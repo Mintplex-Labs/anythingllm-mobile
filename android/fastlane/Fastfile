@@ -1,0 +1,48 @@
+default_platform :android
+
+platform :android do
+  desc "Release Android app to Alpha track"
+  lane :release_android_alpha do
+    android_dir = File.expand_path('..', Dir.pwd)
+    
+    # Create google-services.json from GitHub secret
+    File.write(
+      File.join(android_dir, "app/google-services.json"),
+      ENV["GOOGLE_SERVICES_JSON"]
+    )
+    
+    # Build APK for GitHub Release
+    gradle(
+      task: "assemble",
+      build_type: "Release",
+      properties: {
+        "android.injected.signing.store.file" => File.join(android_dir, "app/anythingllm-release-key.keystore"),
+        "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["KEY_PASSWORD"]
+      }
+    )
+    
+    # Build Bundle for Play Store
+    gradle(
+      task: "bundle",
+      build_type: "Release",
+      properties: {
+        "android.injected.signing.store.file" => File.join(android_dir, "app/anythingllm-release-key.keystore"),
+        "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["KEY_PASSWORD"]
+      }
+    )
+
+    upload_to_play_store(
+      track: "alpha",
+      package_name: "com.anythingllm",
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_apk: true,
+      json_key: File.join(android_dir, "play-store-key.json")
+    )
+  end
+end

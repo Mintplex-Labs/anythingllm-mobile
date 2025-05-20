@@ -7,8 +7,7 @@ apply plugin: "kotlin-kapt"
 
 apply from: "../../node_modules/react-native-config/android/dotenv.gradle"
 
-// Path to local QAIRT SDK.
- def qnnSDKLocalPath = "C:\\QNNSDK\\2.34.0.250424"
+def qnnSDKLocalPath = "C:\\QNNSDK\\2.34.0.250424"
 def buildDir = project.getLayout().getBuildDirectory()
 def libsDir = buildDir.dir("libs")
 

@@ -10,13 +10,21 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import android.util.Log;
 import android.system.Os;
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+interface StringCallback {
+    fun onNewString(response: String)
+}
 
 class ChatQnnModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
     companion object {
         private const val TAG = "ChatQnnModule"
     }
+    private var genieWrapperHandle: Long = 0
     private val reactContext: ReactApplicationContext = reactContext
     private val EVENT_NAME = "onTokenGenerated"
+    private val executorService: ExecutorService = Executors.newSingleThreadExecutor()
 
     // Native method declarations
     public external fun getResponseForPrompt(chatQnnWrapperHandle: Long, userQuestion: String, callback: Any)
@@ -52,8 +60,7 @@ class ChatQnnModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
     @ReactMethod
     fun ping(promise: Promise) {
         try {
-            val modelDirectoryPath = copyFilesToModelDir()
-            promise.resolve("Model loaded successfully")
+            promise.resolve("Got response from JNI")
         } catch (e: Exception) {
             Log.e(TAG, "Error in ping: ${e.message}")
             promise.reject("PING_ERROR", e.message)
@@ -62,6 +69,40 @@ class ChatQnnModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
 
     @ReactMethod
     fun loadModel(promise: Promise) {
+        try {
+            genieWrapperHandle = genieLoader()
+            promise.resolve(true)
+        } catch (e: Exception) {
+            Log.e(TAG, "Error loading model: ${e.message}")
+            promise.reject("LOAD_MODEL_ERROR", e.message)
+        }
+    }
+
+    @ReactMethod
+    fun generateResponse(prompt: String, promise: Promise) {
+        try {
+            if (genieWrapperHandle == 0L) {
+                Log.d(TAG, "Genie model not loaded, loading model")
+                genieLoader()
+            }
+
+            executorService.execute {
+                getResponseForPrompt(genieWrapperHandle, prompt, object : StringCallback {
+                    override fun onNewString(response: String) {
+                        val params: WritableMap = Arguments.createMap()
+                        params.putString("token", response)
+                        sendEvent(EVENT_NAME, params)
+                    }
+                })
+                promise.resolve(true)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error sending prompt: ${e.message}")
+            promise.reject("SEND_PROMPT_ERROR", e.message)
+        }
+    }
+
+    private fun genieLoader(): Long {
         try {
             val modelDirPath = copyFilesToModelDir()
             val htpConfigPath = File(reactContext.filesDir, "models/htp_config/qualcomm-snapdragon-8-elite.json").absolutePath
@@ -74,17 +115,15 @@ class ChatQnnModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
             Os.setenv("ADSP_LIBRARY_PATH", appLibDir, true)
             Os.setenv("LD_LIBRARY_PATH", appLibDir, true)
 
-            // LOG ADSP_LIBRARY_PATH and LD_LIBRARY_PATH
             Log.d(TAG, "ADSP_LIBRARY_PATH: ${Os.getenv("ADSP_LIBRARY_PATH")}")
             Log.d(TAG, "LD_LIBRARY_PATH: ${Os.getenv("LD_LIBRARY_PATH")}")
             
-            loadModel(modelDirPath, htpConfigPath)
-            Log.d(TAG, "Model loaded successfully!")
-            
-            promise.resolve(true)
+            genieWrapperHandle = loadModel(modelDirPath, htpConfigPath)
+            Log.d(TAG, "Model loaded successfully with handle: $genieWrapperHandle")
+            return genieWrapperHandle
         } catch (e: Exception) {
             Log.e(TAG, "Error loading model: ${e.message}")
-            promise.reject("LOAD_MODEL_ERROR", e.message)
+            throw e
         }
     }
 

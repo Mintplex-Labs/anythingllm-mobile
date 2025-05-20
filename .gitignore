@@ -33,6 +33,8 @@ local.properties
 .cxx/
 *.keystore
 !debug.keystore
+android/app/src/main/res/drawable-*
+android/app/src/main/res/raw
 
 # node.js
 #

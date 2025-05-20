@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {Image, View, Alert} from 'react-native';
 import {Button, Text} from 'react-native-paper';
 import {observer} from 'mobx-react';
@@ -11,15 +11,15 @@ import {NavigationProp} from '@react-navigation/native';
 import {L10nContext} from '../../utils';
 
 import  GenieWrapper from '../../utils/GenieModule';
-async function ping() {
-  const result = await GenieWrapper.ping();
-  console.log({result});
-  Alert.alert("Ping result", result);
-}
+async function sendPrompt(setResponse: (response: string) => void) {
+  setResponse("");
+  let response = "";
+  await GenieWrapper.generateResponse("Hello, how are you?", (token: string) => {
+    response += token;
+    setResponse(response);
+  });
 
-async function loadModel() {
-  const result = await GenieWrapper.loadModel();
-  Alert.alert("Load model result", result ? "Model loaded successfully" : "Failed to load model");
+  Alert.alert("NPU Response:", response);
 }
 
 interface ChatEmptyPlaceholderProps {
@@ -33,6 +33,7 @@ export const ChatEmptyPlaceholder = observer(
     const navigation = useNavigation<NavigationProp<any>>();
     const l10n = useContext(L10nContext);
     const styles = createStyles({theme});
+    const [response, setResponse] = useState("");
 
     const hasAvailableModels = modelStore.availableModels.length > 0;
     const hasActiveModel = modelStore.activeModelId !== undefined;
@@ -77,16 +78,12 @@ export const ChatEmptyPlaceholder = observer(
         </View>
         <Button
           mode="contained"
-          onPress={ping}
+          onPress={sendPrompt.bind(this, setResponse)}
           style={styles.button}
           loading={modelStore.isContextLoading}
-          >Ping NPU Interface</Button>
-        <Button
-          mode="contained"
-          onPress={loadModel}
-          style={styles.button}
-          loading={modelStore.isContextLoading}
-          >Load NPU Model</Button>
+          >
+            Send Example Prompt
+          </Button>
         <Button
           mode="contained"
           onPress={onPress}
@@ -97,6 +94,7 @@ export const ChatEmptyPlaceholder = observer(
             ? l10n.components?.chatEmptyPlaceholder?.loading
             : buttonText}
         </Button>
+        <Text>{response}</Text>
       </View>
     );
   },

@@ -1,9 +1,16 @@
+import java.nio.file.Paths
+
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply plugin: "kotlin-kapt"
 
 apply from: "../../node_modules/react-native-config/android/dotenv.gradle"
+
+// Path to local QAIRT SDK.
+ def qnnSDKLocalPath = "C:\\QNNSDK\\2.34.0.250424"
+def buildDir = project.getLayout().getBuildDirectory()
+def libsDir = buildDir.dir("libs")
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -88,7 +95,19 @@ android {
         versionCode 71 
         versionName "1.9.4"
         ndk {
-            abiFilters "arm64-v8a", "x86_64"
+            abiFilters "arm64-v8a"
+        }
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++17"
+                abiFilters "arm64-v8a"
+                arguments "-DQNN_SDK_ROOT_PATH=" + qnnSDKLocalPath
+            }
+        }
+        sourceSets {
+            main {
+                jniLibs.srcDir libsDir
+            }
         }
     }
     signingConfigs {
@@ -115,6 +134,57 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path file("src/main/cpp/CMakeLists.txt")
+            version "3.22.1"
+        }
+    }
+
+    packagingOptions {
+        jniLibs.useLegacyPackaging = true
+    }
+
+    aaptOptions {
+        noCompress "bin", "json"
+    }
+
+    preBuild.doFirst {
+        if (!qnnSDKLocalPath) {
+            throw new RuntimeException("Please download QAIRT SDK and set `qnnSDKLocalPath` in build.gradle.")
+        }
+
+        // Check if QNN SDK is set correctly
+        def qnnSDKFile = file(qnnSDKLocalPath)
+        if (!qnnSDKFile.exists()) {
+            throw new RuntimeException("QAIRT SDK does not exist at $qnnSDKFile.absolutePath.")
+        }
+
+        // Copy required QNN libs
+        def genieLibFile = file(Paths.get(qnnSDKLocalPath, "lib", "aarch64-android", "libGenie.so"))
+        if (!genieLibFile.exists()) {
+            throw new RuntimeException("libGenie.so does not exist. Expected at $genieLibFile.absolutePath")
+        }
+
+        def libsABIDir = buildDir.dir("libs/arm64-v8a")
+        copy {
+            from qnnSDKLocalPath
+
+            include "**/lib/aarch64-android/libQnnHtp.so"
+            include "**/lib/aarch64-android/libQnnHtpPrepare.so"
+            include "**/lib/aarch64-android/libQnnSystem.so"
+            include "**/lib/aarch64-android/libQnnSaver.so"
+            include "**/lib/hexagon-v**/unsigned/libQnnHtpV**Skel.so"
+            include "**/lib/aarch64-android/libQnnHtpV**Stub.so"
+
+            into libsABIDir
+            eachFile {
+                path = name
+            }
+            includeEmptyDirs = false
         }
     }
 }

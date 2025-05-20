@@ -12,6 +12,7 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
 import com.anythingllm.download.DownloadPackage
+import com.anythingllm.chatqnn.ChatQnnPackage
 
 class MainApplication : Application(), ReactApplication {
 
@@ -24,6 +25,7 @@ class MainApplication : Application(), ReactApplication {
               add(DeviceInfoPackage())
               add(KeepAwakePackage())
               add(DownloadPackage())
+              add(ChatQnnPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

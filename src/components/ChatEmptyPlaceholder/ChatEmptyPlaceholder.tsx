@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Image, View} from 'react-native';
+import {Image, View, Alert} from 'react-native';
 import {Button, Text} from 'react-native-paper';
 import {observer} from 'mobx-react';
 
@@ -9,6 +9,18 @@ import {modelStore} from '../../store';
 import {useNavigation} from '@react-navigation/native';
 import {NavigationProp} from '@react-navigation/native';
 import {L10nContext} from '../../utils';
+
+import  GenieWrapper from '../../utils/GenieModule';
+async function ping() {
+  const result = await GenieWrapper.ping();
+  console.log({result});
+  Alert.alert("Ping result", result);
+}
+
+async function loadModel() {
+  const result = await GenieWrapper.loadModel();
+  Alert.alert("Load model result", result ? "Model loaded successfully" : "Failed to load model");
+}
 
 interface ChatEmptyPlaceholderProps {
   onSelectModel: () => void;
@@ -63,6 +75,18 @@ export const ChatEmptyPlaceholder = observer(
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.description}>{description}</Text>
         </View>
+        <Button
+          mode="contained"
+          onPress={ping}
+          style={styles.button}
+          loading={modelStore.isContextLoading}
+          >Ping NPU Interface</Button>
+        <Button
+          mode="contained"
+          onPress={loadModel}
+          style={styles.button}
+          loading={modelStore.isContextLoading}
+          >Load NPU Model</Button>
         <Button
           mode="contained"
           onPress={onPress}

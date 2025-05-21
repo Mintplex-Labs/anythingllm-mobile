@@ -1,7 +1,12 @@
-import { Appearance } from 'react-native';
-import { makePersistable } from 'mobx-persist-store';
-import { makeAutoObservable, runInAction } from 'mobx';
+import {Appearance} from 'react-native';
+
+import {makePersistable} from 'mobx-persist-store';
+import {makeAutoObservable, runInAction} from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {l10n} from '../utils/l10n';
+
+// Define available languages type
+export type AvailableLanguage = keyof typeof l10n;
 
 export class UIStore {
   static readonly GROUP_KEYS = {
@@ -23,6 +28,12 @@ export class UIStore {
 
   //colorScheme = useColorScheme();
   colorScheme: 'light' | 'dark' = Appearance.getColorScheme() ?? 'light';
+
+  // Current selected language (default to English)
+  _language: AvailableLanguage = 'en';
+
+  // List of supported languages
+  supportedLanguages: AvailableLanguage[] = ['en', 'ja', 'zh'];
 
   displayMemUsage = false;
 
@@ -47,6 +58,7 @@ export class UIStore {
         'autoNavigatetoChat',
         'displayMemUsage',
         'benchmarkShareDialog',
+        '_language',
       ],
       storage: AsyncStorage,
     });
@@ -75,6 +87,21 @@ export class UIStore {
     });
   }
 
+  setLanguage(language: AvailableLanguage) {
+    runInAction(() => {
+      this._language = language;
+    });
+  }
+  get language() {
+    // If the language is not in l10n, return 'en'
+    // This can happen when the app removes a language from l10n
+    return this._language in l10n ? this._language : 'en';
+  }
+
+  get l10n() {
+    return l10n[this.language];
+  }
+
   setAutoNavigateToChat(value: boolean) {
     runInAction(() => {
       this.autoNavigatetoChat = value;
@@ -100,5 +127,4 @@ export class UIStore {
   }
 }
 
-const uiStore = new UIStore();
-export default uiStore;
+export const uiStore = new UIStore();

@@ -16,7 +16,8 @@
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\"",
     "start": "react-native start",
     "start:reset": "react-native start --reset-cache",
-    "test": "jest"
+    "test": "jest",
+    "generate:fonts:manifest": "node scripts/generateFontsManifest.js"
   },
   "dependencies": {
     "@dr.pogodin/react-native-fs": "^2.30.3",
@@ -93,6 +94,7 @@
     "@types/react-test-renderer": "^18.0.0",
     "@types/uuid": "^10.0.0",
     "babel-jest": "^29.6.3",
+    "babel-plugin-module-resolver": "^5.0.2",
     "eslint": "^8.19.0",
     "husky": "^9.1.7",
     "jest": "^29.6.3",

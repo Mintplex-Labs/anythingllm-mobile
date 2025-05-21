@@ -9,6 +9,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import android.util.Log;
 import android.system.Os;
+import android.os.Build;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,7 +21,14 @@ interface StringCallback {
 class ChatQnnModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
     companion object {
         private const val TAG = "ChatQnnModule"
+        private val SUPPORTED_SOC_MODELS = setOf(
+            "SM8750", // Snapdragon 8 Elite
+        )
     }
+
+    private var isInitialized = false
+    private var isCompatible = false
+
     private var genieWrapperHandle: Long = 0
     private val reactContext: ReactApplicationContext = reactContext
     private val EVENT_NAME = "onTokenGenerated"
@@ -32,30 +40,41 @@ class ChatQnnModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
     public external fun loadModel(modelDirPath: String, htpConfigPath: String): Long
 
     init {
-        Log.d(TAG, "Starting ChatQnn library initialization")
-        try {
-            val appLibDir = reactContext.applicationInfo.nativeLibraryDir
-            Log.d(TAG, "App native library path: $appLibDir")
-            
-            // Make QNN libraries discoverable
-            Os.setenv("ADSP_LIBRARY_PATH", appLibDir, true)
-            Os.setenv("LD_LIBRARY_PATH", appLibDir, true)
-            
-            val libFile = File(appLibDir, "libchatqnn.so")
-            Log.d(TAG, "Looking for library at: ${libFile.absolutePath}")
-            Log.d(TAG, "Library exists: ${libFile.exists()}")
-            
-            Log.d(TAG, "Attempting to load ChatQnn library")
-            System.loadLibrary("chatqnn");
-            Log.d(TAG, "Successfully loaded ChatQnn library")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to load ChatQnn library", e)
-            Log.e(TAG, "Error details: ${e.message}")
-            e.printStackTrace()
+        isCompatible = checkDeviceCompatibility()
+        if (isCompatible) {
+            Log.d(TAG, "Starting ChatQnn library initialization")
+            try {
+                val appLibDir = reactContext.applicationInfo.nativeLibraryDir
+                Log.d(TAG, "App native library path: $appLibDir")
+                
+                // Make QNN libraries discoverable
+                Os.setenv("ADSP_LIBRARY_PATH", appLibDir, true)
+                Os.setenv("LD_LIBRARY_PATH", appLibDir, true)
+                
+                val libFile = File(appLibDir, "libchatqnn.so")
+                Log.d(TAG, "Looking for library at: ${libFile.absolutePath}")
+                Log.d(TAG, "Library exists: ${libFile.exists()}")
+                
+                Log.d(TAG, "Attempting to load ChatQnn library")
+                System.loadLibrary("chatqnn");
+                Log.d(TAG, "Successfully loaded ChatQnn library")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load ChatQnn library", e)
+                Log.e(TAG, "Error details: ${e.message}")
+                e.printStackTrace()
+            }
+        } else {
+            Log.w(TAG, "Device is not compatible with QNN. Will not initialize ChatQnn library.")
         }
+        isInitialized = true
     }
 
     override fun getName(): String = "GenieModule"
+
+    @ReactMethod
+    fun supportedDevice(promise: Promise) {
+        promise.resolve(isCompatible)
+    }
 
     @ReactMethod
     fun ping(promise: Promise) {
@@ -180,5 +199,27 @@ class ChatQnnModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
         reactContext
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit(eventName, params);
+    }
+
+    // Check if the device is compatible with the QNN SDK (Snapdragon 8 Elite only rn)
+    private fun checkDeviceCompatibility(): Boolean {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val socModel = Build.SOC_MODEL
+                if (SUPPORTED_SOC_MODELS.contains(socModel)) {
+                    Log.d(TAG, "Device has compatible SOC model: $socModel")
+                    return true
+                } else {
+                    Log.d(TAG, "Device has incompatible SOC model: $socModel")
+                    return false
+                }
+            }
+            
+            Log.w(TAG, "Build information cannot be determined - assuming incompatible")
+            return false
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking device compatibility", e)
+            return false
+        }
     }
 } 

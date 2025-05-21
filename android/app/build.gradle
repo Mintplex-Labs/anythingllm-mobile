@@ -7,9 +7,12 @@ apply plugin: "kotlin-kapt"
 
 apply from: "../../node_modules/react-native-config/android/dotenv.gradle"
 
-def qnnSDKLocalPath = "C:\\QNNSDK\\2.34.0.250424"
+def qnnSDKLocalPath = System.getenv('QNN_SDK_ROOT')
 def buildDir = project.getLayout().getBuildDirectory()
 def libsDir = buildDir.dir("libs")
+
+if(qnnSDKLocalPath == null) throw new RuntimeException("QNN_SDK_ROOT is not set and must be set in the environment variables")
+else println("Building with QNN SDK from $qnnSDKLocalPath")
 
 /**
  * This is the configuration block to customize your React Native Android app.

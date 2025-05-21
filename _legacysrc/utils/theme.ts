@@ -3,9 +3,9 @@ import {
   DefaultTheme as PaperLightTheme,
   configureFonts,
 } from 'react-native-paper';
-import { MD3BaseColors, SemanticColors, Theme, AnythingLLMColorways } from './types';
-import { withOpacity, stateLayerOpacity } from './colorUtils';
-import { StyleSheet } from 'react-native';
+
+import {MD3BaseColors, SemanticColors, Theme} from './types';
+import {withOpacity, stateLayerOpacity} from './colorUtils';
 
 // MD3 key colors (seed colors)
 const md3BaseColors: Partial<MD3BaseColors> = {
@@ -15,30 +15,12 @@ const md3BaseColors: Partial<MD3BaseColors> = {
   error: '#FF653F',
 };
 
-const AnythingLLMColors = (isDark: boolean = false) => {
-  // TODO: add light theme colors
-  const darkThemeColors = {
-    text: {
-      primary: '#FFFFFF',
-      secondary: '#E2E2E2',
-    },
-    background: {
-      primary: '#000000',
-      secondary: '#111111',
-    },
-  };
-
-  return darkThemeColors;
-};
-
-type ApplicationColors = MD3BaseColors & { anythingllm: AnythingLLMColorways };
-const createBaseColors = (isDark: boolean): ApplicationColors => {
+const createBaseColors = (isDark: boolean): MD3BaseColors => {
   const baseTheme = isDark ? MD3DarkTheme : PaperLightTheme;
 
   if (isDark) {
     return {
       ...baseTheme.colors,
-      anythingllm: AnythingLLMColors(isDark),
       primary: '#DADDE6',
       onPrimary: '#44464C',
       primaryContainer: '#5B5E66',
@@ -78,7 +60,6 @@ const createBaseColors = (isDark: boolean): ApplicationColors => {
 
   return {
     ...baseTheme.colors,
-    anythingllm: AnythingLLMColors(isDark),
     primary: md3BaseColors.primary!,
     onPrimary: '#FFFFFF',
     primaryContainer: '#DEE0E6',
@@ -199,17 +180,17 @@ const createSemanticColors = (
 });
 
 export const fontStyles = {
-  regular: { fontFamily: 'Inter-Regular' },
-  medium: { fontFamily: 'Inter-Medium' },
-  bold: { fontFamily: 'Inter-Bold' },
-  thin: { fontFamily: 'Inter-Thin' },
-  light: { fontFamily: 'Inter-Light' },
-  semibold: { fontFamily: 'Inter-SemiBold' },
-  extraBold: { fontFamily: 'Inter-ExtraBold' },
+  regular: {fontFamily: 'Inter-Regular'},
+  medium: {fontFamily: 'Inter-Medium'},
+  bold: {fontFamily: 'Inter-Bold'},
+  thin: {fontFamily: 'Inter-Thin'},
+  light: {fontFamily: 'Inter-Light'},
+  semibold: {fontFamily: 'Inter-SemiBold'},
+  extraBold: {fontFamily: 'Inter-ExtraBold'},
 };
 
 const baseFontVariants = configureFonts({
-  config: { ...fontStyles.regular },
+  config: {...fontStyles.regular},
 });
 
 const customVariants = {
@@ -251,7 +232,7 @@ const configuredFonts = configureFonts({
   },
 });
 
-const createTheme = (isDark: boolean): Theme & { colors: ApplicationColors } => {
+const createTheme = (isDark: boolean): Theme => {
   const baseTheme = isDark ? MD3DarkTheme : PaperLightTheme;
   const baseColors = createBaseColors(isDark);
   const semanticColors = createSemanticColors(baseColors, isDark);
@@ -366,21 +347,3 @@ const createTheme = (isDark: boolean): Theme & { colors: ApplicationColors } => 
 
 export const lightTheme = createTheme(false);
 export const darkTheme = createTheme(true);
-export const rootStyles = (theme: Theme) =>
-  StyleSheet.create({
-    root: {
-      flex: 1,
-    },
-    headerWithoutDivider: {
-      elevation: 0,
-      shadowOpacity: 0,
-      borderBottomWidth: 0,
-      backgroundColor: theme.colors.background,
-    },
-    headerWithDivider: {
-      backgroundColor: theme.colors.background,
-    },
-    headerTitle: {
-      ...theme.fonts.titleSmall,
-    },
-  });

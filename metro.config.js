@@ -1,13 +1,11 @@
-const {getDefaultConfig, mergeConfig} = require('@react-native/metro-config');
-
-//const localPackagePaths = ['localpath/code/llama.rn'];
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const { withNativeWind } = require("nativewind/metro");
 
 const defaultConfig = getDefaultConfig(__dirname);
-const {assetExts, sourceExts} = defaultConfig.resolver;
+const { assetExts, sourceExts } = defaultConfig.resolver;
 
-const config = {
+const configOptions = {
   resolver: {
-    //nodeModulesPaths: [...localPackagePaths], // update to resolver
     assetExts: assetExts.filter(ext => ext !== 'svg'),
     sourceExts: [...sourceExts, 'svg'],
   },
@@ -21,10 +19,9 @@ const config = {
         inlineRequires: true,
       },
     }),
-    // Make sure decorators are properly transformed
     enableBabelRuntime: true,
   },
-  //watchFolders: [...localPackagePaths],
 };
 
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+const config = mergeConfig(getDefaultConfig(__dirname), configOptions);
+module.exports = withNativeWind(config, { input: './global.css' });

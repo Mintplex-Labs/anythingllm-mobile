@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-bg: #131314;
+  --secondary-bg: #454545;
+
+  --primary-text: #fff;
+  --secondary-text: #888;
+}

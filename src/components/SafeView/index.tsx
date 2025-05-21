@@ -1,35 +1,31 @@
 import { Edge, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import useTheme from "@/hooks/useTheme";
-import createStyles from "./styles";
-import { ScrollView, View, ViewStyle } from "react-native";
+import { ScrollView, View } from "react-native";
 
 interface SafeViewProps {
   edges?: Edge[];
   scrollable?: boolean;
   children: React.ReactNode;
-  safeAreaStyles?: Partial<ViewStyle>;
-  containerStyles?: Partial<ViewStyle>;
+  safeAreaClassNames?: string;
+  containerClassNames?: string;
 }
 
 export default function SafeView({
   edges = [],
   scrollable = true,
-  safeAreaStyles = {},
-  containerStyles = {},
+  safeAreaClassNames = '',
+  containerClassNames = '',
   children
 }: SafeViewProps) {
-  const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const styles = createStyles(theme, insets);
 
   return (
-    <SafeAreaView style={{ ...styles.safeArea, ...safeAreaStyles }} edges={edges}>
+    <SafeAreaView className={`h-full bg-[--primary-bg] ${safeAreaClassNames}`} edges={edges}>
       {scrollable ? (
-        <ScrollView contentContainerStyle={{ ...styles.container, ...containerStyles }}>
+        <ScrollView contentContainerClassName={`p-4 pb-[${insets.bottom}px] ${containerClassNames}`}>
           {children}
         </ScrollView>
       ) : (
-        <View style={{ ...styles.container, ...containerStyles }}>
+        <View className={`p-4 pb-[${insets.bottom}px] ${containerClassNames}`}>
           {children}
         </View>
       )}

@@ -1,6 +1,6 @@
 import * as RNFS from '@dr.pogodin/react-native-fs';
-import {makeAutoObservable, observable} from 'mobx';
-import {NativeEventEmitter, NativeModules, Platform} from 'react-native';
+import { makeAutoObservable, observable } from 'mobx';
+import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
 
 import {
   DownloadEventCallbacks,
@@ -9,11 +9,12 @@ import {
   DownloadProgress,
 } from './types';
 
-import {Model} from '../../utils/types';
-import {formatBytes, hasEnoughSpace} from '../../utils';
-import {uiStore} from '../../store';
+import { Model } from '@/utils/types';
+import { hasEnoughSpace } from '@/utils/device';
+import { formatBytes } from '@/utils/formatters';
+import uiStore from '@/store/UIStore';
 
-const {DownloadModule} = NativeModules;
+const { DownloadModule } = NativeModules;
 const TAG = 'DownloadManager';
 
 export class DownloadManager {
@@ -35,7 +36,6 @@ export class DownloadManager {
     if (DownloadModule) {
       console.log(`${TAG}: Setting up Android event listeners`);
       this.eventEmitter = new NativeEventEmitter(DownloadModule);
-
       this.eventEmitter.addListener('onDownloadProgress', event => {
         // console.log(
         //   `${TAG}: Progress event received for ID ${event.downloadId}:`,
@@ -69,11 +69,10 @@ export class DownloadManager {
         const remainingBytes = event.totalBytes - event.bytesWritten;
         const etaSeconds = speedBps > 0 ? remainingBytes / speedBps : 0;
         const etaMinutes = Math.ceil(etaSeconds / 60);
-        const l10nData = uiStore.l10n;
         const etaText =
           etaSeconds >= 60
-            ? `${etaMinutes} ${l10nData.common.minutes}`
-            : `${Math.ceil(etaSeconds)} ${l10nData.common.seconds}`;
+            ? `${etaMinutes} minutes`
+            : `${Math.ceil(etaSeconds)} seconds`;
 
         const progress: DownloadProgress = {
           bytesDownloaded: event.bytesWritten,
@@ -161,9 +160,8 @@ export class DownloadManager {
     totalBytes: number,
     speedBps: number,
   ): string {
-    const l10nData = uiStore.l10n;
     if (speedBps <= 0) {
-      return l10nData.common.calculating;
+      return 'calculating...';
     }
 
     const remainingBytes = totalBytes - bytesDownloaded;
@@ -172,8 +170,8 @@ export class DownloadManager {
 
     const eta =
       etaSeconds >= 60
-        ? `${etaMinutes} ${l10nData.common.minutes}`
-        : `${Math.ceil(etaSeconds)} ${l10nData.common.seconds}`;
+        ? `${etaMinutes} minutes`
+        : `${Math.ceil(etaSeconds)} seconds`;
     console.log(`${TAG}: Calculated ETA:`, {
       remainingBytes,
       speedBps,
@@ -277,7 +275,7 @@ export class DownloadManager {
         discretionary: false,
         progressInterval: 800,
         headers: {
-          ...(authToken ? {Authorization: `Bearer ${authToken}`} : {}),
+          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
         },
         begin: res => {
           console.log(`${TAG}: Download started for ID: ${model.id}`, {
@@ -293,7 +291,7 @@ export class DownloadManager {
             bytesTotal: res.contentLength,
             progress: 0,
             speed: '0 B/s',
-            eta: uiStore.l10n.common.calculating,
+            eta: 'calculating...',
             rawSpeed: 0,
             rawEta: 0,
           };
@@ -316,11 +314,10 @@ export class DownloadManager {
           const remainingBytes = res.contentLength - res.bytesWritten;
           const etaSeconds = speedBps > 0 ? remainingBytes / speedBps : 0;
           const etaMinutes = Math.ceil(etaSeconds / 60);
-          const l10nData = uiStore.l10n;
           const etaText =
             etaSeconds >= 60
-              ? `${etaMinutes} ${l10nData.common.minutes}`
-              : `${Math.ceil(etaSeconds)} ${l10nData.common.seconds}`;
+              ? `${etaMinutes} minutes`
+              : `${Math.ceil(etaSeconds)} seconds`;
 
           const progress: DownloadProgress = {
             bytesDownloaded: res.bytesWritten,
@@ -410,7 +407,7 @@ export class DownloadManager {
         networkType: 'ANY',
         priority: 1,
         progressInterval: 1000,
-        ...(authToken ? {authToken} : {}),
+        ...(authToken ? { authToken } : {}),
       });
 
       // Store the download ID
@@ -576,7 +573,7 @@ export class DownloadManager {
               bytesTotal: totalBytes,
               progress: progress,
               speed: '0 B/s',
-              eta: uiStore.l10n.common.calculating,
+              eta: 'calculating...',
               rawSpeed: 0,
               rawEta: 0,
             },

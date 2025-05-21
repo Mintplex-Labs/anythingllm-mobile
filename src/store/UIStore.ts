@@ -3,11 +3,21 @@ import { makePersistable } from 'mobx-persist-store';
 import { makeAutoObservable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+type StorageKeys =
+  'onboarding_welcome_completed' |
+  'onboarding_model_selection_completed' |
+  'llmPreference';
+
 export class UIStore {
   static readonly GROUP_KEYS = {
     READY_TO_USE: 'ready_to_use',
     AVAILABLE_TO_DOWNLOAD: 'available_to_download',
   } as const;
+  static readonly STORAGE_KEYS: StorageKeys[] = [
+    'onboarding_welcome_completed',
+    'onboarding_model_selection_completed',
+    'llmPreference',
+  ] as const;
 
   pageStates = {
     modelsScreen: {
@@ -32,6 +42,8 @@ export class UIStore {
     shouldShow: true,
   };
 
+  storage = AsyncStorage;
+
   showError(message: string) {
     // TODO: Implement error display logic (e.g., toast, alert, etc.)
     console.error(message);
@@ -53,6 +65,28 @@ export class UIStore {
 
     // backwards compatibility. Removed this from the ui settings screen.
     this.iOSBackgroundDownloading = true;
+  }
+
+  async getFromStorage<T>(key: StorageKeys, defaultValue: T): Promise<T> {
+    return this.storage.getItem(key).then((value) => {
+      if (value) return JSON.parse(value) as T;
+      else return defaultValue as T;
+    });
+  }
+
+  async setToStorage<T>(key: StorageKeys, value: T) {
+    return this.storage.setItem(key, JSON.stringify(value));
+  }
+
+  async getAllFromStorage(): Promise<{ [key: string]: any }> {
+    return this.storage.multiGet(UIStore.STORAGE_KEYS)
+      .then((result) => {
+        return result.map(([key, value]) => {
+          return {
+            [key]: value,
+          };
+        });
+      });
   }
 
   setValue<T extends keyof typeof this.pageStates>(

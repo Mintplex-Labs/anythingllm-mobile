@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import { NavigationContainer } from '@react-navigation/native';
-import { Provider as PaperProvider } from 'react-native-paper';
+import { ActivityIndicator, Provider as PaperProvider } from 'react-native-paper';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
@@ -9,37 +9,82 @@ import {
   gestureHandlerRootHOC,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import useTheme from '@/hooks/useTheme';
 import { rootStyles } from '@/utils/theme';
 import MainDrawer from '@/components/Drawer';
 import { PATHS } from './src/utils/paths';
-import { OnboardingWelcome } from '@/screens';
+import Screens from '@/screens';
+import './global.css';
+import { Suspense } from 'react';
+import SafeView from '@/components/SafeView';
+import useInitialRoute from '@/hooks/useInitialRoute';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
   const theme = useTheme();
   const styles = rootStyles(theme);
+  const { initialRoute, isLoading } = useInitialRoute();
 
+  if (isLoading) return (
+    <SafeAreaProvider>
+      <SafeView scrollable={false} containerClassNames='flex h-[100vh] justify-center items-center'>
+        <ActivityIndicator size="large" animating={true} color={theme.colors.anythingllm.text.primary} />
+      </SafeView>
+    </SafeAreaProvider>
+  );
   return (
-    <GestureHandlerRootView style={styles.root}>
-      <SafeAreaProvider>
-        <KeyboardProvider statusBarTranslucent navigationBarTranslucent>
-          <PaperProvider theme={theme}>
-            <NavigationContainer>
-              <MainDrawer theme={theme}>
+    <Suspense fallback={<ActivityIndicator />}>
+      <GestureHandlerRootView style={styles.root}>
+        <SafeAreaProvider>
+          <KeyboardProvider statusBarTranslucent navigationBarTranslucent>
+            <PaperProvider theme={theme}>
+              <BottomSheetModalProvider>
+                <NavigationContainer>
 
-                <Drawer.Screen
-                  name={PATHS.onboarding.welcome}
-                  component={gestureHandlerRootHOC(OnboardingWelcome)}
-                  options={{ headerShown: false }}
-                />
+                  <MainDrawer
+                    theme={theme}
+                    initialRouteName={initialRoute}
+                  >
+                    <Drawer.Screen
+                      name={PATHS.onboarding.welcome}
+                      component={gestureHandlerRootHOC(Screens.OnboardingWelcome)}
+                      options={{ headerShown: false }}
+                    />
+                    <Drawer.Screen
+                      name={PATHS.onboarding.model_selection}
+                      component={gestureHandlerRootHOC(Screens.OnboardingModelSelection)}
+                      options={{ headerShown: false }}
+                    />
 
-              </MainDrawer>
-            </NavigationContainer>
-          </PaperProvider>
-        </KeyboardProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+                    <Drawer.Screen
+                      name={PATHS.home}
+                      component={gestureHandlerRootHOC(Screens.Home)}
+                      options={{ headerShown: false }}
+                    />
+
+                    <Drawer.Screen
+                      name={PATHS.workspace_chat}
+                      component={gestureHandlerRootHOC(Screens.WorkspaceChat)}
+                      options={{ headerShown: false }}
+                    />
+
+                    <Drawer.Screen
+                      name="DevToolsDatabaseInspector"
+                      component={gestureHandlerRootHOC(Screens.DevToolsDatabaseInspector)}
+                      options={{
+                        title: 'Database Inspector',
+                      }}
+                    />
+                  </MainDrawer>
+
+                </NavigationContainer>
+              </BottomSheetModalProvider>
+            </PaperProvider>
+          </KeyboardProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </Suspense>
   )
 });
 

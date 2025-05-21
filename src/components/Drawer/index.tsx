@@ -9,20 +9,21 @@ interface IMainDrawer {
   theme?: Theme;
   overrideOptions?: Partial<DrawerNavigationOptions>;
   children: React.ReactNode;
+  initialRouteName?: string;
 }
 
 const Drawer = createDrawerNavigator();
 export default function MainDrawer({
   theme = darkTheme,
   overrideOptions = {},
+  initialRouteName,
   children
 }: IMainDrawer) {
   const styles = rootStyles(theme);
 
   return (
     <Drawer.Navigator
-      // do we need this?
-      // useLegacyImplementation={false}
+      initialRouteName={initialRouteName}
       screenOptions={{
         headerLeft: () => <HeaderLeft />,
         drawerStyle: {

@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { View, TouchableOpacity, Linking, Text, NativeEventEmitter } from 'react-native';
+import React, { Fragment, useState } from 'react';
+import { View, TouchableOpacity, Linking, Text, NativeEventEmitter, RefreshControl } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   DrawerContentScrollView,
@@ -15,8 +15,18 @@ const eventEmitter = new NativeEventEmitter();
 export default function SidebarContent() {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const { workspaces } = useWorkspaces(true);
+  const { workspaces, activeWorkspaceSlug, fetchWorkspaces } = useWorkspaces(true);
   const { showNewWorkspaceModal, openNewWorkspaceModal, closeNewWorkspaceModal } = useNewWorkspaceModal();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await fetchWorkspaces(true);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [fetchWorkspaces]);
 
   return (
     <Fragment>
@@ -32,12 +42,22 @@ export default function SidebarContent() {
           </TouchableOpacity>
 
           {/* Scrollable Workspaces */}
-          <DrawerContentScrollView className='flex-1 max-h-[90vh]'>
+          <DrawerContentScrollView
+            className='flex-1 max-h-[90vh]'
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={[theme.colors.primary]}
+                tintColor={theme.colors.primary}
+              />
+            }
+          >
             {workspaces.map((ws) => (
               <WorkspaceItem
                 key={ws.slug}
                 workspace={ws}
-                isActive={ws.isActive}
+                isActive={ws.slug === activeWorkspaceSlug}
                 changeWorkspace={() => {
                   eventEmitter.emit('workspaceChatPageInfo', {
                     type: 'update',

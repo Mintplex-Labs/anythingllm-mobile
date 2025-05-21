@@ -5,6 +5,7 @@ import Workspace from "@/database/models/Workspace";
 const eventEmitter = new NativeEventEmitter();
 export default function useWorkspaces(withThreads: boolean = false) {
   const [workspaces, setWorkspaces] = useState<any[]>([]);
+  const [activeWorkspaceSlug, setActiveWorkspaceSlug] = useState<string | null>(null);
 
   async function fetchWorkspaces(withThreads: boolean = false) {
     console.log('fetching workspaces...', { withThreads });
@@ -20,7 +21,7 @@ export default function useWorkspaces(withThreads: boolean = false) {
         if (event.type === 'update') {
           const { wsSlug } = event.details;
           console.log("Got page update", { wsSlug });
-          if (wsSlug) setWorkspaces(prev => prev.map(ws => ws.slug === wsSlug ? { ...ws, isActive: true } : ws));
+          if (wsSlug) setActiveWorkspaceSlug(wsSlug);
         }
       }
     );
@@ -97,5 +98,5 @@ export default function useWorkspaces(withThreads: boolean = false) {
     fetchWorkspaces(withThreads);
   }, []);
 
-  return { workspaces, fetchWorkspaces };
+  return { workspaces, activeWorkspaceSlug, fetchWorkspaces };
 }

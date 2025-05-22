@@ -5,9 +5,11 @@ import { NativeEventEmitter } from "react-native";
 import Workspace from "@/database/models/Workspace";
 import { useNavigation } from "@react-navigation/native";
 import { PATHS } from "@/utils/paths";
+import useRedirect from "@/hooks/useRedirect";
 
 const eventEmitter = new NativeEventEmitter();
 export default function Home() {
+  useRedirect();
   const navigation = useNavigation();
 
   async function createWorkspace() {
@@ -19,11 +21,12 @@ export default function Home() {
             name: workspace.name,
             slug: workspace.slug,
             createdAt: workspace.createdAt,
+            threads: workspace.threads,
           },
         });
 
         // @ts-ignore
-        navigation.navigate(PATHS.workspace_chat, { wsSlug: workspace.slug });
+        navigation.navigate(PATHS.workspace_chat, { wsSlug: workspace.slug, threadSlug: workspace.threads[0].slug });
       })
       .catch((error) => {
         console.error(error);

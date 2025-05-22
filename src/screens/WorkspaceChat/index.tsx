@@ -3,12 +3,15 @@ import SafeView from "@/components/SafeView";
 import TopBar from "@/components/TopBar";
 import { useRoute } from '@react-navigation/native';
 import { useEffect } from "react";
+import useRedirect from "@/hooks/useRedirect";
 
 const eventEmitter = new NativeEventEmitter();
 export default function WorkspaceChat() {
+  useRedirect();
   const route = useRoute();
   const { wsSlug, threadSlug = null } = route.params as { wsSlug: string, threadSlug?: string | null };
 
+  // Emits the page info to the sidebar on load
   useEffect(() => {
     eventEmitter.emit('workspaceChatPageInfo', {
       type: 'update',
@@ -26,6 +29,9 @@ export default function WorkspaceChat() {
         <Text className="text-2xl font-bold text-white">Start Chatting</Text>
         <Text className="text-white text-center">
           {wsSlug}
+        </Text>
+        <Text className="text-white text-center">
+          {threadSlug}
         </Text>
       </View>
     </SafeView>

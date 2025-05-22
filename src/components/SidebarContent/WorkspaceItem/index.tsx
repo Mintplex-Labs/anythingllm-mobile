@@ -4,14 +4,17 @@ import { Fragment, useState } from "react";
 import ThreadItem from "./ThreadItem";
 import { NativeEventEmitter } from "react-native";
 import Workspace from "@/database/models/Workspace";
+import WorkspaceThread from "@/database/models/WorkspaceThread";
+import { PATHS } from "@/utils/paths";
 
 const eventEmitter = new NativeEventEmitter();
 
-function WorkspaceItem({ workspace, isActive = false, changeWorkspace }: { workspace: any, isActive?: boolean, changeWorkspace: () => void }) {
-  const [activeThreadIdx, setActiveThreadIdx] = useState(0);
+function WorkspaceItem({ workspace, isActive = false, changeWorkspace, currentThreadSlug }: { workspace: any, isActive?: boolean, changeWorkspace: () => void, currentThreadSlug: string | null }) {
+  const _activeThreadIdx = workspace.threads.findIndex((t: any) => t.slug === currentThreadSlug);
   const [isRenameModalVisible, setIsRenameModalVisible] = useState(false);
   const [threadSlug, setThreadSlug] = useState('');
-  const [newThreadName, setNewThreadName] = useState('');
+  const [activeThreadIdx, setActiveThreadIdx] = useState(_activeThreadIdx !== -1 ? _activeThreadIdx : 0);
+  const [newThreadName, setNewThreadName] = useState(workspace.threads?.[_activeThreadIdx]?.name || '');
   const color = isActive ? 'white' : '#E2E8F0';
   const bgColor = isActive ? 'bg-white/40' : 'bg-white/20';
 
@@ -20,12 +23,14 @@ function WorkspaceItem({ workspace, isActive = false, changeWorkspace }: { works
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Delete', onPress: () => {
-          eventEmitter.emit('workspaceUpdate', {
-            type: 'remove-thread',
-            details: {
-              workspaceSlug: workspace.slug,
-              threadSlug: threadSlug,
-            },
+          WorkspaceThread.delete(workspace.slug, threadSlug).then(() => {
+            eventEmitter.emit('workspaceUpdate', {
+              type: 'remove-thread',
+              details: {
+                workspaceSlug: workspace.slug,
+                threadSlug: threadSlug,
+              },
+            });
           });
         }
       },
@@ -48,6 +53,19 @@ function WorkspaceItem({ workspace, isActive = false, changeWorkspace }: { works
         }
       },
     ]);
+  }
+
+  async function handleThreadRename(threadSlug: string, newName: string) {
+    setThreadSlug(threadSlug);
+    setIsRenameModalVisible(false);
+    setNewThreadName('');
+    if (!newName) return;
+    WorkspaceThread.update(workspace.slug, threadSlug, { name: newName }).then(() => {
+      eventEmitter.emit('workspaceUpdate', {
+        type: 'rename-thread',
+        details: { workspaceSlug: workspace.slug, threadSlug: threadSlug, newName: newName },
+      });
+    });
   }
 
   return (
@@ -104,18 +122,7 @@ function WorkspaceItem({ workspace, isActive = false, changeWorkspace }: { works
               </TouchableOpacity>
               <TouchableOpacity
                 className="px-4 py-2 rounded-lg bg-transparent border border-white"
-                onPress={() => {
-                  eventEmitter.emit('workspaceUpdate', {
-                    type: 'rename-thread',
-                    details: {
-                      workspaceSlug: workspace.slug,
-                      threadSlug: threadSlug,
-                      newName: newThreadName,
-                    },
-                  });
-                  setIsRenameModalVisible(false);
-                  setNewThreadName('');
-                }}
+                onPress={() => handleThreadRename(threadSlug, newThreadName)}
               >
                 <Text className="text-white">Rename</Text>
               </TouchableOpacity>
@@ -140,7 +147,13 @@ function WorkspaceThreads({ workspace, activeThreadIdx, setActiveThreadIdx, hand
             thread={thread}
             highlightDownstroke={idx <= activeThreadIdx}
             hasPrevious={hasPrevious}
-            onPress={() => setActiveThreadIdx(idx)}
+            onPress={() => {
+              setActiveThreadIdx(idx)
+              eventEmitter.emit('REDIRECT', {
+                path: PATHS.workspace_chat,
+                params: { wsSlug: workspace.slug, threadSlug: thread.slug },
+              });
+            }}
             onDelete={handleThreadDelete.bind(null, thread.slug)}
             onRename={() => {
               setThreadSlug(thread.slug);
@@ -152,11 +165,18 @@ function WorkspaceThreads({ workspace, activeThreadIdx, setActiveThreadIdx, hand
       <TouchableOpacity
         className="flex-row items-center gap-x-2"
         onPress={() => {
-          eventEmitter.emit('workspaceUpdate', {
-            type: 'add-thread',
-            details: {
-              workspaceSlug: workspace.slug,
-            },
+          WorkspaceThread.create({ workspaceSlug: workspace.slug }).then((thread) => {
+            eventEmitter.emit('workspaceUpdate', {
+              type: 'add-thread',
+              details: {
+                workspaceSlug: workspace.slug,
+                thread,
+              },
+            });
+            eventEmitter.emit('REDIRECT', {
+              path: PATHS.workspace_chat,
+              params: { wsSlug: workspace.slug, threadSlug: thread.slug },
+            });
           });
         }}
       >

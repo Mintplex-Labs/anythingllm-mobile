@@ -44,10 +44,16 @@ export default class Workspace extends Model {
     return workspace;
   }
 
+  static async get(slug: string): Promise<any> {
+    const workspace = await database.get(Workspace.table).query(Q.where('slug', slug)).fetch();
+    if (workspace.length === 0) return null;
+    return workspace[0];
+  }
+
   static async create({ name }: { name: string }): Promise<any> {
-    let slug = slugify(name);
+    let slug = slugify(name).toLowerCase();
     let existingWorkspace = await Workspace.find(slug);
-    if (existingWorkspace) slug = slugify(name + generateUUID());
+    if (existingWorkspace) slug = slugify(name + generateUUID()).toLowerCase();
 
     let newWorkspace: any;
     await database.write(async () => {
@@ -60,8 +66,11 @@ export default class Workspace extends Model {
     newWorkspace = this.toWorkspaceObject(newWorkspace);
 
     // Create a new thread for the workspace on creation
-    await WorkspaceThread.create({ workspaceSlug: slug });
-    return newWorkspace;
+    const thread = await WorkspaceThread.create({ workspaceSlug: slug });
+    return {
+      ...newWorkspace,
+      threads: [thread],
+    };
   }
 
   static async delete(wsSlug: string): Promise<any> {

@@ -33,6 +33,18 @@ export default class WorkspaceThread extends Model {
     };
   }
 
+  /**
+   * Returns watermelon db model instance
+   */
+  static async get(workspaceSlug: string, threadSlug: string): Promise<Model | null> {
+    const workspaceThread = await database.get(WorkspaceThread.table).query(
+      Q.where('workspace_slug', workspaceSlug),
+      Q.where('slug', threadSlug)
+    ).fetch();
+    if (workspaceThread.length === 0) return null;
+    return workspaceThread[0];
+  }
+
   static async find(workspaceSlug: string, threadSlug: string): Promise<any> {
     const workspaceBySlug = await database.get(WorkspaceThread.table).query(
       Q.where('workspace_slug', workspaceSlug),
@@ -65,6 +77,22 @@ export default class WorkspaceThread extends Model {
     this.log('newWorkspaceThread', { workspace: workspaceSlug, thread: newWorkspaceThread.slug });
     newWorkspaceThread = this.toWorkspaceThreadObject(newWorkspaceThread);
     return newWorkspaceThread;
+  }
+
+  static async update(workspaceSlug: string, threadSlug: string, data: { name: string }): Promise<any> {
+    if (!data.name) return this.log('no name provided', { workspaceSlug, threadSlug, data });
+
+    const existingThread = await this.get(workspaceSlug, threadSlug);
+    if (!existingThread) return this.log('thread not found', { workspaceSlug, threadSlug });
+
+    await database.write(async () => {
+      await existingThread.update((thread: any) => {
+        thread.name = data.name;
+      });
+    });
+
+    this.log('updated workspace thread', { workspaceSlug, threadSlug, data });
+    return true;
   }
 
   static async delete(workspaceSlug: string, threadSlug: string): Promise<any> {

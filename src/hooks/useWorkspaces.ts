@@ -6,6 +6,7 @@ const eventEmitter = new NativeEventEmitter();
 export default function useWorkspaces(withThreads: boolean = false) {
   const [workspaces, setWorkspaces] = useState<any[]>([]);
   const [activeWorkspaceSlug, setActiveWorkspaceSlug] = useState<string | null>(null);
+  const [activeThreadSlug, setActiveThreadSlug] = useState<string | null>(null);
 
   async function fetchWorkspaces(withThreads: boolean = false) {
     console.log('fetching workspaces...', { withThreads });
@@ -19,9 +20,10 @@ export default function useWorkspaces(withThreads: boolean = false) {
       'workspaceChatPageInfo',
       (event) => {
         if (event.type === 'update') {
-          const { wsSlug } = event.details;
-          console.log("Got page update", { wsSlug });
+          const { wsSlug, threadSlug } = event.details;
+          console.log("Got page update", { wsSlug, threadSlug });
           if (wsSlug) setActiveWorkspaceSlug(wsSlug);
+          if (threadSlug) setActiveThreadSlug(threadSlug);
         }
       }
     );
@@ -42,10 +44,11 @@ export default function useWorkspaces(withThreads: boolean = false) {
       'workspaceUpdate',
       (event) => {
         if (event.type === 'add-thread') {
-          const { workspaceSlug } = event.details;
-          setWorkspaces(prev => prev.map(ws =>
-            ws.slug === workspaceSlug ? { ...ws, threads: [...(ws?.threads || []), { name: 'New Thread', slug: `new-thread-${Math.random().toString(36).substring(2, 15)}` }] } : ws
-          ));
+          const { workspaceSlug, thread } = event.details;
+          setWorkspaces(prev => prev.map(ws => ws.slug === workspaceSlug ? { ...ws, threads: [...(ws?.threads || []), thread] } : ws));
+          if (workspaceSlug) setActiveWorkspaceSlug(workspaceSlug);
+          if (thread.slug) setActiveThreadSlug(thread.slug);
+          eventEmitter.emit('workspaceChatPageInfo', { type: 'update', details: { wsSlug: workspaceSlug, threadSlug: thread.slug } });
           return;
         }
 
@@ -98,5 +101,5 @@ export default function useWorkspaces(withThreads: boolean = false) {
     fetchWorkspaces(withThreads);
   }, []);
 
-  return { workspaces, activeWorkspaceSlug, fetchWorkspaces };
+  return { workspaces, activeWorkspaceSlug, activeThreadSlug, fetchWorkspaces };
 }

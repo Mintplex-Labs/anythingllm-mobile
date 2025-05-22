@@ -10,12 +10,14 @@ import { Plus, BookOpen, GithubLogo } from 'phosphor-react-native';
 import WorkspaceItem from './WorkspaceItem';
 import useWorkspaces from '@/hooks/useWorkspaces';
 import NewWorkspaceModal, { useNewWorkspaceModal } from '@/components/NewWorkspaceModal';
+import WorkspaceThread from '@/database/models/WorkspaceThread';
+import { PATHS } from '@/utils/paths';
 
 const eventEmitter = new NativeEventEmitter();
 export default function SidebarContent() {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const { workspaces, activeWorkspaceSlug, fetchWorkspaces } = useWorkspaces(true);
+  const { workspaces, activeWorkspaceSlug, activeThreadSlug, fetchWorkspaces } = useWorkspaces(true);
   const { showNewWorkspaceModal, openNewWorkspaceModal, closeNewWorkspaceModal } = useNewWorkspaceModal();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -27,6 +29,23 @@ export default function SidebarContent() {
       setRefreshing(false);
     }
   }, [fetchWorkspaces]);
+
+  async function handleWorkspaceChange(wsSlug: string) {
+    const ws = workspaces.find((ws) => ws.slug === wsSlug);
+    if (!ws) return;
+
+    // If no threads, create a new one right now so we can switch to it
+    let threadSlug = ws.threads?.length > 0 ? ws.threads[0].slug : null;
+    if (!threadSlug) {
+      threadSlug = await WorkspaceThread.create({ workspaceSlug: ws.slug });
+      await fetchWorkspaces(true);
+    }
+
+    eventEmitter.emit('REDIRECT', {
+      path: PATHS.workspace_chat,
+      params: { wsSlug, threadSlug },
+    });
+  }
 
   return (
     <Fragment>
@@ -58,14 +77,8 @@ export default function SidebarContent() {
                 key={ws.slug}
                 workspace={ws}
                 isActive={ws.slug === activeWorkspaceSlug}
-                changeWorkspace={() => {
-                  eventEmitter.emit('workspaceChatPageInfo', {
-                    type: 'update',
-                    details: {
-                      wsSlug: ws.slug,
-                    },
-                  });
-                }}
+                changeWorkspace={handleWorkspaceChange.bind(null, ws.slug)}
+                currentThreadSlug={activeThreadSlug}
               />
             ))}
           </DrawerContentScrollView>

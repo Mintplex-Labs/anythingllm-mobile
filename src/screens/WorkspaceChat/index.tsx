@@ -1,39 +1,248 @@
-import { Text, View, NativeEventEmitter } from "react-native";
+import { ActivityIndicator, NativeEventEmitter, Text, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import TopBar from "@/components/TopBar";
-import { useRoute } from '@react-navigation/native';
-import { useEffect } from "react";
 import useRedirect from "@/hooks/useRedirect";
+import useChatInfoEmit from "./useChatInfoEmit";
+import { useState, useCallback, useRef, useEffect } from "react";
+import { FlatList } from "react-native-gesture-handler";
+import PromptInput from "./PromptInput";
+import useLlmPreference from "@/hooks/useLLMPreference";
+import { clearTempMessages } from "@/utils/chat/helpers";
+import { Portal, Snackbar } from "react-native-paper";
+import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 
-const eventEmitter = new NativeEventEmitter();
+// Define the message type for our chat
+export interface ChatMessage {
+  uuid: string;
+  content: string;
+  role: "user" | "assistant";
+  createdAt: Date;
+  attachments?: Object[];
+  metrics?: Object;
+}
+
 export default function WorkspaceChat() {
   useRedirect();
-  const route = useRoute();
-  const { wsSlug, threadSlug = null } = route.params as { wsSlug: string, threadSlug?: string | null };
+  const { wsSlug, threadSlug } = useChatInfoEmit();
+  const { LLMProvider, isLoading: isLoadingProvider } = useLlmPreference();
 
-  // Emits the page info to the sidebar on load
-  useEffect(() => {
-    eventEmitter.emit('workspaceChatPageInfo', {
-      type: 'update',
-      details: {
-        wsSlug,
-        threadSlug,
-      },
-    });
+  // State for messages and streaming
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [promptDisabled, setPromptDisabled] = useState(false);
+  const [promptInput, setPromptInput] = useState('');
+  const flatListRef = useRef<FlatList>(null);
+
+  function scrollToBottom() {
+    flatListRef.current?.scrollToEnd({ animated: true });
+  }
+
+  const addMessage = useCallback((message: ChatMessage) => {
+    setMessages(prev => [...prev, message]);
+    scrollToBottom();
+    setPromptInput('');
   }, []);
 
+  // Function to handle streaming messages
+  const handleStreamingMessage = useCallback((event: IStreamEvent, content: string | object) => {
+    if (event === 'chunk') {
+      // Update the last message or create a new one
+      const chunk = content as string;
+      setMessages(prev => {
+        const lastMessage = prev.slice(-1)[0];
+        if (lastMessage && lastMessage.role === "assistant") {
+          return [...prev.slice(0, -1), {
+            ...lastMessage,
+            content: lastMessage.content + chunk
+          }];
+        }
+        return [...prev, {
+          uuid: Date.now().toString(),
+          content: chunk,
+          role: "assistant",
+          createdAt: new Date(),
+          metrics: {}
+        },];
+      });
+    }
+
+    // If the event is completion of streaming, add metrics to the last message
+    if (event === 'complete') {
+      console.log('completion of streaming', content);
+      const metrics = content as object;
+      setMessages(prev => {
+        const lastMessage = prev[0];
+        if (lastMessage && lastMessage.role === "assistant") {
+          return [{
+            ...lastMessage,
+            metrics
+          }, ...prev.slice(1)];
+        }
+        return prev;
+      });
+    }
+
+    if (event === 'abort') console.error('abort', content);
+  }, []);
+
+  const renderMessage = useCallback(({ item }: { item: ChatMessage }) => {
+    const isUser = item.role === "user";
+    return (
+      <View
+        className={`flex flex-row ${isUser ? 'justify-end' : 'justify-start'} mb-4`}
+      >
+        <View
+          className={`max-w-[80%] rounded-lg p-3 ${isUser ? 'bg-blue-500' : 'bg-gray-700'
+            }`}
+        >
+          <Text className="text-white">
+            {item.content}
+          </Text>
+          <Text className="text-white/50 text-xs mt-1">
+            {item.createdAt.toLocaleTimeString()}
+          </Text>
+        </View>
+      </View>
+    );
+  }, []);
+
+  const handleSendMessage = useCallback(async (forcedContent?: string) => {
+    let prompt: string;
+
+    // If the forced content is a string and not empty, use it as the prompt
+    if (typeof forcedContent === 'string') {
+      prompt = forcedContent.trim();
+    } else {
+      prompt = promptInput.trim();
+    }
+    if (!prompt || prompt === '') return;
+
+    // If the user message is /reset, reset the messages
+    if (prompt === '/reset') {
+      setPromptInput('');
+      setPromptDisabled(true);
+      clearTempMessages(setMessages).finally(() => {
+        setPromptDisabled(false);
+      });
+      return;
+    }
+
+    const newMessage: ChatMessage = {
+      uuid: Date.now().toString(),
+      content: prompt,
+      role: "user",
+      createdAt: new Date(),
+    };
+    const messageHistory = [...messages, newMessage];
+    addMessage(newMessage);
+
+    try {
+      // setPromptDisabled(true);
+      await LLMProvider.chat({
+        messages: messageHistory,
+        streaming: true,
+        onComplete: addMessage,
+        onStream: handleStreamingMessage,
+      });
+    } catch (error: any) {
+      console.error('Error getting LLM response:', error);
+      const errorMessage: ChatMessage = {
+        uuid: Date.now().toString(),
+        content: error.message,
+        role: "assistant",
+        createdAt: new Date(),
+      };
+      addMessage(errorMessage);
+    } finally {
+      setPromptDisabled(false);
+      setPromptInput('');
+      scrollToBottom();
+    }
+  }, [addMessage, messages, LLMProvider, promptInput]);
+
+  if (isLoadingProvider) {
+    return (
+      <SafeView scrollable={false}>
+        <TopBar />
+        <View className="flex h-[90vh] justify-center items-center">
+          <ActivityIndicator size="large" color="#fff" />
+        </View>
+      </SafeView>
+    );
+  }
+
   return (
-    <SafeView scrollable={false} >
+    <SafeView scrollable={false}>
       <TopBar />
-      <View className="flex flex-col h-[90vh] justify-center items-center gap-y-4">
-        <Text className="text-2xl font-bold text-white">Start Chatting</Text>
-        <Text className="text-white text-center">
-          {wsSlug}
+      <View className="h-[90vh]">
+        <ThreadResetAlert />
+        <Text className="text-white/50 text-xs font-mono py-1">
+          {wsSlug}/{threadSlug}
         </Text>
-        <Text className="text-white text-center">
-          {threadSlug}
+        <Text className="text-white/50 text-xs font-mono">
+          {LLMProvider.name}/{LLMProvider?.model}
         </Text>
+
+        <FlatList
+          ref={flatListRef}
+          data={messages}
+          renderItem={renderMessage}
+          keyExtractor={item => item.uuid}
+          className="flex px-4 mb-[25vh]"
+          contentContainerStyle={{ flexGrow: 1, }}
+          ListEmptyComponent={() => (
+            <View className="flex-1 justify-center items-center gap-y-4">
+              <Text className="text-white/50">Send your first message!</Text>
+              {['Hello, how are you?', 'What is the transfomer model for AI?', 'Explain the tower of hanoi algorithm'].map((message) => (
+                <TouchableOpacity key={message} className="px-4 py-2 border-white/20 border rounded-lg" onPress={() => {
+                  handleSendMessage(message);
+                }}>
+                  <Text className="text-white">{message}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        />
+        <View className="absolute bottom-0 left-0 right-0 h-[20vh]">
+          <PromptInput
+            promptInput={promptInput}
+            onPromptInputChange={setPromptInput}
+            onSend={handleSendMessage}
+            disabled={promptDisabled}
+          />
+        </View>
       </View>
     </SafeView>
   );
-};
+}
+
+const eventEmitter = new NativeEventEmitter();
+function ThreadResetAlert() {
+  const [status, setStatus] = useState({
+    visible: false,
+    message: '',
+  });
+
+  useEffect(() => {
+    eventEmitter.addListener('threadReset', () => {
+      setStatus({ visible: true, message: 'Thread chat history has been reset.' });
+    });
+    return () => {
+      eventEmitter.removeAllListeners('threadReset');
+    };
+  }, []);
+
+  return (
+    <Portal>
+      <Snackbar
+        visible={status.visible}
+        onDismiss={() => setStatus({ visible: false, message: '' })}
+        duration={2500}
+        action={{
+          label: 'Dismiss',
+          onPress: () => setStatus({ visible: false, message: '' }),
+        }}>
+        {status.message ?? 'Action completed'}
+      </Snackbar>
+    </Portal>
+  );
+}

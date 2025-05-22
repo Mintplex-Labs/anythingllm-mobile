@@ -17,7 +17,7 @@ const eventEmitter = new NativeEventEmitter();
 export default function SidebarContent() {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const { workspaces, activeWorkspaceSlug, activeThreadSlug, fetchWorkspaces } = useWorkspaces(true);
+  const { workspaces, activeWorkspaceSlug, setActiveWorkspaceSlug, activeThreadSlug, fetchWorkspaces } = useWorkspaces(true);
   const { showNewWorkspaceModal, openNewWorkspaceModal, closeNewWorkspaceModal } = useNewWorkspaceModal();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -77,7 +77,7 @@ export default function SidebarContent() {
                 key={ws.slug}
                 workspace={ws}
                 isActive={ws.slug === activeWorkspaceSlug}
-                changeWorkspace={handleWorkspaceChange.bind(null, ws.slug)}
+                changeWorkspace={() => setActiveWorkspaceSlug(ws.slug)}
                 currentThreadSlug={activeThreadSlug}
               />
             ))}

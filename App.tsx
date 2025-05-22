@@ -19,12 +19,15 @@ import './global.css';
 import { Suspense } from 'react';
 import SafeView from '@/components/SafeView';
 import useInitialRoute from '@/hooks/useInitialRoute';
+import './src/utils/polyfills';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
   const theme = useTheme();
   const styles = rootStyles(theme);
   const { initialRoute, isLoading } = useInitialRoute();
+
+  console.log('initialRoute', initialRoute);
 
   if (isLoading) return (
     <SafeAreaProvider>
@@ -44,7 +47,7 @@ const App = observer(() => {
 
                   <MainDrawer
                     theme={theme}
-                    initialRouteName={initialRoute}
+                    initialRouteName={initialRoute.path}
                   >
                     <Drawer.Screen
                       name={PATHS.onboarding.welcome}
@@ -67,6 +70,7 @@ const App = observer(() => {
                       name={PATHS.workspace_chat}
                       component={gestureHandlerRootHOC(Screens.WorkspaceChat)}
                       options={{ headerShown: false }}
+                      initialParams={initialRoute.params}
                     />
 
                     <Drawer.Screen

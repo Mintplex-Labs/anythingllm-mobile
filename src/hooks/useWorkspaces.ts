@@ -101,5 +101,5 @@ export default function useWorkspaces(withThreads: boolean = false) {
     fetchWorkspaces(withThreads);
   }, []);
 
-  return { workspaces, activeWorkspaceSlug, activeThreadSlug, fetchWorkspaces };
+  return { workspaces, activeWorkspaceSlug, setActiveWorkspaceSlug, activeThreadSlug, fetchWorkspaces };
 }

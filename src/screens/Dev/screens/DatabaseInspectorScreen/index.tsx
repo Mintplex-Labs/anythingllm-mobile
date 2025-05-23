@@ -5,13 +5,14 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
-  Alert,
+  TextInput
 } from 'react-native';
-import { Card, Button, TextInput } from 'react-native-paper';
+import { Card, Button  } from 'react-native-paper';
 import { database } from '@/database';
 import { useNavigation } from '@react-navigation/native';
 import { PATHS } from '@/utils/paths';
 import uiStore from '@/store/UIStore';
+import { KeyboardAccessoryView } from '@/components/KeyboardAccessoryView';
 
 // Define the collections we want to inspect
 const COLLECTIONS = [
@@ -259,24 +260,35 @@ const DatabaseInspectorScreen = () => {
 
       <View className="flex flex-col gap-y-4">
         <Text className="text-2xl font-bold text-black">LLM Manager</Text>
-        <View className="flex flex-col gap-y-4">  
-          <TextInput
-            placeholder="Provider"
-            value={llmpref?.provider}
-            // @ts-ignore
-            onChangeText={(text: string) => setLlmPref({...llmpref, provider: text})}
-          />
-          <TextInput
-            placeholder="Model"
-            value={llmpref?.config?.model}
-            // @ts-ignore
-            onChangeText={(text: string) => setLlmPref({...llmpref, config: {...llmpref?.config, model: text}})}
-          />
-        </View>
-        <TouchableOpacity onPress={() => uiStore.setToStorage('llmPreference', llmpref)}>
-          <Text className="text-blue-500">Save LLM Preference</Text>
-        </TouchableOpacity>
-       
+        
+        <KeyboardAccessoryView
+          useListenersOnAndroid={true}
+          renderScrollable={(panHandlers) => (
+            <View className="flex flex-col gap-y-4 h-[200px]" {...panHandlers}>
+              <View className="flex flex-col gap-y-4">
+                <TextInput
+                  placeholder="Provider"
+                  className="px-2 rounded-md text-lg text-white bg-[--secondary-bg]"
+                  value={llmpref?.provider}
+                  // @ts-ignore
+                  onChangeText={(text: string) => setLlmPref({...llmpref, provider: text})}
+              />
+              <TextInput
+                placeholder="Model"
+                className="px-2 rounded-md text-lg text-white bg-[--secondary-bg]"
+                value={llmpref?.config?.model}
+                // @ts-ignore
+                onChangeText={(text: string) => setLlmPref({...llmpref, config: {...llmpref?.config, model: text}})}
+              />
+            </View>
+            <TouchableOpacity onPress={() => uiStore.setToStorage('llmPreference', llmpref)}>
+              <Text className="text-blue-500">Save LLM Preference</Text>
+            </TouchableOpacity>
+            </View>
+          )}
+        >
+          
+        </KeyboardAccessoryView>
       </View>
     </SafeAreaView>
   );

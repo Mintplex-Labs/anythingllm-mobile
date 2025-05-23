@@ -251,7 +251,7 @@ export const stops = [
  * @param text - The text to process
  * @returns The text with thinking parts removed
  */
-export function removeThinkingParts(text: string): string {
+export function parseThinkingParts(text: string): { nonThinkingText: string, thinkingText: string, isCompleteThought: boolean } {
   // Check if the text contains any thinking tags
   const hasThinkingTags =
     text.includes('<think>') ||
@@ -259,21 +259,29 @@ export function removeThinkingParts(text: string): string {
     text.includes('<thinking>');
 
   // If no thinking tags are found, return the original text
-  if (!hasThinkingTags) {
-    return text;
+  if (!hasThinkingTags)  return {nonThinkingText: text, thinkingText: '', isCompleteThought: false};
+
+  let nonThinkingText = text;
+  let thinkingText = '';
+  let isCompleteThought = ['</think>', '</thought>', '</thinking>'].some(tag => text.includes(tag));
+
+  if (!isCompleteThought) {
+    thinkingText = text.match(/<think>([\s\S]*)/)?.[1] ||
+      text.match(/<thought>([\s\S]*)/)?.[1] ||
+      text.match(/<thinking>([\s\S]*)/)?.[1] ||
+      '';
+    return {nonThinkingText: '', thinkingText, isCompleteThought: false};
+  } else {
+    thinkingText = text.match(/<think>([\s\S]*?)<\/think>/)?.[1] ||
+      text.match(/<thought>([\s\S]*?)<\/thought>/)?.[1] ||
+      text.match(/<thinking>([\s\S]*?)<\/thinking>/)?.[1] ||
+      '';
   }
 
-  // Remove content between <think> and </think> tags
-  let result = text.replace(/<think>[\s\S]*?<\/think>/g, '');
+  // Remove content between <think> and </think> tags to get the non-thinking text
+  nonThinkingText = nonThinkingText.replace(/<think>[\s\S]*?<\/think>/g, '');
+  nonThinkingText = nonThinkingText.replace(/<thought>[\s\S]*?<\/thought>/g, '');
+  nonThinkingText = nonThinkingText.replace(/<thinking>[\s\S]*?<\/thinking>/g, '');
 
-  // Remove content between <thought> and </thought> tags
-  result = result.replace(/<thought>[\s\S]*?<\/thought>/g, '');
-
-  // Remove content between <thinking> and </thinking> tags
-  result = result.replace(/<thinking>[\s\S]*?<\/thinking>/g, '');
-
-  // Log for debugging
-  console.log('Removed thinking parts from context');
-
-  return result;
+  return { nonThinkingText: nonThinkingText.trim(), thinkingText: thinkingText.trim(), isCompleteThought };
 }

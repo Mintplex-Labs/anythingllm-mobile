@@ -12,8 +12,8 @@ interface PromptInputProps {
 
 export default function PromptInput({ promptInput, onPromptInputChange, onSend, disabled = false }: PromptInputProps) {
   return (
-    <View >
-      <View className="flex h-full justify-start bg-[--secondary-bg] rounded-t-lg px-2" >
+    <View>
+      <View className="flex h-full justify-start bg-[--secondary-bg] rounded-t-lg" >
         <TextInput
           placeholder="Type your message..."
           placeholderTextColor="#666"
@@ -24,9 +24,10 @@ export default function PromptInput({ promptInput, onPromptInputChange, onSend, 
           editable={!disabled}
           textAlignVertical="top"
         />
-        {disabled ? (
-          <View className='flex w-[90%] mx-auto flex-row gap-x-1 items-center justify-center bg-blue-500/20 rounded-md p-2'>
-            <Text className='!text-white text-lg'>Responding...</Text>
+        <View className="bg-[--secondary-bg]">
+          {disabled ? (
+            <View className='flex w-[90%] mx-auto flex-row gap-x-1 items-center justify-center bg-blue-500/20 rounded-md p-2'>
+              <Text className='!text-white text-lg'>Responding...</Text>
             <ActivityIndicator size="small" color="#fff" />
           </View>
         ) : (
@@ -35,6 +36,7 @@ export default function PromptInput({ promptInput, onPromptInputChange, onSend, 
             <PaperPlaneTilt size={14} color="white" />
           </TouchableOpacity>
         )}
+        </View>
       </View>
     </View >
   );

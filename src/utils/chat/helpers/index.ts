@@ -22,19 +22,7 @@ export const DUMMY_MESSAGES: ChatMessage[] = [
   },
   {
     uuid: "2",
-    content: "I'm good, thank you!",
-    role: "assistant",
-    createdAt: new Date(),
-  },
-  {
-    uuid: "3",
-    content: "What is the capital of France?",
-    role: "user",
-    createdAt: new Date(),
-  },
-  {
-    uuid: "4",
-    content: "The capital of France is Paris. This is a test of a long message that should wrap around the screen. how does it look? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    content: "<think>The user is going to ask about the weather and the weather is sunny as long as the user doesn't ask about the weather in the past 10 minutes</think>\n\nHello, how are you?",
     role: "assistant",
     createdAt: new Date(),
   },

@@ -1,9 +1,9 @@
-import { ActivityIndicator, NativeEventEmitter, Text, TouchableOpacity, View, RefreshControl } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View, RefreshControl } from "react-native";
 import SafeView from "@/components/SafeView";
 import TopBar from "@/components/TopBar";
 import useRedirect from "@/hooks/useRedirect";
 import useChatInfoEmit from "./useChatInfoEmit";
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 import { FlatList } from "react-native-gesture-handler";
 import PromptInput from "./PromptInput";
 import useLlmPreference from "@/hooks/useLLMPreference";
@@ -213,7 +213,7 @@ export default function WorkspaceChat() {
   return (
     <SafeView scrollable={false}>
       <TopBar />
-      <View className="h-[85vh] pb-20">
+      <View className="h-[86vh] pb-20">
         <ThreadResetAlert />
         <Text className="text-white/50 text-xs font-mono py-1">
           {wsSlug}/{threadSlug}

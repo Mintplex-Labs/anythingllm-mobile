@@ -26,6 +26,30 @@ export const DUMMY_MESSAGES: ChatMessage[] = [
     role: "assistant",
     createdAt: new Date(),
   },
+  {
+    uuid: "3",
+    content: "Hello, how are you?",
+    role: "user",
+    createdAt: new Date(),
+  },
+  {
+    uuid: "4",
+    content: Array(10).fill("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.").join("\n"),
+    role: "assistant",
+    createdAt: new Date(),
+  },
+  {
+    uuid: "5",
+    content: "Hello, how are you?",
+    role: "user",
+    createdAt: new Date(),
+  },
+  {
+    uuid: "6",
+    content: Array(10).fill("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.").join("\n"),
+    role: "assistant",
+    createdAt: new Date(),
+  },
 ]
 
 /**

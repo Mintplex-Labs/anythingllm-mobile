@@ -31,7 +31,7 @@ type IContent = {
 }
 
 export type IStreamEvent = 'chunk' | 'complete' | 'abort';
-type IStreamCallback = (event: IStreamEvent, response: string | object) => void;
+export type IStreamCallback = (event: IStreamEvent, response: string | object) => void;
 
 export type IAttachment = {
   contentString: string;

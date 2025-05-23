@@ -87,9 +87,9 @@ class ChatQnnModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
     }
 
     @ReactMethod
-    fun loadModel(promise: Promise) {
+    fun loadModel(modelFolderName: String, promise: Promise) {
         try {
-            genieWrapperHandle = genieLoader()
+            genieWrapperHandle = genieLoader(modelFolderName)
             promise.resolve(true)
         } catch (e: Exception) {
             Log.e(TAG, "Error loading model: ${e.message}")
@@ -98,11 +98,11 @@ class ChatQnnModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
     }
 
     @ReactMethod
-    fun generateResponse(prompt: String, promise: Promise) {
+    fun generateResponse(modelFolderName: String, prompt: String, promise: Promise) {
         try {
             if (genieWrapperHandle == 0L) {
-                Log.d(TAG, "Genie model not loaded, loading model")
-                genieLoader()
+                Log.d(TAG, "Genie model not loaded, auto-loading model")
+                genieLoader(modelFolderName)
             }
 
             executorService.execute {
@@ -121,10 +121,32 @@ class ChatQnnModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
         }
     }
 
-    private fun genieLoader(): Long {
+    @ReactMethod
+    fun unloadModel(promise: Promise) {
         try {
-            val modelDirPath = copyFilesToModelDir()
-            val htpConfigPath = File(reactContext.filesDir, "models/htp_config/qualcomm-snapdragon-8-elite.json").absolutePath
+            if (genieWrapperHandle == 0L) {
+                Log.d(TAG, "No handle to unload - skipping")
+                promise.resolve(true)
+                return
+            }
+
+            executorService.execute {
+                freeModel(genieWrapperHandle)
+                promise.resolve(true)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error unloading model: ${e.message}")
+            promise.reject("UNLOAD_MODEL_ERROR", e.message)
+        }
+    }
+
+    private fun genieLoader(modelFolderName: String): Long {
+        try {
+            val modelDirPath = copyFilesToModelDir(modelFolderName)
+
+            // TODO:
+            // We only support the 8 Elite right now - so this config is hardcoded. When we support more, we'll need to make this dynamic.
+            val htpConfigPath = File(reactContext.filesDir, "htp_config/qualcomm-snapdragon-8-elite.json").absolutePath
             
             Log.d(TAG, "Loading model from: $modelDirPath")
             Log.d(TAG, "HTP config path: $htpConfigPath")
@@ -146,10 +168,9 @@ class ChatQnnModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
         }
     }
 
-    private fun copyFilesToModelDir(): String {
+    private fun copyFilesToModelDir(modelTargetDir: String): String {
         try {
             // Create model directory
-            val modelTargetDir = "phi35mini"
             val modelDir = File(reactContext.filesDir, "models/$modelTargetDir")
             if (!modelDir.exists()) modelDir.mkdirs()
 
@@ -160,7 +181,7 @@ class ChatQnnModule(reactContext: ReactApplicationContext) : ReactContextBaseJav
             val filesToCopy = listOf(
                 "models/$modelTargetDir/genie_config.json" to "genie_config.json",
                 "models/$modelTargetDir/tokenizer.json" to "tokenizer.json",
-                "htp_config/qualcomm-snapdragon-8-elite.json" to "../htp_config/qualcomm-snapdragon-8-elite.json"
+                "htp_config/qualcomm-snapdragon-8-elite.json" to "../../../htp_config/qualcomm-snapdragon-8-elite.json"
             )
 
             for ((sourcePath, destName) in filesToCopy) {

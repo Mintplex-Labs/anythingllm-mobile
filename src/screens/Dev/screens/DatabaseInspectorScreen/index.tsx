@@ -7,10 +7,11 @@ import {
   SafeAreaView,
   Alert,
 } from 'react-native';
-import { Card, Button } from 'react-native-paper';
+import { Card, Button, TextInput } from 'react-native-paper';
 import { database } from '@/database';
 import { useNavigation } from '@react-navigation/native';
 import { PATHS } from '@/utils/paths';
+import uiStore from '@/store/UIStore';
 
 // Define the collections we want to inspect
 const COLLECTIONS = [
@@ -27,6 +28,13 @@ const DatabaseInspectorScreen = () => {
     null,
   );
   const [selectedRecord, setSelectedRecord] = useState<any | null>(null);
+  const [llmpref, setLlmPref] = useState<{provider: string, config: {model: string}} | null>(null);
+
+  useEffect(() => {
+    uiStore.getFromStorage('llmPreference', {provider: 'openai', config: {model: 'gpt-4'}}).then((value) => {
+      setLlmPref(value);
+    });
+  }, []);
 
   // Load data for all collections
   const loadAllCollections = async () => {
@@ -223,10 +231,10 @@ const DatabaseInspectorScreen = () => {
   return (
     <SafeAreaView>
       <View>
-        <Text>Database Inspector</Text>
+        <Text className="text-2xl font-bold text-black">Database Inspector</Text>
         <TouchableOpacity
           onPress={() => navigation.navigate(PATHS.home as never)}>
-          <Text>Close</Text>
+          <Text className="text-black">Close</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={async () => {
@@ -237,7 +245,7 @@ const DatabaseInspectorScreen = () => {
             }
           })
         }}>
-          <Text>Reset Database</Text>
+          <Text className="text-red-500">Reset Database</Text>
         </TouchableOpacity>
 
       </View>
@@ -248,6 +256,28 @@ const DatabaseInspectorScreen = () => {
             ? renderRecordList()
             : renderCollectionList()}
       </ScrollView>
+
+      <View className="flex flex-col gap-y-4">
+        <Text className="text-2xl font-bold text-black">LLM Manager</Text>
+        <View className="flex flex-col gap-y-4">  
+          <TextInput
+            placeholder="Provider"
+            value={llmpref?.provider}
+            // @ts-ignore
+            onChangeText={(text: string) => setLlmPref({...llmpref, provider: text})}
+          />
+          <TextInput
+            placeholder="Model"
+            value={llmpref?.config?.model}
+            // @ts-ignore
+            onChangeText={(text: string) => setLlmPref({...llmpref, config: {...llmpref?.config, model: text}})}
+          />
+        </View>
+        <TouchableOpacity onPress={() => uiStore.setToStorage('llmPreference', llmpref)}>
+          <Text className="text-blue-500">Save LLM Preference</Text>
+        </TouchableOpacity>
+       
+      </View>
     </SafeAreaView>
   );
 };

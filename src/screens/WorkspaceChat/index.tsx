@@ -1,4 +1,4 @@
-import { ActivityIndicator, NativeEventEmitter, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, NativeEventEmitter, Text, TouchableOpacity, View, RefreshControl } from "react-native";
 import SafeView from "@/components/SafeView";
 import TopBar from "@/components/TopBar";
 import useRedirect from "@/hooks/useRedirect";
@@ -24,13 +24,14 @@ export interface ChatMessage {
 export default function WorkspaceChat() {
   useRedirect();
   const { wsSlug, threadSlug } = useChatInfoEmit();
-  const { LLMProvider, isLoading: isLoadingProvider } = useLlmPreference();
+  const { LLMProvider, isLoading: isLoadingProvider, error, fetchLLMPreference } = useLlmPreference();
 
   // State for messages and streaming
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [promptDisabled, setPromptDisabled] = useState(false);
   const [promptInput, setPromptInput] = useState('');
   const flatListRef = useRef<FlatList>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   function scrollToBottom() {
     flatListRef.current?.scrollToEnd({ animated: true });
@@ -159,12 +160,38 @@ export default function WorkspaceChat() {
     }
   }, [addMessage, messages, LLMProvider, promptInput]);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      // TODO: Make backend call to fetch messages
+      // For now, just reload the current messages to clear the UI
+      setMessages([]);
+      await fetchLLMPreference();
+    } catch (error) {
+      console.error('Error refreshing messages:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [messages]);
+
   if (isLoadingProvider) {
     return (
       <SafeView scrollable={false}>
         <TopBar />
-        <View className="flex h-[90vh] justify-center items-center">
+        <View className="flex h-[80vh] justify-center items-center">
           <ActivityIndicator size="large" color="#fff" />
+        </View>
+      </SafeView>
+    );
+  }
+
+  if (!!error) {
+    return (
+      <SafeView scrollable={false}>
+        <TopBar />
+        <View className="flex h-[80vh] justify-center items-center">
+          <Text className="text-red-500">Error loading LLM provider</Text>
+          <Text className="text-red-500">{error.message}</Text>
         </View>
       </SafeView>
     );
@@ -173,7 +200,7 @@ export default function WorkspaceChat() {
   return (
     <SafeView scrollable={false}>
       <TopBar />
-      <View className="h-[90vh]">
+      <View className="h-[85vh]">
         <ThreadResetAlert />
         <Text className="text-white/50 text-xs font-mono py-1">
           {wsSlug}/{threadSlug}
@@ -187,8 +214,16 @@ export default function WorkspaceChat() {
           data={messages}
           renderItem={renderMessage}
           keyExtractor={item => item.uuid}
-          className="flex px-4 mb-[25vh]"
+          className="flex px-4 pt-4 mb-[25vh]"
           contentContainerStyle={{ flexGrow: 1, }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor="#fff"
+              colors={["#fff"]}
+            />
+          }
           ListEmptyComponent={() => (
             <View className="flex-1 justify-center items-center gap-y-4">
               <Text className="text-white/50">Send your first message!</Text>
@@ -202,7 +237,7 @@ export default function WorkspaceChat() {
             </View>
           )}
         />
-        <View className="absolute bottom-0 left-0 right-0 h-[20vh]">
+        <View className="absolute bottom-0 left-0 right-0 h-[23vh]">
           <PromptInput
             promptInput={promptInput}
             onPromptInputChange={setPromptInput}

@@ -6,17 +6,19 @@ import {
 } from '@react-navigation/drawer';
 import useTheme from '@/hooks/useTheme';
 import { createStyles } from './styles';
-import { Plus, BookOpen, GithubLogo } from 'phosphor-react-native';
+import { Plus, BookOpen, GithubLogo, Brain } from 'phosphor-react-native';
 import WorkspaceItem from './WorkspaceItem';
 import useWorkspaces from '@/hooks/useWorkspaces';
 import NewWorkspaceModal, { useNewWorkspaceModal } from '@/components/NewWorkspaceModal';
 import WorkspaceThread from '@/database/models/WorkspaceThread';
 import { PATHS } from '@/utils/paths';
+import SafeView from '../SafeView';
+import { useNavigation } from '@react-navigation/native';
 
 const eventEmitter = new NativeEventEmitter();
 export default function SidebarContent() {
   const theme = useTheme();
-  const styles = createStyles(theme);
+  const navigation = useNavigation();
   const { workspaces, activeWorkspaceSlug, setActiveWorkspaceSlug, activeThreadSlug, fetchWorkspaces } = useWorkspaces(true);
   const { showNewWorkspaceModal, openNewWorkspaceModal, closeNewWorkspaceModal } = useNewWorkspaceModal();
   const [refreshing, setRefreshing] = useState(false);
@@ -48,9 +50,9 @@ export default function SidebarContent() {
   }
 
   return (
-    <Fragment>
-      <GestureHandlerRootView style={styles.sidebarContainer}>
-        <View className='flex-1 bg-[--primary-bg] pt-10 px-4'>
+    <SafeView applyInsets={false} containerClassNames='flex-1 flex-col flex px-2 pt-4' edges={['top', 'bottom']}>
+      <GestureHandlerRootView>
+        <View className='flex-1 bg-[--primary-bg]'>
           <TouchableOpacity
             className='p-2 py-4 rounded-lg bg-white flex-row items-center justify-center gap-x-1'
             activeOpacity={0.8}
@@ -84,7 +86,7 @@ export default function SidebarContent() {
           </DrawerContentScrollView>
 
           {/* Sticky Bottom Icons */}
-          <View className='flex-row justify-around items-center py-4 border-t border-white/20'>
+          <View className='flex-row justify-around items-center p-4 border-t border-white/20'>
             <TouchableOpacity onPress={() => Linking.openURL('https://docs.anythingllm.com')}>
               <BookOpen size={28} color={theme.colors.anythingllm.text.primary} />
             </TouchableOpacity>
@@ -92,10 +94,14 @@ export default function SidebarContent() {
             <TouchableOpacity onPress={() => Linking.openURL('https://github.com/mintplex-labs/anything-llm')}>
               <GithubLogo size={28} color={theme.colors.anythingllm.text.primary} />
             </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => navigation.navigate(PATHS.onboarding.model_selection as never)}>
+              <Brain size={28} color={theme.colors.anythingllm.text.primary} />
+            </TouchableOpacity>
           </View>
         </View>
       </GestureHandlerRootView>
       <NewWorkspaceModal showing={showNewWorkspaceModal} close={closeNewWorkspaceModal} />
-    </Fragment>
+    </SafeView>
   );
 }

@@ -20,6 +20,7 @@ async function confirmSelection(
   navigation: NavigationProp<any>
 ) {
   const saveAndNavigate = async () => {
+    console.log('saveAndNavigate::llmPreference', selection)
     await uiStore.setToStorage('onboarding_model_selection_completed', true);
     await uiStore.setToStorage('llmPreference', selection)
     navigation.navigate(PATHS.home as never)
@@ -61,6 +62,7 @@ export default function OnboardingModelSelection() {
       config
     }
     setSelection(newSelection);
+    // @ts-ignore
     if (autoConfirm) confirmSelection(newSelection, setIsLoading, autoConfirm, navigation);
   }
 

@@ -24,7 +24,7 @@ export default class OpenAILite {
     }
   }
 
-  constructor({ apiKey, baseURL }: { apiKey?: string | null, baseURL?: string }) {
+  constructor({ apiKey, baseURL }: { apiKey?: string | null, baseURL?: string } = {}) {
     this.apiKey = apiKey || this.apiKey;
     this.baseURL = baseURL || this.baseURL;
   }

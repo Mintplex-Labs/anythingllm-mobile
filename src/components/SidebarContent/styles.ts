@@ -5,6 +5,10 @@ export const createStyles = (theme: MD3Theme) =>
   StyleSheet.create({
     sidebarContainer: {
       flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      paddingTop: "15%",
+      paddingBottom: "10%",
       backgroundColor: theme.colors.surface,
     },
     divider: {

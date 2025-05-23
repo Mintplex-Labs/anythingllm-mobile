@@ -7,6 +7,7 @@ interface SafeViewProps {
   children: React.ReactNode;
   safeAreaClassNames?: string;
   containerClassNames?: string;
+  applyInsets?: boolean;
 }
 
 export default function SafeView({
@@ -14,18 +15,20 @@ export default function SafeView({
   scrollable = true,
   safeAreaClassNames = '',
   containerClassNames = '',
+  applyInsets = true,
   children
 }: SafeViewProps) {
   const insets = useSafeAreaInsets();
+  const containerClassInitial = applyInsets ? `p-4 pb-[${insets.bottom}px]` : '';
 
   return (
     <SafeAreaView className={`h-full bg-[--primary-bg] ${safeAreaClassNames}`} edges={edges}>
       {scrollable ? (
-        <ScrollView contentContainerClassName={`p-4 pb-[${insets.bottom}px] ${containerClassNames}`}>
+        <ScrollView contentContainerClassName={`${containerClassInitial} ${containerClassNames}`}>
           {children}
         </ScrollView>
       ) : (
-        <View className={`p-4 pb-[${insets.bottom}px] ${containerClassNames}`}>
+        <View className={`${containerClassInitial} ${containerClassNames}`}>
           {children}
         </View>
       )}

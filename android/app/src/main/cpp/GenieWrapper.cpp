@@ -13,7 +13,6 @@
 #include "GenieCommon.h"
 #include "GenieDialog.h"
 #include "GenieWrapper.hpp"
-#include "PromptHandler.hpp"
 
 using namespace App;
 
@@ -156,6 +155,15 @@ GenieWrapper::~GenieWrapper()
     }
 }
 
+/** 
+ * GetResponseForPrompt: Get response from Genie
+ * 
+ * @param user_prompt -THIS MUST BE THE PROMPT AS A STRING FULLY TEMPLATED
+ * @param env -JNIEnv
+ * @param callback -Jobject callback
+ * @param onNewStringMethod -JmethodID onNewStringMethod
+ * @return -String response from Genie
+ */
 std::string GenieWrapper::GetResponseForPrompt(const std::string& user_prompt,
                                                JNIEnv* env,
                                                jobject callback,
@@ -168,12 +176,9 @@ std::string GenieWrapper::GetResponseForPrompt(const std::string& user_prompt,
         .env = env, .callback = callback, .on_new_string_method = onNewStringMethod, .data = model_response
     };
 
-    std::string tagged_prompt = prompt_handler.GetPromptWithTag(user_prompt);
-    // Get response from Genie
-    if (GENIE_STATUS_SUCCESS != GenieDialog_query(m_dialog_handle, tagged_prompt.c_str(),
+    if (GENIE_STATUS_SUCCESS != GenieDialog_query(m_dialog_handle, user_prompt.c_str(),
                                                   GenieDialog_SentenceCode_t::GENIE_DIALOG_SENTENCE_COMPLETE,
-                                                  GenieCallBack, &user_data))
-    {
+                                                  GenieCallBack, &user_data)) {
         __android_log_print(ANDROID_LOG_ERROR, "ChatApp", "Failed to get response from bot.");
     }
 

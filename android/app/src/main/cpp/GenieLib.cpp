@@ -13,17 +13,13 @@
 extern "C" JNIEXPORT jlong JNICALL Java_com_anythingllm_chatqnn_ChatQnnModule_loadModel(JNIEnv* env,
                                                                                    jobject /* this */,
                                                                                    jstring model_dir_path,
-                                                                                   jstring htp_config_path)
-{
-    try
-    {
+                                                                                   jstring htp_config_path) {
+    try {
         // Get UTF-8 strings from JNI
         const char* model_dir_chars = env->GetStringUTFChars(model_dir_path, nullptr);
         const char* htp_config_chars = env->GetStringUTFChars(htp_config_path, nullptr);
         
-        if (!model_dir_chars || !htp_config_chars) {
-            throw std::runtime_error("Failed to get UTF-8 strings from JNI");
-        }
+        if (!model_dir_chars || !htp_config_chars) throw std::runtime_error("Failed to get UTF-8 strings from JNI");
 
         // Convert to std::string
         std::string model_dir = model_dir_chars;
@@ -46,9 +42,7 @@ extern "C" JNIEXPORT jlong JNICALL Java_com_anythingllm_chatqnn_ChatQnnModule_lo
 
         App::GenieWrapper* chatApp = new App::GenieWrapper(model_config_path.string(), model_dir, htp_config, tokenizer_path.string());
         return reinterpret_cast<jlong>(chatApp);
-    }
-    catch (std::exception& e)
-    {
+    } catch (std::exception& e) {
         jclass exception_cls = env->FindClass("java/lang/RuntimeException");
         env->ThrowNew(exception_cls, e.what());
         return 0;
@@ -58,23 +52,20 @@ extern "C" JNIEXPORT jlong JNICALL Java_com_anythingllm_chatqnn_ChatQnnModule_lo
 extern "C" JNIEXPORT void JNICALL Java_com_anythingllm_chatqnn_ChatQnnModule_getResponseForPrompt(JNIEnv* env,
                                                                                              jobject /* this */,
                                                                                              jlong genie_wrapper_handle,
-                                                                                             jstring user_question,
-                                                                                             jobject callback)
-{
-    try
-    {
-        // Get callback method
+                                                                                             jstring templated_prompt,
+                                                                                             jobject callback) {
+    try {
+        __android_log_print(ANDROID_LOG_INFO, "GenieLib", "getResponseForPrompt");
         jclass callbackClass = env->GetObjectClass(callback);
         jmethodID onNewStringMethod = env->GetMethodID(callbackClass, "onNewString", "(Ljava/lang/String;)V");
 
-        std::string user_input = env->GetStringUTFChars(user_question, 0);
+        std::string completion_prompt = env->GetStringUTFChars(templated_prompt, 0);
+        __android_log_print(ANDROID_LOG_INFO, "GenieLib", "completion_prompt: %s", completion_prompt.c_str());
 
-        // Get response from Genie
         App::GenieWrapper* myClass = reinterpret_cast<App::GenieWrapper*>(genie_wrapper_handle);
-        auto response = myClass->GetResponseForPrompt(user_input, env, callback, onNewStringMethod);
-    }
-    catch (std::exception& e)
-    {
+        auto response = myClass->GetResponseForPrompt(completion_prompt, env, callback, onNewStringMethod);
+    } catch (std::exception& e){
+        __android_log_print(ANDROID_LOG_ERROR, "GenieLib", "Exception: %s", e.what());
         jclass exception_cls = env->FindClass("java/lang/RuntimeException");
         env->ThrowNew(exception_cls, e.what());
     }
@@ -82,15 +73,13 @@ extern "C" JNIEXPORT void JNICALL Java_com_anythingllm_chatqnn_ChatQnnModule_get
 
 extern "C" JNIEXPORT void JNICALL Java_com_anythingllm_chatqnn_ChatQnnModule_freeModel(JNIEnv* env,
                                                                                   jobject /* this */,
-                                                                                  jlong genie_wrapper_handle)
-{
-    try
-    {
+                                                                                  jlong genie_wrapper_handle) {
+    try {
+        __android_log_print(ANDROID_LOG_INFO, "GenieLib", "Freeing GenieWrapper");
         App::GenieWrapper* genie_wrapper = reinterpret_cast<App::GenieWrapper*>(genie_wrapper_handle);
         delete genie_wrapper;
-    }
-    catch (std::exception& e)
-    {
+    } catch (std::exception& e) {
+        __android_log_print(ANDROID_LOG_ERROR, "GenieLib", "Exception: %s", e.what());
         jclass exception_cls = env->FindClass("java/lang/RuntimeException");
         env->ThrowNew(exception_cls, e.what());
     }

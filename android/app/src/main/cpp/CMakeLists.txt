@@ -22,7 +22,6 @@ include_directories(${GENIE_HEADERS_PATH})
 message(STATUS "Source files: ${CMAKE_CURRENT_SOURCE_DIR}/GenieLib.cpp")
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
-        ${CMAKE_CURRENT_SOURCE_DIR}/PromptHandler.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/GenieWrapper.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/GenieLib.cpp)
 

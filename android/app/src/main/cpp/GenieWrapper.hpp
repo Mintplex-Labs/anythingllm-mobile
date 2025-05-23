@@ -9,7 +9,6 @@
 
 #include "GenieCommon.h"
 #include "GenieDialog.h"
-#include "PromptHandler.hpp"
 
 namespace App
 {
@@ -22,7 +21,6 @@ class GenieWrapper
     GenieDialogConfig_Handle_t m_config_handle = nullptr;
     GenieDialog_Handle_t m_dialog_handle = nullptr;
     std::string m_user_name;
-    AppUtils::PromptHandler prompt_handler;
 
   public:
     /**

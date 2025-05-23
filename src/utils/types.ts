@@ -301,6 +301,8 @@ export interface NPUEnabledModel {
   origin: ModelOrigin.ANYTHINGLLM;
   cdnUrls: string[];
   modelId: string;
+  defaultChatTemplate: ChatTemplateConfig;
+  chatTemplate: ChatTemplateConfig;
 }
 
 export namespace MessageType {

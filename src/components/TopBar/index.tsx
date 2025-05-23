@@ -3,15 +3,17 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { List } from 'phosphor-react-native';
+import { DevSettings } from 'react-native';
 
 export default function TopBar() {
   const navigation = useNavigation<DrawerNavigationProp<any>>();
 
   return (
     <Fragment>
-      <View className="flex flex-row items-center justify-between px-4 py-3">
+      <View className="flex flex-row items-center justify-between px-4 py-3 mt-4">
         <TouchableOpacity
           onPress={() => navigation.openDrawer()}
+          onLongPress={() => DevSettings.reload()}
         >
           <List size={24} color="white" />
         </TouchableOpacity>

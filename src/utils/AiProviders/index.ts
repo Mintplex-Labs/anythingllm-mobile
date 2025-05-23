@@ -1,12 +1,9 @@
 import OpenAICompatible from "./openAICompatible";
 import OnDeviceProvider from "./onDevice";
-function getLLM(provider: string, config: { [key: string]: any } = {}) {
-  // temp
-  return new OnDeviceProvider({
-    provider: 'genie',
-    config: { model: 'Qwen/Qwen3-0.6B-GGUF/Qwen3-0.6B-Q8_0.gguf' }
-  })
 
+export type LLMProvider = OpenAICompatible | OnDeviceProvider;
+function getLLM(provider: string, config: { [key: string]: any } = {}): LLMProvider {
+  console.log('getLLM', { provider, config });
   switch (provider) {
     case 'openai':
       return new OpenAICompatible({
@@ -16,6 +13,11 @@ function getLLM(provider: string, config: { [key: string]: any } = {}) {
           modelId: config.modelId,
         }
       });
+    case 'native':
+      return new OnDeviceProvider({
+        provider: 'native',
+        config: { model: config.model }
+      })
     default:
       throw new Error(`Provider ${provider} not supported`);
   }

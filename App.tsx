@@ -27,7 +27,6 @@ const App = observer(() => {
   const styles = rootStyles(theme);
   const { initialRoute, isLoading } = useInitialRoute();
 
-  console.log('initialRoute', initialRoute);
 
   if (isLoading) return (
     <SafeAreaProvider>
@@ -36,6 +35,8 @@ const App = observer(() => {
       </SafeView>
     </SafeAreaProvider>
   );
+
+  console.log('initialRoute', initialRoute);
   return (
     <Suspense fallback={<ActivityIndicator />}>
       <GestureHandlerRootView style={styles.root}>

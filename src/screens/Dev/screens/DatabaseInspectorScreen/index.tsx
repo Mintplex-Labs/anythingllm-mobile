@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   TextInput
 } from 'react-native';
-import { Card, Button  } from 'react-native-paper';
+import { Card, Button } from 'react-native-paper';
 import { database } from '@/database';
 import { useNavigation } from '@react-navigation/native';
 import { PATHS } from '@/utils/paths';
@@ -29,10 +29,10 @@ const DatabaseInspectorScreen = () => {
     null,
   );
   const [selectedRecord, setSelectedRecord] = useState<any | null>(null);
-  const [llmpref, setLlmPref] = useState<{provider: string, config: {model: string}} | null>(null);
+  const [llmpref, setLlmPref] = useState<{ provider: string, config: { model: string } } | null>(null);
 
   useEffect(() => {
-    uiStore.getFromStorage('llmPreference', {provider: 'openai', config: {model: 'gpt-4'}}).then((value) => {
+    uiStore.getFromStorage('llmPreference', { provider: 'openai', config: { model: 'gpt-4' } }).then((value) => {
       setLlmPref(value);
     });
   }, []);
@@ -258,38 +258,51 @@ const DatabaseInspectorScreen = () => {
             : renderCollectionList()}
       </ScrollView>
 
+      <View className="flex flex-col gap-y-4 m-2">
+        <TouchableOpacity
+          className='bg-blue-500 rounded-md p-4'
+          onPress={() => {
+            uiStore.setToStorage('onboarding_welcome_completed', false);
+            uiStore.setToStorage('onboarding_model_selection_completed', false);
+          }}>
+          <Text className="text-white">Reset onboarding</Text>
+        </TouchableOpacity>
+      </View>
+
+
       <View className="flex flex-col gap-y-4">
         <Text className="text-2xl font-bold text-black">LLM Manager</Text>
-        
+
         <KeyboardAccessoryView
           useListenersOnAndroid={true}
           renderScrollable={(panHandlers) => (
-            <View className="flex flex-col gap-y-4 h-[200px]" {...panHandlers}>
+            <View className="flex flex-col gap-y-4 h-[100vh]" {...panHandlers}>
               <View className="flex flex-col gap-y-4">
                 <TextInput
                   placeholder="Provider"
                   className="px-2 rounded-md text-lg text-white bg-[--secondary-bg]"
                   value={llmpref?.provider}
                   // @ts-ignore
-                  onChangeText={(text: string) => setLlmPref({...llmpref, provider: text})}
-              />
-              <TextInput
-                placeholder="Model"
-                className="px-2 rounded-md text-lg text-white bg-[--secondary-bg]"
-                value={llmpref?.config?.model}
-                // @ts-ignore
-                onChangeText={(text: string) => setLlmPref({...llmpref, config: {...llmpref?.config, model: text}})}
-              />
-            </View>
-            <TouchableOpacity onPress={() => uiStore.setToStorage('llmPreference', llmpref)}>
-              <Text className="text-blue-500">Save LLM Preference</Text>
-            </TouchableOpacity>
+                  onChangeText={(text: string) => setLlmPref({ ...llmpref, provider: text })}
+                />
+                <TextInput
+                  placeholder="Model"
+                  className="px-2 rounded-md text-lg text-white bg-[--secondary-bg]"
+                  value={llmpref?.config?.model}
+                  // @ts-ignore
+                  onChangeText={(text: string) => setLlmPref({ ...llmpref, config: { ...llmpref?.config, model: text } })}
+                />
+              </View>
+              <TouchableOpacity onPress={() => uiStore.setToStorage('llmPreference', llmpref)}>
+                <Text className="text-blue-500">Save LLM Preference</Text>
+              </TouchableOpacity>
             </View>
           )}
         >
-          
         </KeyboardAccessoryView>
       </View>
+
+
     </SafeAreaView>
   );
 };

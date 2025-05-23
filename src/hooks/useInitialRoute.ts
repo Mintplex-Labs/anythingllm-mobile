@@ -14,6 +14,8 @@ type InitialRoute = {
 async function determineInitialRoute() {
   const welcomeCompleted = await uiStore.getFromStorage('onboarding_welcome_completed', false);
   const modelSelectionCompleted = await uiStore.getFromStorage('onboarding_model_selection_completed', false);
+  console.log('welcomeCompleted', welcomeCompleted);
+  console.log('modelSelectionCompleted', modelSelectionCompleted);
   if (!welcomeCompleted) return PATHS.onboarding.welcome;
   else if (!modelSelectionCompleted) return PATHS.onboarding.model_selection;
   else return DEFAULT_INITIAL_ROUTE;
@@ -31,12 +33,20 @@ export default function useInitialRoute(): { initialRoute: InitialRoute, isLoadi
   const [isLoading, setIsLoading] = useState(true);
 
   // Debugging for storage
-  uiStore.getAllFromStorage().then(console.log);
+  // uiStore.getAllFromStorage().then(console.log);
 
   useEffect(() => {
     async function checkForInitialRoute() {
       const staticRoute = await determineInitialRoute();
 
+      // If the user is not onboarded, we need to redirect them to the onboarding flow
+      if (staticRoute !== DEFAULT_INITIAL_ROUTE) {
+        setInitialRoute({ path: staticRoute, params: {} });
+        setIsLoading(false);
+        return;
+      }
+
+      // If the user is onboarded and has no workspaces, we need to redirect them to the onboarding flow
       const workspaces = await Workspace.getAll(true);
       if (workspaces.length === 0) {
         setInitialRoute({ path: staticRoute, params: {} });
@@ -44,6 +54,7 @@ export default function useInitialRoute(): { initialRoute: InitialRoute, isLoadi
         return;
       }
 
+      // If the user is onboarded and has workspaces, we need to redirect them to the workspace chat of the first workspace/thread
       const workspace = workspaces[0];
       const thread = workspace.threads[0] || await WorkspaceThread.create({ workspaceSlug: workspace.slug });
       setInitialRoute({ path: PATHS.workspace_chat, params: { wsSlug: workspace.slug, threadSlug: thread.slug } });
@@ -52,11 +63,6 @@ export default function useInitialRoute(): { initialRoute: InitialRoute, isLoadi
     }
 
     checkForInitialRoute();
-    // determineInitialRoute()
-    //   .then((initialRoute) => {
-    //     setInitialRoute(initialRoute);
-    //   })
-    //   .finally(() => setIsLoading(false));
   }, []);
 
   return { initialRoute, isLoading };

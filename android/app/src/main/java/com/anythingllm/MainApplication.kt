@@ -13,6 +13,7 @@ import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
 import com.anythingllm.download.DownloadPackage
 import com.anythingllm.chatqnn.ChatQnnPackage
+import com.anythingllm.storage.StoragePackage
 
 class MainApplication : Application(), ReactApplication {
 
@@ -26,6 +27,7 @@ class MainApplication : Application(), ReactApplication {
               add(KeepAwakePackage())
               add(DownloadPackage())
               add(ChatQnnPackage())
+              add(StoragePackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

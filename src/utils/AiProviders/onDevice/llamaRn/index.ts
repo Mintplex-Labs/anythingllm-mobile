@@ -24,7 +24,7 @@ export default class LlamaRnWrapper {
   private keepAliveTimer: NodeJS.Timeout | null = null;
   private keepAliveInterval = 1000 * 60 * 5;
 
-  constructor({ model }: {model: string}) {
+  constructor({ model }: { model: string }) {
     this.model = model;
   }
 
@@ -33,12 +33,12 @@ export default class LlamaRnWrapper {
   }
 
   async determineGgufFilePath() {
-    if(!this.ggufFilePath) {
+    if (!this.ggufFilePath) {
       this.log(`GGUF file location is not yet set - getting from RNFS`);
       let path = `${RNFS.DocumentDirectoryPath}/models/gguf/${this.model}`;
 
-      if(path.endsWith('.gguf')) {
-        if(await RNFS.exists(path)) {
+      if (path.endsWith('.gguf')) {
+        if (await RNFS.exists(path)) {
           this.ggufFilePath = path;
           this.log(`GGUF file found at ${this.ggufFilePath}`);
           return this.ggufFilePath;
@@ -52,7 +52,7 @@ export default class LlamaRnWrapper {
       this.log(`Expected GGUF file path is ${path}`);
       const files = await RNFS.readDir(path);
       const ggufFile = files.find(file => file.name.endsWith('.gguf'));
-      if(!ggufFile) throw new Error(`LlamaRnWrapper::ggufFilePath: No gguf file found for model ${this.model}`);
+      if (!ggufFile) throw new Error(`LlamaRnWrapper::ggufFilePath: No gguf file found for model ${this.model}`);
       this.ggufFilePath = `${path}/${ggufFile.name}`;
     }
     return this.ggufFilePath;
@@ -68,21 +68,13 @@ export default class LlamaRnWrapper {
 
   async initialize(): Promise<boolean> {
     try {
-      if(!!this.llamaRnContext) {
+      if (!!this.llamaRnContext) {
         this.log(`Context already loaded - skipping`);
         return true;
       }
 
-      if(!this.ggufFilePath) await this.determineGgufFilePath();
-      if(!this.ggufFilePath) throw new Error(`LlamaRnWrapper::initialize: No gguf file found for model ${this.model}`);
-
-      console.log({
-        model: this.ggufFilePath,
-        use_mlock: true,
-        n_ctx: this.modeDefinition?.defaultCompletionSettings?.n_predict ?? 2048,
-        n_gpu_layers: Platform.OS === 'ios' ? 99 : 0,
-        embedding: false,
-      })
+      if (!this.ggufFilePath) await this.determineGgufFilePath();
+      if (!this.ggufFilePath) throw new Error(`LlamaRnWrapper::initialize: No gguf file found for model ${this.model}`);
 
       this.llamaRnContext = await initLlama({
         model: this.ggufFilePath,
@@ -101,7 +93,7 @@ export default class LlamaRnWrapper {
   }
 
   private keepAlive() {
-    if(this.keepAliveTimer) this.log(`Keep alive timer already running - resetting timer for ${this.keepAliveInterval}ms`);
+    if (this.keepAliveTimer) this.log(`Keep alive timer already running - resetting timer for ${this.keepAliveInterval}ms`);
     else this.log(`Starting keep alive timer for ${this.keepAliveInterval}ms`);
     this.keepAliveTimer = setTimeout(() => {
       this.cleanup();
@@ -114,15 +106,15 @@ export default class LlamaRnWrapper {
    */
   async getChatCompletion(messages: NativeLlamaChatMessage[]): Promise<IResponse> {
     this.keepAlive();
-    if(!this.llamaRnContext) await this.initialize();
-    if(!this.llamaRnContext) throw new Error(`LlamaRnWrapper::streamGetChatCompletion: Model not initialized`);
+    if (!this.llamaRnContext) await this.initialize();
+    if (!this.llamaRnContext) throw new Error(`LlamaRnWrapper::streamGetChatCompletion: Model not initialized`);
 
     const msgResult: NativeCompletionResult = await this.llamaRnContext.completion({
       messages: messages,
       n_predict: this.modeDefinition?.defaultCompletionSettings?.n_predict ?? 2048,
       stop: stops,
     });
-    
+
     return {
       textResponse: msgResult.content,
       metrics: {
@@ -140,14 +132,14 @@ export default class LlamaRnWrapper {
    */
   async streamGetChatCompletion(messages: NativeLlamaChatMessage[], callback: (token: string) => void): Promise<IResponse> {
     this.keepAlive();
-    if(!this.llamaRnContext) await this.initialize();
-    if(!this.llamaRnContext) throw new Error(`LlamaRnWrapper::streamGetChatCompletion: Model not initialized`);
+    if (!this.llamaRnContext) await this.initialize();
+    if (!this.llamaRnContext) throw new Error(`LlamaRnWrapper::streamGetChatCompletion: Model not initialized`);
 
     const msgResult: NativeCompletionResult = await this.llamaRnContext.completion({
       messages: messages,
       n_predict: this.modeDefinition?.defaultCompletionSettings?.n_predict ?? 2048,
       stop: stops,
-    },  (data: {token: string}) => {
+    }, (data: { token: string }) => {
       const { token } = data;
       callback(token);
     });
@@ -166,7 +158,7 @@ export default class LlamaRnWrapper {
 
   async unloadModel(): Promise<void> {
     this.log('Unloading model');
-    if(this.llamaRnContext) await this.llamaRnContext.release();
+    if (this.llamaRnContext) await this.llamaRnContext.release();
     this.llamaRnContext = null;
   }
 

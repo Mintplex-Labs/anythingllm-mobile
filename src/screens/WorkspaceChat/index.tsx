@@ -1,4 +1,4 @@
-import { ActivityIndicator, Text, TouchableOpacity, View, RefreshControl } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View, RefreshControl, Alert } from "react-native";
 import SafeView from "@/components/SafeView";
 import TopBar from "@/components/TopBar";
 import useRedirect from "@/hooks/useRedirect";
@@ -7,12 +7,13 @@ import { useState, useCallback, useRef } from "react";
 import { FlatList } from "react-native-gesture-handler";
 import PromptInput from "./PromptInput";
 import useLlmPreference from "@/hooks/useLLMPreference";
-import { clearTempMessages, DUMMY_MESSAGES } from "@/utils/chat/helpers";
+import { clearTempMessages } from "@/utils/chat/helpers";
 import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { isDebugMode } from "@/utils/constants";
 import ThreadResetAlert from "./ThreadResetSnackbar";
 import { KeyboardAccessoryView } from '@/components/KeyboardAccessoryView';
 import { parseThinkingParts } from "@/utils/chat";
+import useAttachments, { Attachment } from "@/hooks/useAttachments";
 
 // Define the message type for our chat
 export interface ChatMessage {
@@ -20,7 +21,7 @@ export interface ChatMessage {
   content: string;
   role: "user" | "assistant";
   createdAt: Date;
-  attachments?: Object[];
+  attachments?: Attachment[];
   metrics?: Object;
 }
 
@@ -28,6 +29,7 @@ export default function WorkspaceChat() {
   useRedirect();
   const { wsSlug, threadSlug } = useChatInfoEmit();
   const { LLMProvider, isLoading: isLoadingProvider, error, fetchLLMPreference } = useLlmPreference();
+  const attachmentInterface = useAttachments();
 
   // State for messages and streaming
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -137,6 +139,7 @@ export default function WorkspaceChat() {
       clearTempMessages(setMessages).finally(() => {
         setPromptDisabled(false);
       });
+      attachmentInterface.clearAttachments();
       return;
     }
 
@@ -145,9 +148,11 @@ export default function WorkspaceChat() {
       content: prompt,
       role: "user",
       createdAt: new Date(),
+      attachments: attachmentInterface.attachments,
     };
     const messageHistory = [...messages, newMessage];
     addMessage(newMessage);
+    attachmentInterface.clearAttachments();
 
     try {
       if (!isDebugMode) setPromptDisabled(true);
@@ -179,6 +184,7 @@ export default function WorkspaceChat() {
       // TODO: Make backend call to fetch messages
       // For now, just reload the current messages to clear the UI
       setMessages([]);
+      attachmentInterface.clearAttachments();
       await fetchLLMPreference();
     } catch (error) {
       console.error('Error refreshing messages:', error);
@@ -215,12 +221,14 @@ export default function WorkspaceChat() {
       <TopBar />
       <View className="h-[86vh] pb-20">
         <ThreadResetAlert />
-        <Text className="text-white/50 text-xs font-mono py-1">
-          {wsSlug}/{threadSlug}
-        </Text>
-        <Text className="text-white/50 text-xs font-mono">
-          {LLMProvider.name}/{LLMProvider?.model}
-        </Text>
+        <TouchableOpacity onLongPress={onRefresh}>
+          <Text className="text-white/50 text-xs font-mono py-1">
+            {wsSlug}/{threadSlug}
+          </Text>
+          <Text className="text-white/50 text-xs font-mono">
+            {LLMProvider.name}/{LLMProvider?.model}
+          </Text>
+        </TouchableOpacity>
 
         <KeyboardAccessoryView
           useListenersOnAndroid={true}
@@ -261,9 +269,10 @@ export default function WorkspaceChat() {
             onPromptInputChange={setPromptInput}
             onSend={handleSendMessage}
             disabled={promptDisabled}
+            attachmentInterface={attachmentInterface}
           />
         </KeyboardAccessoryView>
       </View>
-    </SafeView>
+    </SafeView >
   );
 }

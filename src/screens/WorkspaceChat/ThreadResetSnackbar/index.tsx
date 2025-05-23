@@ -14,8 +14,12 @@ export default function ThreadResetAlert() {
     eventEmitter.addListener('threadReset', () => {
       setStatus({ visible: true, message: 'Thread chat history has been reset.' });
     });
+    eventEmitter.addListener('genericSnackbar', (message: string) => {
+      setStatus({ visible: true, message: message });
+    });
     return () => {
       eventEmitter.removeAllListeners('threadReset');
+      eventEmitter.removeAllListeners('genericSnackbar');
     };
   }, []);
 

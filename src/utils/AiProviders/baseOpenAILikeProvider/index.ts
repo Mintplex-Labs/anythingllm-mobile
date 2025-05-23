@@ -58,8 +58,10 @@ export default abstract class BaseOpenAILikeProvider {
     return this._provider;
   }
 
-  defaultSystemMessage() {
-    return 'You are a helpful assistant that can answer questions and help with tasks.';
+  defaultSystemMessage(contextTexts: string[] = []) {
+    const baseMessage = 'You are a helpful assistant that can answer questions and help with tasks.';
+    if (!contextTexts.length) return baseMessage;
+    return `${baseMessage}\n\nHere is some context that may be relevant to the conversation: ${contextTexts.join('\n\n')}`;
   }
 
   /**
@@ -85,11 +87,12 @@ export default abstract class BaseOpenAILikeProvider {
   * Construct the user prompt for this model.
   */
   private constructMessages({
-    // contextTexts = [],
+    contextTexts = [],
     chatHistory = [],
     userPrompt = "",
     attachments = [],
   }: {
+    contextTexts: string[];
     chatHistory: ChatMessage[];
     userPrompt: string;
     attachments?: IAttachment[];
@@ -99,7 +102,7 @@ export default abstract class BaseOpenAILikeProvider {
     // https://community.openai.com/t/o1-models-do-not-support-system-role-in-chat-completion/953880
     const prompt = {
       role: this.isOTypeModel ? "user" : "system",
-      content: this.defaultSystemMessage(), // TODO: Add contextTexts
+      content: this.defaultSystemMessage(contextTexts),
     };
 
     return [
@@ -119,9 +122,21 @@ export default abstract class BaseOpenAILikeProvider {
     if (messages.length === 0) throw new Error("Messages array must contain at least one element");
     const history = messages.slice(0, -1);
     const userPrompt = messages[messages.length - 1];
+
+    const contextTexts: string[] = [];
+    for (let attachment of userPrompt.attachments || []) {
+      if (!attachment.type.startsWith('text')) continue;
+      if (!attachment.content) continue;
+
+      // For demo, only take a small chunk of target document so we don't overwhelm the LLM
+      if (attachment.content.length <= 1000) contextTexts.push(attachment.content);
+      else contextTexts.push(attachment.content?.slice(4011, 5000) || '');
+    }
+
     return this.constructMessages({
       chatHistory: history,
       userPrompt: userPrompt.content,
+      contextTexts,
     });
   }
 

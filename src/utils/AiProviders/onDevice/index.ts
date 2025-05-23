@@ -30,7 +30,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     this.computeRuntime = this.determineComputeRuntime(this.config.model);
     this.model = this.config.model;
 
-    if(this.computeRuntime === 'NPU') this.submodule = new GenieWrapper({ model: this.model });
+    if (this.computeRuntime === 'NPU') this.submodule = new GenieWrapper({ model: this.model });
     else this.submodule = new LlamaRnWrapper({ model: this.model });
     this.log(`${this.name}::${this.submodule.name} initialized with model ${this.model}`);
   }
@@ -40,7 +40,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   }
 
   determineComputeRuntime = (modelName: string) => {
-    if(modelName.endsWith('.gguf')) return 'CPU';
+    if (modelName.endsWith('.gguf')) return 'CPU';
     const definition = defaultModels.find(m => m.id === modelName);
     return definition?.runtime || 'CPU';
   }
@@ -61,8 +61,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     onStream?: IStreamCallback;
   }) {
     const normalizedMessages = this.buildPrompt(messages);
-
-    if(!streaming) {
+    if (!streaming) {
       const response = await this.submodule.getChatCompletion(normalizedMessages as any);
       onComplete({
         uuid: Date.now().toString(),
@@ -72,8 +71,8 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
         metrics: response.metrics,
       });
       return;
-    } 
-    
+    }
+
     this.log(`Streaming ${this.model} with ${this.computeRuntime}`);
     await this.submodule.streamGetChatCompletion(normalizedMessages, (token: string) => onStream('chunk', token));
   }

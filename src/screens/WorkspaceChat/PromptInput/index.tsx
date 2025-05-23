@@ -1,43 +1,64 @@
-import { PaperPlaneTilt } from 'phosphor-react-native';
-import React from 'react';
-import { View, TextInput, TouchableOpacity, Text } from 'react-native';
+import { Paperclip, PaperPlaneTilt } from 'phosphor-react-native';
+import React, { Fragment } from 'react';
+import { View, TextInput, TouchableOpacity, Text, Keyboard } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
+import { AttachmentInterface } from '@/hooks/useAttachments';
 
 interface PromptInputProps {
   promptInput: string;
   onPromptInputChange: (text: string) => void;
   onSend: () => void;
   disabled?: boolean;
+  attachmentInterface: AttachmentInterface;
 }
 
-export default function PromptInput({ promptInput, onPromptInputChange, onSend, disabled = false }: PromptInputProps) {
+export default function PromptInput({
+  promptInput,
+  onPromptInputChange,
+  onSend,
+  disabled = false,
+  attachmentInterface
+}: PromptInputProps) {
+  const handleSend = () => {
+    Keyboard.dismiss();
+    onSend();
+  }
+
   return (
-    <View className='h-[100px]'>
-      <View className="flex h-full justify-start bg-[--secondary-bg] rounded-t-lg" >
-        <TextInput
-          placeholder="Type your message..."
-          placeholderTextColor="#666"
-          className="h-full text-white text-lg"
-          value={promptInput}
-          onChangeText={onPromptInputChange}
-          multiline
-          editable={!disabled}
-          textAlignVertical="top"
-        />
-      </View>
-      <View className="bg-[--secondary-bg] fixed bottom-0 left-0 right-0">
-        {disabled ? (
-          <View className='flex w-[90%] mx-auto flex-row gap-x-1 items-center justify-center bg-blue-500/20 rounded-md p-2'>
-            <Text className='!text-white text-lg'>Responding...</Text>
-            <ActivityIndicator size="small" color="#fff" />
-          </View>
-        ) : (
-          <TouchableOpacity className='flex w-[90%] mx-auto flex-row gap-x-1 items-center justify-center bg-blue-500 rounded-md p-2' onPress={onSend}>
-            <Text className='!text-white text-lg'>Send Message</Text>
-            <PaperPlaneTilt size={14} color="white" />
+    <Fragment>
+      {attachmentInterface.renderAttachments()}
+      <View className='h-[100px] -top-[5px]'>
+        <View className="flex h-full justify-start bg-[--secondary-bg] rounded-t-lg" >
+          <TextInput
+            placeholder="Type your message..."
+            placeholderTextColor="#666"
+            className="h-full text-white text-lg"
+            value={promptInput}
+            onChangeText={onPromptInputChange}
+            multiline
+            editable={!disabled}
+            textAlignVertical="top"
+          />
+        </View>
+        <View className="bg-[--secondary-bg] fixed bottom-0 left-0 right-0 flex-row items-center justify-center gap-x-2 px-2 pb-2">
+          <TouchableOpacity
+            className='flex h-full w-[40px] flex-row gap-x-1 items-center justify-center disabled:opacity-50 bg-gray-500 rounded-md p-2'
+            onPress={attachmentInterface.askForAttachment}
+          >
+            <Paperclip size={18} color="white" />
           </TouchableOpacity>
-        )}
-      </View>
-    </View >
+
+          <TouchableOpacity
+            className='flex-1 mx-auto flex-row gap-x-1 items-center justify-center disabled:opacity-70 bg-blue-500 rounded-md p-2'
+            onPress={handleSend}
+          >
+            <Text className='!text-white text-lg'>
+              {disabled ? 'Responding...' : 'Send Message'}
+            </Text>
+            {disabled ? <ActivityIndicator size="small" color="#fff" /> : <PaperPlaneTilt size={14} color="white" />}
+          </TouchableOpacity>
+        </View>
+      </View >
+    </Fragment>
   );
 }

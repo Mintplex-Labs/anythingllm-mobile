@@ -3,9 +3,15 @@
 @tailwind utilities;
 
 :root {
+  --dark: #222628;
+
   --primary-bg: #131314;
   --secondary-bg: #454545;
 
   --primary-text: #fff;
   --secondary-text: #888;
+
+  --cta-blue: #84CAFF;
+  --cta-blue-progress-bar: #7cd4fd;
+  --cta-light-blue: #36bffa;
 }

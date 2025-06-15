@@ -25,6 +25,9 @@ const AnythingLLMColors = (isDark: boolean = false) => {
     background: {
       primary: '#000000',
       secondary: '#111111',
+      ctaBlue: '#84CAFF',
+      ctaBlueProgressBar: '#7cd4fd',
+      ctaLightBlue: '#36bffa',
     },
   };
 

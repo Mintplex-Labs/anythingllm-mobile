@@ -261,10 +261,7 @@ const DatabaseInspectorScreen = () => {
       <View className="flex flex-col gap-y-4 m-2">
         <TouchableOpacity
           className='bg-blue-500 rounded-md p-4'
-          onPress={() => {
-            uiStore.setToStorage('onboarding_welcome_completed', false);
-            uiStore.setToStorage('onboarding_model_selection_completed', false);
-          }}>
+          onPress={() => uiStore.resetAllStorage()}>
           <Text className="text-white">Reset onboarding</Text>
         </TouchableOpacity>
       </View>

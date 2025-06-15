@@ -1,100 +1,38 @@
-import { Text, TouchableOpacity, View, Alert } from "react-native";
+import React, { useState } from "react";
+import { Image, View } from "react-native";
+import SimpleModelSelection from "./Simple";
 import SafeView from "@/components/SafeView";
-import uiStore from "@/store/UIStore";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { PATHS } from "@/utils/paths";
-import { Fragment, useState, useEffect } from "react";
-import ProviderSelection from "@/components/LLMSelection/ProviderSelection";
-import { AVAILABLE_LLM_PROVIDERS } from "@/utils/llmproviders";
-import { ActivityIndicator } from "react-native-paper";
+import ProgressBars from "@/components/Onboarding/ProgressBars";
+
+const SELECTION_MODES = {
+  simple: SimpleModelSelection,
+}
 
 export interface ISelection {
   provider: string;
   config: Record<string, any>;
 }
 
-async function confirmSelection(
-  selection: ISelection,
-  setIsLoading: (isLoading: boolean) => void,
-  byPassConfirmation: boolean = false,
-  navigation: NavigationProp<any>
-) {
-  const saveAndNavigate = async () => {
-    console.log('saveAndNavigate::llmPreference', selection)
-    await uiStore.setToStorage('onboarding_model_selection_completed', true);
-    await uiStore.setToStorage('llmPreference', selection)
-    navigation.navigate(PATHS.home as never)
-  }
-
-  try {
-    setIsLoading(true);
-    if (!byPassConfirmation) {
-      Alert.alert('Are you sure?', 'This will replace your current model', [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Confirm', onPress: async () => await saveAndNavigate() }
-      ])
-    } else await saveAndNavigate();
-  } catch (error) {
-    console.error('Error confirming selection', error)
-  } finally {
-    setIsLoading(false);
-  }
-}
-
 export default function OnboardingModelSelection() {
-  const navigation = useNavigation();
-  const [isLoading, setIsLoading] = useState(false);
-  const [selection, setSelection] = useState<ISelection>({
-    provider: 'native',
-    config: {}
-  });
+  const [mode, _setMode] = useState<keyof typeof SELECTION_MODES>('simple');
+  const SelectionMode = SELECTION_MODES[mode];
 
-  function handleProviderChange(provider: string) {
-    setSelection((prev) => ({
-      ...prev,
-      provider
-    }));
-  }
-
-  function handleConfigChange(config: Record<string, any>, autoConfirm = false) {
-    let newSelection = {
-      ...selection,
-      config
-    }
-    setSelection(newSelection);
-    // @ts-ignore
-    if (autoConfirm) confirmSelection(newSelection, setIsLoading, autoConfirm, navigation);
-  }
-
-  const providerOptions = AVAILABLE_LLM_PROVIDERS.find(p => p.value === selection.provider)?.options || AVAILABLE_LLM_PROVIDERS[0].options;
   return (
-    <SafeView scrollable={isLoading === false} containerClassNames="!p-0">
-      {isLoading && (
-        <Fragment>
-          <View className="absolute w-full h-[200vh] bg-black/80 z-50" />
-          <View className="absolute w-full h-full flex items-center justify-center z-50">
-            <ActivityIndicator size="large" color="white" />
-          </View>
-        </Fragment>
-      )}
-      <View className="flex h-[90vh]">
-        <View className="flex flex-col gap-y-2 w-full items-center justify-center pt-4">
-          <Text className="text-white text-2xl font-bold">Model Selection</Text>
-          <Text className="text-[--secondary-text] text-sm text-center">
-            You can change this later in the settings. {'\n'}It will be used for all your conversations by default.
-          </Text>
+    <React.Fragment>
+      <View pointerEvents="none" className="absolute top-0 left-0 w-screen h-[100vh] z-[2]">
+        <Image
+          source={require("@/assets/onboarding/bg-blobs.png")}
+          resizeMode="contain"
+          className="w-screen h-[100vh]"
+        />
+      </View>
+
+      <SafeView scrollable={false} safeAreaClassNames="bg-[--primary-bg]" containerClassNames="h-[88%] my-auto z-[1]">
+        <View className="flex flex-col gap-y-[66px]">
+          <ProgressBars numberOfBars={3} activeBar={1} />
+          <SelectionMode />
         </View>
-        <ProviderSelection selection={selection} onChange={handleProviderChange} />
-        {providerOptions?.(selection, handleConfigChange)}
-      </View>
-      <View className="flex flex-col gap-y-2 w-full items-center justify-center pt-4">
-        <TouchableOpacity
-          onPress={() => Alert.alert('Not implemented', 'This feature is not implemented yet')}
-          className="bg-transparent pb-10"
-        >
-          <Text className="text-blue-500 text-md">Skip for now</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeView>
+      </SafeView>
+    </React.Fragment >
   );
 };

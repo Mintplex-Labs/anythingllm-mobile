@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 type StorageKeys =
   'onboarding_welcome_completed' |
   'onboarding_model_selection_completed' |
+  'onboarding_survey_completed' |
+  'onboarding_data_handling_completed' |
   'llmPreference';
 
 export class UIStore {
@@ -16,6 +18,8 @@ export class UIStore {
   static readonly STORAGE_KEYS: StorageKeys[] = [
     'onboarding_welcome_completed',
     'onboarding_model_selection_completed',
+    'onboarding_survey_completed',
+    'onboarding_data_handling_completed',
     'llmPreference',
   ] as const;
 
@@ -131,6 +135,10 @@ export class UIStore {
     runInAction(() => {
       this.benchmarkShareDialog.shouldShow = shouldShow;
     });
+  }
+
+  async resetAllStorage() {
+    return this.storage.multiRemove(UIStore.STORAGE_KEYS);
   }
 }
 

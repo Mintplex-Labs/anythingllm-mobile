@@ -60,6 +60,16 @@ const App = observer(() => {
                       component={gestureHandlerRootHOC(Screens.OnboardingModelSelection)}
                       options={{ headerShown: false }}
                     />
+                    <Drawer.Screen
+                      name={PATHS.onboarding.survey}
+                      component={gestureHandlerRootHOC(Screens.OnboardingSurvey)}
+                      options={{ headerShown: false }}
+                    />
+                    <Drawer.Screen
+                      name={PATHS.onboarding.data_handling}
+                      component={gestureHandlerRootHOC(Screens.OnboardingDataHandling)}
+                      options={{ headerShown: false }}
+                    />
 
                     <Drawer.Screen
                       name={PATHS.home}

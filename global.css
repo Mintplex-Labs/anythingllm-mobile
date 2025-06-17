@@ -14,5 +14,9 @@
   --cta-blue: #84CAFF;
   --cta-blue-progress-bar: #7cd4fd;
   --cta-light-blue: #36bffa;
-  --bg-gray-10: #1B1B1E;
+
+  --hex-gray-10: #1B1B1E;
+  --hex-gray-8: #222628;
+
+  --bg-white-5: rgba(255, 255, 255, 0.05);
 }

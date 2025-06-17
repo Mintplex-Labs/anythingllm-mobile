@@ -13,7 +13,7 @@ interface SafeViewProps {
 export default function SafeView({
   edges = [],
   scrollable = true,
-  safeAreaClassNames = '',
+  safeAreaClassNames = 'bg-[--primary-bg]',
   containerClassNames = '',
   applyInsets = true,
   children
@@ -22,7 +22,7 @@ export default function SafeView({
   const containerClassInitial = applyInsets ? `p-4 pb-[${insets.bottom}px]` : '';
 
   return (
-    <SafeAreaView className={`h-full bg-[--primary-bg] ${safeAreaClassNames}`} edges={edges}>
+    <SafeAreaView className={`h-full ${safeAreaClassNames}`} edges={edges}>
       {scrollable ? (
         <ScrollView contentContainerClassName={`${containerClassInitial} ${containerClassNames}`}>
           {children}

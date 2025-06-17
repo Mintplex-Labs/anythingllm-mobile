@@ -4,15 +4,23 @@ import Workspace from "@/database/models/Workspace";
 
 const eventEmitter = new NativeEventEmitter();
 export default function useWorkspaces(withThreads: boolean = false) {
+  const [isLoading, setIsLoading] = useState(false);
   const [workspaces, setWorkspaces] = useState<any[]>([]);
   const [activeWorkspaceSlug, setActiveWorkspaceSlug] = useState<string | null>(null);
   const [activeThreadSlug, setActiveThreadSlug] = useState<string | null>(null);
 
   async function fetchWorkspaces(withThreads: boolean = false) {
-    console.log('fetching workspaces...', { withThreads });
-    const workspaces = await Workspace.getAll(withThreads);
-    setWorkspaces(workspaces);
-    return workspaces;
+    try {
+      setIsLoading(true);
+      const workspaces = await Workspace.getAll(withThreads);
+      setWorkspaces(workspaces);
+      return workspaces;
+    } catch (error) {
+      console.error('Error fetching workspaces', error);
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -32,11 +40,23 @@ export default function useWorkspaces(withThreads: boolean = false) {
       'reloadWorkspaces',
       () => fetchWorkspaces(withThreads)
     );
+
+    // Emit initial state if we have workspaces
+    if (workspaces.length > 0) {
+      eventEmitter.emit('workspaceChatPageInfo', {
+        type: 'update',
+        details: {
+          wsSlug: workspaces[0].slug,
+          threadSlug: workspaces[0].threads?.[0]?.slug || null,
+        },
+      });
+    }
+
     return () => {
       workspaceListener.remove();
       reloadListener.remove();
     };
-  }, []);
+  }, [workspaces]);
 
   // Listen for workspace updates
   useEffect(() => {
@@ -101,5 +121,5 @@ export default function useWorkspaces(withThreads: boolean = false) {
     fetchWorkspaces(withThreads);
   }, []);
 
-  return { workspaces, activeWorkspaceSlug, setActiveWorkspaceSlug, activeThreadSlug, fetchWorkspaces };
+  return { loadingWorkspaces: isLoading, workspaces, activeWorkspaceSlug, setActiveWorkspaceSlug, activeThreadSlug, fetchWorkspaces };
 }

@@ -12,11 +12,11 @@ import {
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import useTheme from '@/hooks/useTheme';
 import { rootStyles } from '@/utils/theme';
-import MainDrawer from '@/components/Drawer';
+import WorkspaceDrawer from '@/components/WorkspaceDrawer';
 import { PATHS } from './src/utils/paths';
 import Screens from '@/screens';
 import './global.css';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import SafeView from '@/components/SafeView';
 import useInitialRoute from '@/hooks/useInitialRoute';
 import './src/utils/polyfills';
@@ -26,7 +26,6 @@ const App = observer(() => {
   const theme = useTheme();
   const styles = rootStyles(theme);
   const { initialRoute, isLoading } = useInitialRoute();
-
 
   if (isLoading) return (
     <SafeAreaProvider>
@@ -46,10 +45,7 @@ const App = observer(() => {
               <BottomSheetModalProvider>
                 <NavigationContainer>
 
-                  <MainDrawer
-                    theme={theme}
-                    initialRouteName={initialRoute.path}
-                  >
+                  <WorkspaceDrawer initialRouteName={initialRoute.path}>
                     <Drawer.Screen
                       name={PATHS.onboarding.welcome}
                       component={gestureHandlerRootHOC(Screens.OnboardingWelcome)}
@@ -91,7 +87,7 @@ const App = observer(() => {
                         title: 'Database Inspector',
                       }}
                     />
-                  </MainDrawer>
+                  </WorkspaceDrawer>
 
                 </NavigationContainer>
               </BottomSheetModalProvider>

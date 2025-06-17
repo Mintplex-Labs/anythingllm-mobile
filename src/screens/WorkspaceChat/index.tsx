@@ -29,7 +29,7 @@ export default function WorkspaceChat() {
   useRedirect();
   const { wsSlug, threadSlug } = useChatInfoEmit();
   const { LLMProvider, isLoading: isLoadingProvider, error, fetchLLMPreference } = useLlmPreference();
-  const attachmentInterface = useAttachments();
+  const attachmentInterface = useAttachments(wsSlug);
 
   // State for messages and streaming
   const [messages, setMessages] = useState<ChatMessage[]>([]);

@@ -1,11 +1,13 @@
 import { Text, TouchableOpacity, View, Alert } from "react-native";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { generateUUID, } from "@/utils/constants";
 import { CircleNotch, FileText, Spinner } from "phosphor-react-native";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { NativeEventEmitter } from "react-native";
 import Storage from "@/utils/storage";
 import { pick } from 'react-native-document-picker';
+import getEmbedder from "@/utils/Embedder";
+import VectorDB from "@/utils/VectorDB";
 
 const eventEmitter = new NativeEventEmitter();
 export interface Attachment {
@@ -25,9 +27,12 @@ export interface AttachmentInterface {
     clearAttachments: () => void;
     renderAttachments: () => React.ReactNode;
     askForAttachment: () => void;
+    clearWorkspaceVectors: () => Promise<void>;
 }
 
-export default function useAttachments(): AttachmentInterface {
+export default function useAttachments(wsSlug: string): AttachmentInterface {
+    const embedder = getEmbedder('native');
+    const [workspaceSlug, setWorkspaceSlug] = useState(wsSlug);
     const [attachments, setAttachments] = useState<Attachment[]>([]);
     const addAttachment = useCallback((attachment: Attachment) => {
         setAttachments(prev => [...prev, attachment]);
@@ -40,6 +45,28 @@ export default function useAttachments(): AttachmentInterface {
     const clearAttachments = useCallback(() => {
         setAttachments([]);
     }, []);
+
+    const onClearWorkspaceVectors = useCallback(async () => {
+        setAttachments([]);
+        await VectorDB.resetVectorsForWorkspace(workspaceSlug);
+        console.log(`Vectors cleared for workspace ${workspaceSlug}`);
+    }, []);
+
+    const clearWorkspaceVectors = useCallback(async () => {
+        Alert.alert(
+            'Clear Workspace Vectors',
+            'Are you sure you want to clear the vectors for this workspace? This will remove all vectors for this workspace and cannot be undone.', [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Clear', style: 'destructive', onPress: onClearWorkspaceVectors }
+        ]);
+    }, []);
+
+    useEffect(() => {
+        setWorkspaceSlug(wsSlug);
+        VectorDB.getWorkspaceVectorCount(wsSlug).then(count => {
+            console.log(`VectorDB count for workspace ${wsSlug}: ${count}`);
+        });
+    }, [wsSlug]);
 
     /**
      * Process an attachment and add it to the attachments array
@@ -66,6 +93,15 @@ export default function useAttachments(): AttachmentInterface {
             });
             const result = await RNFS.read(realPath, stats.size, 0, 'utf8');
             if (!result) throw new Error('Attachment content was empty or could not be read');
+
+            await embedder
+                .splitAndEmbed(result, { chunkSize: 2048, chunkOverlap: 20 })
+                .then(embedResults => embedResults.map(embedResult => {
+                    const metadata = { ...embedResult.metadata, name: attachment.name };
+                    return { embedding: embedResult.embedding, metadata };
+                }))
+                .then(async (embeddings) => await VectorDB.bulkInsert(workspaceSlug, embeddings))
+                .then(async (count) => console.log(`Inserted ${count} embeddings into VectorDB - now ${await VectorDB.getWorkspaceVectorCount(workspaceSlug)} vectors in the database`));
 
             setAttachments(prev => prev.map(a => a.uuid === attachment.uuid ? { ...a, content: result, processing: false } : a));
         } catch (e) {
@@ -129,9 +165,10 @@ export default function useAttachments(): AttachmentInterface {
             removeAttachment,
             clearAttachments,
             renderAttachments,
-            askForAttachment
+            askForAttachment,
+            clearWorkspaceVectors
         }
-    }, [attachments, addAttachment, removeAttachment, clearAttachments, renderAttachments, askForAttachment]);
+    }, [attachments, addAttachment, removeAttachment, clearAttachments, renderAttachments, askForAttachment, clearWorkspaceVectors]);
 
     return attachmentInterface;
 }

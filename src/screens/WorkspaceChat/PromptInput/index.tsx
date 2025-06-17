@@ -44,6 +44,7 @@ export default function PromptInput({
           <TouchableOpacity
             className='flex h-full w-[40px] flex-row gap-x-1 items-center justify-center disabled:opacity-50 bg-gray-500 rounded-md p-2'
             onPress={attachmentInterface.askForAttachment}
+            onLongPress={attachmentInterface.clearWorkspaceVectors}
           >
             <Paperclip size={18} color="white" />
           </TouchableOpacity>

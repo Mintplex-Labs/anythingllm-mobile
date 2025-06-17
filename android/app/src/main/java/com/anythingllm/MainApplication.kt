@@ -14,6 +14,7 @@ import com.facebook.soloader.SoLoader
 import com.anythingllm.download.DownloadPackage
 import com.anythingllm.chatqnn.ChatQnnPackage
 import com.anythingllm.storage.StoragePackage
+import com.anythingllm.vector.VectorBoxPackage
 
 class MainApplication : Application(), ReactApplication {
 
@@ -28,6 +29,7 @@ class MainApplication : Application(), ReactApplication {
               add(DownloadPackage())
               add(ChatQnnPackage())
               add(StoragePackage())
+              add(VectorBoxPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

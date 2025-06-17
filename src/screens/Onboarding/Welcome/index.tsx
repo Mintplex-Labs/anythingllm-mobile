@@ -38,7 +38,7 @@ export default function OnboardingWelcome() {
 
           <TouchableOpacity
             onPress={handleGetStarted}
-            className="flex w-full bg-[--cta-blue] rounded-md p-4 text-center max-w-[85%] mx-auto"
+            className="flex w-full bg-[--cta-light-blue] rounded-md p-4 text-center max-w-[85%] mx-auto"
           >
             <Text className="text-[--dark] font-bold text-center">Get Started</Text>
           </TouchableOpacity>

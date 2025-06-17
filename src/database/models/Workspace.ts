@@ -4,6 +4,7 @@ import slugify from 'slugify';
 import { Q, Model } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
 import WorkspaceThread, { WorkspaceThreadType } from './WorkspaceThread';
+import VectorDB from '@/utils/VectorDB';
 
 export type WorkspaceType = {
   name: string;
@@ -90,6 +91,9 @@ export default class Workspace extends Model {
         this.log(`Deleting ${threads.length} threads associated with this workspace`);
         for (const thread of threads) await WorkspaceThread.delete(wsSlug, thread.slug);
       }
+
+      // Delete all vectors for the workspace
+      await VectorDB.resetVectorsForWorkspace(wsSlug);
 
       this.log('workspace successfully deleted');
       return true;

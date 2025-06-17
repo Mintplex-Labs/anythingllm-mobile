@@ -1,9 +1,9 @@
-import { initLlama, LlamaContext, NativeCompletionResult } from '@pocketpalai/llama.rn'
+import { initLlama, LlamaContext, NativeCompletionResult } from 'llama.rn'
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { Model } from '@/utils/types';
 import { defaultModels } from '@/utils/models';
 import { Platform } from 'react-native';
-import { NativeLlamaChatMessage } from '@pocketpalai/llama.rn/lib/typescript/NativeRNLlama';
+import { NativeLlamaChatMessage } from 'llama.rn/lib/typescript/NativeRNLlama';
 import { stops } from '@/utils/chat';
 
 type IResponse = {

@@ -12,7 +12,7 @@ import { makePersistable } from 'mobx-persist-store';
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { computed, makeAutoObservable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LlamaContext, initLlama } from '@pocketpalai/llama.rn';
+import { LlamaContext, initLlama } from 'llama.rn';
 import { CompletionParams } from '@/utils/chat/completionTypes';
 import { fetchModelFilesDetails } from '@/utils/api/hf';
 // import { chatSessionStore } from '@/store/ChatSessionStore';

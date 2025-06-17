@@ -31,6 +31,15 @@ export const MODEL_CARDS = [
     },
 ];
 
+export const EMBEDDING_MODEL = {
+    id: 'default',
+    name: 'Default',
+    description: 'The default embedding model for AnythingLLM.',
+    size: '25MB',
+    modelId: 'leliuga/all-MiniLM-L6-v2-GGUF',
+    tag: 'https://huggingface.co/leliuga/all-MiniLM-L6-v2-GGUF/resolve/main/all-MiniLM-L6-v2.Q8_0.gguf',
+}
+
 export function resolveDestinationPathFromGGUFUrl(url: string) {
     const splits = new URL(url).pathname.split('/');
     const creator = {
@@ -39,15 +48,6 @@ export function resolveDestinationPathFromGGUFUrl(url: string) {
         file: splits.slice(-1)[0],
     }
     return `${RNFS.DocumentDirectoryPath}/models/gguf/${creator.creator}/${creator.model}/${creator.file}`;
-}
-
-export const EMBEDDING_MODEL = {
-    id: 'default',
-    name: 'Default',
-    description: 'The default embedding model for AnythingLLM.',
-    size: '25MB',
-    modelId: 'second-state/All-MiniLM-L6-v2-Embedding-GGUF',
-    tag: 'https://huggingface.co/second-state/All-MiniLM-L6-v2-Embedding-GGUF/resolve/main/all-MiniLM-L6-v2-Q8_0.gguf',
 }
 
 export default MODEL_CARDS;

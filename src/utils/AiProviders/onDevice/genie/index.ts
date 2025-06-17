@@ -4,7 +4,7 @@ import { defaultModels } from '@/utils/models';
 import TokenManager from '@/utils/tiktoken';
 import { NPUEnabledModel } from '@/utils/types';
 import { NativeModules, NativeEventEmitter, EmitterSubscription } from 'react-native';
-import { NativeLlamaChatMessage } from '@pocketpalai/llama.rn/lib/typescript/NativeRNLlama';
+import { NativeLlamaChatMessage } from 'llama.rn/lib/typescript/NativeRNLlama';
 
 type IResponse = {
   textResponse: string;
@@ -35,7 +35,7 @@ export default class GenieWrapper {
   private keepAliveTimer: NodeJS.Timeout | null = null;
   private keepAliveInterval = 1000 * 60 * 5;
 
-  constructor({ model }: {model: string}) {
+  constructor({ model }: { model: string }) {
     this.eventEmitter = new NativeEventEmitter(GenieModule);
     this.tokenListener = null;
     this.model = model;
@@ -86,20 +86,20 @@ export default class GenieWrapper {
   defaultSystemMessage() {
     return 'You are a helpful assistant that can answer questions and help with tasks.';
   }
-  
+
   get chatTemplate() {
     const chatTemplate = this.modeDefinition.chatTemplate;
     chatTemplate.systemPrompt = this.defaultSystemMessage();
     return chatTemplate;
   }
-  
+
   /**
    * Gets the chat completion from the model.
    * Returns the text response
    */
   async getChatCompletion(messages: NativeLlamaChatMessage[]): Promise<IResponse> {
     const formattedChat = applyTemplate(messages, {
-      customTemplate:  this.chatTemplate,
+      customTemplate: this.chatTemplate,
       addGenerationPrompt: true,
     }) as string;
 
@@ -114,7 +114,7 @@ export default class GenieWrapper {
 
     await GenieModule.generateResponse(this.model, formattedChat);
     this.tokenListener.remove();
-    
+
     const duration = Date.now() - startTime;
     const tokenizer = new TokenManager(this.model);
     const prompt_tokens = tokenizer.countFromString(formattedChat);
@@ -126,7 +126,7 @@ export default class GenieWrapper {
         completion_tokens,
         total_tokens: prompt_tokens + completion_tokens,
         outputTps: completion_tokens / duration,
-        duration, 
+        duration,
       },
     };
   }
@@ -136,7 +136,7 @@ export default class GenieWrapper {
    */
   async streamGetChatCompletion(messages: NativeLlamaChatMessage[], callback: (token: string) => void): Promise<IResponse> {
     const formattedChat = applyTemplate(messages, {
-      customTemplate:  this.chatTemplate,
+      customTemplate: this.chatTemplate,
       addGenerationPrompt: true,
     }) as string;
 
@@ -171,7 +171,7 @@ export default class GenieWrapper {
           completion_tokens,
           total_tokens: prompt_tokens + completion_tokens,
           outputTps: completion_tokens / duration,
-          duration, 
+          duration,
         },
       };
     } catch (error) {

@@ -1,5 +1,5 @@
 import { applyTemplate, Templates } from 'chat-formatter';
-import { JinjaFormattedChatResult, LlamaContext } from '@pocketpalai/llama.rn';
+import { JinjaFormattedChatResult, LlamaContext } from 'llama.rn';
 import { CompletionParams } from './completionTypes';
 import { defaultCompletionParams } from './completionSettingsVersions';
 import {
@@ -259,7 +259,7 @@ export function parseThinkingParts(text: string): { nonThinkingText: string, thi
     text.includes('<thinking>');
 
   // If no thinking tags are found, return the original text
-  if (!hasThinkingTags)  return {nonThinkingText: text, thinkingText: '', isCompleteThought: false};
+  if (!hasThinkingTags) return { nonThinkingText: text, thinkingText: '', isCompleteThought: false };
 
   let nonThinkingText = text;
   let thinkingText = '';
@@ -270,7 +270,7 @@ export function parseThinkingParts(text: string): { nonThinkingText: string, thi
       text.match(/<thought>([\s\S]*)/)?.[1] ||
       text.match(/<thinking>([\s\S]*)/)?.[1] ||
       '';
-    return {nonThinkingText: '', thinkingText, isCompleteThought: false};
+    return { nonThinkingText: '', thinkingText, isCompleteThought: false };
   } else {
     thinkingText = text.match(/<think>([\s\S]*?)<\/think>/)?.[1] ||
       text.match(/<thought>([\s\S]*?)<\/thought>/)?.[1] ||

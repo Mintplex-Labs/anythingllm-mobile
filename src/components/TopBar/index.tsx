@@ -1,32 +1,59 @@
-import React, { Fragment } from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, Image, TouchableOpacity, Text, NativeEventEmitter } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { List } from 'phosphor-react-native';
-import { DevSettings } from 'react-native';
+import useDevShortcut from './useDevShortcut';
+import NewThreadIcon from '@/assets/new-thread.svg';
+import WorkspaceThread from '@/database/models/WorkspaceThread';
+import { PATHS } from '@/utils/paths';
+import ModelChip from './ModelChip';
 
-export default function TopBar() {
+export default function TopBar({ modelName, workspace, thread }: { modelName?: string, workspace?: any, thread?: any }) {
   const navigation = useNavigation<DrawerNavigationProp<any>>();
+  const { registerPress } = useDevShortcut();
+  const canMakeThread = !!workspace && !!thread;
+
+  function handleNewThread() {
+    const eventEmitter = new NativeEventEmitter();
+    WorkspaceThread.create({ workspaceSlug: workspace.slug }).then((thread) => {
+      eventEmitter.emit('workspaceUpdate', {
+        type: 'add-thread',
+        details: {
+          workspaceSlug: workspace.slug,
+          thread,
+        },
+      });
+      eventEmitter.emit('REDIRECT', {
+        path: PATHS.workspace_chat,
+        params: { wsSlug: workspace.slug, threadSlug: thread.slug },
+      });
+    });
+  }
 
   return (
-    <Fragment>
-      <View className="flex flex-row items-center justify-between px-4 py-3 mt-4">
-        <TouchableOpacity
-          onPress={() => navigation.openDrawer()}
-          onLongPress={() => DevSettings.reload()}
-        >
-          <List size={24} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('DevToolsDatabaseInspector')}>
+    <View className='flex flex-row items-center justify-between h-fit min-h-[50px]'>
+      <TouchableOpacity onPress={() => navigation.openDrawer()}>
+        <List size={34} color="white" />
+      </TouchableOpacity>
+      <View className='flex flex-col items-center gap-y-0'>
+        <TouchableOpacity onPress={registerPress} className='flex flex-col items-center gap-y-0'>
           <Image
             source={require('@/assets/logo/anything-llm.png')}
-            className="h-8 w-32"
-            resizeMode="contain"
+            style={{
+              width: 150,
+              height: 50,
+            }}
+            resizeMode='center'
           />
         </TouchableOpacity>
-        <View className='w-[32px]' />
+        <ModelChip modelName={modelName} />
       </View>
-      <View className="h-[1px] bg-white/10 w-[1000vw] left-[-50%]" />
-    </Fragment>
+      {canMakeThread ? (
+        <TouchableOpacity onPress={handleNewThread}>
+          <NewThreadIcon width={32} height={32} fill="white" />
+        </TouchableOpacity>
+      ) : <View className='w-[32px]' />}
+    </View>
   );
-} 
+}

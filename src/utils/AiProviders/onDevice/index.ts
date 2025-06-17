@@ -4,6 +4,7 @@ import LlamaRnWrapper from "./llamaRn";
 import { ChatMessage } from "@/screens/WorkspaceChat";
 import BaseOpenAILikeProvider, { IStreamCallback } from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
+import MODEL_CARDS from "@/utils/defaultModels";
 
 export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   protected provider: string;
@@ -47,6 +48,33 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
   get name() {
     return this.provider;
+  }
+
+  availableModels() {
+    const basicModels = MODEL_CARDS.map(m => ({
+      id: m.id,
+      name: m.name,
+      description: m.description,
+      size: m.size,
+      modelId: m.modelId,
+      downloadUrl: m.tag,
+    }));
+    const crossPlatformModels = defaultModels
+      .filter(m => m.runtime === 'CPU')
+      .map(m => ({ ...m, id: m.id.endsWith('.gguf') ? m.id.split('/').slice(0, -1).join('/') : m.id }))
+      .map(m => {
+        return {
+          id: m.id,
+          name: m.name,
+          size: m.size,
+          modelId: m.id,
+          downloadUrl: m.downloadUrl || '',
+        }
+      });
+    return [
+      ...basicModels,
+      ...crossPlatformModels
+    ];
   }
 
   override async chat({

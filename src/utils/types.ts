@@ -295,6 +295,7 @@ export interface NPUEnabledModel {
   size: number;
   params: number;
   isDownloaded: boolean;
+  downloadUrl: string;
   progress: number;
   downloadSpeed?: string;
   fullPath?: string;

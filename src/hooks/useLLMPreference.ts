@@ -28,6 +28,17 @@ export default function useLlmPreference(): {
     }
   }
 
+  // Listen for changes to the LLM preference so we can update the LLM provider across the app
+  useEffect(() => {
+    function listenForLLMPreferenceChange() {
+      uiStore.emitter.addListener('llmPreference', (event) => {
+        setLlmPreferences(event.details);
+        setLLMProvider(getLLM(event.details.provider, event.details.config));
+      });
+    }
+    listenForLLMPreferenceChange();
+  }, []);
+
   useEffect(() => {
     fetchLLMPreference();
   }, []);

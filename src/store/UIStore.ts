@@ -2,6 +2,7 @@ import { Appearance } from 'react-native';
 import { makePersistable } from 'mobx-persist-store';
 import { makeAutoObservable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NativeEventEmitter } from 'react-native';
 
 type StorageKeys =
   'onboarding_welcome_completed' |
@@ -11,6 +12,7 @@ type StorageKeys =
   'llmPreference';
 
 export class UIStore {
+  emitter: NativeEventEmitter;
   static readonly GROUP_KEYS = {
     READY_TO_USE: 'ready_to_use',
     AVAILABLE_TO_DOWNLOAD: 'available_to_download',
@@ -40,8 +42,6 @@ export class UIStore {
 
   displayMemUsage = false;
 
-  iOSBackgroundDownloading = true;
-
   benchmarkShareDialog = {
     shouldShow: true,
   };
@@ -67,8 +67,7 @@ export class UIStore {
       storage: AsyncStorage,
     });
 
-    // backwards compatibility. Removed this from the ui settings screen.
-    this.iOSBackgroundDownloading = true;
+    this.emitter = new NativeEventEmitter();
   }
 
   async getFromStorage<T>(key: StorageKeys, defaultValue: T): Promise<T> {
@@ -79,7 +78,9 @@ export class UIStore {
   }
 
   async setToStorage<T>(key: StorageKeys, value: T) {
-    return this.storage.setItem(key, JSON.stringify(value));
+    const result = await this.storage.setItem(key, JSON.stringify(value));
+    this.emitter.emit(key, { details: value });
+    return result;
   }
 
   async getAllFromStorage(): Promise<{ [key: string]: any }> {
@@ -122,12 +123,6 @@ export class UIStore {
   setDisplayMemUsage(value: boolean) {
     runInAction(() => {
       this.displayMemUsage = value;
-    });
-  }
-
-  setiOSBackgroundDownloading(value: boolean) {
-    runInAction(() => {
-      this.iOSBackgroundDownloading = value;
     });
   }
 

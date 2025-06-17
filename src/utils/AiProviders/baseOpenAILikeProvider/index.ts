@@ -45,6 +45,7 @@ export default abstract class BaseOpenAILikeProvider {
   protected abstract model: string;
   protected abstract temperature: number;
   protected abstract log: (message: string, ...args: any[]) => void;
+  abstract availableModels(): object[];
 
   constructor({ provider, config }: BaseLLMProviderConfig) {
     this._provider = provider;

@@ -81,7 +81,7 @@ const App = observer(() => {
                     />
 
                     <Drawer.Screen
-                      name="DevToolsDatabaseInspector"
+                      name={PATHS.developer.home}
                       component={gestureHandlerRootHOC(Screens.DevToolsDatabaseInspector)}
                       options={{
                         title: 'Database Inspector',

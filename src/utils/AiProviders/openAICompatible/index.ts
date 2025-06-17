@@ -46,6 +46,10 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
   protected log = (text: string, ...args: any[]) => {
     console.log(`\x1b[36m[${this.constructor.name}]\x1b[0m ${text}`, ...args);
   }
+
+  availableModels() {
+    return [];
+  }
 }
 
 export default OpenAICompatible;

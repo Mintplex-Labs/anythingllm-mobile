@@ -1,5 +1,5 @@
 import { View, Text, Alert, TextInput, Modal, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
-import { DotsSixVertical, UploadSimple, Gear, Plus, SquaresFour, CaretUp } from "phosphor-react-native";
+import { SquaresFour, CaretUp } from "phosphor-react-native";
 import { Fragment, useState } from "react";
 import ThreadItem from "./ThreadItem";
 import { NativeEventEmitter } from "react-native";
@@ -202,29 +202,6 @@ function WorkspaceThreadsContainer({ workspace, activeThreadIdx, setActiveThread
           />
         )
       })}
-      <TouchableOpacity
-        className="flex-row items-center gap-x-2"
-        onPress={() => {
-          WorkspaceThread.create({ workspaceSlug: workspace.slug }).then((thread) => {
-            eventEmitter.emit('workspaceUpdate', {
-              type: 'add-thread',
-              details: {
-                workspaceSlug: workspace.slug,
-                thread,
-              },
-            });
-            eventEmitter.emit('REDIRECT', {
-              path: PATHS.workspace_chat,
-              params: { wsSlug: workspace.slug, threadSlug: thread.slug },
-            });
-          });
-        }}
-      >
-        <View className="p-1 rounded-lg bg-white/20">
-          <Plus size={12} color='white' />
-        </View>
-        <Text className="text-lg text-[--secondary-text]">New Thread</Text>
-      </TouchableOpacity>
     </View>
   )
 }

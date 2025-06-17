@@ -7,7 +7,7 @@ import { PATHS } from "@/utils/paths";
 import { useNavigation } from "@react-navigation/native";
 import useLlmPreference from "@/hooks/useLLMPreference";
 import { AVAILABLE_LLM_PROVIDERS } from "@/utils/llmproviders";
-import { FileText, Robot } from "phosphor-react-native";
+import { FileDashed, FileMagnifyingGlass, FileText, Robot, Sparkle } from "phosphor-react-native";
 import Workspace from "@/database/models/Workspace";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { EMBEDDING_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/defaultModels";
@@ -92,7 +92,7 @@ export default function DataHandling() {
             <View className="flex flex-col gap-y-4 justify-center items-center">
               <Text className="text-white text-4xl font-bold text-center">Data Handling & Privacy</Text>
               <Text className="text-white/60 text-xl text-center">
-                This is a brief overview of how chats, documents, and other data is handled on your device.
+                With AnythingLLM, all chats, documents, and other data is processed and stored on your device.
               </Text>
             </View>
 
@@ -100,19 +100,18 @@ export default function DataHandling() {
               <PrivacyItem
                 name="Fully Local Chats"
                 description="All chats are stored on your device."
-                image={LLMProvider?.logo}
+                image={<Image source={require('@/assets/logo/anything-llm-infinity.png')} className="w-[34px] h-[34px]" resizeMode="contain" />}
               />
               <PrivacyItem
                 name="Document Embedding"
                 description="All documents and processing are done on your device."
-                Icon={FileText}
+                Icon={<FileDashed size={34} color="#FFF" />}
               />
               <PrivacyItem
                 name="AI Agents"
                 description="All agents are run on your device and only use the internet when required (eg: Web search) "
-                Icon={Robot}
+                Icon={<Sparkle size={34} color="#FFF" />}
               />
-
             </View>
 
             <View className="absolute top-[80vh] left-0 right-0 mx-4 flex flex-row gap-x-4 items-center justify-between">
@@ -120,7 +119,6 @@ export default function DataHandling() {
                 <Text className="text-black text-xl">Experience AnythingLLM</Text>
               </TouchableOpacity>
             </View>
-
           </React.Fragment>
         </View>
       </SafeView>
@@ -128,7 +126,7 @@ export default function DataHandling() {
   );
 };
 
-function PrivacyItem({ name, description, image, Icon }: { name: string, description: string, image?: any, Icon?: React.ElementType }) {
+function PrivacyItem({ name, description, image, Icon }: { name: string, description: string, image?: any, Icon?: React.ReactNode }) {
   return (
     <TouchableOpacity
       activeOpacity={0.8}
@@ -136,9 +134,9 @@ function PrivacyItem({ name, description, image, Icon }: { name: string, descrip
       className={`flex flex-row rounded-lg gap-x-4 items-center`}
       disabled={true}
     >
-      <View style={{ width: 48, height: 48 }} className="shrink-0 grow-0 bg-white rounded-lg flex items-center justify-center">
-        {image && <Image source={image} className="w-full h-full" />}
-        {Icon && <Icon size={24} color="#000" />}
+      <View style={{ width: 48, height: 48 }} className="shrink-0 grow-0 rounded-lg flex items-center justify-center">
+        {image && image}
+        {Icon && Icon}
       </View>
       <View className="flex flex-col gap-y-1 max-w-[80%] word-break-all">
         <Text className="text-white text-xl font-bold word-break-all">{name}</Text>

@@ -30,9 +30,9 @@ export default function OnboardingWelcome() {
             resizeMode="contain"
             className="max-w-[380px] mx-auto"
           />
-          <View className="flex max-w-[65%] mx-auto">
+          <View className="flex max-w-[75%] mx-auto">
             <Text className="text-white text-regular text-center">
-              Run an entire AI assistant entirely on your phone with the power of the AnythingLLM ecosystem.
+              Transform your phone into a personal AI assistant to chat with documents, AI agents, and more - all private and on-device.
             </Text>
           </View>
 

@@ -1,22 +1,7 @@
 import { Text, View, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as RNFS from '@dr.pogodin/react-native-fs';
-
-/**
- * Resolves the destination path for a gguf model from a url
- * Typically this is a huggingface url
- * @param url - The url of the model
- * @returns The destination path for the model
- */
-function resolveDestinationPathFromGGUFUrl(url: string) {
-    const splits = new URL(url).pathname.split('/');
-    const creator = {
-        creator: splits[1],
-        model: splits[2],
-        file: splits.slice(-1)[0],
-    }
-    return `${RNFS.DocumentDirectoryPath}/models/gguf/${creator.creator}/${creator.model}/${creator.file}`;
-}
+import { resolveDestinationPathFromGGUFUrl } from "@/utils/defaultModels";
 
 /**
  * Hook to download a model from a url

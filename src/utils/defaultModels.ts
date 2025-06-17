@@ -40,6 +40,12 @@ export const EMBEDDING_MODEL = {
     tag: 'https://huggingface.co/leliuga/all-MiniLM-L6-v2-GGUF/resolve/main/all-MiniLM-L6-v2.Q8_0.gguf',
 }
 
+/**
+ * Resolves the destination path for a gguf model from a url
+ * Typically this is a huggingface url
+ * @param url - The url of the model
+ * @returns The destination path for the model
+ */
 export function resolveDestinationPathFromGGUFUrl(url: string) {
     const splits = new URL(url).pathname.split('/');
     const creator = {

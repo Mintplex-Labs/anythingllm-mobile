@@ -37,12 +37,14 @@ export default function Home() {
     <SafeView scrollable={false} >
       <TopBar />
       <View className="flex flex-col h-[90vh] justify-center items-center gap-y-4">
-        <Text className="text-2xl font-bold text-white">Welcome to AnythingLLM</Text>
-        <Text className="text-white text-center">
-          Get started by creating a new workspace.
-        </Text>
-        <TouchableOpacity className="rounded-lg p-2 border border-white/20" onPress={createWorkspace}>
-          <Text className="text-white">Create Workspace</Text>
+        <View className="flex flex-col items-center justify-center gap-y-1">
+          <Text className="text-2xl font-bold text-white">Welcome to AnythingLLM</Text>
+          <Text className="text-white text-center">
+            Get started by creating a new workspace.
+          </Text>
+        </View>
+        <TouchableOpacity style={{ minWidth: 117 }} className="rounded-lg p-2 border border-white py-2 px-4" onPress={createWorkspace}>
+          <Text className="text-white text-xl">Create Workspace</Text>
         </TouchableOpacity>
       </View>
     </SafeView>

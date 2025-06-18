@@ -11,7 +11,7 @@ import ModelChip from './ModelChip';
 
 export default function TopBar({ modelName, workspace, thread }: { modelName?: string, workspace?: any, thread?: any }) {
   const navigation = useNavigation<DrawerNavigationProp<any>>();
-  const { registerPress } = useDevShortcut({ workspace, thread });
+  const { registerPress, showDebug } = useDevShortcut({ workspace, thread });
   const canMakeThread = !!workspace && !!thread;
 
   function handleNewThread() {
@@ -37,7 +37,11 @@ export default function TopBar({ modelName, workspace, thread }: { modelName?: s
         <List size={34} color="white" />
       </TouchableOpacity>
       <View className='flex flex-col items-center gap-y-0'>
-        <TouchableOpacity onPress={registerPress} className='flex flex-col items-center gap-y-0'>
+        <TouchableOpacity
+          onLongPress={showDebug}
+          onPress={registerPress}
+          className='flex flex-col items-center gap-y-0'
+        >
           <Image
             source={require('@/assets/logo/anything-llm.png')}
             style={{

@@ -6,13 +6,13 @@ import { ArrowsInSimple, ArrowsOutSimple } from "phosphor-react-native";
 import { screenDimensions } from '@/utils/constants';
 import ActionMenu, { ACTION_MENU_HEIGHT } from './Actions';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { AttachmentInterface } from '@/hooks/useAttachments';
+import { AttachmentInterface, ChatWindowAttachmentsContainer } from '@/hooks/useAttachments';
 import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
 import { useDrawerStatus } from '@react-navigation/drawer';
+import useKeyboardHeight from '@/hooks/useKeyboardHeight';
 
 const defaultPadding = [0, 0, 32]; // top padding for snap points
-const bottomSheetPadding = [0, 380, 80]; // bottom padding for snap points
-const snapPointsDefault = ['22%', '60%', '100%'];
+export const snapPointsDefault = ['22%', '60%', '100%'];
 
 interface PromptInputProps {
     attachmentHandler: AttachmentInterface;
@@ -20,6 +20,7 @@ interface PromptInputProps {
 
 export default function PromptInput({ attachmentHandler }: PromptInputProps) {
     const insets = useSafeAreaInsets();
+    const keyboardHeight = useKeyboardHeight();
     const drawerStatus = useDrawerStatus()
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const { registerSheet, presentSheet, activeSheet } = useBottomSheet();
@@ -80,9 +81,12 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
     };
 
     const inputHeight = useMemo(() => {
-        const currentSnapPoint = parseInt(snapPoints[sheetIndex]) / 100;
-        return (screenDimensions.height) * currentSnapPoint - ACTION_MENU_HEIGHT - insets.bottom;
-    }, [sheetIndex, insets.bottom]);
+        let currentSnapPoint = parseInt(snapPoints[sheetIndex]) / 100;
+        if (isNaN(currentSnapPoint)) currentSnapPoint = parseInt(snapPoints[0]) / 100;
+
+        const actionMenuHeight = isFullScreen ? (ACTION_MENU_HEIGHT * 2) : ACTION_MENU_HEIGHT;
+        return (screenDimensions.height * currentSnapPoint) - insets.bottom - actionMenuHeight - keyboardHeight;
+    }, [sheetIndex, keyboardHeight]);
 
     useEffect(() => {
         registerSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, bottomSheetRef);
@@ -120,7 +124,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
 
     return (
         <>
-            <AttachmentsContainer attachmentHandler={attachmentHandler} />
+            {sheetIndex === 0 && <ChatWindowAttachmentsContainer attachmentHandler={attachmentHandler} />}
             <GestureHandlerRootView>
                 <BottomSheetModal
                     ref={bottomSheetRef}
@@ -148,7 +152,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
                             placeholderTextColor="#9F9FA0"
                             className="text-white text-lg"
                             onFocus={() => {
-                                bottomSheetRef.current?.snapToIndex(1);
+                                if (sheetIndex === 0) bottomSheetRef.current?.snapToIndex(1);
                                 setIsInputFocused(true);
                             }}
                             onBlur={() => {
@@ -161,35 +165,15 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
                             scrollEnabled={true}
                             style={{
                                 textAlignVertical: 'top',
-                                height: sheetIndex === 0 ? inputHeight : 'auto',
+                                height: inputHeight,
                                 borderRadius: 16,
                                 paddingHorizontal: 16,
-                                marginBottom: sheetIndex === 0 ? bottomSheetPadding[sheetIndex] : 0,
                             }}
                         />
-                        <ActionMenu
-                            show={!isFullScreen}
-                            sheetIndex={sheetIndex}
-                            attachmentHandler={attachmentHandler}
-                        />
+                        <ActionMenu isFullScreen={isFullScreen} sheetIndex={sheetIndex} attachmentHandler={attachmentHandler} />
                     </Animated.View>
                 </BottomSheetModal>
             </GestureHandlerRootView>
         </>
     );
 };
-
-const ATTACHMENTS_HEIGHT = 40 + 10; // height for the attachment items and the bottom padding
-function AttachmentsContainer({ attachmentHandler }: { attachmentHandler: AttachmentInterface }) {
-    const insets = useSafeAreaInsets();
-    const getTopPosition = useCallback(() => {
-        const snapPoint = parseInt(snapPointsDefault[0]) / 100;
-        return screenDimensions.height - (screenDimensions.height * snapPoint) - insets.bottom - (ATTACHMENTS_HEIGHT * 0.5);
-    }, [insets.bottom]);
-
-    return (
-        <View style={{ position: 'absolute', zIndex: 2, left: 0, top: getTopPosition(), height: ATTACHMENTS_HEIGHT }}>
-            {attachmentHandler.renderAttachments()}
-        </View>
-    );
-}

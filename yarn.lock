@@ -2872,6 +2872,11 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
+"@yz1311/react-native-intent-launcher@^0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@yz1311/react-native-intent-launcher/-/react-native-intent-launcher-0.3.5.tgz#923c9460f784ef21e70222bf5724d50451d0354a"
+  integrity sha512-2UtqbHDrjZQyxiMDrp5ZKa2EWggUQsarYb7MG9uzMIFBaJNPiNVnDuU0+ywF0n0LUaEZdKScqAeUr1YJTP9qXQ==
+
 JSONStream@^1.3.5:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.5.tgz#3208c1f08d3a4d99261ab64f92302bc15e111ca0"

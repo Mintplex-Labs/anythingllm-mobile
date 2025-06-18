@@ -1,12 +1,19 @@
-import React, { createContext, useContext, useRef, useState, useCallback } from 'react';
+import React, { createContext, useContext, useRef, useState, useCallback, useEffect } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { NativeEventEmitter } from 'react-native';
 
 export const BOTTOM_SHEET_NAMES = {
     PRIMARY_PROMPT_INPUT: 'primary-prompt-input',
     MODEL_CHIP_SELECTION: 'model-chip-selection',
     SETTINGS: 'settings',
+    TOOLS: 'tools',
 } as const;
 export type BottomSheetType = (typeof BOTTOM_SHEET_NAMES)[keyof typeof BOTTOM_SHEET_NAMES] | null;
+
+export const BOTTOM_SHEET_EVENTS = {
+    DISMISS_ALL_SHEETS: 'dismissAllSheets',
+} as const;
+export type BottomSheetEvent = (typeof BOTTOM_SHEET_EVENTS)[keyof typeof BOTTOM_SHEET_EVENTS];
 
 interface BottomSheetContextType {
     activeSheet: BottomSheetType;
@@ -18,6 +25,7 @@ interface BottomSheetContextType {
 }
 
 const BottomSheetContext = createContext<BottomSheetContextType | null>(null);
+const eventEmitter = new NativeEventEmitter();
 
 export function BottomSheetProvider({ children }: { children: React.ReactNode }) {
     const [activeSheet, setActiveSheet] = useState<BottomSheetType>(null);
@@ -54,6 +62,13 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
         sheetRefs.current.forEach((ref) => ref.current?.dismiss());
         setActiveSheet(null);
     }, []);
+
+    useEffect(() => {
+        eventEmitter.addListener(BOTTOM_SHEET_EVENTS.DISMISS_ALL_SHEETS, dismissAllSheets);
+        return () => {
+            eventEmitter.removeAllListeners(BOTTOM_SHEET_EVENTS.DISMISS_ALL_SHEETS);
+        };
+    }, [dismissAllSheets]);
 
     return (
         <BottomSheetContext.Provider

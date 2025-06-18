@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, View, Alert, ActivityIndicator, ScrollView } from "react-native";
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { generateUUID, } from "@/utils/constants";
+import { generateUUID, screenDimensions, } from "@/utils/constants";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { NativeEventEmitter } from "react-native";
 import Storage from "@/utils/storage";
@@ -8,8 +8,9 @@ import { pick } from 'react-native-document-picker';
 import getEmbedder from "@/utils/Embedder";
 import VectorDB from "@/utils/VectorDB";
 import { showToast } from "@/utils/Notification";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { snapPointsDefault } from "@/screens/WorkspaceChat/PromptInput";
 
-const eventEmitter = new NativeEventEmitter();
 const MAX_ATTACHMENTS = 4;
 export interface Attachment {
     uuid: string;
@@ -191,4 +192,19 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
     }, [attachments, addAttachment, removeAttachment, clearAttachments, renderAttachments, askForAttachment, clearWorkspaceVectors]);
 
     return attachmentInterface;
+}
+
+const ATTACHMENTS_SECTION_HEIGHT = 40; // height for the attachment items and the bottom padding
+export function ChatWindowAttachmentsContainer({ attachmentHandler }: { attachmentHandler: AttachmentInterface }) {
+    const insets = useSafeAreaInsets();
+    const getTopPosition = useCallback(() => {
+        const snapPoint = parseInt(snapPointsDefault[0]) / 100;
+        return screenDimensions.height - (screenDimensions.height * snapPoint) - insets.top - ATTACHMENTS_SECTION_HEIGHT;
+    }, [insets.bottom]);
+
+    return (
+        <View style={{ position: 'absolute', zIndex: 2, left: 0, top: getTopPosition(), height: ATTACHMENTS_SECTION_HEIGHT + 10 }}>
+            {attachmentHandler.renderAttachments()}
+        </View>
+    );
 }

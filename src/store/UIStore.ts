@@ -9,7 +9,8 @@ type StorageKeys =
   'onboarding_model_selection_completed' |
   'onboarding_survey_completed' |
   'onboarding_data_handling_completed' |
-  'llmPreference';
+  'llmPreference' |
+  'tools';
 
 export class UIStore {
   emitter: NativeEventEmitter;
@@ -23,6 +24,7 @@ export class UIStore {
     'onboarding_survey_completed',
     'onboarding_data_handling_completed',
     'llmPreference',
+    'tools',
   ] as const;
 
   pageStates = {

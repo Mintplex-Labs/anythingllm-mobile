@@ -11,7 +11,7 @@ import ModelChip from './ModelChip';
 
 export default function TopBar({ modelName, workspace, thread }: { modelName?: string, workspace?: any, thread?: any }) {
   const navigation = useNavigation<DrawerNavigationProp<any>>();
-  const { registerPress } = useDevShortcut();
+  const { registerPress } = useDevShortcut({ workspace, thread });
   const canMakeThread = !!workspace && !!thread;
 
   function handleNewThread() {

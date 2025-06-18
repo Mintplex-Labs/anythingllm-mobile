@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { NativeEventEmitter } from "react-native";
+import { Alert, NativeEventEmitter } from "react-native";
 import { showToast } from "@/utils/Notification";
 import { PATHS } from "@/utils/paths";
 
-export default function useDevShortcut() {
+export default function useDevShortcut({ workspace, thread }: { workspace?: any, thread?: any }) {
     const THRESHOLD = 5;
     const developerPressEmitter = new NativeEventEmitter();
     let timer: NodeJS.Timeout;
@@ -11,6 +11,7 @@ export default function useDevShortcut() {
     function registerPress() { setPresses(prevPresses => prevPresses + 1); }
 
     useEffect(() => {
+        if (presses === 2 && !!workspace && !!thread) Alert.alert('debug', `${workspace?.name}: ${workspace?.slug}\n\n${thread?.name}: ${thread?.slug}`);
         if (presses === 3) showToast(`Press ${THRESHOLD - presses} more times to open developer tools`, 'short');
         if (presses >= THRESHOLD) {
             clearTimeout(timer);

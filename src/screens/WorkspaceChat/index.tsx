@@ -3,32 +3,21 @@ import SafeView from "@/components/SafeView";
 import TopBar from "@/components/TopBar";
 import useRedirect from "@/hooks/useRedirect";
 import useLlmPreference from "@/hooks/useLLMPreference";
-import { Attachment } from "@/hooks/useAttachments";
 import useChatInfoEmit from "@/hooks/useChatInfoEmit";
 import { useEffect } from "react";
 import useWorkspaceThread from "@/hooks/useWorkspaceThread";
-
-// Define the message type for our chat
-export interface ChatMessage {
-  uuid: string;
-  content: string;
-  role: "user" | "assistant";
-  createdAt: Date;
-  attachments?: Attachment[];
-  metrics?: Object;
-}
+import PromptInput from "./PromptInput";
+import useAttachments from "@/hooks/useAttachments";
 
 export default function WorkspaceChat() {
   useRedirect();
   const { wsSlug, threadSlug } = useChatInfoEmit();
   const { LLMProvider, isLoading: isLoadingProvider, error, fetchLLMPreference } = useLlmPreference();
-  const { loadingWorkspaceThread, workspace, thread, fetchWorkspaceThread, error: errorWorkspaceThread } = useWorkspaceThread(wsSlug, threadSlug);
+  const { loadingWorkspaceThread, workspace, thread, error: errorWorkspaceThread } = useWorkspaceThread(wsSlug, threadSlug);
+  const attachmentHandler = useAttachments(wsSlug);
 
   useEffect(() => {
-    async function prepareChatView() {
-      await fetchLLMPreference();
-    }
-    prepareChatView();
+    fetchLLMPreference();
   }, [wsSlug, threadSlug]);
 
   if (isLoadingProvider || loadingWorkspaceThread) return <LoadingView />;
@@ -36,15 +25,23 @@ export default function WorkspaceChat() {
   if (!!errorWorkspaceThread) return <ErrorView title="Error loading workspace thread" error={errorWorkspaceThread} />;
 
   return (
-    <SafeView scrollable={false} safeAreaClassNames="pt-[21px] bg-[--primary-bg]">
+    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col justify-between" safeAreaStyle={{ backgroundColor: '#000' }}>
       <TopBar modelName={LLMProvider?.model} workspace={workspace} thread={thread} />
+
+      {/* Chat History */}
+      <View className="flex-1 w-full flex items-center justify-center">
+        <Text className="text-white">Chat History goes here</Text>
+      </View>
+
+      {/* Prompt Input */}
+      <PromptInput attachmentHandler={attachmentHandler} />
     </SafeView >
   );
 }
 
 function LoadingView() {
   return (
-    <SafeView scrollable={false} safeAreaClassNames="pt-[21px] bg-[--primary-bg]">
+    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" safeAreaStyle={{ backgroundColor: '#000' }}>
       <TopBar />
       <View className="flex h-[80vh] justify-center items-center">
         <ActivityIndicator size="large" color="#fff" />
@@ -55,7 +52,7 @@ function LoadingView() {
 
 function ErrorView({ title, error }: { title: string, error: any }) {
   return (
-    <SafeView scrollable={false} safeAreaClassNames="pt-[21px] bg-[--primary-bg]">
+    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" safeAreaStyle={{ backgroundColor: '#000' }}>
       <TopBar />
       <View className="flex h-[80vh] justify-center items-center">
         <Text className="text-red-500">{title}</Text>

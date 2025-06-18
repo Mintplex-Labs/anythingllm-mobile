@@ -1,15 +1,16 @@
-import { Text, TouchableOpacity, View, Alert } from "react-native";
+import { Text, TouchableOpacity, View, Alert, ActivityIndicator, ScrollView } from "react-native";
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { generateUUID, } from "@/utils/constants";
-import { CircleNotch, FileText, Spinner } from "phosphor-react-native";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { NativeEventEmitter } from "react-native";
 import Storage from "@/utils/storage";
 import { pick } from 'react-native-document-picker';
 import getEmbedder from "@/utils/Embedder";
 import VectorDB from "@/utils/VectorDB";
+import { showToast } from "@/utils/Notification";
 
 const eventEmitter = new NativeEventEmitter();
+const MAX_ATTACHMENTS = 4;
 export interface Attachment {
     uuid: string;
     type: string;
@@ -28,6 +29,7 @@ export interface AttachmentInterface {
     renderAttachments: () => React.ReactNode;
     askForAttachment: () => void;
     clearWorkspaceVectors: () => Promise<void>;
+    isMaxAttachments: boolean;
 }
 
 export default function useAttachments(wsSlug: string): AttachmentInterface {
@@ -50,6 +52,7 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
         setAttachments([]);
         await VectorDB.resetVectorsForWorkspace(workspaceSlug);
         console.log(`Vectors cleared for workspace ${workspaceSlug}`);
+        showToast('Workspace vectors cleared');
     }, []);
 
     const clearWorkspaceVectors = useCallback(async () => {
@@ -105,7 +108,7 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
 
             setAttachments(prev => prev.map(a => a.uuid === attachment.uuid ? { ...a, content: result, processing: false } : a));
         } catch (e) {
-            eventEmitter.emit('genericSnackbar', (e as Error).message);
+            showToast((e as Error).message);
             removeAttachment(attachment);
         }
     }, []);
@@ -133,28 +136,44 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
     const renderAttachments = useCallback(() => {
         if (attachments.length === 0) return null;
         return (
-            <View className="flex flex-row gap-x-2 top-[-15px]">
-                {attachments.map((attachment) => {
-                    return (
-                        <TouchableOpacity
-                            key={attachment.uuid}
-                            className="flex flex-row gap-x-2 items-center bg-gray-700 rounded-full py-1 px-3"
-                            onPress={() => {
-                                Alert.alert('Remove Attachment', 'Are you sure you want to remove this attachment from chat?', [
-                                    { text: 'Cancel', style: 'cancel' },
-                                    { text: 'Remove', style: 'destructive', onPress: () => removeAttachment(attachment) }
-                                ]);
-                            }}
-                        >
-                            {attachment.processing ?
-                                <View className="animate-spin"><CircleNotch size={16} color="#fff" /></View> :
-                                <FileText size={16} color="#fff" />
-                            }
-                            <Text className="text-white">{attachment.name}</Text>
-                        </TouchableOpacity>
-                    );
-                })}
-            </View>
+            <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                className="px-2"
+            >
+                <View className="flex flex-row gap-x-2">
+                    {attachments.map((attachment) => {
+                        const isProcessing = attachment.processing;
+                        return (
+                            <TouchableOpacity
+                                key={attachment.uuid}
+                                disabled={isProcessing}
+                                style={{
+                                    height: 40,
+                                    paddingHorizontal: 14,
+                                    ...(isProcessing ? {
+                                        backgroundColor: 'transparent',
+                                        borderWidth: 1,
+                                        borderColor: '#6F6F71'
+                                    } : {
+                                        backgroundColor: '#333333'
+                                    }),
+                                }}
+                                className="flex flex-row gap-x-2 items-center rounded-full justify-center"
+                                onPress={() => {
+                                    Alert.alert('Remove Attachment', 'Are you sure you want to remove this attachment from chat?', [
+                                        { text: 'Cancel', style: 'cancel' },
+                                        { text: 'Remove', style: 'destructive', onPress: () => removeAttachment(attachment) }
+                                    ]);
+                                }}
+                            >
+                                {isProcessing && <ActivityIndicator size="small" color="#fff" />}
+                                <Text className="text-white">{attachment.name}</Text>
+                            </TouchableOpacity>
+                        );
+                    })}
+                </View>
+            </ScrollView>
         );
     }, [attachments]);
 
@@ -166,7 +185,8 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
             clearAttachments,
             renderAttachments,
             askForAttachment,
-            clearWorkspaceVectors
+            clearWorkspaceVectors,
+            isMaxAttachments: attachments.length >= MAX_ATTACHMENTS
         }
     }, [attachments, addAttachment, removeAttachment, clearAttachments, renderAttachments, askForAttachment, clearWorkspaceVectors]);
 

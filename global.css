@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  --true-black: #000;
   --dark: #222628;
 
   --primary-bg: #131314;

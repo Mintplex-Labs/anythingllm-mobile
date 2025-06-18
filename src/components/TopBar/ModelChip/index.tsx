@@ -11,9 +11,13 @@ import AwaitableAlert from '@/components/AwaitableAlert';
 import { formatBytes } from '@/utils/formatters';
 import { useNetInfo } from '@react-native-community/netinfo';
 import DownloadProgress from '@/screens/Onboarding/ModelSelection/DownloadProgress';
+import { useBottomSheet } from '@/contexts/BottomSheetContext';
 
+const SHEET_NAME = 'model-chip-selection';
 export default function ModelChip({ modelName }: { modelName?: string }) {
     const bottomSheetRef = useRef<BottomSheetModal>(null);
+    const { registerSheet, unregisterSheet, presentSheet, dismissSheet } = useBottomSheet();
+
     const renderBackdrop = useCallback(
         (props: BottomSheetBackdropProps) => (
             <BottomSheetBackdrop
@@ -30,13 +34,16 @@ export default function ModelChip({ modelName }: { modelName?: string }) {
         return modelName.split('/').pop();
     }, [modelName]);
 
+    useEffect(() => {
+        registerSheet(SHEET_NAME, bottomSheetRef);
+        return () => unregisterSheet(SHEET_NAME);
+    }, [registerSheet, unregisterSheet]);
 
-    function openModelSelection() { bottomSheetRef.current?.present(); }
 
     if (!modelName) return null;
     return (
         <Fragment>
-            <TouchableOpacity onPress={openModelSelection} style={{ marginTop: -5, maxWidth: 150 }} className='bg-white/10 rounded-full'>
+            <TouchableOpacity onPress={() => presentSheet(SHEET_NAME)} style={{ marginTop: -5, maxWidth: 150 }} className='bg-white/10 rounded-full'>
                 <Text className='text-white text-sm px-2 py-1' numberOfLines={1} ellipsizeMode='middle'>{parsedModelName}</Text>
             </TouchableOpacity>
             <BottomSheetModal
@@ -47,11 +54,12 @@ export default function ModelChip({ modelName }: { modelName?: string }) {
                 backdropComponent={renderBackdrop}
                 backgroundStyle={{ backgroundColor: '#1B1B1E' }}
                 handleIndicatorStyle={{ backgroundColor: '#9F9FA0', width: 45, margin: 10 }}
+                onDismiss={() => dismissSheet(SHEET_NAME)}
             >
-                <AvailableModels closeSheet={() => bottomSheetRef.current?.close()} />
+                <AvailableModels closeSheet={() => dismissSheet(SHEET_NAME)} />
             </BottomSheetModal>
-        </Fragment >
-    )
+        </Fragment>
+    );
 }
 
 interface AvailableModel {

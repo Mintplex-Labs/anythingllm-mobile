@@ -7,6 +7,7 @@ import { screenDimensions } from '@/utils/constants';
 import ActionMenu, { ACTION_MENU_HEIGHT } from './Actions';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AttachmentInterface } from '@/hooks/useAttachments';
+import { useBottomSheet } from '@/contexts/BottomSheetContext';
 
 const defaultPadding = [0, 0, 32]; // top padding for snap points
 const bottomSheetPadding = [0, 380, 80]; // bottom padding for snap points
@@ -16,9 +17,11 @@ interface PromptInputProps {
     attachmentHandler: AttachmentInterface;
 }
 
+const BOTTOM_SHEET_NAME = 'primary-prompt-input';
 export default function PromptInput({ attachmentHandler }: PromptInputProps) {
     const insets = useSafeAreaInsets();
     const bottomSheetRef = useRef<BottomSheetModal>(null);
+    const { registerSheet, unregisterSheet, presentSheet } = useBottomSheet();
     const paddingAnim = useRef(new Animated.Value(defaultPadding[0])).current;
     const snapPoints = useMemo(() => snapPointsDefault, []);
     const inputRef = useRef<View>(null);
@@ -27,11 +30,12 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
     const [prompt, setPrompt] = useState('');
     const [isInputFocused, setIsInputFocused] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false);
+
     const handleSheetChanges = useCallback((index: number) => {
         switch (index) {
             case -1:
                 bottomSheetRef.current?.snapToIndex(0);
-                bottomSheetRef.current?.present();
+                presentSheet(BOTTOM_SHEET_NAME);
                 setIsFullScreen(false);
                 break;
             case 2:
@@ -50,7 +54,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
             delay: 0,
             useNativeDriver: false,
         }).start();
-    }, []);
+    }, [presentSheet]);
 
     const HandleComponent = () => {
         function handleExpand() {
@@ -80,17 +84,16 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
         return (screenDimensions.height) * currentSnapPoint - ACTION_MENU_HEIGHT - insets.bottom;
     }, [sheetIndex, insets.bottom]);
 
+    useEffect(() => {
+        registerSheet(BOTTOM_SHEET_NAME, bottomSheetRef);
+        return () => unregisterSheet(BOTTOM_SHEET_NAME);
+    }, [registerSheet, unregisterSheet]);
+
     // Disable the back button when the input is focused
     // to prevent page navigation while in full screen
     useEffect(() => {
-        const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-            if (isInputFocused) return true;
-            return false;
-        });
-
-        return () => {
-            backHandler.remove();
-        };
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', () => isInputFocused ? true : false);
+        return () => backHandler.remove();
     }, [isInputFocused]);
 
     // Handle the keyboard dismissing while in the half-open state
@@ -103,15 +106,14 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
         return () => keyboardDidHideListener.remove();
     }, [sheetIndex]);
 
-    // Present the bottom sheet when it is not open and the user navigates to the chat screen
     useEffect(() => {
-        if (bottomSheetRef.current) bottomSheetRef.current.present();
+        if (bottomSheetRef.current) presentSheet(BOTTOM_SHEET_NAME);
     }, [bottomSheetRef.current]);
 
     return (
         <>
             <AttachmentsContainer attachmentHandler={attachmentHandler} />
-            <GestureHandlerRootView >
+            <GestureHandlerRootView>
                 <BottomSheetModal
                     ref={bottomSheetRef}
                     index={0}

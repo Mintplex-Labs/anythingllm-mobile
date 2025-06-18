@@ -24,18 +24,15 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
     const sheetRefs = useRef<Map<BottomSheetType, React.RefObject<BottomSheetModal>>>(new Map());
 
     const registerSheet = useCallback((type: BottomSheetType, ref: React.RefObject<BottomSheetModal>) => {
-        console.log('registering sheet', type);
         sheetRefs.current.set(type, ref);
     }, []);
 
     const unregisterSheet = useCallback((type: BottomSheetType) => {
-        console.log('unregistering sheet', type);
         sheetRefs.current.delete(type);
     }, []);
 
     const presentSheet = useCallback((type: BottomSheetType, force: boolean = false) => {
         if (activeSheet === type && !force) return;
-        console.log('presenting sheet', { type, force });
         // Dismiss all sheets except the one we are presenting
         sheetRefs.current.forEach((ref, sheetType) => sheetType !== type && ref.current?.dismiss());
         const newRef = sheetRefs.current.get(type);
@@ -46,7 +43,6 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
     }, [activeSheet]);
 
     const dismissSheet = useCallback((type: BottomSheetType) => {
-        console.log('dismissing sheet', type);
         const ref = sheetRefs.current.get(type);
         if (ref?.current) {
             ref.current.dismiss();
@@ -55,7 +51,6 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
     }, []);
 
     const dismissAllSheets = useCallback(() => {
-        console.log('dismissing all sheets');
         sheetRefs.current.forEach((ref) => ref.current?.dismiss());
         setActiveSheet(null);
     }, []);

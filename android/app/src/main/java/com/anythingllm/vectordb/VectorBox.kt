@@ -18,6 +18,8 @@ import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.annotation.HnswIndex
 import io.objectbox.annotation.VectorDistanceType
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 @Entity
 data class VectorEntity(
@@ -31,16 +33,26 @@ data class VectorEntity(
 class VectorBox(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
     companion object {
         private const val TAG = "VectorBox"
+      
+        @Volatile
+        private var store: BoxStore? = null
+        private val lock = java.util.concurrent.locks.ReentrantLock()
     }
 
-    private val store: BoxStore
     private val box: Box<VectorEntity>
 
     init {
-        store = MyObjectBox.builder()
-                .androidContext(reactContext)
-                .build()
-        box = store.boxFor(VectorEntity::class.java)
+        // Ensure singleton BoxStore
+        if (store == null) {
+            lock.withLock {
+                if (store == null) {
+                    store = MyObjectBox.builder()
+                        .androidContext(reactContext.applicationContext)
+                        .build()
+                }
+            }
+        }
+        box = store!!.boxFor(VectorEntity::class.java)
     }
 
     override fun getName(): String = "VectorBox"

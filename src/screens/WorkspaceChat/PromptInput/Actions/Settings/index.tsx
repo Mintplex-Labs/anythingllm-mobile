@@ -1,40 +1,47 @@
-import React, { Fragment, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { ArrowClockwise, Gear, Paperclip, SlidersHorizontal } from "phosphor-react-native";
+import { Gear, Paperclip, SlidersHorizontal } from "phosphor-react-native";
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
-import ToolsAction from './Tools';
+import { ToolsActionIcon } from './Tools';
+import ResetChatAction from './ResetChat';
 
-export default function SettingsButton() {
-    const bottomSheetRef = useRef<BottomSheetModal>(null);
-    const { registerSheet, presentSheet } = useBottomSheet();
+export default function SettingsActionSheet() {
+    const settingsSheetRef = useRef<BottomSheetModal>(null);
+    const { registerSheet, presentSheet, activeSheet } = useBottomSheet();
+
     useEffect(() => {
-        registerSheet(BOTTOM_SHEET_NAMES.SETTINGS, bottomSheetRef);
+        registerSheet(BOTTOM_SHEET_NAMES.SETTINGS, settingsSheetRef);
     }, [registerSheet]);
 
     return (
-        <Fragment>
-            <TouchableOpacity onPress={() => presentSheet(BOTTOM_SHEET_NAMES.SETTINGS, true)}>
-                <SlidersHorizontal size={22} color="#FFF" />
-            </TouchableOpacity>
-            <BottomSheetModal
-                ref={bottomSheetRef}
-                index={0}
-                snapPoints={['25%']}
-                enableDynamicSizing={false}
-                enablePanDownToClose={true}
-                backgroundStyle={{ backgroundColor: '#1B1B1E' }}
-                handleIndicatorStyle={{ backgroundColor: '#9F9FA0', width: 45, margin: 10 }}
-                onDismiss={() => presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)}
-            >
-                <View style={{ paddingHorizontal: 30 }} className='flex flex-row items-center justify-between'>
-                    <SettingsItem icon={<Paperclip size={32} color="#FFF" />} text="Files" onPress={() => { }} />
-                    <SettingsItem icon={<ArrowClockwise size={32} color="#FFF" />} text="Reset" onPress={() => { }} />
-                    <ToolsAction />
-                    <SettingsItem icon={<Gear size={32} color="#FFF" />} text="Settings" onPress={() => { }} />
-                </View>
-            </BottomSheetModal>
-        </Fragment>
+        <BottomSheetModal
+            ref={settingsSheetRef}
+            index={0}
+            snapPoints={['25%']}
+            enableDynamicSizing={false}
+            enablePanDownToClose={true}
+            backgroundStyle={{ backgroundColor: '#1B1B1E' }}
+            handleIndicatorStyle={{ backgroundColor: '#9F9FA0', width: 45, margin: 10 }}
+            // If the settings sheet is dismissed AND was the current focused, present the primary prompt input sheet
+            onDismiss={() => activeSheet === BOTTOM_SHEET_NAMES.SETTINGS && presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)}
+        >
+            <View style={{ paddingHorizontal: 30 }} className='flex flex-row items-center justify-between'>
+                <SettingsItem icon={<Paperclip size={32} color="#FFF" />} text="Files" onPress={() => { }} />
+                <ResetChatAction />
+                <ToolsActionIcon />
+                <SettingsItem icon={<Gear size={32} color="#FFF" />} text="Settings" onPress={() => { }} />
+            </View>
+        </BottomSheetModal>
+    );
+}
+
+export function SettingsActionIcon() {
+    const { presentSheet } = useBottomSheet();
+    return (
+        <TouchableOpacity onPress={() => presentSheet(BOTTOM_SHEET_NAMES.SETTINGS)}>
+            <SlidersHorizontal size={22} color="#FFF" />
+        </TouchableOpacity>
     );
 }
 

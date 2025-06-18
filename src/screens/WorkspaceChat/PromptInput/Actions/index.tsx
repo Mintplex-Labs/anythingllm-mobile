@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, TouchableOpacity, View } from 'react-native';
-import { PaperPlaneRight } from "phosphor-react-native";
+import { PaperPlaneRight, SlidersHorizontal } from "phosphor-react-native";
 import { AttachmentInterface } from '@/hooks/useAttachments';
 import AttachmentsButton from './AttachmentsButton';
 import { screenDimensions } from '@/utils/constants';
 import useKeyboardHeight from '@/hooks/useKeyboardHeight';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { snapPointsDefault } from '../index';
-import SettingsButton from './Settings';
+import { SettingsActionIcon } from './Settings';
 
 export const ACTION_MENU_HEIGHT = 40;
 export default function ActionMenu({ isFullScreen, sheetIndex, ...props }: { isFullScreen: boolean, sheetIndex?: number, attachmentHandler: AttachmentInterface }) {
@@ -15,7 +15,6 @@ export default function ActionMenu({ isFullScreen, sheetIndex, ...props }: { isF
     const insets = useSafeAreaInsets();
     const defaultTopPosition = (screenDimensions.height * (parseInt(snapPointsDefault[0]) / 100)) - insets.bottom - ACTION_MENU_HEIGHT;
     const topPositionAnim = useRef(new Animated.Value(defaultTopPosition)).current;
-
     useEffect(() => {
         const snapPoint = parseInt(snapPointsDefault[sheetIndex ?? 0]) / 100;
         let newTopPosition = (screenDimensions.height * snapPoint) - insets.bottom - ACTION_MENU_HEIGHT - keyboardHeight;
@@ -36,7 +35,7 @@ export default function ActionMenu({ isFullScreen, sheetIndex, ...props }: { isF
             {isFullScreen ? <View /> : (
                 <View className='flex flex-row items-center gap-x-4'>
                     <AttachmentsButton attachmentHandler={props.attachmentHandler} />
-                    <SettingsButton />
+                    <SettingsActionIcon />
                 </View>
             )}
 

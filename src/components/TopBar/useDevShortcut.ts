@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Alert, NativeEventEmitter } from "react-native";
 import { showToast } from "@/utils/Notification";
 import { PATHS } from "@/utils/paths";
-import { BOTTOM_SHEET_EVENTS } from "@/contexts/BottomSheetContext";
 
 export default function useDevShortcut({ workspace, thread }: { workspace?: any, thread?: any }) {
     const THRESHOLD = 5;
@@ -21,7 +20,6 @@ export default function useDevShortcut({ workspace, thread }: { workspace?: any,
         if (presses >= THRESHOLD) {
             clearTimeout(timer);
             setPresses(0);
-            developerPressEmitter.emit(BOTTOM_SHEET_EVENTS.DISMISS_ALL_SHEETS);
             developerPressEmitter.emit('REDIRECT', {
                 path: PATHS.developer.home,
             });

@@ -16,7 +16,7 @@ import WorkspaceDrawer from '@/components/WorkspaceDrawer';
 import { PATHS } from './src/utils/paths';
 import Screens from '@/screens';
 import './global.css';
-import { Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
 import SafeView from '@/components/SafeView';
 import useInitialRoute from '@/hooks/useInitialRoute';
 import './src/utils/polyfills';

@@ -9,6 +9,13 @@ import useWorkspaceThread from "@/hooks/useWorkspaceThread";
 import PromptInput from "./PromptInput";
 import useAttachments from "@/hooks/useAttachments";
 
+// Supplemental UI Sheets from the PromptInput actions
+// Must be top level so their refs are not lost when the PromptInput is unmounted
+// DO NOT add sheets _inside_ the PromptInput component since they will be unmounted when the PromptInput is unmounted
+// thus nulling the ref and preventing the sheet from being dismissed
+import SettingsActionSheet from "./PromptInput/Actions/Settings";
+import ToolsActionSheet from "./PromptInput/Actions/Settings/Tools";
+
 export default function WorkspaceChat() {
   useRedirect();
   const { wsSlug, threadSlug } = useChatInfoEmit();
@@ -35,6 +42,8 @@ export default function WorkspaceChat() {
 
       {/* Prompt Input */}
       <PromptInput attachmentHandler={attachmentHandler} />
+      <SettingsActionSheet />
+      <ToolsActionSheet />
     </SafeView >
   );
 }

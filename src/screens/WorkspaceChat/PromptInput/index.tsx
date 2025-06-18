@@ -10,6 +10,8 @@ import { AttachmentInterface, ChatWindowAttachmentsContainer } from '@/hooks/use
 import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
 import { useDrawerStatus } from '@react-navigation/drawer';
 import useKeyboardHeight from '@/hooks/useKeyboardHeight';
+import { PATHS } from '@/utils/paths';
+import useRouteObserver from '@/hooks/useRouteObserver';
 
 const defaultPadding = [0, 0, 32]; // top padding for snap points
 export const snapPointsDefault = ['22%', '60%', '100%'];
@@ -20,6 +22,7 @@ interface PromptInputProps {
 
 export default function PromptInput({ attachmentHandler }: PromptInputProps) {
     const insets = useSafeAreaInsets();
+    const { currentRoute } = useRouteObserver();
     const keyboardHeight = useKeyboardHeight();
     const drawerStatus = useDrawerStatus()
     const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -96,12 +99,14 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
     // - the drawer is closed
     // - the active sheet is null
     // - the bottom sheet ref exists
+    // - the current route is the workspace chat route
     // then watch for changes to the active sheet
     useEffect(() => {
         if (
             drawerStatus === 'closed' &&
             (activeSheet === null || activeSheet === BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT) &&
-            !!bottomSheetRef.current
+            !!bottomSheetRef.current &&
+            currentRoute === PATHS.workspace_chat
         ) presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)
     }, [activeSheet]);
 

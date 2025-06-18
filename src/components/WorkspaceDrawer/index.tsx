@@ -2,6 +2,7 @@ import { screenDimensions } from "@/utils/constants";
 import { createDrawerNavigator, DrawerNavigationOptions } from "@react-navigation/drawer";
 import HeaderLeft from "@/components/HeaderLeft";
 import SidebarContent from "./SidebarContent";
+import useRouteObserver from "@/hooks/useRouteObserver";
 
 interface IWorkspaceDrawer {
   overrideOptions?: Partial<DrawerNavigationOptions>;
@@ -15,6 +16,8 @@ export default function WorkspaceDrawer({
   initialRouteName,
   children
 }: IWorkspaceDrawer) {
+  useRouteObserver();
+
   // 360 is the max width for the drawer is on wide screens
   // 90% of the screen width for smaller screens
   const width = (screenDimensions.width > 400) ? 360 : screenDimensions.width * 0.9;

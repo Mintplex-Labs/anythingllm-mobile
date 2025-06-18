@@ -12,8 +12,14 @@ type StorageKeys =
   'llmPreference' |
   'tools';
 
+export const GLOBAL_EVENTS = {
+  RESET_CHAT: 'reset_chat',
+} as const;
+
 export class UIStore {
   emitter: NativeEventEmitter;
+  globalEvents = GLOBAL_EVENTS;
+
   static readonly GROUP_KEYS = {
     READY_TO_USE: 'ready_to_use',
     AVAILABLE_TO_DOWNLOAD: 'available_to_download',
@@ -132,6 +138,10 @@ export class UIStore {
     runInAction(() => {
       this.benchmarkShareDialog.shouldShow = shouldShow;
     });
+  }
+
+  emitGlobalEvent(event: typeof GLOBAL_EVENTS[keyof typeof GLOBAL_EVENTS]) {
+    this.emitter.emit(event);
   }
 
   async resetAllStorage() {

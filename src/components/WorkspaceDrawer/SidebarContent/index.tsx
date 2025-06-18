@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Linking, Text, NativeEventEmitter, RefreshControl, ActivityIndicator } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
@@ -8,12 +8,13 @@ import { Gear } from 'phosphor-react-native';
 import WorkspaceItem from './WorkspaceItem';
 import useWorkspaces from '@/hooks/useWorkspaces';
 import NewWorkspaceModal, { useNewWorkspaceModal } from '@/components/NewWorkspaceModal';
-import { PATHS } from '@/utils/paths';
 import SafeView from '@/components/SafeView';
-import { useNavigation } from '@react-navigation/native';
+import { useDrawerStatus } from '@react-navigation/drawer';
+import { BOTTOM_SHEET_NAMES, useBottomSheet } from '@/contexts/BottomSheetContext';
 
 export default function SidebarContent() {
-  const navigation = useNavigation();
+  const drawerStatus = useDrawerStatus();
+  const { presentSheet, dismissAllSheets, activeSheet } = useBottomSheet();
   const { loadingWorkspaces, workspaces, activeWorkspaceSlug, setActiveWorkspaceSlug, activeThreadSlug, fetchWorkspaces } = useWorkspaces(true);
   const { showNewWorkspaceModal, openNewWorkspaceModal, closeNewWorkspaceModal } = useNewWorkspaceModal();
   const [refreshing, setRefreshing] = useState(false);
@@ -26,6 +27,11 @@ export default function SidebarContent() {
       setRefreshing(false);
     }
   }, [fetchWorkspaces]);
+
+  useEffect(() => {
+    if (drawerStatus === 'open') return dismissAllSheets();
+    if (drawerStatus === 'closed') return presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true);
+  }, [drawerStatus]);
 
   return (
     <SafeView applyInsets={false} safeAreaClassNames='bg-[--hex-gray-10]' containerClassNames='flex-1 flex-col flex px-2 pt-4' edges={['top', 'bottom']}>

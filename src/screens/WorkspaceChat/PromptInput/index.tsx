@@ -7,7 +7,8 @@ import { screenDimensions } from '@/utils/constants';
 import ActionMenu, { ACTION_MENU_HEIGHT } from './Actions';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AttachmentInterface } from '@/hooks/useAttachments';
-import { useBottomSheet } from '@/contexts/BottomSheetContext';
+import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
+import { useDrawerStatus } from '@react-navigation/drawer';
 
 const defaultPadding = [0, 0, 32]; // top padding for snap points
 const bottomSheetPadding = [0, 380, 80]; // bottom padding for snap points
@@ -17,11 +18,11 @@ interface PromptInputProps {
     attachmentHandler: AttachmentInterface;
 }
 
-const BOTTOM_SHEET_NAME = 'primary-prompt-input';
 export default function PromptInput({ attachmentHandler }: PromptInputProps) {
     const insets = useSafeAreaInsets();
+    const drawerStatus = useDrawerStatus()
     const bottomSheetRef = useRef<BottomSheetModal>(null);
-    const { registerSheet, unregisterSheet, presentSheet } = useBottomSheet();
+    const { registerSheet, presentSheet, activeSheet } = useBottomSheet();
     const paddingAnim = useRef(new Animated.Value(defaultPadding[0])).current;
     const snapPoints = useMemo(() => snapPointsDefault, []);
     const inputRef = useRef<View>(null);
@@ -35,7 +36,6 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
         switch (index) {
             case -1:
                 bottomSheetRef.current?.snapToIndex(0);
-                presentSheet(BOTTOM_SHEET_NAME);
                 setIsFullScreen(false);
                 break;
             case 2:
@@ -85,9 +85,21 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
     }, [sheetIndex, insets.bottom]);
 
     useEffect(() => {
-        registerSheet(BOTTOM_SHEET_NAME, bottomSheetRef);
-        return () => unregisterSheet(BOTTOM_SHEET_NAME);
-    }, [registerSheet, unregisterSheet]);
+        registerSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, bottomSheetRef);
+    }, [registerSheet]);
+
+    // Always present the prompt input on mount when:
+    // - the drawer is closed
+    // - the active sheet is null
+    // - the bottom sheet ref exists
+    // then watch for changes to the active sheet
+    useEffect(() => {
+        if (
+            drawerStatus === 'closed' &&
+            (activeSheet === null || activeSheet === BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT) &&
+            !!bottomSheetRef.current
+        ) presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)
+    }, [activeSheet]);
 
     // Disable the back button when the input is focused
     // to prevent page navigation while in full screen
@@ -106,10 +118,6 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
         return () => keyboardDidHideListener.remove();
     }, [sheetIndex]);
 
-    useEffect(() => {
-        if (bottomSheetRef.current) presentSheet(BOTTOM_SHEET_NAME);
-    }, [bottomSheetRef.current]);
-
     return (
         <>
             <AttachmentsContainer attachmentHandler={attachmentHandler} />
@@ -120,9 +128,15 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
                     snapPoints={snapPoints}
                     keyboardBehavior='extend'
                     enableDynamicSizing={false}
+                    enablePanDownToClose={false}
                     onChange={handleSheetChanges}
-                    backgroundStyle={{ backgroundColor: '#1B1B1E', borderTopLeftRadius: 30, borderTopRightRadius: 30, paddingTop: 16 }}
                     handleComponent={HandleComponent}
+                    backgroundStyle={{
+                        backgroundColor: '#1B1B1E',
+                        borderTopLeftRadius: 30,
+                        borderTopRightRadius: 30,
+                        paddingTop: 16,
+                    }}
                 >
                     <Animated.View
                         ref={inputRef}
@@ -150,11 +164,12 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
                                 height: sheetIndex === 0 ? inputHeight : 'auto',
                                 borderRadius: 16,
                                 paddingHorizontal: 16,
-                                marginBottom: bottomSheetPadding[sheetIndex],
+                                marginBottom: sheetIndex === 0 ? bottomSheetPadding[sheetIndex] : 0,
                             }}
                         />
                         <ActionMenu
-                            show={!isFullScreen && sheetIndex === 0}
+                            show={!isFullScreen}
+                            sheetIndex={sheetIndex}
                             attachmentHandler={attachmentHandler}
                         />
                     </Animated.View>

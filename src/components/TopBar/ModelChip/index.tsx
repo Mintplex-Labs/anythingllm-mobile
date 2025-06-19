@@ -29,7 +29,12 @@ export default function ModelChip({ modelName }: { modelName?: string }) {
     );
     const parsedModelName = useMemo(() => {
         if (!modelName) return null;
-        return modelName.split('/').pop();
+        return modelName
+            .split('/')
+            .pop()
+            ?.replaceAll(new RegExp('(-?)(gguf|GGUF|Gguf)$', 'g'), '') // Remove -gguf suffix
+            ?.replaceAll(new RegExp('-', 'g'), ' ') // Replace - with space
+            ?.replace(/^./, (str) => str.toUpperCase()); // Capitalize first letter
     }, [modelName]);
 
     useEffect(() => {
@@ -39,8 +44,15 @@ export default function ModelChip({ modelName }: { modelName?: string }) {
     if (!modelName) return null;
     return (
         <Fragment>
-            <TouchableOpacity onPress={() => presentSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)} style={{ marginTop: -5, maxWidth: 150 }} className='bg-white/10 rounded-full'>
-                <Text className='text-white text-sm px-2 py-1' numberOfLines={1} ellipsizeMode='middle'>{parsedModelName}</Text>
+            <TouchableOpacity onPress={() => presentSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)} style={{ marginTop: -5, maxWidth: 200 }} className='bg-white/10 rounded-full'>
+                <Text
+                    style={{ fontSize: 14, paddingVertical: 4, paddingHorizontal: 12 }}
+                    className='text-white'
+                    numberOfLines={1}
+                    ellipsizeMode='middle'
+                >
+                    {parsedModelName || 'Unknown LLM'}
+                </Text>
             </TouchableOpacity>
             <BottomSheetModal
                 ref={bottomSheetRef}

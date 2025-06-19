@@ -15,9 +15,13 @@ export type WorkspaceType = {
 
 export default class Workspace extends Model {
   static table = 'workspaces';
+  static defaultSystemPrompt = `You are a helpful assistant that can answer questions and help with tasks.`;
+  static defaultTemperature = 0.7;
 
   @text('name') name!: string;
   @text('slug') slug!: string; // unique!!
+  @text('system_prompt') systemPrompt!: string;
+  @field('temperature') temperature!: number;
   @field('created_at') createdAt!: number;
 
   static log(message: any, ...args: any[]) {
@@ -72,6 +76,8 @@ export default class Workspace extends Model {
       newWorkspace = await database.get(Workspace.table).create((workspace: any) => {
         workspace.name = name;
         workspace.slug = slug;
+        workspace.system_prompt = this.defaultSystemPrompt;
+        workspace.temperature = this.defaultTemperature;
         workspace.created_at = Date.now();
       });
     });
@@ -105,7 +111,6 @@ export default class Workspace extends Model {
 
       // Delete all vectors for the workspace
       await VectorDB.resetVectorsForWorkspace(wsSlug);
-
       this.log('workspace successfully deleted');
       return true;
     } catch (error) {

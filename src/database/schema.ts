@@ -8,6 +8,8 @@ export default appSchema({
       columns: [
         { name: 'name', type: 'string' },
         { name: 'slug', type: 'string', isIndexed: true },
+        { name: 'system_prompt', type: 'string', isOptional: true },
+        { name: 'temperature', type: 'number', isOptional: true },
         { name: 'created_at', type: 'number' },
       ],
     }),

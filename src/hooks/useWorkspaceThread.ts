@@ -38,7 +38,7 @@ export default function useWorkspaceThread(wsSlug: string, threadSlug: string | 
       (event) => {
         if (event.type === 'update') {
           const { workspace, thread } = event.details;
-          console.log("Got page update", { workspace, thread });
+          // console.log("Got page update", { workspace, thread });
           if (workspace) setWorkspace(workspace);
           if (thread) setThread(thread);
         }

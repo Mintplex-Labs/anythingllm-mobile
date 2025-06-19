@@ -36,7 +36,7 @@ const App = observer(() => {
     </SafeAreaProvider>
   );
 
-  console.log('initialRoute', initialRoute);
+  // console.log('initialRoute', initialRoute);
   return (
     <BottomSheetProvider>
       <Suspense fallback={<ActivityIndicator />}>

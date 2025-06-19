@@ -10,7 +10,7 @@ interface VectorEntity {
 
 interface VectorBoxInterface {
     insert(workspaceSlug: string, embedding: number[], metadata?: string): Promise<number>;
-    bulkInsert(workspaceSlug: string, embeddings: { embedding: number[], metadata: string }[]): Promise<number>;
+    bulkInsert(workspaceSlug: string, embeddings: { embedding: number[], metadata: string }[]): Promise<number[]>;
     get(id: number): Promise<VectorEntity>;
     update(id: number, embedding: number[], metadata?: string): Promise<boolean>;
     remove(id: number): Promise<boolean>;
@@ -18,6 +18,7 @@ interface VectorBoxInterface {
     workspaceVectorCount(workspaceSlug: string): Promise<number>;
     resetVectorsForWorkspace(workspaceSlug: string): Promise<boolean>;
     semanticSearch(workspaceSlug: string, queryVector: number[], topN: number): Promise<{ id: number, metadata: string, score: number }[]>;
+    deleteVectorsByIds(ids: number[]): Promise<boolean>;
 }
 
 /**
@@ -74,17 +75,19 @@ class VectorDB {
     /**
      * Bulk insert vectors into the database
      * The metadata will be stringified if it's not already a string prior to insertion
+     * Returns an array of vector box ids for the ObjectBox database
      */
-    async bulkInsert(workspaceSlug: string, vectors: { embedding: number[], metadata: object }[]): Promise<number> {
+    async bulkInsert(workspaceSlug: string, vectors: { embedding: number[], metadata: object }[]): Promise<{ count: number, ids: number[] }> {
         try {
-            if (vectors.length === 0) return 0;
+            if (vectors.length === 0) return { count: 0, ids: [] };
             if (!vectors.every(vector => vector.embedding && vector.embedding.length > 0 && vector.metadata)) throw new Error('Invalid vector schema');
             const preparedVectors = vectors.map(vector => ({
                 embedding: vector.embedding,
                 metadata: typeof vector.metadata === 'string' ? vector.metadata : JSON.stringify(vector.metadata)
             }));
 
-            return await this.vectorBox.bulkInsert(workspaceSlug, preparedVectors);
+            const result = await this.vectorBox.bulkInsert(workspaceSlug, preparedVectors);
+            return { count: result.length, ids: result };
         } catch (error) {
             console.error('Error inserting vectors:', error);
             throw error;
@@ -117,6 +120,15 @@ class VectorDB {
             return await this.vectorBox.resetVectorsForWorkspace(workspaceSlug);
         } catch (error) {
             console.error('Error resetting vectors:', error);
+            throw error;
+        }
+    }
+
+    async deleteVectorsByIds(ids: number[]): Promise<boolean> {
+        try {
+            return await this.vectorBox.deleteVectorsByIds(ids);
+        } catch (error) {
+            console.error('Error deleting vectors:', error);
             throw error;
         }
     }

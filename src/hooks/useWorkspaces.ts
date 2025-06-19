@@ -29,7 +29,7 @@ export default function useWorkspaces(withThreads: boolean = false) {
       (event) => {
         if (event.type === 'update') {
           const { wsSlug, threadSlug } = event.details;
-          console.log("Got page update", { wsSlug, threadSlug });
+          // console.log("Got page update", { wsSlug, threadSlug });
           if (wsSlug) setActiveWorkspaceSlug(wsSlug);
           if (threadSlug) setActiveThreadSlug(threadSlug);
         }

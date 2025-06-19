@@ -120,8 +120,11 @@ class VectorBox(reactContext: ReactApplicationContext) : ReactContextBaseJavaMod
                     workspaceSlug = workspaceSlug
                 ))
             }
+            
             box.put(vectorEntities)
-            promise.resolve(vectorEntities.size.toDouble())
+            val vectorBoxIds = Arguments.createArray()
+            for (entity in vectorEntities) vectorBoxIds.pushDouble(entity.id.toDouble());
+            promise.resolve(vectorBoxIds)
         } catch (e: Exception) {
             promise.reject("ERROR", e.message)
         }
@@ -176,7 +179,18 @@ class VectorBox(reactContext: ReactApplicationContext) : ReactContextBaseJavaMod
     fun reset(promise: Promise) {
         try {
             box.removeAll()
-            Log.d(TAG, "Entire VectorDB reset - all vectors deleted")
+            Log.d(TAG, "Entire VectorDB reset - all vectors deleted!")
+            promise.resolve(true)
+        } catch (e: Exception) {
+            promise.reject("ERROR", e.message)
+        }
+    }
+
+     @ReactMethod
+    fun deleteVectorsByIds(ids: ReadableArray, promise: Promise) {
+        try {
+            for (i in 0 until ids.size()) box.remove(ids.getDouble(i).toLong())
+            Log.d(TAG, "Deleted ${ids.size()} vectors!")
             promise.resolve(true)
         } catch (e: Exception) {
             promise.reject("ERROR", e.message)

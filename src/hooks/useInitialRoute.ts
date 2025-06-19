@@ -16,12 +16,6 @@ async function determineInitialRoute() {
   const modelSelectionCompleted = await uiStore.getFromStorage('onboarding_model_selection_completed', false);
   const surveyCompleted = await uiStore.getFromStorage('onboarding_survey_completed', false);
   const dataHandlingCompleted = await uiStore.getFromStorage('onboarding_data_handling_completed', false);
-  console.log({
-    welcomeCompleted,
-    modelSelectionCompleted,
-    surveyCompleted,
-    dataHandlingCompleted,
-  })
 
   if (!welcomeCompleted) return PATHS.onboarding.welcome;
   else if (!modelSelectionCompleted) return PATHS.onboarding.model_selection;

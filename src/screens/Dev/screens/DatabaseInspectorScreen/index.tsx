@@ -8,18 +8,14 @@ import {
   TextInput
 } from 'react-native';
 import { Card, Button } from 'react-native-paper';
-import { database } from '@/database';
+import { database, databaseTables } from '@/database';
 import { useNavigation } from '@react-navigation/native';
 import { PATHS } from '@/utils/paths';
 import uiStore from '@/store/UIStore';
 import { KeyboardAccessoryView } from '@/components/KeyboardAccessoryView';
 
 // Define the collections we want to inspect
-const COLLECTIONS = [
-  'workspaces',
-  'workspace_threads',
-];
-
+const COLLECTIONS = databaseTables;
 const DatabaseInspectorScreen = () => {
   const navigation = useNavigation();
   const [collectionData, setCollectionData] = useState<{

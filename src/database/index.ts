@@ -6,6 +6,7 @@ import migrations from './migrations';
 // models
 import Workspace from './models/Workspace';
 import WorkspaceThread from './models/WorkspaceThread';
+import Document from './models/Document';
 
 const adapter = new SQLiteAdapter({
   schema,
@@ -17,5 +18,7 @@ const adapter = new SQLiteAdapter({
 
 export const database = new Database({
   adapter,
-  modelClasses: [Workspace, WorkspaceThread],
+  modelClasses: [Workspace, WorkspaceThread, Document],
 });
+
+export const databaseTables = [Workspace.table, WorkspaceThread.table, Document.table];

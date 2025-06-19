@@ -10,7 +10,7 @@ export default function useChatInfoEmit() {
 
   // Emits the page info to the sidebar on load
   useEffect(() => {
-    console.log('emitting workspaceChatPageInfo', { wsSlug, threadSlug });
+    // console.log('emitting workspaceChatPageInfo', { wsSlug, threadSlug });
     eventEmitter.emit('workspaceChatPageInfo', {
       type: 'update',
       details: {

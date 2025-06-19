@@ -47,5 +47,5 @@ import { polyfill as polyfillCrypto } from 'react-native-polyfill-globals/src/cr
   polyfillCrypto();
   polyfilled.push('crypto');
 
-  console.log(`polyfilled: `, polyfilled);
+  console.log(`🛠️ \x1b[33m[polyfills]\x1b[0m Patched ${polyfilled.length} globals. ${polyfilled.join(', ')}`);
 })();

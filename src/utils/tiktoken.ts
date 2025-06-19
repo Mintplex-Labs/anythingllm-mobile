@@ -32,7 +32,6 @@ export default class TokenManager {
 
     TokenManager.instance = this;
     TokenManager.currentModel = model;
-    this.log("Initialized new TokenManager instance for model:", model);
     return this;
   }
 

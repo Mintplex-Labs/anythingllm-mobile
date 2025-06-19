@@ -2,11 +2,11 @@ import { Text, TouchableOpacity, View, Alert, ActivityIndicator, ScrollView } fr
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { generateUUID, screenDimensions, } from "@/utils/constants";
 import * as RNFS from '@dr.pogodin/react-native-fs';
-import { NativeEventEmitter } from "react-native";
 import Storage from "@/utils/storage";
 import { pick } from 'react-native-document-picker';
 import getEmbedder from "@/utils/Embedder";
 import VectorDB from "@/utils/VectorDB";
+import Document from "@/database/models/Document";
 import { showToast } from "@/utils/Notification";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { snapPointsDefault } from "@/screens/WorkspaceChat/PromptInput";
@@ -25,7 +25,7 @@ export interface Attachment {
 export interface AttachmentInterface {
     attachments: Attachment[];
     addAttachment: (attachment: Attachment) => void;
-    removeAttachment: (attachment: Attachment) => void;
+    removeAttachment: (attachment: Attachment) => Promise<void>;
     clearAttachments: () => void;
     renderAttachments: () => React.ReactNode;
     askForAttachment: () => void;
@@ -41,18 +41,26 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
         setAttachments(prev => [...prev, attachment]);
     }, []);
 
-    const removeAttachment = useCallback((attachment: Attachment) => {
+    const removeAttachment = useCallback(async (attachment: Attachment) => {
         setAttachments(prev => prev.filter(a => a.uuid !== attachment.uuid));
+        await Document.delete([{ field: 'uuid', value: attachment.uuid }], true); // delete the document and the vectors associated with it
     }, []);
 
-    const clearAttachments = useCallback(() => {
+    const clearAttachments = useCallback(async () => {
+        const currentAttachments = attachments;
         setAttachments([]);
+        await Promise.all(currentAttachments.map(a => removeAttachment(a)));
     }, []);
 
+    /**
+     * Blindly clears the workspace vectors and deletes the documents
+     * associated with the workspace. This is used when the user wants to
+     * clear the workspace vectors and start fresh.
+     */
     const onClearWorkspaceVectors = useCallback(async () => {
         setAttachments([]);
         await VectorDB.resetVectorsForWorkspace(workspaceSlug);
-        console.log(`Vectors cleared for workspace ${workspaceSlug}`);
+        await Document.delete([{ field: 'workspace_slug', value: workspaceSlug }]);
         showToast('Workspace vectors cleared');
     }, []);
 
@@ -67,9 +75,9 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
 
     useEffect(() => {
         setWorkspaceSlug(wsSlug);
-        VectorDB.getWorkspaceVectorCount(wsSlug).then(count => {
-            console.log(`VectorDB count for workspace ${wsSlug}: ${count}`);
-        });
+        // VectorDB.getWorkspaceVectorCount(wsSlug).then(count => {
+        //     console.log(`VectorDB count for workspace ${wsSlug}: ${count}`);
+        // });
     }, [wsSlug]);
 
     /**
@@ -98,16 +106,33 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
             const result = await RNFS.read(realPath, stats.size, 0, 'utf8');
             if (!result) throw new Error('Attachment content was empty or could not be read');
 
-            await embedder
+            const document = await embedder
                 .splitAndEmbed(result, { chunkSize: 2048, chunkOverlap: 20 })
                 .then(embedResults => embedResults.map(embedResult => {
                     const metadata = { ...embedResult.metadata, name: attachment.name };
                     return { embedding: embedResult.embedding, metadata };
                 }))
                 .then(async (embeddings) => await VectorDB.bulkInsert(workspaceSlug, embeddings))
-                .then(async (count) => console.log(`Inserted ${count} embeddings into VectorDB - now ${await VectorDB.getWorkspaceVectorCount(workspaceSlug)} vectors in the database`));
+                .then(async ({ count, ids }) => {
+                    console.log(`Inserted ${count} embeddings into VectorDB - now ${await VectorDB.getWorkspaceVectorCount(workspaceSlug)} vectors in the database`);
+                    return ids;
+                })
+                .then(async (ids) => {
+                    return await Document.create({
+                        name: attachment.name,
+                        workspaceSlug: workspaceSlug,
+                        vectorBoxIds: ids,
+                    });
+                });
 
-            setAttachments(prev => prev.map(a => a.uuid === attachment.uuid ? { ...a, content: result, processing: false } : a));
+            if (!document) throw new Error('Failed to create document for attachment');
+            const newAttachment: Attachment = {
+                ...attachment,
+                content: result,
+                processing: false,
+                uuid: document.uuid, // update the attachment with the new uuid so we can manage the DB record associated with it
+            };
+            setAttachments(prev => prev.map(a => a.uuid === attachment.uuid ? newAttachment : a));
         } catch (e) {
             showToast((e as Error).message);
             removeAttachment(attachment);

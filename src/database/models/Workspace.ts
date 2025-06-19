@@ -21,7 +21,7 @@ export default class Workspace extends Model {
   @field('created_at') createdAt!: number;
 
   static log(message: any, ...args: any[]) {
-    console.log(`[db:Workspace]`, message, ...args) // eslint-disable-line no-console
+    console.log(`\x1b[32m[db:Workspace]\x1b[0m`, message, ...args) // eslint-disable-line no-console
   }
 
   static toWorkspaceObject(data: any): WorkspaceType {

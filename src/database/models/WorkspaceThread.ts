@@ -20,7 +20,7 @@ export default class WorkspaceThread extends Model {
   @field('created_at') createdAt!: number;
 
   static log(message: any, ...args: any[]) {
-    console.log(`[db:WorkspaceThread]`, message, ...args) // eslint-disable-line no-console
+    console.log(`\x1b[32m[db:WorkspaceThread]\x1b[0m`, message, ...args) // eslint-disable-line no-console
   }
 
   static toWorkspaceThreadObject(data: any): WorkspaceThreadType {

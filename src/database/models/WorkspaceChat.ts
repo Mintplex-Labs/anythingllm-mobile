@@ -3,7 +3,7 @@ import { database } from '@/database';
 import { Q, Model } from '@nozbe/watermelondb';
 import WorkspaceThread, { type WorkspaceThreadType } from './WorkspaceThread';
 
-export type DocumentCitation = {
+export type IDocumentCitation = {
   type: 'document';
   document: {
     uuid: string;
@@ -13,7 +13,7 @@ export type DocumentCitation = {
   }
 }
 
-export type AgentWebSearchCitation = {
+export type IAgentWebSearchCitation = {
   type: 'web-search';
   reference: {
     url: string;
@@ -21,21 +21,20 @@ export type AgentWebSearchCitation = {
   };
 }
 
-export type AgentCitation = AgentWebSearchCitation;
-export type ChatCitation = DocumentCitation | AgentCitation;
+export type IAgentCitation = IAgentWebSearchCitation;
+export type IChatCitation = IDocumentCitation | IAgentCitation;
 export type WorkspaceChatResponseType = {
   textResponse: string;
   thoughts: string;
-  toolCalls: any[];
+  toolCalls: string[];
   metrics: any; // TODO: Can we track this??
   attachments: any[];
-  citations: ChatCitation[];
+  citations: IChatCitation[];
 }
 
 export type WorkspaceChatType = {
   uuid: string;
   workspaceThread: WorkspaceThreadType;
-  role: 'user' | 'assistant';
   prompt: string;
   response: WorkspaceChatResponseType;
   createdAt: number;
@@ -46,7 +45,6 @@ export default class WorkspaceChat extends Model {
 
   @text('uuid') uuid!: string;
   @immutableRelation(WorkspaceThread.table, 'slug') workspaceThread!: WorkspaceThreadType;
-  @text('role') role!: 'user' | 'assistant';
   @text('prompt') prompt!: string;
   @json('response', (json) => json) response!: WorkspaceChatResponseType;
   @field('created_at') createdAt!: number;
@@ -56,11 +54,9 @@ export default class WorkspaceChat extends Model {
   }
 
   static toWorkspaceChatObject(data: any): Partial<WorkspaceChatType> {
-    const { uuid, workspaceThread, role, prompt, response, createdAt } = data;
+    const { uuid, prompt, response, createdAt } = data;
     return {
       uuid,
-      // workspaceThread: WorkspaceThread.toWorkspaceThreadObject(workspaceThread),
-      role,
       prompt,
       response,
       createdAt,
@@ -91,14 +87,13 @@ export default class WorkspaceChat extends Model {
   }
 
   static async create(data: Partial<WorkspaceChatType & { workspaceThreadSlug: string }>): Promise<WorkspaceChatType> {
-    const { uuid, workspaceThreadSlug, role, prompt, response } = data;
+    const { uuid, workspaceThreadSlug, prompt, response } = data;
 
     let newWorkspaceChat: any;
     await database.write(async () => {
       newWorkspaceChat = await database.get(WorkspaceChat.table).create((workspaceChat: any) => {
         workspaceChat.uuid = uuid;
         workspaceChat.workspaceThread = workspaceThreadSlug;
-        workspaceChat.role = role;
         workspaceChat.prompt = prompt;
         workspaceChat.response = response;
         workspaceChat.createdAt = Date.now();

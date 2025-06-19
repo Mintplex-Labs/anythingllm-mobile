@@ -102,7 +102,6 @@ export const getVerboseDateTimeRepresentation = (
 
 export function timeAgo(
   dateValue: string | number | Date,
-  l10nData = l10n.en,
   format: 'short' | 'long' = 'long',
 ): string {
   const inputDate =
@@ -155,5 +154,19 @@ export function timeAgo(
       '{{time}}',
       timeValue,
     );
+  }
+}
+
+export function numberToPercentageString(number: number | string, significantDigits = 0) {
+  const num = typeof number === 'string' ? parseFloat(number) : number;
+  return `${(num * 100).toFixed(significantDigits)}%`;
+}
+
+export function getOrigin(url: string) {
+  try {
+    const hostname = new URL(url).hostname;
+    return hostname.match(/^www\.(.*)/)?.[1] || hostname;
+  } catch (error) {
+    return url;
   }
 }

@@ -50,7 +50,7 @@ export default function useInitialRoute(): { initialRoute: InitialRoute, isLoadi
       }
 
       // If the user is onboarded and has no workspaces, we need to redirect them to the onboarding flow
-      const workspaces = await Workspace.find([]);
+      const workspaces = await Workspace.find([], true);
       if (workspaces.length === 0) {
         setInitialRoute({ path: staticRoute, params: {} });
         setIsLoading(false);

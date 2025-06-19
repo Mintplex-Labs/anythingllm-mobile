@@ -17,6 +17,7 @@ import ChatHistory from "./ChatHistory";
 import SettingsActionSheet from "./PromptInput/Actions/Settings";
 import ToolsActionSheet from "./PromptInput/Actions/Settings/Tools";
 import WorkspaceFilesActionSheet from "./PromptInput/Actions/Settings/Files";
+import CitationsActionSheet from "./ChatHistory/CitationsActionSheet";
 
 export default function WorkspaceChat() {
   useRedirect();
@@ -38,13 +39,14 @@ export default function WorkspaceChat() {
       <TopBar modelName={LLMProvider?.model} workspace={workspace} thread={thread} />
 
       {/* Chat History */}
-      <ChatHistory />
+      <ChatHistory workspace={workspace} thread={thread} />
 
       {/* Prompt Input */}
       <PromptInput attachmentHandler={attachmentHandler} />
       <SettingsActionSheet workspace={workspace} thread={thread} />
       <ToolsActionSheet />
       <WorkspaceFilesActionSheet workspace={workspace} />
+      <CitationsActionSheet />
     </SafeView >
   );
 }

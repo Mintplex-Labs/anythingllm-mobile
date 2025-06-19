@@ -37,7 +37,6 @@ export default appSchema({
       columns: [
         { name: 'uuid', type: 'string', isIndexed: true },
         { name: 'workspace_thread_slug', type: 'string', isIndexed: true },
-        { name: 'role', type: 'string' },
         { name: 'prompt', type: 'string' },
         { name: 'response', type: 'string' },
         { name: 'created_at', type: 'number' },

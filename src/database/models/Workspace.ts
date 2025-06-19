@@ -1,4 +1,4 @@
-import { field, text } from '@nozbe/watermelondb/decorators';
+import { field, lazy, text } from '@nozbe/watermelondb/decorators';
 import { database } from '@/database';
 import slugify from 'slugify';
 import { Q, Model } from '@nozbe/watermelondb';
@@ -15,7 +15,12 @@ export type WorkspaceType = {
   temperature: number;
   threads?: WorkspaceThreadType[];
 };
-export type WorkspaceDBType = Model & WorkspaceType;
+
+export type WorkspaceDBType = Model & WorkspaceType & {
+  threads: {
+    fetch: () => Promise<(Model & WorkspaceThreadType)[]>;
+  }
+};
 
 export default class Workspace extends Model {
   static table = 'workspaces';
@@ -52,6 +57,17 @@ export default class Workspace extends Model {
       },
     },
   }
+
+  static associations = {
+    threads: { type: 'has_many' as const, foreignKey: 'workspace_slug' },
+    // Documents(?) - we usually just fetch by the workspace slug directly and not through the workspace model
+  }
+
+  @lazy
+  threads = this.collections
+    .get('workspace_threads')
+    // @ts-ignore
+    .query(Q.where('workspace_slug', this.slug));
 
   @text('name') name!: string;
   @text('slug') slug!: string; // unique!!
@@ -97,7 +113,7 @@ export default class Workspace extends Model {
 
     if (withThreads) {
       const workspacesWithThreads = await Promise.all((workspaces).map(async (workspace) => {
-        const threads = await WorkspaceThread.find([{ field: 'workspace_slug', value: workspace.slug }]);
+        const threads = await workspace.threads.fetch().then((threads) => threads.map((thread) => WorkspaceThread.toWorkspaceThreadObject(thread)));
         return { ...this.toWorkspaceObject(workspace), threads };
       }));
       return workspacesWithThreads;

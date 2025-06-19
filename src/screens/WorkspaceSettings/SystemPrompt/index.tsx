@@ -41,7 +41,7 @@ export function SystemPromptView({ workspace, goToPage }: SystemPromptViewProps)
 
             setSaveStatus({ text: 'Autosaving...', state: 'saving' });
             try {
-                await Workspace.update(workspace.slug, { systemPrompt: newSystemPrompt });
+                await Workspace.update([{ field: 'slug', value: workspace.slug }], { systemPrompt: newSystemPrompt });
                 setSaveStatus({ text: 'Autosaved!', state: 'saved' });
             } catch (err) {
                 console.error('Error saving system prompt:', err);
@@ -70,18 +70,18 @@ export function SystemPromptView({ workspace, goToPage }: SystemPromptViewProps)
                 <TouchableOpacity onPress={() => goToPage('main')} className="absolute left-0 flex flex-row items-center gap-2">
                     <ArrowLeft size={24} color="#FFF" weight="bold" />
                 </TouchableOpacity>
-                <Text style={{ maxWidth: '80%' }} numberOfLines={1} ellipsizeMode="middle" className="text-[--text-secondary] text-lg font-medium">System Prompt</Text>
+                <Text style={{ maxWidth: '80%', color: '#9F9FA0' }} numberOfLines={1} ellipsizeMode="middle" className="text-lg font-medium">System Prompt</Text>
             </View>
 
             <KeyboardAvoidingView style={{ paddingHorizontal: 18 }} behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1">
                 <View className="w-full flex flex-col" style={{ gap: 12 }}>
                     <View className="flex flex-row items-center justify-between">
-                        <Text className="text-[--text-secondary] text-sm uppercase">Current Prompt</Text>
+                        <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">Current Prompt</Text>
 
                         <View className="flex flex-row items-center">
                             <ActivityIndicator size="small" color="#FFF" animating={saveStatus.state === 'saving'} style={{ transform: [{ scale: 0.5 }] }} />
                             {saveStatus.state === 'saved' && <CheckCircle size={12} color="#6CE9A6" style={{ marginRight: 2 }} />}
-                            <Text className="text-[--text-secondary] text-sm">{saveStatus.text}</Text>
+                            <Text style={{ color: '#9F9FA0' }} className="text-sm">{saveStatus.text}</Text>
                         </View>
                     </View>
                     <TextInput

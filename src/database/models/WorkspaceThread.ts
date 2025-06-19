@@ -1,9 +1,10 @@
-import { field, relation, text } from '@nozbe/watermelondb/decorators';
+import { field, immutableRelation, relation, text } from '@nozbe/watermelondb/decorators';
 import { database } from '@/database';
 import slugify from 'slugify';
-import { Q, Model } from '@nozbe/watermelondb';
+import { Q, Model, Relation } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
-import { WorkspaceChatType } from './WorkspaceChat';
+import { type WorkspaceType } from './Workspace';
+import { type WorkspaceChatType } from './WorkspaceChat';
 
 export type WorkspaceThreadType = {
   name: string;
@@ -28,10 +29,16 @@ export default class WorkspaceThread extends Model {
     },
   }
 
+  static associations = {
+    workspace: { type: 'belongs_to' as const, key: 'workspace_slug' },
+    chats: { type: 'has_many' as const, foreignKey: 'workspace_thread_slug' },
+  }
+
   @text('name') name!: string;
   @text('slug') slug!: string;
   @text('workspace_slug') workspaceSlug!: string;
-  @relation('workspace_chats', 'workspace_thread_slug') workspaceChats!: WorkspaceChatType[];
+  @immutableRelation('workspaces', 'workspace_slug') workspace!: Relation<Model & WorkspaceType>;
+  @relation('workspace_chats', 'workspace_thread_slug') chats!: Relation<Model & WorkspaceChatType>;
   @field('created_at') createdAt!: number;
 
   static log(message: any, ...args: any[]) {
@@ -89,12 +96,6 @@ export default class WorkspaceThread extends Model {
     let newWorkspaceThread: any;
     await database.write(async () => {
       newWorkspaceThread = await database.get(WorkspaceThread.table).create((workspaceThread: any) => {
-        console.log('newWorkspaceThread', {
-          name: 'New Thread',
-          workspace: workspaceSlug,
-          slug: slug,
-          created_at: Date.now(),
-        });
         workspaceThread.name = 'New Thread';
         workspaceThread.slug = slug;
         workspaceThread.workspaceSlug = workspaceSlug;
@@ -102,7 +103,7 @@ export default class WorkspaceThread extends Model {
       });
     });
 
-    this.log('newWorkspaceThread', { workspace: workspaceSlug, thread: newWorkspaceThread.slug });
+    this.log('WorkspaceThread created', { workspace: workspaceSlug, thread: newWorkspaceThread.slug });
     newWorkspaceThread = this.toWorkspaceThreadObject(newWorkspaceThread);
     return newWorkspaceThread;
   }

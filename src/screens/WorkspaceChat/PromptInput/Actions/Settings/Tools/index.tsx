@@ -77,7 +77,7 @@ function TogglableItem({ title, description, isOn, onToggle, primary = false }: 
         <View className='flex w-full flex-row items-center justify-between'>
             <View className='flex flex-col items-start justify-between'>
                 <Text className={`text-[14px] font-semibold ${!primary && !isOn ? 'text-[--text-primary]' : 'text-white'}`}>{title}</Text>
-                <Text className='text-[--text-secondary] text-sm'>{description}</Text>
+                <Text style={{ color: '#9F9FA0' }} className='text-sm'>{description}</Text>
             </View>
             <ToggleSwitch isOn={isOn} onToggle={onToggle} />
         </View>

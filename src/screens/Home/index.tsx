@@ -34,7 +34,7 @@ export default function Home() {
   }
 
   return (
-    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" safeAreaStyle={{ backgroundColor: '#000' }}>
+    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" safeAreaStyle={{ backgroundColor: '#000' }} applyGradient>
       <TopBar />
       <View className="flex flex-col h-[90vh] justify-center items-center gap-y-4">
         <View className="flex flex-col items-center justify-center gap-y-1">
@@ -43,8 +43,8 @@ export default function Home() {
             Get started by creating a new workspace.
           </Text>
         </View>
-        <TouchableOpacity style={{ minWidth: 117 }} className="rounded-lg p-2 border border-white py-2 px-4" onPress={createWorkspace}>
-          <Text className="text-white text-xl">Create Workspace</Text>
+        <TouchableOpacity activeOpacity={0.8} style={{ minWidth: 200 }} className="rounded-lg bg-white/10  py-2 px-4" onPress={createWorkspace}>
+          <Text className="text-white text-center text-xl">Create Workspace</Text>
         </TouchableOpacity>
       </View>
     </SafeView>

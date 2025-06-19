@@ -1,8 +1,9 @@
-import { field, text } from '@nozbe/watermelondb/decorators';
+import { field, relation, text } from '@nozbe/watermelondb/decorators';
 import { database } from '@/database';
 import slugify from 'slugify';
 import { Q, Model } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
+import { WorkspaceChatType } from './WorkspaceChat';
 
 export type WorkspaceThreadType = {
   name: string;
@@ -13,10 +14,24 @@ export type WorkspaceThreadType = {
 
 export default class WorkspaceThread extends Model {
   static table = 'workspace_threads';
+  static defaultName = 'New Thread';
+  static writableFields = {
+    name: {
+      validate: (value: string) => {
+        let error = '';
+        if (typeof value !== 'string') error = 'Name must be a string';
+        if (!value) error = 'Name is required';
+        if (value.length < 3) error = 'Name must be at least 3 characters long';
+        if (value.length > 100) error = 'Name must be less than 100 characters long';
+        return { valid: !error, error };
+      },
+    },
+  }
 
   @text('name') name!: string;
   @text('slug') slug!: string;
   @text('workspace_slug') workspaceSlug!: string;
+  @relation('workspace_chats', 'workspace_thread_slug') workspaceChats!: WorkspaceChatType[];
   @field('created_at') createdAt!: number;
 
   static log(message: any, ...args: any[]) {
@@ -33,26 +48,39 @@ export default class WorkspaceThread extends Model {
     };
   }
 
+
   /**
-   * Returns watermelon db model instance
-   */
-  static async get(workspaceSlug: string, threadSlug: string): Promise<Model | null> {
-    const workspaceThread = await database.get(WorkspaceThread.table).query(
-      Q.where('workspace_slug', workspaceSlug),
-      Q.where('slug', threadSlug)
-    ).fetch();
-    if (workspaceThread.length === 0) return null;
-    return workspaceThread[0];
+ * Find the first thread by a given set of where clauses
+ * @param where - An array of where clauses
+ * @returns The first thread with the WorkspaceThreadType interface
+ */
+  static async first(where: { field: string, value: string }[] = []): Promise<WorkspaceThreadType | null> {
+    const thread = await this.get(where);
+    if (!thread || thread.length === 0) return null;
+    return this.toWorkspaceThreadObject(thread[0]);
   }
 
-  static async find(workspaceSlug: string, threadSlug: string): Promise<any> {
-    const workspaceBySlug = await database.get(WorkspaceThread.table).query(
-      Q.where('workspace_slug', workspaceSlug),
-      Q.where('slug', threadSlug)
+  /**
+   * Find documents by a given set of where clauses
+   * @param where - An array of where clauses
+   * @returns An array of documents with the DocumentType interface
+   */
+  static async find(where: { field: string, value: string }[] = []): Promise<WorkspaceThreadType[]> {
+    const threads = await database.get(WorkspaceThread.table).query(
+      where.map(({ field, value }) => Q.where(field, value))
     ).fetch();
+    return threads.map((thread) => this.toWorkspaceThreadObject(thread));
+  }
 
-    if (workspaceBySlug.length === 0) return null;
-    return WorkspaceThread.toWorkspaceThreadObject(workspaceBySlug[0]);
+  /**
+   * Returns watermelon db model instances by a given set of where clauses
+   */
+  static async get(where: { field: string, value: string }[] = []): Promise<Model[] | null> {
+    const workspaceThread = await database.get(WorkspaceThread.table).query(
+      where.map(({ field, value }) => Q.where(field, value))
+    ).fetch();
+    if (workspaceThread.length === 0) return null;
+    return workspaceThread;
   }
 
   static async create({ workspaceSlug }: { workspaceSlug: string }): Promise<any> {
@@ -79,40 +107,51 @@ export default class WorkspaceThread extends Model {
     return newWorkspaceThread;
   }
 
-  static async update(workspaceSlug: string, threadSlug: string, data: { name: string }): Promise<any> {
-    if (!data.name) return this.log('no name provided', { workspaceSlug, threadSlug, data });
+  static async update(where: { field: string, value: string }[] = [], updates: Partial<WorkspaceThreadType>): Promise<WorkspaceThreadType | null> {
+    try {
+      let validatedFields: Partial<WorkspaceThreadType> = {};
+      for (const [key, value] of Object.entries(updates)) {
+        const validation = WorkspaceThread.writableFields[key].validate(value);
+        if (!validation.valid) throw new Error(validation.error);
+        validatedFields[key] = value;
+      }
 
-    const existingThread = await this.get(workspaceSlug, threadSlug);
-    if (!existingThread) return this.log('thread not found', { workspaceSlug, threadSlug });
+      const existingThread = (await this.get(where))?.[0];
+      if (!existingThread) throw new Error('Thread not found');
 
-    await database.write(async () => {
-      await existingThread.update((thread: any) => {
-        thread.name = data.name;
+      let updatedThread: any = existingThread;
+      await database.write(async () => {
+        updatedThread = await existingThread.update((thread: any) => {
+          Object.assign(thread, validatedFields);
+          return WorkspaceThread.toWorkspaceThreadObject(thread);
+        });
       });
-    });
 
-    this.log('updated workspace thread', { workspaceSlug, threadSlug, data });
-    return true;
+      this.log('updated workspace thread', { where, updates });
+      return this.toWorkspaceThreadObject(updatedThread);
+    } catch (error) {
+      console.error('Error updating workspace thread:', error);
+      return null;
+    }
   }
 
-  static async delete(workspaceSlug: string, threadSlug: string): Promise<any> {
-    await database.write(async () => {
-      const workspaceThread = await database.get(WorkspaceThread.table).query(
-        Q.where('workspace_slug', workspaceSlug),
-        Q.where('slug', threadSlug)).fetch();
-      if (workspaceThread.length === 0) return;
+  static async delete(where: { field: string, value: string }[] = []): Promise<any> {
+    try {
+      await database.write(async () => {
+        const workspaceThread = await database.get(WorkspaceThread.table).query(
+          where.map(({ field, value }) => Q.where(field, value))
+        ).fetch();
+        if (workspaceThread.length === 0) return;
 
-      this.log('deleting workspace thread', workspaceSlug, threadSlug);
-      await workspaceThread[0].destroyPermanently();
-    });
-    return true;
-  }
-
-  static async getAll(workspaceSlug: string): Promise<any[]> {
-    const workspaceThreads = await database.get(WorkspaceThread.table).query(
-      Q.where('workspace_slug', workspaceSlug)
-    ).fetch();
-    if (workspaceThreads.length === 0) return [];
-    return workspaceThreads.map((workspaceThread) => this.toWorkspaceThreadObject(workspaceThread));
+        this.log(`deleting ${workspaceThread.length} workspace threads`);
+        await database.batch(workspaceThread.map((thread) => thread.prepareMarkAsDeleted()));
+        this.log(`deleted ${workspaceThread.length} workspace threads`);
+        return true;
+      });
+      return true;
+    } catch (error) {
+      console.error('Error deleting workspace thread:', error);
+      return false;
+    }
   }
 }

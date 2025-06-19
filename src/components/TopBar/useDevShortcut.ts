@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { Alert, NativeEventEmitter } from "react-native";
+import { Alert } from "react-native";
 import { showToast } from "@/utils/Notification";
 import { PATHS } from "@/utils/paths";
 import uiStore from "@/store/UIStore";
 
 export default function useDevShortcut({ workspace, thread }: { workspace?: any, thread?: any }) {
     const THRESHOLD = 5;
-    const developerPressEmitter = new NativeEventEmitter();
     let timer: NodeJS.Timeout;
     const [presses, setPresses] = useState(0);
     function registerPress() { setPresses(prevPresses => prevPresses + 1); }

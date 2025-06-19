@@ -29,7 +29,7 @@ function WorkspaceItem({ workspace, isActive = false, changeWorkspace, currentTh
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Delete', onPress: () => {
-          WorkspaceThread.delete(workspace.slug, threadSlug).then(() => {
+          WorkspaceThread.delete([{ field: 'workspace_slug', value: workspace.slug }, { field: 'slug', value: threadSlug }]).then(() => {
             eventEmitter.emit('workspaceUpdate', {
               type: 'remove-thread',
               details: {
@@ -66,7 +66,7 @@ function WorkspaceItem({ workspace, isActive = false, changeWorkspace, currentTh
     setIsRenameModalVisible(false);
     setNewThreadName('');
     if (!newName) return;
-    WorkspaceThread.update(workspace.slug, threadSlug, { name: newName }).then(() => {
+    WorkspaceThread.update([{ field: 'workspace_slug', value: workspace.slug }, { field: 'slug', value: threadSlug }], { name: newName }).then(() => {
       eventEmitter.emit('workspaceUpdate', {
         type: 'rename-thread',
         details: { workspaceSlug: workspace.slug, threadSlug: threadSlug, newName: newName },

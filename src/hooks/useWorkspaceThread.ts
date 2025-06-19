@@ -18,8 +18,9 @@ export default function useWorkspaceThread(wsSlug: string, threadSlug: string | 
       setIsLoading(true);
       const [workspace, thread] = await Promise.all([
         Workspace.get(wsSlug),
-        WorkspaceThread.get(wsSlug, threadSlug)
+        WorkspaceThread.first([{ field: 'workspace_slug', value: wsSlug }, { field: 'slug', value: threadSlug }])
       ]);
+
       setWorkspace(workspace);
       setThread(thread);
       return { workspace, thread };

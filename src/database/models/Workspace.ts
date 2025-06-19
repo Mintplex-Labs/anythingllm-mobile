@@ -87,7 +87,7 @@ export default class Workspace extends Model {
 
     if (workspaceBySlug.length === 0) return null;
     const workspace = this.toWorkspaceObject(workspaceBySlug[0]);
-    workspace.threads = await WorkspaceThread.getAll(workspace.slug);
+    workspace.threads = await WorkspaceThread.find([{ field: 'workspace_slug', value: workspace.slug }]);
     return workspace;
   }
 
@@ -172,11 +172,7 @@ export default class Workspace extends Model {
       });
 
       // Delete all threads for the workspace
-      const threads = await WorkspaceThread.getAll(wsSlug);
-      if (threads.length > 0) {
-        this.log(`Deleting ${threads.length} threads associated with this workspace`);
-        for (const thread of threads) await WorkspaceThread.delete(wsSlug, thread.slug);
-      }
+      await WorkspaceThread.delete([{ field: 'workspace_slug', value: wsSlug }]);
 
       // Delete all vectors for the workspace
       await VectorDB.resetVectorsForWorkspace(wsSlug);
@@ -195,8 +191,7 @@ export default class Workspace extends Model {
     if (!withThreads) return workspaces;
 
     for (const workspace of workspaces) {
-      const threads = await WorkspaceThread.getAll(workspace.slug);
-      workspace.threads = threads;
+      workspace.threads = await WorkspaceThread.find([{ field: 'workspace_slug', value: workspace.slug }]);
     }
 
     return workspaces;

@@ -10,6 +10,8 @@ export type WorkspaceType = {
   name: string;
   slug: string;
   createdAt: number;
+  systemPrompt: string;
+  temperature: number;
   threads?: WorkspaceThreadType[];
 };
 
@@ -29,10 +31,12 @@ export default class Workspace extends Model {
   }
 
   static toWorkspaceObject(data: any): WorkspaceType {
-    const { name, slug, createdAt } = data;
+    const { name, slug, createdAt, systemPrompt, temperature } = data;
     return {
       name: name,
       slug: slug,
+      systemPrompt,
+      temperature,
       createdAt,
       threads: [],
     };
@@ -44,7 +48,7 @@ export default class Workspace extends Model {
    * @param slug - The slug of the workspace to find
    * @returns The workspace object
    */
-  static async find(slug: string): Promise<any> {
+  static async find(slug: string): Promise<WorkspaceType | null> {
     const workspaceBySlug = await database.get(Workspace.table).query(
       Q.where('slug', slug)
     ).fetch();
@@ -76,8 +80,8 @@ export default class Workspace extends Model {
       newWorkspace = await database.get(Workspace.table).create((workspace: any) => {
         workspace.name = name;
         workspace.slug = slug;
-        workspace.system_prompt = this.defaultSystemPrompt;
-        workspace.temperature = this.defaultTemperature;
+        workspace.system_prompt = Workspace.defaultSystemPrompt;
+        workspace.temperature = Workspace.defaultTemperature;
         workspace.created_at = Date.now();
       });
     });

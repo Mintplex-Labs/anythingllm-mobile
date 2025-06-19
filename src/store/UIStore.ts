@@ -141,8 +141,8 @@ export class UIStore {
     });
   }
 
-  emitGlobalEvent(event: typeof GLOBAL_EVENTS[keyof typeof GLOBAL_EVENTS]) {
-    this.emitter.emit(event);
+  emitGlobalEvent(event: typeof GLOBAL_EVENTS[keyof typeof GLOBAL_EVENTS], details?: { path: string, params?: object }) {
+    this.emitter.emit(event, { ...details });
   }
 
   async resetAllStorage() {

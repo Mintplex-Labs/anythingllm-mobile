@@ -5,6 +5,7 @@ import OnboardingDataHandling from "./Onboarding/DataHandling";
 
 import Home from "./Home";
 import WorkspaceChat from "./WorkspaceChat";
+import WorkspaceSettings from "./WorkspaceSettings";
 
 import DevToolsDatabaseInspector from "./Dev/screens/DatabaseInspectorScreen";
 
@@ -16,6 +17,7 @@ export default {
   Home,
 
   WorkspaceChat,
+  WorkspaceSettings,
 
   DevToolsDatabaseInspector,
 };

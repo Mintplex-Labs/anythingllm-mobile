@@ -22,5 +22,6 @@ export default function useRouteObserver() {
 
     return {
         currentRoute: navigation.getState()?.routes[navigation.getState()?.index ?? 0]?.name ?? null,
+        previousRoute: previousRouteRef.current ?? null,
     }
 } 

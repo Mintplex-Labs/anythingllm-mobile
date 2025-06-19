@@ -7,6 +7,7 @@ export const PATHS = {
   },
   home: 'Home',
   workspace_chat: 'WorkspaceChat',
+  workspace_settings: 'WorkspaceSettings',
 
   developer: {
     home: 'DevToolsDatabaseInspector',

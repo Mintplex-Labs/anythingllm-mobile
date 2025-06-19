@@ -81,6 +81,12 @@ const App = observer(() => {
                         options={{ headerShown: false }}
                         initialParams={initialRoute.params}
                       />
+                      <Drawer.Screen
+                        name={PATHS.workspace_settings}
+                        component={gestureHandlerRootHOC(Screens.WorkspaceSettings)}
+                        options={{ headerShown: false }}
+                        initialParams={initialRoute.params}
+                      />
 
                       <Drawer.Screen
                         name={PATHS.developer.home}

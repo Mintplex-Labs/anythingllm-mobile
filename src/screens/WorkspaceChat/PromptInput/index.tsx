@@ -108,7 +108,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
             !!bottomSheetRef.current &&
             currentRoute === PATHS.workspace_chat
         ) presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)
-    }, [activeSheet]);
+    }, [activeSheet, currentRoute]);
 
     // Disable the back button when the input is focused
     // to prevent page navigation while in full screen

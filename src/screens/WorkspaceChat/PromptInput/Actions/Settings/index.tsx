@@ -8,14 +8,25 @@ import ResetChatActionButton from './ResetChat';
 import { WorkspaceType } from '@/database/models/Workspace';
 import { WorkspaceThreadType } from '@/database/models/WorkspaceThread';
 import { WorkspaceFilesActionButton } from './Files';
+import { PATHS } from '@/utils/paths';
+import uiStore from '@/store/UIStore';
 
 export default function SettingsActionSheet({ workspace, thread }: { workspace: WorkspaceType, thread: WorkspaceThreadType }) {
     const settingsSheetRef = useRef<BottomSheetModal>(null);
     const { registerSheet, presentSheet, activeSheet } = useBottomSheet();
 
+    function goToSettings() {
+        uiStore.emitGlobalEvent(uiStore.globalEvents.REDIRECT, {
+            path: PATHS.workspace_settings,
+            params: { wsSlug: workspace.slug, threadSlug: thread.slug },
+        });
+    }
+
     useEffect(() => {
         registerSheet(BOTTOM_SHEET_NAMES.SETTINGS, settingsSheetRef);
     }, [registerSheet]);
+
+    console.log('SettingsActionSheet', { w: workspace.slug, t: thread.slug });
 
     return (
         <BottomSheetModal
@@ -33,7 +44,7 @@ export default function SettingsActionSheet({ workspace, thread }: { workspace: 
                 <WorkspaceFilesActionButton />
                 <ResetChatActionButton />
                 <ToolsActionButton />
-                <SettingsItem icon={<Gear size={32} color="#FFF" />} text="Settings" onPress={() => { }} />
+                <SettingsItem icon={<Gear size={32} color="#FFF" />} text="Settings" onPress={goToSettings} />
             </View>
         </BottomSheetModal>
     );

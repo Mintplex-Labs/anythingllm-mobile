@@ -49,6 +49,12 @@ const App = observer(() => {
 
                     <WorkspaceDrawer initialRouteName={initialRoute.path}>
                       <Drawer.Screen
+                        name={PATHS.home}
+                        component={gestureHandlerRootHOC(Screens.Home)}
+                        options={{ headerShown: false }}
+                      />
+
+                      <Drawer.Screen
                         name={PATHS.onboarding.welcome}
                         component={gestureHandlerRootHOC(Screens.OnboardingWelcome)}
                         options={{ headerShown: false }}
@@ -69,11 +75,6 @@ const App = observer(() => {
                         options={{ headerShown: false }}
                       />
 
-                      <Drawer.Screen
-                        name={PATHS.home}
-                        component={gestureHandlerRootHOC(Screens.Home)}
-                        options={{ headerShown: false }}
-                      />
 
                       <Drawer.Screen
                         name={PATHS.workspace_chat}

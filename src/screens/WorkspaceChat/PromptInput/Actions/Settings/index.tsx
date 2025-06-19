@@ -16,17 +16,16 @@ export default function SettingsActionSheet({ workspace, thread }: { workspace: 
     const { registerSheet, presentSheet, activeSheet } = useBottomSheet();
 
     function goToSettings() {
+        if (!workspace?.slug) return;
         uiStore.emitGlobalEvent(uiStore.globalEvents.REDIRECT, {
             path: PATHS.workspace_settings,
-            params: { wsSlug: workspace.slug, threadSlug: thread.slug },
+            params: { wsSlug: workspace.slug, threadSlug: thread?.slug },
         });
     }
 
     useEffect(() => {
         registerSheet(BOTTOM_SHEET_NAMES.SETTINGS, settingsSheetRef);
     }, [registerSheet]);
-
-    console.log('SettingsActionSheet', { w: workspace.slug, t: thread.slug });
 
     return (
         <BottomSheetModal

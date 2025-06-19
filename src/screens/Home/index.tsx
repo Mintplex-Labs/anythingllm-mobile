@@ -34,7 +34,7 @@ export default function Home() {
   }
 
   return (
-    <SafeView scrollable={false} safeAreaClassNames="pt-[21px] bg-[--primary-bg]">
+    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" safeAreaStyle={{ backgroundColor: '#000' }}>
       <TopBar />
       <View className="flex flex-col h-[90vh] justify-center items-center gap-y-4">
         <View className="flex flex-col items-center justify-center gap-y-1">

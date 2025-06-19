@@ -6,8 +6,9 @@ import useLlmPreference from "@/hooks/useLLMPreference";
 import useChatInfoEmit from "@/hooks/useChatInfoEmit";
 import { useEffect } from "react";
 import useWorkspaceThread from "@/hooks/useWorkspaceThread";
-import PromptInput from "./PromptInput";
+import PromptInput, { snapPointsDefault } from "./PromptInput";
 import useAttachments from "@/hooks/useAttachments";
+import ChatHistory from "./ChatHistory";
 
 // Supplemental UI Sheets from the PromptInput actions
 // Must be top level so their refs are not lost when the PromptInput is unmounted
@@ -33,13 +34,11 @@ export default function WorkspaceChat() {
   if (!!errorWorkspaceThread) return <ErrorView title="Error loading workspace thread" error={errorWorkspaceThread} />;
 
   return (
-    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col justify-between" applyGradient safeAreaStyle={{ backgroundColor: '#000' }}>
+    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" applyGradient safeAreaStyle={{ backgroundColor: '#000' }}>
       <TopBar modelName={LLMProvider?.model} workspace={workspace} thread={thread} />
 
       {/* Chat History */}
-      <View className="flex-1 w-full flex items-center justify-center">
-        <Text className="text-white">Chat History goes here</Text>
-      </View>
+      <ChatHistory />
 
       {/* Prompt Input */}
       <PromptInput attachmentHandler={attachmentHandler} />

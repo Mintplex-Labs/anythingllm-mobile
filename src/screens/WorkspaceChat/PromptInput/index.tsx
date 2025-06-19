@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { TouchableOpacity, Animated, BackHandler, Keyboard, View, Text } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { ArrowsInSimple, ArrowsOutSimple } from "phosphor-react-native";
 import { screenDimensions } from '@/utils/constants';
@@ -130,55 +129,53 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
     return (
         <>
             {sheetIndex === 0 && <ChatWindowAttachmentsContainer attachmentHandler={attachmentHandler} />}
-            <GestureHandlerRootView>
-                <BottomSheetModal
-                    ref={bottomSheetRef}
-                    index={0}
-                    snapPoints={snapPoints}
-                    keyboardBehavior='extend'
-                    enableDynamicSizing={false}
-                    enablePanDownToClose={false}
-                    onChange={handleSheetChanges}
-                    handleComponent={HandleComponent}
-                    backgroundStyle={{
-                        backgroundColor: '#1B1B1E',
-                        borderTopLeftRadius: 30,
-                        borderTopRightRadius: 30,
-                    }}
-                >
-                    <Animated.View
-                        ref={inputRef}
-                        style={{ paddingTop: paddingAnim }}
-                        className={'flex flex-col justify-between'}>
-                        <BottomSheetTextInput
-                            multiline={true}
-                            placeholder="Enter your prompt"
-                            placeholderTextColor="#9F9FA0"
-                            className="text-white text-lg"
-                            onFocus={() => {
-                                if (sheetIndex === 0) bottomSheetRef.current?.snapToIndex(1);
-                                setIsInputFocused(true);
-                            }}
-                            onBlur={() => {
-                                setIsInputFocused(false);
-                                bottomSheetRef.current?.snapToIndex(0);
-                                Keyboard.dismiss();
-                            }}
-                            value={prompt}
-                            onChangeText={setPrompt}
-                            scrollEnabled={true}
-                            style={{
-                                textAlignVertical: 'top',
-                                height: inputHeight,
-                                borderRadius: 16,
-                                paddingTop: 16,
-                                paddingHorizontal: 20,
-                            }}
-                        />
-                        <ActionMenu isFullScreen={isFullScreen} sheetIndex={sheetIndex} attachmentHandler={attachmentHandler} />
-                    </Animated.View>
-                </BottomSheetModal>
-            </GestureHandlerRootView>
+            <BottomSheetModal
+                ref={bottomSheetRef}
+                index={0}
+                snapPoints={snapPoints}
+                keyboardBehavior='extend'
+                enableDynamicSizing={false}
+                enablePanDownToClose={false}
+                onChange={handleSheetChanges}
+                handleComponent={HandleComponent}
+                backgroundStyle={{
+                    backgroundColor: '#1B1B1E',
+                    borderTopLeftRadius: 30,
+                    borderTopRightRadius: 30,
+                }}
+            >
+                <Animated.View
+                    ref={inputRef}
+                    style={{ paddingTop: paddingAnim }}
+                    className={'flex flex-col justify-between'}>
+                    <BottomSheetTextInput
+                        multiline={true}
+                        placeholder="Enter your prompt"
+                        placeholderTextColor="#9F9FA0"
+                        className="text-white text-lg"
+                        onFocus={() => {
+                            if (sheetIndex === 0) bottomSheetRef.current?.snapToIndex(1);
+                            setIsInputFocused(true);
+                        }}
+                        onBlur={() => {
+                            setIsInputFocused(false);
+                            bottomSheetRef.current?.snapToIndex(0);
+                            Keyboard.dismiss();
+                        }}
+                        value={prompt}
+                        onChangeText={setPrompt}
+                        scrollEnabled={true}
+                        style={{
+                            textAlignVertical: 'top',
+                            height: inputHeight,
+                            borderRadius: 16,
+                            paddingTop: 16,
+                            paddingHorizontal: 20,
+                        }}
+                    />
+                    <ActionMenu isFullScreen={isFullScreen} sheetIndex={sheetIndex} attachmentHandler={attachmentHandler} />
+                </Animated.View>
+            </BottomSheetModal>
         </>
     );
 };

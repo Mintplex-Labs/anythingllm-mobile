@@ -50,7 +50,7 @@ export default function useInitialRoute(): { initialRoute: InitialRoute, isLoadi
       }
 
       // If the user is onboarded and has no workspaces, we need to redirect them to the onboarding flow
-      const workspaces = await Workspace.getAll(true);
+      const workspaces = await Workspace.find([]);
       if (workspaces.length === 0) {
         setInitialRoute({ path: staticRoute, params: {} });
         setIsLoading(false);
@@ -59,7 +59,7 @@ export default function useInitialRoute(): { initialRoute: InitialRoute, isLoadi
 
       // If the user is onboarded and has workspaces, we need to redirect them to the workspace chat of the first workspace/thread
       const workspace = workspaces[0];
-      const thread = workspace.threads[0] || await WorkspaceThread.create({ workspaceSlug: workspace.slug });
+      const thread = workspace.threads?.[0] || await WorkspaceThread.create({ workspaceSlug: workspace.slug });
       setInitialRoute({ path: PATHS.workspace_chat, params: { wsSlug: workspace.slug, threadSlug: thread.slug } });
       setIsLoading(false);
       return;

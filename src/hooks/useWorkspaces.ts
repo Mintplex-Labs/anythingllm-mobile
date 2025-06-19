@@ -12,7 +12,7 @@ export default function useWorkspaces(withThreads: boolean = false) {
   async function fetchWorkspaces(withThreads: boolean = false) {
     try {
       setIsLoading(true);
-      const workspaces = await Workspace.getAll(withThreads);
+      const workspaces = await Workspace.find([], withThreads);
       setWorkspaces(workspaces);
       return workspaces;
     } catch (error) {

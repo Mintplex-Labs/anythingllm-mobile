@@ -50,10 +50,10 @@ export default class WorkspaceThread extends Model {
 
 
   /**
- * Find the first thread by a given set of where clauses
- * @param where - An array of where clauses
- * @returns The first thread with the WorkspaceThreadType interface
- */
+  * Find the first thread by a given set of where clauses
+  * @param where - An array of where clauses
+  * @returns The first thread with the WorkspaceThreadType interface
+  */
   static async first(where: { field: string, value: string }[] = []): Promise<WorkspaceThreadType | null> {
     const thread = await this.get(where);
     if (!thread || thread.length === 0) return null;

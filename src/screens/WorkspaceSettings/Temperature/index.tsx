@@ -41,7 +41,7 @@ export function TemperatureView({ workspace, goToPage }: TemperatureViewProps) {
 
             setSaveStatus({ text: 'Autosaving...', state: 'saving' });
             try {
-                await Workspace.update(workspace.slug, { temperature: newTemperature });
+                await Workspace.update([{ field: 'slug', value: workspace.slug }], { temperature: newTemperature });
                 setSaveStatus({ text: 'Autosaved!', state: 'saved' });
             } catch (err) {
                 console.error('Error saving temperature:', err);

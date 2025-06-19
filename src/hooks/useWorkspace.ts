@@ -10,7 +10,7 @@ export default function useWorkspace(wsSlug: string) {
   async function fetchWorkspace() {
     try {
       if (!wsSlug) throw new Error('Workspace slug is required');
-      const workspace = await Workspace.find(wsSlug);
+      const workspace = await Workspace.first([{ field: 'slug', value: wsSlug }]);
       if (!workspace) throw new Error('Workspace not found');
       setWorkspace(workspace);
       return { workspace };

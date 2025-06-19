@@ -17,7 +17,7 @@ export default function useWorkspaceThread(wsSlug: string, threadSlug: string | 
 
       setIsLoading(true);
       const [workspace, thread] = await Promise.all([
-        Workspace.get(wsSlug),
+        Workspace.first([{ field: 'slug', value: wsSlug }]),
         WorkspaceThread.first([{ field: 'workspace_slug', value: wsSlug }, { field: 'slug', value: threadSlug }])
       ]);
 
@@ -67,65 +67,6 @@ export default function useWorkspaceThread(wsSlug: string, threadSlug: string | 
       reloadListener.remove();
     };
   }, [workspace, thread]);
-
-  // Listen for workspace updates
-  // useEffect(() => {
-  //   const workspaceListener = eventEmitter.addListener(
-  //     'workspaceUpdate',
-  //     (event) => {
-  //       if (event.type === 'add-thread') {
-  //         const { workspaceSlug, thread } = event.details;
-  //         setWorkspace(prev => prev.map(ws => ws.slug === workspaceSlug ? { ...ws, threads: [...(ws?.threads || []), thread] } : ws));
-  //         if (workspaceSlug) setWorkspace(workspaceSlug);
-  //         if (thread.slug) setThread(thread.slug);
-  //         eventEmitter.emit('workspaceThreadPageInfo', { type: 'update', details: { workspace, thread } });
-  //         return;
-  //       }
-
-  //       if (event.type === 'remove-thread') {
-  //         const { workspaceSlug, threadSlug } = event.details;
-  //         setWorkspace(prev => prev.map(ws =>
-  //           ws.slug === workspaceSlug ? { ...ws, threads: ws.threads.filter(t => t.slug !== threadSlug) } : ws
-  //         ));
-  //         return;
-  //       }
-
-  //       if (event.type === 'rename-thread') {
-  //         const { workspaceSlug, threadSlug, newName } = event.details;
-  //         setWorkspace(prev => prev.map(ws =>
-  //           ws.slug === workspaceSlug ? { ...ws, threads: ws.threads.map(t => t.slug === threadSlug ? { ...t, name: newName } : t) } : ws
-  //         ));
-  //         return;
-  //       }
-
-  //       if (event.type === 'remove-workspace') {
-  //         const { workspaceSlug } = event.details;
-  //         setWorkspace(prev => prev.filter(ws => ws.slug !== workspaceSlug));
-  //         fetchWorkspaceThread()
-  //           .then(({ workspace }) => {
-  //             if (!workspace) return console.log('no workspaces left - nowhere to go!');
-  //             eventEmitter.emit('workspaceThreadPageInfo', { type: 'update', details: { workspace, thread: null } });
-  //           });
-  //         return;
-  //       }
-
-  //       if (event.type === 'add-workspace') {
-  //         const { name, slug } = event.details;
-  //         setWorkspace(prev => [...prev, { name, slug, threads: [] }]);
-  //         fetchWorkspaceThread()
-  //           .then(({ workspace }) => {
-  //             eventEmitter.emit('workspaceThreadPageInfo', { type: 'update', details: { workspace, thread: null } });
-  //           });
-  //         return;
-  //       }
-  //     }
-  //   );
-
-  //   // Cleanup listeners on unmount
-  //   return () => {
-  //     workspaceListener.remove();
-  //   };
-  // }, []);
 
   useEffect(() => {
     fetchWorkspaceThread();

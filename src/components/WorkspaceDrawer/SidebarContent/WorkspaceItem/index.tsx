@@ -50,7 +50,7 @@ function WorkspaceItem({ workspace, isActive = false, changeWorkspace, currentTh
         text: 'Delete',
         style: 'destructive',
         onPress: () => {
-          Workspace.delete(workspace.slug).then(() => {
+          Workspace.delete([{ field: 'slug', value: workspace.slug }]).then(() => {
             eventEmitter.emit('workspaceUpdate', {
               type: 'remove-workspace',
               details: { workspaceSlug: workspace.slug },

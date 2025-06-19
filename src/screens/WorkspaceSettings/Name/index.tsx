@@ -41,7 +41,7 @@ export function NameView({ workspace, goToPage }: NameViewProps) {
 
             setSaveStatus({ text: 'Autosaving...', state: 'saving' });
             try {
-                await Workspace.update(workspace.slug, { name: newName });
+                await Workspace.update([{ field: 'slug', value: workspace.slug }], { name: newName });
                 setSaveStatus({ text: 'Autosaved!', state: 'saved' });
             } catch (err) {
                 console.error('Error saving system prompt:', err);

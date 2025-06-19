@@ -4,7 +4,7 @@ import slugify from 'slugify';
 import { Q, Model } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
 import WorkspaceThread, { WorkspaceThreadType } from './WorkspaceThread';
-import VectorDB from '@/utils/VectorDB';
+import Document from './Document';
 import uiStore from '@/store/UIStore';
 
 export type WorkspaceType = {
@@ -15,6 +15,7 @@ export type WorkspaceType = {
   temperature: number;
   threads?: WorkspaceThreadType[];
 };
+export type WorkspaceDBType = Model & WorkspaceType;
 
 export default class Workspace extends Model {
   static table = 'workspaces';
@@ -75,36 +76,50 @@ export default class Workspace extends Model {
   }
 
   /**
-   * Find a workspace by slug and load all threads associated with it
-   * @note This is the preferred way to get a workspace
-   * @param slug - The slug of the workspace to find
-   * @returns The workspace object
-   */
-  static async find(slug: string): Promise<WorkspaceType | null> {
-    const workspaceBySlug = await database.get(Workspace.table).query(
-      Q.where('slug', slug)
-    ).fetch();
-
-    if (workspaceBySlug.length === 0) return null;
-    const workspace = this.toWorkspaceObject(workspaceBySlug[0]);
-    workspace.threads = await WorkspaceThread.find([{ field: 'workspace_slug', value: workspace.slug }]);
-    return workspace;
+  * Find the first workspace by a given set of where clauses
+  * @param where - An array of where clauses
+  * @returns The first workspace with the WorkspaceType interface
+  */
+  static async first(where: { field: string, value: string }[] = []): Promise<WorkspaceType | null> {
+    const workspace = await this.get(where);
+    if (!workspace || workspace.length === 0) return null;
+    return this.toWorkspaceObject(workspace[0]);
   }
 
   /**
-   * Get a workspace by slug returns the raw WatermelonDB workspace object
-   * @note you should use find() instead
-   * @param slug - The slug of the workspace to find
+   * Find workspaces by a given set of where clauses
+   * @param where - An array of where clauses
+   * @returns An array of workspaces with the WorkspaceType interface
    */
-  static async get(slug: string): Promise<Model | null> {
-    const workspace = await database.get(Workspace.table).query(Q.where('slug', slug)).fetch();
-    if (workspace.length === 0) return null;
-    return workspace[0];
+  static async find(where: { field: string, value: string }[] = [], withThreads: boolean = false): Promise<WorkspaceType[]> {
+    const workspaces = await this.get(where);
+    if (!workspaces) return [];
+
+    if (withThreads) {
+      const workspacesWithThreads = await Promise.all((workspaces).map(async (workspace) => {
+        const threads = await WorkspaceThread.find([{ field: 'workspace_slug', value: workspace.slug }]);
+        return { ...this.toWorkspaceObject(workspace), threads };
+      }));
+      return workspacesWithThreads;
+    }
+
+    return workspaces.map((workspace) => this.toWorkspaceObject(workspace));
+  }
+
+  /**
+   * Returns watermelon db model instances by a given set of where clauses
+   */
+  static async get(where: { field: string, value: string }[] = []): Promise<WorkspaceDBType[] | null> {
+    const workspaces = await database.get(Workspace.table).query(
+      where.map(({ field, value }) => Q.where(field, value))
+    ).fetch();
+    if (workspaces.length === 0) return null;
+    return workspaces as WorkspaceDBType[];
   }
 
   static async create({ name }: { name: string }): Promise<any> {
     let slug = slugify(name).toLowerCase();
-    let existingWorkspace = await Workspace.find(slug);
+    let existingWorkspace = await Workspace.first([{ field: 'slug', value: slug }]);
     if (existingWorkspace) slug = slugify(name + generateUUID()).toLowerCase();
 
     const nameValidation = Workspace.writableFields.name.validate(name);
@@ -130,20 +145,20 @@ export default class Workspace extends Model {
     };
   }
 
-  static async update(wsSlug: string, data: Partial<WorkspaceType>): Promise<WorkspaceType | null> {
+  static async update(where: { field: string, value: string }[] = [], updates: Partial<WorkspaceType>): Promise<WorkspaceType | null> {
     try {
-      const workspace = await Workspace.get(wsSlug);
-      if (!workspace) return null;
+      const workspace = (await Workspace.get(where))?.[0] as WorkspaceDBType;
+      if (!workspace) throw new Error('Workspace not found');
 
       let validatedFields: Partial<WorkspaceType> = {};
-      for (const [key, value] of Object.entries(data)) {
+      for (const [key, value] of Object.entries(updates)) {
         const validation = Workspace.writableFields[key].validate(value);
         if (!validation.valid) throw new Error(validation.error);
         validatedFields[key] = value;
       }
 
       let updatedWorkspace: any = workspace;
-      this.log(`updating workspace ${wsSlug}`, validatedFields);
+      this.log(`updating workspace ${workspace.slug}`, validatedFields);
       await database.write(async () => {
         updatedWorkspace = await workspace.update((ws: any) => {
           Object.assign(ws, validatedFields);
@@ -160,40 +175,28 @@ export default class Workspace extends Model {
     }
   }
 
-  static async delete(wsSlug: string): Promise<any> {
+  static async delete(where: { field: string, value: string }[] = []): Promise<any> {
     try {
-      if (!wsSlug) return true;
+      if (where.length === 0) throw new Error('No where clauses provided');
 
+      const workspaces = await this.get(where);
+      if (!workspaces || workspaces.length === 0) throw new Error('No workspaces found for query');
+
+      const workspaceSlugs: string[] = workspaces.map((ws) => (ws as WorkspaceDBType).slug);
       await database.write(async () => {
-        const workspace = await database.get(Workspace.table).query(Q.where('slug', wsSlug)).fetch();
-        if (workspace.length === 0) return;
-        this.log('deleting workspace', wsSlug);
-        await workspace[0].destroyPermanently();
+        this.log(`deleting ${workspaces.length} workspaces`, where);
+        await database.batch(workspaces.map((ws) => ws.prepareMarkAsDeleted()));
+        this.log(`deleted ${workspaces.length} workspaces`, where);
+        return true;
       });
 
-      // Delete all threads for the workspace
-      await WorkspaceThread.delete([{ field: 'workspace_slug', value: wsSlug }]);
-
-      // Delete all vectors for the workspace
-      await VectorDB.resetVectorsForWorkspace(wsSlug);
-      this.log('workspace successfully deleted');
+      await Promise.all(workspaceSlugs.map((wsSlug) => WorkspaceThread.delete([{ field: 'workspace_slug', value: wsSlug }])));
+      await Promise.all(workspaceSlugs.map((wsSlug) => Document.delete([{ field: 'workspace_slug', value: wsSlug }], true)));
+      this.log(`${workspaceSlugs.length} workspaces, children threads, and dependent documents/vectors successfully deleted`);
       return true;
     } catch (error) {
       console.error('Error deleting workspace:', error);
       return false;
     }
-  }
-
-  static async getAll(withThreads: boolean = false): Promise<any[]> {
-    this.log('getAll', { withThreads });
-    const workspaces = (await database.get(Workspace.table).query().fetch())
-      .map((workspace) => this.toWorkspaceObject(workspace));
-    if (!withThreads) return workspaces;
-
-    for (const workspace of workspaces) {
-      workspace.threads = await WorkspaceThread.find([{ field: 'workspace_slug', value: workspace.slug }]);
-    }
-
-    return workspaces;
   }
 }

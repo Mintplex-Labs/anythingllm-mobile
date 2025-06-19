@@ -15,6 +15,7 @@ import useAttachments from "@/hooks/useAttachments";
 // thus nulling the ref and preventing the sheet from being dismissed
 import SettingsActionSheet from "./PromptInput/Actions/Settings";
 import ToolsActionSheet from "./PromptInput/Actions/Settings/Tools";
+import WorkspaceFilesActionSheet from "./PromptInput/Actions/Settings/Files";
 
 export default function WorkspaceChat() {
   useRedirect();
@@ -42,8 +43,9 @@ export default function WorkspaceChat() {
 
       {/* Prompt Input */}
       <PromptInput attachmentHandler={attachmentHandler} />
-      <SettingsActionSheet />
+      <SettingsActionSheet workspace={workspace} thread={thread} />
       <ToolsActionSheet />
+      <WorkspaceFilesActionSheet workspace={workspace} />
     </SafeView >
   );
 }

@@ -1,11 +1,11 @@
 import { Fragment } from "react";
 import { ArrowClockwise } from "phosphor-react-native";
 import { View, Text, TouchableOpacity } from "react-native";
-import { BOTTOM_SHEET_EVENTS, useBottomSheet } from "@/contexts/BottomSheetContext";
+import { useBottomSheet } from "@/contexts/BottomSheetContext";
 import { showToast } from "@/utils/Notification";
-import uiStore, { GLOBAL_EVENTS } from "@/store/UIStore";
+import uiStore from "@/store/UIStore";
 
-export default function ResetChatAction() {
+export default function ResetChatActionButton() {
     const { dismissAllSheets } = useBottomSheet();
     const handleReset = () => {
         dismissAllSheets();

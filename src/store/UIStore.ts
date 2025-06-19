@@ -14,6 +14,7 @@ type StorageKeys =
 
 export const GLOBAL_EVENTS = {
   RESET_CHAT: 'reset_chat',
+  REDIRECT: 'REDIRECT',
 } as const;
 
 export class UIStore {

@@ -3,10 +3,13 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { Gear, Paperclip, SlidersHorizontal } from "phosphor-react-native";
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
-import { ToolsActionIcon } from './Tools';
-import ResetChatAction from './ResetChat';
+import { ToolsActionButton } from './Tools';
+import ResetChatActionButton from './ResetChat';
+import { WorkspaceType } from '@/database/models/Workspace';
+import { WorkspaceThreadType } from '@/database/models/WorkspaceThread';
+import { WorkspaceFilesActionButton } from './Files';
 
-export default function SettingsActionSheet() {
+export default function SettingsActionSheet({ workspace, thread }: { workspace: WorkspaceType, thread: WorkspaceThreadType }) {
     const settingsSheetRef = useRef<BottomSheetModal>(null);
     const { registerSheet, presentSheet, activeSheet } = useBottomSheet();
 
@@ -27,9 +30,9 @@ export default function SettingsActionSheet() {
             onDismiss={() => activeSheet === BOTTOM_SHEET_NAMES.SETTINGS && presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)}
         >
             <View style={{ paddingHorizontal: 30 }} className='flex flex-row items-center justify-between'>
-                <SettingsItem icon={<Paperclip size={32} color="#FFF" />} text="Files" onPress={() => { }} />
-                <ResetChatAction />
-                <ToolsActionIcon />
+                <WorkspaceFilesActionButton />
+                <ResetChatActionButton />
+                <ToolsActionButton />
                 <SettingsItem icon={<Gear size={32} color="#FFF" />} text="Settings" onPress={() => { }} />
             </View>
         </BottomSheetModal>

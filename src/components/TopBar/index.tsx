@@ -8,6 +8,7 @@ import NewThreadIcon from '@/assets/new-thread.svg';
 import WorkspaceThread from '@/database/models/WorkspaceThread';
 import { PATHS } from '@/utils/paths';
 import ModelChip from './ModelChip';
+import uiStore from '@/store/UIStore';
 
 export default function TopBar({ modelName, workspace, thread }: { modelName?: string, workspace?: any, thread?: any }) {
   const navigation = useNavigation<DrawerNavigationProp<any>>();
@@ -24,7 +25,7 @@ export default function TopBar({ modelName, workspace, thread }: { modelName?: s
           thread,
         },
       });
-      eventEmitter.emit('REDIRECT', {
+      uiStore.emitter.emit(uiStore.globalEvents.REDIRECT, {
         path: PATHS.workspace_chat,
         params: { wsSlug: workspace.slug, threadSlug: thread.slug },
       });

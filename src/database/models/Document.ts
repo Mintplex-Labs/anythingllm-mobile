@@ -41,11 +41,16 @@ export default class Document extends Model {
     };
   }
 
+  /**
+   * Find documents by a given set of where clauses
+   * @param where - An array of where clauses
+   * @returns An array of documents with the DocumentType interface
+   */
   static async find(where: { field: string, value: string }[] = []): Promise<any> {
     const documents = await database.get(Document.table).query(
       where.map(({ field, value }) => Q.where(field, value))
     ).fetch();
-    return documents;
+    return documents.map((document) => this.toDocumentObject(document));
   }
 
   static async create({
@@ -75,6 +80,40 @@ export default class Document extends Model {
     newDocument = this.toDocumentObject(newDocument);
     this.log('newDocument', newDocument);
     return newDocument;
+  }
+
+  static async deleteByUuids(uuids: string[], withVectors: boolean = false): Promise<any> {
+    try {
+      if (!uuids.length) return true;
+
+      let vectorBoxIds: number[] = [];
+      await database.write(async () => {
+        const documents = await database.get(Document.table).query(
+          Q.where('uuid', Q.oneOf(uuids))
+        ).fetch();
+
+        if (documents.length === 0) return;
+        this.log(`deleting ${documents.length} documents by uuids`);
+        for (const document of documents) {
+          // @ts-ignore
+          let documentVectorBoxIds = document._raw.vector_box_ids;
+          if (typeof documentVectorBoxIds === 'string') documentVectorBoxIds = JSON.parse(documentVectorBoxIds);
+          vectorBoxIds = [...vectorBoxIds, ...(documentVectorBoxIds || [])];
+          await document.destroyPermanently();
+        }
+      });
+
+      if (withVectors) {
+        this.log(`deleting ${vectorBoxIds.length} vectors associated with documents`);
+        await VectorDB.deleteVectorsByIds(vectorBoxIds);
+      }
+
+      this.log('documents successfully deleted');
+      return true;
+    } catch (error) {
+      console.error('Error deleting documents:', error);
+      return false;
+    }
   }
 
   static async delete(where: { field: string, value: string }[] = [], withVectors: boolean = false): Promise<any> {

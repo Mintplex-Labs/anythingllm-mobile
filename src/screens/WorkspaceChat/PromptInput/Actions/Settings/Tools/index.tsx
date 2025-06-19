@@ -59,7 +59,7 @@ export default function ToolsActionSheet() {
     );
 }
 
-export function ToolsActionIcon() {
+export function ToolsActionButton() {
     const { presentSheet } = useBottomSheet();
     return (
         <TouchableOpacity onPress={() => presentSheet(BOTTOM_SHEET_NAMES.TOOLS)} style={{ gap: 11 }} className='flex flex-col items-center justify-center'>

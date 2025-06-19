@@ -34,6 +34,12 @@ export default class Workspace extends Model {
     };
   }
 
+  /**
+   * Find a workspace by slug and load all threads associated with it
+   * @note This is the preferred way to get a workspace
+   * @param slug - The slug of the workspace to find
+   * @returns The workspace object
+   */
   static async find(slug: string): Promise<any> {
     const workspaceBySlug = await database.get(Workspace.table).query(
       Q.where('slug', slug)
@@ -45,6 +51,11 @@ export default class Workspace extends Model {
     return workspace;
   }
 
+  /**
+   * Get a workspace by slug returns the raw WatermelonDB workspace object
+   * @note you should use find() instead
+   * @param slug - The slug of the workspace to find
+   */
   static async get(slug: string): Promise<any> {
     const workspace = await database.get(Workspace.table).query(Q.where('slug', slug)).fetch();
     if (workspace.length === 0) return null;

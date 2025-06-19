@@ -7,6 +7,7 @@ export const BOTTOM_SHEET_NAMES = {
     MODEL_CHIP_SELECTION: 'model-chip-selection',
     SETTINGS: 'settings',
     TOOLS: 'tools',
+    WORKSPACE_FILES: 'workspace-files',
 } as const;
 export type BottomSheetType = (typeof BOTTOM_SHEET_NAMES)[keyof typeof BOTTOM_SHEET_NAMES] | null;
 

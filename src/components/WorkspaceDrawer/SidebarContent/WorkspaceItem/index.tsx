@@ -6,6 +6,7 @@ import { NativeEventEmitter } from "react-native";
 import Workspace from "@/database/models/Workspace";
 import WorkspaceThread from "@/database/models/WorkspaceThread";
 import { PATHS } from "@/utils/paths";
+import uiStore from "@/store/UIStore";
 
 interface IWorkspaceItem {
   workspace: any;
@@ -189,7 +190,7 @@ function WorkspaceThreadsContainer({ workspace, activeThreadIdx, setActiveThread
             thread={thread}
             onPress={() => {
               setActiveThreadIdx(idx)
-              eventEmitter.emit('REDIRECT', {
+              uiStore.emitter.emit(uiStore.globalEvents.REDIRECT, {
                 path: PATHS.workspace_chat,
                 params: { wsSlug: workspace.slug, threadSlug: thread.slug },
               });

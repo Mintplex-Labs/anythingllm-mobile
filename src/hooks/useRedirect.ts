@@ -1,14 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import { useEffect } from "react";
-import { NativeEventEmitter } from "react-native";
+import uiStore from "@/store/UIStore";
 
-const eventEmitter = new NativeEventEmitter();
 export default function useRedirect() {
   const navigation = useNavigation();
 
   // Listen for redirect events
   useEffect(() => {
-    const redirectListener = eventEmitter.addListener('REDIRECT', (event) => {
+    const redirectListener = uiStore.emitter.addListener(uiStore.globalEvents.REDIRECT, (event) => {
       console.log('redirecting to', event.path, event.params);
       // @ts-ignore
       navigation.navigate(event.path, event.params as never);

@@ -14,6 +14,7 @@ export default {
   OnboardingSurvey,
   OnboardingDataHandling,
   Home,
+
   WorkspaceChat,
 
   DevToolsDatabaseInspector,

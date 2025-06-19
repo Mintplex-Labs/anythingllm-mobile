@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Alert, NativeEventEmitter } from "react-native";
 import { showToast } from "@/utils/Notification";
 import { PATHS } from "@/utils/paths";
+import uiStore from "@/store/UIStore";
 
 export default function useDevShortcut({ workspace, thread }: { workspace?: any, thread?: any }) {
     const THRESHOLD = 5;
@@ -20,7 +21,7 @@ export default function useDevShortcut({ workspace, thread }: { workspace?: any,
         if (presses >= THRESHOLD) {
             clearTimeout(timer);
             setPresses(0);
-            developerPressEmitter.emit('REDIRECT', {
+            uiStore.emitter.emit(uiStore.globalEvents.REDIRECT, {
                 path: PATHS.developer.home,
             });
             return;

@@ -5,6 +5,7 @@ import { Q, Model } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
 import WorkspaceThread, { WorkspaceThreadType } from './WorkspaceThread';
 import VectorDB from '@/utils/VectorDB';
+import uiStore from '@/store/UIStore';
 
 export type WorkspaceType = {
   name: string;
@@ -17,8 +18,39 @@ export type WorkspaceType = {
 
 export default class Workspace extends Model {
   static table = 'workspaces';
+  static defaultName = 'New Workspace';
   static defaultSystemPrompt = `You are a helpful assistant that can answer questions and help with tasks.`;
   static defaultTemperature = 0.7;
+  static writableFields = {
+    name: {
+      validate: (value: string) => {
+        let error = '';
+        if (typeof value !== 'string') error = 'Name must be a string';
+        if (!value) error = 'Name is required';
+        if (value.length < 3) error = 'Name must be at least 3 characters long';
+        if (value.length > 100) error = 'Name must be less than 100 characters long';
+        return { valid: !error, error };
+      },
+    },
+    systemPrompt: {
+      validate: (value: string) => {
+        let error = '';
+        if (typeof value !== 'string') error = 'System prompt must be a string';
+        if (!value) error = 'System prompt is required';
+        if (value.length < 10) error = 'System prompt must be at least 10 characters long';
+        if (value.length > 1000) error = 'System prompt must be less than 1000 characters long';
+        return { valid: !error, error };
+      },
+    },
+    temperature: {
+      validate: (value: number) => {
+        let error = '';
+        if (typeof value !== 'number' || isNaN(Number(value))) error = 'Temperature must be a number';
+        if (value < 0 || value > 1) error = 'Temperature must be between 0 and 1';
+        return { valid: !error, error };
+      },
+    },
+  }
 
   @text('name') name!: string;
   @text('slug') slug!: string; // unique!!
@@ -64,7 +96,7 @@ export default class Workspace extends Model {
    * @note you should use find() instead
    * @param slug - The slug of the workspace to find
    */
-  static async get(slug: string): Promise<any> {
+  static async get(slug: string): Promise<Model | null> {
     const workspace = await database.get(Workspace.table).query(Q.where('slug', slug)).fetch();
     if (workspace.length === 0) return null;
     return workspace[0];
@@ -74,6 +106,9 @@ export default class Workspace extends Model {
     let slug = slugify(name).toLowerCase();
     let existingWorkspace = await Workspace.find(slug);
     if (existingWorkspace) slug = slugify(name + generateUUID()).toLowerCase();
+
+    const nameValidation = Workspace.writableFields.name.validate(name);
+    if (!nameValidation.valid) throw new Error(nameValidation.error);
 
     let newWorkspace: any;
     await database.write(async () => {
@@ -93,6 +128,36 @@ export default class Workspace extends Model {
       ...newWorkspace,
       threads: [thread],
     };
+  }
+
+  static async update(wsSlug: string, data: Partial<WorkspaceType>): Promise<WorkspaceType | null> {
+    try {
+      const workspace = await Workspace.get(wsSlug);
+      if (!workspace) return null;
+
+      let validatedFields: Partial<WorkspaceType> = {};
+      for (const [key, value] of Object.entries(data)) {
+        const validation = Workspace.writableFields[key].validate(value);
+        if (!validation.valid) throw new Error(validation.error);
+        validatedFields[key] = value;
+      }
+
+      let updatedWorkspace: any = workspace;
+      this.log(`updating workspace ${wsSlug}`, validatedFields);
+      await database.write(async () => {
+        updatedWorkspace = await workspace.update((ws: any) => {
+          Object.assign(ws, validatedFields);
+          return Workspace.toWorkspaceObject(ws);
+        });
+      });
+
+      // Emit the updated workspace to the UI if useWorkspace hook is listening
+      uiStore.emitter.emit('workspaceUpdate', { type: 'update', details: { workspace: updatedWorkspace } });
+      return updatedWorkspace;
+    } catch (error) {
+      console.error('Error updating workspace:', error);
+      return null;
+    }
   }
 
   static async delete(wsSlug: string): Promise<any> {

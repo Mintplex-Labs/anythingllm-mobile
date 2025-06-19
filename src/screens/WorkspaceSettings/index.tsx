@@ -1,15 +1,23 @@
 import useRedirect from "@/hooks/useRedirect";
 import useChatInfoEmit from "@/hooks/useChatInfoEmit";
 import useWorkspace from "@/hooks/useWorkspace";
-import { LoadingView, ErrorView, MainView } from "./Main";
 import { useEffect, useState } from "react";
 import { NativeEventEmitter } from "react-native";
 
+import { LoadingView, ErrorView, MainView } from "./Main";
+import { NameView } from "./Name";
+import { SystemPromptView } from "./SystemPrompt";
+import { TemperatureView } from "./Temperature";
+
 const PAGES = {
   main: (props: any) => <MainView {...props} />,
+  system_prompt: (props: any) => <SystemPromptView {...props} />,
+  temperature: (props: any) => <TemperatureView {...props} />,
+  name: (props: any) => <NameView {...props} />,
 };
 export type IWorkspacePageKey = keyof typeof PAGES;
 
+// Local event emitter for Settings page navigation
 const eventEmitter = new NativeEventEmitter();
 export default function WorkspaceSettings() {
   useRedirect();

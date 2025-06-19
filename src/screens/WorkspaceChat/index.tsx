@@ -33,7 +33,7 @@ export default function WorkspaceChat() {
   if (!!errorWorkspaceThread) return <ErrorView title="Error loading workspace thread" error={errorWorkspaceThread} />;
 
   return (
-    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col justify-between" safeAreaStyle={{ backgroundColor: '#000' }}>
+    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col justify-between" applyGradient safeAreaStyle={{ backgroundColor: '#000' }}>
       <TopBar modelName={LLMProvider?.model} workspace={workspace} thread={thread} />
 
       {/* Chat History */}
@@ -52,7 +52,7 @@ export default function WorkspaceChat() {
 
 function LoadingView() {
   return (
-    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" safeAreaStyle={{ backgroundColor: '#000' }}>
+    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" applyGradient safeAreaStyle={{ backgroundColor: '#000' }}>
       <TopBar />
       <View className="flex h-[80vh] justify-center items-center">
         <ActivityIndicator size="large" color="#fff" />
@@ -63,7 +63,7 @@ function LoadingView() {
 
 function ErrorView({ title, error }: { title: string, error: any }) {
   return (
-    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" safeAreaStyle={{ backgroundColor: '#000' }}>
+    <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" applyGradient safeAreaStyle={{ backgroundColor: '#000' }}>
       <TopBar />
       <View className="flex h-[80vh] justify-center items-center">
         <Text className="text-red-500">{title}</Text>

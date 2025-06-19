@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { NativeEventEmitter } from "react-native";
 import Workspace, { WorkspaceType } from "@/database/models/Workspace";
+import uiStore from "@/store/UIStore";
 
-const eventEmitter = new NativeEventEmitter();
 export default function useWorkspace(wsSlug: string) {
   const [isLoading, setIsLoading] = useState(true);
   const [workspace, setWorkspace] = useState<WorkspaceType>();
@@ -26,6 +25,19 @@ export default function useWorkspace(wsSlug: string) {
 
   useEffect(() => {
     fetchWorkspace();
+  }, [wsSlug]);
+
+  useEffect(() => {
+    const workspaceListener = uiStore.emitter.addListener(
+      'workspaceUpdate',
+      (event) => {
+        if (event.type === 'update') {
+          const { workspace } = event.details;
+          if (workspace.slug === wsSlug) setWorkspace(workspace);
+        }
+      }
+    );
+    return () => workspaceListener.remove();
   }, [wsSlug]);
 
   return { loadingWorkspace: isLoading, workspace, fetchWorkspace, error };

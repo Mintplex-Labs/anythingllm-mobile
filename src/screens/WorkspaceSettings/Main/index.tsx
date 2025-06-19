@@ -1,12 +1,13 @@
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, BackHandler, Text, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
-import { ArrowLeft, CaretRight, ChatCentered, File, Thermometer } from "phosphor-react-native";
+import { ArrowLeft, CaretRight, ChatCentered, Cube, File, Thermometer } from "phosphor-react-native";
 import Workspace, { WorkspaceType } from "@/database/models/Workspace";
 import { IWorkspacePageKey } from "../index";
 import uiStore from "@/store/UIStore";
 import { PATHS } from "@/utils/paths";
+import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
 
 interface MainViewProps {
     workspace: WorkspaceType;
@@ -19,9 +20,11 @@ export function MainView({ workspace, goToPage, initialThreadSlug }: MainViewPro
     function goBackToWorkspaceChat() {
         uiStore.emitGlobalEvent(uiStore.globalEvents.REDIRECT, {
             path: PATHS.workspace_chat,
-            params: { wsSlug: workspace.slug, threadSlug: initialThreadSlug || workspace.threads![0].slug },
+            params: { wsSlug: workspace.slug, threadSlug: initialThreadSlug ?? workspace.threads![0].slug },
         });
+        return true;
     }
+    useHighjackBackButtonPress(goBackToWorkspaceChat);
 
     return (
         <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" safeAreaStyle={{ backgroundColor: '#1B1B1E' }}>
@@ -34,6 +37,23 @@ export function MainView({ workspace, goToPage, initialThreadSlug }: MainViewPro
             </View>
 
             <ScrollView contentContainerClassName="flex flex-col" contentContainerStyle={{ paddingHorizontal: 18, gap: 24, }}>
+
+                {/* Name */}
+                <View className="w-full flex flex-col" style={{ gap: 12 }}>
+                    <Text className="text-[--text-secondary] text-sm uppercase">Workspace Name</Text>
+                    <TouchableOpacity style={{ backgroundColor: '#27282A', padding: 14, gap: 20 }} className="w-full flex flex-row items-center rounded-lg" onPress={() => goToPage('name')}>
+                        <View className="flex flex-row gap-2 items-center">
+                            <Cube size={18} color="#FFF" />
+                            <Text className="text-white text-lg">Name</Text>
+                        </View>
+                        <View className="flex flex-1 flex-row gap-2 items-center justify-between">
+                            <Text numberOfLines={1} ellipsizeMode="tail" className="text-[--text-secondary] text-lg flex-1 text-right">
+                                {workspace?.name || Workspace.defaultName}
+                            </Text>
+                            <CaretRight size={18} color="#FFF" />
+                        </View>
+                    </TouchableOpacity>
+                </View>
 
                 {/* System Prompt */}
                 <View className="w-full flex flex-col" style={{ gap: 12 }}>

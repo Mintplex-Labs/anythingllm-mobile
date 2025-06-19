@@ -144,7 +144,6 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
                         backgroundColor: '#1B1B1E',
                         borderTopLeftRadius: 30,
                         borderTopRightRadius: 30,
-                        paddingTop: 16,
                     }}
                 >
                     <Animated.View
@@ -172,7 +171,8 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
                                 textAlignVertical: 'top',
                                 height: inputHeight,
                                 borderRadius: 16,
-                                paddingHorizontal: 16,
+                                paddingTop: 16,
+                                paddingHorizontal: 20,
                             }}
                         />
                         <ActionMenu isFullScreen={isFullScreen} sheetIndex={sheetIndex} attachmentHandler={attachmentHandler} />

@@ -8,6 +8,12 @@ interface VectorEntity {
     workspaceSlug?: string;
 }
 
+export type SemanticSearchResult = {
+    id: number;
+    metadata: { content?: string, [key: string]: any };
+    score: number;
+}
+
 interface VectorBoxInterface {
     insert(workspaceSlug: string, embedding: number[], metadata?: string): Promise<number>;
     bulkInsert(workspaceSlug: string, embeddings: { embedding: number[], metadata: string }[]): Promise<number[]>;
@@ -98,7 +104,7 @@ class VectorDB {
      * Run a semantic search on the database for a specific workspace
      * with a query vector and return the top N results.
      */
-    async runSemanticSearch(workspaceSlug: string, queryVector: number[], topN: number = 2): Promise<{ id: number, metadata: object, score: number }[]> {
+    async runSemanticSearch(workspaceSlug: string, queryVector: number[], topN: number = 2): Promise<SemanticSearchResult[]> {
         try {
             const results = await this.vectorBox.semanticSearch(workspaceSlug, queryVector, topN);
             return results.map((result: { id: number, metadata: string, score: number }) => ({

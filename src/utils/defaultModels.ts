@@ -35,9 +35,12 @@ export const EMBEDDING_MODEL = {
     id: 'default',
     name: 'Default',
     description: 'The default embedding model for AnythingLLM.',
-    size: '25MB',
-    modelId: 'leliuga/all-MiniLM-L6-v2-GGUF',
-    tag: 'https://huggingface.co/leliuga/all-MiniLM-L6-v2-GGUF/resolve/main/all-MiniLM-L6-v2.Q8_0.gguf',
+    size: '84.1MB',
+
+    // Nomic Embed Text works best, all the All-MiniLM-L6-v2 models are too compressed and suck.
+    // https://huggingface.co/nomic-ai/nomic-embed-text-v1.5-GGUF
+    modelId: 'nomic-ai/nomic-embed-text-v1.5-GGUF',
+    tag: 'https://huggingface.co/nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.Q4_K_M.gguf',
 }
 
 /**

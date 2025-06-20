@@ -125,9 +125,9 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     onComplete?: (response: any) => void;
     onStream?: IStreamCallback | IOnDeviceStreamCallback;
   }) {
-    const normalizedMessages = this.buildPrompt(messages);
+    const { formattedMessages, citations } = await this.buildPrompt(messages);
     if (!streaming) {
-      const response = await this.submodule.getChatCompletion(normalizedMessages as any);
+      const response = await this.submodule.getChatCompletion(formattedMessages as any);
       onComplete({
         textResponse: response.textResponse,
         metrics: response.metrics,
@@ -136,7 +136,10 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     }
 
     this.log(`Streaming ${this.model} with ${this.computeRuntime}`);
-    await this.submodule.streamGetChatCompletion(normalizedMessages as any, (token: string) => onStream('chunk', token));
+    const fullResult = await this.submodule.streamGetChatCompletion(formattedMessages as any, (token: string) => onStream('chunk', token));
+
+    if (!!fullResult.metrics) onStream('report_metrics', fullResult.metrics);
+    if (!!citations) onStream('report_citations', citations);
     onStream('complete', '');
   }
 }

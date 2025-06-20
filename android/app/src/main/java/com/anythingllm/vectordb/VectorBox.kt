@@ -24,7 +24,9 @@ import kotlin.concurrent.withLock
 @Entity
 data class VectorEntity(
         @Id var id: Long = 0,
-        @HnswIndex(dimensions = 384, distanceType = VectorDistanceType.COSINE)
+        // https://objectbox.io/docfiles/java/current/io/objectbox/annotation/VectorDistanceType.html
+        // Fixed dimensions for now, assuming nomic-embed-text-v1.5-GGUF
+        @HnswIndex(dimensions = 768, distanceType = VectorDistanceType.COSINE)
         var embedding: FloatArray? = null,
         var metadata: String? = null,
         var workspaceSlug: String? = null

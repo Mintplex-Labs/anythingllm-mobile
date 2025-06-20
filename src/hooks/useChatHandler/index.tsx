@@ -4,9 +4,9 @@ import { type LLMProvider } from "@/utils/AiProviders";
 import { useState, useMemo, useEffect, createContext, useContext, useCallback, useRef } from "react";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import uiStore from "@/store/UIStore";
-import WorkspaceChat from "@/database/models/WorkspaceChat";
+import WorkspaceChat, { IDocumentCitation } from "@/database/models/WorkspaceChat";
 import { merge } from 'lodash';
-import { ICompleteResponse, IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
+import { ICompleteResponse, IStreamEvent, IStreamResponse } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { parseStreamingChunksToResponse } from "./parser";
 import { activateKeepAwake, deactivateKeepAwake } from "@/utils/keepAwake";
 import { Keyboard } from "react-native";
@@ -158,17 +158,34 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                 messages: messageHistory,
                 streaming: true,
                 // onComplete: this is for non-streaming responses
-                onStream: async (event: IStreamEvent, data: string | ICompleteResponse['metrics']): Promise<void> => {
-                    if (event === 'abort') throw new Error('Chat aborted');
-                    if (event === 'complete') return debug('Chat stream complete');
-                    if (typeof data !== 'string') return debug('Unhandled stream event', event, data);
-
-                    const parsed = parseStreamingChunksToResponse(event, accumulator, data);
-                    accumulator += data;
-
-                    if (!parsed) return debug('No parsable content - skipping');
-                    merge(newChat, { response: { textResponse: parsed.textResponse, thoughts: parsed.reasoningContent } });
-                    uiStore.emitter.emit(CHAT_HANDLER_EVENTS.UPDATE_CHAT, { uuid: newChat.uuid as string, chat: newChat });
+                onStream: async (event: IStreamEvent, data: IStreamResponse): Promise<void> => {
+                    let emitUpdate = false;
+                    switch (event) {
+                        case 'abort':
+                            throw new Error('Chat aborted');
+                        case 'complete':
+                            debug('Chat stream complete');
+                            break;
+                        case 'report_metrics':
+                            debug('Report metrics', data);
+                            merge(newChat, { response: { metrics: data as ICompleteResponse['metrics'] } });
+                            break;
+                        case 'report_citations':
+                            debug('Report citations', data);
+                            merge(newChat, { response: { citations: data as IDocumentCitation[] } });
+                            emitUpdate = true;
+                            break;
+                        case 'chunk':
+                            const parsed = parseStreamingChunksToResponse(event, accumulator, data as string);
+                            accumulator += data;
+                            if (!parsed) return debug('No parsable content - skipping');
+                            merge(newChat, { response: { textResponse: parsed.textResponse, thoughts: parsed.reasoningContent } });
+                            emitUpdate = true;
+                            break;
+                        default:
+                            debug('Unhandled stream event', event, data);
+                    }
+                    if (emitUpdate) uiStore.emitter.emit(CHAT_HANDLER_EVENTS.UPDATE_CHAT, { uuid: newChat.uuid as string, chat: newChat });
                     return;
                 },
             }).catch(err => {

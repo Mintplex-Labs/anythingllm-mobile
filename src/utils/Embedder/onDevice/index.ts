@@ -4,9 +4,38 @@ import * as RNFS from '@dr.pogodin/react-native-fs';
 import { initLlama, LlamaContext, NativeEmbeddingResult } from "llama.rn";
 import { Platform } from "react-native";
 
+type EmbedderPrefixType = 'query' | 'embed_document';
 
+/**
+ * The is a known bug with the on device embedder.
+ * - When you send a query to the embedder, it will return a vector that is ok.
+ * - Sending the EXACT SAME query again will return a different vector.
+ * - Sending a different query will return a different vector.
+ * - Sending the original query again will return the original vector from the first time.
+ * 
+ * Seeing this is a known bug with the on device embedder. Not a bug with the model.
+ * The likelyhood that the same query is sent twice is very low, but it is something to be aware of.
+ * We could track the last query vector and compare it to the new query vector and unload the model if they are different
+ * before sending to semantic search, but that is a lot of overhead and we are not sure if it is worth it.
+ */
 export default class OnDeviceEmbedderProvider {
     static instance: OnDeviceEmbedderProvider;
+
+    /**
+     * According to the llama.cpp documentation:
+     * -1: no normalization (default)
+     * 0: max absolute int16
+     * 1: taxicab (L1)
+     * 2: euclidean (L2)
+     * >2: p-norm
+     */
+    private EMBEDDING_NORMALIZATION = -1;
+    private EMBED_PREFIXES = {
+        // For nomic-embed-text-v1.5-GGUF it has task prefixes for the different tasks.
+        // https://huggingface.co/nomic-ai/nomic-embed-text-v1.5
+        query: 'search_query: ',
+        embed_document: 'search_document: ',
+    }
 
     private _isWorking: boolean = false;
     private model = EMBEDDING_MODEL.modelId;
@@ -60,12 +89,9 @@ export default class OnDeviceEmbedderProvider {
 
             this.llamaRnContext = await initLlama({
                 model: this.modelPath,
-                use_mlock: true,
                 n_gpu_layers: Platform.OS === 'ios' ? 99 : 0,
                 embedding: true,
             })
-
-            this.log(`initialized with model ${this.model}`);
             return true;
         } catch (error) {
             console.error('Failed to initialize model:', error);
@@ -115,7 +141,10 @@ export default class OnDeviceEmbedderProvider {
         }
     }
 
-    private async cleanup(): Promise<void> {
+    /**
+     * Cleans up the embedder.
+     */
+    async cleanup(): Promise<void> {
         this.log('Cleaning up!');
         await this.unloadModel();
     }
@@ -125,13 +154,15 @@ export default class OnDeviceEmbedderProvider {
      * @param text - The text to embed.
      * @returns The embedding.
      */
-    async embed(text: string) {
+    async embed(text: string, as: 'query' | 'embed_document' = 'query') {
         return this.wrapInKeepAlive(async () => {
             await this.initialize();
             if (!this.llamaRnContext) throw new Error('OnDeviceEmbedderProvider::embed: could not initialize');
 
             this.keepAlive();
-            const msgResult: NativeEmbeddingResult = await this.llamaRnContext.embedding(text);
+            const prefixedText = `${this.EMBED_PREFIXES[as]}${text}`;
+            this.log(`Embedding text with prefix: ${prefixedText}`);
+            const msgResult: NativeEmbeddingResult = await this.llamaRnContext.embedding(prefixedText, { embd_normalize: this.EMBEDDING_NORMALIZATION });
             return msgResult.embedding;
         });
     }
@@ -140,22 +171,24 @@ export default class OnDeviceEmbedderProvider {
      * Embeds a batch of texts.
      * @param texts - The texts to embed.
      */
-    async embedBatch(texts: string[]) {
+    async embedBatch(texts: string[], as: EmbedderPrefixType = 'query') {
         let embeddings: number[][] = [];
-        for (const text of texts) embeddings.push(await this.embed(text));
+        for (const text of texts) embeddings.push(await this.embed(text, as));
         return embeddings;
     }
 
     /**
      * Splits the document text into chunks and embeds them.
      * Returns an array of embeddings with their respective metadata.
+     * 
+     * Assumes this is a document that is being embedded for semantic search.
      */
-    async splitAndEmbed(documentText: string, options: TextSplitterConfig) {
+    async splitAndEmbed(documentText: string, options: TextSplitterConfig, as: EmbedderPrefixType = 'embed_document') {
         const textSplitter = new TextSplitter(options);
-        const chunks = await textSplitter.splitText(documentText);
+        let chunks = await textSplitter.splitText(documentText);
         this.log(`Split document into ${chunks.length} ~${chunks[0].length} character chunks`);
 
-        const embeddings = await this.embedBatch(chunks);
+        const embeddings = await this.embedBatch(chunks, as);
         return embeddings.map((embedding, index) => ({
             embedding,
             metadata: {

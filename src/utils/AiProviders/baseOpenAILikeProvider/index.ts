@@ -1,10 +1,13 @@
 import Workspace, { type WorkspaceType } from "@/database/models/Workspace";
+import { IDocumentCitation } from "@/database/models/WorkspaceChat";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import { formatChatHistory } from "@/utils/chat/helpers";
 import { StreamMetrics } from "@/utils/chat/LLMPerformanceMonitor";
 import { MonitoredStream } from "@/utils/chat/LLMPerformanceMonitor";
 import LLMPerformanceMonitor from "@/utils/chat/LLMPerformanceMonitor";
+import getEmbedder, { EmbedderProvider } from "@/utils/Embedder";
 import OpenAILite from "@/utils/openai";
+import VectorDB, { SemanticSearchResult } from "@/utils/VectorDB";
 
 interface BaseLLMProviderConfig {
   provider: string;
@@ -36,10 +39,22 @@ type IContent = {
   };
 }
 
-export type IStreamEvent = 'chunk' | 'complete' | 'abort';
-export type IStreamCallback = (event: IStreamEvent, response: string | ICompleteResponse['metrics']) => void;
+export type IStreamEvent = 'chunk' | 'complete' | 'abort' | 'report_citations' | 'report_metrics';
+export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[];
+export type IStreamCallback = (
+  event: IStreamEvent,
+  response: IStreamResponse
+) => void;
+
 export type IAttachment = {
   contentString: string;
+}
+
+class SilentError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'SilentError';
+  }
 }
 
 export default abstract class BaseOpenAILikeProvider {
@@ -57,6 +72,9 @@ export default abstract class BaseOpenAILikeProvider {
 
   static DEFAULT_SYSTEM_MESSAGE = 'You are a helpful assistant that can answer questions and help with tasks.';
 
+  private DEFAULT_TOP_N = 2;
+  private SEMANTIC_SEARCH_MIN_RELEVANCE_SCORE = 0.6;
+
   constructor({ provider, config }: BaseLLMProviderConfig) {
     this._provider = provider;
     this._config = config;
@@ -72,6 +90,16 @@ export default abstract class BaseOpenAILikeProvider {
   get workspace() {
     if (!this._workspace) this.log('\x1b[43m\x1b[34m[ERROR]\x1b[0m No workspace attached to provider - you likely forgot to call attachWorkspaceToProvider(workspace) before using this method in any call stack.');
     return this._workspace || null;
+  }
+
+  get topN() {
+    return this.DEFAULT_TOP_N;
+    // return this.workspace.topN;
+  }
+
+  get minRelevanceScore() {
+    return this.SEMANTIC_SEARCH_MIN_RELEVANCE_SCORE;
+    // return this.workspace.minRelevanceScore;
   }
 
   /**
@@ -112,11 +140,20 @@ export default abstract class BaseOpenAILikeProvider {
    * Generates the system message for the provider.
    * If the workspace has a system prompt, it will be used.
    * Otherwise, the default system message will be used.
+   * 
+   * Will also add the context texts to the system message if they are provided.
    */
   defaultSystemMessage(contextTexts: string[] = []) {
     const baseMessage = this.workspace?.systemPrompt || BaseOpenAILikeProvider.DEFAULT_SYSTEM_MESSAGE;
     if (!contextTexts.length) return baseMessage;
-    return `${baseMessage}\n\nHere is some context that may be relevant to the conversation: ${contextTexts.join('\n\n')}`;
+
+    const context = contextTexts
+      .map((text, i) => {
+        return `Context ${i + 1}: ${text}`;
+      })
+      .join("\n\n");
+
+    return `${baseMessage}\n\n[CONTEXT_START]\n${context}\n[CONTEXT_END]`;
   }
 
   /**
@@ -170,22 +207,82 @@ export default abstract class BaseOpenAILikeProvider {
     ];
   }
 
+  private buildDocumentCitations(vectorSearchResults: SemanticSearchResult[]): IDocumentCitation[] {
+    return vectorSearchResults.map((r) => ({
+      type: 'document',
+      document: {
+        uuid: String(r.id),
+        name: String(r.metadata.name),
+        chunk: String(r.metadata.content),
+        score: r.score, // numberToPercentageString(r.score) will be run on the frontend to convert to a percentage string
+      },
+    }));
+  }
+
+  /**
+   * Filters the semantic search results to only include relevant results.
+   * 
+   * @param results - The semantic search results to filter.
+   * @returns The filtered semantic search results.
+   */
+  private filterSemanticSearchResults(results: SemanticSearchResult[]): SemanticSearchResult[] {
+    return results
+      .map((r) => {
+        const percentRelevance = 1 - r.score;
+        const isRelevant = percentRelevance >= this.minRelevanceScore;
+        if (isRelevant) return { ...r, score: percentRelevance };
+        this.log(`Semantic search result "${r.metadata.name}" is not relevant enough (${percentRelevance})`);
+        return null;
+      })
+      .filter((r) => r !== null);
+  }
+
+  /**
+   * Gets the context texts for the user prompt from semantic search
+   * of the workspace's vector store.
+   */
+  async getContextTexts(userPrompt: string): Promise<SemanticSearchResult[]> {
+    try {
+      if (!this.workspace) throw new SilentError('No workspace attached to provider');
+      if (userPrompt.length < 10) throw new SilentError('User prompt is too short to get context texts');
+      if (await VectorDB.getWorkspaceVectorCount(this.workspace.slug) === 0) throw new SilentError('No vectors in vector store');
+
+      const embedder = getEmbedder('native');
+      const queryVector = await embedder.embed(userPrompt, 'query');
+      const results = await VectorDB
+        .runSemanticSearch(this.workspace.slug, queryVector, this.topN)
+        .then((results) => this.filterSemanticSearchResults(results));
+
+      if (results.length === 0) return [];
+      this.log(`\nGot ${results.length} contexts:`, JSON.stringify({ topN: this.topN, minRelevanceScore: this.minRelevanceScore, dimensions: queryVector.length, query: `${userPrompt.slice(0, 50)}...`, results: results.map((r) => r.score) }, null, 2));
+      return results;
+    } catch (e) {
+      if (e instanceof Error) this.log(e.message);
+      else this.log('Error getting context texts:', e);
+      return [];
+    }
+  }
+
   /**
    * Builds the prompt from the message history.
    */
-  buildPrompt(messages: DynamicChatMessage[]) {
+  async buildPrompt(messages: DynamicChatMessage[]): Promise<{ citations: IDocumentCitation[], formattedMessages: any[] }> {
     if (messages.length === 0) throw new Error("Messages array must contain at least one element");
     const history = messages.slice(0, -1);
     const userPrompt = messages[messages.length - 1];
+    const vectorSearchResults = await this.getContextTexts(userPrompt.prompt as string);
+    const contextTexts = vectorSearchResults
+      .filter((r) => r.metadata.content !== undefined && r.metadata.content !== null && r.metadata.content !== '')
+      .map((r) => String(r.metadata.content));
 
-    // TODO: Semantic search for context text
-    const contextTexts: string[] = [];
-
-    return this.constructMessages({
-      chatHistory: history,
-      userPrompt: userPrompt.prompt as string,
-      contextTexts,
-    });
+    return {
+      citations: this.buildDocumentCitations(vectorSearchResults),
+      formattedMessages: this.constructMessages({
+        chatHistory: history,
+        userPrompt: userPrompt.prompt as string,
+        contextTexts,
+      }),
+    }
   }
 
   async chat({
@@ -199,7 +296,9 @@ export default abstract class BaseOpenAILikeProvider {
     onComplete?: (response: ICompleteResponse) => void;
     onStream?: IStreamCallback;
   }) {
-    const formattedMessages = this.buildPrompt(messages);
+    // citations are unhandled for now in the base class
+    const { citations: _, formattedMessages } = await this.buildPrompt(messages);
+
     // For async responses, we can just return the response immediately
     if (!streaming) {
       const response = await this.getChatCompletion(formattedMessages);

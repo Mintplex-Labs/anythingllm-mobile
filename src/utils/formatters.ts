@@ -157,6 +157,12 @@ export function timeAgo(
   }
 }
 
+/**
+ * Formats a float (0-1) as a percentage string.
+ * @param number - The number to format.
+ * @param significantDigits - The number of significant digits to show.
+ * @returns The formatted percentage string.
+ */
 export function numberToPercentageString(number: number | string, significantDigits = 0) {
   const num = typeof number === 'string' ? parseFloat(number) : number;
   return `${(num * 100).toFixed(significantDigits)}%`;

@@ -136,7 +136,7 @@ function AvailableModels({ closeSheet }: { closeSheet: () => void }) {
         <View className='flex flex-col items-center justify-center gap-y-4 w-full h-full'>
             <Text className='text-white text-lg font-semibold py-4'>Choose your model</Text>
             {!availableModels.length && <Text className='text-white text-sm'>No models available</Text>}
-            {availableModels.length && (
+            {availableModels.length > 0 && (
                 <FlatList
                     data={availableModels}
                     className='w-full'

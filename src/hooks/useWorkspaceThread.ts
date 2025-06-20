@@ -5,17 +5,17 @@ import WorkspaceThread from "@/database/models/WorkspaceThread";
 
 const eventEmitter = new NativeEventEmitter();
 export default function useWorkspaceThread(wsSlug: string, threadSlug: string | null) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [workspace, setWorkspace] = useState<any>(null);
   const [thread, setThread] = useState<any>(null);
   const [error, setError] = useState<any>(null);
 
   async function fetchWorkspaceThread() {
     try {
+      setIsLoading(true);
       if (!wsSlug) throw new Error('Workspace slug is required');
       if (!threadSlug) throw new Error('Thread slug is required');
 
-      setIsLoading(true);
       const [workspace, thread] = await Promise.all([
         Workspace.first([{ field: 'slug', value: wsSlug }]),
         WorkspaceThread.first([{ field: 'workspace_slug', value: wsSlug }, { field: 'slug', value: threadSlug }])

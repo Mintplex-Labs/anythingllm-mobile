@@ -13,8 +13,7 @@ function getLLM(provider: string, config: { [key: string]: any } = {}): LLMProvi
         }
       });
     case 'native':
-      return new OnDeviceProvider({
-        provider: 'native',
+      return OnDeviceProvider.getInstance({
         config: { model: config.model }
       })
     default:

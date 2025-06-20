@@ -21,6 +21,7 @@ import SafeView from '@/components/SafeView';
 import useInitialRoute from '@/hooks/useInitialRoute';
 import './src/utils/polyfills';
 import { BottomSheetProvider } from '@/contexts/BottomSheetContext';
+import { LLMPreferenceProvider } from '@/contexts/LLMPreferenceContext';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
@@ -44,62 +45,64 @@ const App = observer(() => {
           <SafeAreaProvider>
             <KeyboardProvider statusBarTranslucent navigationBarTranslucent>
               <PaperProvider theme={theme}>
-                <BottomSheetModalProvider>
-                  <NavigationContainer>
+                <LLMPreferenceProvider>
+                  <BottomSheetModalProvider>
+                    <NavigationContainer>
 
-                    <WorkspaceDrawer initialRouteName={initialRoute.path}>
-                      <Drawer.Screen
-                        name={PATHS.home}
-                        component={gestureHandlerRootHOC(Screens.Home)}
-                        options={{ headerShown: false }}
-                      />
+                      <WorkspaceDrawer initialRouteName={initialRoute.path}>
+                        <Drawer.Screen
+                          name={PATHS.home}
+                          component={gestureHandlerRootHOC(Screens.Home)}
+                          options={{ headerShown: false }}
+                        />
 
-                      <Drawer.Screen
-                        name={PATHS.onboarding.welcome}
-                        component={gestureHandlerRootHOC(Screens.OnboardingWelcome)}
-                        options={{ headerShown: false }}
-                      />
-                      <Drawer.Screen
-                        name={PATHS.onboarding.model_selection}
-                        component={gestureHandlerRootHOC(Screens.OnboardingModelSelection)}
-                        options={{ headerShown: false }}
-                      />
-                      <Drawer.Screen
-                        name={PATHS.onboarding.survey}
-                        component={gestureHandlerRootHOC(Screens.OnboardingSurvey)}
-                        options={{ headerShown: false }}
-                      />
-                      <Drawer.Screen
-                        name={PATHS.onboarding.data_handling}
-                        component={gestureHandlerRootHOC(Screens.OnboardingDataHandling)}
-                        options={{ headerShown: false }}
-                      />
+                        <Drawer.Screen
+                          name={PATHS.onboarding.welcome}
+                          component={gestureHandlerRootHOC(Screens.OnboardingWelcome)}
+                          options={{ headerShown: false }}
+                        />
+                        <Drawer.Screen
+                          name={PATHS.onboarding.model_selection}
+                          component={gestureHandlerRootHOC(Screens.OnboardingModelSelection)}
+                          options={{ headerShown: false }}
+                        />
+                        <Drawer.Screen
+                          name={PATHS.onboarding.survey}
+                          component={gestureHandlerRootHOC(Screens.OnboardingSurvey)}
+                          options={{ headerShown: false }}
+                        />
+                        <Drawer.Screen
+                          name={PATHS.onboarding.data_handling}
+                          component={gestureHandlerRootHOC(Screens.OnboardingDataHandling)}
+                          options={{ headerShown: false }}
+                        />
 
 
-                      <Drawer.Screen
-                        name={PATHS.workspace_chat}
-                        component={gestureHandlerRootHOC(Screens.WorkspaceChat)}
-                        options={{ headerShown: false }}
-                        initialParams={initialRoute.params}
-                      />
-                      <Drawer.Screen
-                        name={PATHS.workspace_settings}
-                        component={gestureHandlerRootHOC(Screens.WorkspaceSettings)}
-                        options={{ headerShown: false }}
-                        initialParams={initialRoute.params}
-                      />
+                        <Drawer.Screen
+                          name={PATHS.workspace_chat}
+                          component={gestureHandlerRootHOC(Screens.WorkspaceChat)}
+                          options={{ headerShown: false }}
+                          initialParams={initialRoute.params}
+                        />
+                        <Drawer.Screen
+                          name={PATHS.workspace_settings}
+                          component={gestureHandlerRootHOC(Screens.WorkspaceSettings)}
+                          options={{ headerShown: false }}
+                          initialParams={initialRoute.params}
+                        />
 
-                      <Drawer.Screen
-                        name={PATHS.developer.home}
-                        component={gestureHandlerRootHOC(Screens.DevToolsDatabaseInspector)}
-                        options={{
-                          title: 'Database Inspector',
-                        }}
-                      />
-                    </WorkspaceDrawer>
+                        <Drawer.Screen
+                          name={PATHS.developer.home}
+                          component={gestureHandlerRootHOC(Screens.DevToolsDatabaseInspector)}
+                          options={{
+                            title: 'Database Inspector',
+                          }}
+                        />
+                      </WorkspaceDrawer>
 
-                  </NavigationContainer>
-                </BottomSheetModalProvider>
+                    </NavigationContainer>
+                  </BottomSheetModalProvider>
+                </LLMPreferenceProvider>
               </PaperProvider>
             </KeyboardProvider>
           </SafeAreaProvider>

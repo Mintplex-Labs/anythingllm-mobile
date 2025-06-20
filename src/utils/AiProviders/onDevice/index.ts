@@ -7,8 +7,11 @@ import MODEL_CARDS from "@/utils/defaultModels";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 
 export type IOnDeviceStreamCallback = IGenieStreamCallback | ILlamaRnStreamCallback;
+export type OnDeviceProviderConstructorProps = { config: { model: string } }
 
 export default class OnDeviceProvider extends BaseOpenAILikeProvider {
+  static instance: OnDeviceProvider;
+
   protected provider: string;
   protected config: any;
   protected computeRuntime: string = 'CPU';
@@ -20,21 +23,20 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   protected isOTypeModel: boolean;
   protected temperature: number;
 
-  constructor({ provider = 'ondevice', config = {} }: { provider?: string, config?: any }) {
-    super({ provider, config });
+  constructor({ config }: OnDeviceProviderConstructorProps) {
+    super({ provider: 'native', config });
 
     // For compilance with the base class - we stub it here.
     this.client = new OpenAILite();
     this.isOTypeModel = false;
     this.temperature = 0.7;
 
-    this.provider = provider;
+    this.provider = 'native';
     this.config = config;
     this.computeRuntime = this.determineComputeRuntime(this.config.model);
     this.model = this.config.model;
 
-    if (this.computeRuntime === 'NPU') this.submodule = new GenieWrapper({ model: this.model });
-    else this.submodule = new LlamaRnWrapper({ model: this.model });
+    this.submodule = this.setSubmodule(this.model);
     this.log(`${this.name}::${this.submodule.name} initialized with model ${this.model}`);
   }
 
@@ -48,8 +50,31 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     return definition?.runtime || 'CPU';
   }
 
+  private setSubmodule(model: string) {
+    if (!model) throw new Error('No model provided to setSubmodule');
+    if (this.computeRuntime === 'NPU') this.submodule = new GenieWrapper({ model });
+    else this.submodule = new LlamaRnWrapper({ model });
+    return this.submodule;
+  }
+
+  static getInstance(props: OnDeviceProviderConstructorProps) {
+    if (!OnDeviceProvider.instance) OnDeviceProvider.instance = new OnDeviceProvider(props);
+    return OnDeviceProvider.instance;
+  }
+
   get name() {
     return this.provider;
+  }
+
+  async loadNewModel(model: string) {
+    if (!model) return this.log('No model provided to loadNewModel - skipping.');
+
+    if (this.model === model) return;
+    this.model = model;
+    this.computeRuntime = this.determineComputeRuntime(this.model);
+    await this.submodule.cleanup();
+    this.submodule = this.setSubmodule(this.model);
+    this.log(`${this.name}::${this.submodule.name} re-initialized with model ${this.model}`);
   }
 
   availableModels() {

@@ -51,6 +51,7 @@ export default abstract class BaseOpenAILikeProvider {
   protected abstract model: string;
   protected abstract temperature: number;
   protected abstract log: (message: string, ...args: any[]) => void;
+  protected abstract loadNewModel(model: string): Promise<void>;
   abstract availableModels(): object[];
 
   static DEFAULT_SYSTEM_MESSAGE = 'You are a helpful assistant that can answer questions and help with tasks.';
@@ -77,6 +78,7 @@ export default abstract class BaseOpenAILikeProvider {
    * when generating a system message.
    */
   attachWorkspaceToProvider(workspace: WorkspaceType) {
+    if (!!this._workspace && this._workspace.slug === workspace.slug) return;
     this.log(`Attached workspace "${workspace.slug}" to LLM provider!`);
     this._workspace = workspace;
   }

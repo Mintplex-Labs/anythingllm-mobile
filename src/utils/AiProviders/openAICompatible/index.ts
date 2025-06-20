@@ -1,7 +1,7 @@
 import BaseOpenAILikeProvider from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
 
-interface OpenAICompatibleConfig {
+export interface OpenAICompatibleConfig {
   provider: string;
   config?: {
     baseURL?: string;
@@ -49,6 +49,10 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
 
   availableModels() {
     return [];
+  }
+
+  async loadNewModel(model: string) {
+    this.model = model;
   }
 }
 

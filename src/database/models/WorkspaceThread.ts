@@ -88,7 +88,7 @@ export default class WorkspaceThread extends Model {
     return workspaceThread;
   }
 
-  static async create({ workspaceSlug }: { workspaceSlug: string }): Promise<any> {
+  static async create({ workspaceSlug }: { workspaceSlug: string }): Promise<WorkspaceThreadType> {
     const slug = slugify(generateUUID());
 
     let newWorkspaceThread: any;

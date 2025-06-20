@@ -1,22 +1,23 @@
 import { View, Text, Alert, TextInput, Modal, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import { SquaresFour, CaretUp } from "phosphor-react-native";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import ThreadItem from "./ThreadItem";
 import { NativeEventEmitter } from "react-native";
 import Workspace from "@/database/models/Workspace";
 import WorkspaceThread from "@/database/models/WorkspaceThread";
 import { PATHS } from "@/utils/paths";
 import uiStore from "@/store/UIStore";
+import { useNavigation } from "@react-navigation/native";
 
 interface IWorkspaceItem {
   workspace: any;
   isActive?: boolean;
-  changeWorkspace: () => void;
   currentThreadSlug: string | null;
 }
 
 const eventEmitter = new NativeEventEmitter();
-function WorkspaceItem({ workspace, isActive = false, changeWorkspace, currentThreadSlug }: IWorkspaceItem) {
+function WorkspaceItem({ workspace, isActive = false, currentThreadSlug }: IWorkspaceItem) {
+  const navigation = useNavigation();
   const _activeThreadIdx = workspace.threads?.findIndex((t: any) => t.slug === currentThreadSlug);
   const [isRenameModalVisible, setIsRenameModalVisible] = useState(false);
   const [threadSlug, setThreadSlug] = useState('');
@@ -28,8 +29,8 @@ function WorkspaceItem({ workspace, isActive = false, changeWorkspace, currentTh
     Alert.alert('Delete thread', 'Are you sure you want to delete this thread? All chat history will be lost.', [
       { text: 'Cancel', style: 'cancel' },
       {
-        text: 'Delete', onPress: () => {
-          WorkspaceThread.delete([{ field: 'workspace_slug', value: workspace.slug }, { field: 'slug', value: threadSlug }]).then(() => {
+        text: 'Delete', onPress: async () => {
+          await WorkspaceThread.delete([{ field: 'workspace_slug', value: workspace.slug }, { field: 'slug', value: threadSlug }]).then(() => {
             eventEmitter.emit('workspaceUpdate', {
               type: 'remove-thread',
               details: {
@@ -38,6 +39,30 @@ function WorkspaceItem({ workspace, isActive = false, changeWorkspace, currentTh
               },
             });
           });
+
+          const threads = await WorkspaceThread.find([{ field: 'workspace_slug', value: workspace.slug }]);
+          if (threads.length === 0) {
+            const newThread = await WorkspaceThread.create({ workspaceSlug: workspace.slug });
+            eventEmitter.emit('workspaceUpdate', {
+              type: 'add-thread',
+              details: {
+                workspaceSlug: newThread.workspaceSlug,
+                thread: newThread,
+              },
+            });
+            navigation.reset({
+              index: 0,
+              // @ts-ignore
+              routes: [{ name: PATHS.workspace_chat, params: { workspaceSlug: workspace.slug, threadSlug: newThread.slug } }],
+            });
+          } else {
+            const thread = threads[0];
+            navigation.reset({
+              index: 0,
+              // @ts-ignore
+              routes: [{ name: PATHS.workspace_chat, params: { workspaceSlug: workspace.slug, threadSlug: thread.slug } }],
+            });
+          }
         }
       },
     ]);
@@ -49,13 +74,30 @@ function WorkspaceItem({ workspace, isActive = false, changeWorkspace, currentTh
       {
         text: 'Delete',
         style: 'destructive',
-        onPress: () => {
-          Workspace.delete([{ field: 'slug', value: workspace.slug }]).then(() => {
+        onPress: async () => {
+          await Workspace.delete([{ field: 'slug', value: workspace.slug }]).then(() => {
             eventEmitter.emit('workspaceUpdate', {
               type: 'remove-workspace',
               details: { workspaceSlug: workspace.slug },
             });
           });
+
+          const workspaces = await Workspace.find([], true);
+          console.log('WorkspaceItem:handleWorkspaceDelete:workspaces', workspaces.length);
+          if (workspaces.length === 0) {
+            navigation.reset({
+              index: 0,
+              // @ts-ignore
+              routes: [{ name: PATHS.home }],
+            });
+          } else {
+            const workspace = workspaces[0];
+            navigation.reset({
+              index: 0,
+              // @ts-ignore
+              routes: [{ name: PATHS.workspace_chat, params: { workspaceSlug: workspace.slug, threadSlug: workspace.threads[0].slug } }],
+            });
+          }
         }
       },
     ]);
@@ -178,6 +220,17 @@ interface IWorkspaceThreadsContainer {
   setIsRenameModalVisible: (visible: boolean) => void;
 }
 function WorkspaceThreadsContainer({ workspace, activeThreadIdx, setActiveThreadIdx, handleThreadDelete, setThreadSlug, setIsRenameModalVisible }: IWorkspaceThreadsContainer) {
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (!workspace.threads) return;
+    uiStore.emitter.addListener(uiStore.globalEvents.REDIRECT, (event) => {
+      if (event.path !== PATHS.workspace_chat) return;
+      if (event.params.wsSlug !== workspace.slug) return;
+      setActiveThreadIdx(workspace.threads?.findIndex((t: any) => t.slug === event.params.threadSlug) || 0);
+    });
+    return () => uiStore.emitter.removeAllListeners(uiStore.globalEvents.REDIRECT);
+  }, [workspace.threads]);
   if (!workspace.threads) return null;
 
   return (
@@ -190,9 +243,10 @@ function WorkspaceThreadsContainer({ workspace, activeThreadIdx, setActiveThread
             thread={thread}
             onPress={() => {
               setActiveThreadIdx(idx)
-              uiStore.emitter.emit(uiStore.globalEvents.REDIRECT, {
-                path: PATHS.workspace_chat,
-                params: { wsSlug: workspace.slug, threadSlug: thread.slug },
+              navigation.reset({
+                index: 0,
+                // @ts-ignore
+                routes: [{ name: PATHS.workspace_chat, params: { wsSlug: workspace.slug, threadSlug: thread.slug } }],
               });
             }}
             onDelete={handleThreadDelete.bind(null, thread.slug)}

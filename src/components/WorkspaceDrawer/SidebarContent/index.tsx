@@ -14,8 +14,8 @@ import { BOTTOM_SHEET_NAMES, useBottomSheet } from '@/contexts/BottomSheetContex
 
 export default function SidebarContent() {
   const drawerStatus = useDrawerStatus();
-  const { presentSheet, dismissAllSheets, activeSheet } = useBottomSheet();
-  const { loadingWorkspaces, workspaces, activeWorkspaceSlug, setActiveWorkspaceSlug, activeThreadSlug, fetchWorkspaces } = useWorkspaces(true);
+  const { presentSheet, dismissAllSheets } = useBottomSheet();
+  const { loadingWorkspaces, workspaces, activeWorkspaceSlug, activeThreadSlug, fetchWorkspaces } = useWorkspaces(true);
   const { showNewWorkspaceModal, openNewWorkspaceModal, closeNewWorkspaceModal } = useNewWorkspaceModal();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -72,7 +72,6 @@ export default function SidebarContent() {
                   key={ws.slug}
                   workspace={ws}
                   isActive={ws.slug === activeWorkspaceSlug}
-                  changeWorkspace={() => setActiveWorkspaceSlug(ws.slug)}
                   currentThreadSlug={activeThreadSlug}
                 />
               ))}

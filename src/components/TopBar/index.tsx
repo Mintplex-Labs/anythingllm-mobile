@@ -29,6 +29,11 @@ export default function TopBar({ modelName, workspace, thread }: { modelName?: s
         path: PATHS.workspace_chat,
         params: { wsSlug: workspace.slug, threadSlug: thread.slug },
       });
+      navigation.reset({
+        index: 0,
+        // @ts-ignore
+        routes: [{ name: PATHS.workspace_chat, params: { wsSlug: workspace.slug, threadSlug: thread.slug } }],
+      });
     });
   }
 

@@ -9,6 +9,7 @@ import { merge } from 'lodash';
 import { ICompleteResponse, IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { parseStreamingChunksToResponse } from "./parser";
 import { activateKeepAwake, deactivateKeepAwake } from "@/utils/keepAwake";
+import { Keyboard } from "react-native";
 
 const SHOW_DEBUG_LOGS = true;
 
@@ -51,6 +52,8 @@ export const CHAT_HANDLER_EVENTS = {
     DISABLE_PROMPT_INPUT: 'disable_prompt_input',
     ENABLE_PROMPT_INPUT: 'enable_prompt_input',
     RESET_CHAT: 'reset_chat',
+    UPDATE_CHAT: 'update_chat',
+    NEW_CHAT_STARTED: 'new_chat_started',
 }
 
 function debug(text: string, ...args: any[]) {
@@ -59,6 +62,7 @@ function debug(text: string, ...args: any[]) {
 
 export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHandlerInterfaceProps): ChatHandlerInterface {
     const [chatsMap, setChatsMap] = useState<Map<string, DynamicChatMessage>>(new Map());
+
     const [prompt, _setPrompt] = useState('');
     const [isLoadingChats, setIsLoadingChats] = useState(true);
     const [errorLoadingChats, setErrorLoadingChats] = useState<Error | null>(null);
@@ -107,38 +111,21 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         return Array.from(chatsMap.values());
     }, [chatsMap]);
 
-    const updateChat = useCallback((uuid: string, updates: Partial<any>) => {
-        setChatsMap(prevMap => {
-            const newMap = new Map(prevMap);
-            const existingChat = newMap.get(uuid);
-            if (existingChat) newMap.set(uuid, merge({}, existingChat, updates));
-            return newMap;
-        });
-    }, []);
-
-    const concludeChat = useCallback(async (uuid: string) => {
-        let chatToSave: DynamicChatMessage | undefined;
+    const concludeChat = useCallback(async (newChat: DynamicChatMessage) => {
+        let chatToSave: DynamicChatMessage = { ...newChat, isLoading: false };
         setChatsMap((prevMap) => {
-            const existingChat = prevMap.get(uuid);
-            if (!existingChat) {
-                debug('Chat not found', uuid);
-                return prevMap;
-            }
-
             const newMap = new Map(prevMap);
-            const updatedChat = { ...existingChat, isLoading: false };
-            newMap.set(uuid, updatedChat);
-            chatToSave = updatedChat; // Capture for database save
+            newMap.set(newChat.uuid as string, chatToSave);
             return newMap;
         });
 
         // Emit the assistant response complete event
-        uiStore.emitter.emit(CHAT_HANDLER_EVENTS.ASSISTANT_RESPONSE_COMPLETE);
+        uiStore.emitter.emit(CHAT_HANDLER_EVENTS.ASSISTANT_RESPONSE_COMPLETE, { uuid: newChat.uuid as string });
 
         // Save to database after state update
         if (!chatToSave) return debug('Failed to save chat to database!');
         await WorkspaceChat.create(chatToSave)
-            .then(() => debug('Chat saved to database', uuid))
+            .then(() => debug('Chat saved to database', chatToSave.uuid))
             .catch(err => debug('Error saving chat to database', err));
     }, []);
 
@@ -147,11 +134,12 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
      */
     const _addChat = useCallback((chat: DynamicChatMessage) => {
         debug('Creating new chat', chat.uuid);
-        setChatsMap(prevMap => {
+        setChatsMap((prevMap) => {
             const newMap = new Map(prevMap);
             newMap.set(chat.uuid as string, chat);
             return newMap;
         });
+        uiStore.emitter.emit(CHAT_HANDLER_EVENTS.NEW_CHAT_STARTED, { uuid: chat.uuid as string, chat: chat });
     }, []);
 
     /**
@@ -161,42 +149,44 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
     const _processChat = useCallback(async (prompt: string) => {
         try {
             activateKeepAwake();
-            const newChat = WorkspaceChat.newChatItem({ workspaceThreadSlug: thread.slug, prompt });
+            let newChat = WorkspaceChat.newChatItem({ workspaceThreadSlug: thread.slug, prompt });
             _addChat(newChat as DynamicChatMessage);
 
-            const currentChatsArray = Array.from(chatsMap.values()).concat([newChat as DynamicChatMessage]);
+            const messageHistory = Array.from(chatsMap.values()).concat([newChat as DynamicChatMessage]);
             let accumulator = '';
             await llmProvider.chat({
-                messages: currentChatsArray,
+                messages: messageHistory,
                 streaming: true,
                 // onComplete: this is for non-streaming responses
                 onStream: async (event: IStreamEvent, data: string | ICompleteResponse['metrics']): Promise<void> => {
-                    debug('Stream event', event, data);
                     if (event === 'abort') throw new Error('Chat aborted');
-                    if (event === 'complete') return await concludeChat(newChat.uuid as string);
+                    if (event === 'complete') return debug('Chat stream complete');
                     if (typeof data !== 'string') return debug('Unhandled stream event', event, data);
 
                     const parsed = parseStreamingChunksToResponse(event, accumulator, data);
                     accumulator += data;
 
                     if (!parsed) return debug('No parsable content - skipping');
-                    updateChat(newChat.uuid as string, { response: { textResponse: parsed.textResponse, thoughts: parsed.reasoningContent } });
+                    merge(newChat, { response: { textResponse: parsed.textResponse, thoughts: parsed.reasoningContent } });
+                    uiStore.emitter.emit(CHAT_HANDLER_EVENTS.UPDATE_CHAT, { uuid: newChat.uuid as string, chat: newChat });
                     return;
                 },
             }).catch(err => {
                 debug('Error processing chat', err);
-                updateChat(newChat.uuid as string, { type: 'error', response: { textResponse: err.message || 'Error processing chat' } });
+                merge(newChat, { type: 'error', response: { textResponse: err.message || 'Error processing chat' } });
+            }).finally(async () => {
+                await concludeChat(newChat as DynamicChatMessage);
             });
         } catch (err) {
             debug('Error processing chat', err);
         } finally {
             deactivateKeepAwake();
         }
-    }, [thread.slug, _addChat, chatsMap, updateChat, llmProvider, concludeChat]);
+    }, [thread.slug, _addChat, llmProvider, concludeChat]);
 
     const canScrollChatHistory = useMemo(() => {
-        return !isLoadingChats && chatsMap.size > 0;
-    }, [isLoadingChats, chatsMap]);
+        return !isLoadingChats && chatsArray.length > 0;
+    }, [isLoadingChats, chatsArray]);
 
     const setPrompt = useCallback((promptToSet: string, autoSubmit: boolean = false) => {
         _setPrompt(promptToSet);
@@ -219,6 +209,10 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         }
     }, [prompt]);
 
+    const hideKeyboard = useCallback(() => {
+        Keyboard.dismiss();
+    }, []);
+
     useEffect(() => {
         fetchChats();
     }, []);
@@ -235,6 +229,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.DISABLE_PROMPT_INPUT, disablePromptInput);
         uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.ENABLE_PROMPT_INPUT, enablePromptInput);
         uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.RESET_CHAT, reset);
+        uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.PROMPT_SUBMITTED, hideKeyboard);
         return () => {
             uiStore.emitter.removeAllListeners(CHAT_HANDLER_EVENTS.DISABLE_PROMPT_INPUT);
             uiStore.emitter.removeAllListeners(CHAT_HANDLER_EVENTS.ENABLE_PROMPT_INPUT);
@@ -246,8 +241,6 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         return {
             // Chat History
             chats: chatsArray,
-            chatsMap,
-            updateChat,
             isLoadingChats,
             errorLoadingChats,
             canScrollChatHistory,
@@ -262,7 +255,6 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         }
     }, [
         chatsMap,
-        updateChat,
         isLoadingChats,
         errorLoadingChats,
         canScrollChatHistory,

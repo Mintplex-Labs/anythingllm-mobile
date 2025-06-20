@@ -1,6 +1,6 @@
 import { Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Brain, CaretUp } from "phosphor-react-native";
 import { BASE_MESSAGE_STYLES } from "../styles";
 
@@ -23,10 +23,14 @@ const THINKING_STYLES: Record<string, ViewStyle | TextStyle> = {
     }
 }
 
-export default function ThinkingContainer({ chat }: { chat: DynamicChatMessage }) {
+export default function ThinkingContainer({ chat, autoClose }: { chat: DynamicChatMessage, autoClose: boolean }) {
     const [isExpanded, setIsExpanded] = useState(chat.isLoading);
-
     const thoughts = chat.response?.thoughts;
+
+    useEffect(() => {
+        if (autoClose) setIsExpanded(false);
+    }, [autoClose]);
+
     if (!thoughts) return null;
 
     if (!isExpanded) {

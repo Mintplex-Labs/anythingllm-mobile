@@ -1,6 +1,6 @@
 import { Text, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
 import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CaretUp, Hammer } from "phosphor-react-native";
 import { BASE_MESSAGE_STYLES } from "../styles";
 
@@ -23,10 +23,13 @@ const TOOL_CALL_STYLES: Record<string, ViewStyle | TextStyle> = {
     }
 }
 
-export default function ToolCallContainer({ chat }: { chat: DynamicChatMessage }) {
+export default function ToolCallContainer({ chat, autoClose }: { chat: DynamicChatMessage, autoClose: boolean }) {
     const [isExpanded, setIsExpanded] = useState(chat.isLoading);
-
     const toolCalls = chat.response?.toolCalls;
+
+    useEffect(() => {
+        if (autoClose) setIsExpanded(false);
+    }, [autoClose]);
     if (!toolCalls?.length) return null;
 
     if (!isExpanded) {

@@ -3,19 +3,54 @@ import useChatInfoEmit from "@/hooks/useChatInfoEmit";
 import useWorkspace from "@/hooks/useWorkspace";
 import { useEffect, useState } from "react";
 import { NativeEventEmitter } from "react-native";
+import Workspace from "@/database/models/Workspace";
 
 import { LoadingView, ErrorView, MainView } from "./Main";
-import { NameView } from "./Name";
-import { SystemPromptView } from "./SystemPrompt";
-import { TemperatureView } from "./Temperature";
-import { ContextLengthView } from "./ContextLength";
+import { NumericInputView } from "./NumericInput";
+import { TextInputView } from "./TextInput";
 
 const PAGES = {
   main: (props: any) => <MainView {...props} />,
-  system_prompt: (props: any) => <SystemPromptView {...props} />,
-  temperature: (props: any) => <TemperatureView {...props} />,
-  name: (props: any) => <NameView {...props} />,
-  context_length: (props: any) => <ContextLengthView {...props} />,
+  system_prompt: (props: any) => (
+    <TextInputView
+      {...props}
+      multiLine={true}
+      field="systemPrompt"
+      title="System Prompt"
+      placeholder="Enter your system prompt here..."
+      resetValue={Workspace.defaultSystemPrompt}
+    />
+  ),
+  name: (props: any) => (
+    <TextInputView
+      {...props}
+      field="name"
+      title="Name"
+      placeholder="Enter your name here..."
+      resetValue={Workspace.defaultName}
+    />
+  ),
+  temperature: (props: any) => (
+    <NumericInputView
+      {...props}
+      field="temperature"
+      title="Temperature"
+      placeholder="Enter your temperature here..."
+      resetValue={Workspace.defaultTemperature}
+      reattachProviderOnSave={true}
+    />
+  ),
+  context_length: (props: any) => (
+    <NumericInputView
+      {...props}
+      field="contextLength"
+      title="Context Length"
+      placeholder="Enter your context length here..."
+      resetValue={Workspace.defaultContextLength}
+      hint="Keep in mind that the context length is also dependent on the model you are using and has memory implications for your device.\n\nWe recommend not changing this unless you know what you are doing."
+      reattachProviderOnSave={true}
+    />
+  ),
 };
 export type IWorkspacePageKey = keyof typeof PAGES;
 

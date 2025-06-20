@@ -6,7 +6,7 @@ import useLlmPreference from "@/hooks/useLLMPreference";
 import useChatInfoEmit from "@/hooks/useChatInfoEmit";
 import { useEffect } from "react";
 import useWorkspaceThread from "@/hooks/useWorkspaceThread";
-import PromptInput, { snapPointsDefault } from "./PromptInput";
+import PromptInput from "./PromptInput";
 import useAttachments from "@/hooks/useAttachments";
 import ChatHistory from "./ChatHistory";
 import { ChatHandlerWrapper } from "@/hooks/useChatHandler";

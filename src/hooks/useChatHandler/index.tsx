@@ -70,9 +70,9 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
             if (!thread.slug) return;
             const chats = await WorkspaceChat.find(
                 [{ field: 'workspace_thread_slug', value: thread.slug }],
-                [{ field: 'created_at', direction: 'desc' }]
+                [{ field: 'created_at', direction: 'asc' }]
             );
-            setChatsMap(new Map(chats.map(chat => [chat.uuid, chat])));
+            setChatsMap(new Map(chats.map(chat => [chat.uuid, { ...chat, isLoading: false }])));
             debug('Fetched chats', chats.length);
         } catch (err) {
             debug('Error fetching chats', err);
@@ -84,11 +84,11 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
 
     const disablePromptInput = useCallback(() => {
         _setPromptDisabled(true);
-    }, [_setPromptDisabled]);
+    }, []);
 
     const enablePromptInput = useCallback(() => {
         _setPromptDisabled(false);
-    }, [_setPromptDisabled]);
+    }, []);
 
     const reset = useCallback(async () => {
         debug('Resetting chat history');

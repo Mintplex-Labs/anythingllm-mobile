@@ -6,13 +6,21 @@ import { Platform } from "react-native";
 
 
 export default class OnDeviceEmbedderProvider {
+    static instance: OnDeviceEmbedderProvider;
+
+    private _isWorking: boolean = false;
     private model = EMBEDDING_MODEL.modelId;
     private modelPath = resolveDestinationPathFromGGUFUrl(EMBEDDING_MODEL.tag);
     private keepAliveTimer: NodeJS.Timeout | null = null;
     private keepAliveInterval = 1000 * (60 * 3); // 3 minutes
     private llamaRnContext: LlamaContext | null = null;
 
-    constructor() { }
+    // Singleton, there are no props so nothing to ever reload.
+    // Just keep the singleton instance alive.
+    constructor() {
+        if (!OnDeviceEmbedderProvider.instance) OnDeviceEmbedderProvider.instance = this;
+        return OnDeviceEmbedderProvider.instance;
+    }
 
     private log(text: string, ...args: any[]) {
         console.log(`\x1b[35m[OnDeviceEmbedderProvider]\x1b[0m ${text}`, ...args);
@@ -68,10 +76,20 @@ export default class OnDeviceEmbedderProvider {
     private keepAlive() {
         if (this.keepAliveTimer) clearTimeout(this.keepAliveTimer);
         this.keepAliveTimer = setTimeout(() => {
-            this.cleanup();
+            if (!this._isWorking) this.cleanup();
+            else {
+                /**
+                 * If we are still working we cannot unload the model
+                 * so we reset the keep alive timer. This is unbounded and will
+                 * keep the model loaded for as long as we are working (could be forever!)
+                 * TODO: implement a max iteration count to prevent infinite loops to force unload the model
+                 * in case the user is stuck in a loaded state to free up memory.
+                 */
+                this.log('Cannot cleanup, still working...');
+                this.keepAliveTimer = setTimeout(() => this.keepAlive(), this.keepAliveInterval);
+            }
         }, this.keepAliveInterval);
     }
-
 
     private async unloadModel(): Promise<void> {
         this.log('Unloading model');
@@ -79,15 +97,26 @@ export default class OnDeviceEmbedderProvider {
         this.llamaRnContext = null;
     }
 
+    /**
+     * Wraps a function in a keep alive mechanism. that will allow us to keep extending the keep alive timer
+     * for as long as any interations are happening.
+     * @param func - The function to wrap.
+     * @returns The result of the function.
+     */
     private async wrapInKeepAlive(func: () => Promise<any>) {
-        this.keepAlive();
-        const result = await func();
-        this.keepAlive();
-        return result;
+        try {
+            this._isWorking = true;
+            this.keepAlive();
+            return await func();
+        } catch (error) {
+            this.log('error running function', error);
+        } finally {
+            this._isWorking = false;
+        }
     }
 
     private async cleanup(): Promise<void> {
-        this.log('Cleaning up OnDeviceEmbedderProvider');
+        this.log('Cleaning up!');
         await this.unloadModel();
     }
 

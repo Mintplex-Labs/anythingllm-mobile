@@ -1,4 +1,5 @@
-import { ChatMessage } from "@/screens/WorkspaceChat";
+import { WorkspaceType } from "@/database/models/Workspace";
+import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import { formatChatHistory } from "@/utils/chat/helpers";
 import { StreamMetrics } from "@/utils/chat/LLMPerformanceMonitor";
 import { MonitoredStream } from "@/utils/chat/LLMPerformanceMonitor";
@@ -10,7 +11,7 @@ interface BaseLLMProviderConfig {
   config: { [key: string]: any };
 }
 
-type IResponse = {
+export type ICompleteResponse = {
   textResponse: string;
   metrics: {
     prompt_tokens: number;
@@ -19,6 +20,11 @@ type IResponse = {
     outputTps: number;
     duration: number;
   },
+}
+
+export type IStreamableResponse = {
+  stream: any;
+  abortController: AbortController;
 }
 
 type IContent = {
@@ -31,8 +37,7 @@ type IContent = {
 }
 
 export type IStreamEvent = 'chunk' | 'complete' | 'abort';
-export type IStreamCallback = (event: IStreamEvent, response: string | object) => void;
-
+export type IStreamCallback = (event: IStreamEvent, response: string | ICompleteResponse['metrics']) => void;
 export type IAttachment = {
   contentString: string;
 }
@@ -40,12 +45,15 @@ export type IAttachment = {
 export default abstract class BaseOpenAILikeProvider {
   protected _provider: string;
   protected _config: any;
+  private _workspace: WorkspaceType | null = null;
   protected abstract client: OpenAILite;
   protected abstract isOTypeModel: boolean;
   protected abstract model: string;
   protected abstract temperature: number;
   protected abstract log: (message: string, ...args: any[]) => void;
   abstract availableModels(): object[];
+
+  static DEFAULT_SYSTEM_MESSAGE = 'You are a helpful assistant that can answer questions and help with tasks.';
 
   constructor({ provider, config }: BaseLLMProviderConfig) {
     this._provider = provider;
@@ -59,8 +67,27 @@ export default abstract class BaseOpenAILikeProvider {
     return this._provider;
   }
 
+  get workspace() {
+    if (!this._workspace) this.log('\x1b[43m\x1b[34m[ERROR]\x1b[0m No workspace attached to provider - you likely forgot to call attachWorkspaceToProvider(workspace) before using this method in any call stack.');
+    return this._workspace || null;
+  }
+
+  /**
+   * Attaches a workspace to the provider so it can be referenced
+   * when generating a system message.
+   */
+  attachWorkspaceToProvider(workspace: WorkspaceType) {
+    this.log(`Attached workspace "${workspace.slug}" to LLM provider!`);
+    this._workspace = workspace;
+  }
+
+  /**
+   * Generates the system message for the provider.
+   * If the workspace has a system prompt, it will be used.
+   * Otherwise, the default system message will be used.
+   */
   defaultSystemMessage(contextTexts: string[] = []) {
-    const baseMessage = 'You are a helpful assistant that can answer questions and help with tasks.';
+    const baseMessage = this.workspace?.systemPrompt || BaseOpenAILikeProvider.DEFAULT_SYSTEM_MESSAGE;
     if (!contextTexts.length) return baseMessage;
     return `${baseMessage}\n\nHere is some context that may be relevant to the conversation: ${contextTexts.join('\n\n')}`;
   }
@@ -94,7 +121,7 @@ export default abstract class BaseOpenAILikeProvider {
     attachments = [],
   }: {
     contextTexts: string[];
-    chatHistory: ChatMessage[];
+    chatHistory: DynamicChatMessage[];
     userPrompt: string;
     attachments?: IAttachment[];
   }) {
@@ -119,24 +146,17 @@ export default abstract class BaseOpenAILikeProvider {
   /**
    * Builds the prompt from the message history.
    */
-  buildPrompt(messages: ChatMessage[]) {
+  buildPrompt(messages: DynamicChatMessage[]) {
     if (messages.length === 0) throw new Error("Messages array must contain at least one element");
     const history = messages.slice(0, -1);
     const userPrompt = messages[messages.length - 1];
 
+    // TODO: Semantic search for context text
     const contextTexts: string[] = [];
-    for (let attachment of userPrompt.attachments || []) {
-      if (!attachment.type.startsWith('text')) continue;
-      if (!attachment.content) continue;
-
-      // For demo, only take a small chunk of target document so we don't overwhelm the LLM
-      if (attachment.content.length <= 1000) contextTexts.push(attachment.content);
-      else contextTexts.push(attachment.content?.slice(4011, 5000) || '');
-    }
 
     return this.constructMessages({
       chatHistory: history,
-      userPrompt: userPrompt.content,
+      userPrompt: userPrompt.prompt as string,
       contextTexts,
     });
   }
@@ -147,9 +167,9 @@ export default abstract class BaseOpenAILikeProvider {
     onComplete = () => { },
     onStream = () => { },
   }: {
-    messages: ChatMessage[];
+    messages: DynamicChatMessage[];
     streaming?: boolean;
-    onComplete?: (response: ChatMessage) => void;
+    onComplete?: (response: ICompleteResponse) => void;
     onStream?: IStreamCallback;
   }) {
     const formattedMessages = this.buildPrompt(messages);
@@ -157,10 +177,7 @@ export default abstract class BaseOpenAILikeProvider {
     if (!streaming) {
       const response = await this.getChatCompletion(formattedMessages);
       onComplete({
-        uuid: Date.now().toString(),
-        content: response.textResponse,
-        role: "assistant",
-        createdAt: new Date(),
+        textResponse: response.textResponse,
         metrics: response.metrics,
       });
       return;
@@ -174,7 +191,7 @@ export default abstract class BaseOpenAILikeProvider {
    * Gets the chat completion from the model.
    * Returns the text response and metrics in a single call, no streaming.
    */
-  private async getChatCompletion(messages: any[] = []): Promise<IResponse> {
+  private async getChatCompletion(messages: any[] = []): Promise<ICompleteResponse> {
     this.log('Running chat completion...');
     const result = await LLMPerformanceMonitor.measureAsyncFunction(
       // @ts-ignore
@@ -201,7 +218,7 @@ export default abstract class BaseOpenAILikeProvider {
     };
   }
 
-  async streamGetChatCompletion(messages: any[] = []): Promise<any> {
+  async streamGetChatCompletion(messages: any[] = []): Promise<IStreamableResponse> {
     const abortController = new AbortController();
     const stream = await LLMPerformanceMonitor.measureStream(
       // @ts-ignore

@@ -4,12 +4,13 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { useBottomSheet } from "@/contexts/BottomSheetContext";
 import { showToast } from "@/utils/Notification";
 import uiStore from "@/store/UIStore";
+import { CHAT_HANDLER_EVENTS } from "@/hooks/useChatHandler";
 
 export default function ResetChatActionButton() {
     const { dismissAllSheets } = useBottomSheet();
     const handleReset = () => {
         dismissAllSheets();
-        uiStore.emitGlobalEvent(uiStore.globalEvents.RESET_CHAT);
+        uiStore.emitter.emit(CHAT_HANDLER_EVENTS.RESET_CHAT);
         showToast("Chats history cleared");
     }
 

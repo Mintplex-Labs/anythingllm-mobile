@@ -28,7 +28,7 @@ interface BottomSheetContextType {
 
 const BottomSheetContext = createContext<BottomSheetContextType | null>(null);
 
-const DEBUG = true;
+const DEBUG = false;
 function debug(text: string, ...args: any[]) {
     if (DEBUG) console.log(`[BottomSheetContext] ${text}`, ...args);
 }

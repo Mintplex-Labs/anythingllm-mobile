@@ -10,7 +10,7 @@ export default class Storage {
     ]
 
     public static log(message: string) {
-        console.log(`[StorageNativeModule] ${message}`);
+        console.log(`\x1b[33m[StorageNativeModule]\x1b[0m ${message}`);
     }
 
     public static needsStorageSearch(uri: string) {

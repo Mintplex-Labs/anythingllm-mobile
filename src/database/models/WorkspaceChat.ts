@@ -1,7 +1,8 @@
-import { field, json, text, immutableRelation } from '@nozbe/watermelondb/decorators';
+import { field, json, text } from '@nozbe/watermelondb/decorators';
 import { database } from '@/database';
 import { Q, Model } from '@nozbe/watermelondb';
-import WorkspaceThread, { type WorkspaceThreadType } from './WorkspaceThread';
+import { generateUUID } from '@/utils/constants';
+import { DynamicChatMessage } from '@/screens/WorkspaceChat/ChatHistory';
 
 export type IDocumentCitation = {
   type: 'document';
@@ -28,13 +29,13 @@ export type WorkspaceChatResponseType = {
   thoughts: string;
   toolCalls: string[];
   metrics: any; // TODO: Can we track this??
-  attachments: any[];
+  attachments: any[]; // This would be IMAGES, not files - which are embedded on upload
   citations: IChatCitation[];
 }
 
 export type WorkspaceChatType = {
   uuid: string;
-  workspaceThread: WorkspaceThreadType;
+  workspaceThreadSlug: string;
   prompt: string;
   response: WorkspaceChatResponseType;
   createdAt: number;
@@ -44,7 +45,7 @@ export default class WorkspaceChat extends Model {
   static table = 'workspace_chats';
 
   @text('uuid') uuid!: string;
-  @immutableRelation(WorkspaceThread.table, 'slug') workspaceThread!: WorkspaceThreadType;
+  @text('workspace_thread_slug') workspaceThreadSlug!: string;
   @text('prompt') prompt!: string;
   @json('response', (json) => json) response!: WorkspaceChatResponseType;
   @field('created_at') createdAt!: number;
@@ -68,9 +69,10 @@ export default class WorkspaceChat extends Model {
    * @param where - An array of where clauses
    * @returns An array of chats with the WorkspaceChatType interface
    */
-  static async find(where: { field: string, value: string }[] = []): Promise<WorkspaceChatType[]> {
+  static async find(where: { field: string, value: string }[] = [], orderBy: { field: string, direction: 'asc' | 'desc' }[] = []): Promise<WorkspaceChatType[]> {
     const chats = await database.get(WorkspaceChat.table).query(
-      where.map(({ field, value }) => Q.where(field, value))
+      ...where.map(({ field, value }) => Q.where(field, value)),
+      ...orderBy.map(({ field, direction }) => Q.sortBy(field, direction))
     ).fetch();
     return chats.map((chat) => this.toWorkspaceChatObject(chat) as WorkspaceChatType);
   }
@@ -86,14 +88,14 @@ export default class WorkspaceChat extends Model {
     return chat[0];
   }
 
-  static async create(data: Partial<WorkspaceChatType & { workspaceThreadSlug: string }>): Promise<WorkspaceChatType> {
+  static async create(data: Partial<WorkspaceChatType>): Promise<WorkspaceChatType> {
     const { uuid, workspaceThreadSlug, prompt, response } = data;
 
     let newWorkspaceChat: any;
     await database.write(async () => {
       newWorkspaceChat = await database.get(WorkspaceChat.table).create((workspaceChat: any) => {
-        workspaceChat.uuid = uuid;
-        workspaceChat.workspaceThread = workspaceThreadSlug;
+        workspaceChat.uuid = uuid ?? generateUUID();
+        workspaceChat.workspaceThreadSlug = workspaceThreadSlug;
         workspaceChat.prompt = prompt;
         workspaceChat.response = response;
         workspaceChat.createdAt = Date.now();
@@ -127,5 +129,29 @@ export default class WorkspaceChat extends Model {
       this.log('error deleting workspace chats', error);
       return false;
     }
+  }
+
+  /**
+   * Create a new chat with a given prompt for placeholder purposes
+   * @param data - The data for the new chat
+   */
+  static newChatItem(data: { workspaceThreadSlug: string, prompt: string }): Partial<DynamicChatMessage> & { workspaceThreadSlug: string } {
+    if (!data.workspaceThreadSlug) throw new Error('Workspace thread slug is required');
+    if (!data.prompt) throw new Error('Prompt is required');
+    return {
+      uuid: generateUUID(),
+      workspaceThreadSlug: data.workspaceThreadSlug,
+      prompt: data.prompt,
+      response: {
+        textResponse: '',
+        thoughts: '',
+        toolCalls: [],
+        metrics: {},
+        attachments: [],
+        citations: [],
+      },
+      createdAt: Date.now(),
+      isLoading: true,
+    };
   }
 }

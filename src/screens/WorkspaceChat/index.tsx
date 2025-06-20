@@ -9,6 +9,7 @@ import useWorkspaceThread from "@/hooks/useWorkspaceThread";
 import PromptInput, { snapPointsDefault } from "./PromptInput";
 import useAttachments from "@/hooks/useAttachments";
 import ChatHistory from "./ChatHistory";
+import { ChatHandlerWrapper } from "@/hooks/useChatHandler";
 
 // Supplemental UI Sheets from the PromptInput actions
 // Must be top level so their refs are not lost when the PromptInput is unmounted
@@ -38,11 +39,12 @@ export default function WorkspaceChat() {
     <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" applyGradient safeAreaStyle={{ backgroundColor: '#000' }}>
       <TopBar modelName={LLMProvider?.model} workspace={workspace} thread={thread} />
 
-      {/* Chat History */}
-      <ChatHistory workspace={workspace} thread={thread} />
+      {/* Chat Handler Wrapper manage updates to the chat history and prompt input easily*/}
+      <ChatHandlerWrapper workspace={workspace} thread={thread} llmProvider={LLMProvider}>
+        <ChatHistory />
+        <PromptInput attachmentHandler={attachmentHandler} />
+      </ChatHandlerWrapper>
 
-      {/* Prompt Input */}
-      <PromptInput attachmentHandler={attachmentHandler} />
       <SettingsActionSheet workspace={workspace} thread={thread} />
       <ToolsActionSheet />
       <WorkspaceFilesActionSheet workspace={workspace} />

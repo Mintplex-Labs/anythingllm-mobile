@@ -1,10 +1,12 @@
 import { defaultModels } from "@/utils/models";
-import GenieWrapper from "./genie";
-import LlamaRnWrapper from "./llamaRn";
-import { ChatMessage } from "@/screens/WorkspaceChat";
+import GenieWrapper, { IGenieStreamCallback } from "./genie";
+import LlamaRnWrapper, { ILlamaRnStreamCallback } from "./llamaRn";
 import BaseOpenAILikeProvider, { IStreamCallback } from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
 import MODEL_CARDS from "@/utils/defaultModels";
+import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
+
+export type IOnDeviceStreamCallback = IGenieStreamCallback | ILlamaRnStreamCallback;
 
 export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   protected provider: string;
@@ -83,25 +85,23 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     onComplete = () => { },
     onStream = () => { },
   }: {
-    messages: ChatMessage[];
+    messages: DynamicChatMessage[];
     streaming?: boolean;
-    onComplete?: (response: ChatMessage) => void;
-    onStream?: IStreamCallback;
+    onComplete?: (response: any) => void;
+    onStream?: IStreamCallback | IOnDeviceStreamCallback;
   }) {
     const normalizedMessages = this.buildPrompt(messages);
     if (!streaming) {
       const response = await this.submodule.getChatCompletion(normalizedMessages as any);
       onComplete({
-        uuid: Date.now().toString(),
-        content: response.textResponse,
-        role: "assistant",
-        createdAt: new Date(),
+        textResponse: response.textResponse,
         metrics: response.metrics,
       });
       return;
     }
 
     this.log(`Streaming ${this.model} with ${this.computeRuntime}`);
-    await this.submodule.streamGetChatCompletion(normalizedMessages, (token: string) => onStream('chunk', token));
+    await this.submodule.streamGetChatCompletion(normalizedMessages as any, (token: string) => onStream('chunk', token));
+    onStream('complete', '');
   }
 }

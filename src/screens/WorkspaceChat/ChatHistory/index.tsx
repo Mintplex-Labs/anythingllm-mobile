@@ -1,33 +1,29 @@
-import { useMemo, useRef, useEffect, useState } from "react";
-import { FlatList } from "react-native";
-import { type WorkspaceType } from "@/database/models/Workspace";
-import { type WorkspaceThreadType } from "@/database/models/WorkspaceThread";
+import { useMemo, useRef, useState, useCallback } from "react";
+import { FlatList, RefreshControl } from "react-native";
 import { screenDimensions } from "@/utils/constants";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { snapPointsDefault } from "../PromptInput";
-import useWorkspaceThreadChats from "@/hooks/useWorkspaceThreadChats";
 import UserAssistantPair from "./Messages";
 import { type WorkspaceChatType } from "@/database/models/WorkspaceChat";
+import EmptyList, { EmptyListLoading } from "./EmptyList";
+import { useChatHandlerContext } from "@/hooks/useChatHandler/index";
 
 export interface DynamicChatMessage extends Partial<WorkspaceChatType> {
+    type?: 'message' | 'error'
     isLoading?: boolean; // indicates if the message is in the process of being generated. Does not exist in the db record.
 }
 
-interface ChatHistoryProps {
-    workspace: WorkspaceType;
-    thread: WorkspaceThreadType;
-}
-
-export default function ChatHistory({ thread }: ChatHistoryProps) {
+export default function ChatHistory() {
     const flatListRef = useRef<FlatList>(null);
     const insets = useSafeAreaInsets();
-    const { chats, isLoading, error } = useWorkspaceThreadChats(thread);
+    const chatHandler = useChatHandlerContext();
     const [userHasScrolled, setUserHasScrolled] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     const promptInputHeight = useMemo(() => (screenDimensions.height * (100 - parseFloat(snapPointsDefault[0])) / 100), []);
     const chatHistoryHeight = useMemo(() => promptInputHeight - (65 + insets.top + 13), [insets.top]);
 
     const scrollToEnd = () => {
-        if (flatListRef.current && chats.length > 0 && !userHasScrolled) {
+        if (flatListRef.current && chatHandler.chats.length > 0 && !userHasScrolled) {
             flatListRef.current.scrollToOffset({
                 offset: screenDimensions.height + (chatHistoryHeight * 0.35),
                 animated: true
@@ -35,17 +31,32 @@ export default function ChatHistory({ thread }: ChatHistoryProps) {
         }
     };
 
+    const onRefresh = useCallback(async () => {
+        setRefreshing(true);
+        chatHandler.fetchChats().finally(() => setRefreshing(false));
+    }, [chatHandler.fetchChats]);
+
     return (
         <FlatList
             ref={flatListRef}
             style={{ height: chatHistoryHeight, paddingTop: 20, paddingHorizontal: 10 }}
-            contentContainerStyle={{ paddingBottom: screenDimensions.height * 0.35 }}
+            contentContainerStyle={{ paddingBottom: screenDimensions.height * 0.35, display: 'flex', flexDirection: 'column', gap: 20 }}
             showsVerticalScrollIndicator={false}
-            data={chats}
+            scrollEnabled={chatHandler.canScrollChatHistory}
+            data={chatHandler.chats}
             keyExtractor={(item) => item.uuid!}
             renderItem={({ item }) => <UserAssistantPair chat={item} />}
+            ListEmptyComponent={chatHandler.isLoadingChats ? <EmptyListLoading height={chatHistoryHeight} /> : <EmptyList height={chatHistoryHeight} />}
             onScrollEndDrag={() => setUserHasScrolled(true)}
             onLayout={scrollToEnd}
+            refreshControl={
+                <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                    tintColor="#FFF"
+                    colors={["#000"]}
+                />
+            }
         />
     )
 }

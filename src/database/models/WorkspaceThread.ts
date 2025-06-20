@@ -1,10 +1,9 @@
-import { field, immutableRelation, relation, text } from '@nozbe/watermelondb/decorators';
+import { field, immutableRelation, text } from '@nozbe/watermelondb/decorators';
 import { database } from '@/database';
 import slugify from 'slugify';
 import { Q, Model, Relation } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
 import { type WorkspaceType } from './Workspace';
-import { type WorkspaceChatType } from './WorkspaceChat';
 
 export type WorkspaceThreadType = {
   name: string;
@@ -31,14 +30,13 @@ export default class WorkspaceThread extends Model {
 
   static associations = {
     workspace: { type: 'belongs_to' as const, key: 'workspace_slug' },
-    chats: { type: 'has_many' as const, foreignKey: 'workspace_thread_slug' },
+    // WorkspaceChats? relations are really complex so maybe do it later.
   }
 
   @text('name') name!: string;
   @text('slug') slug!: string;
   @text('workspace_slug') workspaceSlug!: string;
   @immutableRelation('workspaces', 'workspace_slug') workspace!: Relation<Model & WorkspaceType>;
-  @relation('workspace_chats', 'workspace_thread_slug') chats!: Relation<Model & WorkspaceChatType>;
   @field('created_at') createdAt!: number;
 
   static log(message: any, ...args: any[]) {

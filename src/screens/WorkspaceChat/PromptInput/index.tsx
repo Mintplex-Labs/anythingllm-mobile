@@ -11,6 +11,7 @@ import { useDrawerStatus } from '@react-navigation/drawer';
 import useKeyboardHeight from '@/hooks/useKeyboardHeight';
 import { PATHS } from '@/utils/paths';
 import useRouteObserver from '@/hooks/useRouteObserver';
+import { useChatHandlerContext } from '@/hooks/useChatHandler/index';
 
 const defaultPadding = [0, 0, 32]; // top padding for snap points
 export const snapPointsDefault = ['22%', '60%', '100%'];
@@ -20,6 +21,7 @@ interface PromptInputProps {
 }
 
 export default function PromptInput({ attachmentHandler }: PromptInputProps) {
+    const chatHandler = useChatHandlerContext();
     const insets = useSafeAreaInsets();
     const { currentRoute } = useRouteObserver();
     const keyboardHeight = useKeyboardHeight();
@@ -31,7 +33,6 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
     const inputRef = useRef<View>(null);
 
     const [sheetIndex, setSheetIndex] = useState(0);
-    const [prompt, setPrompt] = useState('');
     const [isInputFocused, setIsInputFocused] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false);
 
@@ -162,8 +163,8 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
                             bottomSheetRef.current?.snapToIndex(0);
                             Keyboard.dismiss();
                         }}
-                        value={prompt}
-                        onChangeText={setPrompt}
+                        value={chatHandler.prompt}
+                        onChangeText={chatHandler.setPrompt}
                         scrollEnabled={true}
                         style={{
                             textAlignVertical: 'top',
@@ -173,7 +174,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
                             paddingHorizontal: 20,
                         }}
                     />
-                    <ActionMenu isFullScreen={isFullScreen} sheetIndex={sheetIndex} attachmentHandler={attachmentHandler} />
+                    <ActionMenu isFullScreen={isFullScreen} sheetIndex={sheetIndex} attachmentHandler={attachmentHandler} chatHandler={chatHandler} />
                 </Animated.View>
             </BottomSheetModal>
         </>

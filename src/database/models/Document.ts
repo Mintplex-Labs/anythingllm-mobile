@@ -78,7 +78,7 @@ export default class Document extends Model {
       });
     });
     newDocument = this.toDocumentObject(newDocument);
-    this.log('newDocument', newDocument);
+    this.log(`newDocument created ${newDocument.uuid} - ${newDocument.name}`);
     return newDocument;
   }
 

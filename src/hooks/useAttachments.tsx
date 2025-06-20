@@ -10,6 +10,8 @@ import Document from "@/database/models/Document";
 import { showToast } from "@/utils/Notification";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { snapPointsDefault } from "@/screens/WorkspaceChat/PromptInput";
+import { CHAT_HANDLER_EVENTS } from "@/hooks/useChatHandler";
+import uiStore from "@/store/UIStore";
 
 const MAX_ATTACHMENTS = 4;
 export interface Attachment {
@@ -73,13 +75,6 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
         ]);
     }, []);
 
-    useEffect(() => {
-        setWorkspaceSlug(wsSlug);
-        // VectorDB.getWorkspaceVectorCount(wsSlug).then(count => {
-        //     console.log(`VectorDB count for workspace ${wsSlug}: ${count}`);
-        // });
-    }, [wsSlug]);
-
     /**
      * Process an attachment and add it to the attachments array
      * @notice On Android The user MUST select the file from the real folder,
@@ -94,6 +89,7 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
     const processAttachment = useCallback(async (attachment: Attachment) => {
         if (!attachment.uri) return;
         try {
+            uiStore.emitter.emit(CHAT_HANDLER_EVENTS.DISABLE_PROMPT_INPUT);
             const realPath = await Storage.getRealPathFromUri(attachment.uri).catch((e) => {
                 console.log('error', e);
                 throw new Error('Attachment could not be found');
@@ -113,11 +109,7 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
                     return { embedding: embedResult.embedding, metadata };
                 }))
                 .then(async (embeddings) => await VectorDB.bulkInsert(workspaceSlug, embeddings))
-                .then(async ({ count, ids }) => {
-                    console.log(`Inserted ${count} embeddings into VectorDB - now ${await VectorDB.getWorkspaceVectorCount(workspaceSlug)} vectors in the database`);
-                    return ids;
-                })
-                .then(async (ids) => {
+                .then(async ({ ids }) => {
                     return await Document.create({
                         name: attachment.name,
                         workspaceSlug: workspaceSlug,
@@ -136,6 +128,8 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
         } catch (e) {
             showToast((e as Error).message);
             removeAttachment(attachment);
+        } finally {
+            uiStore.emitter.emit(CHAT_HANDLER_EVENTS.ENABLE_PROMPT_INPUT);
         }
     }, []);
 
@@ -202,6 +196,15 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
             </ScrollView>
         );
     }, [attachments]);
+
+    useEffect(() => {
+        setWorkspaceSlug(wsSlug);
+    }, [wsSlug]);
+
+    useEffect(() => {
+        uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.PROMPT_SUBMITTED, () => setAttachments([]));
+        return () => uiStore.emitter.removeAllListeners(CHAT_HANDLER_EVENTS.PROMPT_SUBMITTED);
+    }, [setAttachments]);
 
     const attachmentInterface = useMemo(() => {
         return {

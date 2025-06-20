@@ -13,9 +13,9 @@ type StorageKeys =
   'tools';
 
 export const GLOBAL_EVENTS = {
-  RESET_CHAT: 'reset_chat',
   REDIRECT: 'REDIRECT',
   CITATIONS_FOCUSED: 'CITATIONS_FOCUSED',
+  SUBMIT_PROMPT: 'SUBMIT_PROMPT',
 } as const;
 
 export class UIStore {

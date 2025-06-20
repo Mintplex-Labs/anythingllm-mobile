@@ -1,21 +1,10 @@
-import { ChatMessage } from '@/screens/WorkspaceChat';
 import { applyTemplate } from "chat-formatter";
 import { defaultModels } from '@/utils/models';
 import TokenManager from '@/utils/tiktoken';
 import { NPUEnabledModel } from '@/utils/types';
 import { NativeModules, NativeEventEmitter, EmitterSubscription } from 'react-native';
 import { NativeLlamaChatMessage } from 'llama.rn/lib/typescript/NativeRNLlama';
-
-type IResponse = {
-  textResponse: string;
-  metrics: {
-    prompt_tokens: number;
-    completion_tokens: number;
-    total_tokens: number;
-    outputTps: number;
-    duration: number;
-  },
-}
+import { ICompleteResponse } from "@/utils/AiProviders/baseOpenAILikeProvider";
 
 interface KotlinGenieModuleInterface {
   loadModel(modelFolderName: string): Promise<number>;
@@ -25,6 +14,8 @@ interface KotlinGenieModuleInterface {
   unloadModel(): Promise<void>;
   ping(): Promise<string>;
 }
+
+export type IGenieStreamCallback = (token: string) => void;
 const { GenieModule } = NativeModules as { GenieModule: KotlinGenieModuleInterface };
 
 export default class GenieWrapper {
@@ -97,7 +88,7 @@ export default class GenieWrapper {
    * Gets the chat completion from the model.
    * Returns the text response
    */
-  async getChatCompletion(messages: NativeLlamaChatMessage[]): Promise<IResponse> {
+  async getChatCompletion(messages: NativeLlamaChatMessage[]): Promise<ICompleteResponse> {
     const formattedChat = applyTemplate(messages, {
       customTemplate: this.chatTemplate,
       addGenerationPrompt: true,
@@ -134,12 +125,11 @@ export default class GenieWrapper {
   /**
    * Streams the chat completion from the model.
    */
-  async streamGetChatCompletion(messages: NativeLlamaChatMessage[], callback: (token: string) => void): Promise<IResponse> {
+  async streamGetChatCompletion(messages: NativeLlamaChatMessage[], callback: IGenieStreamCallback): Promise<ICompleteResponse> {
     const formattedChat = applyTemplate(messages, {
       customTemplate: this.chatTemplate,
       addGenerationPrompt: true,
     }) as string;
-
 
     this.keepAlive();
     if (!callback) throw new Error('callback is required');

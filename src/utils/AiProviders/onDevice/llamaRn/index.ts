@@ -5,18 +5,9 @@ import { defaultModels } from '@/utils/models';
 import { Platform } from 'react-native';
 import { NativeLlamaChatMessage } from 'llama.rn/lib/typescript/NativeRNLlama';
 import { stops } from '@/utils/chat';
+import { ICompleteResponse } from "@/utils/AiProviders/baseOpenAILikeProvider";
 
-type IResponse = {
-  textResponse: string;
-  metrics: {
-    prompt_tokens: number;
-    completion_tokens: number;
-    total_tokens: number;
-    outputTps: number;
-    duration: number;
-  },
-}
-
+export type ILlamaRnStreamCallback = (token: string) => void;
 export default class LlamaRnWrapper {
   private model: string;
   private ggufFilePath: string | null = null;
@@ -104,7 +95,7 @@ export default class LlamaRnWrapper {
    * Gets the chat completion from the model.
    * Returns the text response
    */
-  async getChatCompletion(messages: NativeLlamaChatMessage[]): Promise<IResponse> {
+  async getChatCompletion(messages: NativeLlamaChatMessage[]): Promise<ICompleteResponse> {
     this.keepAlive();
     if (!this.llamaRnContext) await this.initialize();
     if (!this.llamaRnContext) throw new Error(`LlamaRnWrapper::streamGetChatCompletion: Model not initialized`);
@@ -130,7 +121,7 @@ export default class LlamaRnWrapper {
   /**
    * Streams the chat completion from the model.
    */
-  async streamGetChatCompletion(messages: NativeLlamaChatMessage[], callback: (token: string) => void): Promise<IResponse> {
+  async streamGetChatCompletion(messages: NativeLlamaChatMessage[], callback: ILlamaRnStreamCallback): Promise<ICompleteResponse> {
     this.keepAlive();
     if (!this.llamaRnContext) await this.initialize();
     if (!this.llamaRnContext) throw new Error(`LlamaRnWrapper::streamGetChatCompletion: Model not initialized`);

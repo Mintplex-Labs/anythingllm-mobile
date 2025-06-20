@@ -8,13 +8,15 @@ import useKeyboardHeight from '@/hooks/useKeyboardHeight';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { snapPointsDefault } from '../index';
 import { SettingsActionIcon } from './Settings';
+import { type ChatHandlerInterface } from '@/hooks/useChatHandler/index';
 
 export const ACTION_MENU_HEIGHT = 40;
-export default function ActionMenu({ isFullScreen, sheetIndex, ...props }: { isFullScreen: boolean, sheetIndex?: number, attachmentHandler: AttachmentInterface }) {
+export default function ActionMenu({ isFullScreen, sheetIndex, chatHandler, ...props }: { isFullScreen: boolean, sheetIndex?: number, attachmentHandler: AttachmentInterface, chatHandler: ChatHandlerInterface }) {
     const keyboardHeight = useKeyboardHeight();
     const insets = useSafeAreaInsets();
     const defaultTopPosition = (screenDimensions.height * (parseInt(snapPointsDefault[0]) / 100)) - insets.bottom - ACTION_MENU_HEIGHT;
     const topPositionAnim = useRef(new Animated.Value(defaultTopPosition)).current;
+
     useEffect(() => {
         const snapPoint = parseInt(snapPointsDefault[sheetIndex ?? 0]) / 100;
         let newTopPosition = (screenDimensions.height * snapPoint) - insets.bottom - ACTION_MENU_HEIGHT - keyboardHeight;
@@ -40,7 +42,12 @@ export default function ActionMenu({ isFullScreen, sheetIndex, ...props }: { isF
             )}
 
             <View className='flex flex-row items-center gap-x-4'>
-                <TouchableOpacity className='flex flex-row items-center gap-x-2'>
+                <TouchableOpacity
+                    onLongPress={chatHandler.reset}
+                    onPress={() => chatHandler.submitPrompt()}
+                    disabled={chatHandler.promptDisabled}
+                    className='flex flex-row items-center gap-x-2 disabled:opacity-50'
+                >
                     <PaperPlaneRight size={22} color="#FFF" weight='fill' />
                 </TouchableOpacity>
             </View>

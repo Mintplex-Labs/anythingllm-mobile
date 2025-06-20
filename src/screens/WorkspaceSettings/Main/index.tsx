@@ -2,7 +2,7 @@ import { ActivityIndicator, BackHandler, Text, TouchableOpacity, View } from "re
 import SafeView from "@/components/SafeView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
-import { ArrowLeft, CaretRight, ChatCentered, Cube, File, Thermometer } from "phosphor-react-native";
+import { ArrowLeft, CaretRight, ChatCentered, Cube, File, Note, Thermometer } from "phosphor-react-native";
 import Workspace, { WorkspaceType } from "@/database/models/Workspace";
 import { IWorkspacePageKey } from "../index";
 import uiStore from "@/store/UIStore";
@@ -92,6 +92,26 @@ export function MainView({ workspace, goToPage, initialThreadSlug }: MainViewPro
                     </TouchableOpacity>
                     <Text style={{ color: '#9F9FA0' }} className="text-xs">
                         The temperature is the level of randomness of the AI's responses. The higher the temperature, the more random the responses will be.
+                    </Text>
+                </View>
+
+                {/* Context Length */}
+                <View className="w-full flex flex-col" style={{ gap: 12 }}>
+                    <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">Context Length</Text>
+                    <TouchableOpacity style={{ backgroundColor: '#27282A', padding: 14, gap: 20 }} className="w-full flex flex-row items-center rounded-lg" onPress={() => goToPage('context_length')}>
+                        <View className="flex flex-row gap-2 items-center">
+                            <Note size={18} color="#FFF" />
+                            <Text className="text-white text-lg">Context Length</Text>
+                        </View>
+                        <View className="flex flex-1 flex-row gap-2 items-center justify-between">
+                            <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: '#9F9FA0' }} className="text-lg flex-1 text-right">
+                                {workspace?.contextLength || Workspace.defaultContextLength}
+                            </Text>
+                            <CaretRight size={18} color="#FFF" />
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={{ color: '#9F9FA0' }} className="text-xs">
+                        The context length is the maximum number of tokens that the AI can use to while generating a response.
                     </Text>
                 </View>
 

@@ -84,7 +84,6 @@ export function NameView({ workspace, goToPage }: NameViewProps) {
                     </View>
                     <TextInput
                         numberOfLines={1}
-                        editable={saveStatus.state === 'waiting'}
                         autoFocus={true}
                         style={{
                             maxHeight: screenDimensions.height - keyboardHeight - insets.top - insets.bottom - 200,

@@ -10,6 +10,7 @@ export default appSchema({
         { name: 'slug', type: 'string', isIndexed: true },
         { name: 'system_prompt', type: 'string', isOptional: true },
         { name: 'temperature', type: 'number', isOptional: true },
+        { name: 'context_length', type: 'number', isOptional: true },
         { name: 'created_at', type: 'number' },
       ],
     }),

@@ -54,6 +54,14 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
   async loadNewModel(model: string) {
     this.model = model;
   }
+
+  /**
+   * This is a stub method for compliance with the base class.
+   * We don't need to unload the model here since that is not supported by this provider.
+   */
+  async unloadModel() {
+    return;
+  }
 }
 
 export default OpenAICompatible;

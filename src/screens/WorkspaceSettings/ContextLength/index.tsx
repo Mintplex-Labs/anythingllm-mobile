@@ -1,7 +1,7 @@
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ArrowLeft, CheckCircle, CircleNotch } from "phosphor-react-native";
+import { ArrowLeft, CheckCircle } from "phosphor-react-native";
 import { WorkspaceType } from "@/database/models/Workspace";
 import { IWorkspacePageKey } from "../index";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -11,8 +11,9 @@ import debounce from 'lodash/debounce';
 import Workspace from '@/database/models/Workspace';
 import { showToast } from "@/utils/Notification";
 import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
+import useLLMProvider from "@/hooks/useLLMPreference";
 
-interface SystemPromptViewProps {
+interface ContextLengthViewProps {
     workspace: WorkspaceType;
     goToPage: (page: IWorkspacePageKey) => void;
 }
@@ -22,18 +23,19 @@ const DEFAULT_SAVE_STATUS = {
     state: 'waiting' as 'waiting' | 'saving' | 'saved',
 };
 
-export function SystemPromptView({ workspace, goToPage }: SystemPromptViewProps) {
+export function ContextLengthView({ workspace, goToPage }: ContextLengthViewProps) {
     useHighjackBackButtonPress(() => { goToPage('main'); return true; });
     const insets = useSafeAreaInsets();
     const keyboardHeight = useKeyboardHeight();
-    const [systemPrompt, setSystemPrompt] = useState(workspace.systemPrompt);
+    const { LLMProvider } = useLLMProvider();
+    const [contextLength, setContextLength] = useState(workspace.contextLength ?? Workspace.defaultContextLength);
     const [saveStatus, setSaveStatus] = useState(DEFAULT_SAVE_STATUS);
 
     const debouncedSave = useRef(
-        debounce(async (newSystemPrompt: string) => {
+        debounce(async (newContextLength: number) => {
             if (
-                newSystemPrompt === workspace.systemPrompt ||
-                !Workspace.writableFields.systemPrompt.validate(newSystemPrompt).valid
+                newContextLength === workspace.contextLength ||
+                !Workspace.writableFields.contextLength.validate(newContextLength).valid
             ) {
                 setSaveStatus(DEFAULT_SAVE_STATUS);
                 return;
@@ -41,27 +43,29 @@ export function SystemPromptView({ workspace, goToPage }: SystemPromptViewProps)
 
             setSaveStatus({ text: 'Autosaving...', state: 'saving' });
             try {
-                await Workspace.update([{ field: 'slug', value: workspace.slug }], { systemPrompt: newSystemPrompt });
+                const updatedWorkspace = await Workspace.update([{ field: 'slug', value: workspace.slug }], { contextLength: newContextLength });
+                if (!!updatedWorkspace && !!LLMProvider) LLMProvider.attachWorkspaceToProvider(updatedWorkspace as WorkspaceType);
                 setSaveStatus({ text: 'Autosaved!', state: 'saved' });
             } catch (err) {
-                console.error('Error saving system prompt:', err);
-                showToast('Error saving system prompt');
+                console.error('Error saving context length:', err);
+                showToast('Error saving temperature');
             } finally {
                 setTimeout(() => setSaveStatus(DEFAULT_SAVE_STATUS), 2000);
             }
         }, 1000)
     ).current;
 
-    const handleSystemPromptChange = useCallback((text: string) => {
-        setSystemPrompt(text);
-        debouncedSave(text);
+    const handleContextLengthChange = useCallback((text: string) => {
+        const value = parseFloat(text);
+        if (isNaN(value)) return;
+
+        setContextLength(value);
+        debouncedSave(value);
     }, [debouncedSave]);
 
     useEffect(() => {
         return () => debouncedSave.cancel();
     }, [debouncedSave]);
-
-
 
     return (
         <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" safeAreaStyle={{ backgroundColor: '#1B1B1E' }}>
@@ -70,13 +74,13 @@ export function SystemPromptView({ workspace, goToPage }: SystemPromptViewProps)
                 <TouchableOpacity onPress={() => goToPage('main')} className="absolute left-0 flex flex-row items-center gap-2">
                     <ArrowLeft size={24} color="#FFF" weight="bold" />
                 </TouchableOpacity>
-                <Text style={{ maxWidth: '80%', color: '#9F9FA0' }} numberOfLines={1} ellipsizeMode="middle" className="text-lg font-medium">System Prompt</Text>
+                <Text style={{ maxWidth: '80%', color: '#9F9FA0' }} numberOfLines={1} ellipsizeMode="middle" className="text-lg font-medium">Context Length</Text>
             </View>
 
-            <KeyboardAvoidingView style={{ paddingHorizontal: 18 }} behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1">
+            <KeyboardAvoidingView style={{ paddingHorizontal: 18, gap: 8 }} behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 flex flex-col">
                 <View className="w-full flex flex-col" style={{ gap: 12 }}>
                     <View className="flex flex-row items-center justify-between">
-                        <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">Current Prompt</Text>
+                        <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">Current Context Length</Text>
 
                         <View className="flex flex-row items-center">
                             <ActivityIndicator size="small" color="#FFF" animating={saveStatus.state === 'saving'} style={{ transform: [{ scale: 0.5 }] }} />
@@ -85,8 +89,7 @@ export function SystemPromptView({ workspace, goToPage }: SystemPromptViewProps)
                         </View>
                     </View>
                     <TextInput
-                        multiline={true}
-                        numberOfLines={10}
+                        keyboardType="numeric"
                         autoFocus={true}
                         style={{
                             maxHeight: screenDimensions.height - keyboardHeight - insets.top - insets.bottom - 200,
@@ -95,15 +98,21 @@ export function SystemPromptView({ workspace, goToPage }: SystemPromptViewProps)
                             padding: 16
                         }}
                         className="rounded-lg text-white placeholder:text-white/50 text-left"
-                        value={systemPrompt}
-                        onChangeText={handleSystemPromptChange}
-                        placeholder="Enter your system prompt here..."
+                        defaultValue={contextLength.toString()}
+                        onChangeText={handleContextLengthChange}
+                        placeholder="Enter your context length here..."
                     />
-                    {systemPrompt !== Workspace.defaultSystemPrompt && (
-                        <TouchableOpacity onPress={() => handleSystemPromptChange(Workspace.defaultSystemPrompt)} className="flex flex-row items-center justify-center">
+                    {contextLength !== Workspace.defaultContextLength && (
+                        <TouchableOpacity onPress={() => handleContextLengthChange(Workspace.defaultContextLength.toString())} className="flex flex-row items-center justify-center">
                             <Text className="text-white">Reset</Text>
                         </TouchableOpacity>
                     )}
+                </View>
+                <View className="w-full flex flex-col" style={{ gap: 12 }}>
+                    <Text style={{ color: '#9F9FA0' }} className="text-sm">
+                        Keep in mind that the context length is also dependent on the model you are using and has memory implications for your device.{'\n\n'}
+                        We recommend not changing this unless you know what you are doing.
+                    </Text>
                 </View>
             </KeyboardAvoidingView>
 

@@ -8,12 +8,14 @@ import { LoadingView, ErrorView, MainView } from "./Main";
 import { NameView } from "./Name";
 import { SystemPromptView } from "./SystemPrompt";
 import { TemperatureView } from "./Temperature";
+import { ContextLengthView } from "./ContextLength";
 
 const PAGES = {
   main: (props: any) => <MainView {...props} />,
   system_prompt: (props: any) => <SystemPromptView {...props} />,
   temperature: (props: any) => <TemperatureView {...props} />,
   name: (props: any) => <NameView {...props} />,
+  context_length: (props: any) => <ContextLengthView {...props} />,
 };
 export type IWorkspacePageKey = keyof typeof PAGES;
 

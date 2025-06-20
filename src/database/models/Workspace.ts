@@ -13,6 +13,7 @@ export type WorkspaceType = {
   createdAt: number;
   systemPrompt: string;
   temperature: number;
+  contextLength: number;
   threads?: WorkspaceThreadType[];
 };
 
@@ -26,7 +27,14 @@ export default class Workspace extends Model {
   static table = 'workspaces';
   static defaultName = 'New Workspace';
   static defaultSystemPrompt = `You are a helpful assistant that can answer questions and help with tasks.`;
+
+  /**
+   * Inherit the default values from the LlamaRnWrapper class so no weirdness happens during inference.
+   * https://github.com/mybigday/llama.rn/blob/b12219527d9d38d1915c1a69055e6a59db7f7cd1/android/src/main/java/com/rnllama/LlamaContext.java#L68
+   */
   static defaultTemperature = 0.7;
+  static defaultContextLength = 512;
+
   static writableFields = {
     name: {
       validate: (value: string) => {
@@ -56,6 +64,16 @@ export default class Workspace extends Model {
         return { valid: !error, error };
       },
     },
+    contextLength: {
+      validate: (value: number) => {
+        let error = '';
+        const numValue = Number(value);
+        if (typeof value !== 'number' || isNaN(numValue)) error = 'Context length must be a number';
+        if (numValue <= 0) error = 'Context length must be greater than 0';
+        if (numValue <= 50) error = 'Context length must be greater than 50';
+        return { valid: !error, error };
+      },
+    },
   }
 
   static associations = {
@@ -73,6 +91,7 @@ export default class Workspace extends Model {
   @text('slug') slug!: string; // unique!!
   @text('system_prompt') systemPrompt!: string;
   @field('temperature') temperature!: number;
+  @field('context_length') contextLength!: number;
   @field('created_at') createdAt!: number;
 
   static log(message: any, ...args: any[]) {
@@ -80,12 +99,13 @@ export default class Workspace extends Model {
   }
 
   static toWorkspaceObject(data: any): WorkspaceType {
-    const { name, slug, createdAt, systemPrompt, temperature } = data;
+    const { name, slug, createdAt, systemPrompt, temperature, contextLength } = data;
     return {
       name: name,
       slug: slug,
       systemPrompt,
       temperature,
+      contextLength,
       createdAt,
       threads: [],
     };
@@ -148,6 +168,7 @@ export default class Workspace extends Model {
         workspace.slug = slug;
         workspace.system_prompt = Workspace.defaultSystemPrompt;
         workspace.temperature = Workspace.defaultTemperature;
+        workspace.context_length = Workspace.defaultContextLength;
         workspace.created_at = Date.now();
       });
     });

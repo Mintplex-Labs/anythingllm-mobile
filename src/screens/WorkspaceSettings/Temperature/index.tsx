@@ -87,7 +87,6 @@ export function TemperatureView({ workspace, goToPage }: TemperatureViewProps) {
                     </View>
                     <TextInput
                         keyboardType="numeric"
-                        editable={saveStatus.state === 'waiting'}
                         autoFocus={true}
                         style={{
                             maxHeight: screenDimensions.height - keyboardHeight - insets.top - insets.bottom - 200,

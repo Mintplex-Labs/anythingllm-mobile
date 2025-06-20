@@ -52,14 +52,24 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
   private setSubmodule(model: string) {
     if (!model) throw new Error('No model provided to setSubmodule');
-    if (this.computeRuntime === 'NPU') this.submodule = new GenieWrapper({ model });
-    else this.submodule = new LlamaRnWrapper({ model });
+    if (this.computeRuntime === 'NPU') {
+      this.submodule = new GenieWrapper({ model, parent: this });
+    } else {
+      this.submodule = new LlamaRnWrapper({ model, parent: this });
+    }
     return this.submodule;
   }
 
   static getInstance(props: OnDeviceProviderConstructorProps) {
     if (!OnDeviceProvider.instance) OnDeviceProvider.instance = new OnDeviceProvider(props);
     return OnDeviceProvider.instance;
+  }
+
+  /**
+   * Delegates to the submodule to cleanup the model.
+   */
+  async unloadModel() {
+    await this.submodule.cleanup();
   }
 
   get name() {

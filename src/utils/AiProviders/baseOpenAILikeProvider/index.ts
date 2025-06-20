@@ -1,4 +1,4 @@
-import { WorkspaceType } from "@/database/models/Workspace";
+import Workspace, { type WorkspaceType } from "@/database/models/Workspace";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import { formatChatHistory } from "@/utils/chat/helpers";
 import { StreamMetrics } from "@/utils/chat/LLMPerformanceMonitor";
@@ -52,6 +52,7 @@ export default abstract class BaseOpenAILikeProvider {
   protected abstract temperature: number;
   protected abstract log: (message: string, ...args: any[]) => void;
   protected abstract loadNewModel(model: string): Promise<void>;
+  protected abstract unloadModel(): Promise<void>;
   abstract availableModels(): object[];
 
   static DEFAULT_SYSTEM_MESSAGE = 'You are a helpful assistant that can answer questions and help with tasks.';
@@ -78,9 +79,33 @@ export default abstract class BaseOpenAILikeProvider {
    * when generating a system message.
    */
   attachWorkspaceToProvider(workspace: WorkspaceType) {
-    if (!!this._workspace && this._workspace.slug === workspace.slug) return;
+    if (!workspace) return;
+
+    const existingWorkspace = this._workspace ? Workspace.toWorkspaceObject(this._workspace) : null;
+    const newWorkspace = Workspace.toWorkspaceObject(workspace);
+
+    // If the workspace is the same as the existing workspace, do nothing
+    if (existingWorkspace && JSON.stringify(existingWorkspace) === JSON.stringify(newWorkspace)) return;
+
     this.log(`Attached workspace "${workspace.slug}" to LLM provider!`);
     this._workspace = workspace;
+    this.unloadModelOnWorkspaceChange(existingWorkspace, newWorkspace);
+  }
+
+  private unloadModelOnWorkspaceChange(previousWorkspace: WorkspaceType | null, newWorkspace: WorkspaceType) {
+    const trackableChanges = {
+      contextLength: previousWorkspace?.contextLength !== newWorkspace.contextLength,
+      temperature: previousWorkspace?.temperature !== newWorkspace.temperature,
+    }
+
+    for (const [key, value] of Object.entries(trackableChanges)) {
+      if (!value) continue;
+      this.log(`Workspace "${newWorkspace.slug}" changed ${key} - unloading model`);
+      this.unloadModel();
+      break; // break out of the loop after the first change true
+    }
+
+    return;
   }
 
   /**

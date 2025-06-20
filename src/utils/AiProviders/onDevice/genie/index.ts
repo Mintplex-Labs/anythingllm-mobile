@@ -5,6 +5,7 @@ import { NPUEnabledModel } from '@/utils/types';
 import { NativeModules, NativeEventEmitter, EmitterSubscription } from 'react-native';
 import { NativeLlamaChatMessage } from 'llama.rn/lib/typescript/NativeRNLlama';
 import { ICompleteResponse } from "@/utils/AiProviders/baseOpenAILikeProvider";
+import type OnDeviceProvider from '@/utils/AiProviders/onDevice/index';
 
 interface KotlinGenieModuleInterface {
   loadModel(modelFolderName: string): Promise<number>;
@@ -25,11 +26,13 @@ export default class GenieWrapper {
   public genieWrapperHandle: number | null = null;
   private keepAliveTimer: NodeJS.Timeout | null = null;
   private keepAliveInterval = 1000 * 60 * 5;
+  private parent: OnDeviceProvider;
 
-  constructor({ model }: { model: string }) {
+  constructor({ model, parent }: { model: string; parent: OnDeviceProvider }) {
     this.eventEmitter = new NativeEventEmitter(GenieModule);
     this.tokenListener = null;
     this.model = model;
+    this.parent = parent;
   }
 
   log = (text: string, ...args: any[]) => {
@@ -40,7 +43,7 @@ export default class GenieWrapper {
     return 'genie';
   }
 
-  get modeDefinition(): NPUEnabledModel {
+  get modelDefinition(): NPUEnabledModel {
     return defaultModels.find(model => model.id === this.model) as NPUEnabledModel;
   }
 
@@ -79,7 +82,7 @@ export default class GenieWrapper {
   }
 
   get chatTemplate() {
-    const chatTemplate = this.modeDefinition.chatTemplate;
+    const chatTemplate = this.modelDefinition.chatTemplate;
     chatTemplate.systemPrompt = this.defaultSystemMessage();
     return chatTemplate;
   }

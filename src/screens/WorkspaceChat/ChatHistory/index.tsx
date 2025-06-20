@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, useCallback } from "react";
+import { useMemo, useRef, useState, useCallback, useEffect } from "react";
 import { FlatList, RefreshControl } from "react-native";
 import { screenDimensions } from "@/utils/constants";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -6,7 +6,8 @@ import { snapPointsDefault } from "../PromptInput";
 import UserAssistantPair from "./Messages";
 import { type WorkspaceChatType } from "@/database/models/WorkspaceChat";
 import EmptyList, { EmptyListLoading } from "./EmptyList";
-import { useChatHandlerContext } from "@/hooks/useChatHandler/index";
+import { CHAT_HANDLER_EVENTS, useChatHandlerContext } from "@/hooks/useChatHandler/index";
+import uiStore from "@/store/UIStore";
 
 export interface DynamicChatMessage extends Partial<WorkspaceChatType> {
     type?: 'message' | 'error'
@@ -22,6 +23,12 @@ export default function ChatHistory() {
     const promptInputHeight = useMemo(() => (screenDimensions.height * (100 - parseFloat(snapPointsDefault[0])) / 100), []);
     const chatHistoryHeight = useMemo(() => promptInputHeight - (65 + insets.top + 13), [insets.top]);
 
+    const scrollToTop = () => {
+        if (flatListRef.current) {
+            flatListRef.current.scrollToOffset({ offset: 0, animated: true });
+        }
+    };
+
     const scrollToEnd = () => {
         if (flatListRef.current && chatHandler.chats.length > 0 && !userHasScrolled) {
             flatListRef.current.scrollToOffset({
@@ -35,6 +42,11 @@ export default function ChatHistory() {
         setRefreshing(true);
         chatHandler.fetchChats().finally(() => setRefreshing(false));
     }, [chatHandler.fetchChats]);
+
+    useEffect(() => {
+        uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.RESET_CHAT, scrollToTop);
+        return () => uiStore.emitter.removeAllListeners(CHAT_HANDLER_EVENTS.RESET_CHAT);
+    }, []);
 
     return (
         <FlatList

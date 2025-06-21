@@ -4,6 +4,7 @@ import { defaultModels } from "@/utils/models";
 import { Model, NPUEnabledModel } from "@/utils/types";
 import { formatBytes } from "@/utils/formatters";
 import { useState } from "react";
+
 export default function OnDeviceLLMOptions({ selection, onChange }: { selection: ISelection, onChange: (config: Record<string, any>, autoConfirm?: boolean) => void }) {
   const [selectedModel, setSelectedModel] = useState<Model | NPUEnabledModel | null>(selection.config.model);
   const [isConfirming, setIsConfirming] = useState(false);
@@ -13,7 +14,7 @@ export default function OnDeviceLLMOptions({ selection, onChange }: { selection:
 
     setSelectedModel(model);
     setIsConfirming(true);
-    Alert.alert('Downloading model?', `This will download the model to your device. It is ${formatBytes(model.size)} bytes.`, [
+    Alert.alert('Download model?', `This will download the model to your device. It is ${formatBytes(model.size)} bytes.`, [
       { text: 'Cancel', style: 'cancel', onPress: () => setIsConfirming(false) },
       {
         text: 'OK', onPress: () => {

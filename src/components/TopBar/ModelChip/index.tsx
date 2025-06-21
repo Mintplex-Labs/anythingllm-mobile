@@ -77,6 +77,7 @@ interface AvailableModel {
     modelId: string;
     downloadUrl: string;
     description?: string;
+    isPreset?: boolean;
 }
 
 function AvailableModels({ closeSheet }: { closeSheet: () => void }) {
@@ -115,7 +116,7 @@ function AvailableModels({ closeSheet }: { closeSheet: () => void }) {
         }
 
         const shouldDownload = await AwaitableAlert(
-            'Downloading model?',
+            'Download model?',
             `This will download the model to your device. It is ${modelSize} in size.`,
             { text: 'Cancel', style: 'cancel' },
             { text: 'Continue with download', style: 'default' }
@@ -132,6 +133,9 @@ function AvailableModels({ closeSheet }: { closeSheet: () => void }) {
     }, [LLMProvider]);
 
     if (isLoading) return <ActivityIndicator size='large' color='white' />;
+
+
+    let seenAllPresets = 0;
     return (
         <View className='flex flex-col items-center justify-center gap-y-4 w-full h-full'>
             <Text className='text-white text-lg font-semibold py-4'>Choose your model</Text>
@@ -145,31 +149,40 @@ function AvailableModels({ closeSheet }: { closeSheet: () => void }) {
                     scrollEnabled={true}
                     renderItem={({ item }) => {
                         const isCurrentlySelected = selectedModel === item.modelId;
+                        if (!item.isPreset) seenAllPresets++;
 
                         return (
-                            <TouchableOpacity
-                                key={item.modelId}
-                                disabled={!!modelDownloadUrl && modelDownloadUrl !== item.downloadUrl}
-                                onPress={() => handleModelSelection(item)}
-                                className='flex flex-row items-center justify-between w-full disabled:opacity-50'>
-                                <View className='flex flex-col items-start justify-start'>
-                                    <View className='flex flex-row items-center justify-center gap-x-2'>
-                                        <Text className='text-white font-semibold text-lg'>{item.name}</Text>
-                                        {modelDownloadUrl === item.downloadUrl && <DownloadProgress downloadUrl={modelDownloadUrl} onComplete={() => completeModelSelection(item)} />}
+                            <Fragment>
+                                {seenAllPresets === 1 && (
+                                    <View style={{ paddingVertical: 20, position: 'relative' }} className='flex flex-row items-center justify-center w-full'>
+                                        <View style={{ height: 1, opacity: 0.5, backgroundColor: '#9F9FA0', borderRadius: 100, zIndex: 1 }} className='absolute flex flex-1 w-full' />
+                                        <Text style={{ fontSize: 12, color: '#9F9FA0', backgroundColor: '#1B1B1E', paddingHorizontal: 10, zIndex: 2 }} className='text-white text-sm'>Additional LLMs</Text>
                                     </View>
-                                    {item.description && <Text className='text-sm text-[--secondary-text] mt-1'>{item.description}</Text>}
-                                </View>
-                                <View className='flex flex-row items-center justify-center'>
-                                    {isCurrentlySelected ? (
-                                        <View className='relative'>
-                                            <Circle size={24} color='#FFF' />
-                                            <Circle size={16} color='#36bffa' weight='fill' style={{ position: 'absolute', top: (24 - 16) / 2, left: (24 - 16) / 2 }} />
+                                )}
+                                <TouchableOpacity
+                                    key={item.modelId}
+                                    disabled={!!modelDownloadUrl && modelDownloadUrl !== item.downloadUrl}
+                                    onPress={() => handleModelSelection(item)}
+                                    className='flex flex-row items-center justify-between w-full disabled:opacity-50'>
+                                    <View className='flex flex-col items-start justify-start' style={{ maxWidth: '80%' }}>
+                                        <View className='flex flex-row items-center justify-center gap-x-2'>
+                                            <Text className='text-white font-semibold text-lg'>{item.name}</Text>
+                                            {modelDownloadUrl === item.downloadUrl && <DownloadProgress downloadUrl={modelDownloadUrl} onComplete={() => completeModelSelection(item)} />}
                                         </View>
-                                    ) : (
-                                        <Circle size={24} color='#888' />
-                                    )}
-                                </View>
-                            </TouchableOpacity>
+                                        {item.description && <Text className='text-sm text-[--secondary-text] mt-1'>{item.description}</Text>}
+                                    </View>
+                                    <View className='flex flex-row items-center justify-center'>
+                                        {isCurrentlySelected ? (
+                                            <View className='relative'>
+                                                <Circle size={24} color='#FFF' />
+                                                <Circle size={16} color='#36bffa' weight='fill' style={{ position: 'absolute', top: (24 - 16) / 2, left: (24 - 16) / 2 }} />
+                                            </View>
+                                        ) : (
+                                            <Circle size={24} color='#888' />
+                                        )}
+                                    </View>
+                                </TouchableOpacity>
+                            </Fragment>
                         )
                     }}
                 />

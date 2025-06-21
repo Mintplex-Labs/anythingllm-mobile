@@ -33,7 +33,7 @@ function useDownloadModelFromUrl() {
             const fileExists = await RNFS.exists(localStorageDestination);
 
             if (fileExists) {
-                Alert.alert('Model already exists', 'The model already exists in your device - skipping download.');
+                console.log('Model already exists', localStorageDestination);
                 setDownloading(false);
                 setProgress(0);
                 setCompleted(true);

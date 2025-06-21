@@ -293,7 +293,9 @@ export default abstract class BaseOpenAILikeProvider {
   }: {
     messages: DynamicChatMessage[];
     streaming?: boolean;
+    /** On complete is for non-streaming responses - it will not be called if streaming is true */
     onComplete?: (response: ICompleteResponse) => void;
+    /** On stream is for streaming responses - will fire for each token */
     onStream?: IStreamCallback;
   }) {
     // citations are unhandled for now in the base class

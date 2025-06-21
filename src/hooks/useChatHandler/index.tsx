@@ -142,6 +142,37 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         uiStore.emitter.emit(CHAT_HANDLER_EVENTS.NEW_CHAT_STARTED, { uuid: chat.uuid as string, chat: chat });
     }, []);
 
+    const _handleStreamEvent = useCallback((accumulator: string, newChat: DynamicChatMessage, event: IStreamEvent, data: IStreamResponse) => {
+        let emitUpdate = false;
+        switch (event) {
+            case 'abort':
+                throw new Error('Chat aborted');
+            case 'complete':
+                debug('Chat stream complete');
+                break;
+            case 'report_metrics':
+                debug('Report metrics', data);
+                merge(newChat, { response: { metrics: data as ICompleteResponse['metrics'] } });
+                break;
+            case 'report_citations':
+                debug('Report citations', data);
+                merge(newChat, { response: { citations: data as IDocumentCitation[] } });
+                emitUpdate = true;
+                break;
+            case 'chunk':
+                const parsed = parseStreamingChunksToResponse(event, accumulator, data as string);
+                accumulator += data;
+                if (!parsed) return debug('No parsable content - skipping');
+                merge(newChat, { response: { textResponse: parsed.textResponse, thoughts: parsed.reasoningContent } });
+                emitUpdate = true;
+                break;
+            default:
+                debug('Unhandled stream event', event, data);
+        }
+        if (emitUpdate) uiStore.emitter.emit(CHAT_HANDLER_EVENTS.UPDATE_CHAT, { uuid: newChat.uuid as string, chat: newChat });
+        return;
+    }, []);
+
     /**
      * Process a chat and add it to the chat history
      * as well as kick off the LLM inference
@@ -154,40 +185,44 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
 
             const messageHistory = Array.from(chatsMap.values()).concat([newChat as DynamicChatMessage]);
             let accumulator = '';
+
+            // Internal function to handle stream events in a cleaner way
+            // without doing everything in the callback directly. Just my personal preference.
+            function handleStreamEvent(event: IStreamEvent, data: IStreamResponse) {
+                let emitUpdate = false;
+                switch (event) {
+                    case 'abort':
+                        throw new Error('Chat aborted');
+                    case 'complete':
+                        debug('Chat stream complete');
+                        break;
+                    case 'report_metrics':
+                        debug('Report metrics', data);
+                        merge(newChat, { response: { metrics: data as ICompleteResponse['metrics'] } });
+                        break;
+                    case 'report_citations':
+                        debug('Report citations', data);
+                        merge(newChat, { response: { citations: data as IDocumentCitation[] } });
+                        emitUpdate = true;
+                        break;
+                    case 'chunk':
+                        const parsed = parseStreamingChunksToResponse(event, accumulator, data as string);
+                        accumulator += data;
+                        if (!parsed) return debug('No parsable content - skipping');
+                        merge(newChat, { response: { textResponse: parsed.textResponse, thoughts: parsed.reasoningContent } });
+                        emitUpdate = true;
+                        break;
+                    default:
+                        debug('Unhandled stream event', event, data);
+                }
+                if (emitUpdate) uiStore.emitter.emit(CHAT_HANDLER_EVENTS.UPDATE_CHAT, { uuid: newChat.uuid as string, chat: newChat });
+                return;
+            };
+
             await llmProvider.chat({
                 messages: messageHistory,
                 streaming: true,
-                // onComplete: this is for non-streaming responses
-                onStream: async (event: IStreamEvent, data: IStreamResponse): Promise<void> => {
-                    let emitUpdate = false;
-                    switch (event) {
-                        case 'abort':
-                            throw new Error('Chat aborted');
-                        case 'complete':
-                            debug('Chat stream complete');
-                            break;
-                        case 'report_metrics':
-                            debug('Report metrics', data);
-                            merge(newChat, { response: { metrics: data as ICompleteResponse['metrics'] } });
-                            break;
-                        case 'report_citations':
-                            debug('Report citations', data);
-                            merge(newChat, { response: { citations: data as IDocumentCitation[] } });
-                            emitUpdate = true;
-                            break;
-                        case 'chunk':
-                            const parsed = parseStreamingChunksToResponse(event, accumulator, data as string);
-                            accumulator += data;
-                            if (!parsed) return debug('No parsable content - skipping');
-                            merge(newChat, { response: { textResponse: parsed.textResponse, thoughts: parsed.reasoningContent } });
-                            emitUpdate = true;
-                            break;
-                        default:
-                            debug('Unhandled stream event', event, data);
-                    }
-                    if (emitUpdate) uiStore.emitter.emit(CHAT_HANDLER_EVENTS.UPDATE_CHAT, { uuid: newChat.uuid as string, chat: newChat });
-                    return;
-                },
+                onStream: (event, data) => handleStreamEvent(event, data),
             }).catch(err => {
                 debug('Error processing chat', err);
                 merge(newChat, { type: 'error', response: { textResponse: err.message || 'Error processing chat' } });

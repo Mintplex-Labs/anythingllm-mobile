@@ -95,17 +95,22 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
       size: m.size,
       modelId: m.modelId,
       downloadUrl: m.tag,
+      isPreset: true,
     }));
+
     const crossPlatformModels = defaultModels
       .filter(m => m.runtime === 'CPU')
       .map(m => ({ ...m, id: m.id.endsWith('.gguf') ? m.id.split('/').slice(0, -1).join('/') : m.id }))
       .map(m => {
         return {
           id: m.id,
+          // @ts-ignore
+          description: m.description || '',
           name: m.name,
           size: m.size,
           modelId: m.id,
           downloadUrl: m.downloadUrl || '',
+          isPreset: false,
         }
       });
     return [

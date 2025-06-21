@@ -1,4 +1,4 @@
-import { initLlama, LlamaContext, NativeCompletionResult } from 'llama.rn'
+import { CompletionParams, initLlama, LlamaContext, NativeCompletionResult } from 'llama.rn'
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { Model } from '@/utils/types';
 import { defaultModels } from '@/utils/models';
@@ -39,10 +39,20 @@ export default class LlamaRnWrapper {
   constructor({ model, parent }: { model: string; parent: OnDeviceProvider }) {
     this.model = model;
     this.parent = parent;
+    this.presetGGUFFilePath();
   }
 
   log = (text: string, ...args: any[]) => {
     console.log(`\x1b[36m[${this.constructor.name}]\x1b[0m ${text}`, ...args);
+  }
+
+  /**
+   * Presets the gguf file path for extra models we manually support
+   * we have to manually set the gguf file path because we may name the model differently
+   */
+  private presetGGUFFilePath() {
+    if (!this.modelDefinition?.ggufFilePath) return;
+    this.ggufFilePath = `${RNFS.DocumentDirectoryPath}/models/gguf/${this.modelDefinition.ggufFilePath}`;
   }
 
   async determineGgufFilePath() {
@@ -117,6 +127,27 @@ export default class LlamaRnWrapper {
     }
   }
 
+  /**
+   * Parses the model runtime config from the model definition.
+   * This is used to add extra params to the model runtime config that might be recommended by the model provider.
+   * but are not directly user-configurable.
+   * @returns The model runtime config.
+   */
+  private get defaultRuntimeConfig(): CompletionParams | {} {
+    const extraParams: CompletionParams = {};
+    if (!!this.modelDefinition) {
+      if (this.modelDefinition.chatTemplateString) {
+        extraParams.chat_template = this.modelDefinition.chatTemplateString;
+      }
+
+      if (this.modelDefinition.completionSettings)
+        for (const [key, value] of Object.entries(this.modelDefinition.completionSettings)) {
+          extraParams[key] = value;
+        }
+    }
+    return extraParams;
+  }
+
   private keepAlive() {
     if (this.keepAliveTimer) this.log(`Keep alive timer already running - resetting timer for ${this.keepAliveInterval}ms`);
     else this.log(`Starting keep alive timer for ${this.keepAliveInterval}ms`);
@@ -138,6 +169,7 @@ export default class LlamaRnWrapper {
       messages: messages,
       n_predict: this.nPredict,
       stop: stops,
+      ...this.defaultRuntimeConfig,
       temperature: this.temperature,
     });
 
@@ -161,11 +193,14 @@ export default class LlamaRnWrapper {
     if (!this.llamaRnContext) await this.initialize();
     if (!this.llamaRnContext) throw new Error(`LlamaRnWrapper::streamGetChatCompletion: Model not initialized`);
 
+    this.log(`default params: ${JSON.stringify(this.defaultRuntimeConfig)}`);
+
     const msgResult: NativeCompletionResult = await this.llamaRnContext.completion({
       messages: messages,
       n_predict: this.nPredict,
-      temperature: this.temperature,
       stop: stops,
+      ...this.defaultRuntimeConfig,
+      temperature: this.temperature, // workspace temperature overrides any model-specific settings
     }, (data: { token: string }) => {
       const { token } = data;
       callback(token);

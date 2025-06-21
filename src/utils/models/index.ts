@@ -1,6 +1,5 @@
 import { NPUEnabledModel, Model, ModelOrigin } from '@/utils/types';
 import { chatTemplates } from '@/utils/chat';
-import { defaultCompletionParams } from '@/utils/chat/completionSettingsVersions';
 import { Platform } from 'react-native';
 
 export const MODEL_LIST_VERSION = 11;
@@ -35,6 +34,49 @@ const androidOnlyModels: NPUEnabledModel[] = [
 ];
 
 const crossPlatformModels: Model[] = [
+
+  // -------- Jan-nano --------
+  // https://huggingface.co/Menlo/Jan-nano-gguf/resolve/main/jan-nano-4b-Q4_K_S.gguf
+  {
+    id: 'Menlo/Jan-Nano-4b-GGUF',
+    description: '(Q4_K_S) Jan-Nano by Menlo Research is an LLM specifically for deep research tasks.',
+    runtime: 'CPU',
+    author: 'Menlo',
+    name: 'Jan-Nano 4B',
+    type: 'Qwen',
+    ggufFilePath: 'Menlo/Jan-nano-gguf/jan-nano-4b-Q4_K_S.gguf',
+    capabilities: ['text-generation', 'tool-use'],
+    size: 2.38e+9,
+    params: 4_000_000_000,
+    downloadUrl: 'https://huggingface.co/Menlo/Jan-nano-gguf/resolve/main/jan-nano-4b-Q4_K_S.gguf',
+    chatTemplateString: "{%- if tools %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if messages[0].role == 'system' %}\n        {{- messages[0].content + '\\n\\n' }}\n    {%- endif %}\n    {{- \"# Tools\\n\\nYou may call one or more functions to assist with the user query.\\n\\nYou are provided with function signatures within <tools></tools> XML tags:\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\\n\\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\\n<tool_call>\\n{\\\"name\\\": <function-name>, \\\"arguments\\\": <args-json-object>}\\n</tool_call><|im_end|>\\n\" }}\n{%- else %}\n    {%- if messages[0].role == 'system' %}\n        {{- '<|im_start|>system\\n' + messages[0].content + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" and message.content is string and not(message.content.startswith('<tool_response>') and message.content.endswith('</tool_response>')) %}\n        {%- set ns.multi_step_tool = false %}\n        {%- set ns.last_query_index = index %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if message.content is string %}\n        {%- set content = message.content %}\n    {%- else %}\n        {%- set content = '' %}\n    {%- endif %}\n    {%- if (message.role == \"user\") or (message.role == \"system\" and not loop.first) %}\n        {{- '<|im_start|>' + message.role + '\\n' + content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- else %}\n            {%- if '</think>' in content %}\n                {%- set reasoning_content = content.split('</think>')[0].rstrip('\\n').split('<think>')[-1].lstrip('\\n') %}\n                {%- set content = content.split('</think>')[-1].lstrip('\\n') %}\n            {%- endif %}\n        {%- endif %}\n        {%- if loop.index0 > ns.last_query_index %}\n            {%- if loop.last or (not loop.last and reasoning_content) %}\n                {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content.strip('\\n') + '\\n</think>\\n\\n' + content.lstrip('\\n') }}\n            {%- else %}\n                {{- '<|im_start|>' + message.role + '\\n' + content }}\n            {%- endif %}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if (loop.first and content) or (not loop.first) %}\n                    {{- '\\n' }}\n                {%- endif %}\n                {%- if tool_call.function %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {{- '<tool_call>\\n{\"name\": \"' }}\n                {{- tool_call.name }}\n                {{- '\", \"arguments\": ' }}\n                {%- if tool_call.arguments is string %}\n                    {{- tool_call.arguments }}\n                {%- else %}\n                    {{- tool_call.arguments | tojson }}\n                {%- endif %}\n                {{- '}\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.first or (messages[loop.index0 - 1].role != \"tool\") %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if loop.last or (messages[loop.index0 + 1].role != \"tool\") %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n<think>\\n\\n</think>\\n\\n' }}\n{%- endif %}",
+    completionSettings: {
+      temperature: 0.7,
+      top_p: 0.8,
+      top_k: 20,
+      min_p: 0,
+    },
+
+    // Unused?
+    isDownloaded: false,
+    hfUrl: 'https://huggingface.co/Menlo/Jan-nano-gguf',
+    progress: 0,
+    filename: 'jan-nano-4b-Q4_K_S.gguf',
+    isLocal: false,
+    origin: ModelOrigin.HF,
+    defaultChatTemplate: { ...chatTemplates.qwen3 },
+    chatTemplate: { ...chatTemplates.qwen3 },
+    defaultCompletionSettings: {
+      temperature: 0.7,
+      top_p: 0.8,
+      top_k: 20,
+      min_p: 0,
+    },
+    defaultStopWords: ['<|im_end|>'],
+    stopWords: ['<|im_end|>'],
+  },
+
+
   // -------- Gemma --------
   // {
   //   id: 'unsloth/gemma-3-1b-it-GGUF/gemma-3-1b-it-Q8_0.gguf',

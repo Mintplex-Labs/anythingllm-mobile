@@ -255,6 +255,10 @@ export interface HuggingFaceModel {
 
 export interface Model {
   id: string;
+  description?: string;
+  ggufFilePath?: string;
+  chatTemplateString?: string;
+
   runtime: 'CPU' | 'NPU';
   author: string;
   name: string;

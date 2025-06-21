@@ -47,8 +47,9 @@ const PAGES = {
       title="Context Length"
       placeholder="Enter your context length here..."
       resetValue={Workspace.defaultContextLength}
-      hint="Keep in mind that the context length is also dependent on the model you are using and has memory implications for your device.\n\nWe recommend not changing this unless you know what you are doing."
+      hint="Keep in mind that the context length is also dependent on the model you are using and has memory implications for your device."
       reattachProviderOnSave={true}
+      suggestions={[512, 1024, 2048, 4096, 8192]}
     />
   ),
 };

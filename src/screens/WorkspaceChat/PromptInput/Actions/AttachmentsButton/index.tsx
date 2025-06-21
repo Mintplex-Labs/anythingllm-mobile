@@ -10,7 +10,7 @@ export default function AttachmentsButton({ attachmentHandler }: { attachmentHan
             onLongPress={attachmentHandler.clearWorkspaceVectors}
             className='flex flex-row items-center gap-x-2 disabled:opacity-50'
         >
-            <Paperclip size={22} color="#FFF" />
+            <Paperclip size={25} color="#FFF" />
         </TouchableOpacity>
     );
 }

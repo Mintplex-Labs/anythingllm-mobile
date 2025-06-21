@@ -1,4 +1,4 @@
-import { ActivityIndicator, BackHandler, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
@@ -10,7 +10,6 @@ import { PATHS } from "@/utils/paths";
 import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
 import useVectorCount from "@/hooks/useVectorCount";
 import AwaitableAlert from "@/components/AwaitableAlert";
-import { showToast } from "@/utils/Notification";
 import { useEffect, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 
@@ -26,9 +25,10 @@ export function MainView({ workspace, goToPage, initialThreadSlug }: MainViewPro
     const scrollViewRef = useRef<ScrollView>(null);
     const { vectorCount, askToResetVectorsForWorkspace, getVectorCount } = useVectorCount(workspace.slug);
     function goBackToWorkspaceChat() {
-        uiStore.emitGlobalEvent(uiStore.globalEvents.REDIRECT, {
-            path: PATHS.workspace_chat,
-            params: { wsSlug: workspace.slug, threadSlug: initialThreadSlug ?? workspace.threads![0].slug },
+        navigation.reset({
+            index: 0,
+            // @ts-ignore
+            routes: [{ name: PATHS.workspace_chat, params: { wsSlug: workspace.slug, threadSlug: initialThreadSlug ?? workspace.threads![0].slug } }],
         });
         return true;
     }

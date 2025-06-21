@@ -108,7 +108,7 @@ export function TextInputView({ workspace, goToPage, field, title, placeholder, 
                         style={{
                             maxHeight: screenDimensions.height - keyboardHeight - insets.top - insets.bottom - 200,
                             backgroundColor: '#27282A',
-                            textAlignVertical: 'top',
+                            textAlignVertical: 'center',
                             padding: 16
                         }}
                         className="rounded-lg text-white placeholder:text-white/50 text-left"
@@ -122,7 +122,7 @@ export function TextInputView({ workspace, goToPage, field, title, placeholder, 
                         </TouchableOpacity>
                     )}
                 </View>
-                {hint && <Text style={{ color: '#9F9FA0' }} className="text-sm">{hint}</Text>}
+                {hint && <Text style={{ color: '#9F9FA0' }} className="text-sm">{hint.replace(/\\n/g, '\n')}</Text>}
             </KeyboardAvoidingView>
 
         </SafeView >

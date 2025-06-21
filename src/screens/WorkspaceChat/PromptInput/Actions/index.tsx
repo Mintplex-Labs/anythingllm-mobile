@@ -32,8 +32,8 @@ export default function ActionMenu({ isFullScreen, sheetIndex, chatHandler, ...p
 
     return (
         <Animated.View
-            style={{ height: ACTION_MENU_HEIGHT, top: topPositionAnim, position: 'absolute', zIndex: 2, left: 0, right: 0 }}
-            className='flex w-full flex-row items-center justify-between px-2'>
+            style={{ height: ACTION_MENU_HEIGHT, top: topPositionAnim, position: 'absolute', zIndex: 2, left: 0, right: 0, paddingHorizontal: 15 }}
+            className='flex w-full flex-row items-center justify-between'>
             {isFullScreen ? <View /> : (
                 <View className='flex flex-row items-center gap-x-4'>
                     <AttachmentsButton attachmentHandler={props.attachmentHandler} />
@@ -48,7 +48,7 @@ export default function ActionMenu({ isFullScreen, sheetIndex, chatHandler, ...p
                     disabled={chatHandler.promptDisabled}
                     className='flex flex-row items-center gap-x-2 disabled:opacity-50'
                 >
-                    <PaperPlaneRight size={22} color="#FFF" weight='fill' />
+                    <PaperPlaneRight size={25} color="#FFF" weight='fill' />
                 </TouchableOpacity>
             </View>
         </Animated.View>

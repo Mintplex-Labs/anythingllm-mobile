@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowLeft, CheckCircle, CircleNotch } from "phosphor-react-native";
 import { WorkspaceType } from "@/database/models/Workspace";
 import { IWorkspacePageKey } from "../index";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { screenDimensions } from "@/utils/constants";
 import useKeyboardHeight from "@/hooks/useKeyboardHeight";
 import debounce from 'lodash/debounce';
@@ -22,6 +22,7 @@ interface NumericInputViewProps {
     hint?: string;
     placeholder: string;
     reattachProviderOnSave?: boolean;
+    suggestions?: string[];
 }
 
 const DEFAULT_SAVE_STATUS = {
@@ -29,7 +30,7 @@ const DEFAULT_SAVE_STATUS = {
     state: 'waiting' as 'waiting' | 'saving' | 'saved',
 };
 
-export function NumericInputView({ workspace, goToPage, field, title, placeholder, resetValue, hint, reattachProviderOnSave = false }: NumericInputViewProps) {
+export function NumericInputView({ workspace, goToPage, field, title, placeholder, resetValue, hint, reattachProviderOnSave = false, suggestions = [] }: NumericInputViewProps) {
     useHighjackBackButtonPress(() => { goToPage('main'); return true; });
     const insets = useSafeAreaInsets();
     const keyboardHeight = useKeyboardHeight();
@@ -95,7 +96,6 @@ export function NumericInputView({ workspace, goToPage, field, title, placeholde
                 <View className="w-full flex flex-col" style={{ gap: 12 }}>
                     <View className="flex flex-row items-center justify-between">
                         <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">Current {title}</Text>
-
                         <View className="flex flex-row items-center">
                             <ActivityIndicator size="small" color="#FFF" animating={saveStatus.state === 'saving'} style={{ transform: [{ scale: 0.5 }] }} />
                             {saveStatus.state === 'saved' && <CheckCircle size={12} color="#6CE9A6" style={{ marginRight: 2 }} />}
@@ -108,7 +108,7 @@ export function NumericInputView({ workspace, goToPage, field, title, placeholde
                         style={{
                             maxHeight: screenDimensions.height - keyboardHeight - insets.top - insets.bottom - 200,
                             backgroundColor: '#27282A',
-                            textAlignVertical: 'top',
+                            textAlignVertical: 'center',
                             padding: 16
                         }}
                         className="rounded-lg text-white placeholder:text-white/50 text-left"
@@ -123,8 +123,22 @@ export function NumericInputView({ workspace, goToPage, field, title, placeholde
                     )}
                 </View>
                 <View className="w-full flex flex-col" style={{ gap: 12 }}>
-                    {hint && <Text style={{ color: '#9F9FA0' }} className="text-sm">{hint}</Text>}
+                    {hint && <Text style={{ color: '#9F9FA0' }} className="text-sm">{hint.replace(/\\n/g, '\n')}</Text>}
                 </View>
+                {suggestions && (
+                    <View style={{ gap: 10, marginTop: 30 }} className="flex flex-col">
+                        <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">Suggested {title}</Text>
+                        <View style={{ gap: 10, flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'flex-start' }} className="flex flex-row items-center justify-center">
+                            {suggestions
+                                .filter((suggestion) => suggestion.toString() !== value.toString())
+                                .map((suggestion) => (
+                                    <TouchableOpacity key={suggestion} style={{ paddingHorizontal: 10, paddingVertical: 5 }} onPress={() => handleValueChange(suggestion)} className="flex flex-row items-center justify-center bg-white/10 rounded-full">
+                                        <Text className="text-white">{suggestion}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                        </View>
+                    </View>
+                )}
             </KeyboardAvoidingView>
         </SafeView>
     );

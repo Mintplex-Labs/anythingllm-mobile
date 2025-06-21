@@ -53,7 +53,7 @@ export function SettingsActionIcon() {
     const { presentSheet } = useBottomSheet();
     return (
         <TouchableOpacity onPress={() => presentSheet(BOTTOM_SHEET_NAMES.SETTINGS)}>
-            <SlidersHorizontal size={22} color="#FFF" />
+            <SlidersHorizontal size={25} color="#FFF" />
         </TouchableOpacity>
     );
 }

@@ -18,6 +18,8 @@ export interface ChatHandlerInterface {
     chats: DynamicChatMessage[];
     /** Whether the chat history is loading */
     isLoadingChats: boolean;
+    /** Whether the chat is currently working (could be streaming or not) */
+    isWorking: boolean;
     /** The error if the chat history fails to load */
     errorLoadingChats: Error | null;
     /** Whether the chat history can be scrolled */
@@ -54,6 +56,7 @@ export const CHAT_HANDLER_EVENTS = {
     RESET_CHAT: 'reset_chat',
     UPDATE_CHAT: 'update_chat',
     NEW_CHAT_STARTED: 'new_chat_started',
+    CHAT_SCROLL_EVENT: 'chat_scroll_event',
 }
 
 function debug(text: string, ...args: any[]) {
@@ -67,6 +70,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
     const [isLoadingChats, setIsLoadingChats] = useState(true);
     const [errorLoadingChats, setErrorLoadingChats] = useState<Error | null>(null);
     const [_promptDisabled, _setPromptDisabled] = useState<boolean>(false);
+    const [isWorking, setIsWorking] = useState<boolean>(false);
 
     const fetchChats = useCallback(async () => {
         try {
@@ -219,7 +223,10 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                     default:
                         debug('Unhandled stream event', event, data);
                 }
-                if (emitUpdate) uiStore.emitter.emit(CHAT_HANDLER_EVENTS.UPDATE_CHAT, { uuid: newChat.uuid as string, chat: newChat });
+                if (emitUpdate) {
+                    uiStore.emitter.emit(CHAT_HANDLER_EVENTS.UPDATE_CHAT, { uuid: newChat.uuid as string, chat: newChat });
+                    uiStore.emitter.emit(CHAT_HANDLER_EVENTS.CHAT_SCROLL_EVENT);
+                }
                 return;
             };
 
@@ -257,11 +264,13 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         try {
             _setPrompt('');
             disablePromptInput();
+            setIsWorking(true);
             await _processChat(promptToSubmit);
         } catch (err) {
             debug('Error submitting prompt', err);
         } finally {
             enablePromptInput();
+            setIsWorking(false);
         }
     }, [prompt]);
 
@@ -308,6 +317,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
             promptDisabled: _promptDisabled,
             setPrompt,
             submitPrompt,
+            isWorking,
         }
     }, [
         chatsMap,
@@ -321,6 +331,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         submitPrompt,
         chatsArray,
         reset,
+        isWorking,
     ]);
 
     return chatHandlerInterface;

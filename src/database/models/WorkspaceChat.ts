@@ -3,6 +3,7 @@ import { database } from '@/database';
 import { Q, Model } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
 import { DynamicChatMessage } from '@/screens/WorkspaceChat/ChatHistory';
+import { ICompleteResponse } from '@/utils/AiProviders/baseOpenAILikeProvider';
 
 export type IDocumentCitation = {
   type: 'document';
@@ -17,20 +18,29 @@ export type IDocumentCitation = {
 export type IAgentWebSearchCitation = {
   type: 'web-search';
   reference: {
+    title?: string;
     url: string;
     content: string;
   };
+}
+
+export type IAgentToolCall = {
+  uuid: string;
+  signature: string;
+  result: string;
 }
 
 export type IAgentCitation = IAgentWebSearchCitation;
 export type IChatCitation = IDocumentCitation | IAgentCitation;
 export type WorkspaceChatResponseType = {
   textResponse: string;
-  thoughts: string;
-  toolCalls: string[];
-  metrics: any; // TODO: Can we track this??
+  thoughts: string[];
+  toolCalls: IAgentToolCall[];
+  metrics: ICompleteResponse['metrics'];
   attachments: any[]; // This would be IMAGES, not files - which are embedded on upload
   citations: IChatCitation[];
+  currentThoughtChain?: string[];
+  isLoading?: boolean;
 }
 
 export type WorkspaceChatType = {
@@ -144,9 +154,15 @@ export default class WorkspaceChat extends Model {
       prompt: data.prompt,
       response: {
         textResponse: '',
-        thoughts: '',
+        thoughts: [],
         toolCalls: [],
-        metrics: {},
+        metrics: {
+          prompt_tokens: 0,
+          completion_tokens: 0,
+          total_tokens: 0,
+          outputTps: 0,
+          duration: 0,
+        },
         attachments: [],
         citations: [],
       },

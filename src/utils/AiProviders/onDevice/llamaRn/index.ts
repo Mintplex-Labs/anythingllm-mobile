@@ -188,17 +188,29 @@ export default class LlamaRnWrapper {
   /**
    * Streams the chat completion from the model.
    */
-  async streamGetChatCompletion(messages: NativeLlamaChatMessage[], callback: ILlamaRnStreamCallback): Promise<ICompleteResponse> {
+  async streamGetChatCompletion(
+    messages: NativeLlamaChatMessage[],
+    callback: ILlamaRnStreamCallback,
+    availableTools: any[]
+  ): Promise<ICompleteResponse> {
     this.keepAlive();
     if (!this.llamaRnContext) await this.initialize();
     if (!this.llamaRnContext) throw new Error(`LlamaRnWrapper::streamGetChatCompletion: Model not initialized`);
 
-    this.log(`default params: ${JSON.stringify(this.defaultRuntimeConfig)}`);
-
     const msgResult: NativeCompletionResult = await this.llamaRnContext.completion({
       messages: messages,
       n_predict: this.nPredict,
-      stop: stops,
+      stop: [...stops],
+      jinja: this.llamaRnContext.isJinjaSupported(),
+      tool_choice: 'auto',
+      /*
+      This would normally work, but the type and Java implementation are wrong in the library
+      and needs to .getNumber() instead of .getBoolean() since ReactBridge casts a boolean to a number.
+      Even when patched though, the model will still only return one tool call at a time which is not what we want.
+      So we're not using it for now and instead will loop
+       parallel_tool_calls: true,
+      */
+      tools: availableTools,
       ...this.defaultRuntimeConfig,
       temperature: this.temperature, // workspace temperature overrides any model-specific settings
     }, (data: { token: string }) => {
@@ -208,6 +220,7 @@ export default class LlamaRnWrapper {
 
     return {
       textResponse: msgResult.content,
+      toolCalls: msgResult.tool_calls,
       metrics: {
         prompt_tokens: msgResult.timings.prompt_n,
         completion_tokens: msgResult.timings.predicted_n,

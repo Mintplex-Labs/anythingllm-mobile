@@ -77,6 +77,34 @@ const crossPlatformModels: Model[] = [
   },
 
 
+  {
+    id: 'unsloth/gemma-3-4b-it-GGUF/gemma-3-4b-it-Q6_K.gguf',
+    runtime: 'CPU',
+    author: 'unsloth',
+    name: 'Gemma-3-4b-it (Q6_K)',
+    type: 'Gemma',
+    capabilities: ['questionAnswering', 'summarization', 'reasoning'],
+    size: 3.19e+9,
+    params: 4_000_000_000,
+    isDownloaded: false,
+    downloadUrl:
+      'https://huggingface.co/unsloth/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q6_K.gguf',
+    hfUrl: 'https://huggingface.co/unsloth/gemma-3-4b-it-GGUF',
+    progress: 0,
+    filename: 'gemma-3-4b-it-Q6_K.gguf',
+    isLocal: false,
+    origin: ModelOrigin.HF,
+    defaultChatTemplate: { ...chatTemplates.gemma3 },
+    chatTemplate: chatTemplates.gemma3,
+    defaultCompletionSettings: {
+    },
+    completionSettings: {
+    },
+    defaultStopWords: ['<end_of_turn>'],
+    stopWords: ['<end_of_turn>'],
+  },
+
+
   // -------- Gemma --------
   // {
   //   id: 'unsloth/gemma-3-1b-it-GGUF/gemma-3-1b-it-Q8_0.gguf',
@@ -218,6 +246,32 @@ const crossPlatformModels: Model[] = [
   //   },
   // },
   // -------- Qwen --------
+  {
+    id: 'unsloth/Qwen3-1.7B-GGUF/Qwen3-1.7B-Q8_0.gguf',
+    runtime: 'CPU',
+    author: 'Qwen',
+    name: 'Qwen3-1.7B (Q8_0)',
+    type: 'Qwen',
+    capabilities: ['text-generation', 'reasoning'],
+    size: 1.83e+9,
+    params: 1_700_000_000,
+    isDownloaded: false,
+    downloadUrl:
+      'https://huggingface.co/unsloth/Qwen3-1.7B-GGUF/resolve/main/Qwen3-1.7B-Q8_0.gguf',
+    hfUrl: 'https://huggingface.co/unsloth/Qwen3-1.7B-GGUF',
+    progress: 0,
+    filename: 'Qwen3-1.7B-Q8_0.gguf',
+    isLocal: false,
+    origin: ModelOrigin.HF,
+    defaultChatTemplate: { ...chatTemplates.qwen3 },
+    chatTemplate: chatTemplates.qwen3,
+    defaultCompletionSettings: {
+    },
+    completionSettings: {
+    },
+    defaultStopWords: ['<|im_end|>'],
+    stopWords: ['<|im_end|>'],
+  },
   // {
   //   id: 'Qwen/Qwen3-0.6B-GGUF/Qwen3-0.6B-Q8_0.gguf',
   //   runtime: 'CPU',

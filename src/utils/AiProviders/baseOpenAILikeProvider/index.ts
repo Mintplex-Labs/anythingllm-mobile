@@ -1,11 +1,11 @@
 import Workspace, { type WorkspaceType } from "@/database/models/Workspace";
-import { IDocumentCitation } from "@/database/models/WorkspaceChat";
+import { IAgentToolCall, IDocumentCitation } from "@/database/models/WorkspaceChat";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import { formatChatHistory } from "@/utils/chat/helpers";
 import { StreamMetrics } from "@/utils/chat/LLMPerformanceMonitor";
 import { MonitoredStream } from "@/utils/chat/LLMPerformanceMonitor";
 import LLMPerformanceMonitor from "@/utils/chat/LLMPerformanceMonitor";
-import getEmbedder, { EmbedderProvider } from "@/utils/Embedder";
+import getEmbedder from "@/utils/Embedder";
 import OpenAILite from "@/utils/openai";
 import VectorDB, { SemanticSearchResult } from "@/utils/VectorDB";
 
@@ -16,6 +16,14 @@ interface BaseLLMProviderConfig {
 
 export type ICompleteResponse = {
   textResponse: string;
+  toolCalls?: {
+    type: 'function'
+    function: {
+      name: string
+      arguments: string
+    }
+    id?: string
+  }[];
   metrics: {
     prompt_tokens: number;
     completion_tokens: number;
@@ -39,8 +47,15 @@ type IContent = {
   };
 }
 
-export type IStreamEvent = 'chunk' | 'complete' | 'abort' | 'report_citations' | 'report_metrics';
-export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[];
+export type IStreamEvent = 'chunk' |
+  'complete' |
+  'abort' |
+  'report_citations' |
+  'report_metrics' |
+  'will_call_tools' |
+  'report_tool_call' |
+  'report_tool_call_result';
+export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[] | IAgentToolCall;
 export type IStreamCallback = (
   event: IStreamEvent,
   response: IStreamResponse

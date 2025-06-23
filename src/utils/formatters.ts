@@ -176,3 +176,17 @@ export function getOrigin(url: string) {
     return url;
   }
 }
+
+/**
+ * Safely parses a JSON string. If the json is already an object, it will return the object.
+ * @param json - The json string to parse.
+ * @param fallback - The fallback value to return if the json is not valid.
+ */
+export function safeJsonParse(json: string, fallback: any = null) {
+  try {
+    if (typeof json === 'object') return json; // If the json is already an object, return it
+    return JSON.parse(json);
+  } catch (error) {
+    return fallback;
+  }
+}

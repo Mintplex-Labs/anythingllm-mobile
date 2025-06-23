@@ -108,7 +108,7 @@ export function TextInputView({ workspace, goToPage, field, title, placeholder, 
                         style={{
                             maxHeight: screenDimensions.height - keyboardHeight - insets.top - insets.bottom - 200,
                             backgroundColor: '#27282A',
-                            textAlignVertical: 'center',
+                            textAlignVertical: multiLine ? 'top' : 'center',
                             padding: 16
                         }}
                         className="rounded-lg text-white placeholder:text-white/50 text-left"

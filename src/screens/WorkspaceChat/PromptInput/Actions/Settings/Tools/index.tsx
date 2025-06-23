@@ -7,55 +7,78 @@ import ToggleSwitch from "@/components/ToggleSwitch";
 import uiStore from "@/store/UIStore";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
+import ToolsManager from "@/utils/ToolsManager";
 
 export default function ToolsActionSheet() {
     const insets = useSafeAreaInsets();
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const { registerSheet, presentSheet } = useBottomSheet();
-    const [toolSettings, setToolSettings] = useState({
-        webSearch: false,
-        draftEmail: false,
-        draftText: false,
-        calendarEventCreation: false,
-    });
-    const handleToggle = (tool: keyof typeof toolSettings) => {
+    const [toolSettings, setToolSettings] = useState<Record<string, boolean>>({});
+    const handleToggle = async (tool: keyof typeof toolSettings) => {
         const newToolSettings = { ...toolSettings, [tool]: !toolSettings[tool] };
         setToolSettings(newToolSettings);
-        uiStore.setToStorage('tools', newToolSettings);
+        await uiStore.setToStorage('tools', newToolSettings);
+        ToolsManager.resetTools();
+        await loadTools();
     };
+
+    const loadTools = async () => {
+        const updates: Record<string, boolean> = {};
+        for (const tool of ToolsManager.configurableTools) updates[tool.id] = tool.defaultEnabled;
+        const storedToolSettings: Record<string, boolean> = await uiStore.getFromStorage('tools', {});
+        for (const [tool, enabled] of Object.entries(storedToolSettings)) updates[tool] = enabled;
+        setToolSettings(updates);
+    }
 
     useEffect(() => {
         registerSheet(BOTTOM_SHEET_NAMES.TOOLS, bottomSheetRef);
-        uiStore.getFromStorage('tools', toolSettings).then((storedToolSettings) => setToolSettings(prev => ({ ...prev, ...storedToolSettings })));
     }, [registerSheet]);
+
+    useEffect(() => {
+        loadTools();
+    }, []);
 
     return (
         <BottomSheetModal
             ref={bottomSheetRef}
             index={0}
-            snapPoints={['50%']}
+            snapPoints={['50%', '90%']}
             enableDynamicSizing={false}
             enablePanDownToClose={true}
             backgroundStyle={{ backgroundColor: '#1B1B1E' }}
             handleIndicatorStyle={{ backgroundColor: '#9F9FA0', width: 45, margin: 10 }}
             onDismiss={() => presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)}
         >
-            <ScrollView style={{ paddingHorizontal: 30, paddingBottom: insets.bottom }}>
+            <ScrollView contentContainerStyle={{ paddingHorizontal: 30, paddingBottom: insets.bottom + 100 }}>
                 <View style={{ marginBottom: 24 }} className='flex w-full flex-row items-center justify-center'>
                     <Text className='text-white text-lg font-medium'>Tools</Text>
                 </View>
                 <View style={{ gap: 16 }} className='flex flex-col items-start justify-between'>
-                    <TogglableItem primary title="Web Search" description="Real-time web search during chat" isOn={toolSettings.webSearch} onToggle={() => handleToggle('webSearch')} />
+                    {ToolsManager.configurableTools.filter(tool => tool.category === 'default').map(tool => (
+                        <TogglableItem key={tool.id} primary title={tool.name} description={tool.description} isOn={toolSettings[tool.id]} onToggle={handleToggle.bind(null, tool.id)} />
+                    ))}
                     <View style={{ gap: 12 }} className='flex w-full flex-col items-start justify-between'>
-                        <Text className='text-white text-[14px] font-semibold'>App Connections</Text>
-                        <TogglableItem title="Calendar Event Creation" description="Create calendar events dynamically" isOn={toolSettings.calendarEventCreation} onToggle={() => handleToggle('calendarEventCreation')} />
-                        <TogglableItem title="Email Drafting" description="Generate draft emails" isOn={toolSettings.draftEmail} onToggle={() => handleToggle('draftEmail')} />
-                        <TogglableItem title="Draft Text Message" description="Generate draft text messages" isOn={toolSettings.draftText} onToggle={() => handleToggle('draftText')} />
+                        <Text className='text-white  font-semibold'>App Connections</Text>
+                        {ToolsManager.configurableTools.filter(tool => tool.category === 'appConnections').map(tool => (
+                            <TogglableItem key={tool.id} title={tool.name} description={tool.description} isOn={toolSettings[tool.id]} onToggle={handleToggle.bind(null, tool.id)} />
+                        ))}
                     </View>
                 </View>
-
             </ScrollView>
         </BottomSheetModal>
+    );
+}
+
+
+function TogglableItem({ title, description, isOn, onToggle, primary = false }: { title: string, description: string, isOn: boolean, onToggle: () => void, primary?: boolean }) {
+    return (
+        <View className='flex w-full flex-row items-center justify-between'>
+            <View className='flex flex-col items-start justify-between'>
+                <Text className={`text-[14px] font-semibold ${!primary && !isOn ? 'text-[--text-primary]' : 'text-white'}`}>{title}</Text>
+                <Text style={{ color: '#9F9FA0', maxWidth: '90%' }} className='text-sm'>{description}</Text>
+            </View>
+            <ToggleSwitch isOn={isOn} onToggle={onToggle} />
+        </View>
     );
 }
 
@@ -71,19 +94,6 @@ export function ToolsActionButton() {
 
     );
 }
-
-function TogglableItem({ title, description, isOn, onToggle, primary = false }: { title: string, description: string, isOn: boolean, onToggle: () => void, primary?: boolean }) {
-    return (
-        <View className='flex w-full flex-row items-center justify-between'>
-            <View className='flex flex-col items-start justify-between'>
-                <Text className={`text-[14px] font-semibold ${!primary && !isOn ? 'text-[--text-primary]' : 'text-white'}`}>{title}</Text>
-                <Text style={{ color: '#9F9FA0' }} className='text-sm'>{description}</Text>
-            </View>
-            <ToggleSwitch isOn={isOn} onToggle={onToggle} />
-        </View>
-    );
-}
-
 
 /**
  * Notes on actions

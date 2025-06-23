@@ -6,7 +6,7 @@ import { ReadableStream } from 'web-streams-polyfill'
 import { polyfill as polyfillBase64 } from 'react-native-polyfill-globals/src/base64';
 import { polyfill as polyfillEncoding } from 'react-native-polyfill-globals/src/encoding';
 import { polyfill as polyfillURL } from 'react-native-polyfill-globals/src/url';
-import { polyfill as polyfillFetch } from 'react-native-polyfill-globals/src/fetch';
+// import { polyfill as polyfillFetch } from 'react-native-polyfill-globals/src/fetch';
 import { polyfill as polyfillCrypto } from 'react-native-polyfill-globals/src/crypto';
 
 (async () => {
@@ -41,8 +41,10 @@ import { polyfill as polyfillCrypto } from 'react-native-polyfill-globals/src/cr
   polyfillURL();
   polyfilled.push('url');
 
-  polyfillFetch();
-  polyfilled.push('fetch');
+  // This broke regular fetch requests ? 
+  // required "react-native-fetch-api": "^3.0.0", in package.json when it did work??
+  // polyfillFetch();
+  // polyfilled.push('fetch');
 
   polyfillCrypto();
   polyfilled.push('crypto');

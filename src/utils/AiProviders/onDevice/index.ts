@@ -1,10 +1,11 @@
 import { defaultModels } from "@/utils/models";
 import GenieWrapper, { IGenieStreamCallback } from "./genie";
 import LlamaRnWrapper, { ILlamaRnStreamCallback } from "./llamaRn";
-import BaseOpenAILikeProvider, { IStreamCallback } from "../baseOpenAILikeProvider";
+import BaseOpenAILikeProvider, { IStreamCallback, IStreamEvent } from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
 import MODEL_CARDS from "@/utils/defaultModels";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
+import ToolsManager from "@/utils/ToolsManager";
 
 export type IOnDeviceStreamCallback = IGenieStreamCallback | ILlamaRnStreamCallback;
 export type OnDeviceProviderConstructorProps = { config: { model: string } }
@@ -140,11 +141,27 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
       return;
     }
 
+    const availableTools = await ToolsManager.injectAvailableTools();
     this.log(`Streaming ${this.model} with ${this.computeRuntime}`);
-    const fullResult = await this.submodule.streamGetChatCompletion(formattedMessages as any, (token: string) => onStream('chunk', token));
+    let fullResult = await this.submodule.streamGetChatCompletion(formattedMessages as any, (token: string) => onStream('chunk', token), availableTools);
+
+    // Recursive tool call loop
+    await ToolsManager.toolCallLoop({
+      currentResponse: fullResult,
+      runStreamCompletion: (messages: any[], callback: IOnDeviceStreamCallback, availableTools: any[]) => this.submodule.streamGetChatCompletion(messages, callback, availableTools),
+      streamEmitter: (event: IStreamEvent, data: any) => onStream(event, data),
+      currentMessageHistory: formattedMessages,
+    });
+
+    // Single tool call loop
+    // If the model supports tool calls we can delegate the execution to the ToolsManager
+    // if (fullResult.toolCalls) {
+    //   const toolCallCompletedMessages = await ToolsManager.manageToolCallExecutions(fullResult.toolCalls, onStream, formattedMessages);
+    //   fullResult = await this.submodule.streamGetChatCompletion(toolCallCompletedMessages as any, (token: string) => onStream('chunk', token), await ToolsManager.injectAvailableTools());
+    // }
 
     if (!!fullResult.metrics) onStream('report_metrics', fullResult.metrics);
-    if (!!citations) onStream('report_citations', citations);
+    if (!!citations) onStream('report_citations', citations); // Reports document citations - will be merged
     onStream('complete', '');
   }
 }

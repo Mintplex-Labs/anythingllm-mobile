@@ -4,7 +4,7 @@ import uiStore from "@/store/UIStore";
 
 export default function CitationsContainer({ chat }: { chat: DynamicChatMessage }) {
     const citations = chat.response?.citations;
-    if (!citations?.length) return null;
+    if (!citations?.length || chat.isLoading) return null;
 
     return (
         <TouchableOpacity

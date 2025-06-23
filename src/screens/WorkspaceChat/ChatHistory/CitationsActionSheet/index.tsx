@@ -59,11 +59,11 @@ export default function CitationsActionSheet() {
                     <Text className='text-white text-lg font-medium'>Citations</Text>
                 </View>
                 <View style={{ gap: 24 }} className='flex flex-col items-start justify-between'>
-                    {focusedCitations.map((citation) => {
+                    {focusedCitations.map((citation, index) => {
                         const Component = CITATION_COMPONENT[citation.type];
                         if (!Component) return null;
                         // @ts-ignore
-                        return <Component key={citation.type} citation={citation} />
+                        return <Component key={`${citation.type}-${index}`} citation={citation} />
                     })}
                 </View>
             </ScrollView>
@@ -89,12 +89,15 @@ function DocumentCitation({ citation }: { citation: IDocumentCitation }) {
 function WebSearchCitation({ citation }: { citation: IAgentWebSearchCitation }) {
     return (
         <TouchableOpacity onPress={() => Linking.openURL(citation.reference.url)} className='flex flex-col items-start justify-between w-full' style={{ gap: 12 }}>
-            <View className='flex flex-row items-center justify-between w-full'>
-                <View className='flex flex-row items-center' style={{ gap: 4 }}>
-                    <Globe size={18} color="#7cd4fd" />
-                    <Text className='text-white text-lg font-semibold'>{getOrigin(citation.reference.url)}</Text>
-                    <ArrowSquareOut size={18} color="#888" />
+            <View className='flex flex-col' style={{ gap: 2 }}>
+                <View className='flex flex-row items-center justify-between w-full'>
+                    <View className='flex flex-row items-center' style={{ gap: 4, maxWidth: '95%' }}>
+                        <Globe size={18} color="#7cd4fd" />
+                        <Text className='text-white text-lg font-semibold' numberOfLines={1} ellipsizeMode="tail">{citation.reference.title || getOrigin(citation.reference.url)}</Text>
+                        <ArrowSquareOut size={18} color="#888" />
+                    </View>
                 </View>
+                <Text style={{ color: '#9F9FA0', opacity: 0.7 }} className="text-xs">{citation.reference.url}</Text>
             </View>
             <Text style={{ color: '#9F9FA0' }} className="">{citation.reference.content}</Text>
         </TouchableOpacity>

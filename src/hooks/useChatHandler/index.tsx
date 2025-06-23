@@ -1,10 +1,10 @@
-import WorkspaceThread, { type WorkspaceThreadType } from "@/database/models/WorkspaceThread";
+import { type WorkspaceThreadType } from "@/database/models/WorkspaceThread";
 import { type WorkspaceType } from "@/database/models/Workspace";
 import { type LLMProvider } from "@/utils/AiProviders";
 import { useState, useMemo, useEffect, createContext, useContext, useCallback, useRef } from "react";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import uiStore from "@/store/UIStore";
-import WorkspaceChat, { IDocumentCitation } from "@/database/models/WorkspaceChat";
+import WorkspaceChat, { IAgentToolCall, IChatCitation } from "@/database/models/WorkspaceChat";
 import { merge } from 'lodash';
 import { ICompleteResponse, IStreamEvent, IStreamResponse } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { parseStreamingChunksToResponse } from "./parser";
@@ -142,37 +142,6 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         uiStore.emitter.emit(CHAT_HANDLER_EVENTS.NEW_CHAT_STARTED, { uuid: chat.uuid as string, chat: chat });
     }, []);
 
-    const _handleStreamEvent = useCallback((accumulator: string, newChat: DynamicChatMessage, event: IStreamEvent, data: IStreamResponse) => {
-        let emitUpdate = false;
-        switch (event) {
-            case 'abort':
-                throw new Error('Chat aborted');
-            case 'complete':
-                debug('Chat stream complete');
-                break;
-            case 'report_metrics':
-                debug('Report metrics', data);
-                merge(newChat, { response: { metrics: data as ICompleteResponse['metrics'] } });
-                break;
-            case 'report_citations':
-                debug('Report citations', data);
-                merge(newChat, { response: { citations: data as IDocumentCitation[] } });
-                emitUpdate = true;
-                break;
-            case 'chunk':
-                const parsed = parseStreamingChunksToResponse(event, accumulator, data as string);
-                accumulator += data;
-                if (!parsed) return debug('No parsable content - skipping');
-                merge(newChat, { response: { textResponse: parsed.textResponse, thoughts: parsed.reasoningContent } });
-                emitUpdate = true;
-                break;
-            default:
-                debug('Unhandled stream event', event, data);
-        }
-        if (emitUpdate) uiStore.emitter.emit(CHAT_HANDLER_EVENTS.UPDATE_CHAT, { uuid: newChat.uuid as string, chat: newChat });
-        return;
-    }, []);
-
     /**
      * Process a chat and add it to the chat history
      * as well as kick off the LLM inference
@@ -195,6 +164,8 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                         throw new Error('Chat aborted');
                     case 'complete':
                         debug('Chat stream complete');
+                        merge(newChat, { isLoading: false });
+                        emitUpdate = true;
                         break;
                     case 'report_metrics':
                         debug('Report metrics', data);
@@ -202,14 +173,47 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                         break;
                     case 'report_citations':
                         debug('Report citations', data);
-                        merge(newChat, { response: { citations: data as IDocumentCitation[] } });
+                        const citations = newChat.response?.citations || [];
+                        for (const citation of data as IChatCitation[]) citations.push(citation);
+                        merge(newChat, { response: { citations } });
+                        emitUpdate = true;
+                        break;
+                    case 'will_call_tools':
+                        // moves existing thoughts to the current thought chain so thoughts are cleared
+                        // nullifies the text response as it is not valid anymore
+                        debug('Will call tool', data);
+                        merge(newChat, {
+                            response: {
+                                currentThoughtChain: [...(newChat.response?.thoughts || [])],
+                                thoughts: [],
+                                toolCalls: [],
+                                textResponse: '',
+                            }
+                        });
+                        accumulator = '';
+                        emitUpdate = true;
+                        break;
+                    case 'report_tool_call':
+                        merge(newChat, { response: { toolCalls: [...(newChat.response?.toolCalls || []), data] } });
+                        emitUpdate = true;
+                        break;
+                    case 'report_tool_call_result':
+                        const toolCallResult = data as IAgentToolCall;
+                        if (!newChat.response?.toolCalls) return;
+
+                        const existingToolCall = newChat.response?.toolCalls.find(t => t.uuid === toolCallResult.uuid);
+                        if (!existingToolCall) return;
+
+                        debug('Updating tool call result', toolCallResult.uuid);
+                        existingToolCall.result = toolCallResult.result;
+                        merge(newChat, { response: { toolCalls: newChat.response?.toolCalls } });
                         emitUpdate = true;
                         break;
                     case 'chunk':
                         const parsed = parseStreamingChunksToResponse(event, accumulator, data as string);
                         accumulator += data;
                         if (!parsed) return debug('No parsable content - skipping');
-                        merge(newChat, { response: { textResponse: parsed.textResponse, thoughts: parsed.reasoningContent } });
+                        merge(newChat, { response: { textResponse: parsed.textResponse, thoughts: [...(newChat.response?.currentThoughtChain || []), parsed.reasoningContent] } });
                         emitUpdate = true;
                         break;
                     default:

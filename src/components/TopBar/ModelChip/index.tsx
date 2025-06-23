@@ -154,9 +154,10 @@ function AvailableModels({ closeSheet }: { closeSheet: () => void }) {
                         return (
                             <Fragment>
                                 {seenAllPresets === 1 && (
-                                    <View style={{ paddingVertical: 20, position: 'relative' }} className='flex flex-row items-center justify-center w-full'>
-                                        <View style={{ height: 1, opacity: 0.5, backgroundColor: '#9F9FA0', borderRadius: 100, zIndex: 1 }} className='absolute flex flex-1 w-full' />
-                                        <Text style={{ fontSize: 12, color: '#9F9FA0', backgroundColor: '#1B1B1E', paddingHorizontal: 10, zIndex: 2 }} className='text-white text-sm'>Additional LLMs</Text>
+                                    <View style={{ paddingVertical: 10, position: 'relative', opacity: 0.75 }} className="w-full flex flex-row items-center justify-center w-full">
+                                        <View style={{ height: 1, backgroundColor: '#9F9FA0', borderRadius: 100, }} className='flex flex-1 w-full' />
+                                        <Text style={{ fontSize: 12, color: '#9F9FA0', paddingHorizontal: 10, zIndex: 2 }} className='text-white text-sm'>Additional LLMs</Text>
+                                        <View style={{ height: 1, backgroundColor: '#9F9FA0', borderRadius: 100, }} className='flex flex-1 w-full' />
                                     </View>
                                 )}
                                 <TouchableOpacity

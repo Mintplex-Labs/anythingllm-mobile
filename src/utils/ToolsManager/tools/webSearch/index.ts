@@ -127,7 +127,6 @@ export default {
 
         const webSearchCitations: IAgentWebSearchCitation[] = [];
         for (const result of data) {
-            debugger
             webSearchCitations.push({
                 type: 'web-search',
                 reference: {

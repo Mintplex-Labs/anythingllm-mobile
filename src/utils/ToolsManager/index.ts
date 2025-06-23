@@ -3,6 +3,7 @@ import { NativeCompletionResult } from "llama.rn";
 import { generateUUID } from "../constants";
 import { IStreamEvent } from "../AiProviders/baseOpenAILikeProvider";
 import Tools from './tools';
+import { safeJsonParse } from "../formatters";
 
 type ToolManagerTool = {
     /** Definition of the tool - this can be used to generate a tool call */
@@ -107,7 +108,12 @@ class ToolsManager {
     private _generateToolCallSignature(toolCall: NativeCompletionResult['tool_calls'][number]) {
         const { name, arguments: args } = toolCall.function;
         if (!name) return '';
-        if (Object.keys(args).length > 0 && args !== "{}") return `${name}(${JSON.stringify(args)})`;
+        if (Object.keys(args).length > 0 && args !== "{}") {
+            const parsedArgs = safeJsonParse(args, null);
+            if (!parsedArgs) return `${name}(${JSON.stringify(args)})`;
+            const argsString = Object.entries(parsedArgs).map(([key, value]) => `${key}: ${value}`).join(', ');
+            return `${name}(${argsString})`;
+        }
         else return `${name}()`;
     }
 

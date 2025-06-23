@@ -1,4 +1,4 @@
-import { ActivityIndicator, Text, View, ViewStyle } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import { BASE_MESSAGE_STYLES } from "./styles";
 import ThinkingContainer from "./ThinkingContainer";
@@ -6,6 +6,8 @@ import ToolCallContainer from "./ToolCallContainer";
 import CitationsContainer from "./Citations";
 import { Warning } from "phosphor-react-native";
 import useChatListeners from "./useChatListeners";
+import Markdown, { MarkdownIt } from 'react-native-markdown-display';
+MarkdownIt({ typographer: true, linkify: true });
 
 function hasNothingToShow(chat: DynamicChatMessage): boolean {
     if (!chat.isLoading) return false;
@@ -61,9 +63,10 @@ function TextResponseContainer({ chat }: { chat: DynamicChatMessage }) {
 
     return (
         <View className="flex flex-row items-start w-full justify-start">
-            <View className="rounded-lg" style={[BASE_MESSAGE_STYLES, { maxWidth: '100%' }]}>
-                <Text>{chat.response?.textResponse}</Text>
-            </View>
+            {/* <View className="rounded-lg" style={[BASE_MESSAGE_STYLES, { maxWidth: '100%' }]}> */}
+            {/* <Text>{chat.response?.textResponse}</Text> */}
+            <Markdown>{chat.response?.textResponse}</Markdown>
+            {/* </View> */}
         </View>
     )
 }

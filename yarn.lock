@@ -2915,6 +2915,11 @@ acorn@^8.8.2, acorn@^8.9.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.14.0.tgz#063e2c70cac5fb4f6467f0b11152e04c682795b0"
   integrity sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==
 
+add@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/add/-/add-2.0.6.tgz#248f0a9f6e5a528ef2295dbeec30532130ae2235"
+  integrity sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==
+
 ajv@^6.12.4:
   version "6.12.6"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.6.tgz#baf5a62e802b07d977034586f8c3baf5adf26df4"
@@ -4251,6 +4256,11 @@ entities@^4.2.0, entities@^4.4.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/entities/-/entities-4.5.0.tgz#5d268ea5e7113ec74c4d033b79ea5a35a488fb48"
   integrity sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==
+
+entities@~2.0.0:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/entities/-/entities-2.0.3.tgz#5c487e5742ab93c15abb5da22759b8590ec03b7f"
+  integrity sha512-MyoZ0jgnLvB2X3Lg5HqpFmn1kybDiIfEQmKzTb5apr51Rb+T3KdmMiqa70T+bhGnyv7bQ6WMj2QMHpGMmlrUYQ==
 
 env-paths@^2.2.1:
   version "2.2.1"
@@ -6338,6 +6348,13 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
+linkify-it@^2.0.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/linkify-it/-/linkify-it-2.2.0.tgz#e3b54697e78bf915c70a38acd78fd09e0058b1cf"
+  integrity sha512-GnAl/knGn+i1U/wjBz3akz2stz+HrHLsxMwHQGofCDfPvlf+gDKN58UtfmUquTY4/MXeE2x7k19KQmeoZi94Iw==
+  dependencies:
+    uc.micro "^1.0.1"
+
 llama.rn@^0.5.11:
   version "0.5.11"
   resolved "https://registry.yarnpkg.com/llama.rn/-/llama.rn-0.5.11.tgz#e77b45d0ca0d6fda1fc2e080a4d7e54442467fed"
@@ -6512,6 +6529,17 @@ makeerror@1.0.12:
   dependencies:
     tmpl "1.0.5"
 
+markdown-it@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-10.0.0.tgz#abfc64f141b1722d663402044e43927f1f50a8dc"
+  integrity sha512-YWOP1j7UbDNz+TumYP1kpwnP0aEa711cJjrAQrzd0UXlbJfc5aAq0F/PZHjiioqDC1NKgvIMX+o+9Bk7yuM2dg==
+  dependencies:
+    argparse "^1.0.7"
+    entities "~2.0.0"
+    linkify-it "^2.0.0"
+    mdurl "^1.0.1"
+    uc.micro "^1.0.5"
+
 marked@5.0.5:
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/marked/-/marked-5.0.5.tgz#1c7bd284d7d29d7d75d6241b26e5d5bf3b558a12"
@@ -6536,6 +6564,11 @@ mdn-data@2.0.30:
   version "2.0.30"
   resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.30.tgz#ce4df6f80af6cfbe218ecd5c552ba13c4dfa08cc"
   integrity sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==
+
+mdurl@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
+  integrity sha512-/sKlQJCBYVY9Ers9hqzKou4H6V5UWc/M59TH2dvkt+84itfnq7uFOMLpOiOS4ujvHP4etln18fmIxA5R5fll0g==
 
 memoize-one@^5.0.0:
   version "5.2.1"
@@ -7580,7 +7613,7 @@ prompts@^2.0.1, prompts@^2.4.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.5.7, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.7.x, prop-types@^15.8.1:
+prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.7.x, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -7719,6 +7752,13 @@ react-native-dotenv@^3.4.11:
   dependencies:
     dotenv "^16.4.5"
 
+react-native-fit-image@^1.5.5:
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/react-native-fit-image/-/react-native-fit-image-1.5.5.tgz#c660d1ad74b9dcaa1cba27a0d9c23837e000226c"
+  integrity sha512-Wl3Vq2DQzxgsWKuW4USfck9zS7YzhvLNPpkwUUCF90bL32e1a0zOVQ3WsJILJOwzmPdHfzZmWasiiAUNBkhNkg==
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-gesture-handler@^2.20.2:
   version "2.21.2"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.21.2.tgz#824a098d7397212fbe51aa3a9df84833a4ea1c3f"
@@ -7772,6 +7812,16 @@ react-native-linear-gradient@^2.8.3:
   version "2.8.3"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz#9a116649f86d74747304ee13db325e20b21e564f"
   integrity sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==
+
+react-native-markdown-display@^7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-markdown-display/-/react-native-markdown-display-7.0.2.tgz#b6584cec8d6670c0141fb8780bc2f0710188a4c2"
+  integrity sha512-Mn4wotMvMfLAwbX/huMLt202W5DsdpMO/kblk+6eUs55S57VVNni1gzZCh5qpznYLjIQELNh50VIozEfY6fvaQ==
+  dependencies:
+    css-to-react-native "^3.0.0"
+    markdown-it "^10.0.0"
+    prop-types "^15.7.2"
+    react-native-fit-image "^1.5.5"
 
 react-native-marked@^6.0.4:
   version "6.0.5"
@@ -9031,6 +9081,11 @@ typescript@5.0.4:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.4.tgz#b217fd20119bd61a94d4011274e0ab369058da3b"
   integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
 
+uc.micro@^1.0.1, uc.micro@^1.0.5:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.6.tgz#9c411a802a409a91fc6cf74081baba34b24499ac"
+  integrity sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==
+
 unbox-primitive@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/unbox-primitive/-/unbox-primitive-1.0.2.tgz#29032021057d5e6cdbd08c5129c226dff8ed6f9e"
@@ -9438,6 +9493,11 @@ yargs@^17.0.0, yargs@^17.3.1, yargs@^17.6.2:
     string-width "^4.2.3"
     y18n "^5.0.5"
     yargs-parser "^21.1.1"
+
+yarn@^1.22.22:
+  version "1.22.22"
+  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.22.22.tgz#ac34549e6aa8e7ead463a7407e1c7390f61a6610"
+  integrity sha512-prL3kGtyG7o9Z9Sv8IPfBNrWTDmXB4Qbes8A9rEzt6wkJV8mUvoirjU0Mp3GGAU06Y0XQyA3/2/RQFVuK7MTfg==
 
 yocto-queue@^0.1.0:
   version "0.1.0"

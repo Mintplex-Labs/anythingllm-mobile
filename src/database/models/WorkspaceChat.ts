@@ -30,8 +30,37 @@ export type IAgentToolCall = {
   result: string;
 }
 
+export type IEmailAction = {
+  type: 'email';
+  action: {
+    title: string;
+    link: string;
+  }
+}
+
+export type ITextAction = {
+  type: 'sms';
+  action: {
+    title: string;
+    link: string;
+  }
+}
+
+export type ICalendarEventAction = {
+  type: 'calendar_event_creation';
+  action: {
+    beginTime: number;
+    endTime: number;
+    title: string;
+    eventLocation: string;
+    description: string;
+    allDay: boolean;
+  }
+}
+
 export type IAgentCitation = IAgentWebSearchCitation;
 export type IChatCitation = IDocumentCitation | IAgentCitation;
+export type IAgentAction = IEmailAction | ITextAction | ICalendarEventAction;
 export type WorkspaceChatResponseType = {
   textResponse: string;
   thoughts: string[];
@@ -40,6 +69,7 @@ export type WorkspaceChatResponseType = {
   attachments: any[]; // This would be IMAGES, not files - which are embedded on upload
   citations: IChatCitation[];
   currentThoughtChain?: string[];
+  actions: IAgentAction[];
   isLoading?: boolean;
 }
 
@@ -156,6 +186,7 @@ export default class WorkspaceChat extends Model {
         textResponse: '',
         thoughts: [],
         toolCalls: [],
+        actions: [],
         metrics: {
           prompt_tokens: 0,
           completion_tokens: 0,

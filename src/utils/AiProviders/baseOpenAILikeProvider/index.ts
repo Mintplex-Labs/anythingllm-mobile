@@ -54,8 +54,9 @@ export type IStreamEvent = 'chunk' |
   'report_metrics' |
   'will_call_tools' |
   'report_tool_call' |
-  'report_tool_call_result';
-export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[] | IAgentToolCall;
+  'report_tool_call_result' |
+  'report_action';
+export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[] | IAgentToolCall | IAgentAction;
 export type IStreamCallback = (
   event: IStreamEvent,
   response: IStreamResponse

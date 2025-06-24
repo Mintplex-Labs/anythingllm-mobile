@@ -2,7 +2,7 @@ import { screenDimensions } from "@/utils/constants";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { useChatHandlerContext } from "@/hooks/useChatHandler";
 
-const defaultMessages = ['Search the web for AnythingLLM and tell me the key features', 'Hello, how are you?', 'What is the transfomer model for AI?', 'Explain the tower of hanoi algorithm'];
+const defaultMessages = ['Create a calendar event for tomorrow at 10am in San Francisco', 'Hello, how are you?', 'What is the transfomer model for AI?', 'Explain the tower of hanoi algorithm'];
 export default function EmptyList({ height }: { height: number }) {
     return (
         <View style={{ height, gap: 14 }} className='flex flex-col items-center justify-center'>

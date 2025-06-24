@@ -15,6 +15,7 @@ import com.anythingllm.download.DownloadPackage
 import com.anythingllm.chatqnn.ChatQnnPackage
 import com.anythingllm.storage.StoragePackage
 import com.anythingllm.vector.VectorBoxPackage
+import com.anythingllm.webscraper.WebScraperPackage
 
 class MainApplication : Application(), ReactApplication {
 
@@ -30,6 +31,7 @@ class MainApplication : Application(), ReactApplication {
               add(ChatQnnPackage())
               add(StoragePackage())
               add(VectorBoxPackage())
+              add(WebScraperPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

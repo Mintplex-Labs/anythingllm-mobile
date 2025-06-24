@@ -8,7 +8,6 @@ import { type WorkspaceChatType } from "@/database/models/WorkspaceChat";
 import EmptyList, { EmptyListLoading } from "./EmptyList";
 import { CHAT_HANDLER_EVENTS, useChatHandlerContext } from "@/hooks/useChatHandler/index";
 import uiStore from "@/store/UIStore";
-import { Gesture, TapGestureHandler } from "react-native-gesture-handler";
 
 export interface DynamicChatMessage extends Partial<WorkspaceChatType> {
     type?: 'message' | 'error'

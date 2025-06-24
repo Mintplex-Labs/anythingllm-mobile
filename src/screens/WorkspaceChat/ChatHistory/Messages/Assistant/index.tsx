@@ -4,10 +4,10 @@ import { BASE_MESSAGE_STYLES } from "./styles";
 import ThinkingContainer from "./ThinkingContainer";
 import ToolCallContainer from "./ToolCallContainer";
 import CitationsContainer from "./Citations";
+import ActionsContainer from "./Actions";
 import { Warning } from "phosphor-react-native";
 import useChatListeners from "./useChatListeners";
-import Markdown, { MarkdownIt } from 'react-native-markdown-display';
-MarkdownIt({ typographer: true, linkify: true });
+import TextResponseContainer from "./TextResponse";
 
 function hasNothingToShow(chat: DynamicChatMessage): boolean {
     if (!chat.isLoading) return false;
@@ -28,6 +28,7 @@ export default function AssistantMessage(props: { chat: DynamicChatMessage }) {
             <ToolCallContainer chat={chat} autoClose={autoClose} />
             <ThinkingContainer chat={chat} autoClose={autoClose} />
             <TextResponseContainer chat={chat} />
+            <ActionsContainer chat={chat} />
             <CitationsContainer chat={chat} />
         </View>
     )
@@ -53,20 +54,6 @@ function ErrorContainer({ chat }: { chat: DynamicChatMessage }) {
                 <Warning size={18} color="#F97066" />
                 <Text style={{ color: '#F97066' }} className="text-lg">{chat.response?.textResponse}</Text>
             </View>
-        </View>
-    )
-}
-
-function TextResponseContainer({ chat }: { chat: DynamicChatMessage }) {
-    const textResponse = chat.response?.textResponse;
-    if (!textResponse) return null;
-
-    return (
-        <View className="flex flex-row items-start w-full justify-start">
-            {/* <View className="rounded-lg" style={[BASE_MESSAGE_STYLES, { maxWidth: '100%' }]}> */}
-            {/* <Text>{chat.response?.textResponse}</Text> */}
-            <Markdown>{chat.response?.textResponse}</Markdown>
-            {/* </View> */}
         </View>
     )
 }

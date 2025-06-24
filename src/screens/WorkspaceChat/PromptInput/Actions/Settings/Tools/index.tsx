@@ -94,26 +94,3 @@ export function ToolsActionButton() {
 
     );
 }
-
-/**
- * Notes on actions
-   'mailto:your@address.com?subject=Test&body=Test' - opens the email app
-   'sms:user?body=make%20an%20appointment' - opens the sms app
-   'linkedin://profile/prakashiyerleadershipcoach' - opens the linkedin app
-
-  'content://com.android.calendar/time' - opens the calendar app
-   Create event:
-    IntentLauncher.startActivity({
-    action: IntentConstant.ACTION_INSERT,
-    data: 'content://com.android.calendar/events',
-    category: IntentConstant.CATEGORY_DEFAULT,
-    extra: {
-        beginTime: startTime.getTime(),
-        endTime: endTime.getTime(),
-        title: 'Sample Event',
-        eventLocation: 'Test',
-        description: 'Test'
-    }
-})
-
-*/

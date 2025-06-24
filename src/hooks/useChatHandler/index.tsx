@@ -4,12 +4,13 @@ import { type LLMProvider } from "@/utils/AiProviders";
 import { useState, useMemo, useEffect, createContext, useContext, useCallback, useRef } from "react";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import uiStore from "@/store/UIStore";
-import WorkspaceChat, { IAgentToolCall, IChatCitation } from "@/database/models/WorkspaceChat";
+import WorkspaceChat, { IAgentAction, IAgentToolCall, IChatCitation } from "@/database/models/WorkspaceChat";
 import { merge } from 'lodash';
 import { ICompleteResponse, IStreamEvent, IStreamResponse } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { parseStreamingChunksToResponse } from "./parser";
 import { activateKeepAwake, deactivateKeepAwake } from "@/utils/keepAwake";
 import { Keyboard } from "react-native";
+import webscraper from "@/utils/ToolsManager/tools/webScraping/webscraper";
 
 const SHOW_DEBUG_LOGS = true;
 
@@ -180,6 +181,13 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                         const citations = newChat.response?.citations || [];
                         for (const citation of data as IChatCitation[]) citations.push(citation);
                         merge(newChat, { response: { citations } });
+                        emitUpdate = true;
+                        break;
+                    case 'report_action':
+                        debug('Report action', data);
+                        const actions = newChat.response?.actions || [];
+                        actions.push(data as IAgentAction);
+                        merge(newChat, { response: { actions } });
                         emitUpdate = true;
                         break;
                     case 'will_call_tools':

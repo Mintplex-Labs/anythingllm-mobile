@@ -39,23 +39,12 @@ class ToolsManager {
 
     configurableTools = [
         Tools.default.webSearch,
+        Tools.default.webScraping,
         Tools.default.getCurrentTime,
         Tools.default.getLocation,
         Tools.appConnections.draftEmail,
-        // {
-        //     id: 'draftText',
-        //     name: 'Draft Text',
-        //     description: 'Draft a text message for the user',
-        //     defaultEnabled: false,
-        //     category: 'appConnections',
-        // },
-        // {
-        //     id: 'calendarEventCreation',
-        //     name: 'Calendar Event Creation',
-        //     description: 'Create a calendar event for the user',
-        //     defaultEnabled: false,
-        //     category: 'appConnections',
-        // },
+        Tools.appConnections.draftText,
+        Tools.appConnections.calendarEventCreation,
     ]
 
     log = (text: string, ...args: any[]) => {

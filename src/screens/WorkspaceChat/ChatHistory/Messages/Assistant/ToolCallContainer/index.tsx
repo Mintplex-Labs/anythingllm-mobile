@@ -3,6 +3,7 @@ import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import { useState, useEffect } from "react";
 import { Hammer } from "phosphor-react-native";
 import { BASE_MESSAGE_STYLES } from "../styles";
+import { IAgentToolCall } from "@/database/models/WorkspaceChat";
 
 const TOOL_CALL_STYLES: Record<string, ViewStyle & TextStyle> = {
     loading: {
@@ -59,25 +60,29 @@ export default function ToolCallContainer({ chat, autoClose }: { chat: DynamicCh
     return (
         <TouchableOpacity onPress={() => setIsExpanded(false)} className="flex flex-row items-start w-full justify-start">
             <View className="rounded-lg w-full flex flex-col" style={[TOOL_CALL_STYLES[chat.isLoading ? 'loading' : 'completed'], { gap: 5 }]}>
-                {toolCalls.map((toolCall, index) => (
-                    <View key={index} className="flex flex-row items-center justify-between w-full">
-                        {toolCall.result && (
-                            <View className="flex flex-col justify-start items-start">
-                                <Text style={[TOOL_CALL_STYLES.text]} className="font-semibold">{toolCall.signature}</Text>
-                                <Text style={[TOOL_CALL_STYLES.text, { paddingLeft: 10, borderLeftWidth: 2, borderLeftColor: 'rgba(178,221,255,0.4)' }]}>{toolCall.result}</Text>
-                            </View>
-                        )}
-                        {!toolCall.result && (
-                            <View className="flex flex-row items-center gap-2">
-                                {/* @ts-ignore */}
-                                <ActivityIndicator size='small' color={TOOL_CALL_STYLES.text.color} />
-                                <Text style={[TOOL_CALL_STYLES.text]} className="font-semibold">{toolCall.signature}:</Text>
-                                <Text style={[TOOL_CALL_STYLES.text, { fontStyle: 'italic' }]}>running agent...</Text>
-                            </View>
-                        )}
-                    </View>
-                ))}
+                {toolCalls.map((toolCall, index) => <RenderExpandedToolCall key={index} toolCall={toolCall} />)}
             </View>
         </TouchableOpacity>
+    )
+}
+
+function RenderExpandedToolCall({ toolCall }: { toolCall: IAgentToolCall }) {
+    return (
+        <View className="flex flex-row items-center justify-between w-full">
+            {toolCall.result && (
+                <View className="flex flex-col justify-start items-start">
+                    <Text style={[TOOL_CALL_STYLES.text]}>{toolCall.signature}</Text>
+                    <Text style={[TOOL_CALL_STYLES.text, { paddingLeft: 10, borderLeftWidth: 2, borderLeftColor: 'rgba(178,221,255,0.4)' }]}>{toolCall.result}</Text>
+                </View>
+            )}
+            {!toolCall.result && (
+                <View className="flex flex-row items-center gap-2">
+                    {/* @ts-ignore */}
+                    <ActivityIndicator size='small' color={TOOL_CALL_STYLES.text.color} />
+                    <Text style={[TOOL_CALL_STYLES.text]} className="font-semibold">{toolCall.signature}:</Text>
+                    <Text style={[TOOL_CALL_STYLES.text, { fontStyle: 'italic' }]}>running agent...</Text>
+                </View>
+            )}
+        </View>
     )
 }

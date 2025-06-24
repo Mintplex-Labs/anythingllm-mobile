@@ -1,6 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
-import {database, databaseTables} from '@/database';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { database, databaseTables } from '@/database';
+import uiStore from '@/store/UIStore';
+import { showToast } from '@/utils/Notification';
 
 // Define the collections we want to inspect
 const COLLECTIONS = databaseTables;
@@ -15,7 +17,7 @@ const DatabaseInspectorView = () => {
 
   // Load data for all collections
   const loadAllCollections = async () => {
-    const data: {[key: string]: Array<any>} = {};
+    const data: { [key: string]: Array<any> } = {};
 
     for (const collectionName of COLLECTIONS) {
       try {
@@ -23,7 +25,7 @@ const DatabaseInspectorView = () => {
           .get(collectionName)
           .query()
           .fetch();
-        data[collectionName] = records.map(record => ({...record._raw}));
+        data[collectionName] = records.map(record => ({ ...record._raw }));
       } catch (error) {
         console.error(`Error fetching ${collectionName}:`, error);
         data[collectionName] = [];
@@ -142,8 +144,8 @@ const DatabaseInspectorView = () => {
         </View>
         <ScrollView
           nestedScrollEnabled={true}
-          style={{maxHeight: 400}}
-          contentContainerStyle={{paddingBottom: 8}}>
+          style={{ maxHeight: 400 }}
+          contentContainerStyle={{ paddingBottom: 8 }}>
           {Object.entries(selectedRecord).map(([key, value]) => (
             <View key={key} className="p-4 mb-2 bg-[--primary-bg] rounded-lg">
               <Text className="text-[#B2DDFF] font-medium mb-1">{key}</Text>
@@ -170,7 +172,7 @@ const DatabaseInspectorView = () => {
               }`}>
               <Text
                 className={hasPrevious ? 'text-[--dark]' : 'text-[#6c757d]'}
-                style={{fontWeight: '600'}}>
+                style={{ fontWeight: '600' }}>
                 Previous
               </Text>
             </TouchableOpacity>
@@ -182,7 +184,7 @@ const DatabaseInspectorView = () => {
               }`}>
               <Text
                 className={hasNext ? 'text-[--dark]' : 'text-[#6c757d]'}
-                style={{fontWeight: '600'}}>
+                style={{ fontWeight: '600' }}>
                 Next
               </Text>
             </TouchableOpacity>
@@ -201,21 +203,35 @@ const DatabaseInspectorView = () => {
         : renderCollectionList()}
 
       {!selectedRecord && !selectedCollection && (
-        <TouchableOpacity
-          className="bg-red-500 rounded-lg p-4 shadow-sm"
-          onPress={async () => {
-            await database.write(async () => {
-              const collections = Object.values(database.collections.map);
-              for (const collection of collections) {
-                await collection.query().destroyAllPermanently();
-              }
-            });
-            loadAllCollections();
-          }}>
-          <Text className="text-white text-center font-bold">
-            Reset Database
-          </Text>
-        </TouchableOpacity>
+        <View className="flex flex-row gap-x-4">
+          <TouchableOpacity
+            className="flex-1 bg-red-500 rounded-lg p-4 shadow-sm"
+            onPress={async () => {
+              await database.write(async () => {
+                const collections = Object.values(database.collections.map);
+                for (const collection of collections) {
+                  await collection.query().destroyAllPermanently();
+                }
+              });
+              loadAllCollections();
+              showToast('Database has been reset');
+            }}>
+            <Text className="text-white text-center font-bold">
+              Reset Database
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            className="flex-1 bg-blue-500 rounded-lg p-4 shadow-sm"
+            onPress={() => {
+              uiStore.resetAllStorage();
+              showToast('Onboarding has been reset');
+            }}>
+            <Text className="text-white text-center font-bold">
+              Reset Onboarding
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );

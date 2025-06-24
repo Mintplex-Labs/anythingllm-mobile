@@ -1,18 +1,19 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import uiStore from '@/store/UIStore';
+import { showToast } from '@/utils/Notification';
 
 export default function LLMManagerView() {
   const [llmpref, setLlmPref] = useState<{
     provider: string;
-    config: {model: string};
+    config: { model: string };
   } | null>(null);
 
   useEffect(() => {
     uiStore
       .getFromStorage('llmPreference', {
         provider: 'openai',
-        config: {model: 'gpt-4'},
+        config: { model: 'gpt-4' },
       })
       .then(value => {
         setLlmPref(value);
@@ -33,7 +34,7 @@ export default function LLMManagerView() {
             className="p-4 rounded-lg bg-[--primary-bg] text-white border-none"
             value={llmpref?.provider}
             onChangeText={(text: string) =>
-              setLlmPref(prev => (prev ? {...prev, provider: text} : null))
+              setLlmPref(prev => (prev ? { ...prev, provider: text } : null))
             }
           />
         </View>
@@ -47,7 +48,9 @@ export default function LLMManagerView() {
             value={llmpref?.config?.model}
             onChangeText={(text: string) =>
               setLlmPref(prev =>
-                prev ? {...prev, config: {...prev.config, model: text}} : null,
+                prev
+                  ? { ...prev, config: { ...prev.config, model: text } }
+                  : null,
               )
             }
           />
@@ -55,9 +58,12 @@ export default function LLMManagerView() {
 
         <TouchableOpacity
           className="bg-[--cta-light-blue] rounded-lg p-4 mt-2"
-          onPress={() =>
-            llmpref && uiStore.setToStorage('llmPreference', llmpref)
-          }>
+          onPress={() => {
+            if (llmpref) {
+              uiStore.setToStorage('llmPreference', llmpref);
+              showToast('LLM configuration saved');
+            }
+          }}>
           <Text className="text-[--dark] font-bold text-center">
             Save Configuration
           </Text>

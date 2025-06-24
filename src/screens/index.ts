@@ -4,6 +4,8 @@ import OnboardingSurvey from "./Onboarding/Survey";
 import OnboardingDataHandling from "./Onboarding/DataHandling";
 
 import Home from "./Home";
+import UserSettings from "./UserSettings";
+
 import WorkspaceChat from "./WorkspaceChat";
 import WorkspaceSettings from "./WorkspaceSettings";
 
@@ -19,5 +21,6 @@ export default {
   WorkspaceChat,
   WorkspaceSettings,
 
+  UserSettings,
   DevToolsDatabaseInspector,
 };

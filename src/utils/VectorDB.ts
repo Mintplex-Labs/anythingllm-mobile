@@ -25,6 +25,7 @@ interface VectorBoxInterface {
     resetVectorsForWorkspace(workspaceSlug: string): Promise<boolean>;
     semanticSearch(workspaceSlug: string, queryVector: number[], topN: number): Promise<{ id: number, metadata: string, score: number }[]>;
     deleteVectorsByIds(ids: number[]): Promise<boolean>;
+    reset(): Promise<boolean>;
 }
 
 /**
@@ -133,6 +134,15 @@ class VectorDB {
     async deleteVectorsByIds(ids: number[]): Promise<boolean> {
         try {
             return await this.vectorBox.deleteVectorsByIds(ids);
+        } catch (error) {
+            console.error('Error deleting vectors:', error);
+            throw error;
+        }
+    }
+
+    async reset() {
+        try {
+            return this.vectorBox.reset();
         } catch (error) {
             console.error('Error deleting vectors:', error);
             throw error;

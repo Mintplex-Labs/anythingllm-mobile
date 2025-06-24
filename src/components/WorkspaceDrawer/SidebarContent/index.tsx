@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, Linking, Text, NativeEventEmitter, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, TouchableOpacity, Text, RefreshControl, ActivityIndicator } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   DrawerContentScrollView,
@@ -11,13 +11,26 @@ import NewWorkspaceModal, { useNewWorkspaceModal } from '@/components/NewWorkspa
 import SafeView from '@/components/SafeView';
 import { useDrawerStatus } from '@react-navigation/drawer';
 import { BOTTOM_SHEET_NAMES, useBottomSheet } from '@/contexts/BottomSheetContext';
+import { PATHS } from '@/utils/paths';
+import uiStore from '@/store/UIStore';
 
-export default function SidebarContent() {
+export default function SidebarContent({ navigation }: { navigation: any }) {
   const drawerStatus = useDrawerStatus();
   const { presentSheet, dismissAllSheets } = useBottomSheet();
   const { loadingWorkspaces, workspaces, activeWorkspaceSlug, activeThreadSlug, fetchWorkspaces } = useWorkspaces(true);
   const { showNewWorkspaceModal, openNewWorkspaceModal, closeNewWorkspaceModal } = useNewWorkspaceModal();
   const [refreshing, setRefreshing] = useState(false);
+
+  const goToUserSettings = () => {
+    uiStore.emitter.emit(uiStore.globalEvents.REDIRECT, {
+      path: PATHS.user_settings,
+    });
+    navigation.reset({
+      index: 0,
+      // @ts-ignore
+      routes: [{ name: PATHS.user_settings }],
+    });
+  }
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
@@ -40,7 +53,7 @@ export default function SidebarContent() {
           {/* Topbar */}
           <View className='flex flex-row items-center justify-between pt-[20px] w-full p-[16px] border-b border-[--hex-gray-8] shrink-0'>
             <Text className='text-2xl font-semibold text-white'>Workspaces</Text>
-            <TouchableOpacity activeOpacity={0.6} onPress={() => null}>
+            <TouchableOpacity activeOpacity={0.6} onPress={goToUserSettings}>
               <Gear size={30} color='#FFF' />
             </TouchableOpacity>
           </View>

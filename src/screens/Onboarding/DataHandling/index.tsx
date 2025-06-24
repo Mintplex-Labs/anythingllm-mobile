@@ -7,7 +7,7 @@ import { PATHS } from "@/utils/paths";
 import { useNavigation } from "@react-navigation/native";
 import useLlmPreference from "@/hooks/useLLMPreference";
 import { AVAILABLE_LLM_PROVIDERS } from "@/utils/llmproviders";
-import { FileDashed, FileMagnifyingGlass, FileText, Robot, Sparkle } from "phosphor-react-native";
+import { FileDashed, Sparkle } from "phosphor-react-native";
 import Workspace from "@/database/models/Workspace";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { EMBEDDING_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";

@@ -153,4 +153,14 @@ export default class WorkspaceThread extends Model {
       return false;
     }
   }
+
+  static async deleteAll() {
+    const threads = await this.get();
+    if (!threads || threads.length === 0) return true;
+    await database.write(async () => {
+      this.log(`deleting ${threads.length} threads`);
+      await database.batch(threads.map((thread) => thread.prepareMarkAsDeleted()));
+    });
+    return true;
+  }
 }

@@ -236,4 +236,14 @@ export default class Workspace extends Model {
       return false;
     }
   }
+
+  static async deleteAll() {
+    const workspaces = await this.get();
+    if (!workspaces || workspaces.length === 0) return true;
+    await database.write(async () => {
+      this.log(`deleting ${workspaces.length} workspaces`);
+      await database.batch(workspaces.map((ws) => ws.prepareMarkAsDeleted()));
+    });
+    return true;
+  }
 }

@@ -201,4 +201,14 @@ export default class WorkspaceChat extends Model {
       isLoading: true,
     };
   }
+
+  static async deleteAll() {
+    const chats = await database.get(WorkspaceChat.table).query().fetch() as (Model & WorkspaceChatType)[];
+    if (!chats || chats.length === 0) return true;
+    await database.write(async () => {
+      this.log(`deleting ${chats.length} chats`);
+      await database.batch(chats.map((chat) => chat.prepareMarkAsDeleted()));
+    });
+    return true;
+  }
 }

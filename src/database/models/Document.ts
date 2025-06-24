@@ -150,7 +150,13 @@ export default class Document extends Model {
     }
   }
 
-
-
-
+  static async deleteAll(withVectors: boolean = false) {
+    const documents = await database.get(Document.table).query().fetch() as (Model & DocumentType)[];
+    if (!documents || documents.length === 0) return true;
+    await database.write(async () => {
+      this.log(`deleting ${documents.length} documents`);
+      await database.batch(documents.map((document) => document.prepareMarkAsDeleted()));
+    });
+    if (withVectors) await VectorDB.reset();
+  }
 }

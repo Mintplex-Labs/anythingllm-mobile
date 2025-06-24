@@ -92,6 +92,12 @@ const App = observer(() => {
                         />
 
                         <Drawer.Screen
+                          name={PATHS.user_settings}
+                          component={gestureHandlerRootHOC(Screens.UserSettings)}
+                          options={{ headerShown: false }}
+                        />
+
+                        <Drawer.Screen
                           name={PATHS.developer.home}
                           component={gestureHandlerRootHOC(Screens.DevToolsDatabaseInspector)}
                           options={{

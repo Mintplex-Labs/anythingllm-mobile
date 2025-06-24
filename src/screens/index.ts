@@ -9,7 +9,7 @@ import UserSettings from "./UserSettings";
 import WorkspaceChat from "./WorkspaceChat";
 import WorkspaceSettings from "./WorkspaceSettings";
 
-import DevToolsDatabaseInspector from "./Dev/screens/DatabaseInspectorScreen";
+import DevToolsMenu from "./Dev";
 
 export default {
   OnboardingWelcome,
@@ -22,5 +22,5 @@ export default {
   WorkspaceSettings,
 
   UserSettings,
-  DevToolsDatabaseInspector,
+  DevToolsMenu,
 };

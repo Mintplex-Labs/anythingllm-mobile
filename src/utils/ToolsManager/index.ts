@@ -45,6 +45,7 @@ class ToolsManager {
         Tools.appConnections.draftEmail,
         Tools.appConnections.draftText,
         Tools.appConnections.calendarEventCreation,
+        Tools.appConnections.calendarEventReading,
     ]
 
     log = (text: string, ...args: any[]) => {

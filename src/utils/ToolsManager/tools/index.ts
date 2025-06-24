@@ -5,6 +5,7 @@ import webScraping from './webScraping';
 import draftEmail from './draftEmail';
 import draftText from './draftText';
 import calendarEventCreation from './calendarEventCreation';
+import calendarEventReading from './calendarEventReading';
 
 export default {
     default: {
@@ -17,5 +18,6 @@ export default {
         draftEmail,
         draftText,
         calendarEventCreation,
+        calendarEventReading,
     }
 } as const;

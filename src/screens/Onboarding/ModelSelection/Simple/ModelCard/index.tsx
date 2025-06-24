@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import MODEL_CARDS from "@/utils/defaultModels";
+import MODEL_CARDS from "@/utils/models/defaults";
 import DownloadProgress from "@/screens/Onboarding/ModelSelection/DownloadProgress";
 
 type ModelCardProps = {

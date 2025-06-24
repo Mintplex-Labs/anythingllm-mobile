@@ -34,7 +34,6 @@ const androidOnlyModels: NPUEnabledModel[] = [
 ];
 
 const crossPlatformModels: Model[] = [
-
   // -------- Jan-nano --------
   // https://huggingface.co/Menlo/Jan-nano-gguf/resolve/main/jan-nano-4b-Q4_K_S.gguf
   {
@@ -76,12 +75,12 @@ const crossPlatformModels: Model[] = [
     stopWords: ['<|im_end|>'],
   },
 
-
   {
     id: 'unsloth/gemma-3-4b-it-GGUF/gemma-3-4b-it-Q6_K.gguf',
     runtime: 'CPU',
     author: 'unsloth',
-    name: 'Gemma-3-4b-it (Q6_K)',
+    name: 'Gemma-3-4b',
+    description: '(Q6_K) Gemma3 4B is a larger version of the Gemma3 1B model for more complex tasks.',
     type: 'Gemma',
     capabilities: ['questionAnswering', 'summarization', 'reasoning'],
     size: 3.19e+9,
@@ -103,7 +102,6 @@ const crossPlatformModels: Model[] = [
     defaultStopWords: ['<end_of_turn>'],
     stopWords: ['<end_of_turn>'],
   },
-
 
   // -------- Gemma --------
   // {
@@ -250,7 +248,8 @@ const crossPlatformModels: Model[] = [
     id: 'unsloth/Qwen3-1.7B-GGUF/Qwen3-1.7B-Q8_0.gguf',
     runtime: 'CPU',
     author: 'Qwen',
-    name: 'Qwen3-1.7B (Q8_0)',
+    name: 'Qwen3-1.7B',
+    description: '(Q8_0) Qwen3 1.7B is a much more capable version of the Qwen3-0.6B model for more complex tasks.',
     type: 'Qwen',
     capabilities: ['text-generation', 'reasoning'],
     size: 1.83e+9,

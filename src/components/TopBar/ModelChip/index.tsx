@@ -5,7 +5,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import useLlmPreference from '@/hooks/useLLMPreference';
 import { Circle } from 'phosphor-react-native';
 import * as RNFS from '@dr.pogodin/react-native-fs';
-import { resolveDestinationPathFromGGUFUrl } from '@/utils/defaultModels';
+import { resolveDestinationPathFromGGUFUrl } from '@/utils/models/defaults';
 import uiStore from "@/store/UIStore";
 import AwaitableAlert from '@/components/AwaitableAlert';
 import { formatBytes } from '@/utils/formatters';

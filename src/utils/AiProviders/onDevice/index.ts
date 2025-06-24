@@ -3,7 +3,7 @@ import GenieWrapper, { IGenieStreamCallback } from "./genie";
 import LlamaRnWrapper, { ILlamaRnStreamCallback } from "./llamaRn";
 import BaseOpenAILikeProvider, { IStreamCallback, IStreamEvent } from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
-import MODEL_CARDS from "@/utils/defaultModels";
+import MODEL_CARDS from "@/utils/models/defaults";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
 

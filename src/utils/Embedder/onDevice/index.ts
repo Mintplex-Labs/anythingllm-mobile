@@ -1,4 +1,4 @@
-import { EMBEDDING_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/defaultModels";
+import { EMBEDDING_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
 import TextSplitter, { TextSplitterConfig } from "@/utils/TextSplitter";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { initLlama, LlamaContext, NativeEmbeddingResult } from "llama.rn";

@@ -10,7 +10,7 @@ import { AVAILABLE_LLM_PROVIDERS } from "@/utils/llmproviders";
 import { FileDashed, FileMagnifyingGlass, FileText, Robot, Sparkle } from "phosphor-react-native";
 import Workspace from "@/database/models/Workspace";
 import { useNetInfo } from "@react-native-community/netinfo";
-import { EMBEDDING_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/defaultModels";
+import { EMBEDDING_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 
 export default function DataHandling() {

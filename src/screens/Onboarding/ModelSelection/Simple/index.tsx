@@ -1,7 +1,7 @@
 import { Text, View, Alert } from "react-native";
 import React, { useState } from "react";
 import { useNetInfo } from "@react-native-community/netinfo";
-import MODEL_CARDS, { resolveDestinationPathFromGGUFUrl } from "@/utils/defaultModels";
+import MODEL_CARDS, { resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { PATHS } from "@/utils/paths";
 import uiStore from "@/store/UIStore";

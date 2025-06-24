@@ -1,7 +1,7 @@
 import { Text, View, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as RNFS from '@dr.pogodin/react-native-fs';
-import { resolveDestinationPathFromGGUFUrl } from "@/utils/defaultModels";
+import { resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
 
 /**
  * Hook to download a model from a url

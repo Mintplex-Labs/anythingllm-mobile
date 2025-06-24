@@ -10,6 +10,6 @@ export const PATHS = {
   workspace_settings: 'WorkspaceSettings',
   user_settings: 'UserSettings',
   developer: {
-    home: 'DevToolsDatabaseInspector',
-  }
+    home: 'DevToolsMenu',
+  },
 };

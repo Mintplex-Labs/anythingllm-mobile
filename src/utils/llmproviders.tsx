@@ -1,16 +1,18 @@
-import OnDeviceLLMOptions from "@/components/LLMSelection/ProvderOptions/OnDeviceLLMOptions";
+import OnDeviceLLMOptions from '@/components/LLMSelection/ProvderOptions/OnDeviceLLMOptions';
 
 export const AVAILABLE_LLM_PROVIDERS = [
   {
-    name: "On-Device",
-    value: "native",
+    name: 'On-Device',
+    value: 'native',
     logo: require('@/assets/llmprovider/ondevice.png'),
-    options: (selection: any, onChange: any) => <OnDeviceLLMOptions selection={selection} onChange={onChange} />,
-    description: "Install and run models on your phone.",
+    // options: (selection: any, onChange: any) => (
+    //   <OnDeviceLLMOptions selection={selection} onChange={onChange} />
+    // ),
+    description: 'Install and run models on your phone.',
   },
   {
-    name: "OpenAI",
-    value: "openai",
+    name: 'OpenAI',
+    value: 'openai',
     logo: require('@/assets/llmprovider/openai.png'),
     // options: (settings) => <OpenAiOptions settings={ settings } />,
     description: "Leverage OpenAI's powerful models.",
@@ -234,17 +236,17 @@ export const AVAILABLE_LLM_PROVIDERS = [
   //   requiredConfig: ["ApipieLLMApiKey", "ApipieLLMModelPref"],
   // },
   {
-    name: "Generic OpenAI",
-    value: "generic-openai",
+    name: 'Generic OpenAI',
+    value: 'generic-openai',
     logo: require('@/assets/llmprovider/generic-openai.png'),
     // options: (settings) => <GenericOpenAiOptions settings={settings} />,
     description:
-      "Connect to any OpenAi-compatible service via a custom configuration",
+      'Connect to any OpenAi-compatible service via a custom configuration',
     requiredConfig: [
-      "GenericOpenAiBasePath",
-      "GenericOpenAiModelPref",
-      "GenericOpenAiTokenLimit",
-      "GenericOpenAiKey",
+      'GenericOpenAiBasePath',
+      'GenericOpenAiModelPref',
+      'GenericOpenAiTokenLimit',
+      'GenericOpenAiKey',
     ],
   },
   // {

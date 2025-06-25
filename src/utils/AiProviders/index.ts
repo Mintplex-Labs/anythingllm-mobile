@@ -12,6 +12,15 @@ function getLLM(provider: string, config: { [key: string]: any } = {}): LLMProvi
           modelId: config.modelId,
         }
       });
+    case 'generic-openai':
+      return new OpenAICompatible({
+        provider: 'generic-openai',
+        config: {
+          baseURL: config.baseUrl,
+          apiKey: config.apiKey,
+          modelId: config.model,
+        }
+      });
     case 'native':
       return OnDeviceProvider.getInstance({
         config: { model: config.model }

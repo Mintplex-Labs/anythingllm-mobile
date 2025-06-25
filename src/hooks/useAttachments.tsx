@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { snapPointsDefault } from "@/screens/WorkspaceChat/PromptInput";
 import { CHAT_HANDLER_EVENTS } from "@/hooks/useChatHandler";
 import uiStore from "@/store/UIStore";
+import PDFParser from "@/utils/PDFParser";
 
 const MAX_ATTACHMENTS = 4;
 export interface Attachment {
@@ -95,11 +96,7 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
                 throw new Error('Attachment could not be found');
             });
 
-            const stats = await RNFS.stat(realPath).catch((e) => {
-                console.log('error', e);
-                throw new Error('Attachment could not be read');
-            });
-            const result = await RNFS.read(realPath, stats.size, 0, 'utf8');
+            const result = await extractTextContentFromFile(realPath, attachment.type);
             if (!result) throw new Error('Attachment content was empty or could not be read');
 
             const document = await embedder
@@ -130,6 +127,28 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
             removeAttachment(attachment);
         } finally {
             uiStore.emitter.emit(CHAT_HANDLER_EVENTS.ENABLE_PROMPT_INPUT);
+        }
+    }, []);
+
+    const extractTextContentFromFile = useCallback(async (fileStoragePath: string, mimeType: string): Promise<string | null> => {
+        let result: string | null = null;
+        try {
+            switch (mimeType) {
+                case 'application/pdf':
+                    result = (await PDFParser.extract(fileStoragePath))?.textContent || null;
+                    break;
+                default:
+                    const stats = await RNFS.stat(fileStoragePath).catch((e) => {
+                        console.log('error', e);
+                        throw new Error('Attachment could not be read');
+                    });
+                    result = await RNFS.read(fileStoragePath, stats.size, 0, 'utf8');
+                    break;
+            }
+            return result;
+        } catch (e) {
+            console.log('error', e);
+            return null;
         }
     }, []);
 
@@ -171,6 +190,7 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
                                 style={{
                                     height: 40,
                                     paddingHorizontal: 14,
+                                    maxWidth: 250,
                                     ...(isProcessing ? {
                                         backgroundColor: 'transparent',
                                         borderWidth: 1,
@@ -188,7 +208,7 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
                                 }}
                             >
                                 {isProcessing && <ActivityIndicator size="small" color="#fff" />}
-                                <Text className="text-white">{attachment.name}</Text>
+                                <Text numberOfLines={1} ellipsizeMode="middle" className="text-white">{attachment.name}</Text>
                             </TouchableOpacity>
                         );
                     })}

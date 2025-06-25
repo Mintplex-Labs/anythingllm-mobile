@@ -16,6 +16,7 @@ import com.anythingllm.chatqnn.ChatQnnPackage
 import com.anythingllm.storage.StoragePackage
 import com.anythingllm.vector.VectorBoxPackage
 import com.anythingllm.webscraper.WebScraperPackage
+import com.anythingllm.pdfparser.PdfParserPackage
 
 class MainApplication : Application(), ReactApplication {
 
@@ -32,6 +33,7 @@ class MainApplication : Application(), ReactApplication {
               add(StoragePackage())
               add(VectorBoxPackage())
               add(WebScraperPackage())
+              add(PdfParserPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

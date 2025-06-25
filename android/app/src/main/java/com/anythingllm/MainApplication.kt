@@ -12,7 +12,7 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
 import com.anythingllm.download.DownloadPackage
-import com.anythingllm.chatqnn.ChatQnnPackage
+// import com.anythingllm.chatqnn.ChatQnnPackage - QNN SDK (Genie Runtime LLM)
 import com.anythingllm.storage.StoragePackage
 import com.anythingllm.vector.VectorBoxPackage
 import com.anythingllm.webscraper.WebScraperPackage
@@ -24,12 +24,10 @@ class MainApplication : Application(), ReactApplication {
       object : DefaultReactNativeHost(this) {
         override fun getPackages(): List<ReactPackage> =
             PackageList(this).packages.apply {
-              // Packages that cannot be autolinked yet can be added manually here, for example:
-              // add(MyReactNativePackage())
               add(DeviceInfoPackage())
               add(KeepAwakePackage())
               add(DownloadPackage())
-              add(ChatQnnPackage())
+              // add(ChatQnnPackage()) - QNN SDK (Genie Runtime LLM)
               add(StoragePackage())
               add(VectorBoxPackage())
               add(WebScraperPackage())

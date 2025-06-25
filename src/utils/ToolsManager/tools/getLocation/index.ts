@@ -39,7 +39,7 @@ export default {
             if (!location) return 'Approximated location not able to be determined';
             return JSON.stringify({ city: location?.city, state: location?.regionName, country: location?.country });
         } catch (error) {
-            console.error(error);
+            console.log('getLocationTool', error);
             return 'Error getting location';
         }
     },
@@ -49,7 +49,7 @@ export default {
             const data = await location.json();
             return data;
         } catch (error) {
-            console.error(error);
+            console.log('_getLocation', error);
             return null;
         }
     }

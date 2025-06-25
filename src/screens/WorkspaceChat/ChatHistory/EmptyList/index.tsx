@@ -51,17 +51,17 @@ const smartMessages = {
                 await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: false, getTime: false } as never);
             }
         },
-        email: {
-            text: 'Draft a sales email to John Doe about the benefits of local AI agents',
-            onClick: {
-                before: async function () {
-                    const enabledTools = await uiStore.getFromStorage('tools', {});
-                    await uiStore.setToStorage('tools', { ...enabledTools, draftEmail: true } as never);
-                },
-                after: async function () {
-                    const enabledTools = await uiStore.getFromStorage('tools', {});
-                    await uiStore.setToStorage('tools', { ...enabledTools, draftEmail: false } as never);
-                }
+    },
+    email: {
+        text: 'Draft a sales email to John Doe about the benefits of local AI agents',
+        onClick: {
+            before: async function () {
+                const enabledTools = await uiStore.getFromStorage('tools', {});
+                await uiStore.setToStorage('tools', { ...enabledTools, draftEmail: true } as never);
+            },
+            after: async function () {
+                const enabledTools = await uiStore.getFromStorage('tools', {});
+                await uiStore.setToStorage('tools', { ...enabledTools, draftEmail: false } as never);
             }
         }
     }
@@ -73,13 +73,14 @@ export default function EmptyList({ height }: { height: number }) {
     async function getRandomMessages(limit = 3) {
         const messages = [];
         const availableMessages = { ...smartMessages };
-        for (let i = 0; i < limit; i++) {
+        for (let i = 0; i < Object.keys(smartMessages).length; i++) {
             const keys = Object.keys(availableMessages);
             const randomKey = keys[Math.floor(Math.random() * keys.length)];
             const message = availableMessages[randomKey as keyof typeof availableMessages]
             const text = typeof message.text === 'function' ? await message.text() : message.text;
-            messages.push({ text, onClick: message.onClick } as never);
+            if (!!text) messages.push({ text, onClick: message.onClick } as never);
             delete availableMessages[randomKey];
+            if (messages.length >= limit) break;
         }
         setMessages(messages);
     }

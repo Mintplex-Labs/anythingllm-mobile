@@ -6,6 +6,7 @@ import draftEmail from './draftEmail';
 import draftText from './draftText';
 import calendarEventCreation from './calendarEventCreation';
 import calendarEventReading from './calendarEventReading';
+import summarize from './summarize';
 
 export default {
     default: {
@@ -13,6 +14,7 @@ export default {
         webScraping,
         getLocation,
         getCurrentTime,
+        summarize,
     },
     appConnections: {
         draftEmail,

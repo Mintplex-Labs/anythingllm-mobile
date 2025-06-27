@@ -42,6 +42,7 @@ class ToolsManager {
         Tools.default.webScraping,
         Tools.default.getCurrentTime,
         Tools.default.getLocation,
+        Tools.default.summarize,
         Tools.appConnections.draftEmail,
         Tools.appConnections.draftText,
         Tools.appConnections.calendarEventCreation,

@@ -13,6 +13,7 @@ import { snapPointsDefault } from "@/screens/WorkspaceChat/PromptInput";
 import { CHAT_HANDLER_EVENTS } from "@/hooks/useChatHandler";
 import uiStore from "@/store/UIStore";
 import PDFParser from "@/utils/PDFParser";
+import { storeProcessedFileAsText } from "@/utils/fs";
 
 const MAX_ATTACHMENTS = 4;
 export interface Attachment {
@@ -99,6 +100,12 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
             const result = await extractTextContentFromFile(realPath, attachment.type);
             if (!result) throw new Error('Attachment content was empty or could not be read');
 
+            // Store the attachment as a plain text file in the local folder with the same name
+            // but as text/plain so that it can be read as plain text later on but refer to it as
+            // the original filename.
+            await storeProcessedFileAsText(attachment.name, result);
+
+            // Embed the processed file
             const document = await embedder
                 .splitAndEmbed(result, { chunkSize: 2048, chunkOverlap: 20 })
                 .then(embedResults => embedResults.map(embedResult => {
@@ -223,7 +230,11 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
 
     useEffect(() => {
         uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.PROMPT_SUBMITTED, () => setAttachments([]));
-        return () => uiStore.emitter.removeAllListeners(CHAT_HANDLER_EVENTS.PROMPT_SUBMITTED);
+        uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.CLEAR_ATTACHMENTS, () => setAttachments([]));
+        return () => {
+            uiStore.emitter.removeAllListeners(CHAT_HANDLER_EVENTS.PROMPT_SUBMITTED);
+            uiStore.emitter.removeAllListeners(CHAT_HANDLER_EVENTS.CLEAR_ATTACHMENTS);
+        };
     }, [setAttachments]);
 
     const attachmentInterface = useMemo(() => {

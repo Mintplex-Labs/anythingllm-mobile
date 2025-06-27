@@ -49,6 +49,7 @@ interface IChatHandlerInterfaceProps {
 export const CHAT_HANDLER_EVENTS = {
     SUBMIT_PROMPT: 'submit_prompt',
     SET_PROMPT: 'set_prompt',
+    CLEAR_ATTACHMENTS: 'clear_attachments',
 
     PROMPT_SUBMITTED: 'prompt_submitted',
     ASSISTANT_RESPONSE_COMPLETE: 'assistant_response_complete',
@@ -219,6 +220,11 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                         debug('Updating tool call result', toolCallResult.uuid);
                         existingToolCall.result = toolCallResult.result;
                         merge(newChat, { response: { toolCalls: newChat.response?.toolCalls } });
+                        emitUpdate = true;
+                        break;
+                    case 'report_in_progress_thought':
+                        const inProgressThought = data as string;
+                        merge(newChat, { response: { thoughts: [...(newChat.response?.thoughts || []), inProgressThought] } });
                         emitUpdate = true;
                         break;
                     case 'chunk':

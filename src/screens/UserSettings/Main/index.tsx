@@ -24,6 +24,7 @@ import WorkspaceThread from '@/database/models/WorkspaceThread';
 import Document from '@/database/models/Document';
 import WorkspaceChat from '@/database/models/WorkspaceChat';
 import uninstallAllModels from '@/utils/models/manager';
+import { deleteProcessedFiles } from '@/utils/fs';
 
 interface MainViewProps {
   goToPage: (page: IWorkspacePageKey) => void;
@@ -66,6 +67,7 @@ export function MainView({ goToPage }: MainViewProps) {
       WorkspaceThread.deleteAll(),
       Document.deleteAll(true),
       uninstallAllModels(),
+      deleteProcessedFiles(),
     ]);
     await uiStore.resetAllStorage();
     navigation.reset({

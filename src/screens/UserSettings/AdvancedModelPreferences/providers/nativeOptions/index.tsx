@@ -2,20 +2,23 @@ import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import ModelCard from '@/screens/Onboarding/ModelSelection/Simple/ModelCard';
 import { Cube } from 'phosphor-react-native';
 import { Image } from 'react-native';
-import MODEL_CARDS from '@/utils/models/defaults';
-import { useState, useEffect } from 'react';
+import MODEL_CARDS, { DefaultModel } from '@/utils/models/defaults';
+import { useState, useEffect, Fragment } from 'react';
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { resolveDestinationPathFromGGUFUrl } from '@/utils/models/defaults';
 import uiStore from '@/store/UIStore';
 import AwaitableAlert from '@/components/AwaitableAlert';
 import { formatBytes } from '@/utils/formatters';
 import { useNetInfo } from '@react-native-community/netinfo';
+import { Model } from '@/utils/types';
 
 interface NativeOptionsProps {
   llmPreferences: any;
   fetchLLMPreference: () => Promise<void>;
   LLMProvider: any;
 }
+
+type IModelOptions = DefaultModel & Model;
 
 export default function NativeOptions({
   llmPreferences,
@@ -39,21 +42,9 @@ export default function NativeOptions({
     ? availableModels
     : availableModels.filter(model => model.isPreset);
 
-  const getModelIcon = (model: any) => {
-    if (model.imageUrl) {
-      return ({ size }: { size: number }) => (
-        <Image
-          source={{ uri: model.imageUrl }}
-          style={{ width: size, height: size }}
-          resizeMode="contain"
-        />
-      );
-    }
-
-    const defaultCard = MODEL_CARDS.find(
-      card => card.modelId === model.modelId,
-    );
-    return defaultCard?.Icon || Cube;
+  const getModelIcon = (model: IModelOptions) => {
+    if (model.isPreset) return MODEL_CARDS.find(m => m.modelId === model.modelId)?.Icon || Cube;
+    return Cube;
   };
 
   async function completeModelSelection(model: any) {
@@ -114,10 +105,7 @@ export default function NativeOptions({
   }
 
   return (
-    <View
-      style={{ backgroundColor: '#0E0F0F' }}
-      className="flex flex-col gap-y-4">
-      <Text className="text-[#9F9FA0] text-sm font-semibold">LLM Model*</Text>
+    <Fragment>
       {displayedModels.map((model, index) => (
         <ModelCard
           key={`${model.modelId}-${index}`}
@@ -125,23 +113,24 @@ export default function NativeOptions({
           name={model.name}
           description={model.description || ''}
           Icon={getModelIcon(model)}
+          imageUrl={model.imageUrl}
           tag={model.downloadUrl}
           active={selectedModel === model.modelId}
           onPress={() => handleModelSelection(model)}
           downloadInProgress={!!modelDownloadUrl}
           downloadUrl={modelDownloadUrl}
           onDownloadComplete={() => completeModelSelection(model)}
+          containerStyle={{ width: '100%', maxWidth: null }}
         />
       ))}
-
       {!showAllModels && (
         <TouchableOpacity
           className="mt-4"
           onPress={() => setShowAllModels(true)}
           disabled={!!modelDownloadUrl}>
-          <Text className="text-white text-center">View More</Text>
+          <Text className="text-white text-center text-lg">View More</Text>
         </TouchableOpacity>
       )}
-    </View>
+    </Fragment>
   );
 }

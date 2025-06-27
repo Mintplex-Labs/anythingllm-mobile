@@ -71,7 +71,7 @@ export default function SimpleModelSelection() {
           You can change this later, but pick the one that best suits your needs.
         </Text>
       </View>
-      <View className="flex flex-col gap-y-4 items-center">
+      <View className="flex flex-col items-center" style={{ gap: 16 }}>
         {MODEL_CARDS.map((card, index) => (
           <ModelCard
             key={index}

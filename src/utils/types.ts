@@ -258,6 +258,7 @@ export interface Model {
   description?: string;
   ggufFilePath?: string;
   chatTemplateString?: string;
+  imageUrl?: string;
 
   runtime: 'CPU' | 'NPU';
   author: string;

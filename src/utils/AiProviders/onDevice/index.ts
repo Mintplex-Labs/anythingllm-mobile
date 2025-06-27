@@ -112,6 +112,8 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
           modelId: m.id,
           downloadUrl: m.downloadUrl || '',
           isPreset: false,
+          // @ts-ignore
+          imageUrl: m.imageUrl ?? null,
         }
       });
     return [

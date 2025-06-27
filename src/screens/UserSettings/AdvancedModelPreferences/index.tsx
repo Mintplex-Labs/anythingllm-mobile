@@ -97,7 +97,6 @@ export default function AdvancedModelPreferences({
       scrollable={false}
       safeAreaClassNames="pt-[21px]"
       containerClassNames="flex flex-col"
-      applyGradient={true}
       safeAreaStyle={{ backgroundColor: '#0E0F0F' }}>
       {/* Header */}
       <View

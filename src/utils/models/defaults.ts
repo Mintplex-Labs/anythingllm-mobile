@@ -1,6 +1,17 @@
 import { Feather, Scales, Barbell } from "phosphor-react-native";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 
+export type DefaultModel = {
+    id: string;
+    name: string;
+    description: string;
+    Icon: React.ElementType;
+    size: string;
+    modelId: string;
+    tag: string;
+    isPreset: boolean;
+}
+
 export const MODEL_CARDS = [
     {
         id: 'lightweight',

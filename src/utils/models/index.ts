@@ -55,6 +55,7 @@ const crossPlatformModels: Model[] = [
       top_k: 20,
       min_p: 0,
     },
+    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/643b63fea856622f978fdc35/c8ZIKZbg-Y4ZxkUgMLV8q.png',
 
     // Unused?
     isDownloaded: false,
@@ -89,6 +90,7 @@ const crossPlatformModels: Model[] = [
     downloadUrl:
       'https://huggingface.co/unsloth/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q6_K.gguf',
     hfUrl: 'https://huggingface.co/unsloth/gemma-3-4b-it-GGUF',
+    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/62ecdc18b72a69615d6bd857/E4lkPz1TZNLzIFr_dR273.png',
     progress: 0,
     filename: 'gemma-3-4b-it-Q6_K.gguf',
     isLocal: false,
@@ -257,6 +259,7 @@ const crossPlatformModels: Model[] = [
     isDownloaded: false,
     downloadUrl:
       'https://huggingface.co/unsloth/Qwen3-1.7B-GGUF/resolve/main/Qwen3-1.7B-Q8_0.gguf',
+    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/62ecdc18b72a69615d6bd857/E4lkPz1TZNLzIFr_dR273.png',
     hfUrl: 'https://huggingface.co/unsloth/Qwen3-1.7B-GGUF',
     progress: 0,
     filename: 'Qwen3-1.7B-Q8_0.gguf',

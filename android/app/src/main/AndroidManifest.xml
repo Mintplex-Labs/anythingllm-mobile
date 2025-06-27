@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- Needed only for devices running Android 9 (API 28) or lower -->
     <!-- Currently it is used only for storing chat sessions (/Download)-->

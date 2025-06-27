@@ -4,7 +4,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
-import { Gear } from 'phosphor-react-native';
+import { Gear, QrCode } from 'phosphor-react-native';
 import WorkspaceItem from './WorkspaceItem';
 import useWorkspaces from '@/hooks/useWorkspaces';
 import NewWorkspaceModal, { useNewWorkspaceModal } from '@/components/NewWorkspaceModal';
@@ -29,6 +29,17 @@ export default function SidebarContent({ navigation }: { navigation: any }) {
       index: 0,
       // @ts-ignore
       routes: [{ name: PATHS.user_settings }],
+    });
+  }
+
+  const goToWorkspaceImportStart = () => {
+    uiStore.emitter.emit(uiStore.globalEvents.REDIRECT, {
+      path: PATHS.import_workspace.start,
+    });
+    navigation.reset({
+      index: 0,
+      // @ts-ignore
+      routes: [{ name: PATHS.import_workspace.start }],
     });
   }
 
@@ -92,9 +103,12 @@ export default function SidebarContent({ navigation }: { navigation: any }) {
           )}
 
           {/* Sticky Bottom Icons */}
-          <View className='flex-row shrink-0 justify-around items-center py-[16px] px-[30px] border-t border-[--hex-gray-8] h-[80px]'>
-            <TouchableOpacity activeOpacity={0.8} onPress={openNewWorkspaceModal} className='flex w-full flex-row items-center justify-center bg-white/10 rounded-lg py-[11px]'>
+          <View style={{ paddingVertical: 16, height: 80, paddingHorizontal: 8, gap: 16 }} className='flex flex-row justify-between items-center border-t border-[--hex-gray-8]'>
+            <TouchableOpacity activeOpacity={0.8} onPress={openNewWorkspaceModal} className='flex flex-1 flex-row items-center justify-center bg-white/10 rounded-lg py-[11px]'>
               <Text className='text-lg text-white'>New Workspace</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={goToWorkspaceImportStart} activeOpacity={0.8} style={{ height: '100%', width: 42 }} className='flex items-center justify-center bg-white/10 rounded-lg p-[11px]'>
+              <QrCode size={30} color='#FFF' />
             </TouchableOpacity>
           </View>
         </View>

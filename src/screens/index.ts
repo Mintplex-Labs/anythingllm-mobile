@@ -8,6 +8,7 @@ import UserSettings from "./UserSettings";
 
 import WorkspaceChat from "./WorkspaceChat";
 import WorkspaceSettings from "./WorkspaceSettings";
+import WorkspaceImport from "./WorkspaceImport";
 
 import DevToolsMenu from "./Dev";
 
@@ -20,6 +21,7 @@ export default {
 
   WorkspaceChat,
   WorkspaceSettings,
+  WorkspaceImport,
 
   UserSettings,
   DevToolsMenu,

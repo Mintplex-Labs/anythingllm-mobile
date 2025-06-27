@@ -1,71 +1,115 @@
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Platform, ActivityIndicator, TextInput, TouchableOpacity } from 'react-native';
 import { useState } from 'react';
-import useLLMPreference from '@/hooks/useLLMPreference';
+import { screenDimensions } from '@/utils/constants';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import useKeyboardHeight from '@/hooks/useKeyboardHeight';
 
-export default function GenericOpenAiOptions() {
-  const { llmPreferences, updateLLMPreference } = useLLMPreference();
-  const [apiKey, setApiKey] = useState(llmPreferences.config.apiKey || '');
-  const [baseUrl, setBaseUrl] = useState(llmPreferences.config.baseUrl || '');
-  const [modelName, setModelName] = useState(llmPreferences.config.model || '');
+export default function GenericOpenAiOptions({
+  provider,
+  apiKey,
+  baseUrl,
+  model,
+  onApiKeyChange,
+  onBaseUrlChange,
+  onModelChange,
+}: {
+  provider: 'openai' | 'generic-openai';
+  apiKey: string;
+  baseUrl: string;
+  model: string;
+  onApiKeyChange: (provider: string, settings: { apiKey?: string, baseUrl?: string, model?: string }) => Promise<void>;
+  onBaseUrlChange: (provider: string, settings: { apiKey?: string, baseUrl?: string, model?: string }) => Promise<void>;
+  onModelChange: (provider: string, settings: { apiKey?: string, baseUrl?: string, model?: string }) => Promise<void>;
+}) {
+  const insets = useSafeAreaInsets();
+  const keyboardHeight = useKeyboardHeight();
+  const [currentApiKey, setCurrentApiKey] = useState(apiKey || '');
+  const [currentBaseUrl, setCurrentBaseUrl] = useState(baseUrl || '');
+  const [currentModel, setCurrentModel] = useState(model || '');
 
-  const updateConfig = async (
-    updates: Partial<typeof llmPreferences.config>,
-  ) => {
-    await updateLLMPreference('generic-openai', {
-      ...llmPreferences.config,
-      ...updates,
-    });
+  const handlePropertyChange = async (key: string, value: string) => {
+    switch (key) {
+      case 'apiKey':
+        setCurrentApiKey(value);
+        await onApiKeyChange(provider, { apiKey: value });
+        break;
+      case 'baseUrl':
+        setCurrentBaseUrl(value);
+        await onBaseUrlChange(provider, { baseUrl: value });
+        break;
+      case 'model':
+        setCurrentModel(value);
+        await onModelChange(provider, { model: value });
+        break;
+    }
   };
 
   return (
-    <View className="flex flex-col gap-y-4">
-      <Text className="text-[#9F9FA0] text-sm font-semibold">
-        Generic OpenAI Configuration*
-      </Text>
-      <View
-        style={{ backgroundColor: '#27282A' }}
-        className="flex-col gap-y-4 px-4 py-[14px] rounded-lg">
-        <View>
-          <Text className="text-white text-sm mb-2">Base URL</Text>
+    <View className="flex flex-col">
+      <KeyboardAvoidingView style={{ gap: 8 }} behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 flex flex-col">
+
+        {provider !== 'openai' && (
+          <View className="w-full flex flex-col" style={{ gap: 12 }}>
+            <View className="flex flex-row items-center justify-between">
+              <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">Base URL</Text>
+            </View>
+            <TextInput
+              multiline={false}
+              numberOfLines={1}
+              style={{
+                maxHeight: screenDimensions.height - keyboardHeight - insets.top - insets.bottom - 200,
+                backgroundColor: '#000',
+                textAlignVertical: 'center',
+                padding: 16
+              }}
+              className="rounded-lg text-white placeholder:text-white/50 text-left"
+              value={currentBaseUrl}
+              onChangeText={value => handlePropertyChange('baseUrl', value)}
+              placeholder="Enter your base URL (e.g. https://api.openai.com/v1/)"
+            />
+          </View>
+        )}
+
+        <View className="w-full flex flex-col" style={{ gap: 12 }}>
+          <View className="flex flex-row items-center justify-between">
+            <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">API Key</Text>
+          </View>
           <TextInput
-            value={baseUrl}
-            onChangeText={url => {
-              setBaseUrl(url);
-              updateConfig({ baseUrl: url });
+            multiline={false}
+            numberOfLines={1}
+            style={{
+              maxHeight: screenDimensions.height - keyboardHeight - insets.top - insets.bottom - 200,
+              backgroundColor: '#000',
+              textAlignVertical: 'center',
+              padding: 16
             }}
-            placeholder="e.g: https://proxy.openai.com"
-            placeholderTextColor="#9F9FA0"
-            className="text-white text-sm bg-[#1B1B1E] px-4 py-2 rounded-lg"
-          />
-        </View>
-        <View>
-          <Text className="text-white text-sm mb-2">API Key</Text>
-          <TextInput
-            value={apiKey}
-            onChangeText={key => {
-              setApiKey(key);
-              updateConfig({ apiKey: key });
-            }}
+            className="rounded-lg text-white placeholder:text-white/50 text-left"
+            value={currentApiKey}
+            onChangeText={value => handlePropertyChange('apiKey', value)}
             placeholder="Enter your API key"
-            placeholderTextColor="#9F9FA0"
-            className="text-white text-sm bg-[#1B1B1E] px-4 py-2 rounded-lg"
-            secureTextEntry
           />
         </View>
-        <View>
-          <Text className="text-white text-sm mb-2">Model Name</Text>
+
+        <View className="w-full flex flex-col" style={{ gap: 12 }}>
+          <View className="flex flex-row items-center justify-between">
+            <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">Model Selection</Text>
+          </View>
           <TextInput
-            value={modelName}
-            onChangeText={name => {
-              setModelName(name);
-              updateConfig({ model: name });
+            multiline={false}
+            numberOfLines={1}
+            style={{
+              maxHeight: screenDimensions.height - keyboardHeight - insets.top - insets.bottom - 200,
+              backgroundColor: '#000',
+              textAlignVertical: 'center',
+              padding: 16
             }}
-            placeholder="Model id used for chat requests"
-            placeholderTextColor="#9F9FA0"
-            className="text-white text-sm bg-[#1B1B1E] px-4 py-2 rounded-lg"
+            className="rounded-lg text-white placeholder:text-white/50 text-left"
+            value={currentModel}
+            onChangeText={value => handlePropertyChange('model', value)}
+            placeholder="Enter your model (e.g. gpt-3.5-turbo)"
           />
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }

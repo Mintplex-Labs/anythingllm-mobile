@@ -2,7 +2,7 @@ import useRedirect from '@/hooks/useRedirect';
 import { useEffect, useState } from 'react';
 import { NativeEventEmitter } from 'react-native';
 import { MainView } from './Main';
-import { AdvancedModelPreferences } from './AdvancedModelPreferences';
+import AdvancedModelPreferences from './AdvancedModelPreferences';
 
 const PAGES = {
   main: (props: any) => <MainView {...props} />,

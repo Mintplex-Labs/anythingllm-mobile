@@ -5,9 +5,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { ArrowLeft } from 'phosphor-react-native';
 import { IWorkspacePageKey } from '../index';
 import useLLMPreference from '@/hooks/useLLMPreference';
-import { useState } from 'react';
 import ProviderSelection from '@/components/LLMSelection/ProviderSelection';
-import OpenAiOptions from './providers/openAiOptions';
 import GenericOpenAiOptions from './providers/genericOpenAiOptions';
 import NativeOptions from './providers/nativeOptions';
 import { screenDimensions } from '@/utils/constants';
@@ -16,7 +14,7 @@ interface AdvancedModelPreferencesProps {
   goToPage: (page: IWorkspacePageKey) => void;
 }
 
-export function AdvancedModelPreferences({
+export default function AdvancedModelPreferences({
   goToPage,
 }: AdvancedModelPreferencesProps) {
   const insets = useSafeAreaInsets();
@@ -27,23 +25,27 @@ export function AdvancedModelPreferences({
     fetchLLMPreference,
     updateLLMPreference,
   } = useLLMPreference();
-  const [openAIKey, setOpenAIKey] = useState(
-    llmPreferences.config.apiKey || '',
-  );
+  async function updateProviderSettings(provider: string, settings: { apiKey?: string, baseUrl?: string, model?: string }) {
+    await updateLLMPreference(provider, {
+      ...llmPreferences.config,
+      ...settings,
+    });
+  }
 
   async function handleProviderSelection(provider: string) {
     switch (provider) {
       case 'openai':
         await updateLLMPreference('openai', {
-          apiKey: openAIKey,
+          apiKey: llmPreferences.config.apiKey,
           modelId: 'gpt-3.5-turbo',
+          baseUrl: 'https://api.openai.com/v1/',
         });
         break;
       case 'generic-openai':
         await updateLLMPreference('generic-openai', {
-          apiKey: openAIKey,
-          baseUrl: llmPreferences.config.baseUrl || '',
-          model: llmPreferences.config.model || '',
+          apiKey: '',
+          baseUrl: '',
+          model: '',
         });
         break;
       default:
@@ -53,35 +55,28 @@ export function AdvancedModelPreferences({
     }
   }
 
-  function goBack() {
-    goToPage('main');
-  }
-
   const renderProviderOptions = () => {
     switch (llmPreferences.provider) {
       case 'openai':
-        return (
-          <OpenAiOptions apiKey={openAIKey} onApiKeyChange={setOpenAIKey} />
-        );
+        return <GenericOpenAiOptions
+          provider="openai"
+          apiKey={llmPreferences.config.apiKey || ''}
+          baseUrl={llmPreferences.config.baseUrl || ''}
+          model={llmPreferences.config.model || ''}
+          onApiKeyChange={updateProviderSettings}
+          onBaseUrlChange={updateProviderSettings}
+          onModelChange={updateProviderSettings}
+        />
       case 'generic-openai':
         return (
           <GenericOpenAiOptions
+            provider="generic-openai"
+            apiKey={llmPreferences.config.apiKey || ''}
             baseUrl={llmPreferences.config.baseUrl || ''}
-            apiKey={openAIKey}
-            modelName={llmPreferences.config.model || ''}
-            onBaseUrlChange={url => {
-              updateLLMPreference('generic-openai', {
-                ...llmPreferences.config,
-                baseUrl: url,
-              });
-            }}
-            onApiKeyChange={setOpenAIKey}
-            onModelNameChange={name => {
-              updateLLMPreference('generic-openai', {
-                ...llmPreferences.config,
-                model: name,
-              });
-            }}
+            model={llmPreferences.config.model || ''}
+            onApiKeyChange={updateProviderSettings}
+            onBaseUrlChange={updateProviderSettings}
+            onModelChange={updateProviderSettings}
           />
         );
       case 'native':
@@ -97,12 +92,12 @@ export function AdvancedModelPreferences({
   };
 
   if (isLoading) return <ActivityIndicator size="large" color="white" />;
-
   return (
     <SafeView
       scrollable={false}
       safeAreaClassNames="pt-[21px]"
       containerClassNames="flex flex-col"
+      applyGradient={true}
       safeAreaStyle={{ backgroundColor: '#0E0F0F' }}>
       {/* Header */}
       <View
@@ -112,7 +107,7 @@ export function AdvancedModelPreferences({
         }}
         className="w-full flex flex-row items-center justify-center relative">
         <TouchableOpacity
-          onPress={goBack}
+          onPress={() => goToPage('main')}
           className="absolute left-0 flex flex-row items-center gap-2">
           <ArrowLeft size={24} color="#FFF" weight="bold" />
         </TouchableOpacity>
@@ -136,7 +131,9 @@ export function AdvancedModelPreferences({
       </View>
 
       <View style={{ gap: 16 }} className="flex flex-col">
-        <Text className="text-white font-semibold text-lg">LLM Model</Text>
+        <Text className="text-white font-semibold text-lg">
+          {llmPreferences.provider === 'native' ? 'LLM Model' : 'Provider Settings'}
+        </Text>
         <View style={{ height: screenDimensions.height - insets.bottom - 300 }}>
           <ScrollView
             contentContainerStyle={{

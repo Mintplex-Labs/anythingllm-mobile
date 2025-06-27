@@ -18,6 +18,9 @@ type ModelCardProps = {
   containerStyle?: StyleProp<ViewStyle>;
 }
 
+/**
+ * Model card for the native provider - may be reused for other providers
+ */
 export default function ModelCard({
   id,
   name,
@@ -41,7 +44,7 @@ export default function ModelCard({
         maxWidth: 380,
         maxHeight: 82,
         padding: 16,
-        backgroundColor: active ? '#7cd4fd65' : '#1B1B1E',
+        backgroundColor: active ? '#7cd4fd65' : 'rgba(255, 255, 255, 0.1)',
         borderWidth: active ? 2 : 0,
         borderColor: active ? '#7cd4fd' : 'transparent',
         ...(containerStyle as object),

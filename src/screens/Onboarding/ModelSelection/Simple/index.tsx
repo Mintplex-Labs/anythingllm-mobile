@@ -5,7 +5,7 @@ import MODEL_CARDS, { resolveDestinationPathFromGGUFUrl } from "@/utils/models/d
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { PATHS } from "@/utils/paths";
 import uiStore from "@/store/UIStore";
-import ModelCard from "./ModelCard";
+import ModelCard from "@/components/LLMSelection/ModelCard";
 import AwaitableAlert from "@/components/AwaitableAlert";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 

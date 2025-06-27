@@ -64,7 +64,7 @@ export default function ProviderSelection({
     <View>
       <View className="relative">
         <TouchableOpacity
-          style={{ backgroundColor: '#1B1B1E', height: 68, width: '100%' }}
+          style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', height: 68, width: '100%' }}
           className="flex-row items-center justify-between px-4 py-[14px] rounded-lg"
           onPress={() => bottomSheetRef.current?.present()}>
           <View className="flex-row items-center">

@@ -1,7 +1,6 @@
-import { View, Text, TouchableOpacity, Alert } from 'react-native';
-import ModelCard from '@/screens/Onboarding/ModelSelection/Simple/ModelCard';
+import { Text, TouchableOpacity, Alert } from 'react-native';
+import ModelCard from '@/components/LLMSelection/ModelCard';
 import { Cube } from 'phosphor-react-native';
-import { Image } from 'react-native';
 import MODEL_CARDS, { DefaultModel } from '@/utils/models/defaults';
 import { useState, useEffect, Fragment } from 'react';
 import * as RNFS from '@dr.pogodin/react-native-fs';

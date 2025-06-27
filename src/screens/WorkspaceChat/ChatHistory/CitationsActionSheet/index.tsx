@@ -79,7 +79,7 @@ function DocumentCitation({ citation }: { citation: IDocumentCitation }) {
                     <FileText size={18} color="#FFF" />
                     <Text className='text-white text-lg font-semibold'>{citation.document.name}</Text>
                 </View>
-                <Text style={{ color: '#9F9FA0' }}>Score: {numberToPercentageString(citation.document.score)}</Text>
+                {citation.document.score && <Text style={{ color: '#9F9FA0' }}>Score: {numberToPercentageString(citation.document.score)}</Text>}
             </View>
             <Text style={{ color: '#9F9FA0' }} className="">{citation.document.chunk}</Text>
         </View>

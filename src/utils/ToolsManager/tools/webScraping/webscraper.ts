@@ -22,11 +22,26 @@ class WebScraperInstance {
         WebScraperInstance.instance = this;
     }
 
+    private validatedUrl(url: string): string | null {
+        try {
+            let validUrl = url;
+            const protocolRegex = /^(https|http):\/\//i;
+            if (!protocolRegex.test(validUrl)) validUrl = `https://${validUrl}`;
+            new URL(validUrl);
+            return validUrl;
+        } catch (e) {
+            return null;
+        }
+    }
+
+
     /**
      * Scrape a website and return the TEXT content. (document.body.innerText)
      */
     async scrape(url: string): Promise<WebScraperResult> {
-        return this.webScraper.scrape(url);
+        const validatedUrl = this.validatedUrl(url);
+        if (!validatedUrl) throw new Error('Invalid URL');
+        return this.webScraper.scrape(validatedUrl);
     }
 }
 

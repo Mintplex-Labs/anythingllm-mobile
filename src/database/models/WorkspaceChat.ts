@@ -11,7 +11,7 @@ export type IDocumentCitation = {
     uuid: string;
     name: string;
     chunk: string
-    score: number;
+    score?: number;
   }
 }
 

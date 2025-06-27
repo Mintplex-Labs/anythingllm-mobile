@@ -8,6 +8,7 @@ import LLMPerformanceMonitor from "@/utils/chat/LLMPerformanceMonitor";
 import getEmbedder from "@/utils/Embedder";
 import OpenAILite from "@/utils/openai";
 import VectorDB, { SemanticSearchResult } from "@/utils/VectorDB";
+import { type IAgentAction } from "@/database/models/WorkspaceChat";
 
 interface BaseLLMProviderConfig {
   provider: string;
@@ -55,7 +56,8 @@ export type IStreamEvent = 'chunk' |
   'will_call_tools' |
   'report_tool_call' |
   'report_tool_call_result' |
-  'report_action';
+  'report_action' |
+  'report_in_progress_thought';
 export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[] | IAgentToolCall | IAgentAction;
 export type IStreamCallback = (
   event: IStreamEvent,
@@ -299,6 +301,17 @@ export default abstract class BaseOpenAILikeProvider {
         contextTexts,
       }),
     }
+  }
+
+  /**
+   * Runs a basic chat completion with already formatted messages {role: 'system', content: '...'}
+   * This is a wrapper around the getChatCompletion method that returns the text response and metrics.
+   * 
+   * @param messages - The messages to send to the model.
+   * @returns The text response and metrics.
+   */
+  async runBasicChatCompletion(messages: any[]): Promise<ICompleteResponse> {
+    return this.getChatCompletion(messages);
   }
 
   async chat({

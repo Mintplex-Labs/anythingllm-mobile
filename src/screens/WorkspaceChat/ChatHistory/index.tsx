@@ -45,6 +45,7 @@ export default function ChatHistory() {
         setRefreshing(true);
         chatHandler.fetchChats().finally(() => setRefreshing(false));
         setUserHasScrolled(false);
+        uiStore.emitter.emit(CHAT_HANDLER_EVENTS.CLEAR_ATTACHMENTS);
     }, [chatHandler.fetchChats]);
 
     useEffect(() => {

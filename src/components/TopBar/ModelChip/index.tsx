@@ -27,7 +27,7 @@ import {
   useBottomSheet,
   BOTTOM_SHEET_NAMES,
 } from '@/contexts/BottomSheetContext';
-import ModelCard from './ModelCard';
+import ModelCard from '@/components/ModelCard';
 
 export default function ModelChip() {
   const bottomSheetRef = useRef<BottomSheetModal>(null);

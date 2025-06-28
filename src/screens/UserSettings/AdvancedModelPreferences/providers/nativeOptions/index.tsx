@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import ModelCard from '@/components/TopBar/ModelChip/ModelCard';
 import { useState, useEffect } from 'react';
 import useModelManager from '@/hooks/useModelManager';
+import ModelCard from '@/components/ModelCard';
 
 interface NativeOptionsProps {
   llmPreferences: any;

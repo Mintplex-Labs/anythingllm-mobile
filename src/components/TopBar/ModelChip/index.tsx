@@ -11,8 +11,8 @@ import {
   TouchableOpacity,
   Text,
   ActivityIndicator,
-  Alert,
-  Image,
+  TextInput,
+  Keyboard,
 } from 'react-native';
 import {
   BottomSheetBackdrop,
@@ -20,25 +20,22 @@ import {
   BottomSheetModal,
 } from '@gorhom/bottom-sheet';
 import { FlatList } from 'react-native-gesture-handler';
+import { MagnifyingGlass, X } from 'phosphor-react-native';
 import useLlmPreference from '@/hooks/useLLMPreference';
-import { Circle, DownloadSimple, Cube } from 'phosphor-react-native';
-import * as RNFS from '@dr.pogodin/react-native-fs';
-import { resolveDestinationPathFromGGUFUrl } from '@/utils/models/defaults';
-import uiStore from '@/store/UIStore';
-import AwaitableAlert from '@/components/AwaitableAlert';
-import { formatBytes } from '@/utils/formatters';
-import { useNetInfo } from '@react-native-community/netinfo';
-import DownloadProgress from '@/screens/Onboarding/ModelSelection/DownloadProgress';
+import useModelManager from '@/hooks/useModelManager';
 import {
   useBottomSheet,
   BOTTOM_SHEET_NAMES,
 } from '@/contexts/BottomSheetContext';
-import MODEL_CARDS from '@/utils/models/defaults';
 import ModelCard from './ModelCard';
 
-export default function ModelChip({ modelName }: { modelName?: string }) {
+export default function ModelChip() {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { registerSheet, presentSheet, dismissSheet } = useBottomSheet();
+  const { llmPreferences } = useLlmPreference();
+
+  const modelName = llmPreferences.config.model;
+
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
@@ -64,19 +61,20 @@ export default function ModelChip({ modelName }: { modelName?: string }) {
     registerSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION, bottomSheetRef);
   }, [registerSheet]);
 
-  if (!modelName) return null;
   return (
     <Fragment>
       <TouchableOpacity
         onPress={() => presentSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)}
         style={{ marginTop: -5, maxWidth: 200 }}
-        className="bg-white/10 rounded-full">
+        className={`rounded-full ${
+          !modelName ? 'bg-red-500/20' : 'bg-white/10'
+        }`}>
         <Text
           style={{ fontSize: 14, paddingVertical: 4, paddingHorizontal: 12 }}
-          className="text-white"
+          className={`${!modelName ? 'text-red-500' : 'text-white'}`}
           numberOfLines={1}
           ellipsizeMode="middle">
-          {parsedModelName || 'Unknown LLM'}
+          {parsedModelName || 'No model loaded'}
         </Text>
       </TouchableOpacity>
       <BottomSheetModal
@@ -91,11 +89,15 @@ export default function ModelChip({ modelName }: { modelName?: string }) {
           width: 45,
           margin: 10,
         }}
+        enablePanDownToClose={false}
+        keyboardBehavior="extend"
+        keyboardBlurBehavior="restore"
         onDismiss={() => dismissSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)}>
         <AvailableModels
-          closeSheet={() =>
+          _closeSheet={() =>
             dismissSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)
           }
+          bottomSheetRef={bottomSheetRef}
         />
       </BottomSheetModal>
     </Fragment>
@@ -113,144 +115,86 @@ interface AvailableModel {
   imageUrl?: string;
 }
 
-function AvailableModels({ closeSheet }: { closeSheet: () => void }) {
-  const netInfo = useNetInfo();
+function AvailableModels({
+  bottomSheetRef,
+}: {
+  bottomSheetRef: React.RefObject<BottomSheetModal>;
+}) {
   const { llmPreferences, LLMProvider, isLoading, fetchLLMPreference } =
     useLlmPreference();
-  const [selectedModel, setSelectedModel] = useState<string | null>(null);
   const [availableModels, setAvailableModels] = useState<AvailableModel[]>([]);
-  const [modelDownloadUrl, setModelDownloadUrl] = useState<string | null>(null);
-  const [downloadedModels, setDownloadedModels] = useState<{
-    [key: string]: boolean;
-  }>({});
-  const [downloadProgress, setDownloadProgress] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef(null);
 
-  // Check which models are downloaded
-  useEffect(() => {
-    async function checkDownloadedModels() {
-      const downloadStatus = {};
-      for (const model of availableModels) {
-        const storageLocation = resolveDestinationPathFromGGUFUrl(
-          model.downloadUrl,
-        );
-        const isDownloaded = await RNFS.exists(storageLocation);
-        downloadStatus[model.modelId] = isDownloaded;
-      }
-      setDownloadedModels(downloadStatus);
-    }
-    checkDownloadedModels();
-  }, [availableModels]);
-
-  async function completeModelSelection(model: AvailableModel) {
-    setSelectedModel(model.modelId);
-    await uiStore.setToStorage('llmPreference', {
-      ...llmPreferences,
-      config: { ...llmPreferences.config, model: model.modelId },
-    });
-    await fetchLLMPreference();
-    setModelDownloadUrl(null);
-    closeSheet();
-  }
-
-  async function handleModelSelection(model: AvailableModel) {
-    if (!!modelDownloadUrl) return;
-
-    const storageLocation = resolveDestinationPathFromGGUFUrl(
-      model.downloadUrl,
-    );
-    const isDownloaded = await RNFS.exists(storageLocation);
-    if (isDownloaded) return completeModelSelection(model);
-
-    const modelSize =
-      typeof model.size === 'number' ? formatBytes(model.size) : model.size;
-    if (!netInfo.isConnected)
-      return Alert.alert(
-        'No internet connection.',
-        'You will need to be connected to the internet to download any model.',
-      );
-
-    if (netInfo.type !== 'wifi') {
-      const ignoreWarning = await AwaitableAlert(
-        'Data usage warning',
-        `We recommend using a Wi-Fi connection to download the model since it's ${modelSize} in size.`,
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Continue Anyway', style: 'default' },
-      );
-      if (!ignoreWarning) return;
-    }
-
-    const shouldDownload = await AwaitableAlert(
-      'Download model?',
-      `This will download the model to your device. It is ${modelSize} in size.`,
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Continue with download', style: 'default' },
-    );
-    if (!shouldDownload) return;
-    setModelDownloadUrl(model.downloadUrl);
-
-    // Start download with progress tracking
-    const downloadOptions = {
-      fromUrl: model.downloadUrl,
-      toFile: storageLocation,
-      progress: res => {
-        const progress = (res.bytesWritten / res.contentLength) * 100;
-        setDownloadProgress(Math.round(progress));
-      },
-      background: true,
-    };
-
-    try {
-      await RNFS.downloadFile(downloadOptions).promise;
-      await completeModelSelection(model);
-    } catch (error) {
-      console.error('Download failed:', error);
-      Alert.alert(
-        'Download failed',
-        'There was an error downloading the model.',
-      );
-      setModelDownloadUrl(null);
-      setDownloadProgress(0);
-    }
-  }
+  const {
+    modelDownloadUrl,
+    downloadProgress,
+    downloadedModels,
+    selectedModel,
+    downloadModel,
+    uninstallModel,
+  } = useModelManager({ llmPreferences, fetchLLMPreference, LLMProvider });
 
   useEffect(() => {
     if (LLMProvider) {
-      setAvailableModels(LLMProvider.availableModels() as AvailableModel[]);
-      setSelectedModel(LLMProvider.model);
+      const models = LLMProvider.availableModels() as AvailableModel[];
+      setAvailableModels(models);
     } else setAvailableModels([]);
   }, [LLMProvider]);
 
-  const getModelIcon = (model: AvailableModel) => {
-    if (model.imageUrl) {
-      return (
-        <Image
-          source={{ uri: model.imageUrl }}
-          style={{ width: 24, height: 24 }}
-          resizeMode="contain"
-        />
-      );
-    }
-    const defaultCard = MODEL_CARDS.find(
-      card => card.modelId === model.modelId,
+  const filteredModels = useMemo(() => {
+    return availableModels.filter(
+      model =>
+        model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (model.description || '')
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()),
     );
-    const Icon = defaultCard?.Icon || Cube;
-    return <Icon size={24} color="#000" />;
-  };
+  }, [availableModels, searchQuery]);
 
   if (isLoading) return <ActivityIndicator size="large" color="white" />;
 
   let seenAllPresets = 0;
   return (
     <View className="flex flex-col items-center justify-center gap-y-4 w-full h-full">
-      <Text className="text-white text-lg font-semibold py-4">
-        Choose your model
-      </Text>
-      {!availableModels.length && (
-        <Text className="text-white text-sm">No models available</Text>
+      <View className="flex flex-row items-center mx-6 bg-[#27282A] rounded-lg px-4">
+        <MagnifyingGlass size={20} weight="bold" color="white" />
+        <TextInput
+          ref={searchInputRef}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholder="Search"
+          placeholderTextColor="#9F9FA0"
+          className="flex-1 h-[38px] ml-2 text-white"
+          scrollEnabled={false}
+          onFocus={() => {
+            bottomSheetRef.current?.snapToIndex(1);
+            const keyboardListener = Keyboard.addListener(
+              'keyboardDidShow',
+              () => {
+                bottomSheetRef.current?.snapToIndex(1);
+              },
+            );
+
+            return () => {
+              keyboardListener.remove();
+            };
+          }}
+        />
+        {searchQuery.length > 0 && (
+          <TouchableOpacity onPress={() => setSearchQuery('')}>
+            <X size={20} color="white" />
+          </TouchableOpacity>
+        )}
+      </View>
+      {!filteredModels.length && (
+        <Text className="text-white text-sm text-center pt-4">
+          No models found for "{searchQuery}"
+        </Text>
       )}
-      {availableModels.length > 0 && (
+      {filteredModels.length > 0 && (
         <FlatList
-          data={availableModels}
+          data={filteredModels}
           className="w-full"
           contentContainerStyle={{
             paddingHorizontal: 20,
@@ -259,13 +203,13 @@ function AvailableModels({ closeSheet }: { closeSheet: () => void }) {
           }}
           showsVerticalScrollIndicator={true}
           scrollEnabled={true}
-          renderItem={({ item }) => {
+          renderItem={({ item, index }) => {
             const isCurrentlySelected = selectedModel === item.modelId;
             const isDownloaded = downloadedModels[item.modelId];
             if (!item.isPreset) seenAllPresets++;
 
             return (
-              <Fragment>
+              <Fragment key={`${item.modelId}-${index}`}>
                 {seenAllPresets === 1 && (
                   <View
                     style={{
@@ -308,35 +252,8 @@ function AvailableModels({ closeSheet }: { closeSheet: () => void }) {
                   isDownloaded={isDownloaded}
                   modelDownloadUrl={modelDownloadUrl}
                   downloadProgress={downloadProgress}
-                  onSelect={() => handleModelSelection(item)}
-                  onUninstall={async () => {
-                    const storageLocation = resolveDestinationPathFromGGUFUrl(
-                      item.downloadUrl,
-                    );
-                    const shouldUninstall = await AwaitableAlert(
-                      'Uninstall model?',
-                      'This will remove the model from your device.',
-                      { text: 'Cancel', style: 'cancel' },
-                      { text: 'Uninstall', style: 'destructive' },
-                    );
-                    if (shouldUninstall) {
-                      await RNFS.unlink(storageLocation);
-                      setDownloadedModels({
-                        ...downloadedModels,
-                        [item.modelId]: false,
-                      });
-                      if (selectedModel === item.modelId) {
-                        await uiStore.setToStorage('llmPreference', {
-                          ...llmPreferences,
-                          config: {
-                            ...llmPreferences.config,
-                            model: null,
-                          },
-                        });
-                        await fetchLLMPreference();
-                      }
-                    }
-                  }}
+                  onSelect={() => downloadModel(item)}
+                  onUninstall={() => uninstallModel(item)}
                 />
               </Fragment>
             );

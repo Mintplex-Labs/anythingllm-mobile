@@ -27,7 +27,7 @@ export default function ModelCard({
       return (
         <Image
           source={{ uri: model.imageUrl }}
-          style={{ width: 24, height: 24 }}
+          style={{ width: 32, height: 32 }}
           resizeMode="contain"
         />
       );
@@ -36,7 +36,7 @@ export default function ModelCard({
       card => card.modelId === model.modelId,
     );
     const Icon = defaultCard?.Icon || Cube;
-    return <Icon size={24} color="#000" />;
+    return <Icon size={32} color="#000" />;
   };
 
   return (
@@ -48,10 +48,10 @@ export default function ModelCard({
         borderColor: isSelected ? '#7cd4fd' : 'transparent',
         backgroundColor: isSelected ? '#2e404b' : '#2A2A2E',
       }}
-      className="w-full p-4 rounded-lg flex-row items-center justify-between">
+      className="w-full p-4 rounded-xl flex-row items-center justify-between">
       <View className="flex-1">
         <View className="flex-row items-center gap-2">
-          <View className="w-[32px] h-[32px] bg-white rounded justify-center items-center">
+          <View className="w-[38px] h-[38px] bg-white rounded justify-center items-center">
             {getModelIcon()}
           </View>
           <View className="flex-1">
@@ -78,7 +78,9 @@ export default function ModelCard({
             </View>
           ) : isDownloaded ? (
             <TouchableOpacity onPress={onUninstall} className="px-3 py-1 ml-4">
-              <Text className="text-red-500">Uninstall</Text>
+              <Text className="text-white font-medium text-sm py-2 px-4 bg-white/10 rounded-lg">
+                Uninstall
+              </Text>
             </TouchableOpacity>
           ) : (
             <View className="w-[24px] h-[24px] justify-center items-center ml-4">

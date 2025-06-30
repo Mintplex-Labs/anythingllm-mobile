@@ -6,9 +6,7 @@ export const markdownRules = {
     hr: (node, _children, _parent, _styles) => (
         <View key={node.key} style={[{ backgroundColor: 'rgba(178,221,255,0.2)', height: 1 }]} />
     ),
-    code_block: (node, _children, _parent, _styles) => (
-        <View key={node.key} style={[{ backgroundColor: 'red', height: 1 }]} />
-    ),
+
     fence: (node, _children, _parent, _styles) => {
         return (
             <View key={node.key} style={{ borderRadius: 10, overflow: 'hidden', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }}>
@@ -27,6 +25,9 @@ export const markdownRules = {
  */
 export const markdownStyles = StyleSheet.create({
     code_inline: {
+        backgroundColor: 'rgba(178,221,255,0.2)',
+    },
+    code_block: {
         backgroundColor: 'rgba(178,221,255,0.2)',
     },
 })

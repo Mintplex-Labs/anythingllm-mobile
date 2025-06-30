@@ -8,7 +8,7 @@ import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
 
 export type IOnDeviceStreamCallback = IGenieStreamCallback | ILlamaRnStreamCallback;
-export type OnDeviceProviderConstructorProps = { config: { model: string } }
+export type OnDeviceProviderConstructorProps = { config: { model: string | null } }
 
 export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   static instance: OnDeviceProvider;
@@ -16,8 +16,8 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   protected provider: string;
   protected config: any;
   protected computeRuntime: string = 'CPU';
-  public model: string;
-  protected submodule: GenieWrapper | LlamaRnWrapper;
+  public model: string | null;
+  protected submodule: GenieWrapper | LlamaRnWrapper | null = null;
   protected llamaRnContext: any;
 
   protected client: OpenAILite;
@@ -34,18 +34,21 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
     this.provider = 'native';
     this.config = config;
-    this.computeRuntime = this.determineComputeRuntime(this.config.model);
     this.model = this.config.model;
+    this.computeRuntime = this.determineComputeRuntime(this.model);
 
-    this.submodule = this.setSubmodule(this.model);
-    this.log(`${this.name}::${this.submodule.name} initialized with model ${this.model}`);
+    if (this.model) {
+      this.submodule = this.setSubmodule(this.model);
+      this.log(`${this.name}::${this.submodule.name} initialized with model ${this.model}`);
+    }
   }
 
   log = (text: string, ...args: any[]) => {
-    console.log(`\x1b[36m[${this.constructor.name}:${this.submodule.name}]\x1b[0m ${text}`, ...args);
+    console.log(`\x1b[36m[${this.constructor.name}:${this.submodule?.name || 'no-model'}]\x1b[0m ${text}`, ...args);
   }
 
-  determineComputeRuntime = (modelName: string) => {
+  determineComputeRuntime = (modelName: string | null) => {
+    if (!modelName) return 'CPU';
     if (modelName.endsWith('.gguf')) return 'CPU';
     const definition = defaultModels.find(m => m.id === modelName);
     return definition?.runtime || 'CPU';
@@ -54,11 +57,10 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   private setSubmodule(model: string) {
     if (!model) throw new Error('No model provided to setSubmodule');
     if (this.computeRuntime === 'NPU') {
-      this.submodule = new GenieWrapper({ model, parent: this });
+      return new GenieWrapper({ model, parent: this });
     } else {
-      this.submodule = new LlamaRnWrapper({ model, parent: this });
+      return new LlamaRnWrapper({ model, parent: this });
     }
-    return this.submodule;
   }
 
   static getInstance(props: OnDeviceProviderConstructorProps) {
@@ -70,20 +72,32 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
    * Delegates to the submodule to cleanup the model.
    */
   async unloadModel() {
-    await this.submodule.cleanup();
+    if (this.submodule) {
+      await this.submodule.cleanup();
+    }
   }
 
   get name() {
     return this.provider;
   }
 
-  async loadNewModel(model: string) {
-    if (!model) return this.log('No model provided to loadNewModel - skipping.');
+  async loadNewModel(model: string | null) {
+    if (!model) {
+      this.log('No model provided to loadNewModel - cleaning up.');
+      if (this.submodule) {
+        await this.submodule.cleanup();
+        this.submodule = null;
+      }
+      this.model = null;
+      return;
+    }
 
     if (this.model === model) return;
     this.model = model;
     this.computeRuntime = this.determineComputeRuntime(this.model);
-    await this.submodule.cleanup();
+    if (this.submodule) {
+      await this.submodule.cleanup();
+    }
     this.submodule = this.setSubmodule(this.model);
     this.log(`${this.name}::${this.submodule.name} re-initialized with model ${this.model}`);
   }
@@ -137,6 +151,10 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     onComplete?: (response: any) => void;
     onStream?: IStreamCallback | IOnDeviceStreamCallback;
   }) {
+    if (!this.submodule || !this.model) {
+      throw new Error('No model loaded. Please select a model first.');
+    }
+
     const { formattedMessages, citations } = await this.buildPrompt(messages);
     if (!streaming) {
       const response = await this.submodule.getChatCompletion(formattedMessages as any);
@@ -154,20 +172,13 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     // Recursive tool call loop
     await ToolsManager.toolCallLoop({
       currentResponse: fullResult,
-      runStreamCompletion: (messages: any[], callback: IOnDeviceStreamCallback, availableTools: any[]) => this.submodule.streamGetChatCompletion(messages, callback, availableTools),
+      runStreamCompletion: (messages: any[], callback: IOnDeviceStreamCallback, availableTools: any[]) => this.submodule!.streamGetChatCompletion(messages, callback, availableTools),
       streamEmitter: (event: IStreamEvent, data: any) => onStream(event, data),
       currentMessageHistory: formattedMessages,
     });
 
-    // Single tool call loop
-    // If the model supports tool calls we can delegate the execution to the ToolsManager
-    // if (fullResult.toolCalls) {
-    //   const toolCallCompletedMessages = await ToolsManager.manageToolCallExecutions(fullResult.toolCalls, onStream, formattedMessages);
-    //   fullResult = await this.submodule.streamGetChatCompletion(toolCallCompletedMessages as any, (token: string) => onStream('chunk', token), await ToolsManager.injectAvailableTools());
-    // }
-
     if (!!fullResult.metrics) onStream('report_metrics', fullResult.metrics);
-    if (!!citations) onStream('report_citations', citations); // Reports document citations - will be merged
+    if (!!citations) onStream('report_citations', citations);
     onStream('complete', '');
   }
 }

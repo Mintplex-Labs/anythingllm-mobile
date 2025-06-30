@@ -8,9 +8,7 @@ export type ILocation = {
     lat: number;
     lon: number;
     timezone: string;
-    isp: string;
-    org: string;
-    as: string;
+    asn: string;
     query: string;
 }
 
@@ -45,7 +43,7 @@ export default {
     },
     _getLocation: async function (): Promise<ILocation | null> {
         try {
-            const location = await fetch('http://ip-api.com/json/');
+            const location = await fetch('https://geojson.anythingllm.com');
             const data = await location.json();
             return data;
         } catch (error) {

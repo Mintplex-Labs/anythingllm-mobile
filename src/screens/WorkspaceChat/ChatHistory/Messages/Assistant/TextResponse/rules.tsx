@@ -1,4 +1,3 @@
-import { children } from "@nozbe/watermelondb/decorators";
 import { StyleSheet, View, Text } from "react-native";
 
 export const markdownRules = {

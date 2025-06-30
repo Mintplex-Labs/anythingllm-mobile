@@ -27,8 +27,8 @@ export default function ModelCard({
       return (
         <Image
           source={{ uri: model.imageUrl }}
-          style={{ width: 32, height: 32 }}
-          resizeMode="contain"
+          style={{ width: '100%', height: '100%', borderRadius: 10 }}
+          resizeMode="cover"
         />
       );
     }
@@ -36,7 +36,11 @@ export default function ModelCard({
       card => card.modelId === model.modelId,
     );
     const Icon = defaultCard?.Icon || Cube;
-    return <Icon size={32} color="#000" />;
+    return (
+      <View className="w-[38px] h-[38px] rounded-lg justify-center items-center bg-white">
+        <Icon size={32} color="#000" />
+      </View>
+    );
   };
 
   return (
@@ -51,7 +55,7 @@ export default function ModelCard({
       className="w-full p-4 rounded-xl flex-row items-center justify-between">
       <View className="flex-1">
         <View className="flex-row items-center gap-2">
-          <View className="w-[38px] h-[38px] bg-white rounded justify-center items-center">
+          <View className="w-[38px] h-[38px] rounded justify-center items-center">
             {getModelIcon()}
           </View>
           <View className="flex-1">

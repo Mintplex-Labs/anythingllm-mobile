@@ -16,7 +16,7 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
   const netInfo = useNetInfo();
   const [modelDownloadUrl, setModelDownloadUrl] = useState<string | null>(null);
   const [downloadProgress, setDownloadProgress] = useState(0);
-  const [downloadedModels, setDownloadedModels] = useState<{[key: string]: boolean}>({});
+  const [downloadedModels, setDownloadedModels] = useState<{ [key: string]: boolean }>({});
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
 
   // Check which models are downloaded and set initial selection
@@ -29,7 +29,7 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
   }, [LLMProvider]);
 
   const updateDownloadedModels = async (models: any[]) => {
-    const downloaded: {[key: string]: boolean} = {};
+    const downloaded: { [key: string]: boolean } = {};
     for (const model of models) {
       const path = resolveDestinationPathFromGGUFUrl(model.downloadUrl);
       downloaded[model.modelId] = await RNFS.exists(path);
@@ -52,7 +52,8 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
       await AwaitableAlert(
         'No internet connection.',
         'You will need to be connected to the internet to download any model.',
-        { text: 'OK', style: 'default' }
+        { text: 'Dismiss', style: 'default' },
+        { text: 'OK', style: 'default' },
       );
       return false;
     }
@@ -100,6 +101,7 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
       await AwaitableAlert(
         'Download failed',
         'There was an error downloading the model.',
+        { text: 'Dismiss', style: 'default' },
         { text: 'OK', style: 'default' }
       );
       setModelDownloadUrl(null);

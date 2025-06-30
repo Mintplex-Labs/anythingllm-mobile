@@ -66,9 +66,8 @@ export default function ModelChip() {
       <TouchableOpacity
         onPress={() => presentSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)}
         style={{ marginTop: -5, maxWidth: 200 }}
-        className={`rounded-full ${
-          !modelName ? 'bg-red-500/20' : 'bg-white/10'
-        }`}>
+        className={`rounded-full ${!modelName ? 'bg-red-500/20' : 'bg-white/10'
+          }`}>
         <Text
           style={{ fontSize: 14, paddingVertical: 4, paddingHorizontal: 12 }}
           className={`${!modelName ? 'text-red-500' : 'text-white'}`}
@@ -89,16 +88,11 @@ export default function ModelChip() {
           width: 45,
           margin: 10,
         }}
-        enablePanDownToClose={false}
+        enablePanDownToClose={true}
         keyboardBehavior="extend"
         keyboardBlurBehavior="restore"
         onDismiss={() => dismissSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)}>
-        <AvailableModels
-          _closeSheet={() =>
-            dismissSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)
-          }
-          bottomSheetRef={bottomSheetRef}
-        />
+        <AvailableModels bottomSheetRef={bottomSheetRef} />
       </BottomSheetModal>
     </Fragment>
   );
@@ -120,8 +114,7 @@ function AvailableModels({
 }: {
   bottomSheetRef: React.RefObject<BottomSheetModal>;
 }) {
-  const { llmPreferences, LLMProvider, isLoading, fetchLLMPreference } =
-    useLlmPreference();
+  const { llmPreferences, LLMProvider, isLoading, fetchLLMPreference } = useLlmPreference();
   const [availableModels, setAvailableModels] = useState<AvailableModel[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef(null);

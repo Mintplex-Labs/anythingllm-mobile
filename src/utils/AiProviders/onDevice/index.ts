@@ -1,7 +1,7 @@
 import { defaultModels } from "@/utils/models";
 import GenieWrapper, { IGenieStreamCallback } from "./genie";
 import LlamaRnWrapper, { ILlamaRnStreamCallback } from "./llamaRn";
-import BaseOpenAILikeProvider, { IStreamCallback, IStreamEvent } from "../baseOpenAILikeProvider";
+import BaseOpenAILikeProvider, { ICompleteResponse, IStreamCallback, IStreamEvent } from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
 import MODEL_CARDS from "@/utils/models/defaults";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
@@ -126,12 +126,18 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
           modelId: m.id,
           downloadUrl: m.downloadUrl || '',
           isPreset: false,
+          // @ts-ignore
+          imageUrl: m.imageUrl ?? null,
         }
       });
     return [
       ...basicModels,
       ...crossPlatformModels
     ];
+  }
+
+  async runBasicChatCompletion(messages: any[]): Promise<ICompleteResponse> {
+    return this.submodule.getChatCompletion(messages);
   }
 
   override async chat({

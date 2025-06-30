@@ -5,7 +5,7 @@ import MODEL_CARDS, { resolveDestinationPathFromGGUFUrl } from "@/utils/models/d
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { PATHS } from "@/utils/paths";
 import uiStore from "@/store/UIStore";
-import ModelCard from "./ModelCard";
+import ModelCard from "@/components/LLMSelection/ModelCard";
 import AwaitableAlert from "@/components/AwaitableAlert";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 
@@ -71,7 +71,7 @@ export default function SimpleModelSelection() {
           You can change this later, but pick the one that best suits your needs.
         </Text>
       </View>
-      <View className="flex flex-col gap-y-4 items-center">
+      <View className="flex flex-col items-center" style={{ gap: 16 }}>
         {MODEL_CARDS.map((card, index) => (
           <ModelCard
             key={index}

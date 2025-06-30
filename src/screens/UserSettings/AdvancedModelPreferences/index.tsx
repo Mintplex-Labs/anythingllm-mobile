@@ -5,17 +5,16 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { ArrowLeft } from 'phosphor-react-native';
 import { IWorkspacePageKey } from '../index';
 import useLLMPreference from '@/hooks/useLLMPreference';
-import { useState } from 'react';
 import ProviderSelection from '@/components/LLMSelection/ProviderSelection';
-import OpenAiOptions from './providers/openAiOptions';
 import GenericOpenAiOptions from './providers/genericOpenAiOptions';
 import NativeOptions from './providers/nativeOptions';
+import { screenDimensions } from '@/utils/constants';
 
 interface AdvancedModelPreferencesProps {
   goToPage: (page: IWorkspacePageKey) => void;
 }
 
-export function AdvancedModelPreferences({
+export default function AdvancedModelPreferences({
   goToPage,
 }: AdvancedModelPreferencesProps) {
   const insets = useSafeAreaInsets();
@@ -26,23 +25,27 @@ export function AdvancedModelPreferences({
     fetchLLMPreference,
     updateLLMPreference,
   } = useLLMPreference();
-  const [openAIKey, setOpenAIKey] = useState(
-    llmPreferences.config.apiKey || '',
-  );
+  async function updateProviderSettings(provider: string, settings: { apiKey?: string, baseUrl?: string, model?: string }) {
+    await updateLLMPreference(provider, {
+      ...llmPreferences.config,
+      ...settings,
+    });
+  }
 
   async function handleProviderSelection(provider: string) {
     switch (provider) {
       case 'openai':
         await updateLLMPreference('openai', {
-          apiKey: openAIKey,
+          apiKey: llmPreferences.config.apiKey,
           modelId: 'gpt-3.5-turbo',
+          baseUrl: 'https://api.openai.com/v1/',
         });
         break;
       case 'generic-openai':
         await updateLLMPreference('generic-openai', {
-          apiKey: openAIKey,
-          baseUrl: llmPreferences.config.baseUrl || '',
-          model: llmPreferences.config.model || '',
+          apiKey: '',
+          baseUrl: '',
+          model: '',
         });
         break;
       default:
@@ -52,35 +55,28 @@ export function AdvancedModelPreferences({
     }
   }
 
-  function goBack() {
-    goToPage('main');
-  }
-
   const renderProviderOptions = () => {
     switch (llmPreferences.provider) {
       case 'openai':
-        return (
-          <OpenAiOptions apiKey={openAIKey} onApiKeyChange={setOpenAIKey} />
-        );
+        return <GenericOpenAiOptions
+          provider="openai"
+          apiKey={llmPreferences.config.apiKey || ''}
+          baseUrl={llmPreferences.config.baseUrl || ''}
+          model={llmPreferences.config.model || ''}
+          onApiKeyChange={updateProviderSettings}
+          onBaseUrlChange={updateProviderSettings}
+          onModelChange={updateProviderSettings}
+        />
       case 'generic-openai':
         return (
           <GenericOpenAiOptions
+            provider="generic-openai"
+            apiKey={llmPreferences.config.apiKey || ''}
             baseUrl={llmPreferences.config.baseUrl || ''}
-            apiKey={openAIKey}
-            modelName={llmPreferences.config.model || ''}
-            onBaseUrlChange={url => {
-              updateLLMPreference('generic-openai', {
-                ...llmPreferences.config,
-                baseUrl: url,
-              });
-            }}
-            onApiKeyChange={setOpenAIKey}
-            onModelNameChange={name => {
-              updateLLMPreference('generic-openai', {
-                ...llmPreferences.config,
-                model: name,
-              });
-            }}
+            model={llmPreferences.config.model || ''}
+            onApiKeyChange={updateProviderSettings}
+            onBaseUrlChange={updateProviderSettings}
+            onModelChange={updateProviderSettings}
           />
         );
       case 'native':
@@ -96,61 +92,59 @@ export function AdvancedModelPreferences({
   };
 
   if (isLoading) return <ActivityIndicator size="large" color="white" />;
-
   return (
     <SafeView
       scrollable={false}
       safeAreaClassNames="pt-[21px]"
-      containerClassNames="flex-1 flex flex-col"
+      containerClassNames="flex flex-col"
       safeAreaStyle={{ backgroundColor: '#0E0F0F' }}>
       {/* Header */}
       <View
         style={{
-          paddingHorizontal: 30,
           paddingTop: insets.top,
           paddingBottom: 20,
         }}
         className="w-full flex flex-row items-center justify-center relative">
         <TouchableOpacity
-          onPress={goBack}
+          onPress={() => goToPage('main')}
           className="absolute left-0 flex flex-row items-center gap-2">
           <ArrowLeft size={24} color="#FFF" weight="bold" />
         </TouchableOpacity>
-        <Text
-          style={{ maxWidth: '80%' }}
-          numberOfLines={1}
-          ellipsizeMode="middle"
-          className="text-white text-lg font-medium">
+        <Text className="text-white text-lg font-medium">
           Model Selection
         </Text>
       </View>
 
-      <View className="flex-1 flex flex-col">
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingHorizontal: 8,
-            paddingBottom: 100,
-          }}>
-          <View className="flex-1">
-            {/* Provider Selection */}
-            <View className="mb-8">
-              <Text className="text-[#9F9FA0] text-sm font-semibold mb-4">
-                Choose an LLM Provider*
-              </Text>
-              <ProviderSelection
-                selection={{
-                  provider: llmPreferences.provider,
-                  config: llmPreferences.config,
-                }}
-                onChange={handleProviderSelection}
-              />
-            </View>
+      {/* Provider Selection */}
+      <View style={{ gap: 16, marginBottom: 31 }} className="flex flex-col">
+        <Text className="text-white font-semibold text-lg">
+          Choose an LLM Provider
+        </Text>
+        <ProviderSelection
+          selection={{
+            provider: llmPreferences.provider,
+            config: llmPreferences.config,
+          }}
+          onChange={handleProviderSelection}
+        />
+      </View>
 
-            {/* Model Selection */}
+      <View style={{ gap: 16 }} className="flex flex-col">
+        <Text className="text-white font-semibold text-lg">
+          {llmPreferences.provider === 'native' ? 'LLM Model' : 'Provider Settings'}
+        </Text>
+        <View style={{ height: screenDimensions.height - insets.bottom - 300 }}>
+          <ScrollView
+            contentContainerStyle={{
+              paddingHorizontal: 8,
+              paddingBottom: 100,
+              gap: 16,
+            }}
+            showsVerticalScrollIndicator={true}
+          >
             {renderProviderOptions()}
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </View>
       </View>
     </SafeView>
   );

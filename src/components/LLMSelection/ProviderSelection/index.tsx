@@ -64,13 +64,13 @@ export default function ProviderSelection({
     <View>
       <View className="relative">
         <TouchableOpacity
-          style={{ backgroundColor: '#27282A' }}
-          className="flex-row items-center justify-between px-4 py-[14px] rounded-lg h-[68px]"
+          style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', height: 68, width: '100%' }}
+          className="flex-row items-center justify-between px-4 py-[14px] rounded-lg"
           onPress={() => bottomSheetRef.current?.present()}>
           <View className="flex-row items-center">
             <Image
               source={selectedProviderObject.logo}
-              style={{ width: 32, height: 32 }}
+              style={{ width: 38, height: 38 }}
               className="rounded-lg mr-3"
             />
             <Text className="text-white text-lg">

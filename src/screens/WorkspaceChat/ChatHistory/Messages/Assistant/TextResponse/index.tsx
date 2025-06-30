@@ -1,7 +1,7 @@
 import { View, TouchableOpacity } from 'react-native';
 import { type DynamicChatMessage } from '@/screens/WorkspaceChat/ChatHistory';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
-import { markdownRules } from './rules';
+import { markdownRules, markdownStyles } from './rules';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { hapticOptions } from '@/utils/clipboard';
@@ -28,7 +28,7 @@ export default function TextResponseContainer({
         delayLongPress={500}
         activeOpacity={0.7}
         style={{ width: '100%' }}>
-        <Markdown rules={markdownRules}>{textResponse}</Markdown>
+        <Markdown rules={markdownRules} style={markdownStyles} mergeStyle={false}>{textResponse}</Markdown>
       </TouchableOpacity>
     </View>
   );

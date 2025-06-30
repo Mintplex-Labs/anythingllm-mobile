@@ -4,6 +4,7 @@ import { CHAT_HANDLER_EVENTS, useChatHandlerContext } from "@/hooks/useChatHandl
 import LocationAgentTool from "@/utils/ToolsManager/tools/getLocation";
 import { useEffect, useState } from "react";
 import uiStore from "@/store/UIStore";
+import { listProcessedFiles } from "@/utils/fs";
 
 const noop = () => { };
 const smartMessages = {
@@ -64,6 +65,31 @@ const smartMessages = {
                 await uiStore.setToStorage('tools', { ...enabledTools, draftEmail: false } as never);
             }
         }
+    },
+    summarize: {
+        text: async function () {
+            const mode = ['filename', 'url'];
+            const randomMode = mode[Math.floor(Math.random() * mode.length)];
+            let text = 'Summarize paulgraham.com/foundermode.html';
+            if (randomMode === 'url') return text;
+
+            const files = await listProcessedFiles();
+            if (randomMode === 'filename' && files.length) {
+                const randomFile = files[Math.floor(Math.random() * files.length)];
+                text = `Summarize ${randomFile.name}`;
+            }
+            return text;
+        },
+        onClick: {
+            before: async function () {
+                const enabledTools = await uiStore.getFromStorage('tools', {});
+                await uiStore.setToStorage('tools', { ...enabledTools, summarize: true } as never);
+            },
+            after: async function () {
+                const enabledTools = await uiStore.getFromStorage('tools', {});
+                await uiStore.setToStorage('tools', { ...enabledTools, summarize: false } as never);
+            }
+        }
     }
 };
 
@@ -93,7 +119,7 @@ export default function EmptyList({ height }: { height: number }) {
     if (loading) return <EmptyListLoading height={height} />;
     return (
         <View style={{ height, gap: 14 }} className='flex flex-col items-center justify-center'>
-            {messages.map((message, index) => <DefaultMessage key={index} item={message} />)}
+            {messages.map((message, index) => <DefaultMessage key={index} item={message as never} />)}
         </View>
     )
 }

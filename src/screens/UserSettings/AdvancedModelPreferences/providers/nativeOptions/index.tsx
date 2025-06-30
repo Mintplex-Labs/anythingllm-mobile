@@ -1,7 +1,7 @@
-import { View, Text, TouchableOpacity } from 'react-native';
-import { useState, useEffect } from 'react';
 import useModelManager from '@/hooks/useModelManager';
+import { Text, TouchableOpacity } from 'react-native';
 import ModelCard from '@/components/ModelCard';
+import { useState, useEffect, Fragment } from 'react';
 
 interface NativeOptionsProps {
   llmPreferences: any;
@@ -38,10 +38,7 @@ export default function NativeOptions({
     : availableModels.filter(model => model.isPreset);
 
   return (
-    <View
-      style={{ backgroundColor: '#0E0F0F' }}
-      className="flex flex-col gap-y-4">
-      <Text className="text-[#9F9FA0] text-sm font-semibold">LLM Model*</Text>
+    <Fragment>
       {displayedModels.map((model, index) => (
         <ModelCard
           key={`settings-${model.modelId}-${index}`}
@@ -63,6 +60,6 @@ export default function NativeOptions({
           </Text>
         </TouchableOpacity>
       )}
-    </View>
+    </Fragment>
   );
 }

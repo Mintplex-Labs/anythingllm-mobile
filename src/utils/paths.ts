@@ -12,9 +12,6 @@ export const PATHS = {
   developer: {
     home: 'DevToolsMenu',
   },
-  import_workspace: {
-    start: 'ImportWorkspaceStart',
-    // verify: 'ImportWorkspaceVerify',
-    // success: 'ImportWorkspaceSuccess',
-  }
+
+  connect_to_instance: 'ConnectToInstance',
 };

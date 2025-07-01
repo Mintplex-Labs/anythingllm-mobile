@@ -34,12 +34,12 @@ export default function SidebarContent({ navigation }: { navigation: any }) {
 
   const goToWorkspaceImportStart = () => {
     uiStore.emitter.emit(uiStore.globalEvents.REDIRECT, {
-      path: PATHS.import_workspace.start,
+      path: PATHS.connect_to_instance,
     });
     navigation.reset({
       index: 0,
       // @ts-ignore
-      routes: [{ name: PATHS.import_workspace.start }],
+      routes: [{ name: PATHS.connect_to_instance }],
     });
   }
 
@@ -56,6 +56,11 @@ export default function SidebarContent({ navigation }: { navigation: any }) {
     if (drawerStatus === 'open') return dismissAllSheets();
     if (drawerStatus === 'closed') return presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true);
   }, [drawerStatus]);
+
+  useEffect(() => {
+    uiStore.emitter.addListener(uiStore.globalEvents.REFRESH_WORKSPACES, onRefresh);
+    return () => { uiStore.emitter.removeAllListeners(uiStore.globalEvents.REFRESH_WORKSPACES) };
+  }, []);
 
   return (
     <SafeView applyInsets={false} safeAreaClassNames='bg-[--hex-gray-10]' containerClassNames='flex-1 flex-col flex px-2 pt-4' edges={['top', 'bottom']}>

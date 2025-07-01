@@ -211,4 +211,20 @@ export default class WorkspaceChat extends Model {
     });
     return true;
   }
+
+  static async directCreate(data: Partial<WorkspaceChatType>): Promise<WorkspaceChatType> {
+    let newWorkspaceChat: any;
+    await database.write(async () => {
+      newWorkspaceChat = await database.get(WorkspaceChat.table).create((workspaceChat: any) => {
+        Object.assign(workspaceChat, data);
+        if (!workspaceChat.uuid) workspaceChat.uuid = generateUUID();
+        if (!workspaceChat.workspaceThreadSlug) workspaceChat.workspaceThreadSlug = data.workspaceThreadSlug;
+        if (!workspaceChat.prompt) workspaceChat.prompt = data.prompt;
+        if (!workspaceChat.response) workspaceChat.response = data.response;
+        workspaceChat.createdAt = Date.now();
+      });
+    });
+    newWorkspaceChat = this.toWorkspaceChatObject(newWorkspaceChat);
+    return newWorkspaceChat;
+  }
 }

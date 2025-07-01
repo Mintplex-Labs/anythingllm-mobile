@@ -5,19 +5,17 @@ import { ArrowLeft } from "phosphor-react-native";
 import { IWorkspacePageKey } from "../index";
 import { PATHS } from "@/utils/paths";
 import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Camera, CameraDevice, useCameraPermission, getCameraDevice, useCodeScanner } from "react-native-vision-camera";
-import { showToast } from "@/utils/Notification";
 
 interface MainViewProps {
-    goToPage: (page: IWorkspacePageKey) => void;
+    goToPage: (page: IWorkspacePageKey, params: object) => void;
 }
 
 export function MainView({ goToPage }: MainViewProps) {
     const navigation = useNavigation();
     const insets = useSafeAreaInsets();
-    const [qrCode, setQRCode] = useState<string | null>(null);
     function goHome() {
         navigation.reset({
             index: 0,
@@ -27,11 +25,25 @@ export function MainView({ goToPage }: MainViewProps) {
         return true;
     }
 
-    function onQRCodeScanned(qrCode: any) {
-        showToast('QR code found - ' + qrCode, 'short');
-        setQRCode(qrCode);
-    }
+    function onQRCodeScanned(connectionUrlFromQRCode: string) {
+        try {
+            console.log('connectionUrlFromQRCode', connectionUrlFromQRCode);
+            if (!connectionUrlFromQRCode) throw new Error('Invalid connection URL');
 
+            const connectionUrl = new URL(connectionUrlFromQRCode);
+            if (connectionUrl.protocol !== 'http:' && connectionUrl.protocol !== 'https:') throw new Error('Invalid connection URL');
+            if (connectionUrl.pathname !== '/api/mobile') throw new Error('Invalid connection URL');
+            navigation.reset({
+                index: 0,
+                // @ts-ignore
+                routes: [{ name: PATHS.connect_to_instance, params: { page: 'verify', connectionUrl: connectionUrlFromQRCode } }],
+            });
+            return true
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+    }
     useHighjackBackButtonPress(goHome);
 
     return (
@@ -43,24 +55,18 @@ export function MainView({ goToPage }: MainViewProps) {
         >
             {/* Header */}
             <View style={{ paddingHorizontal: 30, paddingTop: insets.top, paddingBottom: 76 }} className="w-full flex flex-row items-center justify-center relative">
-                <TouchableOpacity onPress={goHome} className="absolute left-0 flex flex-row items-center gap-2">
+                <TouchableOpacity onPress={goHome} className="absolute top-8 left-0 flex flex-row items-center gap-2">
                     <ArrowLeft size={24} color="#FFF" weight="bold" />
                 </TouchableOpacity>
-                <Text style={{ maxWidth: '80%' }} numberOfLines={1} ellipsizeMode="middle" className="text-white text-lg font-medium">Import Workspace</Text>
+                <Text style={{ maxWidth: '80%' }} numberOfLines={1} ellipsizeMode="middle" className="text-white text-lg font-medium">Connect to AnythingLLM</Text>
             </View>
 
             <View style={{ gap: 33 }} className="w-full flex flex-col items-center justify-center">
                 <CameraView onScanReceived={onQRCodeScanned} />
                 <Text style={{ textAlign: 'center' }} className="text-white text-lg">
-                    Scan the QR code for your AnythingLLM workspace to connect or sync it's data to this mobile device!
+                    Scan the QR code for your AnythingLLM desktop app to sync it's data to this mobile device for AI on the go!
                 </Text>
             </View>
-
-            {!qrCode && (
-                <View className="flex-1 w-full flex flex-col items-center justify-center">
-                    <Text className="text-white text-lg opacity-50">Waiting for QR code...</Text>
-                </View>
-            )}
         </SafeView >
     );
 }

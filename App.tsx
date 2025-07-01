@@ -44,7 +44,7 @@ const App = observer(() => {
       </SafeAreaProvider>
     );
 
-  initialRoute.path = PATHS.import_workspace.start;
+  initialRoute.path = PATHS.connect_to_instance;
   // console.log('initialRoute', initialRoute);
   return (
     <BottomSheetProvider>
@@ -109,10 +109,11 @@ const App = observer(() => {
                           initialParams={initialRoute.params}
                         />
 
+                        {/* Connect to instance screens and flows */}
                         <Drawer.Screen
-                          name={PATHS.import_workspace.start}
+                          name={PATHS.connect_to_instance}
                           component={gestureHandlerRootHOC(
-                            Screens.WorkspaceImport,
+                            Screens.ConnectToInstance,
                           )}
                           options={{ headerShown: false }}
                           initialParams={initialRoute.params}

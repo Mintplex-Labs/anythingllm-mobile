@@ -5,6 +5,8 @@ import { useNetInfo } from '@react-native-community/netinfo';
 import { formatBytes } from '@/utils/formatters';
 import AwaitableAlert from '@/components/AwaitableAlert';
 import uiStore from '@/store/UIStore';
+import PushNotifications from '@/utils/PushNotifications';
+import { activateKeepAwake, deactivateKeepAwake } from '@/utils/keepAwake';
 
 interface UseModelManagerProps {
   llmPreferences: any;
@@ -83,21 +85,53 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     const dirPath = storageLocation.substring(0, storageLocation.lastIndexOf('/'));
     await RNFS.mkdir(dirPath, { NSURLIsExcludedFromBackupKey: true });
 
+    const downloadNotificationId = await PushNotifications.send({
+      title: 'Downloading model',
+      body: `Downloading ${model.modelId}`,
+      android: {
+        progress: {
+          indeterminate: true,
+        },
+      },
+    });
+
     try {
+      activateKeepAwake();
       await RNFS.downloadFile({
         fromUrl: model.downloadUrl,
         toFile: storageLocation,
         progress: res => {
-          const progress = (res.bytesWritten / res.contentLength) * 100;
-          setDownloadProgress(Math.round(progress));
+          const progress = Math.round((res.bytesWritten / res.contentLength) * 100);
+          setDownloadProgress(progress);
+          PushNotifications.send({
+            id: downloadNotificationId,
+            title: 'Downloading model',
+            body: `Downloading ${model.modelId}`,
+            android: {
+              progress: {
+                current: progress,
+                max: 100,
+              },
+            },
+          });
         },
         background: true,
+        discretionary: true,
+        progressInterval: 5000,
       }).promise;
 
       setDownloadedModels(prev => ({ ...prev, [model.modelId]: true }));
+      PushNotifications.send({
+        title: 'Download complete',
+        body: `Downloaded ${model.modelId}`,
+      });
       return await selectModel(model);
     } catch (error) {
       console.error('Download failed:', error);
+      PushNotifications.send({
+        title: 'Download failed',
+        body: `There was an error downloading the model.`,
+      });
       await AwaitableAlert(
         'Download failed',
         'There was an error downloading the model.',
@@ -107,6 +141,9 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
       setModelDownloadUrl(null);
       setDownloadProgress(0);
       return false;
+    } finally {
+      deactivateKeepAwake();
+      PushNotifications.cancel(downloadNotificationId);
     }
   };
 

@@ -22,9 +22,11 @@ import useInitialRoute from '@/hooks/useInitialRoute';
 import './src/utils/polyfills';
 import { BottomSheetProvider } from '@/contexts/BottomSheetContext';
 import { LLMPreferenceProvider } from '@/contexts/LLMPreferenceContext';
+import { useEnablePushNotifications } from '@/utils/PushNotifications';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
+  useEnablePushNotifications();
   const theme = useTheme();
   const styles = rootStyles(theme);
   const { initialRoute, isLoading } = useInitialRoute();

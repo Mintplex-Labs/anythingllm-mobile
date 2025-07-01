@@ -2,18 +2,13 @@ import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowLeft } from "phosphor-react-native";
-import { IWorkspacePageKey } from "../index";
 import { PATHS } from "@/utils/paths";
 import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Camera, CameraDevice, useCameraPermission, getCameraDevice, useCodeScanner } from "react-native-vision-camera";
 
-interface MainViewProps {
-    goToPage: (page: IWorkspacePageKey, params: object) => void;
-}
-
-export function MainView({ goToPage }: MainViewProps) {
+export function MainView() {
     const navigation = useNavigation();
     const insets = useSafeAreaInsets();
     function goHome() {
@@ -27,9 +22,7 @@ export function MainView({ goToPage }: MainViewProps) {
 
     function onQRCodeScanned(connectionUrlFromQRCode: string) {
         try {
-            console.log('connectionUrlFromQRCode', connectionUrlFromQRCode);
             if (!connectionUrlFromQRCode) throw new Error('Invalid connection URL');
-
             const connectionUrl = new URL(connectionUrlFromQRCode);
             if (connectionUrl.protocol !== 'http:' && connectionUrl.protocol !== 'https:') throw new Error('Invalid connection URL');
             if (connectionUrl.pathname !== '/api/mobile') throw new Error('Invalid connection URL');

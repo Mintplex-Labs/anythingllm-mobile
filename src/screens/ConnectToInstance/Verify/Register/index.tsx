@@ -1,13 +1,17 @@
 import { useEffect, useState, useMemo } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
-import { Status } from "..";
 import AnythingLLMExternal from "@/utils/AnythingLLMExternal";
 import uiStore from "@/store/UIStore";
 import { PATHS } from "@/utils/paths";
 import { useNavigation } from "@react-navigation/native";
+import { IStatus } from "..";
 
+interface RegisterProps {
+    connectionUrl: string;
+    updateStatus: (status: IStatus) => void;
+}
 
-export default function Register({ connectionUrl, updateStatus }: { connectionUrl: string, updateStatus: (status: Status) => void }) {
+export default function Register({ connectionUrl, updateStatus }: RegisterProps) {
     const navigation = useNavigation();
     const [deviceToken, setDeviceToken] = useState<string | null>(null);
     const [state, setState] = useState<'waiting_for_registration' | 'awaiting_approval'>('waiting_for_registration');

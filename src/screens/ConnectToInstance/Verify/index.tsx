@@ -7,15 +7,14 @@ import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { PATHS } from "@/utils/paths";
 import Register from "./Register";
-import uiStore from "@/store/UIStore";
 
 interface VerifyViewProps {
     params: { connectionUrl: string };
 }
 
-type VerifyStatus = 'register' | 'import' | 'error';
-export type Status = {
-    status: VerifyStatus;
+type IVerifyStatus = 'register' | 'import' | 'error';
+export type IStatus = {
+    status: IVerifyStatus;
     message: string;
 }
 
@@ -23,7 +22,7 @@ export function VerifyView({ params }: VerifyViewProps) {
     const insets = useSafeAreaInsets();
     const navigation = useNavigation();
     const connectionUrl = params?.connectionUrl ?? null;
-    const [status, setStatus] = useState<Status>({
+    const [status, setStatus] = useState<IStatus>({
         status: 'register',
         message: 'Registering your device...',
     });

@@ -14,8 +14,14 @@ import { CheckCircle } from "phosphor-react-native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
-export default function WorkspaceItem({ module, workspace }: { module: AnythingLLMExternal, workspace: CommandResponses['get-workspaces']['workspaces'][number] }) {
-    const [status, setStatus] = useState<'idle' | 'syncing' | 'synced' | 'error'>('idle');
+type IStatus = 'idle' | 'syncing' | 'synced' | 'error';
+interface WorkspaceItemProps {
+    module: AnythingLLMExternal;
+    workspace: CommandResponses['get-workspaces']['workspaces'][number];
+}
+
+export default function WorkspaceItem({ module, workspace }: WorkspaceItemProps) {
+    const [status, setStatus] = useState<IStatus>('idle');
 
     const handleSync = async () => {
         try {
@@ -120,9 +126,11 @@ export default function WorkspaceItem({ module, workspace }: { module: AnythingL
         }
     };
 
+    // Reset status after 5 seconds if there is an error so they can try again
     useEffect(() => {
         if (status === 'error') setTimeout(() => { setStatus('idle') }, 5000);
     }, [status]);
+
     return (
         <View className="flex flex-row justify-between w-full">
             <View className="flex flex-col items-start gap-2">

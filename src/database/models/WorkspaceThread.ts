@@ -3,7 +3,7 @@ import { database } from '@/database';
 import slugify from 'slugify';
 import { Q, Model, Relation } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
-import Workspace, { type WorkspaceType } from './Workspace';
+import { type WorkspaceType } from './Workspace';
 
 export type WorkspaceThreadType = {
   name: string;

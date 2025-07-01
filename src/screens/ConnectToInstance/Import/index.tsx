@@ -6,8 +6,6 @@ import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { PATHS } from "@/utils/paths";
-import { formatNumber } from "@/utils/formatters";
-import { screenDimensions } from "@/utils/constants";
 import AnythingLLMExternal from "@/utils/AnythingLLMExternal";
 import WorkspaceItem from "./WorkspaceItem";
 import { CommandResponses } from "@/utils/AnythingLLMExternal";

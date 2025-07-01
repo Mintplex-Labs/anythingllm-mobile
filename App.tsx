@@ -44,7 +44,6 @@ const App = observer(() => {
       </SafeAreaProvider>
     );
 
-  initialRoute.path = PATHS.connect_to_instance;
   // console.log('initialRoute', initialRoute);
   return (
     <BottomSheetProvider>

@@ -133,9 +133,7 @@ const App = observer(() => {
                           component={gestureHandlerRootHOC(
                             Screens.DevToolsMenu,
                           )}
-                          options={{
-                            title: 'Dev Tools',
-                          }}
+                          options={{ headerShown: false }}
                         />
                       </WorkspaceDrawer>
                     </NavigationContainer>

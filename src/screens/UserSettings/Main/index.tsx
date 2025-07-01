@@ -4,10 +4,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
 import {
   ArrowLeft,
-  Book,
   CaretRight,
+  File,
   Info,
   LockKey,
+  DiscordLogo,
 } from 'phosphor-react-native';
 import { IWorkspacePageKey } from '../index';
 import uiStore from '@/store/UIStore';
@@ -25,9 +26,18 @@ import Document from '@/database/models/Document';
 import WorkspaceChat from '@/database/models/WorkspaceChat';
 import uninstallAllModels from '@/utils/models/manager';
 import { deleteProcessedFiles } from '@/utils/fs';
+import { showToast } from '@/utils/Notification';
 
 interface MainViewProps {
   goToPage: (page: IWorkspacePageKey) => void;
+}
+
+type SupportLink = {
+  title: string;
+  link?: string;
+  icon: React.ReactNode;
+  onPress?: (() => void) | null;
+  borderBottom?: boolean;
 }
 
 function parsedModelName(modelName: string) {
@@ -39,6 +49,35 @@ function parsedModelName(modelName: string) {
     ?.replaceAll(new RegExp('-', 'g'), ' ') // Replace - with space
     ?.replace(/^./, str => startCase(str)); // Capitalize first letter
 }
+
+const ABOUT_LINKS: SupportLink[] = [
+  {
+    title: 'Support AnythingLLM',
+    link: "https://donate.stripe.com/6oU9ATe44f4F1NBeSh1B601",
+    icon: <Info size={18} color="#FFF" />,
+  },
+  {
+    title: 'Privacy & Data',
+    link: 'https://docs.anythingllm.com/anythingllm-mobile/privacy-and-data',
+    icon: <LockKey size={18} color="#FFF" />,
+  },
+  {
+    title: 'Join the Discord',
+    link: 'https://discord.gg/6UyHPeGZAC',
+    icon: <DiscordLogo size={18} color="#FFF" />,
+  },
+]
+
+const UTILITY_LINKS: SupportLink[] = [
+  {
+    title: 'Clear temporary files',
+    icon: <File size={18} color="#FFF" />,
+    onPress: async () => {
+      await deleteProcessedFiles();
+      showToast('Temporary files cleared');
+    },
+  },
+]
 
 export function MainView({ goToPage }: MainViewProps) {
   const navigation = useNavigation();
@@ -168,22 +207,47 @@ export function MainView({ goToPage }: MainViewProps) {
                 gap: 12,
                 borderRadius: 8,
               }}>
-              <SupportItem
-                title="Support"
-                link="https://anythingllm.com/support"
-                icon={<Info size={18} color="#FFF" />}
-              />
-              <SupportItem
-                title="Privacy & Data"
-                link="https://anythingllm.com/privacy"
-                icon={<LockKey size={18} color="#FFF" />}
-              />
-              <SupportItem
-                title="Documentation"
-                link="https://anythingllm.com/docs"
-                icon={<Book size={18} color="#FFF" />}
-                borderBottom={false}
-              />
+              {ABOUT_LINKS.map((link, index) => {
+                return (
+                  <SupportItem
+                    key={index}
+                    title={link.title}
+                    link={link.link}
+                    icon={link.icon}
+                    onPress={link.onPress}
+                    borderBottom={index !== ABOUT_LINKS.length - 1}
+                  />
+                );
+              })}
+            </View>
+          </View>
+
+          <View className="w-full flex flex-col" style={{ gap: 12 }}>
+            <View className="flex flex-row items-end justify-between">
+              <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">
+                Utility
+              </Text>
+            </View>
+            <View
+              className="flex flex-col"
+              style={{
+                backgroundColor: '#1B1B1E',
+                padding: 14,
+                gap: 12,
+                borderRadius: 8,
+              }}>
+              {UTILITY_LINKS.map((link, index) => {
+                return (
+                  <SupportItem
+                    key={index}
+                    title={link.title}
+                    link={link.link}
+                    icon={link.icon}
+                    onPress={link.onPress}
+                    borderBottom={index !== UTILITY_LINKS.length - 1}
+                  />
+                );
+              })}
             </View>
           </View>
         </View>
@@ -208,11 +272,13 @@ function SupportItem({
   link,
   icon,
   borderBottom = true,
+  onPress = null,
 }: {
   title: string;
-  link: string;
+  link?: string;
   icon: React.ReactNode;
   borderBottom?: boolean;
+  onPress?: (() => void) | null;
 }) {
   return (
     <TouchableOpacity
@@ -222,7 +288,7 @@ function SupportItem({
         borderBottomColor: '#27282A',
         paddingBottom: borderBottom ? 12 : 0,
       }}
-      onPress={() => Linking.openURL(link)}>
+      onPress={onPress ? onPress : () => Linking.openURL(link ?? '')}>
       {icon}
       <Text className="text-white text-lg">{title}</Text>
     </TouchableOpacity>

@@ -59,3 +59,12 @@ export async function deleteProcessedFiles() {
     if (!await RNFS.exists(PROCESSED_FOLDER_PATH)) return;
     await RNFS.unlink(PROCESSED_FOLDER_PATH);
 }
+
+/**
+ * Get the number of files in the processed folder
+ * @returns The number of files in the processed folder
+ */
+export async function getProcessedFilesCount() {
+    if (!await RNFS.exists(PROCESSED_FOLDER_PATH)) return 0;
+    return (await RNFS.readDir(PROCESSED_FOLDER_PATH)).length;
+}

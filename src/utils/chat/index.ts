@@ -142,7 +142,7 @@ export const chatTemplates: Record<string, ChatTemplateConfig> = {
     ...Templates.templates.llama32,
     name: 'llama32',
     addGenerationPrompt: true,
-    systemPrompt: '',
+    systemPrompt: 'You are a helpful assistant.',
   },
   gemmasutra: {
     ...Templates.templates.gemmasutra,

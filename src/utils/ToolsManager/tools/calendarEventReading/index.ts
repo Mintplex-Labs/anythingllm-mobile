@@ -1,6 +1,6 @@
 import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { safeJsonParse } from "@/utils/formatters";
-import RNCalendarEvents from "react-native-calendar-events";
+import RNCalendarEvents, { CalendarEventReadable } from "react-native-calendar-events";
 import moment from 'moment';
 
 export default {
@@ -48,20 +48,26 @@ export default {
             const events = await RNCalendarEvents.fetchAllEvents(startDate, endDate);
             if (!events) return 'No calendar events found for the given time range.';
 
-            let eventText = 'Here are the calendar events for the given time range:\n\n';
+            let eventText = `You have ${events.length} events in your calendar for ${search === 'specific date' ? specificDate : search}:\n\n`;
+            const eventDescriptions: string[] = [];
             for (const event of events) {
                 const startDate = moment(event.startDate).format('dddd, MMMM D, YYYY');
                 const endDate = moment(event.endDate ?? (moment(event.startDate).add(1, 'hour').toISOString())); // If no end date, assume it's for 1 hour
 
-                let eventDescription = `On ${startDate.split(',')[0]} at ${startDate.split(',')[1]} you have ${event.title} at ${event.location ?? 'online'}`;
+                let prefix = '';
+                if (search === 'specific date') prefix = `On ${startDate.split(',')[0]} at ${startDate.split(',')[1]} you have `;
+                else prefix = '';
+
+                let eventDescription = `${prefix}${event.title}${event.location ? ` at ${event.location}` : ' online'}`;
                 if (event.allDay) eventDescription += ' that will go on for the whole day.';
                 else {
                     const duration = endDate.diff(moment(event.startDate), 'minutes');
                     const hours = Math.floor(duration / 60);
                     const minutes = duration % 60;
-                    if (hours > 0) eventDescription += ` for ${hours} hours and ${minutes} minutes.`;
-                    else eventDescription += ` for ${minutes} minutes.`;
+                    if (hours > 0) eventDescription += ` for ${hours} hours and ${minutes} minutes`;
+                    else eventDescription += ` for ${minutes} minutes`;
                 }
+                eventDescription += '.';
 
                 if (event.attendees?.length) {
                     const attendees: string[] = [];
@@ -72,19 +78,17 @@ export default {
                     eventDescription += ` The attendees are ${attendees.join(', ')}.`;
                 }
 
-                if (event.description) eventDescription += `Description: ${event.description}.`;
-                eventText += eventDescription + '\n';
+                eventDescription += this._formatEventDescription(event.description as string);
+                eventDescriptions.push(eventDescription);
             }
 
+            eventText += eventDescriptions.join('\n---\n');
             return eventText;
         } catch (e) {
             console.error(`Calendar Event Creation Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
             return `There was an error creating the calendar event.`;
         }
     },
-    /**
-     * Holy shit this sucks, use moment.js when you have time.
-     */
     _searchTypeToDate: function (searchType: 'today' | 'tomorrow' | 'this week' | 'next week' | 'this month' | 'next month' | 'specific date', specificDate?: string) {
         switch (searchType) {
             case 'today':
@@ -123,5 +127,33 @@ export default {
                     endDate: moment(specificDate as string).endOf('day').toISOString()
                 };
         }
+    },
+    _formatEventDescription: function (descriptionContent: string): string {
+        if (!descriptionContent) return '';
+
+        if (descriptionContent.includes('Join Zoom Meeting')) {
+            const regex = /(join\s+zoom\s+meeting)/i;
+            const parts = descriptionContent.split(regex);
+            descriptionContent = parts[0]?.trim();
+        }
+
+        if (descriptionContent.includes('Microsoft Teams Need help?')) {
+            const regex = /(microsoft\s+teams\s+need\s+help\?)/i;
+            const parts = descriptionContent.split(regex);
+            descriptionContent = parts[0]?.replace('_', '').trim(); // underscores are used to separate the text note from the schedule links
+        }
+
+        const keyPhrasesRegex = [
+            /(need\s+to\s+make\s+changes\s+to\s+this\s+event\?)/i,
+            /(this\s+is\s+a\s+google\s+meet\s+web\s+conference\.)/i,
+        ];
+
+        // Remove all the key phrases from the description content
+        for (const keyPhraseRegex of keyPhrasesRegex) {
+            const parts = descriptionContent.split(keyPhraseRegex);
+            if (parts?.[0]) descriptionContent = parts[0]?.trim();
+        }
+
+        return !!descriptionContent ? `Event Description: ${descriptionContent}.` : '';
     }
 } as const;

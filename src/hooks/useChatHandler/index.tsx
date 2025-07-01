@@ -224,7 +224,12 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                         break;
                     case 'report_in_progress_thought':
                         const inProgressThought = data as string;
-                        merge(newChat, { response: { thoughts: [...(newChat.response?.thoughts || []), inProgressThought] } });
+                        merge(newChat, {
+                            response: {
+                                thoughts: [...(newChat.response?.thoughts || []), inProgressThought],
+                                currentThoughtChain: [...(newChat.response?.currentThoughtChain || []), inProgressThought]
+                            }
+                        });
                         emitUpdate = true;
                         break;
                     case 'chunk':

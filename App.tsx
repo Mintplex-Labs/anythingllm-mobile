@@ -1,33 +1,33 @@
 import * as React from 'react';
-import {observer} from 'mobx-react';
-import {NavigationContainer} from '@react-navigation/native';
-import {ActivityIndicator, Provider as PaperProvider} from 'react-native-paper';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {KeyboardProvider} from 'react-native-keyboard-controller';
+import { observer } from 'mobx-react';
+import { NavigationContainer } from '@react-navigation/native';
+import { ActivityIndicator, Provider as PaperProvider } from 'react-native-paper';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import {
   gestureHandlerRootHOC,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
-import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import useTheme from '@/hooks/useTheme';
-import {rootStyles} from '@/utils/theme';
+import { rootStyles } from '@/utils/theme';
 import WorkspaceDrawer from '@/components/WorkspaceDrawer';
-import {PATHS} from './src/utils/paths';
+import { PATHS } from './src/utils/paths';
 import Screens from '@/screens';
 import './global.css';
-import {Suspense} from 'react';
+import { Suspense } from 'react';
 import SafeView from '@/components/SafeView';
 import useInitialRoute from '@/hooks/useInitialRoute';
 import './src/utils/polyfills';
-import {BottomSheetProvider} from '@/contexts/BottomSheetContext';
-import {LLMPreferenceProvider} from '@/contexts/LLMPreferenceContext';
+import { BottomSheetProvider } from '@/contexts/BottomSheetContext';
+import { LLMPreferenceProvider } from '@/contexts/LLMPreferenceContext';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
   const theme = useTheme();
   const styles = rootStyles(theme);
-  const {initialRoute, isLoading} = useInitialRoute();
+  const { initialRoute, isLoading } = useInitialRoute();
 
   if (isLoading)
     return (
@@ -59,7 +59,7 @@ const App = observer(() => {
                         <Drawer.Screen
                           name={PATHS.home}
                           component={gestureHandlerRootHOC(Screens.Home)}
-                          options={{headerShown: false}}
+                          options={{ headerShown: false }}
                         />
 
                         <Drawer.Screen
@@ -67,28 +67,28 @@ const App = observer(() => {
                           component={gestureHandlerRootHOC(
                             Screens.OnboardingWelcome,
                           )}
-                          options={{headerShown: false}}
+                          options={{ headerShown: false }}
                         />
                         <Drawer.Screen
                           name={PATHS.onboarding.model_selection}
                           component={gestureHandlerRootHOC(
                             Screens.OnboardingModelSelection,
                           )}
-                          options={{headerShown: false}}
+                          options={{ headerShown: false }}
                         />
                         <Drawer.Screen
                           name={PATHS.onboarding.survey}
                           component={gestureHandlerRootHOC(
                             Screens.OnboardingSurvey,
                           )}
-                          options={{headerShown: false}}
+                          options={{ headerShown: false }}
                         />
                         <Drawer.Screen
                           name={PATHS.onboarding.data_handling}
                           component={gestureHandlerRootHOC(
                             Screens.OnboardingDataHandling,
                           )}
-                          options={{headerShown: false}}
+                          options={{ headerShown: false }}
                         />
 
                         <Drawer.Screen
@@ -96,7 +96,7 @@ const App = observer(() => {
                           component={gestureHandlerRootHOC(
                             Screens.WorkspaceChat,
                           )}
-                          options={{headerShown: false}}
+                          options={{ headerShown: false }}
                           initialParams={initialRoute.params}
                         />
                         <Drawer.Screen
@@ -104,7 +104,7 @@ const App = observer(() => {
                           component={gestureHandlerRootHOC(
                             Screens.WorkspaceSettings,
                           )}
-                          options={{headerShown: false}}
+                          options={{ headerShown: false }}
                           initialParams={initialRoute.params}
                         />
 
@@ -113,7 +113,7 @@ const App = observer(() => {
                           component={gestureHandlerRootHOC(
                             Screens.UserSettings,
                           )}
-                          options={{headerShown: false}}
+                          options={{ headerShown: false }}
                         />
 
                         <Drawer.Screen

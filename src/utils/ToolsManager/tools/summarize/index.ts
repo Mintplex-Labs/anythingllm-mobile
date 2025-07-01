@@ -3,7 +3,6 @@ import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { getOrigin, safeJsonParse } from "@/utils/formatters";
 import webscraper from "@/utils/ToolsManager/tools/webScraping/webscraper";
 import TextSplitter from "@/utils/TextSplitter";
-import getLLM, { LLMProvider } from "@/utils/AiProviders";
 import uiStore from "@/store/UIStore";
 import { searchProcessedFilesFor } from "@/utils/fs";
 import { generateUUID } from "@/utils/constants";
@@ -114,9 +113,13 @@ export default {
     _getLLMProvider: async function () {
         const preferences = await uiStore.getFromStorage('llmPreference', { provider: 'unknown', config: {} });
         if (preferences.provider === 'unknown') throw new Error('LLM provider is unknown');
+
+        // Lazy load the getLLM function
+        // @ts-ignore - This is a workaround to avoid circular dependency
+        const { default: getLLM } = await import("@/utils/AiProviders");
         return getLLM(preferences.provider, preferences.config);
     },
-    _summarizeChunk: async function (chunk: string, llmProvider: LLMProvider): Promise<string> {
+    _summarizeChunk: async function (chunk: string, llmProvider: any): Promise<string> {
         const systemPrompt = `You are a helpful assistant that creates concise summaries. 
         Summarize the following text in 2-3 sentences, capturing the key points and main ideas. 
         Focus on the most important information and maintain accuracy.`;
@@ -133,7 +136,7 @@ export default {
             return `[Summary error for chunk: ${chunk.substring(0, 100)}...]`;
         }
     },
-    _createHierarchicalSummary: async function (chunks: string[], llmProvider: LLMProvider, streamEmitter: (event: IStreamEvent, data: any) => void): Promise<string> {
+    _createHierarchicalSummary: async function (chunks: string[], llmProvider: any, streamEmitter: (event: IStreamEvent, data: any) => void): Promise<string> {
         streamEmitter('report_in_progress_thought', 'Summarizing document sections...');
 
         const chunkSummaries: string[] = [];

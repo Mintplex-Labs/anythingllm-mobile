@@ -33,7 +33,6 @@ export default function ModelChip() {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { registerSheet, presentSheet, dismissSheet } = useBottomSheet();
   const { llmPreferences } = useLlmPreference();
-
   const modelName = llmPreferences.config.model;
 
   const renderBackdrop = useCallback(

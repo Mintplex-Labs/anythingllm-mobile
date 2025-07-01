@@ -36,7 +36,7 @@ export default function WorkspaceChat() {
   if (!!errorWorkspaceThread) return <ErrorView title="Error loading workspace thread" error={errorWorkspaceThread} />;
   return (
     <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" applyGradient safeAreaStyle={{ backgroundColor: '#000' }}>
-      <TopBar modelName={LLMProvider?.model} workspace={workspace} thread={thread} />
+      <TopBar workspace={workspace} thread={thread} />
 
       {/* Chat Handler Wrapper manage updates to the chat history and prompt input easily*/}
       <ChatHandlerWrapper workspace={workspace} thread={thread} llmProvider={LLMProvider!}>

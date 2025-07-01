@@ -16,11 +16,9 @@ import ModelChip from './ModelChip';
 import uiStore from '@/store/UIStore';
 
 export default function TopBar({
-  modelName,
   workspace,
   thread,
 }: {
-  modelName?: string;
   workspace?: any;
   thread?: any;
 }) {
@@ -74,7 +72,7 @@ export default function TopBar({
             resizeMode="center"
           />
         </TouchableOpacity>
-        <ModelChip modelName={modelName} />
+        <ModelChip />
       </View>
       {canMakeThread ? (
         <TouchableOpacity onPress={handleNewThread}>

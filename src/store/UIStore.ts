@@ -10,12 +10,14 @@ type StorageKeys =
   'onboarding_survey_completed' |
   'onboarding_data_handling_completed' |
   'llmPreference' |
-  'tools';
+  'tools' |
+  'anythingllm_external_connection';
 
 export const GLOBAL_EVENTS = {
   REDIRECT: 'REDIRECT',
   CITATIONS_FOCUSED: 'CITATIONS_FOCUSED',
   SUBMIT_PROMPT: 'SUBMIT_PROMPT',
+  REFRESH_WORKSPACES: 'REFRESH_WORKSPACES',
 } as const;
 
 export class UIStore {
@@ -33,6 +35,7 @@ export class UIStore {
     'onboarding_data_handling_completed',
     'llmPreference',
     'tools',
+    'anythingllm_external_connection',
   ] as const;
 
   pageStates = {
@@ -78,6 +81,10 @@ export class UIStore {
     });
 
     this.emitter = new NativeEventEmitter();
+  }
+
+  async removeFromStorage(key: StorageKeys) {
+    return this.storage.removeItem(key);
   }
 
   async getFromStorage<T>(key: StorageKeys, defaultValue: T): Promise<T> {

@@ -77,7 +77,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
     const fetchChats = useCallback(async () => {
         try {
             setIsLoadingChats(true);
-            if (!thread.slug) return;
+            if (!thread?.slug) return;
             const chats = await WorkspaceChat.find(
                 [{ field: 'workspace_thread_slug', value: thread.slug }],
                 [{ field: 'created_at', direction: 'asc' }]
@@ -90,7 +90,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         } finally {
             setIsLoadingChats(false);
         }
-    }, [thread.slug]);
+    }, [thread?.slug]);
 
     const disablePromptInput = useCallback(() => {
         _setPromptDisabled(true);

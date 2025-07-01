@@ -8,6 +8,7 @@ import UserSettings from "./UserSettings";
 
 import WorkspaceChat from "./WorkspaceChat";
 import WorkspaceSettings from "./WorkspaceSettings";
+import ConnectToInstance from "./ConnectToInstance";
 
 import DevToolsMenu from "./Dev";
 
@@ -23,4 +24,7 @@ export default {
 
   UserSettings,
   DevToolsMenu,
+
+  // Connect and Sync
+  ConnectToInstance,
 };

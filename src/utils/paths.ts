@@ -12,4 +12,6 @@ export const PATHS = {
   developer: {
     home: 'DevToolsMenu',
   },
+
+  connect_to_instance: 'ConnectToInstance',
 };

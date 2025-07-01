@@ -6,6 +6,7 @@ import { generateUUID } from '@/utils/constants';
 import WorkspaceThread, { WorkspaceThreadType } from './WorkspaceThread';
 import Document from './Document';
 import uiStore from '@/store/UIStore';
+import WorkspaceChat from './WorkspaceChat';
 
 export type WorkspaceType = {
   name: string;
@@ -227,8 +228,17 @@ export default class Workspace extends Model {
         return true;
       });
 
-      await Promise.all(workspaceSlugs.map((wsSlug) => WorkspaceThread.delete([{ field: 'workspace_slug', value: wsSlug }])));
+      let workspaceThreadSlugs: string[] = [];
+      for (const wsSlug of workspaceSlugs) {
+        const threads = await WorkspaceThread.get([{ field: 'workspace_slug', value: wsSlug }]);
+        if (!threads || threads.length === 0) continue;
+        workspaceThreadSlugs.push(...threads.map((t) => (t as WorkspaceThread).slug));
+      }
+
+      await Promise.all(workspaceThreadSlugs.map((wsThreadSlug) => WorkspaceChat.delete([{ field: 'workspace_thread_slug', value: wsThreadSlug }])));
+      await Promise.all(workspaceThreadSlugs.map((wsThreadSlug) => WorkspaceThread.delete([{ field: 'slug', value: wsThreadSlug }])));
       await Promise.all(workspaceSlugs.map((wsSlug) => Document.delete([{ field: 'workspace_slug', value: wsSlug }], true)));
+
       this.log(`${workspaceSlugs.length} workspaces, children threads, and dependent documents/vectors successfully deleted`);
       return true;
     } catch (error) {
@@ -245,5 +255,27 @@ export default class Workspace extends Model {
       await database.batch(workspaces.map((ws) => ws.prepareMarkAsDeleted()));
     });
     return true;
+  }
+
+  /**
+   * Create a workspace without the default values
+   * @param data - The data to create the workspace with
+   * @returns The created workspace
+   */
+  static async directCreate(data: Partial<WorkspaceType>): Promise<WorkspaceType> {
+    let newWorkspace: any;
+    await database.write(async () => {
+      newWorkspace = await database.get(Workspace.table).create((workspace: any) => {
+        Object.assign(workspace, data);
+        if (!workspace.name) workspace.name = Workspace.defaultName;
+        if (!workspace.slug) workspace.slug = slugify(workspace.name).toLowerCase();
+        if (!workspace.system_prompt) workspace.system_prompt = Workspace.defaultSystemPrompt;
+        if (!workspace.temperature) workspace.temperature = Workspace.defaultTemperature;
+        if (!workspace.context_length) workspace.context_length = Workspace.defaultContextLength;
+        workspace.created_at = Date.now();
+      });
+    });
+    newWorkspace = this.toWorkspaceObject(newWorkspace);
+    return newWorkspace;
   }
 }

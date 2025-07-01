@@ -108,6 +108,16 @@ const App = observer(() => {
                           initialParams={initialRoute.params}
                         />
 
+                        {/* Connect to instance screens and flows */}
+                        <Drawer.Screen
+                          name={PATHS.connect_to_instance}
+                          component={gestureHandlerRootHOC(
+                            Screens.ConnectToInstance,
+                          )}
+                          options={{ headerShown: false }}
+                          initialParams={initialRoute.params}
+                        />
+
                         <Drawer.Screen
                           name={PATHS.user_settings}
                           component={gestureHandlerRootHOC(

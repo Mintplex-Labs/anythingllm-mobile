@@ -163,4 +163,24 @@ export default class WorkspaceThread extends Model {
     });
     return true;
   }
+
+  /**
+  * Create a workspace thread without the default values
+  * @param data - The data to create the workspace with
+  * @returns The created workspace
+  */
+  static async directCreate(data: Partial<WorkspaceThreadType>): Promise<WorkspaceThread> {
+    let newWorkspaceThread: any;
+    await database.write(async () => {
+      newWorkspaceThread = await database.get(WorkspaceThread.table).create((workspaceThread: any) => {
+        Object.assign(workspaceThread, data);
+        if (!workspaceThread.name) workspaceThread.name = WorkspaceThread.defaultName;
+        if (!workspaceThread.slug) workspaceThread.slug = generateUUID();
+        if (!workspaceThread.workspaceSlug) workspaceThread.workspaceSlug = data.workspaceSlug;
+        workspaceThread.created_at = Date.now();
+      });
+    });
+    newWorkspaceThread = this.toWorkspaceThreadObject(newWorkspaceThread);
+    return newWorkspaceThread;
+  }
 }

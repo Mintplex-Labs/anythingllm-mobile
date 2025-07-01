@@ -16,7 +16,9 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   protected provider: string;
   protected config: any;
   protected computeRuntime: string = 'CPU';
+  // @ts-ignore - this is a valid property for this class
   public model: string | null;
+
   protected submodule: GenieWrapper | LlamaRnWrapper | null = null;
   protected llamaRnContext: any;
 
@@ -137,7 +139,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   }
 
   async runBasicChatCompletion(messages: any[]): Promise<ICompleteResponse> {
-    return this.submodule.getChatCompletion(messages);
+    return this.submodule!.getChatCompletion(messages);
   }
 
   override async chat({
@@ -167,6 +169,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
     const availableTools = await ToolsManager.injectAvailableTools();
     this.log(`Streaming ${this.model} with ${this.computeRuntime}`);
+    this.log('Available tools:', availableTools.map(t => t.function.name));
     let fullResult = await this.submodule.streamGetChatCompletion(formattedMessages as any, (token: string) => onStream('chunk', token), availableTools);
 
     // Recursive tool call loop

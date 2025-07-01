@@ -21,8 +21,8 @@ export default {
     definition: {
         type: 'function',
         function: {
-            name: 'get_current_time',
-            description: 'Get the current time in the users timezone.',
+            name: 'get_location',
+            description: 'Get the approximate location of the user.',
             parameters: {
                 type: 'object',
                 properties: {},

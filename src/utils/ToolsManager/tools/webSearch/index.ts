@@ -26,7 +26,6 @@ export default {
         },
     },
     config: {
-        baseUrl: 'https://html.duckduckgo.com/html',
         maxResults: 3, // preserve context
     },
     execute: async function (args: { query: string } | string, streamEmitter: (event: IStreamEvent, data: any) => void): Promise<string> {
@@ -34,57 +33,8 @@ export default {
             const query = typeof args === 'string' ? safeJsonParse(args)?.query : args?.query;
             if (!query) return `No query provided. No results were found.`;
 
-            const searchURL = new URL(this.config.baseUrl);
-            searchURL.searchParams.append("q", query);
-
-            console.log('searchURL', searchURL.toString());
-            const response = await fetch(searchURL.toString())
-                .then((res) => {
-                    if (res.ok) return res.text();
-                    throw new Error(`${res.status} - ${res.statusText}. params: ${JSON.stringify({ url: searchURL.toString() })}`);
-                })
-                .catch((e) => {
-                    console.error(`DuckDuckGo Search Error: ${e.message}`);
-                    return null;
-                });
-
-            if (!response) return `There was an error searching DuckDuckGo.`;
-            const html = response;
-            const data: { title: string, link: string, snippet: string }[] = [];
-            const results = html.split('<div class="result results_links');
-
-            // Skip first element since it's before the first result
-            for (let i = 1; i <= Math.min(results.length - 1, this.config.maxResults); i++) {
-                const result = results[i];
-
-                // Extract title
-                const titleMatch = result.match(
-                    /<a[^>]*class="result__a"[^>]*>(.*?)<\/a>/
-                );
-                const title = titleMatch ? titleMatch[1].trim() : "";
-
-                // Extract URL
-                const urlMatch = result.match(
-                    /<a[^>]*class="result__a"[^>]*href="([^"]*)">/
-                );
-                const link = urlMatch ? urlMatch[1] : "";
-
-                // Extract snippet
-                const snippetMatch = result.match(
-                    /<a[^>]*class="result__snippet"[^>]*>(.*?)<\/a>/
-                );
-                const snippet = snippetMatch
-                    ? snippetMatch[1].replace(/<\/?b>/g, "").trim()
-                    : "";
-
-                if (title && link && snippet) {
-                    data.push({
-                        title,
-                        link: this._convertLinkToReference(link),
-                        snippet
-                    });
-                }
-            }
+            // TODO: add failovers
+            const data = await this._duckDuckGoSearch(query);
             if (data.length === 0) return `No information was found online for the search query.`;
             console.log(`I found ${data.length} results - reviewing the results now`);
 
@@ -96,6 +46,63 @@ export default {
             console.error(`Web Search Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
             return `There was an error searching the web. I found no results.`;
         }
+    },
+
+    async _duckDuckGoSearch(query: string): Promise<{ title: string, link: string, snippet: string }[]> {
+        const baseUrl = 'https://html.duckduckgo.com/html';
+        const searchURL = new URL(baseUrl);
+        searchURL.searchParams.append("q", query);
+
+        console.log('searchURL', searchURL.toString());
+        const response = await fetch(searchURL.toString(), { method: 'GET' })
+            .then((res) => {
+                if (res.status === 200) return res.text();
+                throw new Error(`${res.status} - ${res.statusText}. params: ${JSON.stringify({ url: searchURL.toString() })}`);
+            })
+            .catch((e) => {
+                console.error(`DuckDuckGo Search Error: ${e.message}`);
+                return null;
+            });
+
+        if (!response) throw new Error(`There was an error searching DuckDuckGo.`);
+
+        const html = response;
+        const data: { title: string, link: string, snippet: string }[] = [];
+        const results = html.split('<div class="result results_links');
+
+        // Skip first element since it's before the first result
+        for (let i = 1; i <= Math.min(results.length - 1, this.config.maxResults); i++) {
+            const result = results[i];
+
+            // Extract title
+            const titleMatch = result.match(
+                /<a[^>]*class="result__a"[^>]*>(.*?)<\/a>/
+            );
+            const title = titleMatch ? titleMatch[1].trim() : "";
+
+            // Extract URL
+            const urlMatch = result.match(
+                /<a[^>]*class="result__a"[^>]*href="([^"]*)">/
+            );
+            const link = urlMatch ? urlMatch[1] : "";
+
+            // Extract snippet
+            const snippetMatch = result.match(
+                /<a[^>]*class="result__snippet"[^>]*>(.*?)<\/a>/
+            );
+            const snippet = snippetMatch
+                ? snippetMatch[1].replace(/<\/?b>/g, "").trim()
+                : "";
+
+            if (title && link && snippet) {
+                data.push({
+                    title,
+                    link: this._convertLinkToReference(link),
+                    snippet
+                });
+            }
+        }
+        return data;
     },
 
     /**
@@ -137,5 +144,5 @@ export default {
             });
         }
         return webSearchCitations;
-    }
+    },
 } as const;

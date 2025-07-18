@@ -28,12 +28,21 @@ import {
   BOTTOM_SHEET_NAMES,
 } from '@/contexts/BottomSheetContext';
 import ModelCard from '@/components/ModelCard';
+import { LLMProvider as LLMProviderType } from '@/utils/AiProviders';
+import { defaultModels } from '@/utils/models';
+import { Model } from '@/utils/types';
+
+function getPresetModelName(llmPreferences: { provider: string; config: any }, LLMProvider: LLMProviderType | null) {
+  if (llmPreferences.provider !== 'native') return llmPreferences.config.model;
+  const modelDefinition = defaultModels.find(model => model.id === llmPreferences.config.model) as Model;
+  return modelDefinition?.name || llmPreferences.config.model;
+}
 
 export default function ModelChip() {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { registerSheet, presentSheet, dismissSheet } = useBottomSheet();
-  const { llmPreferences } = useLlmPreference();
-  const modelName = llmPreferences.config.model;
+  const { llmPreferences, LLMProvider } = useLlmPreference();
+  const modelName = getPresetModelName(llmPreferences, LLMProvider);
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
@@ -48,6 +57,11 @@ export default function ModelChip() {
   );
   const parsedModelName = useMemo(() => {
     if (!modelName) return null;
+
+
+
+
+    console.log({ modelName });
     return modelName
       .split('/')
       .pop()

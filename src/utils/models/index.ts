@@ -35,7 +35,7 @@ const androidOnlyModels: NPUEnabledModel[] = [
 
 const crossPlatformModels: Model[] = [
   // -------- Menlo Lucy 1.7B --------
-  // https://huggingface.co/Menlo/Lucy-gguf/resolve/main/Lucy-Q8_0.gguf
+  // https://huggingface.co/Menlo/Lucy-gguf
   {
     id: 'Menlo/Lucy-gguf',
     description: '(Q8_0) Lucy 1.7B by Menlo Research is an LLM specifically for the edge.',

@@ -109,6 +109,47 @@ export function stripThoughtTags(content: string): string {
 }
 
 /**
+ * Some models will ALWAYS return a JSON response even if the response does not need tool calling.
+ * This function will parse the response and return the JSON object if it is a valid JSON object.
+ * Otherwise, it will return the original content.
+ */
+export function parseJSONResponseType(content: string): string {
+    if (!content || typeof content !== 'string') return content;
+    const trimmedContent = content.trim();
+    if (!trimmedContent.startsWith('{')) return content;
+
+    try {
+        let braceCount = 0;
+        let endIndex = -1;
+
+        for (let i = 0; i < trimmedContent.length; i++) {
+            if (trimmedContent[i] === '{') {
+                braceCount++;
+            } else if (trimmedContent[i] === '}') {
+                braceCount--;
+                if (braceCount === 0) {
+                    endIndex = i;
+                    break;
+                }
+            }
+        }
+
+        if (endIndex !== -1) {
+            const jsonString = trimmedContent.substring(0, endIndex + 1);
+            const parsed = JSON.parse(jsonString);
+            if (parsed.response && typeof parsed.response === 'string') {
+                return parsed.response;
+            }
+            return content;
+        }
+        return content;
+
+    } catch (error) {
+        return content;
+    }
+}
+
+/**
  * Parses the streaming chunks to a response object
  * Enhanced to handle thought parsing for reasoning models
  */
@@ -120,9 +161,10 @@ export function parseStreamingChunksToResponse(
     if (event === 'chunk') {
         const fullContent = accumulator + newChunk;
         const parsed = parseThoughtContent(fullContent);
+        const mainContent = parseJSONResponseType(parsed.mainContent);
 
         return {
-            textResponse: parsed.mainContent,
+            textResponse: mainContent,
             reasoningContent: parsed.reasoningContent,
         };
     }

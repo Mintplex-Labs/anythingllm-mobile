@@ -51,6 +51,7 @@ export default {
     config: {
         maxResults: 4, // preserve context
         anythingLLMPublicSearXNGKey: '1hwFZHYnPHyK1cynbPq9oYbA0tCWpmPss9q8NYUTPyBXpUBPu833fi',
+        anythingLLMPublicSerpHeader: 'x-anythingllm-searxng-serp',
     },
     execute: async function (args: { query: string } | string, streamEmitter: (event: IStreamEvent, data: any) => void): Promise<string> {
         try {
@@ -80,7 +81,7 @@ export default {
         const results = await fetch(searchURL.toString(), {
             method: 'GET',
             headers: {
-                'x-anythingllm-searxng-serp': this.config.anythingLLMPublicSearXNGKey,
+                [this.config.anythingLLMPublicSerpHeader]: this.config.anythingLLMPublicSearXNGKey,
                 'x-device': 'mobile',
             },
         })

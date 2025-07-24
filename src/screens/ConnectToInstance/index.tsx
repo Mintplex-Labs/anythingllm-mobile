@@ -14,6 +14,12 @@ const PAGES = {
 };
 export type IWorkspacePageKey = keyof typeof PAGES;
 
+export interface IExternalConnection {
+  token: string;
+  connectionUrl: string;
+  platform: 'server' | 'desktop';
+}
+
 export default function ConnectToInstance() {
   useRedirect();
   const route = useRoute();
@@ -21,7 +27,7 @@ export default function ConnectToInstance() {
 
   useEffect(() => {
     async function getPage() {
-      const externalConnection = await uiStore.getFromStorage('anythingllm_external_connection', null) as { token: string, connectionUrl: string } | null;
+      const externalConnection = await uiStore.getFromStorage('current_anythingllm_external_connection', null) as IExternalConnection | null;
       if (externalConnection) {
         setPage({ key: 'import', params: { ...route?.params ?? {}, connectionUrl: externalConnection.connectionUrl, deviceToken: externalConnection.token } });
       } else {

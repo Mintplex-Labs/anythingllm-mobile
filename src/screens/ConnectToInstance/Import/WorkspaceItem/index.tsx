@@ -1,19 +1,9 @@
-import Workspace from "@/database/models/Workspace";
-import WorkspaceChat from "@/database/models/WorkspaceChat";
-import { WorkspaceChatType } from "@/database/models/WorkspaceChat";
-import WorkspaceThread from "@/database/models/WorkspaceThread";
 import AnythingLLMExternal, { CommandResponses } from "@/utils/AnythingLLMExternal";
-import { parseThinkingParts } from "@/utils/chat";
-import { generateUUID } from "@/utils/constants";
-import { formatNumber, safeJsonParse } from "@/utils/formatters";
-import { showToast } from "@/utils/Notification";
-import { CheckCircle } from "phosphor-react-native";
+import { formatNumber } from "@/utils/formatters";
+import { CheckCircle, Cloud, Laptop } from "phosphor-react-native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import { syncFromRemote } from "./sync";
-// import Document, { DocumentType } from "@/database/models/Document";
-// import getEmbedder from "@/utils/Embedder";
-// import VectorDB from "@/utils/VectorDB";
 
 type IStatus = 'idle' | 'syncing' | 'synced' | 'error';
 interface WorkspaceItemProps {
@@ -22,6 +12,28 @@ interface WorkspaceItemProps {
 }
 
 export default function WorkspaceItem({ module, workspace }: WorkspaceItemProps) {
+
+    return (
+        <View className="flex flex-row justify-between w-full rounded-lg items-center" style={{ padding: 16, backgroundColor: '#27282A' }}>
+            <View className="flex flex-col items-start" style={{ gap: 4, width: '65%' }}>
+                <Text numberOfLines={1} ellipsizeMode="tail" className="text-white text-lg font-medium" style={{ width: '100%' }}>{workspace.name}</Text>
+                <View className="flex flex-row items-center" style={{ gap: 4 }}>
+                    <Text className="text-white text-base" style={{ color: '#9F9FA0' }}>{formatNumber(workspace.threadCount + 1)} Threads</Text>
+                    <Text className="text-white text-base" style={{ color: '#9F9FA0' }}>|</Text>
+                    <Text className="text-white text-base" style={{ color: '#9F9FA0' }}>{formatNumber(workspace.chatCount)} Chats</Text>
+                </View>
+                <View className="flex flex-row items-center" style={{ gap: 4, opacity: 0.75 }}>
+                    {workspace.platform === 'desktop' && <Laptop size={16} color="#7cd4fd" weight="bold" />}
+                    {workspace.platform === 'server' && <Cloud size={16} color="#7cd4fd" weight="bold" />}
+                    <Text className="text-white text-sm" style={{ color: '#7cd4fd' }}>{new URL(module.connectionUrl).hostname}</Text>
+                </View>
+            </View>
+            <SyncButton module={module} workspace={workspace} />
+        </View>
+    );
+}
+
+function SyncButton({ module, workspace }: { module: AnythingLLMExternal, workspace: CommandResponses['workspaces']['workspaces'][number] }) {
     const [status, setStatus] = useState<IStatus>('idle');
 
     // Reset status after 5 seconds if there is an error so they can try again
@@ -29,32 +41,42 @@ export default function WorkspaceItem({ module, workspace }: WorkspaceItemProps)
         if (status === 'error') setTimeout(() => { setStatus('idle') }, 5000);
     }, [status]);
 
-    return (
-        <View className="flex flex-row justify-between w-full">
-            <View className="flex flex-col items-start gap-2">
-                <Text className="text-white text-lg font-medium">{workspace.name}</Text>
-                <Text className="text-white text-sm">{formatNumber(workspace.threadCount + 1)} threads / {formatNumber(workspace.chatCount)} chats</Text>
-                <Text className="text-white text-sm">{formatNumber(workspace.documentCount)} documents</Text>
-            </View>
+    if (status === 'syncing') {
+        return (
             <TouchableOpacity
-                onPress={() => syncFromRemote({ module, workspace, setStatus })}
-                disabled={status !== 'idle'}
-                style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', width: 100, height: 40 }} className="flex flex-row items-center justify-center gap-2 px-4 py-1 rounded-full disabled:opacity-50">
-                {status === 'syncing' && (
-                    <View className="flex flex-row items-center gap-2">
-                        <ActivityIndicator size="small" color="#FFF" />
-                        <Text className="text-white font-medium">Importing...</Text>
-                    </View>
-                )}
-                {status === 'synced' && (
-                    <View className="flex flex-row items-center gap-2">
-                        <CheckCircle size={24} color="#FFF" />
-                        <Text className="text-white font-medium">Imported!</Text>
-                    </View>
-                )}
-                {status === 'error' && <Text className="text-red-500 font-medium">Error</Text>}
-                {status === 'idle' && <Text className="text-white font-medium">Import</Text>}
+                disabled={true}
+                style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', padding: 8 }} className="flex flex-row items-center justify-center rounded-lg">
+                <ActivityIndicator size="small" color="#7cd4fd" />
             </TouchableOpacity>
-        </View>
-    );
+        )
+    }
+
+    if (status === 'error') {
+        return (
+            <TouchableOpacity
+                disabled={true}
+                style={{ backgroundColor: 'rgba(255, 0, 0, 0.1)', paddingHorizontal: 16, paddingVertical: 8 }} className="flex flex-row items-center justify-center rounded-lg">
+                <Text className="text-red-500 font-medium">Failed</Text>
+            </TouchableOpacity>
+        )
+    }
+
+    if (status === 'synced') {
+        return (
+            <TouchableOpacity
+                disabled={true}
+                style={{ backgroundColor: 'rgba(32, 255, 117, 0.1)', paddingHorizontal: 16, paddingVertical: 8, gap: 2 }} className="flex flex-row items-center justify-center rounded-lg">
+                <CheckCircle size={16} color="#32ff75" />
+                <Text className="font-medium" style={{ color: '#32ff75' }}>Synced</Text>
+            </TouchableOpacity>
+        )
+    }
+
+    return (
+        <TouchableOpacity
+            onPress={() => syncFromRemote({ module, workspace, setStatus })}
+            style={{ backgroundColor: '#7cd4fd', paddingHorizontal: 16, paddingVertical: 8 }} className="flex flex-row items-center justify-center rounded-lg">
+            <Text className="text-black font-medium">Sync</Text>
+        </TouchableOpacity>
+    )
 }

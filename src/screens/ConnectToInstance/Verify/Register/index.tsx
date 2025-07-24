@@ -5,6 +5,7 @@ import uiStore from "@/store/UIStore";
 import { PATHS } from "@/utils/paths";
 import { useNavigation } from "@react-navigation/native";
 import { IStatus } from "..";
+import { IExternalConnection } from "../..";
 
 interface RegisterProps {
     connectionUrl: string;
@@ -22,10 +23,16 @@ export default function Register({ connectionUrl, updateStatus }: RegisterProps)
     useEffect(() => {
         async function registerWithInstance() {
             try {
-                const newDeviceToken = await anythingLLMExternal.registerDevice();
-                if (newDeviceToken) {
-                    await uiStore.setToStorage('anythingllm_external_connection', { token: newDeviceToken, connectionUrl });
-                    setDeviceToken(newDeviceToken);
+                const registration = await anythingLLMExternal.registerDevice();
+                if (registration) {
+                    await uiStore.setToStorage('current_anythingllm_external_connection', { token: registration.token, connectionUrl, platform: registration.platform });
+
+                    // Add to anythingllm_external_connections for future use
+                    const connections = await uiStore.getFromStorage('anythingllm_external_connections', []) as IExternalConnection[];
+                    connections.push({ token: registration.token, connectionUrl, platform: registration.platform });
+                    await uiStore.setToStorage('anythingllm_external_connections', connections);
+
+                    setDeviceToken(registration.token);
                     setState('awaiting_approval');
                 } else throw new Error('Failed to register device');
             } catch (error) {

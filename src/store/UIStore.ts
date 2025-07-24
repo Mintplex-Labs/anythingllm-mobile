@@ -11,7 +11,8 @@ type StorageKeys =
   'onboarding_data_handling_completed' |
   'llmPreference' |
   'tools' |
-  'anythingllm_external_connection';
+  'current_anythingllm_external_connection' |
+  'anythingllm_external_connections';
 
 export const GLOBAL_EVENTS = {
   REDIRECT: 'REDIRECT',
@@ -35,7 +36,8 @@ export class UIStore {
     'onboarding_data_handling_completed',
     'llmPreference',
     'tools',
-    'anythingllm_external_connection',
+    'current_anythingllm_external_connection',
+    'anythingllm_external_connections',
   ] as const;
 
   pageStates = {

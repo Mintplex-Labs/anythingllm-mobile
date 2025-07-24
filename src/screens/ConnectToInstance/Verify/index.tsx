@@ -48,7 +48,7 @@ export function VerifyView({ params }: VerifyViewProps) {
                 <TouchableOpacity onPress={goBack} className="absolute top-8 left-0 flex flex-row items-center gap-2">
                     <ArrowLeft size={24} color="#FFF" weight="bold" />
                 </TouchableOpacity>
-                <Text style={{ maxWidth: '80%' }} numberOfLines={1} ellipsizeMode="middle" className="text-white text-lg font-medium">Connect to AnythingLLM</Text>
+                <Text style={{ maxWidth: '80%' }} numberOfLines={1} ellipsizeMode="middle" className="text-white text-lg font-medium">Verify Connection</Text>
             </View>
 
             <View style={{ gap: 33 }} className="w-full flex flex-col items-center justify-center">

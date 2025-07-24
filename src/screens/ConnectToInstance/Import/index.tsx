@@ -26,7 +26,7 @@ export function ImportView({ params }: ImportViewProps) {
     const [refreshing, setRefreshing] = useState(false);
 
     const goBack = () => {
-        uiStore.removeFromStorage('anythingllm_external_connection');
+        uiStore.removeFromStorage('current_anythingllm_external_connection');
         navigation.reset({
             index: 0,
             // @ts-ignore
@@ -44,7 +44,10 @@ export function ImportView({ params }: ImportViewProps) {
         const validateConnection = await module.tokenIsApproved();
         if (!validateConnection) {
             showToast('Your existing connection to AnythingLLM Desktop expired.', 'short');
-            await uiStore.removeFromStorage('anythingllm_external_connection');
+            await uiStore.removeFromStorage('current_anythingllm_external_connection');
+            // TODO: Remove from anythingllm_external_connections as well
+            debugger
+
             navigation.reset({
                 index: 0,
                 // @ts-ignore
@@ -83,7 +86,7 @@ export function ImportView({ params }: ImportViewProps) {
                 <TouchableOpacity onPress={goBack} className="absolute top-8 left-0 flex flex-row items-center gap-2">
                     <ArrowLeft size={24} color="#FFF" weight="bold" />
                 </TouchableOpacity>
-                <Text style={{ maxWidth: '80%' }} numberOfLines={1} ellipsizeMode="middle" className="text-white text-lg font-medium">Syncing AnythingLLM Desktop</Text>
+                <Text style={{ maxWidth: '80%' }} numberOfLines={1} ellipsizeMode="middle" className="text-white text-lg font-medium">Connect to AnythingLLM</Text>
             </View>
             <ScrollView
                 style={{ flex: 1 }}
@@ -100,17 +103,19 @@ export function ImportView({ params }: ImportViewProps) {
             >
                 {workspaces.map((workspace) => <WorkspaceItem key={workspace.id} module={module as AnythingLLMExternal} workspace={workspace} />)}
             </ScrollView>
-            <View style={{ paddingBottom: insets.bottom - 10, paddingHorizontal: 30 }} className="w-full flex flex-row justify-center">
-                <TouchableOpacity onPress={async () => {
-                    uiStore.emitter.emit(uiStore.globalEvents.REFRESH_WORKSPACES);
-                    // await module?.sendCommand('unregister-device');
-                    // await uiStore.removeFromStorage('anythingllm_external_connection');
-                    navigation.reset({
-                        index: 0,
-                        // @ts-ignore
-                        routes: [{ name: PATHS.home }],
-                    });
-                }} style={{ height: 40 }} className="flex flex-row w-full items-center justify-center gap-2 px-4 py-1 rounded-full">
+            <View style={{ paddingBottom: insets.bottom - 8, paddingHorizontal: 30, paddingTop: 8 }} className="w-full flex flex-row items-center justify-center">
+                <TouchableOpacity
+                    onPress={async () => {
+                        await uiStore.removeFromStorage('current_anythingllm_external_connection');
+                        uiStore.emitter.emit(uiStore.globalEvents.REFRESH_WORKSPACES);
+                        navigation.reset({
+                            index: 0,
+                            // @ts-ignore
+                            routes: [{ name: PATHS.home }],
+                        });
+                    }}
+                    style={{ height: 40, backgroundColor: 'rgba(255, 255, 255, 0.1)', paddingHorizontal: 16, paddingVertical: 8 }}
+                    className="flex flex-row w-full items-center justify-center gap-2 rounded-lg">
                     <Text className="text-white font-medium">Go back to home</Text>
                 </TouchableOpacity>
             </View>

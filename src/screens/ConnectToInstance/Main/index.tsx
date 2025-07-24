@@ -1,14 +1,17 @@
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ArrowLeft } from "phosphor-react-native";
+import { ArrowLeft, Cloud, Laptop } from "phosphor-react-native";
 import { PATHS } from "@/utils/paths";
 import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Camera, CameraDevice, useCameraPermission, getCameraDevice, useCodeScanner } from "react-native-vision-camera";
+import uiStore from "@/store/UIStore";
+import { IExternalConnection } from "..";
 
 export function MainView() {
+    const [existingConnections, setExistingConnections] = useState<IExternalConnection[]>([]);
     const navigation = useNavigation();
     const insets = useSafeAreaInsets();
     function goHome() {
@@ -37,6 +40,11 @@ export function MainView() {
             return false;
         }
     }
+    useEffect(() => {
+        uiStore
+            .getFromStorage('anythingllm_external_connections', [])
+            .then((connections) => setExistingConnections(connections));
+    }, []);
     useHighjackBackButtonPress(goHome);
 
     return (
@@ -54,12 +62,50 @@ export function MainView() {
                 <Text style={{ maxWidth: '80%' }} numberOfLines={1} ellipsizeMode="middle" className="text-white text-lg font-medium">Connect to AnythingLLM</Text>
             </View>
 
-            <View style={{ gap: 33 }} className="w-full flex flex-col items-center justify-center">
+            <View style={{ gap: 20 }} className="w-full flex flex-col items-center justify-center">
                 <CameraView onScanReceived={onQRCodeScanned} />
-                <Text style={{ textAlign: 'center' }} className="text-white text-lg">
-                    Scan the QR code for your AnythingLLM desktop app to sync it's data to this mobile device for AI on the go!
+                <Text style={{ textAlign: 'center', fontSize: 14, width: '80%' }} className="text-[--text-secondary]">
+                    Scan the QR code for your AnythingLLM instance or client to sync it's data to this mobile device for AI on the go!
                 </Text>
             </View>
+
+            {existingConnections.length > 0 && (
+                <View className="w-full flex flex-col items-center justify-center" style={{ paddingTop: 33 }}>
+                    <Text className="text-white text-lg font-medium">Previous Connections</Text>
+                    <ScrollView
+                        style={{ maxHeight: 150 }}
+                        contentContainerStyle={{ gap: 8, paddingTop: 8 }}
+                        contentContainerClassName="w-full flex flex-col items-center justify-center"
+                    >
+                        {existingConnections.map((connection, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                style={{ gap: 8, paddingHorizontal: 16, paddingVertical: 8, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+                                className="flex flex-row items-center justify-center rounded-lg"
+                                onPress={() => {
+                                    uiStore.setToStorage('current_anythingllm_external_connection', connection);
+                                    navigation.reset({
+                                        index: 0,
+                                        // @ts-ignore
+                                        routes: [{ name: PATHS.connect_to_instance, params: { page: 'import' } }],
+                                    });
+                                }}
+                                onLongPress={async () => {
+                                    const connections = await uiStore.getFromStorage('anythingllm_external_connections', []) as IExternalConnection[];
+                                    const newConnections = connections.filter((connection) => connection.token !== connection.token);
+                                    await uiStore.removeFromStorage('current_anythingllm_external_connection');
+                                    await uiStore.setToStorage('anythingllm_external_connections', newConnections);
+                                    setExistingConnections(newConnections);
+                                }}
+                            >
+                                {connection.platform === 'desktop' && <Laptop size={16} color="#7cd4fd" weight="bold" />}
+                                {connection.platform === 'server' && <Cloud size={16} color="#7cd4fd" weight="bold" />}
+                                <Text className="text-white text-lg">{new URL(connection.connectionUrl).hostname}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                </View>
+            )}
         </SafeView >
     );
 }

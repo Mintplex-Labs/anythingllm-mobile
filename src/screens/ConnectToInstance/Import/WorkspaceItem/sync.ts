@@ -110,35 +110,6 @@ export async function syncFromRemote({
             }));
         }
         await Promise.all(chatPromises);
-
-        // Silenced for now - this could be a lot of documents and it will take a while, maybe do this later
-
-        // Embed all documents using the native embedder on the device
-        // Do this sequentially to avoid overwhelming the device - it will take longer
-        // but it will be more reliable and less likely to crash the app
-        // const embedder = getEmbedder('native');
-        // const documentReplicas = [] as DocumentType[];
-        // for (const document of documents) {
-        //     // @ts-ignore
-        //     const metadata = safeJsonParse(document.metadata, null);
-        //     await embedder
-        //         .splitAndEmbed(document.pageContent, { chunkSize: 2048, chunkOverlap: 20 })
-        //         .then(embedResults => embedResults.map(embedResult => {
-        //             const newMetadata = { ...embedResult.metadata, name: metadata?.title ?? 'New Document' };
-        //             return { embedding: embedResult.embedding, metadata: newMetadata };
-        //         }))
-        //         .then(async (embeddings) => await VectorDB.bulkInsert(workspaceReplica.slug, embeddings))
-        //         .then(async ({ ids }) => {
-        //             const newDocument = await Document.create({
-        //                 name: metadata?.title ?? 'New Document',
-        //                 workspaceSlug: workspaceReplica.slug,
-        //                 vectorBoxIds: ids,
-        //             });
-        //             if (!newDocument) throw new Error('Failed to create document');
-        //             documentReplicas.push(newDocument);
-        //         });
-        // }
-
         setStatus('synced');
     } catch (error) {
         console.error(error);

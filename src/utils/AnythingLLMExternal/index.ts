@@ -3,12 +3,11 @@ import { getDeviceName } from "react-native-device-info";
 
 export type Commands = 'workspaces' | 'workspace-content' | 'model-tag' | 'reset-chat' | 'new-thread';
 export type CommandResponses = {
-    'workspaces': { workspaces: Array<{ id: number; name: string, slug: string, threadCount: number, chatCount: number, documentCount: number, openAiPrompt: string, openAiTemp: number, topN: number }> };
+    'workspaces': { workspaces: Array<{ id: number; name: string, slug: string, threadCount: number, chatCount: number, openAiPrompt: string, openAiTemp: number, topN: number, platform: 'server' | 'desktop' }> };
     'workspace-content': {
         workspace: { id: number; name: string, slug: string, openAiPrompt: string, openAiTemp: number, topN: number };
         threads: Array<{ id: number; name: string, slug: string, workspace_id: number }>;
         chats: Array<{ id: number; workspaceId: number, thread_id: number, prompt: string, response: string, createdAt: number }>;
-        documents: Array<{ id: number; docId: string, workspaceId: number, metadata: { title: string }, pageContent: string }>;
     };
     'model-tag': { model: string };
     'reset-chat': never;
@@ -49,9 +48,8 @@ class AnythingLLMExternal {
 
     /**
      * Register the device with the instance
-     * @returns the token for the device
      */
-    async registerDevice(): Promise<string | null> {
+    async registerDevice(): Promise<{ token: string, platform: 'server' | 'desktop' } | null> {
         const response = await fetch(`${this.connectionUrl}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -62,7 +60,7 @@ class AnythingLLMExternal {
         });
         if (!response.ok) throw new Error('Failed to register device');
         const data = await response.json();
-        return data?.token ?? null;
+        return data;
     }
 
     /**

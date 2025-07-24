@@ -10,7 +10,9 @@ import { ICompleteResponse, IStreamEvent, IStreamResponse } from "@/utils/AiProv
 import { parseStreamingChunksToResponse } from "./parser";
 import { activateKeepAwake, deactivateKeepAwake } from "@/utils/keepAwake";
 import { Keyboard } from "react-native";
-import webscraper from "@/utils/ToolsManager/tools/webScraping/webscraper";
+import DelegatedProvider from "@/utils/AiProviders/delegatedProvider";
+import { generateUUID } from "@/utils/constants";
+import AwaitableAlert from "@/components/AwaitableAlert";
 
 const SHOW_DEBUG_LOGS = true;
 
@@ -38,6 +40,8 @@ export interface ChatHandlerInterface {
     setPrompt: (prompt: string, autoSubmit?: boolean) => void;
     /** Submit the prompt for the workspace thread - if no prompt is passed, use the current prompt state */
     submitPrompt: (prompt?: string) => void;
+    /** Whether the chat workspace/thread is remote */
+    isRemote: boolean;
 }
 
 interface IChatHandlerInterfaceProps {
@@ -73,6 +77,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
     const [errorLoadingChats, setErrorLoadingChats] = useState<Error | null>(null);
     const [_promptDisabled, _setPromptDisabled] = useState<boolean>(false);
     const [isWorking, setIsWorking] = useState<boolean>(false);
+    const [isRemote, setIsRemote] = useState<boolean>(workspace.isRemote || thread.isRemote);
 
     const fetchChats = useCallback(async () => {
         try {
@@ -104,8 +109,9 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         debug('Resetting chat history');
         try {
             setIsLoadingChats(true);
-            await WorkspaceChat.delete([{ field: 'workspace_thread_slug', value: thread.slug }]);
             setChatsMap(new Map());
+            await WorkspaceChat.delete([{ field: 'workspace_thread_slug', value: thread.slug }]);
+            if (isRemote) await DelegatedProvider.sendCommand(workspace.remoteConfig, 'reset-chat', { workspaceSlug: workspace.remoteConfig.slug, threadSlug: thread.remoteConfig.slug });
         } catch (err) {
             debug('Error resetting chat history', err);
         } finally {
@@ -153,9 +159,9 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
      * as well as kick off the LLM inference
      */
     const _processChat = useCallback(async (prompt: string) => {
+        let newChat = WorkspaceChat.newChatItem({ workspaceThreadSlug: thread.slug, prompt });
         try {
             activateKeepAwake();
-            let newChat = WorkspaceChat.newChatItem({ workspaceThreadSlug: thread.slug, prompt });
             _addChat(newChat as DynamicChatMessage);
 
             const messageHistory = Array.from(chatsMap.values()).concat([newChat as DynamicChatMessage]);
@@ -249,11 +255,40 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                 return;
             };
 
-            await llmProvider.chat({
+            // Establish the caller as the local provider
+            // If the workspace is remote and reachable, we will update
+            // the caller to the delegated provider. If the remote provider
+            // is non reachable, we will ask the user to confirm.
+            let caller = () => llmProvider.chat({
                 messages: messageHistory,
                 streaming: true,
                 onStream: (event, data) => handleStreamEvent(event, data),
-            }).catch(err => {
+            }) as Promise<any>;
+
+            if (isRemote) {
+                const config = {
+                    connectionUrl: workspace.remoteConfig.connectionUrl,
+                    deviceToken: workspace.remoteConfig.deviceToken,
+                    workspaceSlug: workspace.remoteConfig.slug,
+                    threadSlug: thread.remoteConfig.slug,
+                    onStream: (event, data) => handleStreamEvent(event, data),
+                    message: prompt,
+                }
+
+                const validConfig = await DelegatedProvider.validateConfig(config);
+                if (validConfig) caller = () => DelegatedProvider.delegateStreamableChat(config)
+                else {
+                    const continueLocally = await AwaitableAlert(
+                        "Remote server is not reachable",
+                        "We cannot reach your instance currently. Do you want to continue this conversation locally?",
+                        { text: 'No, cancel', style: 'cancel' },
+                        { text: 'Yes, continue locally', style: 'default' },
+                    );
+                    if (!continueLocally) throw new Error('Remote server is not reachable - chat not sent.');
+                }
+            }
+
+            await caller().catch(err => {
                 debug('Error processing chat', err);
                 merge(newChat, { type: 'error', response: { textResponse: err.message || 'Error processing chat' } });
             }).finally(async () => {
@@ -261,6 +296,8 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
             });
         } catch (err) {
             debug('Error processing chat', err);
+            merge(newChat, { isLoading: false, type: 'error', response: { textResponse: (err as Error).message || 'Error processing chat' } });
+            uiStore.emitter.emit(CHAT_HANDLER_EVENTS.UPDATE_CHAT, { uuid: newChat.uuid as string, chat: newChat });
         } finally {
             deactivateKeepAwake();
         }
@@ -337,6 +374,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
             setPrompt,
             submitPrompt,
             isWorking,
+            isRemote,
         }
     }, [
         chatsMap,
@@ -351,6 +389,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         chatsArray,
         reset,
         isWorking,
+        isRemote,
     ]);
 
     return chatHandlerInterface;

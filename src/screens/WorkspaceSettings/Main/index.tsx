@@ -36,7 +36,7 @@ export function MainView({ workspace, goToPage, initialThreadSlug }: MainViewPro
     async function askToDeleteWorkspace() {
         const confirmDelete = await AwaitableAlert(
             'Delete Workspace?',
-            'Are you sure you want to delete this workspace? All threads will be lost.',
+            `Are you sure you want to delete this workspace? All threads will be lost.${workspace.isRemote ? '\n\nThis will not delete the workspace in your remote instance.' : ''}`,
             { text: 'Cancel', style: 'cancel' },
             { text: 'Delete', style: 'destructive' }
         );

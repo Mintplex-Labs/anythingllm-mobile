@@ -84,6 +84,7 @@
     "react-native-safe-area-context": "^5.4.0",
     "react-native-screens": "^4.8.0",
     "react-native-share": "^12.0.9",
+    "react-native-sse": "^1.2.1",
     "react-native-svg": "^15.11.1",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-vector-icons": "^10.1.0",

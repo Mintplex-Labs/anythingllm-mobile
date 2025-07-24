@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, TouchableOpacity, View } from 'react-native';
-import { PaperPlaneRight, SlidersHorizontal } from "phosphor-react-native";
+import { PaperPlaneRight } from "phosphor-react-native";
 import { AttachmentInterface } from '@/hooks/useAttachments';
 import AttachmentsButton from './AttachmentsButton';
 import { screenDimensions } from '@/utils/constants';
@@ -36,7 +36,7 @@ export default function ActionMenu({ isFullScreen, sheetIndex, chatHandler, ...p
             className='flex w-full flex-row items-center justify-between'>
             {isFullScreen ? <View /> : (
                 <View className='flex flex-row items-center gap-x-4'>
-                    <AttachmentsButton attachmentHandler={props.attachmentHandler} />
+                    <AttachmentsButton chatHandler={chatHandler} attachmentHandler={props.attachmentHandler} />
                     <SettingsActionIcon />
                 </View>
             )}

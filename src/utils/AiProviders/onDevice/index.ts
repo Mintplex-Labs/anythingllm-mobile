@@ -153,10 +153,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     onComplete?: (response: any) => void;
     onStream?: IStreamCallback | IOnDeviceStreamCallback;
   }) {
-    if (!this.submodule || !this.model) {
-      throw new Error('No model loaded. Please select a model first.');
-    }
-
+    if (!this.submodule || !this.model) throw new Error('No model loaded. Please select a model first.');
     const { formattedMessages, citations } = await this.buildPrompt(messages);
     if (!streaming) {
       const response = await this.submodule.getChatCompletion(formattedMessages as any);

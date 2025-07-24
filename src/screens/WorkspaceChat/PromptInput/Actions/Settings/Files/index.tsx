@@ -101,10 +101,15 @@ export default function WorkspaceFilesActionSheet({ workspace }: { workspace: Wo
 }
 
 
-export function WorkspaceFilesActionButton() {
+export function WorkspaceFilesActionButton({ disabled = false }: { disabled: boolean }) {
     const { presentSheet } = useBottomSheet();
     return (
-        <TouchableOpacity onPress={() => presentSheet(BOTTOM_SHEET_NAMES.WORKSPACE_FILES)} style={{ gap: 11 }} className='flex flex-col items-center justify-center'>
+        <TouchableOpacity
+            disabled={disabled}
+            onPress={() => presentSheet(BOTTOM_SHEET_NAMES.WORKSPACE_FILES)}
+            style={{ gap: 11, opacity: disabled ? 0.4 : 1 }}
+            className='flex flex-col items-center justify-center'
+        >
             <View style={{ backgroundColor: '#3f3f42', width: 52, height: 52 }} className='flex flex-col items-center justify-center rounded-full'>
                 <Paperclip size={32} color="#FFF" />
             </View>

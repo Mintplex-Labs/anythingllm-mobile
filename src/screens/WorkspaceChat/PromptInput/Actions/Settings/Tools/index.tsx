@@ -82,10 +82,15 @@ function TogglableItem({ title, description, isOn, onToggle, primary = false }: 
     );
 }
 
-export function ToolsActionButton() {
+export function ToolsActionButton({ disabled = false }: { disabled: boolean }) {
     const { presentSheet } = useBottomSheet();
     return (
-        <TouchableOpacity onPress={() => presentSheet(BOTTOM_SHEET_NAMES.TOOLS)} style={{ gap: 11 }} className='flex flex-col items-center justify-center'>
+        <TouchableOpacity
+            disabled={disabled}
+            onPress={() => presentSheet(BOTTOM_SHEET_NAMES.TOOLS)}
+            style={{ gap: 11, opacity: disabled ? 0.4 : 1 }}
+            className='flex flex-col items-center justify-center'
+        >
             <View style={{ backgroundColor: '#3f3f42', width: 52, height: 52 }} className='flex flex-col items-center justify-center rounded-full'>
                 <Wrench size={32} color="#FFF" />
             </View>

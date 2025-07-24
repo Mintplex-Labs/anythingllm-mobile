@@ -74,7 +74,7 @@ export default function ThreadItem({
             <Text className="text-red-500 text-lg">Delete</Text>
           </TouchableOpacity>
         </View>
-      </BottomSheetModal>
-    </View>
+      </BottomSheetModal >
+    </View >
   );
 }

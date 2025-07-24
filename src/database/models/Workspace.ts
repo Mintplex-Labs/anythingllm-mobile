@@ -1,4 +1,4 @@
-import { field, lazy, text } from '@nozbe/watermelondb/decorators';
+import { field, json, lazy, text } from '@nozbe/watermelondb/decorators';
 import { database } from '@/database';
 import slugify from 'slugify';
 import { Q, Model } from '@nozbe/watermelondb';
@@ -7,6 +7,7 @@ import WorkspaceThread, { WorkspaceThreadType } from './WorkspaceThread';
 import Document from './Document';
 import uiStore from '@/store/UIStore';
 import WorkspaceChat from './WorkspaceChat';
+import AnythingLLMExternal from '@/utils/AnythingLLMExternal';
 
 export type WorkspaceType = {
   name: string;
@@ -15,7 +16,17 @@ export type WorkspaceType = {
   systemPrompt: string;
   temperature: number;
   contextLength: number;
+  isRemote: boolean;
+  remoteConfig: {
+    connectionUrl: string;
+    deviceToken: string;
+    slug: string; // fk slug in destination
+  };
   threads?: WorkspaceThreadType[];
+  /** Check if the remote server is reachable */
+  remoteServerReachable: () => Promise<boolean>;
+  /** Get the model tag for the workspace from the remote server */
+  remoteModelTag: () => Promise<string>;
 };
 
 export type WorkspaceDBType = Model & WorkspaceType & {
@@ -93,6 +104,8 @@ export default class Workspace extends Model {
   @text('system_prompt') systemPrompt!: string;
   @field('temperature') temperature!: number;
   @field('context_length') contextLength!: number;
+  @field('is_remote') isRemote!: boolean;
+  @json('remote_config', (json: any) => json) remoteConfig!: WorkspaceType['remoteConfig'];
   @field('created_at') createdAt!: number;
 
   static log(message: any, ...args: any[]) {
@@ -100,15 +113,39 @@ export default class Workspace extends Model {
   }
 
   static toWorkspaceObject(data: any): WorkspaceType {
-    const { name, slug, createdAt, systemPrompt, temperature, contextLength } = data;
+    const { name, slug, createdAt, systemPrompt, temperature, contextLength, isRemote = false, remoteConfig = null } = data;
     return {
       name: name,
       slug: slug,
       systemPrompt,
       temperature,
       contextLength,
-      createdAt,
+      isRemote,
+      remoteConfig,
       threads: [],
+      createdAt,
+
+      remoteServerReachable: async (): Promise<boolean> => {
+        if (!isRemote || !remoteConfig) return false;
+        try {
+          const external = new AnythingLLMExternal(remoteConfig.connectionUrl, remoteConfig.deviceToken);
+          const response = await external.tokenIsApproved();
+          return response;
+        } catch (error) {
+          return false;
+        }
+      },
+
+      remoteModelTag: async (): Promise<string> => {
+        if (!isRemote || !remoteConfig) return '';
+        try {
+          const external = new AnythingLLMExternal(remoteConfig.connectionUrl, remoteConfig.deviceToken);
+          const response = await external.sendCommand('model-tag', { workspaceSlug: remoteConfig.slug });
+          return response.model;
+        } catch (error) {
+          return '';
+        }
+      },
     };
   }
 
@@ -128,7 +165,7 @@ export default class Workspace extends Model {
    * @param where - An array of where clauses
    * @returns An array of workspaces with the WorkspaceType interface
    */
-  static async find(where: { field: string, value: string }[] = [], withThreads: boolean = false): Promise<WorkspaceType[]> {
+  static async find(where: { field: string, value: any }[] = [], withThreads: boolean = false): Promise<WorkspaceType[]> {
     const workspaces = await this.get(where);
     if (!workspaces) return [];
 
@@ -170,6 +207,8 @@ export default class Workspace extends Model {
         workspace.system_prompt = Workspace.defaultSystemPrompt;
         workspace.temperature = Workspace.defaultTemperature;
         workspace.context_length = Workspace.defaultContextLength;
+        workspace.is_remote = false;
+        workspace.remote_config = null;
         workspace.created_at = Date.now();
       });
     });
@@ -272,6 +311,8 @@ export default class Workspace extends Model {
         if (!workspace.system_prompt) workspace.system_prompt = Workspace.defaultSystemPrompt;
         if (!workspace.temperature) workspace.temperature = Workspace.defaultTemperature;
         if (!workspace.context_length) workspace.context_length = Workspace.defaultContextLength;
+        if (!workspace.is_remote) workspace.is_remote = data.isRemote ?? false;
+        if (!workspace.remote_config) workspace.remote_config = data.remoteConfig ?? null;
         workspace.created_at = Date.now();
       });
     });

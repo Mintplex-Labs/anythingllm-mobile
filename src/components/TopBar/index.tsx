@@ -72,7 +72,7 @@ export default function TopBar({
             resizeMode="center"
           />
         </TouchableOpacity>
-        <ModelChip />
+        <ModelChip workspace={workspace} />
       </View>
       {canMakeThread ? (
         <TouchableOpacity onPress={handleNewThread}>

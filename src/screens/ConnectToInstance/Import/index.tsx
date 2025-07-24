@@ -1,4 +1,4 @@
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View, RefreshControl } from "react-native";
 import SafeView from "@/components/SafeView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ArrowLeft } from "phosphor-react-native";
@@ -22,7 +22,9 @@ export function ImportView({ params }: ImportViewProps) {
     const navigation = useNavigation();
 
     const [module, setModule] = useState<AnythingLLMExternal | null>(null);
-    const [workspaces, setWorkspaces] = useState<CommandResponses['get-workspaces']['workspaces']>([]);
+    const [workspaces, setWorkspaces] = useState<CommandResponses['workspaces']['workspaces']>([]);
+    const [refreshing, setRefreshing] = useState(false);
+
     const goBack = () => {
         uiStore.removeFromStorage('anythingllm_external_connection');
         navigation.reset({
@@ -34,26 +36,38 @@ export function ImportView({ params }: ImportViewProps) {
     }
     useHighjackBackButtonPress(goBack);
 
-    useEffect(() => {
-        async function getWorkspaces() {
-            if (!params?.connectionUrl || !params?.deviceToken) return;
-            const module = new AnythingLLMExternal(params.connectionUrl, params.deviceToken);
-            setModule(module);
+    async function getWorkspaces() {
+        if (!params?.connectionUrl || !params?.deviceToken) return;
+        const module = new AnythingLLMExternal(params.connectionUrl, params.deviceToken);
+        setModule(module);
 
-            const validateConnection = await module.tokenIsApproved();
-            if (!validateConnection) {
-                showToast('Your existing connection to AnythingLLM Desktop expired.', 'short');
-                await uiStore.removeFromStorage('anythingllm_external_connection');
-                navigation.reset({
-                    index: 0,
-                    // @ts-ignore
-                    routes: [{ name: PATHS.connect_to_instance, params: { page: 'start' } }],
-                });
-                return;
-            }
-            const workspaces = await module.sendCommand('get-workspaces');
-            setWorkspaces(workspaces.workspaces);
+        const validateConnection = await module.tokenIsApproved();
+        if (!validateConnection) {
+            showToast('Your existing connection to AnythingLLM Desktop expired.', 'short');
+            await uiStore.removeFromStorage('anythingllm_external_connection');
+            navigation.reset({
+                index: 0,
+                // @ts-ignore
+                routes: [{ name: PATHS.connect_to_instance, params: { page: 'start' } }],
+            });
+            return;
         }
+        const workspaces = await module.sendCommand('workspaces');
+        setWorkspaces(workspaces.workspaces);
+    }
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+        try {
+            await getWorkspaces();
+        } catch (error) {
+            showToast('Failed to refresh workspaces', 'short');
+        } finally {
+            setRefreshing(false);
+        }
+    };
+
+    useEffect(() => {
         getWorkspaces();
     }, [params?.connectionUrl, params?.deviceToken]);
 
@@ -75,6 +89,14 @@ export function ImportView({ params }: ImportViewProps) {
                 style={{ flex: 1 }}
                 contentContainerStyle={{ gap: 33, paddingBottom: 100 }}
                 contentContainerClassName="w-full flex flex-col items-center justify-start"
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        tintColor="#FFF"
+                        colors={["#FFF"]}
+                    />
+                }
             >
                 {workspaces.map((workspace) => <WorkspaceItem key={workspace.id} module={module as AnythingLLMExternal} workspace={workspace} />)}
             </ScrollView>

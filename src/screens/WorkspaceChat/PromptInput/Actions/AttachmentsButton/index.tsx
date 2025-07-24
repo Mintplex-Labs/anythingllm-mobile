@@ -1,8 +1,10 @@
 import { TouchableOpacity } from "react-native";
 import { AttachmentInterface } from "@/hooks/useAttachments";
 import { Paperclip } from "phosphor-react-native";
+import { ChatHandlerInterface } from '@/hooks/useChatHandler/index';
 
-export default function AttachmentsButton({ attachmentHandler }: { attachmentHandler: AttachmentInterface }) {
+export default function AttachmentsButton({ chatHandler, attachmentHandler }: { chatHandler: ChatHandlerInterface, attachmentHandler: AttachmentInterface }) {
+    if (chatHandler.isRemote) return null;
     return (
         <TouchableOpacity
             onPress={attachmentHandler.askForAttachment}

@@ -1,15 +1,26 @@
-import { field, immutableRelation, text } from '@nozbe/watermelondb/decorators';
+import { field, immutableRelation, json, text } from '@nozbe/watermelondb/decorators';
 import { database } from '@/database';
 import slugify from 'slugify';
 import { Q, Model, Relation } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
-import { type WorkspaceType } from './Workspace';
+import Workspace, { type WorkspaceType } from './Workspace';
+import AnythingLLMExternal from '@/utils/AnythingLLMExternal';
+import { showToast } from '@/utils/Notification';
 
 export type WorkspaceThreadType = {
   name: string;
   workspaceSlug: string;
   slug: string;
   createdAt: number;
+  isRemote: boolean;
+  remoteConfig: {
+    wsSlug: string;
+    connectionUrl: string;
+    deviceToken: string;
+    slug: string | null; // fk slug in destination. Null is the default thread.
+  };
+  /** Check if the remote server is reachable */
+  remoteServerReachable: () => Promise<boolean>;
 };
 
 export default class WorkspaceThread extends Model {
@@ -37,6 +48,8 @@ export default class WorkspaceThread extends Model {
   @text('slug') slug!: string;
   @text('workspace_slug') workspaceSlug!: string;
   @immutableRelation('workspaces', 'workspace_slug') workspace!: Relation<Model & WorkspaceType>;
+  @field('is_remote') isRemote!: boolean;
+  @json('remote_config', (json: any) => json) remoteConfig!: WorkspaceThreadType['remoteConfig'];
   @field('created_at') createdAt!: number;
 
   static log(message: any, ...args: any[]) {
@@ -44,12 +57,24 @@ export default class WorkspaceThread extends Model {
   }
 
   static toWorkspaceThreadObject(data: any): WorkspaceThreadType {
-    const { name, slug, createdAt, workspaceSlug } = data;
+    const { name, slug, createdAt, workspaceSlug, isRemote = false, remoteConfig = null } = data;
     return {
       name: name,
       slug: slug,
       workspaceSlug,
+      isRemote,
+      remoteConfig,
       createdAt,
+      remoteServerReachable: async (): Promise<boolean> => {
+        if (!isRemote || !remoteConfig) return false;
+        try {
+          const external = new AnythingLLMExternal(remoteConfig.connectionUrl, remoteConfig.deviceToken);
+          const response = await external.tokenIsApproved();
+          return response;
+        } catch (error) {
+          return false;
+        }
+      },
     };
   }
 
@@ -90,14 +115,46 @@ export default class WorkspaceThread extends Model {
 
   static async create({ workspaceSlug }: { workspaceSlug: string }): Promise<WorkspaceThreadType> {
     const slug = slugify(generateUUID());
+    const parentWorkspace = await Workspace.first([{ field: 'slug', value: workspaceSlug }]);
+    const creationConfig = {
+      name: 'New Thread',
+      slug,
+      workspaceSlug,
+      isRemote: false,
+      remoteConfig: null as any,
+      createdAt: Date.now(),
+    }
+
+    // If the parent workspace is remote, create the thread in the remote workspace as well
+    // If the remote instance is not reachable then we will throw an error to keep the threads from being out of sync
+    if (parentWorkspace?.isRemote) {
+      const externalModule = new AnythingLLMExternal(parentWorkspace.remoteConfig.connectionUrl, parentWorkspace.remoteConfig.deviceToken);
+      const parentWorkspaceSlug = parentWorkspace.remoteConfig.slug;
+      const { thread: fkThread } = await externalModule.sendCommand('new-thread', { workspaceSlug: parentWorkspaceSlug });
+      this.log('Created thread in remote workspace', { fkThread });
+      if (!fkThread) {
+        showToast("We could not create a thread in your remote workspace. Please check your connection and try again.");
+        throw new Error('Failed to create thread in remote workspace');
+      }
+
+      creationConfig.isRemote = true;
+      creationConfig.remoteConfig = {
+        wsSlug: parentWorkspaceSlug,
+        connectionUrl: parentWorkspace.remoteConfig.connectionUrl,
+        deviceToken: parentWorkspace.remoteConfig.deviceToken,
+        slug: fkThread.slug,
+      }
+    }
 
     let newWorkspaceThread: any;
     await database.write(async () => {
       newWorkspaceThread = await database.get(WorkspaceThread.table).create((workspaceThread: any) => {
-        workspaceThread.name = 'New Thread';
-        workspaceThread.slug = slug;
-        workspaceThread.workspaceSlug = workspaceSlug;
-        workspaceThread.createdAt = Date.now();
+        workspaceThread.name = creationConfig.name;
+        workspaceThread.slug = creationConfig.slug;
+        workspaceThread.workspaceSlug = creationConfig.workspaceSlug;
+        workspaceThread.isRemote = creationConfig.isRemote;
+        workspaceThread.remoteConfig = creationConfig.remoteConfig;
+        workspaceThread.createdAt = creationConfig.createdAt;
       });
     });
 
@@ -177,6 +234,8 @@ export default class WorkspaceThread extends Model {
         if (!workspaceThread.name) workspaceThread.name = WorkspaceThread.defaultName;
         if (!workspaceThread.slug) workspaceThread.slug = generateUUID();
         if (!workspaceThread.workspaceSlug) workspaceThread.workspaceSlug = data.workspaceSlug;
+        if (!workspaceThread.isRemote) workspaceThread.isRemote = data.isRemote ?? false;
+        if (!workspaceThread.remoteConfig) workspaceThread.remoteConfig = data.remoteConfig ?? null;
         workspaceThread.created_at = Date.now();
       });
     });

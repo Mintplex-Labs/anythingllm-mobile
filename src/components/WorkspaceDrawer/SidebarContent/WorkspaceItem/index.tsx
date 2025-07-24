@@ -69,7 +69,7 @@ function WorkspaceItem({ workspace, isActive = false, currentThreadSlug }: IWork
   }
 
   async function handleWorkspaceDelete() {
-    Alert.alert('Delete workspace', 'Are you sure you want to delete this workspace? All threads will be lost.', [
+    Alert.alert('Delete workspace', `Are you sure you want to delete this workspace? All threads will be lost.${workspace.isRemote ? '\n\nThis will not delete the workspace in your remote instance.' : ''}`, [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Delete',

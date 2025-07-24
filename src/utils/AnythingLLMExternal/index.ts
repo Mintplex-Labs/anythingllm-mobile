@@ -1,27 +1,35 @@
 import { Platform } from "react-native";
 import { getDeviceName } from "react-native-device-info";
 
-type Commands = 'get-workspaces' | 'pull-workspace-content' | 'unregister-device';
+export type Commands = 'workspaces' | 'workspace-content' | 'model-tag' | 'reset-chat' | 'new-thread';
 export type CommandResponses = {
-    'get-workspaces': { workspaces: Array<{ id: number; name: string, slug: string, threadCount: number, chatCount: number, documentCount: number, openAiPrompt: string, openAiTemp: number, topN: number }> };
-    'pull-workspace-content': {
+    'workspaces': { workspaces: Array<{ id: number; name: string, slug: string, threadCount: number, chatCount: number, documentCount: number, openAiPrompt: string, openAiTemp: number, topN: number }> };
+    'workspace-content': {
         workspace: { id: number; name: string, slug: string, openAiPrompt: string, openAiTemp: number, topN: number };
         threads: Array<{ id: number; name: string, slug: string, workspace_id: number }>;
         chats: Array<{ id: number; workspaceId: number, thread_id: number, prompt: string, response: string, createdAt: number }>;
         documents: Array<{ id: number; docId: string, workspaceId: number, metadata: { title: string }, pageContent: string }>;
     };
-    'unregister-device': never;
+    'model-tag': { model: string };
+    'reset-chat': never;
+    'new-thread': { thread: { id: number; name: string, slug: string, workspace_id: number } };
 };
 
-type CommandBodies = {
-    'get-workspaces': never;
-    'pull-workspace-content': { workspaceId: number };
-    'unregister-device': never;
+export type CommandBodies = {
+    'workspaces': never;
+    'workspace-content': { workspaceSlug: string };
+    'model-tag': { workspaceSlug: string };
+    'reset-chat': { workspaceSlug: string, threadSlug: string | null };
+    'new-thread': { workspaceSlug: string };
 };
 
 class AnythingLLMExternal {
-    private readonly connectionUrl: string;
-    private readonly deviceToken: string;
+    static HEADER_AUTH_TOKEN = 'x-anythingllm-mobile-device-token';
+    /** The connection URL for the AnythingLLM instance */
+    readonly connectionUrl: string;
+    /** The device token for the AnythingLLM instance for this mobile device */
+    readonly deviceToken: string;
+
     constructor(connectionUrl: string, deviceToken?: string) {
         if (!this.isValidUrl(connectionUrl)) throw new Error('Invalid URL');
         this.connectionUrl = connectionUrl;
@@ -63,11 +71,15 @@ class AnythingLLMExternal {
      * @returns True if the token is approved, false otherwise
      */
     async tokenIsApproved(deviceToken: string = this.deviceToken): Promise<boolean> {
+        if (!deviceToken) return false;
+        const aborter = new AbortController();
+        setTimeout(() => aborter.abort(), 2_000); // 2 seconds timeout until the request is aborted
         const response = await fetch(`${this.connectionUrl}/auth`, {
             headers: {
                 'Content-Type': 'application/json',
-                'x-anythingllm-mobile-device-token': deviceToken,
+                [AnythingLLMExternal.HEADER_AUTH_TOKEN]: deviceToken,
             },
+            signal: aborter.signal,
         });
         if (!response.ok) return false;
         await response.text(); // consume the response so it is not left open
@@ -83,7 +95,7 @@ class AnythingLLMExternal {
             body: body ? JSON.stringify(body) : undefined,
             headers: {
                 'Content-Type': 'application/json',
-                'x-anythingllm-mobile-device-token': this.deviceToken,
+                [AnythingLLMExternal.HEADER_AUTH_TOKEN]: this.deviceToken,
             },
         });
         if (!response.ok) throw new Error('Failed to send command');

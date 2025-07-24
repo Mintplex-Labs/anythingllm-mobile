@@ -14,6 +14,7 @@ import uiStore from '@/store/UIStore';
 export default function SettingsActionSheet({ workspace, thread }: { workspace: WorkspaceType, thread: WorkspaceThreadType }) {
     const settingsSheetRef = useRef<BottomSheetModal>(null);
     const { registerSheet, presentSheet, activeSheet } = useBottomSheet();
+    const isRemote = workspace.isRemote || thread.isRemote;
 
     function goToSettings() {
         if (!workspace?.slug) return;
@@ -40,10 +41,10 @@ export default function SettingsActionSheet({ workspace, thread }: { workspace: 
             onDismiss={() => activeSheet === BOTTOM_SHEET_NAMES.SETTINGS && presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)}
         >
             <View style={{ paddingHorizontal: 30 }} className='flex flex-row items-center justify-between'>
-                <WorkspaceFilesActionButton />
+                <WorkspaceFilesActionButton disabled={isRemote} />
                 <ResetChatActionButton />
-                <ToolsActionButton />
-                <SettingsItem icon={<Gear size={32} color="#FFF" />} text="Settings" onPress={goToSettings} />
+                <ToolsActionButton disabled={isRemote} />
+                <GenericSettingsItem disabled={isRemote} icon={<Gear size={32} color="#FFF" />} text="Settings" onPress={goToSettings} />
             </View>
         </BottomSheetModal>
     );
@@ -58,9 +59,14 @@ export function SettingsActionIcon() {
     );
 }
 
-export function SettingsItem({ icon, text, onPress }: { icon: React.ReactNode, text: string, onPress: () => void }) {
+export function GenericSettingsItem({ disabled = false, icon, text, onPress }: { disabled: boolean, icon: React.ReactNode, text: string, onPress: () => void }) {
     return (
-        <TouchableOpacity onPress={onPress} style={{ gap: 11 }} className='flex flex-col items-center justify-center'>
+        <TouchableOpacity
+            disabled={disabled}
+            onPress={onPress}
+            style={{ gap: 11, opacity: disabled ? 0.4 : 1 }}
+            className='flex flex-col items-center justify-center'
+        >
             <View style={{ backgroundColor: '#3f3f42', width: 52, height: 52 }} className='flex flex-col items-center justify-center rounded-full'>
                 {icon}
             </View>

@@ -20,7 +20,7 @@ import {
   BottomSheetModal,
 } from '@gorhom/bottom-sheet';
 import { FlatList } from 'react-native-gesture-handler';
-import { MagnifyingGlass, X } from 'phosphor-react-native';
+import { MagnifyingGlass, Plug, X } from 'phosphor-react-native';
 import useLlmPreference from '@/hooks/useLLMPreference';
 import useModelManager from '@/hooks/useModelManager';
 import {
@@ -31,6 +31,8 @@ import ModelCard from '@/components/ModelCard';
 import { LLMProvider as LLMProviderType } from '@/utils/AiProviders';
 import { defaultModels } from '@/utils/models';
 import { Model } from '@/utils/types';
+import { WorkspaceType } from '@/database/models/Workspace';
+import { showToast } from '@/utils/Notification';
 
 function getPresetModelName(llmPreferences: { provider: string; config: any }, LLMProvider: LLMProviderType | null) {
   if (llmPreferences.provider !== 'native') return llmPreferences.config.model;
@@ -38,11 +40,11 @@ function getPresetModelName(llmPreferences: { provider: string; config: any }, L
   return modelDefinition?.name || llmPreferences.config.model;
 }
 
-export default function ModelChip() {
+export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { registerSheet, presentSheet, dismissSheet } = useBottomSheet();
   const { llmPreferences, LLMProvider } = useLlmPreference();
-  const modelName = getPresetModelName(llmPreferences, LLMProvider);
+  const [modelName, setModelName] = useState<string | null>(null);
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
@@ -57,11 +59,6 @@ export default function ModelChip() {
   );
   const parsedModelName = useMemo(() => {
     if (!modelName) return null;
-
-
-
-
-    console.log({ modelName });
     return modelName
       .split('/')
       .pop()
@@ -74,20 +71,34 @@ export default function ModelChip() {
     registerSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION, bottomSheetRef);
   }, [registerSheet]);
 
+  useEffect(() => {
+    if (workspace?.isRemote) workspace.remoteModelTag().then(model => { setModelName(model) });
+    else setModelName(getPresetModelName(llmPreferences, LLMProvider));
+  }, [workspace]);
+
+  if (!modelName) return null;
   return (
     <Fragment>
       <TouchableOpacity
-        onPress={() => presentSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)}
+        onPress={() => {
+          if (workspace?.isRemote) return showToast('This workspace is managed remotely. You cannot change the model here.');
+          presentSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)
+        }}
         style={{ marginTop: -5, maxWidth: 200 }}
         className={`rounded-full ${!modelName ? 'bg-red-500/20' : 'bg-white/10'
           }`}>
-        <Text
-          style={{ fontSize: 14, paddingVertical: 4, paddingHorizontal: 12 }}
-          className={`${!modelName ? 'text-red-500' : 'text-white'}`}
-          numberOfLines={1}
-          ellipsizeMode="middle">
-          {parsedModelName || 'No model loaded'}
-        </Text>
+        <View className="flex flex-row items-center justify-center" style={{ gap: 4, paddingVertical: 4, paddingHorizontal: 12 }}>
+          {workspace?.isRemote && (
+            <Plug size={16} color="white" weight="bold" />
+          )}
+          <Text
+            style={{ fontSize: 14 }}
+            className={`${!modelName ? 'text-red-500' : 'text-white'}`}
+            numberOfLines={1}
+            ellipsizeMode="middle">
+            {parsedModelName || 'No model loaded'}
+          </Text>
+        </View>
       </TouchableOpacity>
       <BottomSheetModal
         ref={bottomSheetRef}

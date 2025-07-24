@@ -188,7 +188,7 @@ interface IWorkspaceHeader {
 }
 
 function WorkspaceHeader({ workspace, isActive, isExpanded, onClick, handleWorkspaceDelete }: IWorkspaceHeader) {
-  const WorkspaceIcon = workspace.isRemote ? (workspace.platform === 'desktop' ? Laptop : Cloud) : SquaresFour;
+  const WorkspaceIcon = workspace.isRemote ? (workspace.remoteConfig.platform === 'desktop' ? Laptop : Cloud) : SquaresFour;
   return (
     <TouchableOpacity
       key={workspace.slug}

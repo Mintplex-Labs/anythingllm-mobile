@@ -33,6 +33,7 @@ import { defaultModels } from '@/utils/models';
 import { Model } from '@/utils/types';
 import { WorkspaceType } from '@/database/models/Workspace';
 import { showToast } from '@/utils/Notification';
+import uiStore, { UIStore } from '@/store/UIStore';
 
 function getPresetModelName(llmPreferences: { provider: string; config: any }, LLMProvider: LLMProviderType | null) {
   if (llmPreferences.provider !== 'native') return llmPreferences.config.model;
@@ -67,13 +68,27 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
       ?.replace(/^./, str => str.toUpperCase()); // Capitalize first letter
   }, [modelName]);
 
+  /**
+   * Fetch the model name from the remote workspace.
+   * Updates the state of the model name as well
+   */
+  async function fetchRemoteModelName() {
+    if (!workspace?.isRemote) return null;
+    const model = await workspace.remoteModelTag();
+    setModelName(model);
+  }
+
   useEffect(() => {
     registerSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION, bottomSheetRef);
   }, [registerSheet]);
 
   useEffect(() => {
-    if (workspace?.isRemote) workspace.remoteModelTag().then(model => { setModelName(model) });
-    else setModelName(getPresetModelName(llmPreferences, LLMProvider));
+    if (workspace?.isRemote) {
+      fetchRemoteModelName();
+      uiStore.emitter.addListener(uiStore.globalEvents.CHAT_HISTORY_REFRESHED, fetchRemoteModelName);
+    } else setModelName(getPresetModelName(llmPreferences, LLMProvider));
+
+    return () => uiStore.emitter.removeAllListeners(uiStore.globalEvents.CHAT_HISTORY_REFRESHED);
   }, [workspace]);
 
   if (!modelName) return null;

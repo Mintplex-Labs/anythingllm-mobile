@@ -1,7 +1,7 @@
 import { Platform } from "react-native";
 import { getDeviceName } from "react-native-device-info";
 
-export type Commands = 'workspaces' | 'workspace-content' | 'model-tag' | 'reset-chat' | 'new-thread';
+export type Commands = 'workspaces' | 'workspace-content' | 'model-tag' | 'reset-chat' | 'new-thread' | 'unregister-device';
 export type CommandResponses = {
     'workspaces': { workspaces: Array<{ id: number; name: string, slug: string, threadCount: number, chatCount: number, openAiPrompt: string, openAiTemp: number, topN: number, platform: 'server' | 'desktop' }> };
     'workspace-content': {
@@ -12,6 +12,7 @@ export type CommandResponses = {
     'model-tag': { model: string };
     'reset-chat': never;
     'new-thread': { thread: { id: number; name: string, slug: string, workspace_id: number } };
+    'unregister-device': never;
 };
 
 export type CommandBodies = {
@@ -20,6 +21,7 @@ export type CommandBodies = {
     'model-tag': { workspaceSlug: string };
     'reset-chat': { workspaceSlug: string, threadSlug: string | null };
     'new-thread': { workspaceSlug: string };
+    'unregister-device': never;
 };
 
 class AnythingLLMExternal {
@@ -58,7 +60,12 @@ class AnythingLLMExternal {
                 deviceOs: Platform.OS,
             }),
         });
-        if (!response.ok) throw new Error('Failed to register device');
+
+        if (!response.ok) {
+            console.error(`[${response.status}] Failed to register device: ${response.statusText}`, response);
+            throw new Error(`Failed to register device`);
+        }
+
         const data = await response.json();
         return data;
     }

@@ -2,6 +2,7 @@ import useRedirect from "@/hooks/useRedirect";
 import { useEffect, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import uiStore from "@/store/UIStore";
+import AnythingLLMExternal from "@/utils/AnythingLLMExternal";
 
 import { MainView } from "./Main";
 import { VerifyView } from "./Verify";
@@ -39,4 +40,18 @@ export default function ConnectToInstance() {
 
   const Page = PAGES[page.key as keyof typeof PAGES];
   return <Page params={page.params} />;
+}
+
+/**
+ * Unregister a connection from the AnythingLLM instance
+ * - Removes the connection from the local storage + the current connection
+ * - Sends a command to the AnythingLLM instance to unregister the device (blindly)
+ */
+export async function unregisterConnection(connection: IExternalConnection): Promise<IExternalConnection[]> {
+  const connections = await uiStore.getFromStorage('anythingllm_external_connections', []) as IExternalConnection[];
+  const newConnections = connections.filter((c) => c.token !== connection.token);
+  await uiStore.removeFromStorage('current_anythingllm_external_connection');
+  await uiStore.setToStorage('anythingllm_external_connections', newConnections);
+  await (new AnythingLLMExternal(connection.connectionUrl, connection.token)).sendCommand('unregister-device');
+  return newConnections;
 }

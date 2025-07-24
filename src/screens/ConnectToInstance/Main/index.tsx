@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Camera, CameraDevice, useCameraPermission, getCameraDevice, useCodeScanner } from "react-native-vision-camera";
 import uiStore from "@/store/UIStore";
-import { IExternalConnection } from "..";
+import { IExternalConnection, unregisterConnection } from "../index";
 
 export function MainView() {
     const [existingConnections, setExistingConnections] = useState<IExternalConnection[]>([]);
@@ -82,6 +82,10 @@ export function MainView() {
                                 key={index}
                                 style={{ gap: 8, paddingHorizontal: 16, paddingVertical: 8, backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
                                 className="flex flex-row items-center justify-center rounded-lg"
+                                onLongPress={() => unregisterConnection(connection)
+                                    .then((newConnections) => setExistingConnections(newConnections))
+                                    .catch((error) => console.error(error))
+                                }
                                 onPress={() => {
                                     uiStore.setToStorage('current_anythingllm_external_connection', connection);
                                     navigation.reset({
@@ -89,13 +93,6 @@ export function MainView() {
                                         // @ts-ignore
                                         routes: [{ name: PATHS.connect_to_instance, params: { page: 'import' } }],
                                     });
-                                }}
-                                onLongPress={async () => {
-                                    const connections = await uiStore.getFromStorage('anythingllm_external_connections', []) as IExternalConnection[];
-                                    const newConnections = connections.filter((connection) => connection.token !== connection.token);
-                                    await uiStore.removeFromStorage('current_anythingllm_external_connection');
-                                    await uiStore.setToStorage('anythingllm_external_connections', newConnections);
-                                    setExistingConnections(newConnections);
                                 }}
                             >
                                 {connection.platform === 'desktop' && <Laptop size={16} color="#7cd4fd" weight="bold" />}

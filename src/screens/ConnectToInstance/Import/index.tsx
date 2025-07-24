@@ -11,6 +11,7 @@ import WorkspaceItem from "./WorkspaceItem";
 import { CommandResponses } from "@/utils/AnythingLLMExternal";
 import uiStore from "@/store/UIStore";
 import { showToast } from "@/utils/Notification";
+import { unregisterConnection } from "../index";
 
 interface ImportViewProps {
     params: { connectionUrl: string, deviceToken: string };
@@ -45,9 +46,7 @@ export function ImportView({ params }: ImportViewProps) {
         if (!validateConnection) {
             showToast('Your existing connection to AnythingLLM Desktop expired.', 'short');
             await uiStore.removeFromStorage('current_anythingllm_external_connection');
-            // TODO: Remove from anythingllm_external_connections as well
-            debugger
-
+            await unregisterConnection({ connectionUrl: params.connectionUrl, token: params.deviceToken, platform: 'desktop' });
             navigation.reset({
                 index: 0,
                 // @ts-ignore

@@ -21,6 +21,7 @@ export type WorkspaceType = {
     connectionUrl: string;
     deviceToken: string;
     slug: string; // fk slug in destination
+    platform: 'server' | 'desktop';
   };
   threads?: WorkspaceThreadType[];
   /** Check if the remote server is reachable */

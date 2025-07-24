@@ -18,6 +18,7 @@ export type WorkspaceThreadType = {
     connectionUrl: string;
     deviceToken: string;
     slug: string | null; // fk slug in destination. Null is the default thread.
+    platform: 'server' | 'desktop';
   };
   /** Check if the remote server is reachable */
   remoteServerReachable: () => Promise<boolean>;
@@ -142,6 +143,7 @@ export default class WorkspaceThread extends Model {
         wsSlug: parentWorkspaceSlug,
         connectionUrl: parentWorkspace.remoteConfig.connectionUrl,
         deviceToken: parentWorkspace.remoteConfig.deviceToken,
+        platform: parentWorkspace.remoteConfig.platform,
         slug: fkThread.slug,
       }
     }

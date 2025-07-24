@@ -1,5 +1,5 @@
 import { View, Text, Alert, TextInput, Modal, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
-import { SquaresFour, CaretUp } from "phosphor-react-native";
+import { SquaresFour, CaretUp, Laptop, Cloud } from "phosphor-react-native";
 import { Fragment, useEffect, useState } from "react";
 import ThreadItem from "./ThreadItem";
 import { NativeEventEmitter } from "react-native";
@@ -188,6 +188,7 @@ interface IWorkspaceHeader {
 }
 
 function WorkspaceHeader({ workspace, isActive, isExpanded, onClick, handleWorkspaceDelete }: IWorkspaceHeader) {
+  const WorkspaceIcon = workspace.isRemote ? (workspace.platform === 'desktop' ? Laptop : Cloud) : SquaresFour;
   return (
     <TouchableOpacity
       key={workspace.slug}
@@ -198,7 +199,7 @@ function WorkspaceHeader({ workspace, isActive, isExpanded, onClick, handleWorks
     >
       <View className="flex flex-row items-center gap-x-[6px]">
         <View className='w-[24px] h-[24px] flex items-center justify-center'>
-          <SquaresFour size={24} color='#FFF' />
+          <WorkspaceIcon size={24} color='#FFF' />
         </View>
         <Text className='text-lg text-white' numberOfLines={1} ellipsizeMode="tail" style={{ width: 200 }}>
           {workspace.name}

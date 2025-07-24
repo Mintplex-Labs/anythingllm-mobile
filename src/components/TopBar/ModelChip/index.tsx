@@ -20,7 +20,7 @@ import {
   BottomSheetModal,
 } from '@gorhom/bottom-sheet';
 import { FlatList } from 'react-native-gesture-handler';
-import { MagnifyingGlass, Plug, X } from 'phosphor-react-native';
+import { MagnifyingGlass, X } from 'phosphor-react-native';
 import useLlmPreference from '@/hooks/useLLMPreference';
 import useModelManager from '@/hooks/useModelManager';
 import {
@@ -88,9 +88,6 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
         className={`rounded-full ${!modelName ? 'bg-red-500/20' : 'bg-white/10'
           }`}>
         <View className="flex flex-row items-center justify-center" style={{ gap: 4, paddingVertical: 4, paddingHorizontal: 12 }}>
-          {workspace?.isRemote && (
-            <Plug size={16} color="white" weight="bold" />
-          )}
           <Text
             style={{ fontSize: 14 }}
             className={`${!modelName ? 'text-red-500' : 'text-white'}`}

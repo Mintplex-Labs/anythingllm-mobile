@@ -43,6 +43,7 @@ export async function syncFromRemote({
                 connectionUrl: module.connectionUrl,
                 deviceToken: module.deviceToken,
                 slug: workspace.slug,
+                platform: workspace.platform,
             },
         });
 
@@ -64,6 +65,7 @@ export async function syncFromRemote({
                         slug: originalSlug === 'default-thread' ? null : originalSlug,
                         connectionUrl: module.connectionUrl,
                         deviceToken: module.deviceToken,
+                        platform: workspace.platform,
                     },
                 }));
         }

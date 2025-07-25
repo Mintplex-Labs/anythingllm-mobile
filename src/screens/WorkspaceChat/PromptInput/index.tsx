@@ -11,7 +11,6 @@ import {
   BackHandler,
   Keyboard,
   View,
-  Text,
 } from "react-native";
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ArrowsInSimple, ArrowsOutSimple } from "phosphor-react-native";
@@ -52,11 +51,11 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
   const paddingAnim = useRef(new Animated.Value(defaultPadding[0])).current;
   const snapPoints = useMemo(() => snapPointsDefault, []);
   const inputRef = useRef<View>(null);
-  const [selection, setSelection] = useState({ start: 0, end: 0 });
 
   const [sheetIndex, setSheetIndex] = useState(0);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [selection, setSelection] = useState({ start: 0, end: 0 });
 
   const hasModelSelected = useMemo(() => {
     return !!llmPreferences?.config?.model;
@@ -136,6 +135,31 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
       keyboardHeight
     );
   }, [sheetIndex, keyboardHeight]);
+
+  const handleTextInputChange = useCallback(
+    (text: string) => {
+      const cursorAt = selection.start;
+      const oldLength = chatHandler.prompt.length;
+      chatHandler.setPrompt(text);
+
+      // For pasting keep cursor where the paste happened
+      if (Math.abs(text.length - oldLength) > 1) {
+        setSelection({
+          start: cursorAt + (text.length - oldLength),
+          end: cursorAt + (text.length - oldLength),
+        });
+        return;
+      }
+
+      // For normal typing/deletion move cursor one position
+      const newCursorPosition = cursorAt + (text.length > oldLength ? 1 : -1);
+      setSelection({
+        start: Math.max(0, newCursorPosition),
+        end: Math.max(0, newCursorPosition),
+      });
+    },
+    [chatHandler, selection],
+  );
 
   useEffect(() => {
     registerSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, bottomSheetRef);
@@ -227,32 +251,8 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
               Keyboard.dismiss();
             }}
             value={chatHandler.prompt}
-            onChangeText={text => {
-              const cursorAt = selection.start;
-              const oldLength = chatHandler.prompt.length;
-
-              chatHandler.setPrompt(text);
-
-              // For pasting keep cursor where the paste happened
-              if (Math.abs(text.length - oldLength) > 1) {
-                setSelection({
-                  start: cursorAt + (text.length - oldLength),
-                  end: cursorAt + (text.length - oldLength),
-                });
-                return;
-              }
-
-              // For normal typing/deletion move cursor one position
-              const newCursorPosition =
-                cursorAt + (text.length > oldLength ? 1 : -1);
-              setSelection({
-                start: Math.max(0, newCursorPosition),
-                end: Math.max(0, newCursorPosition),
-              });
-            }}
-            onSelectionChange={event => {
-              setSelection(event.nativeEvent.selection);
-            }}
+            onChangeText={handleTextInputChange}
+            onSelectionChange={event => setSelection(event.nativeEvent.selection)}
             selection={selection}
             scrollEnabled={true}
             style={{

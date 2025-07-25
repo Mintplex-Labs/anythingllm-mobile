@@ -276,7 +276,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                 }
 
                 const validConfig = await DelegatedProvider.validateConfig(config);
-                if (validConfig) caller = () => DelegatedProvider.delegateStreamableChat(config)
+                if (validConfig) caller = () => (new DelegatedProvider()).streamChat(config)
                 else {
                     const continueLocally = await AwaitableAlert(
                         "Remote server is not reachable",

@@ -1,5 +1,5 @@
 import Workspace, { type WorkspaceType } from "@/database/models/Workspace";
-import { IAgentToolCall, IDocumentCitation } from "@/database/models/WorkspaceChat";
+import { IAgentCitation, IAgentToolCall, IDocumentCitation } from "@/database/models/WorkspaceChat";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import { formatChatHistory } from "@/utils/chat/helpers";
 import { StreamMetrics } from "@/utils/chat/LLMPerformanceMonitor";
@@ -58,7 +58,7 @@ export type IStreamEvent = 'chunk' |
   'report_tool_call_result' |
   'report_action' |
   'report_in_progress_thought';
-export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[] | IAgentToolCall | IAgentAction;
+export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[] | IAgentCitation[] | IAgentToolCall | IAgentAction;
 export type IStreamCallback = (
   event: IStreamEvent,
   response: IStreamResponse

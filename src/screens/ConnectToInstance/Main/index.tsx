@@ -29,16 +29,17 @@ export function MainView() {
             const connectionUrl = new URL(connectionUrlFromQRCode);
             if (connectionUrl.protocol !== 'http:' && connectionUrl.protocol !== 'https:') throw new Error('Invalid connection URL');
             if (connectionUrl.pathname !== '/api/mobile') throw new Error('Invalid connection URL');
+            const regToken = connectionUrl.searchParams.get('t');
+            if (!regToken) throw new Error('No valid registration token found');
+            connectionUrl.searchParams.delete('t'); // strip the temporary registration token
+
             navigation.reset({
                 index: 0,
                 // @ts-ignore
-                routes: [{ name: PATHS.connect_to_instance, params: { page: 'verify', connectionUrl: connectionUrlFromQRCode } }],
+                routes: [{ name: PATHS.connect_to_instance, params: { page: 'verify', connectionUrl: connectionUrl.toString(), registrationToken: regToken } }],
             });
             return true
-        } catch (error) {
-            console.error(error);
-            return false;
-        }
+        } catch { return false }
     }
     useEffect(() => {
         uiStore

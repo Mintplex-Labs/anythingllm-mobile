@@ -77,7 +77,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
     const [errorLoadingChats, setErrorLoadingChats] = useState<Error | null>(null);
     const [_promptDisabled, _setPromptDisabled] = useState<boolean>(false);
     const [isWorking, setIsWorking] = useState<boolean>(false);
-    const [isRemote, setIsRemote] = useState<boolean>(workspace.isRemote || thread.isRemote);
+    const [isRemote, _] = useState<boolean>(workspace?.isRemote || thread?.isRemote);
 
     const fetchChats = useCallback(async () => {
         try {

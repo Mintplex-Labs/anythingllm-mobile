@@ -52,6 +52,6 @@ export async function unregisterConnection(connection: IExternalConnection): Pro
   const newConnections = connections.filter((c) => c.token !== connection.token);
   await uiStore.removeFromStorage('current_anythingllm_external_connection');
   await uiStore.setToStorage('anythingllm_external_connections', newConnections);
-  await (new AnythingLLMExternal(connection.connectionUrl, connection.token)).sendCommand('unregister-device');
+  try { await (new AnythingLLMExternal(connection.connectionUrl, connection.token)).sendCommand('unregister-device'); } catch { }
   return newConnections;
 }

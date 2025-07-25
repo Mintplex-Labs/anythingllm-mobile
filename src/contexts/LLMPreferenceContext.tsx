@@ -61,7 +61,7 @@ export function LLMPreferenceProvider({ children }: { children: ReactNode }) {
                 case 'native':
                     const onDeviceConfig = event.details.config as OnDeviceProviderConstructorProps['config'];
                     llmProvider = getLLM(event.details.provider, onDeviceConfig);
-                    llmProvider.loadNewModel(onDeviceConfig!.model);
+                    llmProvider.loadNewModel(onDeviceConfig!.model as string);
                     break;
                 case 'openai':
                     const openAIConfig = event.details.config as OpenAICompatibleConfig['config'];

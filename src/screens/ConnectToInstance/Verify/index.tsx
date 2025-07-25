@@ -9,7 +9,7 @@ import { PATHS } from "@/utils/paths";
 import Register from "./Register";
 
 interface VerifyViewProps {
-    params: { connectionUrl: string };
+    params: { connectionUrl: string, registrationToken: string };
 }
 
 type IVerifyStatus = 'register' | 'import' | 'error';
@@ -22,6 +22,7 @@ export function VerifyView({ params }: VerifyViewProps) {
     const insets = useSafeAreaInsets();
     const navigation = useNavigation();
     const connectionUrl = params?.connectionUrl ?? null;
+    const registrationToken = params?.registrationToken ?? null;
     const [status, setStatus] = useState<IStatus>({
         status: 'register',
         message: 'Registering your device...',
@@ -52,7 +53,7 @@ export function VerifyView({ params }: VerifyViewProps) {
             </View>
 
             <View style={{ gap: 33 }} className="w-full flex flex-col items-center justify-center">
-                {status.status === 'register' && <Register connectionUrl={connectionUrl} updateStatus={setStatus} />}
+                {status.status === 'register' && <Register connectionUrl={connectionUrl} registrationToken={registrationToken} updateStatus={setStatus} />}
                 {status.status === 'error' && (
                     <View className="flex flex-col items-center justify-center gap-4">
                         <Text style={{ textAlign: 'center' }} className="text-red-500 text-lg">Error</Text>

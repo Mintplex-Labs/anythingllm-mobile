@@ -4,7 +4,7 @@ import React, {
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 import {
   TouchableOpacity,
   Animated,
@@ -12,29 +12,29 @@ import {
   Keyboard,
   View,
   Text,
-} from 'react-native';
-import { BottomSheetModal, BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import { ArrowsInSimple, ArrowsOutSimple } from 'phosphor-react-native';
-import { screenDimensions } from '@/utils/constants';
-import ActionMenu, { ACTION_MENU_HEIGHT } from './Actions';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+} from "react-native";
+import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { ArrowsInSimple, ArrowsOutSimple } from "phosphor-react-native";
+import { screenDimensions } from "@/utils/constants";
+import ActionMenu, { ACTION_MENU_HEIGHT } from "./Actions";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   AttachmentInterface,
   ChatWindowAttachmentsContainer,
-} from '@/hooks/useAttachments';
+} from "@/hooks/useAttachments";
 import {
   useBottomSheet,
   BOTTOM_SHEET_NAMES,
-} from '@/contexts/BottomSheetContext';
-import { useDrawerStatus } from '@react-navigation/drawer';
-import useKeyboardHeight from '@/hooks/useKeyboardHeight';
-import { PATHS } from '@/utils/paths';
-import useRouteObserver from '@/hooks/useRouteObserver';
-import { useChatHandlerContext } from '@/hooks/useChatHandler/index';
-import useLlmPreference from '@/hooks/useLLMPreference';
+} from "@/contexts/BottomSheetContext";
+import { useDrawerStatus } from "@react-navigation/drawer";
+import useKeyboardHeight from "@/hooks/useKeyboardHeight";
+import { PATHS } from "@/utils/paths";
+import useRouteObserver from "@/hooks/useRouteObserver";
+import { useChatHandlerContext } from "@/hooks/useChatHandler/index";
+import useLlmPreference from "@/hooks/useLLMPreference";
 
 const defaultPadding = [0, 0, 32]; // top padding for snap points
-export const snapPointsDefault = ['22%', '60%', '100%'];
+export const snapPointsDefault = ["22%", "60%", "100%"];
 
 interface PromptInputProps {
   attachmentHandler: AttachmentInterface;
@@ -52,6 +52,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
   const paddingAnim = useRef(new Animated.Value(defaultPadding[0])).current;
   const snapPoints = useMemo(() => snapPointsDefault, []);
   const inputRef = useRef<View>(null);
+  const [selection, setSelection] = useState({ start: 0, end: 0 });
 
   const [sheetIndex, setSheetIndex] = useState(0);
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -111,7 +112,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
         style={{
           top: paddingAnim,
           width: 40,
-          position: 'absolute',
+          position: "absolute",
           left: screenDimensions.width - 50,
         }}
         className="p-4">
@@ -148,7 +149,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
   // then watch for changes to the active sheet
   useEffect(() => {
     if (
-      drawerStatus === 'closed' &&
+      drawerStatus === "closed" &&
       (activeSheet === null ||
         activeSheet === BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT) &&
       !!bottomSheetRef.current &&
@@ -160,7 +161,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
   // Disable the back button when the input is focused
   // to prevent page navigation while in full screen
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () =>
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", () =>
       isInputFocused ? true : false,
     );
     return () => backHandler.remove();
@@ -171,7 +172,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
     // If the keyboard is in the half-open state, then we need to snap to the closed state
     // when the keyboard is dismissed by the user
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => {
         if (sheetIndex === 1) bottomSheetRef.current?.snapToIndex(0);
       },
@@ -194,20 +195,20 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
         onChange={handleSheetChanges}
         handleComponent={HandleComponent}
         backgroundStyle={{
-          backgroundColor: '#1B1B1E',
+          backgroundColor: "#1B1B1E",
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
         }}>
         <Animated.View
           ref={inputRef}
           style={{ paddingTop: paddingAnim }}
-          className={'flex flex-col justify-between'}>
+          className={"flex flex-col justify-between"}>
           <BottomSheetTextInput
             multiline={true}
             placeholder={
               hasModelSelected
-                ? 'Enter your prompt'
-                : 'Please select a model first'
+                ? "Enter your prompt"
+                : "Please select a model first"
             }
             placeholderTextColor="#9F9FA0"
             className="text-white text-lg"
@@ -226,10 +227,36 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
               Keyboard.dismiss();
             }}
             value={chatHandler.prompt}
-            onChangeText={chatHandler.setPrompt}
+            onChangeText={text => {
+              const cursorAt = selection.start;
+              const oldLength = chatHandler.prompt.length;
+
+              chatHandler.setPrompt(text);
+
+              // For pasting keep cursor where the paste happened
+              if (Math.abs(text.length - oldLength) > 1) {
+                setSelection({
+                  start: cursorAt + (text.length - oldLength),
+                  end: cursorAt + (text.length - oldLength),
+                });
+                return;
+              }
+
+              // For normal typing/deletion move cursor one position
+              const newCursorPosition =
+                cursorAt + (text.length > oldLength ? 1 : -1);
+              setSelection({
+                start: Math.max(0, newCursorPosition),
+                end: Math.max(0, newCursorPosition),
+              });
+            }}
+            onSelectionChange={event => {
+              setSelection(event.nativeEvent.selection);
+            }}
+            selection={selection}
             scrollEnabled={true}
             style={{
-              textAlignVertical: 'top',
+              textAlignVertical: "top",
               height: inputHeight,
               borderRadius: 16,
               paddingTop: 16,

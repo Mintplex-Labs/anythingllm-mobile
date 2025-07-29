@@ -9,6 +9,8 @@ import {
   Info,
   LockKey,
   DiscordLogo,
+  FileText,
+  FileLock,
 } from 'phosphor-react-native';
 import { IWorkspacePageKey } from '../index';
 import uiStore from '@/store/UIStore';
@@ -57,11 +59,6 @@ const ABOUT_LINKS: SupportLink[] = [
     icon: <Info size={18} color="#FFF" />,
   },
   {
-    title: 'Privacy & Data',
-    link: 'https://docs.anythingllm.com/anythingllm-mobile/privacy-and-data',
-    icon: <LockKey size={18} color="#FFF" />,
-  },
-  {
     title: 'Join the Discord',
     link: 'https://discord.gg/6UyHPeGZAC',
     icon: <DiscordLogo size={18} color="#FFF" />,
@@ -76,6 +73,19 @@ const UTILITY_LINKS: SupportLink[] = [
       await deleteProcessedFiles();
       showToast('Temporary files cleared');
     },
+  },
+]
+
+const LEGAL_LINKS: SupportLink[] = [
+  {
+    title: 'Terms of Service',
+    link: 'https://docs.anythingllm.com/mobile/terms',
+    icon: <FileText size={18} color="#FFF" />,
+  },
+  {
+    title: 'Privacy Policy',
+    link: 'https://docs.anythingllm.com/mobile/privacy',
+    icon: <FileLock size={18} color="#FFF" />,
   },
 ]
 
@@ -245,6 +255,35 @@ export function MainView({ goToPage }: MainViewProps) {
                     icon={link.icon}
                     onPress={link.onPress}
                     borderBottom={index !== UTILITY_LINKS.length - 1}
+                  />
+                );
+              })}
+            </View>
+          </View>
+
+          <View className="w-full flex flex-col" style={{ gap: 12 }}>
+            <View className="flex flex-row items-end justify-between">
+              <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">
+                Legal & Privacy
+              </Text>
+            </View>
+            <View
+              className="flex flex-col"
+              style={{
+                backgroundColor: '#1B1B1E',
+                padding: 14,
+                gap: 12,
+                borderRadius: 8,
+              }}>
+              {LEGAL_LINKS.map((link, index) => {
+                return (
+                  <SupportItem
+                    key={index}
+                    title={link.title}
+                    link={link.link}
+                    icon={link.icon}
+                    onPress={link.onPress}
+                    borderBottom={index !== LEGAL_LINKS.length - 1}
                   />
                 );
               })}

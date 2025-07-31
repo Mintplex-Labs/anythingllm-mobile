@@ -41,6 +41,26 @@ function getPresetModelName(llmPreferences: { provider: string; config: any }, L
   return modelDefinition?.name || llmPreferences.config.model;
 }
 
+function modelNameToDisplayName(modelName: string) {
+  if (!modelName) return null; // undetermined model
+
+  // Full file path specific (windows: C:\Users\...\..., mac: /Users/...\...)
+  if (modelName.includes('\\') || modelName.startsWith('/')) {
+    return modelName.split(/[\\/]/).pop()?.replaceAll(new RegExp('(-?)(gguf|GGUF|Gguf)$', 'g'), '') // Remove -gguf suffix
+      ?.replaceAll(new RegExp('[-_]', 'g'), ' ') // Replace - and _ with space
+      ?.replaceAll(new RegExp('chat -*', 'g'), '') // Replace cgguf with gguf
+      ?.replace(/^./, str => str.toUpperCase()); // Capitalize first letter
+  }
+
+  // General model name format: <provider>/<model-name>
+  return modelName
+    .split('/')
+    .pop()
+    ?.replaceAll(new RegExp('(-?)(gguf|GGUF|Gguf)$', 'g'), '') // Remove -gguf suffix
+    ?.replaceAll(new RegExp('-', 'g'), ' ') // Replace - with space
+    ?.replace(/^./, str => str.toUpperCase()); // Capitalize first letter
+}
+
 export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { registerSheet, presentSheet, dismissSheet } = useBottomSheet();
@@ -58,15 +78,6 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
     ),
     [],
   );
-  const parsedModelName = useMemo(() => {
-    if (!modelName) return null;
-    return modelName
-      .split('/')
-      .pop()
-      ?.replaceAll(new RegExp('(-?)(gguf|GGUF|Gguf)$', 'g'), '') // Remove -gguf suffix
-      ?.replaceAll(new RegExp('-', 'g'), ' ') // Replace - with space
-      ?.replace(/^./, str => str.toUpperCase()); // Capitalize first letter
-  }, [modelName]);
 
   /**
    * Fetch the model name from the remote workspace.
@@ -108,7 +119,7 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
             className={`${!modelName ? 'text-red-500' : 'text-white'}`}
             numberOfLines={1}
             ellipsizeMode="middle">
-            {parsedModelName || 'No model loaded'}
+            {modelNameToDisplayName(modelName) || 'No model loaded'}
           </Text>
         </View>
       </TouchableOpacity>

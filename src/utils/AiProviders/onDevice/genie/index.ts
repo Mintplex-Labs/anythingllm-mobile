@@ -3,7 +3,7 @@ import { defaultModels } from '@/utils/models';
 import TokenManager from '@/utils/tiktoken';
 import { NPUEnabledModel } from '@/utils/types';
 import { NativeModules, NativeEventEmitter, EmitterSubscription } from 'react-native';
-import { NativeLlamaChatMessage } from 'llama.rn/lib/typescript/NativeRNLlama';
+import { NativeLlamaChatMessage } from '@/utils/AiProviders/onDevice/cactus';
 import { ICompleteResponse } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import type OnDeviceProvider from '@/utils/AiProviders/onDevice/index';
 

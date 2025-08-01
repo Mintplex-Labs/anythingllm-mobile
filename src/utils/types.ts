@@ -1,4 +1,4 @@
-import { CompletionParams } from 'llama.rn';
+import { CompletionParams } from 'cactus-react-native';
 import { TemplateConfig } from 'chat-formatter';
 import * as React from 'react';
 import { ImageURISource, TextStyle } from 'react-native';

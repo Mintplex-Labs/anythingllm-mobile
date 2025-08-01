@@ -1,13 +1,13 @@
-import { CompletionParams as LlamaRNCompletionParams } from 'llama.rn';
+import { CompletionParams as LlamaRNCompletionParams } from 'cactus-react-native';
 
 // Alias allows flexibility to switch API providers later
 // We should move towards OpenAI Compatible API Params
 export type ApiCompletionParams = LlamaRNCompletionParams;
 
 /**
- * App-specific completion parameters that are not part of the llama.rn API.
+ * App-specific completion parameters that are not part of the cactus.lm API.
  * These parameters are used only within the app and should be stripped before
- * sending to the llama.rn API.
+ * sending to the cactus.lm API.
  */
 export type AppOnlyCompletionParams = {
   /**
@@ -26,7 +26,7 @@ export type AppOnlyCompletionParams = {
 
 /**
  * List of keys that are app-specific and should be stripped before
- * sending to the llama.rn API.
+  * sending to the cactus.lm API.
  */
 const APP_ONLY_KEYS: (keyof AppOnlyCompletionParams)[] = [
   'version',
@@ -40,7 +40,7 @@ const APP_ONLY_KEYS: (keyof AppOnlyCompletionParams)[] = [
 export type CompletionParams = ApiCompletionParams & AppOnlyCompletionParams;
 
 /**
- * Strips PocketPal-specific fields before sending to llama.rn.
+ * Strips PocketPal-specific fields before sending to cactus.lm.
  *
  * @param params - The app completion parameters that may include app-specific properties
  * @returns A clean API completion parameters object with only properties supported by the API

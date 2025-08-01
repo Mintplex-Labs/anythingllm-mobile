@@ -1,7 +1,7 @@
 import { EMBEDDING_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
 import TextSplitter, { TextSplitterConfig } from "@/utils/TextSplitter";
 import * as RNFS from '@dr.pogodin/react-native-fs';
-import { initLlama, LlamaContext, NativeEmbeddingResult } from "llama.rn";
+import { NativeEmbeddingResult, CactusLM } from "cactus-react-native";
 import { Platform } from "react-native";
 
 type EmbedderPrefixType = 'query' | 'embed_document';
@@ -42,7 +42,7 @@ export default class OnDeviceEmbedderProvider {
     private modelPath = resolveDestinationPathFromGGUFUrl(EMBEDDING_MODEL.tag);
     private keepAliveTimer: NodeJS.Timeout | null = null;
     private keepAliveInterval = 1000 * (60 * 3); // 3 minutes
-    private llamaRnContext: LlamaContext | null = null;
+    private cactusLmContext: CactusLM | null = null;
 
     // Singleton, there are no props so nothing to ever reload.
     // Just keep the singleton instance alive.
@@ -84,14 +84,14 @@ export default class OnDeviceEmbedderProvider {
 
     private async initialize(): Promise<boolean> {
         try {
-            if (!!this.llamaRnContext) return true;
+            if (!!this.cactusLmContext) return true;
             if (!(await RNFS.exists(this.modelPath))) await this.downloadModel();
 
-            this.llamaRnContext = await initLlama({
+            this.cactusLmContext = await CactusLM.init({
                 model: this.modelPath,
                 n_gpu_layers: Platform.OS === 'ios' ? 99 : 0,
                 embedding: true,
-            })
+            }).then(result => result.lm)
             return true;
         } catch (error) {
             console.error('Failed to initialize model:', error);
@@ -119,8 +119,8 @@ export default class OnDeviceEmbedderProvider {
 
     private async unloadModel(): Promise<void> {
         this.log('Unloading model');
-        if (this.llamaRnContext) await this.llamaRnContext.release();
-        this.llamaRnContext = null;
+        if (this.cactusLmContext) await this.cactusLmContext.release();
+        this.cactusLmContext = null;
     }
 
     /**
@@ -157,12 +157,12 @@ export default class OnDeviceEmbedderProvider {
     async embed(text: string, as: 'query' | 'embed_document' = 'query') {
         return this.wrapInKeepAlive(async () => {
             await this.initialize();
-            if (!this.llamaRnContext) throw new Error('OnDeviceEmbedderProvider::embed: could not initialize');
+            if (!this.cactusLmContext) throw new Error('OnDeviceEmbedderProvider::embed: could not initialize');
 
             this.keepAlive();
             const prefixedText = `${this.EMBED_PREFIXES[as]}${text}`;
             this.log(`Embedding text with prefix: ${prefixedText}`);
-            const msgResult: NativeEmbeddingResult = await this.llamaRnContext.embedding(prefixedText, { embd_normalize: this.EMBEDDING_NORMALIZATION });
+            const msgResult: NativeEmbeddingResult = await this.cactusLmContext.embedding(prefixedText, { embd_normalize: this.EMBEDDING_NORMALIZATION });
             return msgResult.embedding;
         });
     }

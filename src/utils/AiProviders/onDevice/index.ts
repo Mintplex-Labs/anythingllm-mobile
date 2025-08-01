@@ -1,13 +1,13 @@
 import { defaultModels } from "@/utils/models";
 import GenieWrapper, { IGenieStreamCallback } from "./genie";
-import LlamaRnWrapper, { ILlamaRnStreamCallback } from "./llamaRn";
+import CactusLmWrapper, { ICactusLmStreamCallback } from "./cactus";
 import BaseOpenAILikeProvider, { ICompleteResponse, IStreamCallback, IStreamEvent } from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
 import MODEL_CARDS from "@/utils/models/defaults";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
 
-export type IOnDeviceStreamCallback = IGenieStreamCallback | ILlamaRnStreamCallback;
+export type IOnDeviceStreamCallback = IGenieStreamCallback | ICactusLmStreamCallback;
 export type OnDeviceProviderConstructorProps = { config: { model: string | null } }
 
 export default class OnDeviceProvider extends BaseOpenAILikeProvider {
@@ -19,8 +19,8 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   // @ts-ignore - this is a valid property for this class
   public model: string | null;
 
-  protected submodule: GenieWrapper | LlamaRnWrapper | null = null;
-  protected llamaRnContext: any;
+  protected submodule: GenieWrapper | CactusLmWrapper | null = null;
+  protected cactusLmContext: any;
 
   protected client: OpenAILite;
   protected isOTypeModel: boolean;
@@ -61,7 +61,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     if (this.computeRuntime === 'NPU') {
       return new GenieWrapper({ model, parent: this });
     } else {
-      return new LlamaRnWrapper({ model, parent: this });
+      return new CactusLmWrapper({ model, parent: this });
     }
   }
 
@@ -167,7 +167,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     const availableTools = await ToolsManager.injectAvailableTools();
     this.log(`Streaming ${this.model} with ${this.computeRuntime}`);
     this.log('Available tools:', availableTools.map(t => t.function.name));
-    let fullResult = await this.submodule.streamGetChatCompletion(formattedMessages as any, (token: string) => onStream('chunk', token), availableTools);
+    let fullResult = await this.submodule.streamGetChatCompletion(formattedMessages as any, (token: string) => onStream('chunk', token), availableTools, (event: IStreamEvent, data: any) => onStream(event, data));
 
     // Recursive tool call loop
     await ToolsManager.toolCallLoop({

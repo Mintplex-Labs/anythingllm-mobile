@@ -42,8 +42,8 @@ export default class Workspace extends Model {
   static defaultSystemPrompt = `You are a helpful assistant that can answer questions and help with tasks.`;
 
   /**
-   * Inherit the default values from the LlamaRnWrapper class so no weirdness happens during inference.
-   * https://github.com/mybigday/llama.rn/blob/b12219527d9d38d1915c1a69055e6a59db7f7cd1/android/src/main/java/com/rnllama/LlamaContext.java#L68
+   * Inherit the default values from the CactusLmWrapper class so no weirdness happens during inference.
+   * https://github.com/cactus-compute/cactus/tree/main/react/src/NativeCactus.ts#L10
    */
   static defaultTemperature = 0.7;
   static defaultContextLength = 512;

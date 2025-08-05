@@ -84,9 +84,9 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file("anythingllm-release-key.keystore")
+            storeFile file("anythingllm-upload-key.keystore")
             storePassword project.env.get("APP_RELEASE_STORE_PASSWORD")
-            keyAlias "anythingllm_key_alias"
+            keyAlias "anythingllm-keystore"
             keyPassword project.env.get("APP_RELEASE_KEY_PASSWORD")
         }
     }

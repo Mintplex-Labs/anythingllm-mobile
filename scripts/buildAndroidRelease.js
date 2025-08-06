@@ -105,7 +105,7 @@ try {
 
     // Rename the APK to app-release-v${version}-universal.apk
     const apkPath = path.join(outputDir, `universal.apk`);
-    fs.renameSync(apkPath, path.join(outputDir, `anythingllm-v${version}-universal.apk`));
+    fs.renameSync(apkPath, path.join(outputDir, `anythingllm-universal.apk`));
     fs.writeFileSync(path.join(outputDir, `version.txt`), version);
 
     // Clean up zip file
@@ -122,7 +122,6 @@ try {
     if (apkFiles.length > 0) {
         console.log(`🎯 Final APK: ${path.join(outputDir, apkFiles[0])}`);
     }
-
 } catch (error) {
     console.error('❌ Build failed:', error);
     process.exit(1);

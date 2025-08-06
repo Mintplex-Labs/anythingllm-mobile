@@ -12,12 +12,15 @@ import Workspace from "@/database/models/Workspace";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { EMBEDDING_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
 import * as RNFS from '@dr.pogodin/react-native-fs';
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function DataHandling() {
   const navigation = useNavigation();
   const netInfo = useNetInfo();
   const { llmPreferences, isLoading } = useLlmPreference();
   const [isOnboarding, setIsOnboarding] = useState(false);
+  const insets = useSafeAreaInsets();
+
   const onContinue = async () => {
     setIsOnboarding(true);
     async function onboardingTasks() {
@@ -41,7 +44,6 @@ export default function DataHandling() {
     navigation.navigate(PATHS.workspace_chat, { wsSlug: workspace.slug, threadSlug: workspace.threads[0].slug });
   }
 
-  const LLMProvider = AVAILABLE_LLM_PROVIDERS.find(provider => provider.value === llmPreferences.provider)
   if (isLoading) {
     return (
       <SafeView scrollable={false} containerClassNames='flex h-[100vh] justify-center items-center'>
@@ -53,16 +55,14 @@ export default function DataHandling() {
   if (isOnboarding) {
     return (
       <React.Fragment>
-        <View pointerEvents="none" className="absolute top-0 left-0 w-[100vw] h-[100vh] z-[2]">
-          <Image
-            source={require("@/assets/onboarding/bg-blobs.png")}
-            resizeMode="contain"
-            className="w-[100vw] h-[100vh]"
-          />
-        </View>
+        <Image
+          source={require("@/assets/onboarding/bg-blobs.png")}
+          resizeMode="contain"
+          style={{ backgroundColor: "#131314", position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}
+        />
 
-        <SafeView scrollable={false} safeAreaClassNames="bg-[--primary-bg]" containerClassNames='flex h-[100vh] justify-center items-center z-[1]'>
-          <View className="flex flex-col gap-y-1 items-center">
+        <SafeView scrollable={false} safeAreaClassNames="bg-transparent" containerClassNames="h-full z-[1]" containerStyle={{ paddingTop: insets.top + 20 }}>
+          <View className="flex flex-col gap-y-1 items-center my-auto">
             <Image source={require('@/assets/logo/anything-llm.png')} resizeMode="contain" className="w-[70vw]" />
             <View className="flex flex-row gap-x-2 items-center -mt-8">
               <ActivityIndicator size="small" animating={true} color="#fff" />
@@ -76,15 +76,13 @@ export default function DataHandling() {
 
   return (
     <React.Fragment>
-      <View pointerEvents="none" className="absolute top-0 left-0 w-screen h-[100vh] z-[2]">
-        <Image
-          source={require("@/assets/onboarding/bg-blobs.png")}
-          resizeMode="contain"
-          className="w-screen h-[100vh]"
-        />
-      </View>
+      <Image
+        source={require("@/assets/onboarding/bg-blobs.png")}
+        resizeMode="contain"
+        style={{ backgroundColor: "#131314", position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}
+      />
 
-      <SafeView scrollable={false} safeAreaClassNames="bg-[--primary-bg]" containerClassNames="h-[88%] my-auto z-[1]">
+      <SafeView scrollable={false} safeAreaClassNames="bg-transparent" containerClassNames="h-full z-[1]" containerStyle={{ paddingTop: insets.top + 20 }}>
         <View className="flex flex-col gap-y-[66px]">
           <ProgressBars numberOfBars={3} activeBar={3} />
 
@@ -114,7 +112,7 @@ export default function DataHandling() {
               />
             </View>
 
-            <View className="absolute top-[80vh] left-0 right-0 mx-4 flex flex-row gap-x-4 items-center justify-between">
+            <View className="flex flex-row gap-x-4 items-center justify-between">
               <TouchableOpacity onPress={onContinue} className="w-full bg-[--cta-light-blue] rounded-lg px-4 py-2 flex flex-row items-center justify-center">
                 <Text className="text-black text-xl">Experience AnythingLLM</Text>
               </TouchableOpacity>

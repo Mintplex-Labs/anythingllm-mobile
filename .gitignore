@@ -75,3 +75,5 @@ package-lock.json
 .env.*
 !.env.example
 .nvmrc
+
+release/

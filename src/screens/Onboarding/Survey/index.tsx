@@ -5,6 +5,7 @@ import ProgressBars from "@/components/Onboarding/ProgressBars";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { PATHS } from "@/utils/paths";
 import uiStore from "@/store/UIStore";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const options = [
   {
@@ -33,6 +34,8 @@ const options = [
 export default function Survey() {
   const [selection, setSelection] = useState<string | null>(null);
   const navigation = useNavigation<NavigationProp<any>>();
+  const insets = useSafeAreaInsets();
+
   const onContinue = async () => {
     console.log("Stubbed: Sending survey data to server");
     uiStore.setToStorage('onboarding_survey_completed', true);
@@ -44,15 +47,13 @@ export default function Survey() {
 
   return (
     <React.Fragment>
-      <View pointerEvents="none" className="absolute top-0 left-0 w-screen h-[100vh] z-[2]">
-        <Image
-          source={require("@/assets/onboarding/bg-blobs.png")}
-          resizeMode="contain"
-          className="w-screen h-[100vh]"
-        />
-      </View>
+      <Image
+        source={require("@/assets/onboarding/bg-blobs.png")}
+        resizeMode="contain"
+        style={{ backgroundColor: "#131314", position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}
+      />
 
-      <SafeView scrollable={false} safeAreaClassNames="bg-[--primary-bg]" containerClassNames="h-[88%] my-auto z-[1]">
+      <SafeView scrollable={false} safeAreaClassNames="bg-transparent" containerClassNames="h-full z-[1]" containerStyle={{ paddingTop: insets.top + 20 }}>
         <View className="flex flex-col gap-y-[66px]">
           <ProgressBars numberOfBars={3} activeBar={2} />
 
@@ -76,7 +77,7 @@ export default function Survey() {
               ))}
             </View>
 
-            <View className="absolute top-[80vh] left-0 right-0 mx-4 flex flex-row gap-x-4 items-center justify-between">
+            <View className="flex flex-row gap-x-4 items-center justify-between">
               <TouchableOpacity onPress={onBack}>
                 <Text className="text-[--primary-text] text-xl border border-[--primary-text] rounded-lg px-4 py-2">Back</Text>
               </TouchableOpacity>
@@ -96,7 +97,7 @@ function SurveyOption({ title, onPress, disabled, isActive }: { title: string, o
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      style={{ width: '90%', maxWidth: 380, maxHeight: 60, padding: 17, backgroundColor: isActive ? '#7cd4fd65' : '#1B1B1E' }}
+      style={{ width: '90%', maxWidth: 380, maxHeight: 60, padding: 17, backgroundColor: isActive ? '#7cd4fd65' : 'rgba(255,255,255, 0.08)' }}
       className={`flex flex-row rounded-lg gap-x-4 items-center ${!disabled ? 'disabled:opacity-50' : ''}`}
       disabled={!!disabled}
       onPress={onPress}

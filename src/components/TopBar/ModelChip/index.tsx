@@ -41,7 +41,7 @@ function getPresetModelName(llmPreferences: { provider: string; config: any }, L
   return modelDefinition?.name || llmPreferences.config.model;
 }
 
-function modelNameToDisplayName(modelName: string) {
+function modelNameToDisplayName(modelName?: string | null) {
   if (!modelName) return null; // undetermined model
 
   // Full file path specific (windows: C:\Users\...\..., mac: /Users/...\...)
@@ -102,7 +102,9 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
     return () => uiStore.emitter.removeAllListeners(uiStore.globalEvents.CHAT_HISTORY_REFRESHED);
   }, [workspace]);
 
-  if (!modelName) return null;
+  // If the model name is not set and the workspace is remote, we don't want to show the model chip
+  // since it will show "No model loaded" which is confusing
+  if (!modelName && workspace?.isRemote) return null;
   return (
     <Fragment>
       <TouchableOpacity
@@ -145,7 +147,7 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
   );
 }
 
-interface AvailableModel {
+export interface AvailableModel {
   id: string;
   name: string;
   size: number;

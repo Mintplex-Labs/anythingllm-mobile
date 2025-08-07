@@ -55,6 +55,9 @@ function getJavaCommand() {
 }
 
 try {
+    // Clean up release folder
+    if (fs.existsSync('release')) fs.rmSync('release', { recursive: true });
+
     // Clean the build
     console.log('Cleaning the build...');
     runCommand(isWindows ? 'cd android && gradlew clean && cd ..' : 'cd android && ./gradlew clean && cd ..');
@@ -105,24 +108,37 @@ try {
 
     // Rename the APK to app-release-v${version}-universal.apk
     const apkPath = path.join(outputDir, `universal.apk`);
-    fs.renameSync(apkPath, path.join(outputDir, `anythingllm-v${version}-universal.apk`));
-    fs.writeFileSync(path.join(outputDir, `version.txt`), version);
+    fs.renameSync(apkPath, path.join(outputDir, `anythingllm-universal.apk`));
 
     // Clean up zip file
     fs.unlinkSync(zipPath);
     fs.unlinkSync(apksOutputPath);
 
+    // Generate release
+    // - AAB in root for Google Play
+    // - APK in mobile/latest/** for CDN latest
+    // - APK in mobile/legacy/{version}/** for CDN
+    // Create release folder
+    const releaseFolder = `release/v${version}`;
+    if (!fs.existsSync(releaseFolder)) fs.mkdirSync(releaseFolder, { recursive: true });
+    fs.copyFileSync(aabPath, path.join(releaseFolder, `anythingllm-v${version}.aab`));
+
+    // Copy APK to mobile/latest/**
+    const latestFolder = path.join(releaseFolder, `mobile/latest`);
+    if (!fs.existsSync(latestFolder)) fs.mkdirSync(latestFolder, { recursive: true });
+    fs.copyFileSync(path.join(outputDir, `anythingllm-universal.apk`), path.join(latestFolder, `anythingllm-universal.apk`));
+    fs.writeFileSync(path.join(latestFolder, `version.txt`), version);
+
+    // Copy APK to mobile/legacy/{version}/**
+    const legacyFolder = path.join(releaseFolder, `mobile/legacy/${version}`);
+    if (!fs.existsSync(legacyFolder)) fs.mkdirSync(legacyFolder, { recursive: true });
+    fs.copyFileSync(path.join(outputDir, `anythingllm-universal.apk`), path.join(legacyFolder, `anythingllm-universal.apk`));
+    fs.writeFileSync(path.join(legacyFolder, `version.txt`), version);
+
     console.log(`✅ Android release build completed successfully!`);
-    console.log(`📱 Universal APK extracted to: ${outputDir}`);
-    console.log(`📦 AAB bundle: ${aabPath}`);
-    console.log(` APKs package: ${apksOutputPath}`);
-
-    // Show the final APK file
-    const apkFiles = fs.readdirSync(outputDir).filter(file => file.endsWith('.apk'));
-    if (apkFiles.length > 0) {
-        console.log(`🎯 Final APK: ${path.join(outputDir, apkFiles[0])}`);
-    }
-
+    console.log(`📱 Universal APK extracted to: ${releaseFolder}`);
+    console.log(`📦 AAB bundle: ${path.join(releaseFolder, `anythingllm-v${version}.aab`)}`);
+    console.log(`🎯 Final APK: ${path.join(releaseFolder, `anythingllm-universal.apk`)}`);
 } catch (error) {
     console.error('❌ Build failed:', error);
     process.exit(1);

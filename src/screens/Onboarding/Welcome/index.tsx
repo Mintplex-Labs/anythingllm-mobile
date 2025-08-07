@@ -2,11 +2,13 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import uiStore from "@/store/UIStore";
 import { useNavigation } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PATHS } from "@/utils/paths";
 import React from "react";
 
 export default function OnboardingWelcome() {
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const handleGetStarted = () => {
     uiStore.setToStorage('onboarding_welcome_completed', true);
     navigation.navigate(PATHS.onboarding.model_selection as never);
@@ -17,9 +19,9 @@ export default function OnboardingWelcome() {
       <Image
         source={require("@/assets/onboarding/bg-blobs.png")}
         resizeMode="contain"
-        className="absolute top-0 left-0 w-screen h-[100vh] bg-[--primary-bg]"
+        style={{ backgroundColor: "#131314", position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
       />
-      <SafeView scrollable={false} safeAreaClassNames="bg-transparent" containerClassNames="h-[88%] my-auto">
+      <SafeView scrollable={false} safeAreaClassNames="bg-transparent" containerClassNames="my-auto" containerStyle={{ paddingBottom: insets.bottom, paddingTop: insets.top + 20 }}>
         <View className="flex flex-col h-full gap-y-[45px]">
           <View className="flex flex-col justify-center items-center gap-y-2">
             <Text className="text-[#B2DDFF] text-xl">Welcome</Text>

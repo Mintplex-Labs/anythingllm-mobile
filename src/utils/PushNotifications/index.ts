@@ -6,6 +6,11 @@ class PushNotifications {
     private static instance: PushNotifications;
     private channelId: string | null = null;
 
+    /**
+     * Whether the user has granted permissions to receive notifications
+     */
+    public notificationsEnabled: boolean = false;
+
     static getInstance() {
         if (!PushNotifications.instance) PushNotifications.instance = new PushNotifications();
         return PushNotifications.instance;
@@ -19,7 +24,19 @@ class PushNotifications {
     }
 
     private initialize() {
-        if (!AuthorizationStatus.AUTHORIZED) notifee.requestPermission();
+        // Check if notifications are enabled, set initial state of notificationsEnabled
+        // then on requestPermission, update the state with the new settings (if the user has not already granted permissions)
+        notifee.getNotificationSettings().then(settings => {
+            this.notificationsEnabled = settings.authorizationStatus === AuthorizationStatus.AUTHORIZED;
+            if (this.notificationsEnabled) return;
+
+            // If the user has not yet granted permissions, request them. Otherwise, honor their denial/provisional status
+            if (settings.authorizationStatus === AuthorizationStatus.NOT_DETERMINED) {
+                notifee.requestPermission().then(settings => {
+                    this.notificationsEnabled = settings.authorizationStatus === AuthorizationStatus.AUTHORIZED;
+                });
+            }
+        });
         notifee.createChannel({
             id: 'anythingllm-channel',
             name: 'AnythingLLM',

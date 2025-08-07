@@ -1,67 +1,48 @@
-import { Text, View, Alert } from "react-native";
-import React, { useState } from "react";
-import { useNetInfo } from "@react-native-community/netinfo";
-import MODEL_CARDS, { resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
+import { Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { PATHS } from "@/utils/paths";
 import uiStore from "@/store/UIStore";
-import ModelCard from "@/components/LLMSelection/ModelCard";
-import AwaitableAlert from "@/components/AwaitableAlert";
-import * as RNFS from '@dr.pogodin/react-native-fs';
+import useModelManager from "@/hooks/useModelManager";
+import useLlmPreference from "@/hooks/useLLMPreference";
+import { AvailableModel } from "@/components/TopBar/ModelChip";
+import SimpleModelCard from "./SimpleModelCard";
+import getLLM from '@/utils/AiProviders';
+import PushNotifications from "@/utils/PushNotifications";
+
+// During onboarding, this config will not yet be set in the UIStore, so we need set the default here
+const DEFAULT_LLM_PREFERENCE = { provider: 'native', config: { runtime: 'cpu', model: null } } as const;
 
 export default function SimpleModelSelection() {
-  const netInfo = useNetInfo();
   const navigation = useNavigation<NavigationProp<any>>();
-  const [selectedModel, setSelectedModel] = useState<typeof MODEL_CARDS[number]['id'] | null>(null);
-  const [downloadUrl, setDownloadUrl] = useState<typeof MODEL_CARDS[number]['tag'] | null>(null);
+  const LLMProvider = getLLM(DEFAULT_LLM_PREFERENCE.provider, DEFAULT_LLM_PREFERENCE.config);
+  const llmPreferences = DEFAULT_LLM_PREFERENCE;
+  const { fetchLLMPreference } = useLlmPreference();
+  const [availableModels, setAvailableModels] = useState<AvailableModel[]>([]);
+  const {
+    modelDownloadUrl,
+    downloadProgress,
+    downloadedModels,
+    selectedModel,
+    downloadModel,
+    runPreDownloadConfirmations,
+  } = useModelManager({ llmPreferences, fetchLLMPreference, LLMProvider });
 
-  const saveAndNavigate = async (modelOverride?: typeof MODEL_CARDS[number]) => {
-    const model = modelOverride || MODEL_CARDS.find((card) => card.id === selectedModel);
+  const saveAndNavigate = async (modelOverride?: AvailableModel) => {
+    const model = modelOverride || availableModels.find((card) => card.modelId === selectedModel);
     if (!model) return;
 
-    console.log('saveAndNavigate::llmPreference', model.modelId)
     await uiStore.setToStorage('onboarding_model_selection_completed', true);
-    await uiStore.setToStorage('llmPreference', { provider: 'native', config: { runtime: 'cpu', model: model.modelId } })
+    await uiStore.setToStorage('llmPreference', { provider: 'native', config: { runtime: 'cpu', model: model.modelId } });
     navigation.navigate(PATHS.onboarding.survey as never)
-    setDownloadUrl(null);
   }
 
-  const onCardPress = async (id: typeof MODEL_CARDS[number]['id']) => {
-    const nextModel = selectedModel === id ? null : id;
-    setSelectedModel(nextModel);
-    if (!nextModel) return;
-
-    const model = MODEL_CARDS.find((card) => card.id === nextModel);
-    if (!model) return;
-
-    const destinationPath = resolveDestinationPathFromGGUFUrl(model.tag);
-    const fileExists = await RNFS.exists(destinationPath);
-    if (fileExists) return await saveAndNavigate(model);
-
-    if (!netInfo.isConnected) {
-      Alert.alert('No internet connection.', 'You will need to be connected to the internet to download any model.');
-      return;
-    }
-
-    if (netInfo.type !== 'wifi') {
-      const ignoreWarning = await AwaitableAlert(
-        'Data usage warning',
-        `We recommend using a Wi-Fi connection to download the model since it's ${model.size} in size.`,
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Continue Anyway', style: 'default' }
-      );
-      if (!ignoreWarning) return;
-    } else {
-      const confirmDownload = await AwaitableAlert(
-        'Downloading model',
-        `This will use ${model.size} of your device's storage. Click "OK" to continue.`,
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Continue with download', style: 'default' }
-      );
-      if (!confirmDownload) return;
-    }
-    setDownloadUrl(model.tag);
-  }
+  useEffect(() => {
+    if (LLMProvider) {
+      const models = LLMProvider.availableModels() as AvailableModel[];
+      setAvailableModels(models.filter(model => model.isPreset));
+    } else setAvailableModels([]);
+  }, [LLMProvider]);
 
   return (
     <React.Fragment>
@@ -72,15 +53,32 @@ export default function SimpleModelSelection() {
         </Text>
       </View>
       <View className="flex flex-col items-center" style={{ gap: 16 }}>
-        {MODEL_CARDS.map((card, index) => (
-          <ModelCard
+        {availableModels.map((card, index) => (
+          <SimpleModelCard
             key={index}
-            active={selectedModel === card.id}
-            onPress={onCardPress}
-            downloadInProgress={!!downloadUrl}
-            downloadUrl={downloadUrl}
-            onDownloadComplete={saveAndNavigate}
-            {...card}
+            model={card}
+            isSelected={selectedModel === card.modelId}
+            isDownloaded={downloadedModels[card.modelId]}
+            modelDownloadUrl={modelDownloadUrl}
+            downloadProgress={downloadProgress}
+            onSelect={async () => {
+              // If the user has not granted permissions to receive notifications we cannot download models in the background
+              // so we need to await the entire download process
+              if (!PushNotifications.notificationsEnabled) {
+                await downloadModel(card);
+                await saveAndNavigate(card);
+                return;
+              }
+
+              // Manually run the pre-download confirmation checks since we need to confirm
+              // the user approved the download before we navigate to the next screen
+              // Notifications will provide progress updates so we can move to the next screen while the download is in progress
+              const approved = await runPreDownloadConfirmations(card);
+              if (approved) {
+                downloadModel(card, false);
+                await saveAndNavigate(card);
+              }
+            }}
           />
         ))}
       </View>

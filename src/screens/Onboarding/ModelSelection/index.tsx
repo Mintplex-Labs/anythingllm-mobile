@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Image, View } from "react-native";
-import SimpleModelSelection from "./Simple";
+import SimpleModelSelection from "./Simple/index";
 import SafeView from "@/components/SafeView";
 import ProgressBars from "@/components/Onboarding/ProgressBars";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

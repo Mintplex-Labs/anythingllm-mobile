@@ -1,7 +1,7 @@
 import { type WorkspaceThreadType } from "@/database/models/WorkspaceThread";
 import { type WorkspaceType } from "@/database/models/Workspace";
 import { type LLMProvider } from "@/utils/AiProviders";
-import { useState, useMemo, useEffect, createContext, useContext, useCallback, useRef } from "react";
+import { useState, useMemo, useEffect, createContext, useContext, useCallback } from "react";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import uiStore from "@/store/UIStore";
 import WorkspaceChat, { IAgentAction, IAgentToolCall, IChatCitation } from "@/database/models/WorkspaceChat";
@@ -11,7 +11,6 @@ import { parseStreamingChunksToResponse } from "./parser";
 import { activateKeepAwake, deactivateKeepAwake } from "@/utils/keepAwake";
 import { Keyboard } from "react-native";
 import DelegatedProvider from "@/utils/AiProviders/delegatedProvider";
-import { generateUUID } from "@/utils/constants";
 import AwaitableAlert from "@/components/AwaitableAlert";
 
 const SHOW_DEBUG_LOGS = true;
@@ -336,10 +335,13 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
 
     useEffect(() => {
         fetchChats();
+        // On initial load, if a model is downloading, disable the prompt input to prevent crashes
+        if (uiStore.session.has('@downloadInProgress')) disablePromptInput();
     }, []);
 
     useEffect(() => {
         if (!workspace) return;
+        if (!llmProvider) return console.error('No LLM provider found - this should not happen and will crash');
         llmProvider.attachWorkspaceToProvider(workspace);
     }, [workspace, llmProvider]);
 
@@ -351,10 +353,14 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.ENABLE_PROMPT_INPUT, enablePromptInput);
         uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.RESET_CHAT, reset);
         uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.PROMPT_SUBMITTED, hideKeyboard);
+        uiStore.emitter.addListener(uiStore.globalEvents.MODEL_DOWNLOAD_STARTED, disablePromptInput);
+        uiStore.emitter.addListener(uiStore.globalEvents.MODEL_DOWNLOAD_COMPLETE, enablePromptInput);
         return () => {
             uiStore.emitter.removeAllListeners(CHAT_HANDLER_EVENTS.DISABLE_PROMPT_INPUT);
             uiStore.emitter.removeAllListeners(CHAT_HANDLER_EVENTS.ENABLE_PROMPT_INPUT);
             uiStore.emitter.removeAllListeners(CHAT_HANDLER_EVENTS.RESET_CHAT);
+            uiStore.emitter.removeAllListeners(uiStore.globalEvents.MODEL_DOWNLOAD_STARTED);
+            uiStore.emitter.removeAllListeners(uiStore.globalEvents.MODEL_DOWNLOAD_COMPLETE);
         }
     }, [reset, disablePromptInput, enablePromptInput]);
 

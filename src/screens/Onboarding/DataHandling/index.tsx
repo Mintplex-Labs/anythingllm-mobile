@@ -6,25 +6,21 @@ import uiStore from "@/store/UIStore";
 import { PATHS } from "@/utils/paths";
 import { useNavigation } from "@react-navigation/native";
 import useLlmPreference from "@/hooks/useLLMPreference";
-import { AVAILABLE_LLM_PROVIDERS } from "@/utils/llmproviders";
 import { FileDashed, Sparkle } from "phosphor-react-native";
 import Workspace from "@/database/models/Workspace";
-import { useNetInfo } from "@react-native-community/netinfo";
 import { EMBEDDING_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function DataHandling() {
   const navigation = useNavigation();
-  const netInfo = useNetInfo();
-  const { llmPreferences, isLoading } = useLlmPreference();
+  const { isLoading } = useLlmPreference();
   const [isOnboarding, setIsOnboarding] = useState(false);
   const insets = useSafeAreaInsets();
 
   const onContinue = async () => {
     setIsOnboarding(true);
     async function onboardingTasks() {
-      if (netInfo.isConnected && netInfo.type === 'wifi' && netInfo.isInternetReachable) await downloadEmbeddingModel();
       const workspace = await Workspace.create({ name: 'My Workspace' });
       return workspace;
     }

@@ -20,6 +20,8 @@ export const GLOBAL_EVENTS = {
   SUBMIT_PROMPT: 'SUBMIT_PROMPT',
   REFRESH_WORKSPACES: 'REFRESH_WORKSPACES',
   CHAT_HISTORY_REFRESHED: 'CHAT_HISTORY_REFRESHED',
+  MODEL_DOWNLOAD_STARTED: 'MODEL_DOWNLOAD_STARTED',
+  MODEL_DOWNLOAD_COMPLETE: 'MODEL_DOWNLOAD_COMPLETE',
 } as const;
 
 export class UIStore {
@@ -63,6 +65,8 @@ export class UIStore {
   };
 
   storage = AsyncStorage;
+
+  session = new Map<string, any>();
 
   showError(message: string) {
     // TODO: Implement error display logic (e.g., toast, alert, etc.)
@@ -157,7 +161,17 @@ export class UIStore {
   }
 
   async resetAllStorage() {
-    return this.storage.multiRemove(UIStore.STORAGE_KEYS);
+    return await this.storage.multiRemove(UIStore.STORAGE_KEYS);
+  }
+
+  setSessionKey(key: string, value: any, eventToEmit?: typeof GLOBAL_EVENTS[keyof typeof GLOBAL_EVENTS]) {
+    this.session.set(key, value);
+    if (eventToEmit) this.emitter.emit(eventToEmit, { details: value });
+  }
+
+  deleteSessionKey(key: string, eventToEmit?: typeof GLOBAL_EVENTS[keyof typeof GLOBAL_EVENTS]) {
+    this.session.delete(key);
+    if (eventToEmit) this.emitter.emit(eventToEmit);
   }
 }
 

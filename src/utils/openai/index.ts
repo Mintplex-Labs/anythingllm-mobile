@@ -1,3 +1,4 @@
+import { polyfill as polyfillFetch } from 'react-native-polyfill-globals/src/fetch';
 import { safeParseJSON } from '../device';
 
 type IMessage = {
@@ -14,6 +15,11 @@ type IAsyncChatCompletionRequestBody = {
 export default class OpenAILite {
   private baseURL: string = 'https://api.openai.com/v1';
   private apiKey: string | null = null;
+  private streamingFetch: typeof fetch | null = null;
+
+  public models = {
+    list: () => this.listModels()
+  };
 
   public chat = {
     completions: {
@@ -21,12 +27,26 @@ export default class OpenAILite {
         if (body.stream) return this.streamChatCompletion(body, options)
         return this.createChatCompletion(body, options)
       }
-    }
+    },
+  }
+
+  private setupStreamingFetch() {
+    this.log('setupStreamingFetch');
+    const originalFetch = global.fetch;
+    polyfillFetch();
+    this.streamingFetch = global.fetch;
+    global.fetch = originalFetch;
+    this.log('setupStreamingFetch completed - original fetch restored');
   }
 
   constructor({ apiKey, baseURL }: { apiKey?: string | null, baseURL?: string } = {}) {
     this.apiKey = apiKey || this.apiKey;
     this.baseURL = baseURL || this.baseURL;
+    this.setupStreamingFetch();
+  }
+
+  private log = (text: string, ...args: any[]) => {
+    console.log(`🛠️ \x1b[33m[OpenAILite]\x1b[0m ${text}`, ...args);
   }
 
   async createChatCompletion(body: IAsyncChatCompletionRequestBody, _options: any = {}) {
@@ -51,7 +71,7 @@ export default class OpenAILite {
   }
 
   async *streamChatCompletion(body: IAsyncChatCompletionRequestBody, options: { controller?: AbortController } = {}) {
-    const response = await fetch(`${this.baseURL}/chat/completions`, {
+    const response = await this.streamingFetch!(`${this.baseURL}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -91,5 +111,19 @@ export default class OpenAILite {
     } finally {
       reader.releaseLock();
     }
+  }
+
+  async listModels() {
+    return await fetch(`${this.baseURL}/models`, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(this.apiKey ? { 'Authorization': `Bearer ${this.apiKey}` } : {}),
+      }
+    })
+      .then(res => res.json())
+      .catch(err => {
+        console.error(err);
+        throw err;
+      });
   }
 }

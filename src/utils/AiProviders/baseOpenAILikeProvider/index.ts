@@ -9,6 +9,7 @@ import getEmbedder from "@/utils/Embedder";
 import OpenAILite from "@/utils/openai";
 import VectorDB, { SemanticSearchResult } from "@/utils/VectorDB";
 import { type IAgentAction } from "@/database/models/WorkspaceChat";
+import ToolsManager from "@/utils/ToolsManager";
 
 interface BaseLLMProviderConfig {
   provider: string;
@@ -86,7 +87,7 @@ export default abstract class BaseOpenAILikeProvider {
   protected abstract log: (message: string, ...args: any[]) => void;
   protected abstract loadNewModel(model: string): Promise<void>;
   protected abstract unloadModel(): Promise<void>;
-  abstract availableModels(): object[];
+  abstract availableModels(): Promise<object[]>;
 
   static DEFAULT_SYSTEM_MESSAGE = 'You are a helpful assistant that can answer questions and help with tasks.';
 
@@ -317,8 +318,8 @@ export default abstract class BaseOpenAILikeProvider {
   async chat({
     messages,
     streaming = false,
-    onComplete = () => { },
-    onStream = () => { },
+    onComplete = (response: ICompleteResponse) => { console.log('Debug: onComplete - if you are seeing this you forgot to handle completion responses but got one.', response) },
+    onStream = (event: IStreamEvent, data: any) => { console.log('Debug: onStream - if you are seeing this you forgot to handle stream responses but got one.', event, data) },
   }: {
     messages: DynamicChatMessage[];
     streaming?: boolean;
@@ -327,10 +328,7 @@ export default abstract class BaseOpenAILikeProvider {
     /** On stream is for streaming responses - will fire for each token */
     onStream?: IStreamCallback;
   }) {
-    // citations are unhandled for now in the base class
-    const { citations: _, formattedMessages } = await this.buildPrompt(messages);
-
-    // For async responses, we can just return the response immediately
+    const { formattedMessages, citations } = await this.buildPrompt(messages);
     if (!streaming) {
       const response = await this.getChatCompletion(formattedMessages);
       onComplete({
@@ -340,15 +338,22 @@ export default abstract class BaseOpenAILikeProvider {
       return;
     }
 
+    // TODO: Tool Calling is broken in LMStudio - so we can't use this for now since we have no idea how to handle it
+    // TODO: Apparently ALSO LMStudio broke its reasoning reporting in the last update - so we can't use this for now since we have no idea how to handle it
+    // Fix both of these once they are fixed in LMStudio
     const { stream, abortController } = await this.streamGetChatCompletion(formattedMessages);
-    await this.handleDefaultStreamResponse(stream, onStream, abortController);
+    const response = await this.handleDefaultStreamResponse(stream, onStream, abortController);
+
+    if (!!response.metrics) onStream('report_metrics', response.metrics);
+    if (!!citations) onStream('report_citations', citations);
+    onStream('complete', '');
   }
 
   /**
    * Gets the chat completion from the model.
    * Returns the text response and metrics in a single call, no streaming.
    */
-  private async getChatCompletion(messages: any[] = []): Promise<ICompleteResponse> {
+  private async getChatCompletion(messages: any[] = [], availableTools: any[] = []): Promise<ICompleteResponse> {
     this.log('Running chat completion...');
     const result = await LLMPerformanceMonitor.measureAsyncFunction(
       // @ts-ignore
@@ -357,6 +362,7 @@ export default abstract class BaseOpenAILikeProvider {
           model: this.model,
           messages,
           temperature: this.isOTypeModel ? 1 : this.temperature,
+          tools: availableTools,
         })
     ) as unknown as { duration: number, output: Partial<any> & MonitoredStream & { usage: StreamMetrics } };
 
@@ -375,7 +381,7 @@ export default abstract class BaseOpenAILikeProvider {
     };
   }
 
-  async streamGetChatCompletion(messages: any[] = []): Promise<IStreamableResponse> {
+  async streamGetChatCompletion(messages: any[] = [], availableTools: any[] = []): Promise<IStreamableResponse> {
     const abortController = new AbortController();
     const stream = await LLMPerformanceMonitor.measureStream(
       // @ts-ignore
@@ -384,13 +390,15 @@ export default abstract class BaseOpenAILikeProvider {
         stream: true,
         messages,
         temperature: this.isOTypeModel ? 1 : this.temperature,
+        tools: availableTools,
+        tool_choice: 'auto',
       }, { controller: abortController }),
       messages,
     );
     return { stream, abortController };
   }
 
-  private async handleDefaultStreamResponse(stream: any, handler: IStreamCallback, abortController: AbortController) {
+  private async handleDefaultStreamResponse(stream: any, handler: IStreamCallback, abortController: AbortController): Promise<ICompleteResponse> {
     let hasUsageMetrics = false;
     let usage = {
       prompt_tokens: 0,
@@ -403,7 +411,16 @@ export default abstract class BaseOpenAILikeProvider {
       const handleAbort = () => {
         stream?.endMeasurement(usage);
         console.log("\x1b[43m\x1b[34m[STREAM ABORTED]\x1b[0m Client requested to abort stream. Exiting LLM stream handler early.");
-        resolve(fullText);
+        resolve({
+          textResponse: fullText,
+          metrics: {
+            prompt_tokens: usage.prompt_tokens,
+            completion_tokens: usage.completion_tokens,
+            total_tokens: usage.prompt_tokens + usage.completion_tokens,
+            outputTps: usage.completion_tokens / stream.duration,
+            duration: stream.duration,
+          },
+        });
       };
       abortController.signal.addEventListener('abort', handleAbort);
 
@@ -432,15 +449,17 @@ export default abstract class BaseOpenAILikeProvider {
 
           // Check for completion
           if (finishReason) {
-            handler('complete', {
-              prompt_tokens: usage.prompt_tokens,
-              completion_tokens: usage.completion_tokens,
-              total_tokens: usage.prompt_tokens + usage.completion_tokens,
-              outputTps: usage.completion_tokens / stream.duration,
-              duration: stream.duration,
-            });
             stream?.endMeasurement(usage);
-            resolve(fullText);
+            resolve({
+              textResponse: fullText,
+              metrics: {
+                prompt_tokens: usage.prompt_tokens,
+                completion_tokens: usage.completion_tokens,
+                total_tokens: usage.prompt_tokens + usage.completion_tokens,
+                outputTps: usage.completion_tokens / stream.duration,
+                duration: stream.duration,
+              },
+            });
             break;
           }
         }
@@ -448,7 +467,16 @@ export default abstract class BaseOpenAILikeProvider {
         console.log(`\x1b[43m\x1b[34m[STREAMING ERROR]\x1b[0m ${e.message}`);
         handler('abort', e.message);
         stream?.endMeasurement(usage);
-        resolve(fullText);
+        resolve({
+          textResponse: fullText,
+          metrics: {
+            prompt_tokens: usage.prompt_tokens,
+            completion_tokens: usage.completion_tokens,
+            total_tokens: usage.prompt_tokens + usage.completion_tokens,
+            outputTps: usage.completion_tokens / stream.duration,
+            duration: stream.duration,
+          },
+        });
       }
     });
   }

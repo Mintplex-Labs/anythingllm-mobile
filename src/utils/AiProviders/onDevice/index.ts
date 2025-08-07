@@ -104,7 +104,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     this.log(`${this.name}::${this.submodule.name} re-initialized with model ${this.model}`);
   }
 
-  availableModels() {
+  override async availableModels(): Promise<object[]> {
     const basicModels = MODEL_CARDS.map(m => ({
       id: m.id,
       name: m.name,

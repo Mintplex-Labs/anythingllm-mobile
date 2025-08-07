@@ -1,7 +1,11 @@
 import OpenAICompatible from "./openAICompatible";
 import OnDeviceProvider from "./onDevice";
+import LMStudioProvider from "./LMStudioProvider";
 
-export type LLMProvider = OpenAICompatible | OnDeviceProvider;
+export type LLMProvider = OpenAICompatible |
+  OnDeviceProvider |
+  LMStudioProvider;
+
 function getLLM(provider: string, config: { [key: string]: any } = {}): LLMProvider {
   switch (provider) {
     case 'openai':
@@ -9,7 +13,7 @@ function getLLM(provider: string, config: { [key: string]: any } = {}): LLMProvi
         provider: 'openai',
         config: {
           apiKey: config.apiKey,
-          modelId: config.modelId,
+          model: config.model,
         }
       });
     case 'generic-openai':
@@ -18,7 +22,15 @@ function getLLM(provider: string, config: { [key: string]: any } = {}): LLMProvi
         config: {
           baseURL: config.baseUrl,
           apiKey: config.apiKey,
-          modelId: config.model,
+          model: config.model,
+        }
+      });
+    case 'lmstudio':
+      return new LMStudioProvider({
+        provider: 'lmstudio',
+        config: {
+          baseURL: config.baseUrl,
+          model: config.model,
         }
       });
     case 'native':

@@ -1,27 +1,44 @@
 import BaseOpenAILikeProvider from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
 
-export interface OpenAICompatibleConfig {
+export interface LMStudioProviderConfig {
   provider: string;
   config?: {
     baseURL?: string;
-    apiKey?: string;
     model?: string;
-    isOTypeModel?: boolean;
+    apiKey?: string;
   }
 }
 
-class OpenAICompatible extends BaseOpenAILikeProvider {
-  private baseURL: string = 'https://api.openai.com/v1';
+export interface LMStudioModel {
+  id: string;
+  object: string;
+  owned_by: string;
+}
+
+function lmStudioBaseURLFormatter(baseURL?: string) {
+  if (!baseURL) return '';
+  try {
+    const url = new URL(baseURL);
+    url.pathname = '/v1';
+    return url.href;
+  } catch (error) {
+    return baseURL;
+  }
+}
+
+class LMStudioProvider extends BaseOpenAILikeProvider {
+  private baseURL: string = '';
   private apiKey: string | null = null;
 
   public model: string;
   private connectionProvider: string;
-  protected client;
+  protected client: OpenAILite;
   protected temperature: number = 0.7;
-  protected isOTypeModel: boolean = false;
+  protected isOTypeModel: boolean = false; // always false for LMStudio
 
-  constructor({ provider = 'OpenAICompatible', config = {} }: OpenAICompatibleConfig) {
+  constructor({ provider = 'lmstudio', config = {} }: LMStudioProviderConfig) {
+    config.baseURL = lmStudioBaseURLFormatter(config.baseURL);
     super({ provider, config });
 
     // Random other properties we may or may not need
@@ -31,14 +48,14 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
       }
     }
 
-    if (config.baseURL) this.baseURL = config.baseURL;
+    if (config.baseURL) this.baseURL = lmStudioBaseURLFormatter(config.baseURL);
     if (config.apiKey) this.apiKey = config.apiKey;
     this.model = config.model || 'Unknown Model';
     this.connectionProvider = provider;
 
     this.client = new OpenAILite({
-      apiKey: this.apiKey,
-      baseURL: this.baseURL,
+      ...(this.apiKey ? { apiKey: this.apiKey } : {}),
+      ...(this.baseURL ? { baseURL: this.baseURL } : {}),
     });
     this.log(`${this.connectionProvider} initialized with model ${this.model}`);
   }
@@ -47,8 +64,9 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
     console.log(`\x1b[36m[${this.constructor.name}]\x1b[0m ${text}`, ...args);
   }
 
-  override async availableModels(): Promise<object[]> {
-    return [];
+  override async availableModels(): Promise<LMStudioModel[]> {
+    return await this.client.models.list()
+      .then((models) => models.data.map((model: LMStudioModel) => model));
   }
 
   async loadNewModel(model: string) {
@@ -64,4 +82,4 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
   }
 }
 
-export default OpenAICompatible;
+export default LMStudioProvider;

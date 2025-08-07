@@ -11,9 +11,25 @@ interface LLMPreferenceContextType {
     error: Error | null;
     fetchLLMPreference: () => Promise<void>;
     updateLLMPreference: (provider: string, config: any) => Promise<void>;
+    providerToName: (provider: string) => string;
 }
 
 const LLMPreferenceContext = createContext<LLMPreferenceContextType | null>(null);
+
+function providerToName(provider: string) {
+    switch (provider) {
+        case 'openai':
+            return 'OpenAI';
+        case 'generic-openai':
+            return 'OpenAI (Generic)';
+        case 'lmstudio':
+            return 'LMStudio';
+        case 'native':
+            return 'On-Device';
+        default:
+            return 'Unknown';
+    }
+}
 
 export function LLMPreferenceProvider({ children }: { children: ReactNode }) {
     const [llmPreferences, setLlmPreferences] = useState<{ provider: string; config: any }>({
@@ -90,6 +106,7 @@ export function LLMPreferenceProvider({ children }: { children: ReactNode }) {
                 error,
                 fetchLLMPreference,
                 updateLLMPreference,
+                providerToName,
             }}
         >
             {children}

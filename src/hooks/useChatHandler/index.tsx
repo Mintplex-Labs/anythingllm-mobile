@@ -261,6 +261,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
             let caller = () => llmProvider.chat({
                 messages: messageHistory,
                 streaming: true,
+                onComplete: (response) => merge(newChat, { type: 'error', response: { textResponse: response.textResponse, metrics: response.metrics } }),
                 onStream: (event, data) => handleStreamEvent(event, data),
             }) as Promise<any>;
 

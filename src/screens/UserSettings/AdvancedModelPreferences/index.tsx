@@ -6,9 +6,11 @@ import { ArrowLeft } from 'phosphor-react-native';
 import { IWorkspacePageKey } from '../index';
 import useLLMPreference from '@/hooks/useLLMPreference';
 import ProviderSelection from '@/components/LLMSelection/ProviderSelection';
-import GenericOpenAiOptions from './providers/genericOpenAiOptions';
-import NativeOptions from './providers/nativeOptions';
 import { screenDimensions } from '@/utils/constants';
+
+import NativeOptions from './providers/nativeOptions';
+import LMStudioOptions from './providers/LMStudioOptions';
+import GenericOpenAiOptions from './providers/genericOpenAiOptions';
 
 interface AdvancedModelPreferencesProps {
   goToPage: (page: IWorkspacePageKey) => void;
@@ -30,6 +32,7 @@ export default function AdvancedModelPreferences({
       ...llmPreferences.config,
       ...settings,
     });
+    await fetchLLMPreference();
   }
 
   async function handleProviderSelection(provider: string) {
@@ -39,6 +42,12 @@ export default function AdvancedModelPreferences({
           apiKey: llmPreferences.config.apiKey,
           modelId: 'gpt-3.5-turbo',
           baseUrl: 'https://api.openai.com/v1/',
+        });
+        break;
+      case 'lmstudio':
+        await updateLLMPreference('lmstudio', {
+          baseUrl: '',
+          modelId: ''
         });
         break;
       case 'generic-openai':
@@ -64,6 +73,14 @@ export default function AdvancedModelPreferences({
           baseUrl={llmPreferences.config.baseUrl || ''}
           model={llmPreferences.config.model || ''}
           onApiKeyChange={updateProviderSettings}
+          onBaseUrlChange={updateProviderSettings}
+          onModelChange={updateProviderSettings}
+        />
+      case 'lmstudio':
+        return <LMStudioOptions
+          provider="lmstudio"
+          baseUrl={llmPreferences.config.baseUrl || ''}
+          model={llmPreferences.config.model || ''}
           onBaseUrlChange={updateProviderSettings}
           onModelChange={updateProviderSettings}
         />

@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 class PushNotifications {
     private static instance: PushNotifications;
     private channelId: string | null = null;
+    private progressChannelId: string | null = null;
 
     /**
      * Whether the user has granted permissions to receive notifications
@@ -37,10 +38,21 @@ class PushNotifications {
                 });
             }
         });
+
+        // Main notification channel
         notifee.createChannel({
             id: 'anythingllm-channel',
             name: 'AnythingLLM',
         }).then(createdChannelId => this.channelId = createdChannelId);
+
+        // Progress channel to prevent vibration
+        notifee.createChannel({
+            id: 'anythingllm-progress',
+            name: 'Download Progress',
+            vibration: false,
+            importance: 3,
+            vibrationPattern: [],
+        }).then(createdChannelId => this.progressChannelId = createdChannelId);
     }
 
     /**
@@ -49,8 +61,13 @@ class PushNotifications {
      * @returns The notification unique id to reference it later if needed
      */
     public async send(props: Notification): Promise<string> {
-        if (!this.channelId) throw new Error('Channel not created');
-        props.android = { ...props.android, channelId: this.channelId }
+        if (!this.channelId || !this.progressChannelId) throw new Error('Channels not created');
+
+        // Use progress channel for notifications with progress updates
+        const hasProgress = props.android?.progress !== undefined;
+        const channelId = hasProgress ? this.progressChannelId : this.channelId;
+
+        props.android = { ...props.android, channelId }
         return await notifee.displayNotification(props);
     }
 

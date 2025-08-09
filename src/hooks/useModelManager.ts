@@ -104,7 +104,7 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     const dirPath = storageLocation.substring(0, storageLocation.lastIndexOf('/'));
     await RNFS.mkdir(dirPath, { NSURLIsExcludedFromBackupKey: true });
 
-    const downloadNotificationId = await PushNotifications.send({
+    const downloadNotificationId = await PushNotifications.send('progress', {
       title: 'Downloading model',
       body: `Downloading ${model.modelId}`,
       android: {
@@ -123,7 +123,7 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
         progress: res => {
           const progress = Math.round((res.bytesWritten / res.contentLength) * 100);
           setDownloadProgress(progress);
-          PushNotifications.send({
+          PushNotifications.send('progress', {
             id: downloadNotificationId,
             title: 'Downloading model',
             body: `Downloading ${model.modelId}`,
@@ -141,14 +141,14 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
       }).promise;
 
       setDownloadedModels(prev => ({ ...prev, [model.modelId]: true }));
-      PushNotifications.send({
+      PushNotifications.send('primary', {
         title: 'Download complete',
         body: `Downloaded ${model.modelId}`,
       });
       return await selectModel(model);
     } catch (error) {
       console.error('Download failed:', error);
-      PushNotifications.send({
+      PushNotifications.send('primary', {
         title: 'Download failed',
         body: `There was an error downloading the model.`,
       });
@@ -163,7 +163,7 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
       return false;
     } finally {
       deactivateKeepAwake();
-      PushNotifications.cancel(downloadNotificationId);
+      PushNotifications.cancel('progress', downloadNotificationId);
       uiStore.deleteSessionKey('@downloadInProgress', uiStore.globalEvents.MODEL_DOWNLOAD_COMPLETE);
     }
   };

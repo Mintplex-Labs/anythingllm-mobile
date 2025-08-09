@@ -4,8 +4,7 @@ import { useEffect } from 'react';
 
 class PushNotifications {
     private static instance: PushNotifications;
-    private channelId: string | null = null;
-    private progressChannelId: string | null = null;
+    private channels = { primary: '', progress: '' };
 
     /**
      * Whether the user has granted permissions to receive notifications
@@ -24,6 +23,10 @@ class PushNotifications {
         return PushNotifications.instance;
     }
 
+    private log(message: string, ...args: any[]) {
+        console.log(`\x1b[36m[PushNotifications]\x1b[0m ${message}`, ...args);
+    }
+
     private initialize() {
         // Check if notifications are enabled, set initial state of notificationsEnabled
         // then on requestPermission, update the state with the new settings (if the user has not already granted permissions)
@@ -39,20 +42,20 @@ class PushNotifications {
             }
         });
 
-        // Main notification channel
+        // Primary notification channel
         notifee.createChannel({
             id: 'anythingllm-channel',
             name: 'AnythingLLM',
-        }).then(createdChannelId => this.channelId = createdChannelId);
+        }).then(createdChannelId => this.channels.primary = createdChannelId);
 
-        // Progress channel to prevent vibration
+        // Progress channel to prevent vibration/sounds
         notifee.createChannel({
             id: 'anythingllm-progress',
             name: 'Download Progress',
             vibration: false,
             importance: 3,
             vibrationPattern: [],
-        }).then(createdChannelId => this.progressChannelId = createdChannelId);
+        }).then(createdChannelId => this.channels.progress = createdChannelId);
     }
 
     /**
@@ -60,14 +63,12 @@ class PushNotifications {
      * @param props - The notification properties
      * @returns The notification unique id to reference it later if needed
      */
-    public async send(props: Notification): Promise<string> {
-        if (!this.channelId || !this.progressChannelId) throw new Error('Channels not created');
+    public async send(channel: keyof typeof this.channels, props: Notification): Promise<string> {
+        if (!this.channels[channel]) throw new Error('Notification channel does not exist or has not been created');
+        this.log(`Notification sent to channel ${channel}`);
 
-        // Use progress channel for notifications with progress updates
-        const hasProgress = props.android?.progress !== undefined;
-        const channelId = hasProgress ? this.progressChannelId : this.channelId;
-
-        props.android = { ...props.android, channelId }
+        // Add the channel id to the notification
+        props.android = { ...props.android, channelId: this.channels[channel] }
         return await notifee.displayNotification(props);
     }
 
@@ -75,9 +76,10 @@ class PushNotifications {
      * Cancel a push notification
      * @param notificationId - The notification unique id to cancel
      */
-    public async cancel(notificationId: string) {
-        if (!this.channelId) throw new Error('Channel not created');
+    public async cancel(channel: keyof typeof this.channels, notificationId: string) {
+        if (!this.channels[channel]) throw new Error('Notification channel does not exist or has not been created');
         if (!notificationId) throw new Error('Notification ID is required');
+        this.log(`Notification cancelled: ${notificationId}`);
         await notifee.cancelNotification(notificationId);
     }
 }

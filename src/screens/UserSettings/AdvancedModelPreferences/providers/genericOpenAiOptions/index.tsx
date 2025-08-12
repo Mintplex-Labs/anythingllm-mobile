@@ -27,23 +27,6 @@ export default function GenericOpenAiOptions({
   const [currentBaseUrl, setCurrentBaseUrl] = useState(baseUrl || '');
   const [currentModel, setCurrentModel] = useState(model || '');
 
-  const handlePropertyChange = async (key: string, value: string) => {
-    switch (key) {
-      case 'apiKey':
-        setCurrentApiKey(value);
-        await onApiKeyChange(provider, { apiKey: value });
-        break;
-      case 'baseUrl':
-        setCurrentBaseUrl(value);
-        await onBaseUrlChange(provider, { baseUrl: value });
-        break;
-      case 'model':
-        setCurrentModel(value);
-        await onModelChange(provider, { model: value });
-        break;
-    }
-  };
-
   return (
     <View className="flex flex-col">
       <KeyboardAvoidingView style={{ gap: 8 }} behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 flex flex-col">
@@ -64,7 +47,8 @@ export default function GenericOpenAiOptions({
               }}
               className="rounded-lg text-white placeholder:text-white/50 text-left"
               value={currentBaseUrl}
-              onChangeText={value => handlePropertyChange('baseUrl', value)}
+              onChangeText={(value) => setCurrentBaseUrl(value.toLowerCase().trim())}
+              onBlur={() => onBaseUrlChange?.(provider, { baseUrl: currentBaseUrl })}
               placeholder="Enter your base URL (e.g. https://api.openai.com/v1/)"
             />
           </View>
@@ -85,7 +69,8 @@ export default function GenericOpenAiOptions({
             }}
             className="rounded-lg text-white placeholder:text-white/50 text-left"
             value={currentApiKey}
-            onChangeText={value => handlePropertyChange('apiKey', value)}
+            onChangeText={value => setCurrentApiKey(value)}
+            onBlur={() => onApiKeyChange?.(provider, { apiKey: currentApiKey })}
             placeholder="Enter your API key"
           />
         </View>
@@ -105,7 +90,8 @@ export default function GenericOpenAiOptions({
             }}
             className="rounded-lg text-white placeholder:text-white/50 text-left"
             value={currentModel}
-            onChangeText={value => handlePropertyChange('model', value)}
+            onChangeText={value => setCurrentModel(value)}
+            onBlur={() => onModelChange?.(provider, { model: currentModel })}
             placeholder="Enter your model (e.g. gpt-3.5-turbo)"
           />
         </View>

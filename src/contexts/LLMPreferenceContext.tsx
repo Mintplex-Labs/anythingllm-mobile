@@ -3,6 +3,8 @@ import uiStore from '@/store/UIStore';
 import getLLM, { LLMProvider } from '@/utils/AiProviders';
 import { OnDeviceProviderConstructorProps } from '@/utils/AiProviders/onDevice';
 import { OpenAICompatibleConfig } from '@/utils/AiProviders/openAICompatible';
+import { OllamaProviderConfig } from '@/utils/AiProviders/OllamaProvider';
+import { LMStudioProviderConfig } from '@/utils/AiProviders/LMStudioProvider';
 
 interface LLMPreferenceContextType {
     llmPreferences: { provider: string; config: any };
@@ -24,6 +26,8 @@ function providerToName(provider: string) {
             return 'OpenAI (Generic)';
         case 'lmstudio':
             return 'LMStudio';
+        case 'ollama':
+            return 'Ollama';
         case 'native':
             return 'On-Device';
         default:
@@ -82,7 +86,17 @@ export function LLMPreferenceProvider({ children }: { children: ReactNode }) {
                 case 'openai':
                     const openAIConfig = event.details.config as OpenAICompatibleConfig['config'];
                     llmProvider = getLLM(event.details.provider, openAIConfig);
-                    llmProvider.loadNewModel(openAIConfig!.modelId!);
+                    llmProvider.loadNewModel(openAIConfig!.model!);
+                    break;
+                case 'ollama':
+                    const ollamaConfig = event.details.config as OllamaProviderConfig['config'];
+                    llmProvider = getLLM(event.details.provider, ollamaConfig);
+                    llmProvider.loadNewModel(ollamaConfig!.model!);
+                    break;
+                case 'lmstudio':
+                    const lmStudioConfig = event.details.config as LMStudioProviderConfig['config'];
+                    llmProvider = getLLM(event.details.provider, lmStudioConfig);
+                    llmProvider.loadNewModel(lmStudioConfig!.model!);
                     break;
             }
             setLLMProvider(llmProvider);

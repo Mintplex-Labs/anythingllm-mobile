@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useKeyboardHeight from '@/hooks/useKeyboardHeight';
 import { BottomSheetModal, BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
 import { X, MagnifyingGlass, CaretDown } from 'phosphor-react-native';
-import { debounce } from 'lodash';
 import getLLM from '@/utils/AiProviders';
 import LMStudioProvider, { LMStudioModel } from '@/utils/AiProviders/LMStudioProvider';
 
@@ -29,17 +28,6 @@ export default function LMStudioOptions({
   const [searchQuery, setSearchQuery] = useState('');
   const [availableModels, setAvailableModels] = useState<LMStudioModel[]>([]);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
-
-  const debouncedBaseUrlChange = useRef(
-    debounce((newValue: string) => {
-      try {
-        const url = new URL(newValue.toLowerCase().trim());
-        if (!['http:', 'https:'].includes(url.protocol)) throw new Error('Invalid protocol');
-      } catch (error) {
-        console.log("Invalid URL");
-      }
-    }, 100)
-  ).current;
 
   const handlePropertyChange = async (key: string, value: string) => {
     switch (key) {
@@ -103,15 +91,10 @@ export default function LMStudioOptions({
               textAlignVertical: 'center',
               padding: 16
             }}
-            className="rounded-lg text-white placeholder:text-white/50 text-left"
+            className="rounded-lg text-white placeholder:text-white/50 text-left lowercase"
             value={currentBaseUrl}
-            onChangeText={(value) => {
-              setCurrentBaseUrl(value);
-              debouncedBaseUrlChange(value);
-            }}
-            onBlur={() => {
-              onBaseUrlChange?.(provider, { baseUrl: currentBaseUrl });
-            }}
+            onChangeText={(value) => setCurrentBaseUrl(value.toLowerCase().trim())}
+            onBlur={() => onBaseUrlChange?.(provider, { baseUrl: currentBaseUrl })}
             placeholder="Enter your base URL (e.g. http://192.168.86.238:1234)"
           />
         </View>

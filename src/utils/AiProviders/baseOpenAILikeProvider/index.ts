@@ -338,13 +338,23 @@ export default abstract class BaseOpenAILikeProvider {
       return;
     }
 
-    // TODO: Tool Calling is broken in LMStudio - so we can't use this for now since we have no idea how to handle it
-    // TODO: Apparently ALSO LMStudio broke its reasoning reporting in the last update - so we can't use this for now since we have no idea how to handle it
-    // Fix both of these once they are fixed in LMStudio
-    const { stream, abortController } = await this.streamGetChatCompletion(formattedMessages);
-    const response = await this.handleDefaultStreamResponse(stream, onStream, abortController);
+    const availableTools = await ToolsManager.injectAvailableTools();
+    this.log(`Streaming ${this.model} with ${availableTools.length} available tools`);
+    const { stream, abortController } = await this.streamGetChatCompletion(formattedMessages, availableTools);
+    const fullResult = await this.handleDefaultStreamResponse(stream, onStream, abortController);
 
-    if (!!response.metrics) onStream('report_metrics', response.metrics);
+    await ToolsManager.toolCallLoop({
+      currentResponse: fullResult,
+      runStreamCompletion: async (messages: any[], _callback: IStreamCallback, availableTools: any[]) => {
+        const { stream, abortController } = await this.streamGetChatCompletion(messages, availableTools);
+        return await this.handleDefaultStreamResponse(stream, (event: IStreamEvent, data: any) => onStream(event, data), abortController);
+      },
+      streamEmitter: (event: IStreamEvent, data: any) => onStream(event, data),
+      currentMessageHistory: formattedMessages,
+      mergeToolCallResults: false,
+    });
+
+    if (!!fullResult.metrics) onStream('report_metrics', fullResult.metrics);
     if (!!citations) onStream('report_citations', citations);
     onStream('complete', '');
   }
@@ -371,6 +381,7 @@ export default abstract class BaseOpenAILikeProvider {
 
     return {
       textResponse: choices[0].message.content,
+      toolCalls: choices?.[0]?.message?.tool_calls || [],
       metrics: {
         prompt_tokens: result.output.usage?.prompt_tokens || 0,
         completion_tokens: result.output.usage?.completion_tokens || 0,
@@ -390,8 +401,7 @@ export default abstract class BaseOpenAILikeProvider {
         stream: true,
         messages,
         temperature: this.isOTypeModel ? 1 : this.temperature,
-        tools: availableTools,
-        tool_choice: 'auto',
+        ...(availableTools.length > 0 ? { tools: availableTools, tool_choice: 'auto' } : {}),
       }, { controller: abortController }),
       messages,
     );
@@ -404,6 +414,7 @@ export default abstract class BaseOpenAILikeProvider {
       prompt_tokens: 0,
       completion_tokens: 0,
     };
+    let toolToCall: { type: 'function', function: { name: string, arguments: string } } | null = null;
 
     return new Promise(async (resolve) => {
       let fullText = "";
@@ -413,6 +424,7 @@ export default abstract class BaseOpenAILikeProvider {
         console.log("\x1b[43m\x1b[34m[STREAM ABORTED]\x1b[0m Client requested to abort stream. Exiting LLM stream handler early.");
         resolve({
           textResponse: fullText,
+          toolCalls: toolToCall ? [toolToCall] : [],
           metrics: {
             prompt_tokens: usage.prompt_tokens,
             completion_tokens: usage.completion_tokens,
@@ -427,6 +439,7 @@ export default abstract class BaseOpenAILikeProvider {
       try {
         for await (const chunk of stream) {
           const content = chunk?.choices?.[0]?.delta?.content;
+          const toolCall = chunk?.choices?.[0]?.delta?.tool_calls?.[0];
           const finishReason = chunk?.choices?.[0]?.finish_reason;
 
           // Handle usage metrics if present
@@ -447,11 +460,29 @@ export default abstract class BaseOpenAILikeProvider {
             handler('chunk', content);
           }
 
+          // Handle tool calls if present
+          if (toolCall) {
+            // If we don't have a tool to call yet, create one to track the tool call
+            if (toolToCall === null) {
+              toolToCall = {
+                type: 'function',
+                function: {
+                  name: toolCall.function.name,
+                  arguments: toolCall.function.arguments,
+                }
+              }
+            } else {
+              // If we already have a tool to call, append the arguments to the existing tool call
+              toolToCall.function.arguments += toolCall.function.arguments;
+            }
+          }
+
           // Check for completion
           if (finishReason) {
             stream?.endMeasurement(usage);
             resolve({
               textResponse: fullText,
+              toolCalls: toolToCall ? [toolToCall] : [],
               metrics: {
                 prompt_tokens: usage.prompt_tokens,
                 completion_tokens: usage.completion_tokens,

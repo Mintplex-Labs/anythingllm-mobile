@@ -174,6 +174,7 @@ class ToolsManager {
         runStreamCompletion,
         streamEmitter,
         currentMessageHistory,
+        mergeToolCallResults = true,
     }): Promise<any[]> {
         let willLoop = currentResponse.toolCalls && currentResponse.toolCalls.length > 0;
         if (!willLoop) return currentResponse;
@@ -185,7 +186,7 @@ class ToolsManager {
         do {
             nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls, streamEmitter, nextMessages);
             for (const [index, message] of nextMessages.entries()) {
-                if (message.role === 'tool') {
+                if (message.role === 'tool' && mergeToolCallResults) {
                     const previousMessage = nextMessages[index - 1];
                     nextMessages[index - 1] = { ...previousMessage, content: `${previousMessage.content}\nFunction: ${message.signature}\nResult: ${message.content}` };
                     availableTools = availableTools.filter(tool => tool.function.name !== message.function); // Remove the tool from the available tools

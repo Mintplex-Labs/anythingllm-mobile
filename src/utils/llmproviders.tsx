@@ -16,7 +16,12 @@ export const AVAILABLE_LLM_PROVIDERS = [
     value: "lmstudio",
     logo: require('@/assets/llmprovider/lmstudio.png'),
     description: "Discover, download, and run thousands of cutting edge LLMs in a few clicks.",
-    requiredConfig: ["LMStudioBasePath"],
+  },
+  {
+    name: "Ollama",
+    value: "ollama",
+    logo: require('@/assets/llmprovider/ollama.png'),
+    description: "Run LLMs locally on your own machine with Ollama.",
   },
   // {
   //   name: "Azure OpenAI",
@@ -229,12 +234,6 @@ export const AVAILABLE_LLM_PROVIDERS = [
     logo: require('@/assets/llmprovider/generic-openai.png'),
     description:
       "Connect to any OpenAi-compatible service via a custom configuration",
-    requiredConfig: [
-      "GenericOpenAiBasePath",
-      "GenericOpenAiModelPref",
-      "GenericOpenAiTokenLimit",
-      "GenericOpenAiKey",
-    ],
   },
   // {
   //   name: "xAI",

@@ -1,10 +1,12 @@
 import OpenAICompatible from "./openAICompatible";
 import OnDeviceProvider from "./onDevice";
 import LMStudioProvider from "./LMStudioProvider";
+import OllamaProvider from "./OllamaProvider";
 
 export type LLMProvider = OpenAICompatible |
   OnDeviceProvider |
-  LMStudioProvider;
+  LMStudioProvider |
+  OllamaProvider;
 
 function getLLM(provider: string, config: { [key: string]: any } = {}): LLMProvider {
   switch (provider) {
@@ -28,6 +30,14 @@ function getLLM(provider: string, config: { [key: string]: any } = {}): LLMProvi
     case 'lmstudio':
       return new LMStudioProvider({
         provider: 'lmstudio',
+        config: {
+          baseURL: config.baseUrl,
+          model: config.model,
+        }
+      });
+    case 'ollama':
+      return new OllamaProvider({
+        provider: 'ollama',
         config: {
           baseURL: config.baseUrl,
           model: config.model,

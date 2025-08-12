@@ -79,8 +79,7 @@ function RenderExpandedToolCall({ toolCall }: { toolCall: IAgentToolCall }) {
                 <View className="flex flex-row items-center gap-2">
                     {/* @ts-ignore */}
                     <ActivityIndicator size='small' color={TOOL_CALL_STYLES.text.color} />
-                    <Text style={[TOOL_CALL_STYLES.text]} className="font-semibold">{toolCall.signature}:</Text>
-                    <Text style={[TOOL_CALL_STYLES.text, { fontStyle: 'italic' }]}>running agent...</Text>
+                    <Text numberOfLines={1} ellipsizeMode="tail" style={[TOOL_CALL_STYLES.text, { flex: 1, maxWidth: '85%' }]} className="font-semibold">{toolCall.signature}:</Text>
                 </View>
             )}
         </View>

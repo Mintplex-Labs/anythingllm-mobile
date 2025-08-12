@@ -66,7 +66,11 @@ class OllamaProvider extends BaseOpenAILikeProvider {
 
   override async availableModels(): Promise<OllamaModel[]> {
     return await this.client.models.list()
-      .then((models) => models.data.map((model: OllamaModel) => model));
+      .then((models) => models.data.map((model: OllamaModel) => model))
+      .catch((error) => {
+        this.log(`Error fetching models: ${error}`);
+        return [];
+      });
   }
 
   async loadNewModel(model: string) {

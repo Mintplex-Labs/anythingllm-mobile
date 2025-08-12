@@ -178,10 +178,13 @@ function AvailableModels({
   } = useModelManager({ llmPreferences, fetchLLMPreference, LLMProvider });
 
   useEffect(() => {
-    if (LLMProvider) {
-      const models = LLMProvider.availableModels() as AvailableModel[];
-      setAvailableModels(models);
-    } else setAvailableModels([]);
+    const fetchModels = async () => {
+      if (LLMProvider) {
+        const models = await LLMProvider.availableModels() as AvailableModel[];
+        setAvailableModels(models);
+      } else setAvailableModels([]);
+    };
+    fetchModels();
   }, [LLMProvider]);
 
   const filteredModels = useMemo(() => {

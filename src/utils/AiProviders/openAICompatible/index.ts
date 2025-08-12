@@ -47,7 +47,7 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
     console.log(`\x1b[36m[${this.constructor.name}]\x1b[0m ${text}`, ...args);
   }
 
-  override async availableModels(): Promise<object[]> {
+  override async availableModels(): Promise<any[]> {
     return [];
   }
 

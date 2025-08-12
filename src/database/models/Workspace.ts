@@ -46,7 +46,7 @@ export default class Workspace extends Model {
    * https://github.com/mybigday/llama.rn/blob/b12219527d9d38d1915c1a69055e6a59db7f7cd1/android/src/main/java/com/rnllama/LlamaContext.java#L68
    */
   static defaultTemperature = 0.7;
-  static defaultContextLength = 512;
+  static defaultContextLength = 1024;
 
   static writableFields = {
     name: {

@@ -23,6 +23,9 @@ export const markdownRules = {
  * https://github.com/iamacup/react-native-markdown-display/blob/master/src/lib/styles.js
  */
 export const markdownStyles = StyleSheet.create({
+    body: {
+        color: 'white',
+    },
     code_inline: {
         backgroundColor: 'rgba(178,221,255,0.2)',
     },

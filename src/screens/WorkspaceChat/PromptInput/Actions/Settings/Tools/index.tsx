@@ -58,7 +58,7 @@ export default function ToolsActionSheet() {
                         <TogglableItem key={tool.id} primary title={tool.name} description={tool.description} isOn={toolSettings[tool.id]} onToggle={handleToggle.bind(null, tool.id)} />
                     ))}
                     <View style={{ gap: 12 }} className='flex w-full flex-col items-start justify-between'>
-                        <Text className='text-white  font-semibold'>App Connections</Text>
+                        <Text className='text-white font-semibold'>App Connections</Text>
                         {ToolsManager.configurableTools.filter(tool => tool.category === 'appConnections').map(tool => (
                             <TogglableItem key={tool.id} title={tool.name} description={tool.description} isOn={toolSettings[tool.id]} onToggle={handleToggle.bind(null, tool.id)} />
                         ))}
@@ -74,7 +74,7 @@ function TogglableItem({ title, description, isOn, onToggle, primary = false }: 
     return (
         <View className='flex w-full flex-row items-center justify-between'>
             <View className='flex flex-col items-start justify-between'>
-                <Text className={`text-[14px] font-semibold ${!primary && !isOn ? 'text-[--text-primary]' : 'text-white'}`}>{title}</Text>
+                <Text style={{ color: !primary && !isOn ? '#9F9FA0' : '#FFF' }} className={`text-[14px] font-semibold`}>{title}</Text>
                 <Text style={{ color: '#9F9FA0', maxWidth: '90%' }} className='text-sm'>{description}</Text>
             </View>
             <ToggleSwitch isOn={isOn} onToggle={onToggle} />

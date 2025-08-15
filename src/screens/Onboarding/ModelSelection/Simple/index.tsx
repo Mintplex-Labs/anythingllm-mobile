@@ -64,8 +64,10 @@ export default function SimpleModelSelection() {
             onSelect={async () => {
               // If the user has not granted permissions to receive notifications we cannot download models in the background
               // so we need to await the entire download process
-              if (!PushNotifications.notificationsEnabled) {
-                await downloadModel(card);
+              if (PushNotifications.notificationsEnabled) {
+                const approved = await runPreDownloadConfirmations(card);
+                if (!approved) return false;
+                downloadModel(card, false);
                 await saveAndNavigate(card);
                 return;
               }
@@ -74,10 +76,9 @@ export default function SimpleModelSelection() {
               // the user approved the download before we navigate to the next screen
               // Notifications will provide progress updates so we can move to the next screen while the download is in progress
               const approved = await runPreDownloadConfirmations(card);
-              if (approved) {
-                downloadModel(card, false);
-                await saveAndNavigate(card);
-              }
+              if (!approved) return false;
+              const result = await downloadModel(card, false);
+              if (result !== false) await saveAndNavigate(card);
             }}
           />
         ))}

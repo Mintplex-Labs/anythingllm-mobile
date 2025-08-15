@@ -125,7 +125,7 @@ export function NumericInputView({ workspace, goToPage, field, title, placeholde
                 <View className="w-full flex flex-col" style={{ gap: 12 }}>
                     {hint && <Text style={{ color: '#9F9FA0' }} className="text-sm">{hint.replace(/\\n/g, '\n')}</Text>}
                 </View>
-                {suggestions && (
+                {suggestions?.length > 0 && (
                     <View style={{ gap: 10, marginTop: 30 }} className="flex flex-col">
                         <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">Suggested {title}</Text>
                         <View style={{ gap: 10, flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'flex-start' }} className="flex flex-row items-center justify-center">

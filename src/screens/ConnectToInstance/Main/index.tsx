@@ -65,7 +65,7 @@ export function MainView() {
 
             <View style={{ gap: 20 }} className="w-full flex flex-col items-center justify-center">
                 <CameraView onScanReceived={onQRCodeScanned} />
-                <Text style={{ textAlign: 'center', fontSize: 14, width: '80%' }} className="text-[--text-secondary]">
+                <Text style={{ textAlign: 'center', fontSize: 14, width: '80%' }} className="text-white/80">
                     Scan the QR code for your AnythingLLM instance or client to sync it's data to this mobile device for AI on the go!
                 </Text>
             </View>

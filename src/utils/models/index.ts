@@ -34,50 +34,45 @@ const androidOnlyModels: NPUEnabledModel[] = [
 ];
 
 const crossPlatformModels: Model[] = [
-  // -------- Menlo Lucy 1.7B --------
-  // https://huggingface.co/Menlo/Lucy-gguf
-  {
-    id: 'Menlo/Lucy-gguf',
-    description: '(Q8_0) Lucy 1.7B by Menlo Research is an LLM specifically for the edge.',
-    runtime: 'CPU',
-    author: 'Menlo',
-    name: 'Lucy 1.7B',
-    type: 'Qwen',
-    ggufFilePath: 'Menlo/Lucy-gguf/Lucy-Q8_0.gguf',
-    capabilities: ['text-generation', 'tool-use'],
-    size: 1.83e+9,
-    params: 1_700_000_000,
-    downloadUrl: 'https://huggingface.co/Menlo/Lucy-gguf/resolve/main/Lucy-Q8_0.gguf',
-    completionSettings: {
-      temperature: 0.7,
-      top_p: 0.8,
-      top_k: 20,
-      min_p: 0,
-    },
-    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/643b63fea856622f978fdc35/c8ZIKZbg-Y4ZxkUgMLV8q.png',
-
-    // Unused?
-    isDownloaded: false,
-    hfUrl: 'https://huggingface.co/Menlo/Lucy-gguf',
-    progress: 0,
-    filename: 'Lucy-Q8_0.gguf',
-    isLocal: false,
-    origin: ModelOrigin.HF,
-    defaultChatTemplate: { ...chatTemplates.qwen3 },
-    chatTemplate: { ...chatTemplates.qwen3 },
-    defaultCompletionSettings: {
-      temperature: 0.7,
-      top_p: 0.9,
-      top_k: 20,
-      min_p: 0,
-    },
-    defaultStopWords: ['<|im_end|>'],
-    stopWords: ['<|im_end|>'],
-  },
-
   // -------- Gemma --------
   {
-    id: 'unsloth/gemma-3-1b-it-GGUF/gemma-3-1b-it-Q8_0.gguf',
+    id: 'unsloth/gemma-3-270m-it-GGUF',
+    runtime: 'CPU',
+    author: 'unsloth',
+    name: 'Gemma 3 270m',
+    description: '(Q8_K_XL) Gemma3 270m is a hyper-lightweight version of the Gemma3 4B model for more complex tasks.',
+    type: 'Gemma',
+    capabilities: ['questionAnswering', 'summarization', 'reasoning'],
+    size: 471e+6,
+    params: 270_000_000,
+    isDownloaded: false,
+    downloadUrl:
+      'https://huggingface.co/unsloth/gemma-3-270m-it-GGUF/resolve/main/gemma-3-270m-it-UD-Q8_K_XL.gguf',
+    hfUrl: 'https://huggingface.co/unsloth/gemma-3-270m-it-GGUF',
+    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/62ecdc18b72a69615d6bd857/E4lkPz1TZNLzIFr_dR273.png',
+    progress: 0,
+    filename: 'gemma-3-270m-it-UD-Q8_K_XL.gguf',
+    isLocal: false,
+    origin: ModelOrigin.HF,
+    defaultChatTemplate: { ...chatTemplates.gemma3 },
+    chatTemplate: chatTemplates.gemma3,
+    defaultCompletionSettings: {
+      temperature: 1,
+      top_p: 0.95,
+      top_k: 64,
+      min_p: 0,
+    },
+    completionSettings: {
+      temperature: 1,
+      top_p: 0.95,
+      top_k: 64,
+      min_p: 0,
+    },
+    defaultStopWords: ['<end_of_turn>'],
+    stopWords: ['<end_of_turn>'],
+  },
+  {
+    id: 'unsloth/gemma-3-1b-it-GGUF',
     runtime: 'CPU',
     author: 'unsloth',
     name: 'Gemma-3-1b',
@@ -98,8 +93,16 @@ const crossPlatformModels: Model[] = [
     defaultChatTemplate: { ...chatTemplates.gemma3 },
     chatTemplate: chatTemplates.gemma3,
     defaultCompletionSettings: {
+      temperature: 1,
+      top_p: 0.95,
+      top_k: 64,
+      min_p: 0,
     },
     completionSettings: {
+      temperature: 1,
+      top_p: 0.95,
+      top_k: 64,
+      min_p: 0,
     },
     defaultStopWords: ['<end_of_turn>'],
     stopWords: ['<end_of_turn>'],
@@ -152,7 +155,7 @@ const crossPlatformModels: Model[] = [
   // },
   // -------- Qwen --------
   {
-    id: 'unsloth/Qwen3-1.7B-GGUF/Qwen3-1.7B-Q8_0.gguf',
+    id: 'unsloth/Qwen3-1.7B-GGUF',
     runtime: 'CPU',
     author: 'Qwen',
     name: 'Qwen3-1.7B',
@@ -182,7 +185,7 @@ const crossPlatformModels: Model[] = [
 
   // -------- Llama --------
   {
-    id: 'unsloth/Llama-3.2-1B-Instruct-GGUF/Llama-3.2-1B-Instruct-Q8_0.gguf',
+    id: 'unsloth/Llama-3.2-1B-Instruct-GGUF',
     runtime: 'CPU',
     author: 'unsloth',
     name: 'Llama 3.2 1B',
@@ -311,6 +314,46 @@ const crossPlatformModels: Model[] = [
   //     canFitInStorage: true,
   //   },
   // },
+  // -------- Menlo Lucy 1.7B --------
+  // https://huggingface.co/Menlo/Lucy-gguf
+  {
+    id: 'Menlo/Lucy-gguf',
+    description: '(Q8_0) Lucy 1.7B by Menlo Research is an LLM specifically for the edge.',
+    runtime: 'CPU',
+    author: 'Menlo',
+    name: 'Lucy 1.7B',
+    type: 'Qwen',
+    ggufFilePath: 'Menlo/Lucy-gguf/Lucy-Q8_0.gguf',
+    capabilities: ['text-generation', 'tool-use'],
+    size: 1.83e+9,
+    params: 1_700_000_000,
+    downloadUrl: 'https://huggingface.co/Menlo/Lucy-gguf/resolve/main/Lucy-Q8_0.gguf',
+    completionSettings: {
+      temperature: 0.7,
+      top_p: 0.8,
+      top_k: 20,
+      min_p: 0,
+    },
+    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/643b63fea856622f978fdc35/c8ZIKZbg-Y4ZxkUgMLV8q.png',
+
+    // Unused?
+    isDownloaded: false,
+    hfUrl: 'https://huggingface.co/Menlo/Lucy-gguf',
+    progress: 0,
+    filename: 'Lucy-Q8_0.gguf',
+    isLocal: false,
+    origin: ModelOrigin.HF,
+    defaultChatTemplate: { ...chatTemplates.qwen3 },
+    chatTemplate: { ...chatTemplates.qwen3 },
+    defaultCompletionSettings: {
+      temperature: 0.7,
+      top_p: 0.9,
+      top_k: 20,
+      min_p: 0,
+    },
+    defaultStopWords: ['<|im_end|>'],
+    stopWords: ['<|im_end|>'],
+  },
 ];
 
 export const defaultModels =

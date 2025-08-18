@@ -71,6 +71,7 @@ export default class OpenAILite {
   }
 
   async *streamChatCompletion(body: IAsyncChatCompletionRequestBody, options: { controller?: AbortController } = {}) {
+    console.log('streamingChatCompletion', `${this.baseURL}/chat/completions`, { hasApiKey: !!this.apiKey });
     const response = await this.streamingFetch!(`${this.baseURL}/chat/completions`, {
       method: 'POST',
       headers: {

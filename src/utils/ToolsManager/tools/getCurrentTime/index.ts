@@ -1,14 +1,16 @@
+import moment from 'moment';
+
 export default {
     id: 'getTime',
     name: 'Get Time',
-    description: 'Get the current time based on your device.',
+    description: 'Get the current date and time based on your device timezone.',
     defaultEnabled: true,
     category: 'default',
     definition: {
         type: 'function',
         function: {
-            name: 'get_current_time',
-            description: 'Get the current time in the users timezone.',
+            name: 'get_current_datetime',
+            description: 'Get the current date and time in the users timezone.',
             parameters: {
                 type: 'object',
                 properties: {},
@@ -17,5 +19,7 @@ export default {
         },
     },
     config: {},
-    execute: () => new Date().toLocaleTimeString(),
+    execute: () => {
+        return moment().format('LLLL');
+    },
 } as const;

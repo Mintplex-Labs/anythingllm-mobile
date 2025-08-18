@@ -7,6 +7,7 @@ import { BottomSheetModal, BottomSheetBackdrop, BottomSheetView } from '@gorhom/
 import { X, MagnifyingGlass, CaretDown } from 'phosphor-react-native';
 import getLLM from '@/utils/AiProviders';
 import LMStudioProvider, { LMStudioModel } from '@/utils/AiProviders/LMStudioProvider';
+import debounce from 'lodash/debounce';
 
 export default function LMStudioOptions({
   provider,
@@ -63,16 +64,41 @@ export default function LMStudioOptions({
     [],
   );
 
-  useEffect(() => {
-    if (currentBaseUrl) {
-      (getLLM('lmstudio', { baseUrl: currentBaseUrl }) as LMStudioProvider)
-        .availableModels()
-        .then(async (models: LMStudioModel[]) => {
+  const debouncedFetchModels = useRef(
+    debounce(async (url: string) => {
+      if (url) {
+        try {
+          const models = await (getLLM('lmstudio', { baseUrl: url }) as LMStudioProvider).availableModels();
           setAvailableModels(models.map((model: LMStudioModel) => model));
           setCurrentModelId(models[0]?.id || '');
-        });
-    }
-  }, [currentBaseUrl]);
+        } catch (error) {
+          console.log(`Error fetching models: (${url})`, error);
+          setAvailableModels([]);
+          setCurrentModelId('');
+        }
+      } else {
+        setAvailableModels([]);
+        setCurrentModelId('');
+      }
+    }, 500)
+  ).current;
+
+  const debouncedSaveBaseUrl = useRef(
+    debounce(async (url: string) => {
+      await onBaseUrlChange?.(provider, { baseUrl: url });
+    }, 500)
+  ).current;
+
+  useEffect(() => {
+    debouncedFetchModels(currentBaseUrl);
+  }, [currentBaseUrl, debouncedFetchModels]);
+
+  useEffect(() => {
+    return () => {
+      debouncedFetchModels.cancel();
+      debouncedSaveBaseUrl.cancel();
+    };
+  }, [debouncedFetchModels, debouncedSaveBaseUrl]);
 
   return (
     <View className="flex flex-col">
@@ -83,6 +109,8 @@ export default function LMStudioOptions({
             <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">Base URL</Text>
           </View>
           <TextInput
+            key="baseUrl"
+            keyboardType="url"
             multiline={false}
             numberOfLines={1}
             style={{
@@ -93,8 +121,11 @@ export default function LMStudioOptions({
             }}
             className="rounded-lg text-white placeholder:text-white/50 text-left lowercase"
             value={currentBaseUrl}
-            onChangeText={(value) => setCurrentBaseUrl(value.toLowerCase().trim())}
-            onBlur={() => onBaseUrlChange?.(provider, { baseUrl: currentBaseUrl })}
+            onChangeText={(value) => {
+              const cleanedValue = value.toLowerCase().trim();
+              setCurrentBaseUrl(cleanedValue);
+              debouncedSaveBaseUrl(cleanedValue);
+            }}
             placeholder="Enter your base URL (e.g. http://192.168.86.238:1234)"
           />
         </View>

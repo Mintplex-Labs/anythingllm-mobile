@@ -37,6 +37,8 @@ export default function GenericOpenAiOptions({
               <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">Base URL</Text>
             </View>
             <TextInput
+              key="baseUrl"
+              keyboardType="url"
               multiline={false}
               numberOfLines={1}
               style={{
@@ -80,6 +82,8 @@ export default function GenericOpenAiOptions({
             <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">Model Selection</Text>
           </View>
           <TextInput
+            key="model"
+            keyboardType="default"
             multiline={false}
             numberOfLines={1}
             style={{

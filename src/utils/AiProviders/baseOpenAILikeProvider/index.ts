@@ -51,7 +51,8 @@ type IContent = {
 
 export type IStreamEvent = 'chunk' |
   'complete' |
-  'abort' |
+  'abort' | // will throw and crash the app!
+  'timed_out' |
   'report_citations' |
   'report_metrics' |
   'will_call_tools' |
@@ -69,6 +70,12 @@ export type IAttachment = {
   contentString: string;
 }
 
+export type IAvailableModel = {
+  id: string;
+  object: string;
+  owned_by: string;
+}
+
 class SilentError extends Error {
   constructor(message: string) {
     super(message);
@@ -80,6 +87,7 @@ export default abstract class BaseOpenAILikeProvider {
   protected _provider: string;
   protected _config: any;
   private _workspace: WorkspaceType | null = null;
+  private streamingTimeoutLimit: number = 10_000; // Wait 10 seconds before assuming the request is timed out
   protected abstract client: OpenAILite;
   protected abstract isOTypeModel: boolean;
   protected abstract model: string;
@@ -87,7 +95,8 @@ export default abstract class BaseOpenAILikeProvider {
   protected abstract log: (message: string, ...args: any[]) => void;
   protected abstract loadNewModel(model: string): Promise<void>;
   protected abstract unloadModel(): Promise<void>;
-  abstract availableModels(): Promise<object[]>;
+  public isExternalProvider: boolean = false;
+  abstract availableModels(): Promise<IAvailableModel[]>;
 
   static DEFAULT_SYSTEM_MESSAGE = 'You are a helpful assistant that can answer questions and help with tasks.';
 
@@ -405,6 +414,7 @@ export default abstract class BaseOpenAILikeProvider {
       }, { controller: abortController }),
       messages,
     );
+
     return { stream, abortController };
   }
 
@@ -415,12 +425,14 @@ export default abstract class BaseOpenAILikeProvider {
       completion_tokens: 0,
     };
     let toolToCall: { type: 'function', function: { name: string, arguments: string } } | null = null;
+    let timeout: NodeJS.Timeout | null = null;
 
     return new Promise(async (resolve) => {
       let fullText = "";
 
       const handleAbort = () => {
         stream?.endMeasurement(usage);
+        if (timeout) clearTimeout(timeout);
         console.log("\x1b[43m\x1b[34m[STREAM ABORTED]\x1b[0m Client requested to abort stream. Exiting LLM stream handler early.");
         resolve({
           textResponse: fullText,
@@ -437,7 +449,14 @@ export default abstract class BaseOpenAILikeProvider {
       abortController.signal.addEventListener('abort', handleAbort);
 
       try {
+        // If we do not see a token in the timeout limit, abort the stream with a timed out error
+        timeout = setTimeout(() => {
+          abortController.abort();
+          handler('timed_out', 'Streaming request did not receive a response in a reasonable amount of time. Connection may be lost.');
+        }, this.streamingTimeoutLimit);
+
         for await (const chunk of stream) {
+          if (timeout) clearTimeout(timeout); // on the first chunk, clear the timeout since we know the service is responding
           const content = chunk?.choices?.[0]?.delta?.content;
           const toolCall = chunk?.choices?.[0]?.delta?.tool_calls?.[0];
           const finishReason = chunk?.choices?.[0]?.finish_reason;
@@ -508,6 +527,8 @@ export default abstract class BaseOpenAILikeProvider {
             duration: stream.duration,
           },
         });
+      } finally {
+        if (timeout) clearTimeout(timeout);
       }
     });
   }

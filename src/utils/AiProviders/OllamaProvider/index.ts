@@ -36,6 +36,7 @@ class OllamaProvider extends BaseOpenAILikeProvider {
   protected client: OpenAILite;
   protected temperature: number = 0.7;
   protected isOTypeModel: boolean = false; // always false for LMStudio
+  public isExternalProvider: boolean = true;
 
   constructor({ provider = 'ollama', config = {} }: OllamaProviderConfig) {
     config.baseURL = ollamaBaseURLFormatter(config.baseURL);

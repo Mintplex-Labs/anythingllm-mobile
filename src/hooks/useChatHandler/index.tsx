@@ -173,6 +173,11 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                 switch (event) {
                     case 'abort':
                         throw new Error('Chat aborted');
+                    case 'timed_out':
+                        debug('Chat stream timed out');
+                        merge(newChat, { isLoading: false, type: 'error', response: { textResponse: 'The request timed out before a response was received. Connection may be lost.' } });
+                        emitUpdate = true;
+                        break;
                     case 'complete':
                         debug('Chat stream complete');
                         merge(newChat, { isLoading: false });

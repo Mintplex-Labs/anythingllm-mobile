@@ -7,6 +7,7 @@ import { BottomSheetModal, BottomSheetBackdrop, BottomSheetView } from '@gorhom/
 import { X, MagnifyingGlass, CaretDown } from 'phosphor-react-native';
 import getLLM from '@/utils/AiProviders';
 import OllamaProvider, { OllamaModel } from '@/utils/AiProviders/OllamaProvider';
+import debounce from 'lodash/debounce';
 
 export default function OllamaOptions({
   provider,
@@ -45,32 +46,41 @@ export default function OllamaOptions({
     [],
   );
 
-  useEffect(() => {
-    if (currentBaseUrl) {
-      try {
-        const url = new URL(currentBaseUrl.toLowerCase().trim());
-        if (!['http:', 'https:'].includes(url.protocol)) return;
-
-        // Only fetch models if we have a complete URL
-        if (url.hostname) {
-          (getLLM('ollama', { baseUrl: currentBaseUrl }) as OllamaProvider)
-            .availableModels()
-            .then(async (models: OllamaModel[]) => {
-              setAvailableModels(models.map((model: OllamaModel) => model));
-              // Only set current model if none is currently selected
-              if (!currentModelId) {
-                setCurrentModelId(models[0]?.id || '');
-              }
-            })
-            .catch((error) => {
-              console.log("Error fetching models:", error);
-            });
+  const debouncedFetchModels = useRef(
+    debounce(async (url: string) => {
+      if (url) {
+        try {
+          const models = await (getLLM('ollama', { baseUrl: url }) as OllamaProvider).availableModels();
+          setAvailableModels(models.map((model: OllamaModel) => model));
+          setCurrentModelId(models[0]?.id || '');
+        } catch (error) {
+          console.log(`Error fetching models: (${url})`, error);
+          setAvailableModels([]);
+          setCurrentModelId('');
         }
-      } catch (error) {
-        console.log("Invalid URL");
+      } else {
+        setAvailableModels([]);
+        setCurrentModelId('');
       }
-    }
-  }, [currentBaseUrl]);
+    }, 500)
+  ).current;
+
+  const debouncedSaveBaseUrl = useRef(
+    debounce(async (url: string) => {
+      await onBaseUrlChange?.(provider, { baseUrl: url });
+    }, 500)
+  ).current;
+
+  useEffect(() => {
+    debouncedFetchModels(currentBaseUrl);
+  }, [currentBaseUrl, debouncedFetchModels]);
+
+  useEffect(() => {
+    return () => {
+      debouncedFetchModels.cancel();
+      debouncedSaveBaseUrl.cancel();
+    };
+  }, [debouncedFetchModels, debouncedSaveBaseUrl]);
 
   return (
     <View className="flex flex-col">
@@ -81,6 +91,8 @@ export default function OllamaOptions({
             <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">Base URL</Text>
           </View>
           <TextInput
+            key="baseUrl"
+            keyboardType="url"
             multiline={false}
             numberOfLines={1}
             style={{
@@ -91,8 +103,11 @@ export default function OllamaOptions({
             }}
             className="rounded-lg text-white placeholder:text-white/50 text-left"
             value={currentBaseUrl}
-            onChangeText={(value) => setCurrentBaseUrl(value.toLowerCase().trim())}
-            onBlur={() => onBaseUrlChange?.(provider, { baseUrl: currentBaseUrl })}
+            onChangeText={(value) => {
+              const cleanedValue = value.toLowerCase().trim();
+              setCurrentBaseUrl(cleanedValue);
+              debouncedSaveBaseUrl(cleanedValue);
+            }}
             placeholder="Enter your base URL (e.g. http://192.168.86.238:1234)"
           />
         </View>

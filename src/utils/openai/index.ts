@@ -80,7 +80,7 @@ export default class OpenAILite {
       body: JSON.stringify(body),
       ...(options.controller ? { signal: options.controller.signal } : {}),
       // @ts-ignore
-      reactNative: { textStreaming: true }
+      reactNative: { textStreaming: true },
     });
 
     const stream = response.body;
@@ -115,6 +115,7 @@ export default class OpenAILite {
 
   async listModels() {
     return await fetch(`${this.baseURL}/models`, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         ...(this.apiKey ? { 'Authorization': `Bearer ${this.apiKey}` } : {}),

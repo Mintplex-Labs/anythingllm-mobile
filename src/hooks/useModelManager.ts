@@ -23,11 +23,14 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
 
   // Check which models are downloaded and set initial selection
   useEffect(() => {
-    if (LLMProvider) {
-      const models = LLMProvider.availableModels();
-      updateDownloadedModels(models);
-      setSelectedModel(LLMProvider.model || null);
+    async function fetchModels() {
+      if (LLMProvider) {
+        const models = await LLMProvider.availableModels();
+        updateDownloadedModels(models);
+        setSelectedModel(LLMProvider.model || null);
+      }
     }
+    fetchModels();
   }, [LLMProvider]);
 
   const updateDownloadedModels = async (models: any[]) => {

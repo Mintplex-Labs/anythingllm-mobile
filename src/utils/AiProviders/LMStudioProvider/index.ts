@@ -30,6 +30,7 @@ function lmStudioBaseURLFormatter(baseURL?: string) {
 class LMStudioProvider extends BaseOpenAILikeProvider {
   private baseURL: string = '';
   private apiKey: string | null = null;
+  public isExternalProvider: boolean = true;
 
   public model: string;
   private connectionProvider: string;

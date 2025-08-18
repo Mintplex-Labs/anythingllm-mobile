@@ -453,6 +453,18 @@ export default abstract class BaseOpenAILikeProvider {
         timeout = setTimeout(() => {
           abortController.abort();
           handler('timed_out', 'Streaming request did not receive a response in a reasonable amount of time. Connection may be lost.');
+          resolve({
+            textResponse: 'The request timed out before a response was received. Connection may be lost.',
+            toolCalls: [],
+            metrics: {
+              prompt_tokens: 0,
+              completion_tokens: 0,
+              total_tokens: 0,
+              outputTps: 0,
+              duration: stream.duration,
+            },
+          });
+          return;
         }, this.streamingTimeoutLimit);
 
         for await (const chunk of stream) {

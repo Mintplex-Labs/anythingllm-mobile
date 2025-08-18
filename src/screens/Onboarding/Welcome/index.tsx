@@ -3,8 +3,10 @@ import SafeView from "@/components/SafeView";
 import uiStore from "@/store/UIStore";
 import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
 import { PATHS } from "@/utils/paths";
 import React from "react";
+import { showToast } from "@/utils/Notification";
 
 export default function OnboardingWelcome() {
   const navigation = useNavigation();
@@ -13,6 +15,7 @@ export default function OnboardingWelcome() {
     uiStore.setToStorage('onboarding_welcome_completed', true);
     navigation.navigate(PATHS.onboarding.model_selection as never);
   };
+  useHighjackBackButtonPress(() => { showToast('Please proceed through the onboarding flow to continue.', 'short'); return true; });
 
   return (
     <React.Fragment>

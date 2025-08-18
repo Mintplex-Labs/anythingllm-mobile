@@ -1,4 +1,4 @@
-import { CompletionParams, NativeCompletionResult, CactusAgent } from 'cactus-react-native'
+import { CompletionParams, initLlama, LlamaContext } from 'cactus-react-native'
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { Model } from '@/utils/types';
 import { defaultModels } from '@/utils/models';
@@ -6,7 +6,6 @@ import { Platform } from 'react-native';
 import { stops } from '@/utils/chat';
 import { ICompleteResponse, IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import type OnDeviceProvider from '@/utils/AiProviders/onDevice/index';
-import ToolsManager from '@/utils/ToolsManager';
 
 export type NativeLlamaChatMessage = {
   role: string
@@ -37,7 +36,7 @@ export default class CactusLmWrapper {
   private parent: OnDeviceProvider;
   private model: string;
   private ggufFilePath: string | null = null;
-  private cactusLmContext: CactusAgent | null = null;
+  private cactusLmContext: LlamaContext | null = null;
   private keepAliveTimer: NodeJS.Timeout | null = null;
   private keepAliveInterval = 1000 * 60 * 5;
 
@@ -116,14 +115,15 @@ export default class CactusLmWrapper {
       if (!this.ggufFilePath) await this.determineGgufFilePath();
       if (!this.ggufFilePath) throw new Error(`CactusLmWrapper::initialize: No gguf file found for model ${this.model}`);
 
-      this.cactusLmContext = await CactusAgent.init({
+      const lm = await initLlama({
         model: this.ggufFilePath,
         use_mlock: true,
         n_ctx: this.contextLength,
         n_gpu_layers: Platform.OS === 'ios' ? 99 : 0,
         embedding: false,
-      }).then(result => result.agent)
+      })
 
+      this.cactusLmContext = lm
       this.log(`${this.name} initialized with model ${this.model} @ ${this.contextLength} context length`);
       return true;
     } catch (error) {
@@ -170,9 +170,11 @@ export default class CactusLmWrapper {
     if (!this.cactusLmContext) await this.initialize();
     if (!this.cactusLmContext) throw new Error(`CactusLmWrapper::streamGetChatCompletion: Model not initialized`);
 
-    const msgResult = await this.cactusLmContext.completion(messages, {
+    const msgResult = await this.cactusLmContext.completion({
+      messages: messages,
       n_predict: this.nPredict,
       stop: stops,
+      jinja: this.cactusLmContext.isJinjaSupported(),
       ...this.defaultRuntimeConfig,
       temperature: this.temperature,
     });
@@ -196,37 +198,19 @@ export default class CactusLmWrapper {
     messages: NativeLlamaChatMessage[],
     callback: ICactusLmStreamCallback,
     availableTools: any[],
-    streamEmitter: (event: IStreamEvent, data: any) => void
   ): Promise<ICompleteResponse> {
     this.keepAlive();
     if (!this.cactusLmContext) await this.initialize();
     if (!this.cactusLmContext) throw new Error(`CactusLmWrapper::streamGetChatCompletion: Model not initialized`);
 
-    for (const tool of availableTools) {
-      const toolDefinition = ToolsManager.configurableTools.find(t => t.definition.function.name === tool.function.name);
-      if (!toolDefinition) continue;
-      let parameters: { [key: string]: any } = {};
-
-      for (const [key, value] of Object.entries(toolDefinition.definition.function.parameters.properties)) {
-        parameters[key] = {
-          type: value.type,
-          description: value.description,
-          required: toolDefinition.definition.function.parameters.required.includes(key as never)
-        };
-      }
-      console.log('Adding tool', toolDefinition.definition.function.name, parameters);
-      this.cactusLmContext.addTool(
-        (...args: any) => toolDefinition.execute(args, streamEmitter),
-        toolDefinition.description,
-        parameters
-      );
-    }
-
-    const msgResult = await this.cactusLmContext.completionWithTools(messages, {
+    const msgResult = await this.cactusLmContext.completion({
+      messages: messages,
+      stop: [...stops],
       n_predict: this.nPredict,
-      stop: stops,
+      jinja: this.cactusLmContext.isJinjaSupported(),
+      tools: availableTools,
       tool_choice: 'auto',
-      // ...this.defaultRuntimeConfig as any,
+      ...this.defaultRuntimeConfig as any,
       temperature: this.temperature,
     }, (data: { token: string }) => {
       const { token } = data;

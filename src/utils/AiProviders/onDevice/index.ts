@@ -167,7 +167,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     const availableTools = await ToolsManager.injectAvailableTools();
     this.log(`Streaming ${this.model} with ${this.computeRuntime}`);
     this.log('Available tools:', availableTools.map(t => t.function.name));
-    let fullResult = await this.submodule.streamGetChatCompletion(formattedMessages as any, (token: string) => onStream('chunk', token), availableTools, (event: IStreamEvent, data: any) => onStream(event, data));
+    let fullResult = await this.submodule.streamGetChatCompletion(formattedMessages as any, (token: string) => onStream('chunk', token), availableTools);
 
     // Recursive tool call loop
     await ToolsManager.toolCallLoop({

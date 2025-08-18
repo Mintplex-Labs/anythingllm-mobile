@@ -29,7 +29,7 @@ export function LLMPreferenceProvider({ children }: { children: ReactNode }) {
             setIsLoading(true);
             setError(null);
             const preferences = await uiStore.getFromStorage('llmPreference', { provider: 'unknown', config: {} });
-            if (preferences.provider === 'unknown') return setLlmPreferences(preferences); // if provider is unknown, don't fetch the LLM provider
+            if (!preferences.provider || preferences.provider === 'unknown') return setLlmPreferences(preferences); // if provider is unknown, don't fetch the LLM provider
             setLlmPreferences(preferences);
             setLLMProvider(getLLM(preferences.provider, preferences.config));
         } catch (error) {

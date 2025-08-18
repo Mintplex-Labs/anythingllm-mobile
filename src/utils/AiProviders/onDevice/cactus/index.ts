@@ -25,7 +25,7 @@ export default class CactusLmWrapper {
    * On overflow, the chats are auto-truncated by the CactusLmWrapper class. Maybe we can warn the user when
    * they are overflowing?
    */
-  static DEFAULT_CONTEXT_LENGTH = 512;
+  static DEFAULT_CONTEXT_LENGTH = 1024;
   static DEFAULT_TEMPERATURE = 0.7;
 
   /**

@@ -46,7 +46,7 @@ export default class Workspace extends Model {
    * https://github.com/cactus-compute/cactus/tree/main/react/src/NativeCactus.ts#L10
    */
   static defaultTemperature = 0.7;
-  static defaultContextLength = 512;
+  static defaultContextLength = 1024;
 
   static writableFields = {
     name: {

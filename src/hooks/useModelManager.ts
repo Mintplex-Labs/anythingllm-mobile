@@ -39,17 +39,16 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     setDownloadedModels(downloaded);
   };
 
-  const downloadModel = async (model: any) => {
-    if (selectedModel === model.modelId) return;
-    if (!!modelDownloadUrl) return false;
-
-    const isDownloaded = await checkModelDownloaded(model.downloadUrl);
-    if (isDownloaded) {
-      return await selectModel(model);
-    }
-
+  /**
+   * Run the pre-download confirmation checks
+   * - Will deny download if there is no internet connection
+   * - Will ask to continue download if the model is not a Wi-Fi connection
+   * - Will final confirmation before download of model
+   * @param model - The model to download
+   * @returns True if the model can be downloaded, false otherwise
+   */
+  async function runPreDownloadConfirmations(model: any): Promise<boolean> {
     const modelSize = typeof model.size === 'number' ? formatBytes(model.size) : model.size;
-
     if (!netInfo.isConnected) {
       await AwaitableAlert(
         'No internet connection.',
@@ -77,6 +76,26 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
       { text: 'Continue with download', style: 'default' },
     );
     if (!shouldDownload) return false;
+    return true;
+  }
+
+  /**
+   * Download a model
+   * @param model - The model to download
+   * @param runPrefetchChecks - If true, the model will be downloaded and the pre-download confirmation checks will be run. Otherwise, it is assumed these checks have already been run prior to calling this function.
+   * @returns True if the model was downloaded, false otherwise
+   */
+  const downloadModel = async (model: any, runPrefetchChecks = true) => {
+    if (!!modelDownloadUrl) return false;
+
+    const isDownloaded = await checkModelDownloaded(model.downloadUrl);
+    if (isDownloaded) return await selectModel(model);
+
+    // If prefetch checks are enabled, run them before downloading to abort early
+    if (runPrefetchChecks) {
+      const approved = await runPreDownloadConfirmations(model);
+      if (!approved) return false;
+    }
 
     setModelDownloadUrl(model.downloadUrl);
     const storageLocation = resolveDestinationPathFromGGUFUrl(model.downloadUrl);
@@ -85,7 +104,7 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     const dirPath = storageLocation.substring(0, storageLocation.lastIndexOf('/'));
     await RNFS.mkdir(dirPath, { NSURLIsExcludedFromBackupKey: true });
 
-    const downloadNotificationId = await PushNotifications.send({
+    const downloadNotificationId = await PushNotifications.send('progress', {
       title: 'Downloading model',
       body: `Downloading ${model.modelId}`,
       android: {
@@ -97,13 +116,14 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
 
     try {
       activateKeepAwake();
+      uiStore.setSessionKey('@downloadInProgress', true, uiStore.globalEvents.MODEL_DOWNLOAD_STARTED);
       await RNFS.downloadFile({
         fromUrl: model.downloadUrl,
         toFile: storageLocation,
         progress: res => {
           const progress = Math.round((res.bytesWritten / res.contentLength) * 100);
           setDownloadProgress(progress);
-          PushNotifications.send({
+          PushNotifications.send('progress', {
             id: downloadNotificationId,
             title: 'Downloading model',
             body: `Downloading ${model.modelId}`,
@@ -121,14 +141,14 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
       }).promise;
 
       setDownloadedModels(prev => ({ ...prev, [model.modelId]: true }));
-      PushNotifications.send({
+      PushNotifications.send('primary', {
         title: 'Download complete',
         body: `Downloaded ${model.modelId}`,
       });
       return await selectModel(model);
     } catch (error) {
       console.error('Download failed:', error);
-      PushNotifications.send({
+      PushNotifications.send('primary', {
         title: 'Download failed',
         body: `There was an error downloading the model.`,
       });
@@ -143,7 +163,8 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
       return false;
     } finally {
       deactivateKeepAwake();
-      PushNotifications.cancel(downloadNotificationId);
+      PushNotifications.cancel('progress', downloadNotificationId);
+      uiStore.deleteSessionKey('@downloadInProgress', uiStore.globalEvents.MODEL_DOWNLOAD_COMPLETE);
     }
   };
 
@@ -186,14 +207,16 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     }
   };
 
-  const selectModel = async (model: any) => {
+  const selectModel = async (model: { modelId?: string }) => {
     try {
       // Set selected model state first
       setSelectedModel(model?.modelId || null);
 
+      console.log('selectModel::llmPreferences', llmPreferences);
+      console.log('selectModel::model.modelId', model?.modelId);
       // Then update preferences
       await uiStore.setToStorage('llmPreference', {
-        ...llmPreferences,
+        provider: llmPreferences?.provider ?? 'native', // if the provider is not set, default to native
         config: { ...llmPreferences.config, model: model?.modelId || null },
       });
 
@@ -208,7 +231,11 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     }
   };
 
-  const checkModelDownloaded = async (downloadUrl: string) => {
+  /**
+   * Check if a model is downloaded
+   * @param downloadUrl - The download URL of the model to check against
+   */
+  const checkModelDownloaded = async (downloadUrl: string): Promise<boolean> => {
     const storageLocation = resolveDestinationPathFromGGUFUrl(downloadUrl);
     return await RNFS.exists(storageLocation);
   };
@@ -221,5 +248,6 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     downloadModel,
     uninstallModel,
     selectModel,
+    runPreDownloadConfirmations,
   };
 }

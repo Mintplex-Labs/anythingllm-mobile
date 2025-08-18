@@ -75,3 +75,6 @@ package-lock.json
 .env.*
 !.env.example
 .nvmrc
+
+release/
+android/app/src/main/assets/index.android.bundle

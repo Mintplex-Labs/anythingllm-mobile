@@ -1,13 +1,13 @@
 {
   "name": "AnythingLLM",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "prepare": "husky",
     "postinstall": "patch-package",
     "android": "react-native run-android",
     "dev:install:android": "node scripts/devAndroidInstall.js",
-    "build:android:release": "cd android && ./gradlew bundleRelease && cd ..",
+    "build:android:release": "node scripts/buildAndroidRelease.js",
     "clean:android": "cd android && ./gradlew clean && cd ..",
     "clean": "yarn clean:android",
     "lint": "eslint .",

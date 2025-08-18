@@ -12,6 +12,7 @@ interface SafeViewProps {
   containerClassNames?: string;
   applyInsets?: boolean;
   applyGradient?: boolean;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 export default function SafeView({
@@ -20,6 +21,7 @@ export default function SafeView({
   safeAreaStyle = {},
   safeAreaClassNames = 'bg-[--primary-bg]',
   containerClassNames = '',
+  containerStyle = {},
   applyInsets = true,
   applyGradient = false,
   children
@@ -44,7 +46,7 @@ export default function SafeView({
           {children}
         </ScrollView>
       ) : (
-        <View className={`${containerClassInitial} ${containerClassNames}`}>
+        <View className={`${containerClassInitial} ${containerClassNames}`} style={containerStyle}>
           {children}
         </View>
       )}

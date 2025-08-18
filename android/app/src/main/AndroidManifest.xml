@@ -9,6 +9,7 @@
     </queries>
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -34,7 +35,7 @@
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
       android:name=".MainApplication"
-      android:roundIcon="@mipmap/ic_launcher_round"
+      android:roundIcon="@mipmap/ic_launcher"
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
       <activity

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { NavigationContainer } from '@react-navigation/native';
 import { ActivityIndicator, Provider as PaperProvider } from 'react-native-paper';
+import { StatusBar } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
@@ -52,6 +53,7 @@ const App = observer(() => {
       <Suspense fallback={<ActivityIndicator />}>
         <GestureHandlerRootView style={styles.root}>
           <SafeAreaProvider>
+            <StatusBar barStyle='default' backgroundColor="transparent" translucent />
             <KeyboardProvider statusBarTranslucent navigationBarTranslucent>
               <PaperProvider theme={theme}>
                 <LLMPreferenceProvider>

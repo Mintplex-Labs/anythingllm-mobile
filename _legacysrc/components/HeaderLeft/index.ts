@@ -1,1 +1,0 @@
-export {HeaderLeft} from './HeaderLeft';

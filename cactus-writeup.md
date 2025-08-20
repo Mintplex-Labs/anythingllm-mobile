@@ -217,5 +217,3 @@ This is the same as the above `stops` issue - so changing `stops` to `[...stops]
 Other questions
 num_gpu_layers: 99 // is this still only IOS supported (ref: llama.rn)
 n_threads: 4 // How can we determine this value?
-
-62TPS on S25 with "What is Anythingllm" with CactusLM

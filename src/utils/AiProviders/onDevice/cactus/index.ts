@@ -1,4 +1,5 @@
-import { CompletionParams, initLlama, LlamaContext } from 'cactus-react-native'
+import { CompletionParams, CactusLM } from 'cactus-react-native';
+
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { Model } from '@/utils/types';
 import { defaultModels } from '@/utils/models';
@@ -36,7 +37,7 @@ export default class CactusLmWrapper {
   private parent: OnDeviceProvider;
   private model: string;
   private ggufFilePath: string | null = null;
-  private cactusLmContext: LlamaContext | null = null;
+  private cactusLmContext: CactusLM | null = null;
   private keepAliveTimer: NodeJS.Timeout | null = null;
   private keepAliveInterval = 1000 * 60 * 5;
 
@@ -115,15 +116,16 @@ export default class CactusLmWrapper {
       if (!this.ggufFilePath) await this.determineGgufFilePath();
       if (!this.ggufFilePath) throw new Error(`CactusLmWrapper::initialize: No gguf file found for model ${this.model}`);
 
-      const lm = await initLlama({
+      const { lm, error } = await CactusLM.init({
         model: this.ggufFilePath,
         use_mlock: true,
         n_ctx: this.contextLength,
         n_gpu_layers: Platform.OS === 'ios' ? 99 : 0,
         embedding: false,
-      })
+      });
 
-      this.cactusLmContext = lm
+      if (error) throw error;
+      this.cactusLmContext = lm;
       this.log(`${this.name} initialized with model ${this.model} @ ${this.contextLength} context length`);
       return true;
     } catch (error) {
@@ -170,14 +172,14 @@ export default class CactusLmWrapper {
     if (!this.cactusLmContext) await this.initialize();
     if (!this.cactusLmContext) throw new Error(`CactusLmWrapper::streamGetChatCompletion: Model not initialized`);
 
-    const msgResult = await this.cactusLmContext.completion({
-      messages: messages,
-      n_predict: this.nPredict,
-      stop: stops,
-      jinja: this.cactusLmContext.isJinjaSupported(),
-      ...this.defaultRuntimeConfig,
-      temperature: this.temperature,
-    });
+    const msgResult = await this.cactusLmContext.completion(
+      messages,
+      {
+        stop: [...stops],
+        n_predict: this.nPredict,
+        ...this.defaultRuntimeConfig as any,
+        temperature: this.temperature,
+      });
 
     return {
       textResponse: msgResult.content,
@@ -203,19 +205,19 @@ export default class CactusLmWrapper {
     if (!this.cactusLmContext) await this.initialize();
     if (!this.cactusLmContext) throw new Error(`CactusLmWrapper::streamGetChatCompletion: Model not initialized`);
 
-    const msgResult = await this.cactusLmContext.completion({
-      messages: messages,
-      stop: [...stops],
-      n_predict: this.nPredict,
-      jinja: this.cactusLmContext.isJinjaSupported(),
-      tools: availableTools,
-      tool_choice: 'auto',
-      ...this.defaultRuntimeConfig as any,
-      temperature: this.temperature,
-    }, (data: { token: string }) => {
-      const { token } = data;
-      callback(token);
-    });
+    const msgResult = await this.cactusLmContext.completion(
+      messages,
+      {
+        stop: [...stops],
+        n_predict: this.nPredict,
+        tools: availableTools,
+        tool_choice: 'auto',
+        jinja: true, // How do we know if this is supported?
+        ...this.defaultRuntimeConfig as any,
+        temperature: this.temperature,
+      }, ({ token }: { token: string }) => {
+        callback(token);
+      });
 
     return {
       textResponse: msgResult.content,

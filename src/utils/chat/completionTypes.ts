@@ -21,7 +21,7 @@ export type AppOnlyCompletionParams = {
    * When false, thinking parts are removed from the context to save context space.
    */
   include_thinking_in_context?: boolean;
-  // Add other PocketPal-only fields here
+  // Add other app-specific fields here
 };
 
 /**
@@ -40,7 +40,7 @@ const APP_ONLY_KEYS: (keyof AppOnlyCompletionParams)[] = [
 export type CompletionParams = ApiCompletionParams & AppOnlyCompletionParams;
 
 /**
- * Strips PocketPal-specific fields before sending to cactus.lm.
+ * Strips app-specific fields before sending to cactus.lm.
  *
  * @param params - The app completion parameters that may include app-specific properties
  * @returns A clean API completion parameters object with only properties supported by the API

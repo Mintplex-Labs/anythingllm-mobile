@@ -6,6 +6,7 @@ import OpenAILite from "@/utils/openai";
 import MODEL_CARDS from "@/utils/models/defaults";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
+import { CactusLM } from "cactus-react-native";
 
 export type IOnDeviceStreamCallback = IGenieStreamCallback | ICactusLmStreamCallback;
 export type OnDeviceProviderConstructorProps = { config: { model: string | null } }
@@ -20,8 +21,6 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   public model: string | null;
 
   protected submodule: GenieWrapper | CactusLmWrapper | null = null;
-  protected cactusLmContext: any;
-
   protected client: OpenAILite;
   protected isOTypeModel: boolean;
   protected temperature: number;

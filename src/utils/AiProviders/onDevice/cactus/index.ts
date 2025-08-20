@@ -5,7 +5,7 @@ import { Model } from '@/utils/types';
 import { defaultModels } from '@/utils/models';
 import { Platform } from 'react-native';
 import { stops } from '@/utils/chat';
-import { ICompleteResponse, IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
+import { ICompleteResponse } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import type OnDeviceProvider from '@/utils/AiProviders/onDevice/index';
 
 export type NativeLlamaChatMessage = {

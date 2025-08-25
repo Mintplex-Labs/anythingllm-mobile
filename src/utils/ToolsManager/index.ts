@@ -1,5 +1,5 @@
 import uiStore from "@/store/UIStore";
-import { NativeCompletionResult } from "llama.rn";
+import { NativeCompletionResult } from "cactus-react-native";
 import { generateUUID } from "../constants";
 import { IStreamEvent } from "../AiProviders/baseOpenAILikeProvider";
 import Tools from './tools';

@@ -1,30 +1,35 @@
-import { CompletionParams, initLlama, LlamaContext, NativeCompletionResult } from 'llama.rn'
+import { CompletionParams, CactusLM } from 'cactus-react-native';
+
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { Model } from '@/utils/types';
 import { defaultModels } from '@/utils/models';
 import { Platform } from 'react-native';
-import { NativeLlamaChatMessage } from 'llama.rn/lib/typescript/NativeRNLlama';
 import { stops } from '@/utils/chat';
 import { ICompleteResponse } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import type OnDeviceProvider from '@/utils/AiProviders/onDevice/index';
 
-export type ILlamaRnStreamCallback = (token: string) => void;
-export default class LlamaRnWrapper {
+export type NativeLlamaChatMessage = {
+  role: string
+  content: string
+}
+
+export type ICactusLmStreamCallback = (token: string) => void;
+export default class CactusLmWrapper {
   /**
-   * Hardcoded default values for the LlamaRnWrapper class so everything is consistent when unset
-   * https://github.com/mybigday/llama.rn/blob/b12219527d9d38d1915c1a69055e6a59db7f7cd1/android/src/main/java/com/rnllama/LlamaContext.java#L68
+   * Hardcoded default values for the CactusLmWrapper class so everything is consistent when unset
+   * https://github.com/cactus-compute/cactus/tree/main/react/src/NativeCactus.ts#L10
    */
 
   /** 
-   * This is the default context length for the LlamaRnWrapper class, not the workspace settings.
-   * On overflow, the chats are auto-truncated by the LlamaRnWrapper class. Maybe we can warn the user when
+   * This is the default context length for the CactusLmWrapper class, not the workspace settings.
+   * On overflow, the chats are auto-truncated by the CactusLmWrapper class. Maybe we can warn the user when
    * they are overflowing?
    */
   static DEFAULT_CONTEXT_LENGTH = 1024;
   static DEFAULT_TEMPERATURE = 0.7;
 
   /**
-   * This is -1 (no limit) in the LlamaRnWrapper class, but we definitely want to limit it on mobile
+   * This is -1 (no limit) in the CactusLmWrapper class, but we definitely want to limit it on mobile
    * Once we implement a way to abort the stream & have it user-controlled via workspace settings, we can set this to -1 or a higher number
    */
   static DEFAULT_N_PREDICT = 2048;
@@ -32,7 +37,7 @@ export default class LlamaRnWrapper {
   private parent: OnDeviceProvider;
   private model: string;
   private ggufFilePath: string | null = null;
-  private llamaRnContext: LlamaContext | null = null;
+  private cactusLmContext: CactusLM | null = null;
   private keepAliveTimer: NodeJS.Timeout | null = null;
   private keepAliveInterval = 1000 * 60 * 5;
 
@@ -81,7 +86,7 @@ export default class LlamaRnWrapper {
   }
 
   get name() {
-    return 'llama.rn';
+    return 'cactus.lm';
   }
 
   get modelDefinition(): Model {
@@ -89,36 +94,38 @@ export default class LlamaRnWrapper {
   }
 
   get temperature() {
-    return this.parent.workspace?.temperature ?? LlamaRnWrapper.DEFAULT_TEMPERATURE;
+    return this.parent.workspace?.temperature ?? CactusLmWrapper.DEFAULT_TEMPERATURE;
   }
 
   get nPredict() {
-    return LlamaRnWrapper.DEFAULT_N_PREDICT;
-    // return this.parent.workspace?.nPredict ?? LlamaRnWrapper.DEFAULT_N_PREDICT;
+    return CactusLmWrapper.DEFAULT_N_PREDICT;
+    // return this.parent.workspace?.nPredict ?? CactusLmWrapper.DEFAULT_N_PREDICT;
   }
 
   get contextLength() {
-    return this.parent.workspace?.contextLength ?? LlamaRnWrapper.DEFAULT_CONTEXT_LENGTH;
+    return this.parent.workspace?.contextLength ?? CactusLmWrapper.DEFAULT_CONTEXT_LENGTH;
   }
 
   async initialize(): Promise<boolean> {
     try {
-      if (!!this.llamaRnContext) {
+      if (!!this.cactusLmContext) {
         this.log(`Context already loaded - skipping`);
         return true;
       }
 
       if (!this.ggufFilePath) await this.determineGgufFilePath();
-      if (!this.ggufFilePath) throw new Error(`LlamaRnWrapper::initialize: No gguf file found for model ${this.model}`);
+      if (!this.ggufFilePath) throw new Error(`CactusLmWrapper::initialize: No gguf file found for model ${this.model}`);
 
-      this.llamaRnContext = await initLlama({
+      const { lm, error } = await CactusLM.init({
         model: this.ggufFilePath,
         use_mlock: true,
         n_ctx: this.contextLength,
         n_gpu_layers: Platform.OS === 'ios' ? 99 : 0,
         embedding: false,
-      })
+      });
 
+      if (error) throw error;
+      this.cactusLmContext = lm;
       this.log(`${this.name} initialized with model ${this.model} @ ${this.contextLength} context length`);
       return true;
     } catch (error) {
@@ -162,16 +169,17 @@ export default class LlamaRnWrapper {
    */
   async getChatCompletion(messages: NativeLlamaChatMessage[]): Promise<ICompleteResponse> {
     this.keepAlive();
-    if (!this.llamaRnContext) await this.initialize();
-    if (!this.llamaRnContext) throw new Error(`LlamaRnWrapper::streamGetChatCompletion: Model not initialized`);
+    if (!this.cactusLmContext) await this.initialize();
+    if (!this.cactusLmContext) throw new Error(`CactusLmWrapper::streamGetChatCompletion: Model not initialized`);
 
-    const msgResult: NativeCompletionResult = await this.llamaRnContext.completion({
-      messages: messages,
-      n_predict: this.nPredict,
-      stop: stops,
-      ...this.defaultRuntimeConfig,
-      temperature: this.temperature,
-    });
+    const msgResult = await this.cactusLmContext.completion(
+      messages,
+      {
+        stop: [...stops],
+        n_predict: this.nPredict,
+        ...this.defaultRuntimeConfig as any,
+        temperature: this.temperature,
+      });
 
     return {
       textResponse: msgResult.content,
@@ -190,33 +198,26 @@ export default class LlamaRnWrapper {
    */
   async streamGetChatCompletion(
     messages: NativeLlamaChatMessage[],
-    callback: ILlamaRnStreamCallback,
-    availableTools: any[]
+    callback: ICactusLmStreamCallback,
+    availableTools: any[],
   ): Promise<ICompleteResponse> {
     this.keepAlive();
-    if (!this.llamaRnContext) await this.initialize();
-    if (!this.llamaRnContext) throw new Error(`LlamaRnWrapper::streamGetChatCompletion: Model not initialized`);
+    if (!this.cactusLmContext) await this.initialize();
+    if (!this.cactusLmContext) throw new Error(`CactusLmWrapper::streamGetChatCompletion: Model not initialized`);
 
-    const msgResult: NativeCompletionResult = await this.llamaRnContext.completion({
-      messages: messages,
-      n_predict: this.nPredict,
-      stop: [...stops],
-      jinja: this.llamaRnContext.isJinjaSupported(),
-      tool_choice: 'auto',
-      /*
-      This would normally work, but the type and Java implementation are wrong in the library
-      and needs to .getNumber() instead of .getBoolean() since ReactBridge casts a boolean to a number.
-      Even when patched though, the model will still only return one tool call at a time which is not what we want.
-      So we're not using it for now and instead will loop
-       parallel_tool_calls: true,
-      */
-      tools: availableTools,
-      ...this.defaultRuntimeConfig,
-      temperature: this.temperature, // workspace temperature overrides any model-specific settings
-    }, (data: { token: string }) => {
-      const { token } = data;
-      callback(token);
-    });
+    const msgResult = await this.cactusLmContext.completion(
+      messages,
+      {
+        stop: [...stops],
+        n_predict: this.nPredict,
+        tools: availableTools,
+        tool_choice: 'auto',
+        jinja: true, // How do we know if this is supported?
+        ...this.defaultRuntimeConfig as any,
+        temperature: this.temperature,
+      }, ({ token }: { token: string }) => {
+        callback(token);
+      });
 
     return {
       textResponse: msgResult.content,
@@ -233,12 +234,12 @@ export default class LlamaRnWrapper {
 
   async unloadModel(): Promise<void> {
     this.log('Unloading model');
-    if (this.llamaRnContext) await this.llamaRnContext.release();
-    this.llamaRnContext = null;
+    if (this.cactusLmContext) await this.cactusLmContext.release();
+    this.cactusLmContext = null;
   }
 
   async cleanup(): Promise<void> {
-    this.log('Cleaning up LlamaRnWrapper');
+    this.log('Cleaning up CactusLmWrapper');
     await this.unloadModel();
   }
 }

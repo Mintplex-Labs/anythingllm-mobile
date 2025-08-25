@@ -1,13 +1,14 @@
 import { defaultModels } from "@/utils/models";
 import GenieWrapper, { IGenieStreamCallback } from "./genie";
-import LlamaRnWrapper, { ILlamaRnStreamCallback } from "./llamaRn";
+import CactusLmWrapper, { ICactusLmStreamCallback } from "./cactus";
 import BaseOpenAILikeProvider, { ICompleteResponse, IStreamCallback, IStreamEvent } from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
 import MODEL_CARDS from "@/utils/models/defaults";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
+import { CactusLM } from "cactus-react-native";
 
-export type IOnDeviceStreamCallback = IGenieStreamCallback | ILlamaRnStreamCallback;
+export type IOnDeviceStreamCallback = IGenieStreamCallback | ICactusLmStreamCallback;
 export type OnDeviceProviderConstructorProps = { config: { model: string | null } }
 
 export default class OnDeviceProvider extends BaseOpenAILikeProvider {
@@ -19,9 +20,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   // @ts-ignore - this is a valid property for this class
   public model: string | null;
 
-  protected submodule: GenieWrapper | LlamaRnWrapper | null = null;
-  protected llamaRnContext: any;
-
+  protected submodule: GenieWrapper | CactusLmWrapper | null = null;
   protected client: OpenAILite;
   protected isOTypeModel: boolean;
   protected temperature: number;
@@ -61,7 +60,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     if (this.computeRuntime === 'NPU') {
       return new GenieWrapper({ model, parent: this });
     } else {
-      return new LlamaRnWrapper({ model, parent: this });
+      return new CactusLmWrapper({ model, parent: this });
     }
   }
 

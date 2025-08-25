@@ -15,7 +15,6 @@ export default function TextResponseContainer({ chat }: { chat: DynamicChatMessa
   if (!textResponse) return null;
 
   const handlePress = () => {
-    console.log(chat?.response?.metrics);
     if (!chat?.response?.metrics) return;
     setShowMetrics(!showMetrics);
   };

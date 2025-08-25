@@ -224,10 +224,13 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
           borderTopRightRadius: 30,
         }}>
         <Animated.View
+          key="primaryPromptInputContainer"
           ref={inputRef}
           style={{ paddingTop: paddingAnim }}
           className={"flex flex-col justify-between"}>
           <BottomSheetTextInput
+            key="primaryPromptInput"
+            keyboardType="default"
             multiline={true}
             placeholder={
               hasModelSelected
@@ -250,7 +253,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
               bottomSheetRef.current?.snapToIndex(0);
               Keyboard.dismiss();
             }}
-            value={chatHandler.prompt}
+            defaultValue={chatHandler.prompt}
             onChangeText={handleTextInputChange}
             onSelectionChange={event => setSelection(event.nativeEvent.selection)}
             selection={selection}

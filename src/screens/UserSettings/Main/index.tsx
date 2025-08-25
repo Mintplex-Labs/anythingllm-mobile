@@ -20,7 +20,6 @@ import { useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import useLLMPreference from '@/hooks/useLLMPreference';
 import { startCase } from 'lodash';
-import DeviceInfo from 'react-native-device-info';
 import Workspace from '@/database/models/Workspace';
 import WorkspaceThread from '@/database/models/WorkspaceThread';
 import Document from '@/database/models/Document';
@@ -28,6 +27,7 @@ import WorkspaceChat from '@/database/models/WorkspaceChat';
 import uninstallAllModels from '@/utils/models/manager';
 import { deleteProcessedFiles } from '@/utils/fs';
 import { showToast } from '@/utils/Notification';
+import ApkVersion from './ApkVersion';
 
 interface MainViewProps {
   goToPage: (page: IWorkspacePageKey) => void;
@@ -200,14 +200,7 @@ export function MainView({ goToPage }: MainViewProps) {
 
           {/* About AnythingLLM */}
           <View className="w-full flex flex-col" style={{ gap: 12 }}>
-            <View className="flex flex-row items-end justify-between">
-              <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">
-                About AnythingLLM
-              </Text>
-              <Text style={{ color: '#888' }} className="text-sm">
-                v{DeviceInfo.getVersion()}
-              </Text>
-            </View>
+            <ApkVersion />
             <View
               className="flex flex-col"
               style={{

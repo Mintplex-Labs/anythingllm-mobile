@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
 import { PATHS } from "@/utils/paths";
-import React from "react";
+import React, { useEffect } from "react";
 import { showToast } from "@/utils/Notification";
 
 export default function OnboardingWelcome() {
@@ -16,6 +16,11 @@ export default function OnboardingWelcome() {
     navigation.navigate(PATHS.onboarding.model_selection as never);
   };
   useHighjackBackButtonPress(() => { showToast('Please proceed through the onboarding flow to continue.', 'short'); return true; });
+
+  useEffect(() => {
+    debugger
+
+  }, []);
 
   return (
     <React.Fragment>

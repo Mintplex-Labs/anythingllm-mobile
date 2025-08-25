@@ -35,6 +35,7 @@ export default function DataHandling() {
     ]);
 
     uiStore.setToStorage('onboarding_data_handling_completed', true);
+    uiStore.emitGlobalEvent(uiStore.globalEvents.ONBOARDING_COMPLETED);
     console.log(`Navigating to workspace chat: ${workspace.slug} / ${workspace.threads[0].slug}`);
     // @ts-ignore-next-line
     navigation.navigate(PATHS.workspace_chat, { wsSlug: workspace.slug, threadSlug: workspace.threads[0].slug });

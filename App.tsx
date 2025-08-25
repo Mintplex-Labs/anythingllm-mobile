@@ -24,6 +24,7 @@ import './src/utils/polyfills';
 import { BottomSheetProvider } from '@/contexts/BottomSheetContext';
 import { LLMPreferenceProvider } from '@/contexts/LLMPreferenceContext';
 import { useEnablePushNotifications } from '@/utils/PushNotifications';
+import { useOnboardingCompleted } from '@/hooks/useOnboardingHook';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
@@ -31,8 +32,9 @@ const App = observer(() => {
   const theme = useTheme();
   const styles = rootStyles(theme);
   const { initialRoute, isLoading } = useInitialRoute();
+  const { onboardingCompleted, loadingOnboardingCompleted } = useOnboardingCompleted();
 
-  if (isLoading)
+  if (isLoading || loadingOnboardingCompleted)
     return (
       <SafeAreaProvider>
         <SafeView
@@ -60,41 +62,68 @@ const App = observer(() => {
                   <BottomSheetModalProvider>
                     <NavigationContainer>
                       <WorkspaceDrawer initialRouteName={initialRoute.path}>
+                        {!onboardingCompleted && (
+                          <>
+                            <Drawer.Screen
+                              name={PATHS.onboarding.welcome}
+                              component={gestureHandlerRootHOC(
+                                Screens.OnboardingWelcome,
+                              )}
+                              options={{
+                                headerShown: false,
+                                swipeEnabled: false,
+                                gestureHandlerProps: {
+                                  enabled: false,
+                                }
+                              }}
+                            />
+                            <Drawer.Screen
+                              name={PATHS.onboarding.model_selection}
+                              component={gestureHandlerRootHOC(
+                                Screens.OnboardingModelSelection,
+                              )}
+                              options={{
+                                headerShown: false,
+                                swipeEnabled: false,
+                                gestureHandlerProps: {
+                                  enabled: false,
+                                }
+                              }}
+                            />
+                            <Drawer.Screen
+                              name={PATHS.onboarding.survey}
+                              component={gestureHandlerRootHOC(
+                                Screens.OnboardingSurvey,
+                              )}
+                              options={{
+                                headerShown: false,
+                                swipeEnabled: false,
+                                gestureHandlerProps: {
+                                  enabled: false,
+                                }
+                              }}
+                            />
+                            <Drawer.Screen
+                              name={PATHS.onboarding.data_handling}
+                              component={gestureHandlerRootHOC(
+                                Screens.OnboardingDataHandling,
+                              )}
+                              options={{
+                                headerShown: false,
+                                swipeEnabled: false,
+                                gestureHandlerProps: {
+                                  enabled: false,
+                                }
+                              }}
+                            />
+                          </>
+                        )}
+
                         <Drawer.Screen
                           name={PATHS.home}
                           component={gestureHandlerRootHOC(Screens.Home)}
                           options={{ headerShown: false }}
                         />
-
-                        <Drawer.Screen
-                          name={PATHS.onboarding.welcome}
-                          component={gestureHandlerRootHOC(
-                            Screens.OnboardingWelcome,
-                          )}
-                          options={{ headerShown: false }}
-                        />
-                        <Drawer.Screen
-                          name={PATHS.onboarding.model_selection}
-                          component={gestureHandlerRootHOC(
-                            Screens.OnboardingModelSelection,
-                          )}
-                          options={{ headerShown: false }}
-                        />
-                        <Drawer.Screen
-                          name={PATHS.onboarding.survey}
-                          component={gestureHandlerRootHOC(
-                            Screens.OnboardingSurvey,
-                          )}
-                          options={{ headerShown: false }}
-                        />
-                        <Drawer.Screen
-                          name={PATHS.onboarding.data_handling}
-                          component={gestureHandlerRootHOC(
-                            Screens.OnboardingDataHandling,
-                          )}
-                          options={{ headerShown: false }}
-                        />
-
                         <Drawer.Screen
                           name={PATHS.workspace_chat}
                           component={gestureHandlerRootHOC(

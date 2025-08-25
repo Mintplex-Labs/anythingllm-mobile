@@ -38,10 +38,13 @@ export default function SimpleModelSelection() {
   }
 
   useEffect(() => {
-    if (LLMProvider) {
-      const models = LLMProvider.availableModels() as AvailableModel[];
-      setAvailableModels(models.filter(model => model.isPreset));
-    } else setAvailableModels([]);
+    const fetchModels = async () => {
+      if (LLMProvider) {
+        const models = (await LLMProvider.availableModels() ?? []) as AvailableModel[];
+        setAvailableModels(models.filter(model => model.isPreset));
+      } else setAvailableModels([]);
+    }
+    fetchModels();
   }, [LLMProvider]);
 
   return (

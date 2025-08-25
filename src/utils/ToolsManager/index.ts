@@ -1,7 +1,7 @@
 import uiStore from "@/store/UIStore";
 import { NativeCompletionResult } from "cactus-react-native";
 import { generateUUID } from "../constants";
-import { IStreamEvent } from "../AiProviders/baseOpenAILikeProvider";
+import { ICompleteResponse, IStreamCallback, IStreamEvent } from "../AiProviders/baseOpenAILikeProvider";
 import Tools from './tools';
 import { safeJsonParse } from "../formatters";
 
@@ -31,6 +31,15 @@ type ToolManagerTool = {
 
     /** Execute the tool with given arguments - should return a string */
     execute: (args: any, streamEmitter: (event: IStreamEvent, data: any) => void) => Promise<string> | string;
+}
+
+type ToolCallLoopProps = {
+    currentResponse: ICompleteResponse;
+    runStreamCompletion: (messages: any[], callback: IStreamCallback, availableTools: any[]) => Promise<ICompleteResponse>;
+    streamEmitter: (event: IStreamEvent, data: any) => void;
+    currentMessageHistory: any[];
+    /** Whether to merge the tool call results into the previous message (this is the default behavior) */
+    mergeToolCallResults?: boolean;
 }
 
 class ToolsManager {
@@ -175,7 +184,7 @@ class ToolsManager {
         streamEmitter,
         currentMessageHistory,
         mergeToolCallResults = true,
-    }): Promise<any[]> {
+    }: ToolCallLoopProps): Promise<ICompleteResponse> {
         let willLoop = currentResponse.toolCalls && currentResponse.toolCalls.length > 0;
         if (!willLoop) return currentResponse;
 
@@ -184,7 +193,7 @@ class ToolsManager {
         let nextMessages = [...currentMessageHistory];
 
         do {
-            nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls, streamEmitter, nextMessages);
+            nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages);
             for (const [index, message] of nextMessages.entries()) {
                 if (message.role === 'tool' && mergeToolCallResults) {
                     const previousMessage = nextMessages[index - 1];

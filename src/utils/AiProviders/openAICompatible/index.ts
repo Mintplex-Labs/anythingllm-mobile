@@ -6,7 +6,7 @@ export interface OpenAICompatibleConfig {
   config?: {
     baseURL?: string;
     apiKey?: string;
-    modelId?: string;
+    model?: string;
     isOTypeModel?: boolean;
   }
 }
@@ -33,7 +33,7 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
 
     if (config.baseURL) this.baseURL = config.baseURL;
     if (config.apiKey) this.apiKey = config.apiKey;
-    this.model = config.modelId || 'Unknown Model';
+    this.model = config.model || 'Unknown Model';
     this.connectionProvider = provider;
 
     this.client = new OpenAILite({
@@ -47,7 +47,7 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
     console.log(`\x1b[36m[${this.constructor.name}]\x1b[0m ${text}`, ...args);
   }
 
-  availableModels() {
+  override async availableModels(): Promise<any[]> {
     return [];
   }
 

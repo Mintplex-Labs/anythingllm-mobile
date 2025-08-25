@@ -18,7 +18,7 @@ export default {
                 type: 'object',
                 properties: {
                     search: {
-                        type: 'enum',
+                        type: 'string',
                         description: 'The search query to filter the calendar events. Optional.',
                         enum: ['today', 'tomorrow', 'this week', 'next week', 'this month', 'next month', 'specific date'],
                     },

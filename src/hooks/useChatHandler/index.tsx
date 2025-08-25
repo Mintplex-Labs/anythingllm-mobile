@@ -173,6 +173,11 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                 switch (event) {
                     case 'abort':
                         throw new Error('Chat aborted');
+                    case 'timed_out':
+                        debug('Chat stream timed out');
+                        merge(newChat, { isLoading: false, type: 'error', response: { textResponse: 'The request timed out before a response was received. Connection may be lost.' } });
+                        emitUpdate = true;
+                        break;
                     case 'complete':
                         debug('Chat stream complete');
                         merge(newChat, { isLoading: false });
@@ -261,6 +266,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
             let caller = () => llmProvider.chat({
                 messages: messageHistory,
                 streaming: true,
+                onComplete: (response) => merge(newChat, { type: 'error', response: { textResponse: response.textResponse, metrics: response.metrics } }),
                 onStream: (event, data) => handleStreamEvent(event, data),
             }) as Promise<any>;
 

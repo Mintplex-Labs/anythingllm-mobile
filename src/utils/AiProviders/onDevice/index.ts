@@ -1,12 +1,11 @@
 import { defaultModels } from "@/utils/models";
 import GenieWrapper, { IGenieStreamCallback } from "./genie";
 import CactusLmWrapper, { ICactusLmStreamCallback } from "./cactus";
-import BaseOpenAILikeProvider, { ICompleteResponse, IStreamCallback, IStreamEvent } from "../baseOpenAILikeProvider";
+import BaseOpenAILikeProvider, { IAvailableModel, ICompleteResponse, IStreamCallback, IStreamEvent } from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
 import MODEL_CARDS from "@/utils/models/defaults";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
-import { CactusLM } from "cactus-react-native";
 
 export type IOnDeviceStreamCallback = IGenieStreamCallback | ICactusLmStreamCallback;
 export type OnDeviceProviderConstructorProps = { config: { model: string | null } }
@@ -103,7 +102,8 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     this.log(`${this.name}::${this.submodule.name} re-initialized with model ${this.model}`);
   }
 
-  availableModels() {
+  // @ts-ignore
+  override async availableModels(): Promise<object[]> {
     const basicModels = MODEL_CARDS.map(m => ({
       id: m.id,
       name: m.name,
@@ -171,7 +171,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     // Recursive tool call loop
     await ToolsManager.toolCallLoop({
       currentResponse: fullResult,
-      runStreamCompletion: (messages: any[], callback: IOnDeviceStreamCallback, availableTools: any[]) => this.submodule!.streamGetChatCompletion(messages, callback, availableTools),
+      runStreamCompletion: (messages: any[], callback: IOnDeviceStreamCallback | IStreamCallback, availableTools: any[]) => this.submodule!.streamGetChatCompletion(messages, callback as any, availableTools),
       streamEmitter: (event: IStreamEvent, data: any) => onStream(event, data),
       currentMessageHistory: formattedMessages,
     });

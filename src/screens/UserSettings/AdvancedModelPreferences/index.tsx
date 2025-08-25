@@ -6,9 +6,12 @@ import { ArrowLeft } from 'phosphor-react-native';
 import { IWorkspacePageKey } from '../index';
 import useLLMPreference from '@/hooks/useLLMPreference';
 import ProviderSelection from '@/components/LLMSelection/ProviderSelection';
-import GenericOpenAiOptions from './providers/genericOpenAiOptions';
-import NativeOptions from './providers/nativeOptions';
 import { screenDimensions } from '@/utils/constants';
+
+import NativeOptions from './providers/nativeOptions';
+import LMStudioOptions from './providers/LMStudioOptions';
+import GenericOpenAiOptions from './providers/genericOpenAiOptions';
+import OllamaOptions from './providers/OllamaOptions';
 
 interface AdvancedModelPreferencesProps {
   goToPage: (page: IWorkspacePageKey) => void;
@@ -21,7 +24,6 @@ export default function AdvancedModelPreferences({
   const {
     llmPreferences,
     LLMProvider,
-    isLoading,
     fetchLLMPreference,
     updateLLMPreference,
   } = useLLMPreference();
@@ -30,6 +32,7 @@ export default function AdvancedModelPreferences({
       ...llmPreferences.config,
       ...settings,
     });
+    await fetchLLMPreference();
   }
 
   async function handleProviderSelection(provider: string) {
@@ -39,6 +42,18 @@ export default function AdvancedModelPreferences({
           apiKey: llmPreferences.config.apiKey,
           modelId: 'gpt-3.5-turbo',
           baseUrl: 'https://api.openai.com/v1/',
+        });
+        break;
+      case 'lmstudio':
+        await updateLLMPreference('lmstudio', {
+          baseUrl: '',
+          modelId: ''
+        });
+        break;
+      case 'ollama':
+        await updateLLMPreference('ollama', {
+          baseUrl: '',
+          model: '',
         });
         break;
       case 'generic-openai':
@@ -67,6 +82,22 @@ export default function AdvancedModelPreferences({
           onBaseUrlChange={updateProviderSettings}
           onModelChange={updateProviderSettings}
         />
+      case 'lmstudio':
+        return <LMStudioOptions
+          provider="lmstudio"
+          baseUrl={llmPreferences.config.baseUrl || ''}
+          model={llmPreferences.config.model || ''}
+          onBaseUrlChange={updateProviderSettings}
+          onModelChange={updateProviderSettings}
+        />
+      case 'ollama':
+        return <OllamaOptions
+          provider="ollama"
+          baseUrl={llmPreferences.config.baseUrl || ''}
+          model={llmPreferences.config.model || ''}
+          onBaseUrlChange={updateProviderSettings}
+          onModelChange={updateProviderSettings}
+        />
       case 'generic-openai':
         return (
           <GenericOpenAiOptions
@@ -91,7 +122,6 @@ export default function AdvancedModelPreferences({
     }
   };
 
-  if (isLoading) return <ActivityIndicator size="large" color="white" />;
   return (
     <SafeView
       scrollable={false}

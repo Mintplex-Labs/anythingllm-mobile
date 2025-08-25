@@ -7,7 +7,6 @@ import {
   CaretRight,
   File,
   Info,
-  LockKey,
   DiscordLogo,
   FileText,
   FileLock,
@@ -92,7 +91,7 @@ const LEGAL_LINKS: SupportLink[] = [
 export function MainView({ goToPage }: MainViewProps) {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-  const { llmPreferences } = useLLMPreference();
+  const { llmPreferences, providerToName } = useLLMPreference();
   const scrollViewRef = useRef<ScrollView>(null);
   function goBack() {
     navigation.reset({
@@ -178,7 +177,7 @@ export function MainView({ goToPage }: MainViewProps) {
               onPress={() => goToPage('advanced_model_preferences')}>
               <View className="flex flex-row gap-2 items-center">
                 <Text className="text-white text-lg">
-                  {startCase(llmPreferences.provider)}
+                  {providerToName(llmPreferences.provider)}
                 </Text>
               </View>
               <View className="flex flex-1 flex-row gap-2 items-center justify-between">

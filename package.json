@@ -65,6 +65,7 @@
     "react-native-config": "^1.5.1",
     "react-native-device-info": "^14.0.4",
     "react-native-document-picker": "^9.3.1",
+    "react-native-fetch-api": "^3.0.0",
     "react-native-fs": "2.20.0",
     "react-native-gesture-handler": "^2.20.2",
     "react-native-get-random-values": "^1.11.0",

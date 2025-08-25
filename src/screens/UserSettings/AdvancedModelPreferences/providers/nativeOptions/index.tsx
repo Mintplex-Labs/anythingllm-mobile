@@ -2,6 +2,9 @@ import useModelManager from '@/hooks/useModelManager';
 import { Text, TouchableOpacity } from 'react-native';
 import ModelCard from '@/components/ModelCard';
 import { useState, useEffect, Fragment } from 'react';
+import OnDeviceProvider from '@/utils/AiProviders/onDevice';
+import { resolveDestinationPathFromGGUFUrl } from '@/utils/models/defaults';
+import * as RNFS from '@dr.pogodin/react-native-fs';
 
 interface NativeOptionsProps {
   llmPreferences: any;
@@ -16,21 +19,28 @@ export default function NativeOptions({
 }: NativeOptionsProps) {
   const [availableModels, setAvailableModels] = useState<any[]>([]);
   const [showAllModels, setShowAllModels] = useState(false);
-
   const {
     modelDownloadUrl,
     downloadProgress,
-    downloadedModels,
     selectedModel,
     downloadModel,
     uninstallModel,
   } = useModelManager({ llmPreferences, fetchLLMPreference, LLMProvider });
 
   useEffect(() => {
-    if (LLMProvider) {
-      const models = LLMProvider.availableModels();
-      setAvailableModels(models);
-    } else setAvailableModels([]);
+    async function fetchModels() {
+      if (LLMProvider) {
+        const models = await (LLMProvider as OnDeviceProvider).availableModels();
+        for (const model of models) {
+          // @ts-ignore
+          const path = resolveDestinationPathFromGGUFUrl(model.downloadUrl);
+          // @ts-ignore
+          model.isDownloaded = await RNFS.exists(path);
+        }
+        setAvailableModels(models);
+      } else setAvailableModels([]);
+    }
+    fetchModels();
   }, [LLMProvider]);
 
   const displayedModels = showAllModels
@@ -44,7 +54,7 @@ export default function NativeOptions({
           key={`settings-${model.modelId}-${index}`}
           model={model}
           isSelected={selectedModel === model.modelId}
-          isDownloaded={downloadedModels[model.modelId]}
+          isDownloaded={model.isDownloaded}
           modelDownloadUrl={modelDownloadUrl}
           downloadProgress={downloadProgress}
           onSelect={() => downloadModel(model)}

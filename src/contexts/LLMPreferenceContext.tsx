@@ -3,6 +3,8 @@ import uiStore from '@/store/UIStore';
 import getLLM, { LLMProvider } from '@/utils/AiProviders';
 import { OnDeviceProviderConstructorProps } from '@/utils/AiProviders/onDevice';
 import { OpenAICompatibleConfig } from '@/utils/AiProviders/openAICompatible';
+import { OllamaProviderConfig } from '@/utils/AiProviders/OllamaProvider';
+import { LMStudioProviderConfig } from '@/utils/AiProviders/LMStudioProvider';
 
 interface LLMPreferenceContextType {
     llmPreferences: { provider: string; config: any };
@@ -11,9 +13,27 @@ interface LLMPreferenceContextType {
     error: Error | null;
     fetchLLMPreference: () => Promise<void>;
     updateLLMPreference: (provider: string, config: any) => Promise<void>;
+    providerToName: (provider: string) => string;
 }
 
 const LLMPreferenceContext = createContext<LLMPreferenceContextType | null>(null);
+
+function providerToName(provider: string) {
+    switch (provider) {
+        case 'openai':
+            return 'OpenAI';
+        case 'generic-openai':
+            return 'OpenAI (Generic)';
+        case 'lmstudio':
+            return 'LMStudio';
+        case 'ollama':
+            return 'Ollama';
+        case 'native':
+            return 'On-Device';
+        default:
+            return 'Unknown';
+    }
+}
 
 export function LLMPreferenceProvider({ children }: { children: ReactNode }) {
     const [llmPreferences, setLlmPreferences] = useState<{ provider: string; config: any }>({
@@ -66,7 +86,17 @@ export function LLMPreferenceProvider({ children }: { children: ReactNode }) {
                 case 'openai':
                     const openAIConfig = event.details.config as OpenAICompatibleConfig['config'];
                     llmProvider = getLLM(event.details.provider, openAIConfig);
-                    llmProvider.loadNewModel(openAIConfig!.modelId!);
+                    llmProvider.loadNewModel(openAIConfig!.model!);
+                    break;
+                case 'ollama':
+                    const ollamaConfig = event.details.config as OllamaProviderConfig['config'];
+                    llmProvider = getLLM(event.details.provider, ollamaConfig);
+                    llmProvider.loadNewModel(ollamaConfig!.model!);
+                    break;
+                case 'lmstudio':
+                    const lmStudioConfig = event.details.config as LMStudioProviderConfig['config'];
+                    llmProvider = getLLM(event.details.provider, lmStudioConfig);
+                    llmProvider.loadNewModel(lmStudioConfig!.model!);
                     break;
             }
             setLLMProvider(llmProvider);
@@ -90,6 +120,7 @@ export function LLMPreferenceProvider({ children }: { children: ReactNode }) {
                 error,
                 fetchLLMPreference,
                 updateLLMPreference,
+                providerToName,
             }}
         >
             {children}

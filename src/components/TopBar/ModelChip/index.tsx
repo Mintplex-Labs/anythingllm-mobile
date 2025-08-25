@@ -13,6 +13,7 @@ import {
   ActivityIndicator,
   TextInput,
   Keyboard,
+  Image,
 } from 'react-native';
 import {
   BottomSheetBackdrop,
@@ -28,14 +29,14 @@ import {
   BOTTOM_SHEET_NAMES,
 } from '@/contexts/BottomSheetContext';
 import ModelCard from '@/components/ModelCard';
-import { LLMProvider as LLMProviderType } from '@/utils/AiProviders';
 import { defaultModels } from '@/utils/models';
 import { Model } from '@/utils/types';
 import { WorkspaceType } from '@/database/models/Workspace';
 import { showToast } from '@/utils/Notification';
-import uiStore, { UIStore } from '@/store/UIStore';
+import uiStore from '@/store/UIStore';
+import { AVAILABLE_LLM_PROVIDERS } from '@/utils/llmproviders';
 
-function getPresetModelName(llmPreferences: { provider: string; config: any }, LLMProvider: LLMProviderType | null) {
+function getPresetModelName(llmPreferences: { provider: string; config: any }) {
   if (llmPreferences.provider !== 'native') return llmPreferences.config.model;
   const modelDefinition = defaultModels.find(model => model.id === llmPreferences.config.model) as Model;
   return modelDefinition?.name || llmPreferences.config.model;
@@ -97,7 +98,7 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
     if (workspace?.isRemote) {
       fetchRemoteModelName();
       uiStore.emitter.addListener(uiStore.globalEvents.CHAT_HISTORY_REFRESHED, fetchRemoteModelName);
-    } else setModelName(getPresetModelName(llmPreferences, LLMProvider));
+    } else setModelName(getPresetModelName(llmPreferences));
 
     return () => uiStore.emitter.removeAllListeners(uiStore.globalEvents.CHAT_HISTORY_REFRESHED);
   }, [workspace]);
@@ -109,6 +110,7 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
     <Fragment>
       <TouchableOpacity
         onPress={() => {
+          if (LLMProvider?.isExternalProvider) return showToast('Please manage your model preferences in the settings page.');
           if (workspace?.isRemote) return showToast('This workspace is managed remotely. You cannot change the model here.');
           presentSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)
         }}
@@ -116,6 +118,7 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
         className={`rounded-full ${!modelName ? 'bg-red-500/20' : 'bg-white/10'
           }`}>
         <View className="flex flex-row items-center justify-center" style={{ gap: 4, paddingVertical: 4, paddingHorizontal: 12 }}>
+          <ProviderIcon provider={llmPreferences.provider} />
           <Text
             style={{ fontSize: 14 }}
             className={`${!modelName ? 'text-red-500' : 'text-white'}`}
@@ -178,10 +181,13 @@ function AvailableModels({
   } = useModelManager({ llmPreferences, fetchLLMPreference, LLMProvider });
 
   useEffect(() => {
-    if (LLMProvider) {
-      const models = LLMProvider.availableModels() as AvailableModel[];
-      setAvailableModels(models);
-    } else setAvailableModels([]);
+    const fetchModels = async () => {
+      if (LLMProvider) {
+        const models = await LLMProvider.availableModels() as AvailableModel[];
+        setAvailableModels(models);
+      } else setAvailableModels([]);
+    };
+    fetchModels();
   }, [LLMProvider]);
 
   const filteredModels = useMemo(() => {
@@ -304,4 +310,13 @@ function AvailableModels({
       )}
     </View>
   );
+}
+
+function ProviderIcon({ provider }: { provider: string }) {
+  if (provider === 'native') return null; // No icon for on-device.
+
+  const supportedProviders: { [key: string]: any } = {};
+  AVAILABLE_LLM_PROVIDERS.map(provider => supportedProviders[provider.value] = provider.logo);
+  if (!(provider in supportedProviders)) return null;
+  return <Image source={supportedProviders[provider]} style={{ width: 15, height: 15, marginRight: 4 }} />;
 }

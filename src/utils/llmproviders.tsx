@@ -11,6 +11,18 @@ export const AVAILABLE_LLM_PROVIDERS = [
     logo: require('@/assets/llmprovider/openai.png'),
     description: "Leverage OpenAI's powerful models.",
   },
+  {
+    name: "LM Studio",
+    value: "lmstudio",
+    logo: require('@/assets/llmprovider/lmstudio.png'),
+    description: "Discover, download, and run thousands of cutting edge LLMs in a few clicks.",
+  },
+  {
+    name: "Ollama",
+    value: "ollama",
+    logo: require('@/assets/llmprovider/ollama.png'),
+    description: "Run LLMs locally on your own machine with Ollama.",
+  },
   // {
   //   name: "Azure OpenAI",
   //   value: "azure",
@@ -64,19 +76,6 @@ export const AVAILABLE_LLM_PROVIDERS = [
   //   options: (settings) => <OllamaLLMOptions settings={settings} />,
   //   description: "Run LLMs locally on your own machine.",
   //   requiredConfig: ["OllamaLLMBasePath"],
-  // },
-  // {
-  //   name: "Dell Pro AI Studio",
-  //   value: "dpais",
-  //   logo: DellProAiStudioLogo,
-  //   options: (settings) => <DellProAiStudioOptions settings={settings} />,
-  //   description:
-  //     "Run powerful LLMs quickly on NPU powered by Dell Pro AI Studio.",
-  //   requiredConfig: [
-  //     "DellProAiStudioBasePath",
-  //     "DellProAiStudioModelPref",
-  //     "DellProAiStudioTokenLimit",
-  //   ],
   // },
   // {
   //   name: "LM Studio",
@@ -235,12 +234,6 @@ export const AVAILABLE_LLM_PROVIDERS = [
     logo: require('@/assets/llmprovider/generic-openai.png'),
     description:
       "Connect to any OpenAi-compatible service via a custom configuration",
-    requiredConfig: [
-      "GenericOpenAiBasePath",
-      "GenericOpenAiModelPref",
-      "GenericOpenAiTokenLimit",
-      "GenericOpenAiKey",
-    ],
   },
   // {
   //   name: "xAI",

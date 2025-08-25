@@ -27,9 +27,9 @@ export const MODEL_CARDS = [
         name: 'Balanced',
         description: 'For a balance of speed and accuracy.',
         Icon: Scales,
-        size: '1.5GB',
-        modelId: 'unsloth/gemma-3-4b-it-GGUF',
-        tag: 'https://huggingface.co/unsloth/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q6_K.gguf',
+        size: '1.83GB',
+        modelId: 'unsloth/Qwen3-1.7B-GGUF',
+        tag: 'https://huggingface.co/unsloth/Qwen3-1.7B-GGUF/resolve/main/Qwen3-1.7B-Q8_0.gguf',
     },
     {
         id: 'powerful',

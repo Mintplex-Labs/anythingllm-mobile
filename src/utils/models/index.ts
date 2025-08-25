@@ -36,42 +36,6 @@ const androidOnlyModels: NPUEnabledModel[] = [
 const crossPlatformModels: Model[] = [
   // -------- Gemma --------
   {
-    id: 'unsloth/gemma-3-270m-it-GGUF',
-    runtime: 'CPU',
-    author: 'unsloth',
-    name: 'Gemma 3 270m',
-    description: '(Q8_K_XL) Gemma3 270m is a hyper-lightweight version of the Gemma3 4B model for more complex tasks.',
-    type: 'Gemma',
-    capabilities: ['questionAnswering', 'summarization', 'reasoning'],
-    size: 471e+6,
-    params: 270_000_000,
-    isDownloaded: false,
-    downloadUrl:
-      'https://huggingface.co/unsloth/gemma-3-270m-it-GGUF/resolve/main/gemma-3-270m-it-UD-Q8_K_XL.gguf',
-    hfUrl: 'https://huggingface.co/unsloth/gemma-3-270m-it-GGUF',
-    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/62ecdc18b72a69615d6bd857/E4lkPz1TZNLzIFr_dR273.png',
-    progress: 0,
-    filename: 'gemma-3-270m-it-UD-Q8_K_XL.gguf',
-    isLocal: false,
-    origin: ModelOrigin.HF,
-    defaultChatTemplate: { ...chatTemplates.gemma3 },
-    chatTemplate: chatTemplates.gemma3,
-    defaultCompletionSettings: {
-      temperature: 1,
-      top_p: 0.95,
-      top_k: 64,
-      min_p: 0,
-    },
-    completionSettings: {
-      temperature: 1,
-      top_p: 0.95,
-      top_k: 64,
-      min_p: 0,
-    },
-    defaultStopWords: ['<end_of_turn>'],
-    stopWords: ['<end_of_turn>'],
-  },
-  {
     id: 'unsloth/gemma-3-1b-it-GGUF',
     runtime: 'CPU',
     author: 'unsloth',
@@ -85,7 +49,7 @@ const crossPlatformModels: Model[] = [
     downloadUrl:
       'https://huggingface.co/unsloth/gemma-3-1b-it-GGUF/blob/main/gemma-3-1b-it-Q8_0.gguf',
     hfUrl: 'https://huggingface.co/unsloth/gemma-3-1b-it-GGUF',
-    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/62ecdc18b72a69615d6bd857/E4lkPz1TZNLzIFr_dR273.png',
+    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/5dd96eb166059660ed1ee413/WtA3YYitedOr9n02eHfJe.png',
     progress: 0,
     filename: 'gemma-3-1b-it-Q8_0.gguf',
     isLocal: false,
@@ -165,9 +129,8 @@ const crossPlatformModels: Model[] = [
     size: 1.83e+9,
     params: 1_700_000_000,
     isDownloaded: false,
-    downloadUrl:
-      'https://huggingface.co/unsloth/Qwen3-1.7B-GGUF/resolve/main/Qwen3-1.7B-Q8_0.gguf',
-    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/62ecdc18b72a69615d6bd857/E4lkPz1TZNLzIFr_dR273.png',
+    downloadUrl: 'https://huggingface.co/unsloth/Qwen3-1.7B-GGUF/resolve/main/Qwen3-1.7B-Q8_0.gguf',
+    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/620760a26e3b7210c2ff1943/-s1gyJfvbE1RgO5iBeNOi.png',
     hfUrl: 'https://huggingface.co/unsloth/Qwen3-1.7B-GGUF',
     progress: 0,
     filename: 'Qwen3-1.7B-Q8_0.gguf',
@@ -197,7 +160,7 @@ const crossPlatformModels: Model[] = [
     isDownloaded: false,
     downloadUrl:
       'https://huggingface.co/unsloth/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q8_0.gguf',
-    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/62ecdc18b72a69615d6bd857/E4lkPz1TZNLzIFr_dR273.png',
+    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/646cf8084eefb026fb8fd8bc/oCTqufkdTkjyGodsx1vo1.png',
     hfUrl:
       'https://huggingface.co/unsloth/Llama-3.2-1B-Instruct-GGUF',
     progress: 0,

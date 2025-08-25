@@ -6,22 +6,10 @@ import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { hapticOptions } from '@/utils/clipboard';
 import { useState } from 'react';
-
+import { generateUUID } from '@/utils/constants';
 MarkdownIt({ typographer: true, linkify: true });
 
-interface Metrics {
-  completion_tokens: number;
-  duration: number;
-  outputTps: number;
-  prompt_tokens: number;
-  total_tokens: number;
-}
-
-export default function TextResponseContainer({
-  chat,
-}: {
-  chat: DynamicChatMessage & { response: { textResponse: string; metrics: Metrics } };
-}) {
+export default function TextResponseContainer({ chat }: { chat: DynamicChatMessage }) {
   const [showMetrics, setShowMetrics] = useState(false);
   const textResponse = chat.response?.textResponse;
   if (!textResponse) return null;
@@ -39,7 +27,7 @@ export default function TextResponseContainer({
   };
 
   return (
-    <View className="flex flex-row items-start w-full justify-start">
+    <View key={`${chat?.uuid ?? generateUUID()}-text-response-container`} className="flex flex-row items-start w-full justify-start">
       <TouchableOpacity
         onPress={handlePress}
         onLongPress={handleLongPress}

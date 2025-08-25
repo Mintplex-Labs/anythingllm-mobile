@@ -175,7 +175,7 @@ const App = observer(() => {
           </SafeAreaProvider>
         </GestureHandlerRootView>
       </Suspense>
-    </BottomSheetProvider >
+    </BottomSheetProvider>
   );
 });
 

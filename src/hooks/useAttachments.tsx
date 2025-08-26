@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, View, Alert, ActivityIndicator, ScrollView } from "react-native";
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { generateUUID, screenDimensions, } from "@/utils/constants";
+import { generateUUID, getCurrentDeviceInfo, screenDimensions, } from "@/utils/constants";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import Storage from "@/utils/storage";
 import { pick } from 'react-native-document-picker';
@@ -16,6 +16,8 @@ import PDFParser from "@/utils/PDFParser";
 import { storeProcessedFileAsText } from "@/utils/fs";
 
 const MAX_ATTACHMENTS = 4;
+const MIN_ANDROID_API_FS_SEARCH_SUPPORTED = 35;
+
 export interface Attachment {
     uuid: string;
     type: string;
@@ -39,6 +41,7 @@ export interface AttachmentInterface {
 
 export default function useAttachments(wsSlug: string): AttachmentInterface {
     const embedder = getEmbedder('native');
+    const deviceInfo = getCurrentDeviceInfo();
     const [workspaceSlug, setWorkspaceSlug] = useState(wsSlug);
     const [attachments, setAttachments] = useState<Attachment[]>([]);
     const addAttachment = useCallback((attachment: Attachment) => {
@@ -89,9 +92,28 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
      * @param attachment - The attachment to process
      */
     const processAttachment = useCallback(async (attachment: Attachment) => {
+        let temporaryFilePath: string | null = null;
         if (!attachment.uri) return;
         try {
             uiStore.emitter.emit(CHAT_HANDLER_EVENTS.DISABLE_PROMPT_INPUT);
+
+            /**
+             * On Android, if the API level is less than 29, we need to copy the file to the temporary directory
+             * because the file URI is not valid for the app to read - this mainly happens on newer devices that have no real file manager
+             * eg: QRD device for android 16 (API 36) at this time cannot be used to read the file. We can always copy the file and then
+             * read it directly since the file will then be app-owned so we can process it.
+             * 
+             * The temporary file is removed after the attachment is processed. This workaround is not needed for Android 15 (API 35) and below.
+             */
+            if (deviceInfo.isAndroid && deviceInfo.apiLevel > MIN_ANDROID_API_FS_SEARCH_SUPPORTED) {
+                console.log(`Android ${deviceInfo.apiLevel} detected, using temporary file workaround...`);
+                await RNFS.mkdir(RNFS.TemporaryDirectoryPath + '/uploads');
+                temporaryFilePath = `${RNFS.TemporaryDirectoryPath}/uploads/${attachment.uuid}-${attachment.name}`;
+                await RNFS.copyFile(attachment.uri, temporaryFilePath);
+                attachment.uri = temporaryFilePath;
+                console.log(`Temporary file created: ${temporaryFilePath}`);
+            }
+
             const realPath = await Storage.getRealPathFromUri(attachment.uri).catch((e) => {
                 console.log('error', e);
                 throw new Error('Attachment could not be found');
@@ -134,6 +156,10 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
             removeAttachment(attachment);
         } finally {
             uiStore.emitter.emit(CHAT_HANDLER_EVENTS.ENABLE_PROMPT_INPUT);
+            if (temporaryFilePath && await RNFS.exists(temporaryFilePath)) {
+                console.log('Removing temporary file:', temporaryFilePath);
+                await RNFS.unlink(temporaryFilePath);
+            }
         }
     }, []);
 

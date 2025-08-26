@@ -101,7 +101,7 @@ export default abstract class BaseOpenAILikeProvider {
   static DEFAULT_SYSTEM_MESSAGE = 'You are a helpful assistant that can answer questions and help with tasks.';
 
   private DEFAULT_TOP_N = 2;
-  private SEMANTIC_SEARCH_MIN_RELEVANCE_SCORE = 0.6;
+  private SEMANTIC_SEARCH_MIN_RELEVANCE_SCORE = 0.45;
 
   constructor({ provider, config }: BaseLLMProviderConfig) {
     this._provider = provider;

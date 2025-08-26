@@ -3413,10 +3413,10 @@ bytes@3.1.2:
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-3.1.2.tgz#8b0beeb98605adf1b128fa4386403c009e0221a5"
   integrity sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==
 
-cactus-react-native@^0.2.9:
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/cactus-react-native/-/cactus-react-native-0.2.9.tgz#d549b5bd8be61995ac57ae3ce5803b5915e4363a"
-  integrity sha512-jqK3EOrQvdB6Dx89oPyjhnzw0lawCtcQ1U4sulkuh/XfPdsZCfDV8iMDQ1Wd5g2aOam6QrCKd2WzErWOwJLCxw==
+cactus-react-native@0.2.10:
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/cactus-react-native/-/cactus-react-native-0.2.10.tgz#e1381074473f9262dd0d5c39b3e114479a4a5341"
+  integrity sha512-Q+bubTZN56DLwGkaW/mA7iaK1xytjTSNwvO+odb1kGrpuHmFmyA8st2a8vGVYmJu7wwnxJwpalQ8Akvm5w0TqQ==
 
 call-bind@^1.0.2, call-bind@^1.0.5, call-bind@^1.0.6, call-bind@^1.0.7:
   version "1.0.7"

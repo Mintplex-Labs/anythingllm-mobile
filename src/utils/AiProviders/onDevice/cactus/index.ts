@@ -212,7 +212,7 @@ export default class CactusLmWrapper {
         n_predict: this.nPredict,
         tools: availableTools,
         tool_choice: 'auto',
-        jinja: true, // How do we know if this is supported?
+        jinja: this.cactusLmContext.isJinjaSupported(),
         ...this.defaultRuntimeConfig as any,
         temperature: this.temperature,
       }, ({ token }: { token: string }) => {

@@ -16,7 +16,6 @@ import PDFParser from "@/utils/PDFParser";
 import { storeProcessedFileAsText } from "@/utils/fs";
 
 const MAX_ATTACHMENTS = 4;
-const MIN_ANDROID_API_FS_SEARCH_SUPPORTED = 35;
 
 export interface Attachment {
     uuid: string;
@@ -105,8 +104,8 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
              * 
              * The temporary file is removed after the attachment is processed. This workaround is not needed for Android 15 (API 35) and below.
              */
-            if (deviceInfo.isAndroid && deviceInfo.apiLevel > MIN_ANDROID_API_FS_SEARCH_SUPPORTED) {
-                console.log(`Android ${deviceInfo.apiLevel} detected, using temporary file workaround...`);
+            if (deviceInfo.isAndroid) {
+                console.log(`Android device detected, using copy file workaround...`);
                 await RNFS.mkdir(RNFS.TemporaryDirectoryPath + '/uploads');
                 temporaryFilePath = `${RNFS.TemporaryDirectoryPath}/uploads/${attachment.uuid}-${attachment.name}`;
                 await RNFS.copyFile(attachment.uri, temporaryFilePath);

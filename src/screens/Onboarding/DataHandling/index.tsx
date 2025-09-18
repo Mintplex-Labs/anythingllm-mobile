@@ -11,6 +11,7 @@ import Workspace from "@/database/models/Workspace";
 import { EMBEDDING_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Telemetry from "@/utils/Telemetry";
 
 export default function DataHandling() {
   const navigation = useNavigation();
@@ -36,6 +37,7 @@ export default function DataHandling() {
 
     uiStore.setToStorage('onboarding_data_handling_completed', true);
     uiStore.emitGlobalEvent(uiStore.globalEvents.ONBOARDING_COMPLETED);
+    Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ONBOARDING.COMPLETED);
     console.log(`Navigating to workspace chat: ${workspace.slug} / ${workspace.threads[0].slug}`);
     // @ts-ignore-next-line
     navigation.navigate(PATHS.workspace_chat, { wsSlug: workspace.slug, threadSlug: workspace.threads[0].slug });

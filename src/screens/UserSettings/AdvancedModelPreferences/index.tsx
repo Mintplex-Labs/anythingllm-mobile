@@ -7,6 +7,7 @@ import { IWorkspacePageKey } from '../index';
 import useLLMPreference from '@/hooks/useLLMPreference';
 import ProviderSelection from '@/components/LLMSelection/ProviderSelection';
 import { screenDimensions } from '@/utils/constants';
+import Telemetry from '@/utils/Telemetry';
 
 import NativeOptions from './providers/nativeOptions';
 import LMStudioOptions from './providers/LMStudioOptions';
@@ -33,6 +34,7 @@ export default function AdvancedModelPreferences({
       ...settings,
     });
     await fetchLLMPreference();
+    Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.LLM_SETTINGS_UPDATED, { provider, model: settings?.model ?? '' });
   }
 
   async function handleProviderSelection(provider: string) {

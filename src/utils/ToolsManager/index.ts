@@ -4,6 +4,7 @@ import { generateUUID } from "../constants";
 import { ICompleteResponse, IStreamCallback, IStreamEvent } from "../AiProviders/baseOpenAILikeProvider";
 import Tools from './tools';
 import { safeJsonParse } from "../formatters";
+import Telemetry from "../Telemetry";
 
 type ToolManagerTool = {
     /** Definition of the tool - this can be used to generate a tool call */
@@ -162,6 +163,7 @@ class ToolsManager {
                 signature: humanReadableToolCall.signature,
                 function: toolCall.function.name,
             });
+            Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.TOOL_CALLED, { tool: toolCall.function.name });
         }
         return nextMessages;
     }

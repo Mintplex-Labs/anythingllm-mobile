@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "576102610354",
+    "project_id": "anythingllm-mobile",
+    "storage_bucket": "anythingllm-mobile.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576102610354:android:369b21874e9c57673420ab",
+        "android_client_info": {
+          "package_name": "com.anythingllm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBSO7TuJ3Y-Th4p8b5jktaVRSAFGyOPqk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

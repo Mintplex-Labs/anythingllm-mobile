@@ -5,6 +5,7 @@ apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply plugin: "kotlin-kapt"
 apply plugin: "io.objectbox"
+apply plugin: 'com.google.gms.google-services'
 
 apply from: "../../node_modules/react-native-config/android/dotenv.gradle"
 

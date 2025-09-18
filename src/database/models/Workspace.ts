@@ -8,6 +8,7 @@ import Document from './Document';
 import uiStore from '@/store/UIStore';
 import WorkspaceChat from './WorkspaceChat';
 import AnythingLLMExternal from '@/utils/AnythingLLMExternal';
+import Telemetry from '@/utils/Telemetry';
 
 export type WorkspaceType = {
   name: string;
@@ -216,6 +217,7 @@ export default class Workspace extends Model {
     newWorkspace = this.toWorkspaceObject(newWorkspace);
 
     // Create a new thread for the workspace on creation
+    Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.WORKSPACE_CREATED);
     const thread = await WorkspaceThread.create({ workspaceSlug: slug });
     return {
       ...newWorkspace,

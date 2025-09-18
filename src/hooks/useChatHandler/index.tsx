@@ -12,6 +12,7 @@ import { activateKeepAwake, deactivateKeepAwake } from "@/utils/keepAwake";
 import { Keyboard } from "react-native";
 import DelegatedProvider from "@/utils/AiProviders/delegatedProvider";
 import AwaitableAlert from "@/components/AwaitableAlert";
+import Telemetry from "@/utils/Telemetry";
 
 const SHOW_DEBUG_LOGS = true;
 
@@ -137,7 +138,13 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         if (!chatToSave) return debug('Failed to save chat to database!');
         await WorkspaceChat.create(chatToSave)
             .then(() => debug('Chat saved to database', chatToSave.uuid))
-            .catch(err => debug('Error saving chat to database', err));
+            .catch(err => debug('Error saving chat to database', err))
+            .finally(() => {
+                Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.CHAT_COMPLETED, {
+                    llmProvider: llmProvider.name,
+                    llmModel: llmProvider.model,
+                });
+            });
     }, []);
 
     /**

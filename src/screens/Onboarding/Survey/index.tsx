@@ -6,6 +6,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { PATHS } from "@/utils/paths";
 import uiStore from "@/store/UIStore";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import Telemetry from "@/utils/Telemetry";
 
 const options = [
   {
@@ -39,8 +40,10 @@ export default function Survey() {
   const onContinue = async () => {
     console.log("Stubbed: Sending survey data to server");
     uiStore.setToStorage('onboarding_survey_completed', true);
+    Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ONBOARDING.SURVEY_RESPONSE, { selection });
     navigation.navigate(PATHS.onboarding.data_handling as never)
   }
+
   const onBack = () => {
     navigation.navigate(PATHS.onboarding.model_selection as never)
   }

@@ -14,6 +14,7 @@ import { CHAT_HANDLER_EVENTS } from "@/hooks/useChatHandler";
 import uiStore from "@/store/UIStore";
 import PDFParser from "@/utils/PDFParser";
 import { storeProcessedFileAsText } from "@/utils/fs";
+import Telemetry from "@/utils/Telemetry";
 
 const MAX_ATTACHMENTS = 4;
 
@@ -150,6 +151,7 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
                 uuid: document.uuid, // update the attachment with the new uuid so we can manage the DB record associated with it
             };
             setAttachments(prev => prev.map(a => a.uuid === attachment.uuid ? newAttachment : a));
+            Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.DOCUMENT_IMPORTED, { documentType: attachment.type });
         } catch (e) {
             showToast((e as Error).message);
             removeAttachment(attachment);

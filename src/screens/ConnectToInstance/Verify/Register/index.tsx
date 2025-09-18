@@ -6,6 +6,7 @@ import { PATHS } from "@/utils/paths";
 import { useNavigation } from "@react-navigation/native";
 import { IStatus } from "..";
 import { IExternalConnection } from "../..";
+import Telemetry from "@/utils/Telemetry";
 
 interface RegisterProps {
     connectionUrl: string; // eg: http://192.168.1.100:3000/api/mobile
@@ -32,6 +33,7 @@ export default function Register({ connectionUrl, registrationToken, updateStatu
                 const connections = await uiStore.getFromStorage('anythingllm_external_connections', []) as IExternalConnection[];
                 connections.push({ token: registration.token, connectionUrl, platform: registration.platform });
                 await uiStore.setToStorage('anythingllm_external_connections', connections);
+                Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.EXTERNAL_CONNECTION_ESTABLISHED);
 
                 setDeviceToken(registration.token);
                 setState('awaiting_approval');

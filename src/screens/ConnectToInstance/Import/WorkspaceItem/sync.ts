@@ -6,6 +6,7 @@ import { parseThinkingParts } from "@/utils/chat";
 import { showToast } from "@/utils/Notification";
 import AnythingLLMExternal, { CommandResponses } from "@/utils/AnythingLLMExternal";
 import WorkspaceChat, { WorkspaceChatType } from "@/database/models/WorkspaceChat";
+import Telemetry from "@/utils/Telemetry";
 
 async function getPreviouslyImportedWorkspace(workspaceSlug: string): Promise<WorkspaceType | null> {
     const importedWorkspaces = await Workspace.find([{ field: 'is_remote', value: true }]);
@@ -112,6 +113,7 @@ export async function syncFromRemote({
             }));
         }
         await Promise.all(chatPromises);
+        Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.EXTERNAL_WORKSPACE_IMPORTED);
         setStatus('synced');
     } catch (error) {
         console.error(error);

@@ -1,4 +1,4 @@
-import { View, Text, KeyboardAvoidingView, Platform, ActivityIndicator, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
 import { useState } from 'react';
 import { screenDimensions } from '@/utils/constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,7 +13,7 @@ export default function GenericOpenAiOptions({
   onBaseUrlChange,
   onModelChange,
 }: {
-  provider: 'openai' | 'generic-openai' | 'openrouter';
+  provider: 'openai' | 'generic-openai';
   apiKey: string;
   baseUrl: string;
   model: string;

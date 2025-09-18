@@ -178,6 +178,7 @@ function AvailableModels({
     selectedModel,
     downloadModel,
     uninstallModel,
+    selectModel,
   } = useModelManager({ llmPreferences, fetchLLMPreference, LLMProvider });
 
   useEffect(() => {
@@ -300,7 +301,10 @@ function AvailableModels({
                   isDownloaded={isDownloaded}
                   modelDownloadUrl={modelDownloadUrl}
                   downloadProgress={downloadProgress}
-                  onSelect={() => downloadModel(item)}
+                  onSelect={() => {
+                    if (llmPreferences.provider === 'native') return downloadModel(item);
+                    else return selectModel({ modelId: item.id }); // Generic OpenAI /models results
+                  }}
                   onUninstall={() => uninstallModel(item)}
                 />
               </Fragment>

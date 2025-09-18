@@ -49,8 +49,27 @@ export default class OpenAILite {
     console.log(`🛠️ \x1b[33m[OpenAILite]\x1b[0m ${text}`, ...args);
   }
 
+  /**
+   * Format the URL to ensure it is valid
+   * - if the path name has double slashes, eg: //v1, replace them with a single slash (some providers can handle this, but not all)
+   * @param urlString - The URL string to format
+   * @returns The formatted URL string
+   */
+  private formatURL(urlString: string) {
+    try {
+      const url = new URL(urlString);
+      // if the path name has double slashes, eg: //v1, replace them with a single slash
+      url.pathname = url.pathname.replace(/\/\//g, '/');
+      return url.toString();
+    } catch (error) {
+      return urlString;
+    }
+  }
+
   async createChatCompletion(body: IAsyncChatCompletionRequestBody, _options: any = {}) {
-    return await fetch(`${this.baseURL}/chat/completions`, {
+    const formattedURL = this.formatURL(`${this.baseURL}/chat/completions`);
+    console.log('createChatCompletion', formattedURL, { hasApiKey: !!this.apiKey });
+    return await fetch(formattedURL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -71,8 +90,9 @@ export default class OpenAILite {
   }
 
   async *streamChatCompletion(body: IAsyncChatCompletionRequestBody, options: { controller?: AbortController } = {}) {
-    console.log('streamingChatCompletion', `${this.baseURL}/chat/completions`, { hasApiKey: !!this.apiKey });
-    const response = await this.streamingFetch!(`${this.baseURL}/chat/completions`, {
+    const formattedURL = this.formatURL(`${this.baseURL}/chat/completions`);
+    console.log('streamingChatCompletion', formattedURL, { hasApiKey: !!this.apiKey });
+    const response = await this.streamingFetch!(formattedURL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -115,7 +135,9 @@ export default class OpenAILite {
   }
 
   async listModels() {
-    return await fetch(`${this.baseURL}/models`, {
+    const formattedURL = this.formatURL(`${this.baseURL}/models`);
+    console.log('listModels', formattedURL, { hasApiKey: !!this.apiKey });
+    return await fetch(formattedURL, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

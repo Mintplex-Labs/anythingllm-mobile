@@ -18,6 +18,15 @@ function getLLM(provider: string, config: { [key: string]: any } = {}): LLMProvi
           model: config.model,
         }
       });
+    case 'openrouter':
+      return new OpenAICompatible({
+        provider: 'openrouter',
+        config: {
+          apiKey: config.apiKey,
+          baseURL: 'https://openrouter.ai/api/v1',
+          model: config.model,
+        }
+      });
     case 'generic-openai':
       return new OpenAICompatible({
         provider: 'generic-openai',

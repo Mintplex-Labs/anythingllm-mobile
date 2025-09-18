@@ -11,6 +11,12 @@ export interface OpenAICompatibleConfig {
   }
 }
 
+export interface OpenAICompatibleModel {
+  id: string;
+  object: string;
+  owned_by: string;
+}
+
 class OpenAICompatible extends BaseOpenAILikeProvider {
   private baseURL: string = 'https://api.openai.com/v1';
   private apiKey: string | null = null;
@@ -47,8 +53,14 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
     console.log(`\x1b[36m[${this.constructor.name}]\x1b[0m ${text}`, ...args);
   }
 
-  override async availableModels(): Promise<any[]> {
-    return [];
+  override async availableModels(): Promise<OpenAICompatibleModel[]> {
+    console.log('availableModels', await this.client.models.list(), this.apiKey, this.baseURL);
+    return await this.client.models.list()
+      .then((models) => models.data.map((model: OpenAICompatibleModel) => model))
+      .catch((error) => {
+        this.log(`Error fetching models: ${error}`);
+        return [];
+      });
   }
 
   async loadNewModel(model: string) {

@@ -13,7 +13,7 @@ export default function GenericOpenAiOptions({
   onBaseUrlChange,
   onModelChange,
 }: {
-  provider: 'openai' | 'generic-openai';
+  provider: 'openai' | 'generic-openai' | 'openrouter';
   apiKey: string;
   baseUrl: string;
   model: string;

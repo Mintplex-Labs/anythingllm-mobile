@@ -2,6 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, Text, Image } from 'react-native';
 import { DownloadSimple, Cube } from 'phosphor-react-native';
 import MODEL_CARDS from '@/utils/models/defaults';
+import truncate from 'truncate';
 
 interface ModelCardProps {
   model: any;
@@ -64,7 +65,7 @@ export default function ModelCard({
             </Text>
             {model.description && (
               <Text className="text-sm text-[#9F9FA0]">
-                {model.description.length > 100 ? model.description.substring(0, 100) + '...' : model.description}
+                {truncate(model.description, 100)}
               </Text>
             )}
           </View>

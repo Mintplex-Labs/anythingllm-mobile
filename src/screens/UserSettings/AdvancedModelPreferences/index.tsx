@@ -50,7 +50,6 @@ export default function AdvancedModelPreferences({
       case 'openrouter':
         await updateLLMPreference('openrouter', {
           apiKey: llmPreferences.config.apiKey,
-          baseUrl: 'https://openrouter.ai/api/v1',
           modelId: 'qwen/qwen3-4b:free'
         });
         break;

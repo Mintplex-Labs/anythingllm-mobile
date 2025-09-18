@@ -5,6 +5,7 @@ import { OnDeviceProviderConstructorProps } from '@/utils/AiProviders/onDevice';
 import { OpenAICompatibleConfig } from '@/utils/AiProviders/openAICompatible';
 import { OllamaProviderConfig } from '@/utils/AiProviders/OllamaProvider';
 import { LMStudioProviderConfig } from '@/utils/AiProviders/LMStudioProvider';
+import { OpenRouterProviderConfig } from '@/utils/AiProviders/OpenRouterProvider';
 
 interface LLMPreferenceContextType {
     llmPreferences: { provider: string; config: any };
@@ -30,6 +31,8 @@ function providerToName(provider: string) {
             return 'Ollama';
         case 'native':
             return 'On-Device';
+        case 'openrouter':
+            return 'OpenRouter';
         default:
             return 'Unknown';
     }
@@ -87,6 +90,11 @@ export function LLMPreferenceProvider({ children }: { children: ReactNode }) {
                     const openAIConfig = event.details.config as OpenAICompatibleConfig['config'];
                     llmProvider = getLLM(event.details.provider, openAIConfig);
                     llmProvider.loadNewModel(openAIConfig!.model!);
+                    break;
+                case 'openrouter':
+                    const openRouterConfig = event.details.config as OpenRouterProviderConfig['config'];
+                    llmProvider = getLLM(event.details.provider, openRouterConfig);
+                    llmProvider.loadNewModel(openRouterConfig!.model!);
                     break;
                 case 'ollama':
                     const ollamaConfig = event.details.config as OllamaProviderConfig['config'];

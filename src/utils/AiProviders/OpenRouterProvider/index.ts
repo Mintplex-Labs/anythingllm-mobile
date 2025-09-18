@@ -1,24 +1,43 @@
-import BaseOpenAILikeProvider from "../baseOpenAILikeProvider";
+import BaseOpenAILikeProvider, { IAvailableModel } from "../baseOpenAILikeProvider";
+import { OpenAICompatibleModel } from "../openAICompatible";
 import OpenAILite from "@/utils/openai";
 
-export interface OpenAICompatibleConfig {
+export interface OpenRouterProviderConfig {
   provider: string;
   config?: {
-    baseURL?: string;
     apiKey?: string;
     model?: string;
-    isOTypeModel?: boolean;
   }
 }
 
-export interface OpenAICompatibleModel {
+export interface OpenRouterAPIModel {
   id: string;
-  object: string;
-  owned_by: string;
+  canonical_slug: string;
+  hugging_face_id: string;
+  name: string;
+  created: number;
+  description: string;
+  context_length: number;
+  architecture: {
+    modality: string;
+    input_modalities: string[];
+    output_modalities: string[];
+  };
+  pricing: {
+    prompt: string;
+    completion: string;
+  };
+  top_provider: {
+    context_length: number;
+    max_completion_tokens: number;
+    is_moderated: boolean;
+  };
+  per_request_limits: any;
+  supported_parameters: string[];
 }
 
-class OpenAICompatible extends BaseOpenAILikeProvider {
-  private baseURL: string = 'https://api.openai.com/v1';
+class OpenRouterProvider extends BaseOpenAILikeProvider {
+  private baseURL: string = 'https://openrouter.ai/api/v1';
   private apiKey: string | null = null;
 
   public model: string;
@@ -27,7 +46,7 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
   protected temperature: number = 0.7;
   protected isOTypeModel: boolean = false;
 
-  constructor({ provider = 'OpenAICompatible', config = {} }: OpenAICompatibleConfig) {
+  constructor({ provider = 'OpenRouterProvider', config = {} }: OpenRouterProviderConfig) {
     super({ provider, config });
 
     // Random other properties we may or may not need
@@ -37,7 +56,6 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
       }
     }
 
-    if (config.baseURL) this.baseURL = config.baseURL;
     if (config.apiKey) this.apiKey = config.apiKey;
     this.model = config.model || 'Unknown Model';
     this.connectionProvider = provider;
@@ -53,9 +71,17 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
     console.log(`\x1b[36m[${this.constructor.name}]\x1b[0m ${text}`, ...args);
   }
 
-  override async availableModels(): Promise<OpenAICompatibleModel[]> {
+  override async availableModels(): Promise<IAvailableModel[]> {
     return await this.client.models.list()
-      .then((models) => models.data.map((model: OpenAICompatibleModel) => model))
+      .then((models) => models.data.map((model: OpenRouterAPIModel) => {
+        const isFree = Object.values(model?.pricing || {}).every(price => Number(price) === 0);
+        const suffix = isFree && !model.name.toLowerCase().includes('free') ? ' (Free)' : '';
+        return {
+          ...model,
+          // @ts-ignore
+          name: `${model.name}${suffix}`,
+        };
+      }))
       .catch((error) => {
         this.log(`Error fetching models: ${error}`);
         return [];
@@ -75,4 +101,4 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
   }
 }
 
-export default OpenAICompatible;
+export default OpenRouterProvider;

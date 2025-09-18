@@ -2,17 +2,27 @@ import OpenAICompatible from "./openAICompatible";
 import OnDeviceProvider from "./onDevice";
 import LMStudioProvider from "./LMStudioProvider";
 import OllamaProvider from "./OllamaProvider";
+import OpenRouterProvider from "./OpenRouterProvider";
 
 export type LLMProvider = OpenAICompatible |
   OnDeviceProvider |
   LMStudioProvider |
-  OllamaProvider;
+  OllamaProvider |
+  OpenRouterProvider;
 
 function getLLM(provider: string, config: { [key: string]: any } = {}): LLMProvider {
   switch (provider) {
     case 'openai':
       return new OpenAICompatible({
         provider: 'openai',
+        config: {
+          apiKey: config.apiKey,
+          model: config.model,
+        }
+      });
+    case 'openrouter':
+      return new OpenRouterProvider({
+        provider: 'openrouter',
         config: {
           apiKey: config.apiKey,
           model: config.model,

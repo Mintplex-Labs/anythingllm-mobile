@@ -13,6 +13,7 @@ import NativeOptions from './providers/nativeOptions';
 import LMStudioOptions from './providers/LMStudioOptions';
 import GenericOpenAiOptions from './providers/genericOpenAiOptions';
 import OllamaOptions from './providers/OllamaOptions';
+import OpenRouterOptions from './providers/OpenRouterOptions';
 
 interface AdvancedModelPreferencesProps {
   goToPage: (page: IWorkspacePageKey) => void;
@@ -43,7 +44,14 @@ export default function AdvancedModelPreferences({
         await updateLLMPreference('openai', {
           apiKey: llmPreferences.config.apiKey,
           modelId: 'gpt-3.5-turbo',
-          baseUrl: 'https://api.openai.com/v1/',
+          baseUrl: 'https://api.openai.com/v1',
+        });
+        break;
+      case 'openrouter':
+        await updateLLMPreference('openrouter', {
+          apiKey: llmPreferences.config.apiKey,
+          baseUrl: 'https://openrouter.ai/api/v1',
+          modelId: 'qwen/qwen3-4b:free'
         });
         break;
       case 'lmstudio':
@@ -74,13 +82,11 @@ export default function AdvancedModelPreferences({
 
   const renderProviderOptions = () => {
     switch (llmPreferences.provider) {
-      case 'openai':
-        return <GenericOpenAiOptions
-          provider="openai"
-          apiKey={llmPreferences.config.apiKey || ''}
+      case 'ollama':
+        return <OllamaOptions
+          provider="ollama"
           baseUrl={llmPreferences.config.baseUrl || ''}
           model={llmPreferences.config.model || ''}
-          onApiKeyChange={updateProviderSettings}
           onBaseUrlChange={updateProviderSettings}
           onModelChange={updateProviderSettings}
         />
@@ -92,12 +98,22 @@ export default function AdvancedModelPreferences({
           onBaseUrlChange={updateProviderSettings}
           onModelChange={updateProviderSettings}
         />
-      case 'ollama':
-        return <OllamaOptions
-          provider="ollama"
+      case 'openai':
+        return <GenericOpenAiOptions
+          provider={llmPreferences.provider}
+          apiKey={llmPreferences.config.apiKey || ''}
           baseUrl={llmPreferences.config.baseUrl || ''}
           model={llmPreferences.config.model || ''}
+          onApiKeyChange={updateProviderSettings}
           onBaseUrlChange={updateProviderSettings}
+          onModelChange={updateProviderSettings}
+        />
+      case 'openrouter':
+        return <OpenRouterOptions
+          provider="openrouter"
+          apiKey={llmPreferences.config.apiKey || ''}
+          model={llmPreferences.config.model || ''}
+          onApiKeyChange={updateProviderSettings}
           onModelChange={updateProviderSettings}
         />
       case 'generic-openai':

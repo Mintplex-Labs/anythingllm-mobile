@@ -30,6 +30,8 @@ function providerToName(provider: string) {
             return 'Ollama';
         case 'native':
             return 'On-Device';
+        case 'openrouter':
+            return 'OpenRouter';
         default:
             return 'Unknown';
     }

@@ -64,7 +64,7 @@ export default function ModelCard({
             </Text>
             {model.description && (
               <Text className="text-sm text-[#9F9FA0]">
-                {model.description}
+                {model.description.length > 100 ? model.description.substring(0, 100) + '...' : model.description}
               </Text>
             )}
           </View>

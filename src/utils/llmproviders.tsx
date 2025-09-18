@@ -6,10 +6,10 @@ export const AVAILABLE_LLM_PROVIDERS = [
     description: "Install and run models on your phone.",
   },
   {
-    name: "OpenAI",
-    value: "openai",
-    logo: require('@/assets/llmprovider/openai.png'),
-    description: "Leverage OpenAI's powerful models.",
+    name: "Ollama",
+    value: "ollama",
+    logo: require('@/assets/llmprovider/ollama.png'),
+    description: "Run LLMs locally on your own machine with Ollama.",
   },
   {
     name: "LM Studio",
@@ -18,10 +18,16 @@ export const AVAILABLE_LLM_PROVIDERS = [
     description: "Discover, download, and run thousands of cutting edge LLMs in a few clicks.",
   },
   {
-    name: "Ollama",
-    value: "ollama",
-    logo: require('@/assets/llmprovider/ollama.png'),
-    description: "Run LLMs locally on your own machine with Ollama.",
+    name: "OpenAI",
+    value: "openai",
+    logo: require('@/assets/llmprovider/openai.png'),
+    description: "Leverage OpenAI's powerful models.",
+  },
+  {
+    name: "OpenRouter",
+    value: "openrouter",
+    logo: require('@/assets/llmprovider/openrouter.jpeg'),
+    description: "A unified API of AI services from leading providers",
   },
   // {
   //   name: "Azure OpenAI",
@@ -68,23 +74,6 @@ export const AVAILABLE_LLM_PROVIDERS = [
   //     "HuggingFaceLLMAccessToken",
   //     "HuggingFaceLLMTokenLimit",
   //   ],
-  // },
-  // {
-  //   name: "Ollama",
-  //   value: "ollama",
-  //   logo: OllamaLogo,
-  //   options: (settings) => <OllamaLLMOptions settings={settings} />,
-  //   description: "Run LLMs locally on your own machine.",
-  //   requiredConfig: ["OllamaLLMBasePath"],
-  // },
-  // {
-  //   name: "LM Studio",
-  //   value: "lmstudio",
-  //   logo: LMStudioLogo,
-  //   options: (settings) => <LMStudioOptions settings={settings} />,
-  //   description:
-  //     "Discover, download, and run thousands of cutting edge LLMs in a few clicks.",
-  //   requiredConfig: ["LMStudioBasePath"],
   // },
   // {
   //   name: "Local AI",

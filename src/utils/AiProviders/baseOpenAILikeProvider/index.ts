@@ -443,6 +443,7 @@ export default abstract class BaseOpenAILikeProvider {
             total_tokens: usage.prompt_tokens + usage.completion_tokens,
             outputTps: usage.completion_tokens / stream.duration,
             duration: stream.duration,
+            ...stream.metrics,
           },
         });
       };
@@ -520,6 +521,7 @@ export default abstract class BaseOpenAILikeProvider {
                 total_tokens: usage.prompt_tokens + usage.completion_tokens,
                 outputTps: usage.completion_tokens / stream.duration,
                 duration: stream.duration,
+                ...stream.metrics,
               },
             });
             break;
@@ -537,6 +539,7 @@ export default abstract class BaseOpenAILikeProvider {
             total_tokens: usage.prompt_tokens + usage.completion_tokens,
             outputTps: usage.completion_tokens / stream.duration,
             duration: stream.duration,
+            ...stream.metrics,
           },
         });
       } finally {

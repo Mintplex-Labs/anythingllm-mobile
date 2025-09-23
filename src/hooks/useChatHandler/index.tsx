@@ -1,7 +1,7 @@
 import { type WorkspaceThreadType } from "@/database/models/WorkspaceThread";
 import { type WorkspaceType } from "@/database/models/Workspace";
 import { type LLMProvider } from "@/utils/AiProviders";
-import { useState, useMemo, useEffect, createContext, useContext, useCallback } from "react";
+import { useState, useMemo, useEffect, createContext, useContext, useCallback, useRef } from "react";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import uiStore from "@/store/UIStore";
 import WorkspaceChat, { IAgentAction, IAgentToolCall, IChatCitation } from "@/database/models/WorkspaceChat";
@@ -78,6 +78,12 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
     const [_promptDisabled, _setPromptDisabled] = useState<boolean>(false);
     const [isWorking, setIsWorking] = useState<boolean>(false);
     const [isRemote, _] = useState<boolean>(workspace?.isRemote || thread?.isRemote);
+
+    // Keep the latest chatsMap in a ref to avoid stale closures inside callbacks
+    const chatsMapRef = useRef(chatsMap);
+    useEffect(() => {
+        chatsMapRef.current = chatsMap;
+    }, [chatsMap]);
 
     const fetchChats = useCallback(async () => {
         try {
@@ -169,8 +175,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         try {
             activateKeepAwake();
             _addChat(newChat as DynamicChatMessage);
-
-            const messageHistory = Array.from(chatsMap.values()).concat([newChat as DynamicChatMessage]);
+            const messageHistory = Array.from(chatsMapRef.current.values()).concat([newChat as DynamicChatMessage]);
             let accumulator = '';
 
             // Internal function to handle stream events in a cleaner way
@@ -322,7 +327,7 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
     const setPrompt = useCallback((promptToSet: string, autoSubmit: boolean = false) => {
         _setPrompt(promptToSet);
         if (autoSubmit) submitPrompt(promptToSet);
-    }, [prompt]);
+    }, [prompt, _processChat]);
 
     const submitPrompt = useCallback(async (promptToSubmit?: string) => {
         if (!promptToSubmit) promptToSubmit = prompt;

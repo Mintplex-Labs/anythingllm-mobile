@@ -176,8 +176,6 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
             activateKeepAwake();
             _addChat(newChat as DynamicChatMessage);
             const messageHistory = Array.from(chatsMapRef.current.values()).concat([newChat as DynamicChatMessage]);
-            debug('messageHistory', messageHistory);
-            debugger
             let accumulator = '';
 
             // Internal function to handle stream events in a cleaner way

@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState, useCallback } from "react";
-import { FlatList, RefreshControl, View, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
+import { FlatList, RefreshControl, View, NativeSyntheticEvent, NativeScrollEvent, LayoutChangeEvent } from "react-native";
 import { screenDimensions } from "@/utils/constants";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { snapPointsDefault } from "../PromptInput";
@@ -17,6 +17,8 @@ export interface DynamicChatMessage extends Partial<WorkspaceChatType> {
 
 export default function ChatHistory() {
     const flatListRef = useRef<FlatList>(null);
+    const contentHeight = useRef(0);
+    const viewHeight = useRef(0);
     const insets = useSafeAreaInsets();
     const chatHandler = useChatHandlerContext();
     const [refreshing, setRefreshing] = useState(false);
@@ -44,8 +46,10 @@ export default function ChatHistory() {
 
     const scrollToBottom = (animated: boolean = true) => {
         if (!isAtBottom) return;
-        // Using large offset is more reliable than using scrollToEnd
-        flatListRef.current?.scrollToOffset({ animated, offset: 999999 });
+        const offset = contentHeight.current - viewHeight.current;
+        if (offset > 0) {
+            flatListRef.current?.scrollToOffset({ animated, offset });
+        }
     };
 
     const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -53,6 +57,11 @@ export default function ChatHistory() {
         const isScrolledToBottom =
             layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
         setIsAtBottom(isScrolledToBottom);
+    };
+
+    const handleContentSizeChange = (width: number, height: number) => {
+        contentHeight.current = height;
+        scrollToBottom(false);
     };
 
     return (
@@ -67,8 +76,10 @@ export default function ChatHistory() {
             renderItem={({ item }) => <UserAssistantPair chat={item} />}
             ListEmptyComponent={chatHandler.isLoadingChats ? <EmptyListLoading height={chatHistoryHeight} /> : <EmptyList height={chatHistoryHeight} />}
             ListFooterComponent={<View style={{ height: footerHeight }} />}
-            onContentSizeChange={() => scrollToBottom(true)}
-            onLayout={() => scrollToBottom(false)}
+            onContentSizeChange={handleContentSizeChange}
+            onLayout={(e: LayoutChangeEvent) => {
+                viewHeight.current = e.nativeEvent.layout.height;
+            }}
             onScroll={handleScroll}
             scrollEventThrottle={16}
             refreshControl={

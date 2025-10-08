@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState, useCallback } from "react";
-import { FlatList, RefreshControl, View } from "react-native";
+import { FlatList, RefreshControl, View, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 import { screenDimensions } from "@/utils/constants";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { snapPointsDefault } from "../PromptInput";
@@ -8,6 +8,7 @@ import { type WorkspaceChatType } from "@/database/models/WorkspaceChat";
 import EmptyList, { EmptyListLoading } from "./EmptyList";
 import { CHAT_HANDLER_EVENTS, useChatHandlerContext } from "@/hooks/useChatHandler/index";
 import uiStore from "@/store/UIStore";
+import useKeyboardHeight from "@/hooks/useKeyboardHeight";
 
 export interface DynamicChatMessage extends Partial<WorkspaceChatType> {
     type?: 'message' | 'error'
@@ -19,12 +20,20 @@ export default function ChatHistory() {
     const insets = useSafeAreaInsets();
     const chatHandler = useChatHandlerContext();
     const [refreshing, setRefreshing] = useState(false);
+    const [isAtBottom, setIsAtBottom] = useState(true);
+    const keyboardHeight = useKeyboardHeight();
     const promptInputHeight = useMemo(() => (screenDimensions.height * (100 - parseFloat(snapPointsDefault[0])) / 100), []);
     const chatHistoryHeight = useMemo(() => promptInputHeight - (65 + insets.top + 13), [insets.top]);
     const promptInputContainerHeight = useMemo(() => screenDimensions.height - promptInputHeight, [promptInputHeight]);
     const footerHeight = useMemo(() => {
         return promptInputContainerHeight + 20;
     }, [promptInputContainerHeight]);
+
+    const contentContainerStyle = useMemo(() => {
+        return {
+            paddingBottom: keyboardHeight > 0 ? keyboardHeight + insets.bottom : insets.bottom,
+        }
+    }, [keyboardHeight, insets.bottom]);
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
@@ -34,15 +43,23 @@ export default function ChatHistory() {
     }, [chatHandler.fetchChats]);
 
     const scrollToBottom = (animated: boolean = true) => {
+        if (!isAtBottom) return;
         // Using large offset is more reliable than using scrollToEnd
         flatListRef.current?.scrollToOffset({ animated, offset: 999999 });
+    };
+
+    const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+        const isScrolledToBottom =
+            layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
+        setIsAtBottom(isScrolledToBottom);
     };
 
     return (
         <FlatList
             ref={flatListRef}
             style={{ height: chatHistoryHeight, paddingTop: 20, paddingHorizontal: 10 }}
-            contentContainerStyle={{ display: 'flex', flexDirection: 'column', gap: 20 }}
+            contentContainerStyle={contentContainerStyle}
             showsVerticalScrollIndicator={false}
             scrollEnabled={chatHandler.canScrollChatHistory}
             data={chatHandler.chats}
@@ -52,6 +69,8 @@ export default function ChatHistory() {
             ListFooterComponent={<View style={{ height: footerHeight }} />}
             onContentSizeChange={() => scrollToBottom(true)}
             onLayout={() => scrollToBottom(false)}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
             refreshControl={
                 <RefreshControl
                     enabled={!chatHandler.promptDisabled}

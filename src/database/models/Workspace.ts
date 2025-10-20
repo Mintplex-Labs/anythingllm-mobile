@@ -48,6 +48,7 @@ export default class Workspace extends Model {
    */
   static defaultTemperature = 0.7;
   static defaultContextLength = 1024;
+  static maxSystemPromptLength = 10_000;
 
   static writableFields = {
     name: {
@@ -66,7 +67,7 @@ export default class Workspace extends Model {
         if (typeof value !== 'string') error = 'System prompt must be a string';
         if (!value) error = 'System prompt is required';
         if (value.length < 10) error = 'System prompt must be at least 10 characters long';
-        if (value.length > 1000) error = 'System prompt must be less than 1000 characters long';
+        if (value.length > Workspace.maxSystemPromptLength) error = `System prompt must be less than ${Workspace.maxSystemPromptLength} characters long`;
         return { valid: !error, error };
       },
     },

@@ -90,7 +90,8 @@ export default function OllamaOptions({
         let provider = new OllamaProvider({ provider: 'ollama', config: { baseURL: currentBaseUrl, model: currentModelId } });
         const details = await provider.getModelDetails({ baseUrl: currentBaseUrl, modelTag: currentModelId });
         if (!details) return;
-        setNoToolCalls(details?.capabilities?.includes('tools') === false)
+        const supportsToolCalls = details?.capabilities?.includes('tools') || false
+        setNoToolCalls(supportsToolCalls === false)
       } catch { return; }
     }
     checkModelCapability()

@@ -131,11 +131,7 @@ class OllamaProvider extends BaseOpenAILikeProvider {
     try {
       const modelTagDetails = await this.getModelDetails({ baseUrl: this.baseURL, modelTag: this.model });
       if (!modelTagDetails) throw new Error('Could not fetch tag details for model')
-      const hasToolSupport = (
-        !!modelTagDetails.capabilities &&
-        Array.isArray(modelTagDetails.capabilities) &&
-        modelTagDetails.capabilities.includes('tools'));
-
+      const hasToolSupport = modelTagDetails?.capabilities?.includes('tools') || false;
       this.modelCapabilities[this.model] = { tools: hasToolSupport };
       return hasToolSupport;
     } catch (error) {

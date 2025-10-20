@@ -4,7 +4,7 @@ import { screenDimensions } from '@/utils/constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useKeyboardHeight from '@/hooks/useKeyboardHeight';
 import { BottomSheetModal, BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
-import { X, MagnifyingGlass, CaretDown } from 'phosphor-react-native';
+import { X, MagnifyingGlass, CaretDown, Warning } from 'phosphor-react-native';
 import getLLM from '@/utils/AiProviders';
 import OllamaProvider, { OllamaModel } from '@/utils/AiProviders/OllamaProvider';
 import debounce from 'lodash/debounce';
@@ -27,6 +27,7 @@ export default function OllamaOptions({
   const [currentBaseUrl, setCurrentBaseUrl] = useState(baseUrl || '');
   const [currentModelId, setCurrentModelId] = useState(model || '');
   const [searchQuery, setSearchQuery] = useState('');
+  const [noToolCalls, setNoToolCalls] = useState(false);
   const [availableModels, setAvailableModels] = useState<OllamaModel[]>([]);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
@@ -82,6 +83,20 @@ export default function OllamaOptions({
     };
   }, [debouncedFetchModels, debouncedSaveBaseUrl]);
 
+  useEffect(() => {
+    async function checkModelCapability() {
+      try {
+        if (!currentBaseUrl || !currentModelId) return;
+        let provider = new OllamaProvider({ provider: 'ollama', config: { baseURL: currentBaseUrl, model: currentModelId } });
+        const details = await provider.getModelDetails({ baseUrl: currentBaseUrl, modelTag: currentModelId });
+        if (!details) return;
+        const supportsToolCalls = details?.capabilities?.includes('tools') || false
+        setNoToolCalls(supportsToolCalls === false)
+      } catch { return; }
+    }
+    checkModelCapability()
+  }, [currentModelId, currentBaseUrl])
+
   return (
     <View className="flex flex-col">
       <KeyboardAvoidingView style={{ gap: 8 }} behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 flex flex-col">
@@ -113,6 +128,26 @@ export default function OllamaOptions({
         </View>
 
         <View className="w-full flex flex-col" style={{ gap: 12 }}>
+          {noToolCalls === true && (
+            <View className="flex flex-row items-start w-full justify-start">
+              <View className="rounded-lg flex flex-row items-center w-full" style={[{
+                paddingHorizontal: 14,
+                paddingVertical: 10,
+                gap: 4,
+                borderWidth: 1,
+                borderColor: '#F97066',
+                maxWidth: '100%',
+                backgroundColor: 'rgba(122,39,26,0.2)'
+              }]}>
+                <Warning size={18} color="#F97066" />
+                <Text style={{ color: '#F97066' }} className="text-xs">
+                  This model was detected to have <Text style={{ fontWeight: 800, textDecorationLine: 'underline' }}>no tool calling support</Text>.
+                  Only simple chat + RAG will be supported
+                </Text>
+              </View>
+            </View>
+          )}
+
           <View className="flex flex-row items-center justify-between">
             <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">Model Selection</Text>
           </View>

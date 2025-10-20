@@ -1,4 +1,4 @@
-import BaseOpenAILikeProvider from "../baseOpenAILikeProvider";
+import BaseOpenAILikeProvider, { IStreamableResponse } from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
 
 export interface OllamaProviderConfig {
@@ -30,6 +30,7 @@ function ollamaBaseURLFormatter(baseURL?: string) {
 class OllamaProvider extends BaseOpenAILikeProvider {
   private baseURL: string = '';
   private apiKey: string | null = null;
+  private modelCapabilities: { [modelName: string]: { tools: boolean } } = {};
 
   public model: string;
   private connectionProvider: string;
@@ -84,6 +85,77 @@ class OllamaProvider extends BaseOpenAILikeProvider {
    */
   async unloadModel() {
     return;
+  }
+
+  /**
+   * Grabs the model details (license, capabilites, etc) from the internal Ollama API endpoint so that
+   * we can know more information about a model before using it.
+   * @param param0 
+   */
+  async getModelDetails({
+    baseUrl = this.baseURL,
+    modelTag = this.model
+  }: { baseUrl: string, modelTag: string }) {
+    try {
+      const apiBaseUrl = new URL(baseUrl).origin; // api/show is not under v1/
+      const details: null | { capabilities: string[] } = await fetch(`${apiBaseUrl}/api/show`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: modelTag }),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error(`Failed to fetch model details for ${modelTag}. Assuming no tool support.`)
+          return res.json();
+        })
+        .catch((error) => {
+          this.log('getModelDetails', error)
+          return null;
+        })
+
+      return details;
+    } catch (error) {
+      this.log(`Error checking tag details for ${modelTag}:`, error);
+      return false;
+    }
+  }
+
+  /**
+   * Check if the current model for the provider has the ability to call tools
+   * This is determined by the Ollama API and will determine if tools are passed into the model during
+   * chat completion since if we send tools Ollama will crash.
+   * @returns 
+   */
+  private async checkToolSupport(): Promise<boolean> {
+    if (this.modelCapabilities[this.model]?.tools !== undefined) return this.modelCapabilities[this.model].tools;
+
+    try {
+      const modelTagDetails = await this.getModelDetails({ baseUrl: this.baseURL, modelTag: this.model });
+      if (!modelTagDetails) throw new Error('Could not fetch tag details for model')
+      const hasToolSupport = modelTagDetails?.capabilities?.includes('tools') || false;
+      this.modelCapabilities[this.model] = { tools: hasToolSupport };
+      return hasToolSupport;
+    } catch (error) {
+      this.log(`Error checking tool support for ${this.model}:`, error);
+      this.modelCapabilities[this.model] = { tools: false };
+      return false;
+    }
+  }
+
+  /*
+   * Override for streamGetChatCompletion to check if the model supports tools.
+   *
+   * In Ollama, some models support tools so we need to check via the API
+   * to see if the model supports tools. We must remove the tools from the request
+   * if the model does not support tools or else Ollama will throw an error.
+  */
+  override async streamGetChatCompletion(messages: any[] = [], availableTools: any[] = []): Promise<IStreamableResponse> {
+    let tools = availableTools;
+    if (availableTools.length > 0 && !(await this.checkToolSupport())) {
+      this.log(`Model ${this.model} does not support tools, removing them from request.`);
+      tools = [];
+    }
+
+    return super.streamGetChatCompletion(messages, tools);
   }
 }
 

@@ -35,15 +35,18 @@ export function TextInputView({ workspace, goToPage, field, title, placeholder, 
     const insets = useSafeAreaInsets();
     const keyboardHeight = useKeyboardHeight();
     const { LLMProvider } = useLLMProvider();
+    // @ts-ignore
     const [value, setValue] = useState(workspace[field] ?? resetValue);
     const [saveStatus, setSaveStatus] = useState(DEFAULT_SAVE_STATUS);
 
     const debouncedSave = useRef(
         debounce(async (newValue: string) => {
-            if (
-                newValue === workspace[field] ||
-                !Workspace.writableFields[field].validate(newValue).valid
-            ) {
+            if (newValue === workspace[field]) return setSaveStatus(DEFAULT_SAVE_STATUS);
+
+            // Run and show error validation if was an invalid input so the user knows why
+            const validation: { valid: boolean, error: null | string } = Workspace.writableFields[field].validate(newValue)
+            if (!validation.valid) {
+                if (validation.error) showToast(validation.error)
                 setSaveStatus(DEFAULT_SAVE_STATUS);
                 return;
             }
@@ -70,6 +73,7 @@ export function TextInputView({ workspace, goToPage, field, title, placeholder, 
     ).current;
 
     const handleValueChange = useCallback((text: string) => {
+        // @ts-ignore
         setValue(text);
         debouncedSave(text);
     }, [debouncedSave]);

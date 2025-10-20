@@ -87,33 +87,55 @@ class OllamaProvider extends BaseOpenAILikeProvider {
     return;
   }
 
-  private async checkToolSupport(): Promise<boolean> {
-    // Check cache if exists
-    if (this.modelCapabilities[this.model]?.tools !== undefined) {
-      return this.modelCapabilities[this.model].tools;
+  /**
+   * Grabs the model details (license, capabilites, etc) from the internal Ollama API endpoint so that
+   * we can know more information about a model before using it.
+   * @param param0 
+   */
+  async getModelDetails({
+    baseUrl = this.baseURL,
+    modelTag = this.model
+  }: { baseUrl: string, modelTag: string }) {
+    try {
+      const apiBaseUrl = new URL(baseUrl).origin; // api/show is not under v1/
+      const details: null | { capabilities: string[] } = await fetch(`${apiBaseUrl}/api/show`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: modelTag }),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error(`Failed to fetch model details for ${modelTag}. Assuming no tool support.`)
+          return res.json();
+        })
+        .catch((error) => {
+          this.log('getModelDetails', error)
+          return null;
+        })
+
+      return details;
+    } catch (error) {
+      this.log(`Error checking tag details for ${modelTag}:`, error);
+      return false;
     }
+  }
+
+  /**
+   * Check if the current model for the provider has the ability to call tools
+   * This is determined by the Ollama API and will determine if tools are passed into the model during
+   * chat completion since if we send tools Ollama will crash.
+   * @returns 
+   */
+  private async checkToolSupport(): Promise<boolean> {
+    if (this.modelCapabilities[this.model]?.tools !== undefined) return this.modelCapabilities[this.model].tools;
 
     try {
-      const url = new URL(this.baseURL);
-      const apiBaseUrl = url.origin;
-      const response = await fetch(`${apiBaseUrl}/api/show`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ model: this.model }),
-      });
+      const modelTagDetails = await this.getModelDetails({ baseUrl: this.baseURL, modelTag: this.model });
+      if (!modelTagDetails) throw new Error('Could not fetch tag details for model')
+      const hasToolSupport = (
+        !!modelTagDetails.capabilities &&
+        Array.isArray(modelTagDetails.capabilities) &&
+        modelTagDetails.capabilities.includes('tools'));
 
-      if (!response.ok) {
-        this.log(`Failed to fetch model details for ${this.model}. Assuming no tool support.`);
-        this.modelCapabilities[this.model] = { tools: false };
-        return false;
-      }
-
-      const data = await response.json();
-      const hasToolSupport = Array.isArray(data.capabilities) && data.capabilities.includes('tools');
-
-      this.log(`Model ${this.model} tool support: ${hasToolSupport}`);
       this.modelCapabilities[this.model] = { tools: hasToolSupport };
       return hasToolSupport;
     } catch (error) {
@@ -131,13 +153,10 @@ class OllamaProvider extends BaseOpenAILikeProvider {
    * if the model does not support tools or else Ollama will throw an error.
   */
   override async streamGetChatCompletion(messages: any[] = [], availableTools: any[] = []): Promise<IStreamableResponse> {
-    const hasToolSupport = await this.checkToolSupport();
-    const tools = hasToolSupport ? availableTools : [];
-
-    if (!hasToolSupport && availableTools.length > 0) {
+    let tools = availableTools;
+    if (availableTools.length > 0 && !(await this.checkToolSupport())) {
       this.log(`Model ${this.model} does not support tools, removing them from request.`);
-    } else {
-      this.log(`Model ${this.model} supports tools, adding them to request.`);
+      tools = [];
     }
 
     return super.streamGetChatCompletion(messages, tools);

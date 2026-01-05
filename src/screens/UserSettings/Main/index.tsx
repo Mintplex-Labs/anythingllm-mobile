@@ -167,9 +167,9 @@ export function MainView({ goToPage }: MainViewProps) {
         contentContainerClassName="flex flex-col justify-between"
         contentContainerStyle={{
           paddingHorizontal: 8,
-          paddingBottom: insets.bottom,
+          paddingBottom: insets.bottom + 20,
           gap: 24,
-          flex: 1,
+          flexGrow: 1,
         }}>
         <View className="w-full flex flex-col" style={{ gap: 24 }}>
           {/* Selected Provider and Model */}

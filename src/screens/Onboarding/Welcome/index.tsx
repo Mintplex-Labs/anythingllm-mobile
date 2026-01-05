@@ -1,4 +1,4 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import uiStore from "@/store/UIStore";
 import { useNavigation } from "@react-navigation/native";
@@ -19,13 +19,12 @@ export default function OnboardingWelcome() {
 
   return (
     <React.Fragment>
-      <Image
+      <ImageBackground
         source={require("@/assets/onboarding/bg-blobs.png")}
-        resizeMode="contain"
         style={{ backgroundColor: "#131314", position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
       />
       <SafeView scrollable={false} safeAreaClassNames="bg-transparent" containerClassNames="my-auto" containerStyle={{ paddingBottom: insets.bottom, paddingTop: insets.top + 20 }}>
-        <View className="flex flex-col h-full gap-y-[45px]">
+        <View className="flex flex-col h-full justify-between py-4">
           <View className="flex flex-col justify-center items-center gap-y-2">
             <Text className="text-[#B2DDFF] text-xl">Welcome</Text>
             <Text className="text-white text-3xl">AnythingLLM</Text>
@@ -33,7 +32,7 @@ export default function OnboardingWelcome() {
           <Image
             source={require("@/assets/onboarding/welcome.png")}
             resizeMode="contain"
-            className="max-w-[380px] mx-auto"
+            className="max-w-[380px] max-h-[60%] mx-auto py-4"
           />
           <View className="flex max-w-[75%] mx-auto">
             <Text className="text-white text-regular text-center">

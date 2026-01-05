@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ActivityIndicator, Image, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import ProgressBars from "@/components/Onboarding/ProgressBars";
 import uiStore from "@/store/UIStore";
@@ -54,9 +54,8 @@ export default function DataHandling() {
   if (isOnboarding) {
     return (
       <React.Fragment>
-        <Image
+        <ImageBackground
           source={require("@/assets/onboarding/bg-blobs.png")}
-          resizeMode="contain"
           style={{ backgroundColor: "#131314", position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}
         />
 
@@ -75,14 +74,13 @@ export default function DataHandling() {
 
   return (
     <React.Fragment>
-      <Image
+      <ImageBackground
         source={require("@/assets/onboarding/bg-blobs.png")}
-        resizeMode="contain"
         style={{ backgroundColor: "#131314", position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}
       />
 
-      <SafeView scrollable={false} safeAreaClassNames="bg-transparent" containerClassNames="h-full z-[1]" containerStyle={{ paddingTop: insets.top + 20 }}>
-        <View className="flex flex-col gap-y-[66px]">
+      <SafeView scrollable={false} safeAreaClassNames="bg-transparent" containerClassNames="h-full z-[1]" containerStyle={{ paddingTop: insets.top + 20, paddingBottom: insets.bottom + 20 }}>
+        <View className="flex flex-col h-full justify-between">
           <ProgressBars numberOfBars={3} activeBar={3} />
 
           <React.Fragment>

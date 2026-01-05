@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, View } from "react-native";
+import { ImageBackground, View } from "react-native";
 import SimpleModelSelection from "./Simple/index";
 import SafeView from "@/components/SafeView";
 import ProgressBars from "@/components/Onboarding/ProgressBars";
@@ -21,9 +21,8 @@ export default function OnboardingModelSelection() {
 
   return (
     <React.Fragment>
-      <Image
+      <ImageBackground
         source={require("@/assets/onboarding/bg-blobs.png")}
-        resizeMode="contain"
         style={{ backgroundColor: "#131314", position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}
       />
       <SafeView scrollable={false} safeAreaClassNames="bg-transparent" containerStyle={{ zIndex: 1, paddingTop: insets.top + 20 }}>

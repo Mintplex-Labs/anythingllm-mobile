@@ -124,11 +124,16 @@ export function MainView({ goToPage }: MainViewProps) {
       deleteProcessedFiles(),
     ]);
     await uiStore.resetAllStorage();
-    navigation.reset({
-      index: 0,
-      // @ts-ignore
-      routes: [{ name: PATHS.onboarding.welcome }],
-    });
+    uiStore.emitter.emit(uiStore.globalEvents.ONBOARDING_RESET);
+    // Defer navigation reset to the next frame so the component tree
+    // re-renders with onboarding screens registered in the navigator.
+    setTimeout(() => {
+      navigation.reset({
+        index: 0,
+        // @ts-ignore
+        routes: [{ name: PATHS.onboarding.welcome }],
+      });
+    }, 0);
     return true;
   }
   useHighjackBackButtonPress(goBack);

@@ -25,9 +25,13 @@ export function useOnboardingCompleted(): {
     }, []);
 
     useEffect(() => {
-        uiStore.emitter.addListener(uiStore.globalEvents.ONBOARDING_COMPLETED, () => setOnboardingCompleted(true));
+        const onCompleted = () => setOnboardingCompleted(true);
+        const onReset = () => setOnboardingCompleted(false);
+        uiStore.emitter.addListener(uiStore.globalEvents.ONBOARDING_COMPLETED, onCompleted);
+        uiStore.emitter.addListener(uiStore.globalEvents.ONBOARDING_RESET, onReset);
         return () => {
             uiStore.emitter.removeAllListeners(uiStore.globalEvents.ONBOARDING_COMPLETED);
+            uiStore.emitter.removeAllListeners(uiStore.globalEvents.ONBOARDING_RESET);
         };
     }, []);
     return { loadingOnboardingCompleted: loading, onboardingCompleted };

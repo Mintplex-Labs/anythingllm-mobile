@@ -20,6 +20,7 @@ export interface OpenAICompatibleModel {
 class OpenAICompatible extends BaseOpenAILikeProvider {
   private baseURL: string = 'https://api.openai.com/v1';
   private apiKey: string | null = null;
+  public isExternalProvider: boolean = true;
 
   public model: string;
   private connectionProvider: string;

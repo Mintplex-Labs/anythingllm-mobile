@@ -50,6 +50,19 @@ export default class OpenAILite {
   }
 
   /**
+   * Common headers for every request.
+   * `ngrok-skip-browser-warning` makes free ngrok tunnels return the upstream
+   * response instead of their HTML interstitial page. Harmless elsewhere.
+   */
+  private baseHeaders(): Record<string, string> {
+    return {
+      'Content-Type': 'application/json',
+      'ngrok-skip-browser-warning': 'true',
+      ...(this.apiKey ? { 'Authorization': `Bearer ${this.apiKey}` } : {}),
+    };
+  }
+
+  /**
    * Format the URL to ensure it is valid
    * - if the path name has double slashes, eg: //v1, replace them with a single slash (some providers can handle this, but not all)
    * @param urlString - The URL string to format
@@ -71,10 +84,7 @@ export default class OpenAILite {
     console.log('createChatCompletion', formattedURL, { hasApiKey: !!this.apiKey });
     return await fetch(formattedURL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(this.apiKey ? { 'Authorization': `Bearer ${this.apiKey}` } : {}),
-      },
+      headers: this.baseHeaders(),
       body: JSON.stringify({
         ...body,
         stream: false,
@@ -94,10 +104,7 @@ export default class OpenAILite {
     console.log('streamingChatCompletion', formattedURL, { hasApiKey: !!this.apiKey });
     const response = await this.streamingFetch!(formattedURL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(this.apiKey ? { 'Authorization': `Bearer ${this.apiKey}` } : {}),
-      },
+      headers: this.baseHeaders(),
       body: JSON.stringify(body),
       ...(options.controller ? { signal: options.controller.signal } : {}),
       // @ts-ignore
@@ -137,17 +144,25 @@ export default class OpenAILite {
   async listModels() {
     const formattedURL = this.formatURL(`${this.baseURL}/models`);
     console.log('listModels', formattedURL, { hasApiKey: !!this.apiKey });
-    return await fetch(formattedURL, {
+    const res = await fetch(formattedURL, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(this.apiKey ? { 'Authorization': `Bearer ${this.apiKey}` } : {}),
-      }
-    })
-      .then(res => res.json())
-      .catch(err => {
-        console.error(err);
-        throw err;
-      });
+      headers: this.baseHeaders(),
+    });
+
+    const text = await res.text();
+    if (!res.ok) throw new Error(`Request failed with status ${res.status}: ${text.slice(0, 200)}`);
+
+    let parsed: any;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      const looksLikeHtml = text.trim().startsWith('<');
+      throw new Error(looksLikeHtml
+        ? 'Endpoint returned HTML instead of JSON - check the base URL (is the /v1 prefix missing?) or any proxy in front of it.'
+        : `Endpoint returned a non-JSON response: ${text.slice(0, 200)}`);
+    }
+
+    if (!Array.isArray(parsed?.data)) throw new Error('Endpoint response did not contain a "data" array of models.');
+    return parsed;
   }
 }

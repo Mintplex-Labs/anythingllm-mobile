@@ -183,7 +183,9 @@ function AvailableModels({
 
   useEffect(() => {
     const fetchModels = async () => {
-      if (LLMProvider) {
+      // External providers (LM Studio, Ollama, OpenAI-compatible, ...) manage
+      // their models from the settings screen, not this on-device model sheet.
+      if (LLMProvider && !LLMProvider.isExternalProvider) {
         const models = await LLMProvider.availableModels() as AvailableModel[];
         setAvailableModels(models);
       } else setAvailableModels([]);
@@ -194,7 +196,7 @@ function AvailableModels({
   const filteredModels = useMemo(() => {
     return availableModels.filter(
       model =>
-        model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (model.name || model.id || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
         (model.description || '')
           .toLowerCase()
           .includes(searchQuery.toLowerCase()),

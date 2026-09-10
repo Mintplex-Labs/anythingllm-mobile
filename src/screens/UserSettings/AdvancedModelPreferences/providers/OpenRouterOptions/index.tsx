@@ -70,15 +70,14 @@ export default function OpenRouterOptions({
         try {
           const models = await (getLLM('openrouter', { apiKey }) as OpenAICompatible).availableModels();
           setAvailableModels(models.map((model: OpenAICompatibleModel) => model));
-          setCurrentModelId(models[0]?.id || '');
+          // Keep the user's existing selection; only default to the first model when nothing is selected yet.
+          setCurrentModelId(prev => prev || models[0]?.id || '');
         } catch (error) {
           console.log(`Error fetching models:`, error);
           setAvailableModels([]);
-          setCurrentModelId('');
         }
       } else {
         setAvailableModels([]);
-        setCurrentModelId('');
       }
     }, 500)
   ).current;

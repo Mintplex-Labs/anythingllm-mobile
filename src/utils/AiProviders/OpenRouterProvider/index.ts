@@ -37,6 +37,7 @@ export interface OpenRouterAPIModel {
 }
 
 class OpenRouterProvider extends BaseOpenAILikeProvider {
+  public isExternalProvider: boolean = true;
   private baseURL: string = 'https://openrouter.ai/api/v1';
   private apiKey: string | null = null;
 

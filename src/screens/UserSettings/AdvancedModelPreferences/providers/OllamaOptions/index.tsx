@@ -53,15 +53,14 @@ export default function OllamaOptions({
         try {
           const models = await (getLLM('ollama', { baseUrl: url }) as OllamaProvider).availableModels();
           setAvailableModels(models.map((model: OllamaModel) => model));
-          setCurrentModelId(models[0]?.id || '');
+          // Keep the user's existing selection; only default to the first model when nothing is selected yet.
+          setCurrentModelId(prev => prev || models[0]?.id || '');
         } catch (error) {
           console.log(`Error fetching models: (${url})`, error);
           setAvailableModels([]);
-          setCurrentModelId('');
         }
       } else {
         setAvailableModels([]);
-        setCurrentModelId('');
       }
     }, 500)
   ).current;

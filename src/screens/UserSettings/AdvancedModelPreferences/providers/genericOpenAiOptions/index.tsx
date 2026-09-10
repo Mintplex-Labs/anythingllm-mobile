@@ -11,6 +11,18 @@ import debounce from 'lodash/debounce';
 
 type ProviderSettings = { apiKey?: string, baseUrl?: string, model?: string };
 
+/**
+ * Base URLs to try when discovering models. Many OpenAI-compatible servers
+ * (LM Studio, vLLM, llama.cpp, ...) mount their routes under /v1, and users
+ * frequently omit it, so we retry with /v1 appended when the URL lacks it.
+ */
+function baseUrlCandidates(baseUrl: string, requiresBaseUrl: boolean): string[] {
+  if (!requiresBaseUrl) return [baseUrl];
+  const trimmed = baseUrl.replace(/\/+$/, '');
+  if (/\/v\d+$/i.test(trimmed)) return [trimmed];
+  return [trimmed, `${trimmed}/v1`];
+}
+
 export default function GenericOpenAiOptions({
   provider,
   apiKey,
@@ -80,20 +92,33 @@ export default function GenericOpenAiOptions({
 
       setIsFetchingModels(true);
       let models: OpenAICompatibleModel[] = [];
-      try {
-        const llm = getLLM(provider, { baseUrl, apiKey }) as OpenAICompatible;
-        const result = await llm.availableModels();
-        models = Array.isArray(result) ? result.filter((m) => !!m?.id) : [];
-      } catch (error) {
-        console.log(`Error fetching models: (${baseUrl})`, error);
-        models = [];
+      let resolvedBaseUrl = baseUrl;
+      for (const candidateUrl of baseUrlCandidates(baseUrl, requiresBaseUrl)) {
+        try {
+          const llm = getLLM(provider, { baseUrl: candidateUrl, apiKey }) as OpenAICompatible;
+          const result = await llm.availableModels();
+          models = Array.isArray(result) ? result.filter((m) => !!m?.id) : [];
+        } catch (error) {
+          console.log(`Error fetching models: (${candidateUrl})`, error);
+          models = [];
+        }
+        if (requestId !== fetchRequestId.current) return; // stale - user kept typing
+        if (models.length > 0) {
+          resolvedBaseUrl = candidateUrl;
+          break;
+        }
       }
 
-      // Ignore responses from stale requests (user kept typing).
-      if (requestId !== fetchRequestId.current) return;
       setAvailableModels(models);
       setHasAttemptedFetch(true);
       setIsFetchingModels(false);
+
+      // The endpoint only answered once we appended /v1 - persist the corrected
+      // base URL so chat requests hit the same working path.
+      if (models.length > 0 && resolvedBaseUrl !== baseUrl) {
+        setCurrentBaseUrl(resolvedBaseUrl);
+        await onBaseUrlChange?.(provider, { baseUrl: resolvedBaseUrl });
+      }
     }, 500)
   ).current;
 

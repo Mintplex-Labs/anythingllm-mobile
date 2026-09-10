@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { PATHS } from "@/utils/paths";
@@ -9,11 +9,12 @@ import { AvailableModel } from "@/components/TopBar/ModelChip";
 import SimpleModelCard from "./SimpleModelCard";
 import getLLM from '@/utils/AiProviders';
 import PushNotifications from "@/utils/PushNotifications";
+import type { SelectionModeProps } from "../index";
 
 // During onboarding, this config will not yet be set in the UIStore, so we need set the default here
 const DEFAULT_LLM_PREFERENCE = { provider: 'native', config: { runtime: 'cpu', model: null } } as const;
 
-export default function SimpleModelSelection() {
+export default function SimpleModelSelection({ setMode }: SelectionModeProps) {
   const navigation = useNavigation<NavigationProp<any>>();
   const LLMProvider = getLLM(DEFAULT_LLM_PREFERENCE.provider, DEFAULT_LLM_PREFERENCE.config);
   const llmPreferences = DEFAULT_LLM_PREFERENCE;
@@ -85,6 +86,15 @@ export default function SimpleModelSelection() {
             }}
           />
         ))}
+        <TouchableOpacity
+          onPress={() => setMode('external')}
+          disabled={!!modelDownloadUrl}
+          className="disabled:opacity-50 mt-2 px-4 py-2"
+        >
+          <Text className="text-white/60 text-lg text-center underline">
+            Don't want to download a model? Use an external provider
+          </Text>
+        </TouchableOpacity>
       </View>
     </React.Fragment>
   );

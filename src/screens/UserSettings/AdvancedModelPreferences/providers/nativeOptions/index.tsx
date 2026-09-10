@@ -1,6 +1,7 @@
 import useModelManager from '@/hooks/useModelManager';
 import { Text, TouchableOpacity } from 'react-native';
 import ModelCard from '@/components/ModelCard';
+import { groupModelsByProvider, ProviderSectionHeader } from '@/components/ModelCard/ProviderSections';
 import { useState, useEffect, Fragment } from 'react';
 import OnDeviceProvider from '@/utils/AiProviders/onDevice';
 import { resolveDestinationPathFromGGUFUrl } from '@/utils/models/defaults';
@@ -43,23 +44,32 @@ export default function NativeOptions({
     fetchModels();
   }, [LLMProvider]);
 
+  // Always show the currently selected model, even when it is not a preset,
+  // so a model found in storage that is no longer in our list is still visible.
   const displayedModels = showAllModels
     ? availableModels
-    : availableModels.filter(model => model.isPreset);
+    : availableModels.filter(model => model.isPreset || model.modelId === selectedModel);
+
+  const sections = groupModelsByProvider(displayedModels);
 
   return (
     <Fragment>
-      {displayedModels.map((model, index) => (
-        <ModelCard
-          key={`settings-${model.modelId}-${index}`}
-          model={model}
-          isSelected={selectedModel === model.modelId}
-          isDownloaded={model.isDownloaded}
-          modelDownloadUrl={modelDownloadUrl}
-          downloadProgress={downloadProgress}
-          onSelect={() => downloadModel(model)}
-          onUninstall={() => uninstallModel(model)}
-        />
+      {sections.map((section, sectionIndex) => (
+        <Fragment key={`section-${section.title ?? 'presets'}`}>
+          {section.title && <ProviderSectionHeader title={section.title} />}
+          {section.models.map((model, index) => (
+            <ModelCard
+              key={`settings-${sectionIndex}-${model.modelId}-${index}`}
+              model={model}
+              isSelected={selectedModel === model.modelId}
+              isDownloaded={model.isDownloaded}
+              modelDownloadUrl={modelDownloadUrl}
+              downloadProgress={downloadProgress}
+              onSelect={() => downloadModel(model)}
+              onUninstall={() => uninstallModel(model)}
+            />
+          ))}
+        </Fragment>
       ))}
       {availableModels.length > 0 && (
         <TouchableOpacity

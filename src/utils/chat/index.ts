@@ -242,6 +242,7 @@ export const stops = [
   '<|end_of_turn|>',
   '<end_of_turn>',
   '<|endoftext|>',
+  '<turn|>', // Gemma 4
 ];
 
 /**

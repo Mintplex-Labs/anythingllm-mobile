@@ -21,7 +21,8 @@ import {
   BottomSheetModal,
 } from '@gorhom/bottom-sheet';
 import { FlatList } from 'react-native-gesture-handler';
-import { MagnifyingGlass, X } from 'phosphor-react-native';
+import { MagnifyingGlass, Tag, X } from 'phosphor-react-native';
+import { findIconByModelName, findIconByProvider } from '@/components/MonoProviderIcon';
 import useLlmPreference from '@/hooks/useLLMPreference';
 import useModelManager from '@/hooks/useModelManager';
 import {
@@ -29,6 +30,11 @@ import {
   BOTTOM_SHEET_NAMES,
 } from '@/contexts/BottomSheetContext';
 import ModelCard from '@/components/ModelCard';
+import {
+  flattenModelSections,
+  groupModelsByProvider,
+  ProviderSectionHeader,
+} from '@/components/ModelCard/ProviderSections';
 import { defaultModels } from '@/utils/models';
 import { Model } from '@/utils/types';
 import { WorkspaceType } from '@/database/models/Workspace';
@@ -118,7 +124,11 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
         className={`rounded-full ${!modelName ? 'bg-red-500/20' : 'bg-white/10'
           }`}>
         <View className="flex flex-row items-center justify-center" style={{ gap: 4, paddingVertical: 4, paddingHorizontal: 12 }}>
-          <ProviderIcon provider={llmPreferences.provider} />
+          <ProviderIcon
+            provider={llmPreferences.provider}
+            // On-device `modelName` is the friendly display name; the raw id (eg. `unsloth/Qwen3.5-2B-GGUF`) matches more reliably.
+            modelName={llmPreferences.provider === 'native' ? llmPreferences.config?.model || modelName : modelName}
+          />
           <Text
             style={{ fontSize: 14 }}
             className={`${!modelName ? 'text-red-500' : 'text-white'}`}
@@ -156,9 +166,11 @@ export interface AvailableModel {
   size: number;
   modelId: string;
   downloadUrl: string;
-  description?: string;
-  isPreset?: boolean;
-  imageUrl?: string;
+  description: string;
+  isPreset: boolean;
+  provider?: string;
+  isUnknown?: boolean;
+  imageUrl?: string | null;
 }
 
 function AvailableModels({
@@ -203,9 +215,14 @@ function AvailableModels({
     );
   }, [availableModels, searchQuery]);
 
+  // Presets first, then grouped by provider, then anything found in storage we don't recognise.
+  const listItems = useMemo(
+    () => flattenModelSections(groupModelsByProvider(filteredModels)),
+    [filteredModels],
+  );
+
   if (isLoading) return <ActivityIndicator size="large" color="white" />;
 
-  let seenAllPresets = 0;
   return (
     <View className="flex flex-col items-center justify-center gap-y-4 w-full h-full">
       <View className="flex flex-row items-center mx-6 bg-[#27282A] rounded-lg px-4">
@@ -245,7 +262,8 @@ function AvailableModels({
       )}
       {filteredModels.length > 0 && (
         <FlatList
-          data={filteredModels}
+          data={listItems}
+          keyExtractor={item => item.key}
           className="w-full"
           contentContainerStyle={{
             paddingHorizontal: 20,
@@ -254,62 +272,23 @@ function AvailableModels({
           }}
           showsVerticalScrollIndicator={true}
           scrollEnabled={true}
-          renderItem={({ item, index }) => {
-            const isCurrentlySelected = selectedModel === item.modelId;
-            const isDownloaded = downloadedModels[item.modelId];
-            if (!item.isPreset) seenAllPresets++;
+          renderItem={({ item }) => {
+            if (item.type === 'header') return <ProviderSectionHeader title={item.title} />;
 
+            const model = item.model;
             return (
-              <Fragment key={`${item.modelId}-${index}`}>
-                {seenAllPresets === 1 && (
-                  <View
-                    style={{
-                      paddingVertical: 10,
-                      position: 'relative',
-                      opacity: 0.75,
-                    }}
-                    className="w-full flex flex-row items-center justify-center w-full">
-                    <View
-                      style={{
-                        height: 1,
-                        backgroundColor: '#9F9FA0',
-                        borderRadius: 100,
-                      }}
-                      className="flex flex-1 w-full"
-                    />
-                    <Text
-                      style={{
-                        fontSize: 12,
-                        color: '#9F9FA0',
-                        paddingHorizontal: 10,
-                        zIndex: 2,
-                      }}
-                      className="text-white text-sm">
-                      Additional LLMs
-                    </Text>
-                    <View
-                      style={{
-                        height: 1,
-                        backgroundColor: '#9F9FA0',
-                        borderRadius: 100,
-                      }}
-                      className="flex flex-1 w-full"
-                    />
-                  </View>
-                )}
-                <ModelCard
-                  model={item}
-                  isSelected={isCurrentlySelected}
-                  isDownloaded={isDownloaded}
-                  modelDownloadUrl={modelDownloadUrl}
-                  downloadProgress={downloadProgress}
-                  onSelect={() => {
-                    if (llmPreferences.provider === 'native') return downloadModel(item);
-                    else return selectModel({ modelId: item.id }); // Generic OpenAI /models results
-                  }}
-                  onUninstall={() => uninstallModel(item)}
-                />
-              </Fragment>
+              <ModelCard
+                model={model}
+                isSelected={selectedModel === model.modelId}
+                isDownloaded={downloadedModels[model.modelId]}
+                modelDownloadUrl={modelDownloadUrl}
+                downloadProgress={downloadProgress}
+                onSelect={() => {
+                  if (llmPreferences.provider === 'native') return downloadModel(model);
+                  else return selectModel({ modelId: model.id }); // Generic OpenAI /models results
+                }}
+                onUninstall={() => uninstallModel(model)}
+              />
             );
           }}
         />
@@ -318,11 +297,28 @@ function AvailableModels({
   );
 }
 
-function ProviderIcon({ provider }: { provider: string }) {
-  if (provider === 'native') return null; // No icon for on-device.
+const CHIP_ICON_SIZE = 15;
+const CHIP_ICON_STYLE = { marginRight: 4 };
 
-  const supportedProviders: { [key: string]: any } = {};
-  AVAILABLE_LLM_PROVIDERS.map(provider => supportedProviders[provider.value] = provider.logo);
-  if (!(provider in supportedProviders)) return null;
-  return <Image source={supportedProviders[provider]} style={{ width: 15, height: 15, marginRight: 4 }} />;
+/**
+ * Small brand mark shown next to the model name in the chip.
+ *  - On-device: there is no provider logo, so we match the model itself (Qwen, Gemma, Granite, ...).
+ *  - External providers: the provider's mark (Ollama, LM Studio, OpenAI, ...). When we have no mark
+ *    for the provider we try the model name instead, then the legacy png logo, then a generic tag.
+ */
+function ProviderIcon({ provider, modelName }: { provider: string; modelName?: string | null }) {
+  if (!modelName) return null; // Nothing loaded - the chip already reads "No model loaded".
+
+  const MonoIcon =
+    provider === 'native'
+      ? findIconByModelName(modelName)
+      : findIconByProvider(provider) || findIconByModelName(modelName);
+  if (MonoIcon) return <MonoIcon width={CHIP_ICON_SIZE} height={CHIP_ICON_SIZE} color="#ffffff" style={CHIP_ICON_STYLE} />;
+
+  const legacyLogo = AVAILABLE_LLM_PROVIDERS.find(p => p.value === provider)?.logo;
+  if (provider !== 'native' && legacyLogo) {
+    return <Image source={legacyLogo} style={{ width: CHIP_ICON_SIZE, height: CHIP_ICON_SIZE, ...CHIP_ICON_STYLE }} />;
+  }
+
+  return <Tag size={CHIP_ICON_SIZE} color="#ffffff" weight="bold" style={CHIP_ICON_STYLE} />;
 }

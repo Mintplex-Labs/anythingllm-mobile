@@ -1,25 +1,23 @@
 import { EMBEDDING_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
 import TextSplitter, { TextSplitterConfig } from "@/utils/TextSplitter";
 import * as RNFS from '@dr.pogodin/react-native-fs';
-import { NativeEmbeddingResult, CactusLM } from "cactus-react-native";
-import { Platform } from "react-native";
+import { initLlama, LlamaContext, NativeEmbeddingResult } from "llama.rn";
 
 type EmbedderPrefixType = 'query' | 'embed_document';
 
 /**
- * The is a known bug with the on device embedder.
- * - When you send a query to the embedder, it will return a vector that is ok.
- * - Sending the EXACT SAME query again will return a different vector.
- * - Sending a different query will return a different vector.
- * - Sending the original query again will return the original vector from the first time.
- * 
- * Seeing this is a known bug with the on device embedder. Not a bug with the model.
- * The likelyhood that the same query is sent twice is very low, but it is something to be aware of.
- * We could track the last query vector and compare it to the new query vector and unload the model if they are different
- * before sending to semantic search, but that is a lot of overhead and we are not sure if it is worth it.
+ * On-device text embedder backed by llama.rn (llama.cpp) running the
+ * nomic-embed-text-v1.5 GGUF on the CPU.
  */
 export default class OnDeviceEmbedderProvider {
     static instance: OnDeviceEmbedderProvider;
+
+    /**
+     * nomic-embed-text-v1.5 was trained with a 2048 token window (8192 with rope scaling).
+     * Our chunks are far smaller than this. For non-causal embedding models llama.cpp
+     * requires the whole input to fit in a single ubatch, so batch sizes match n_ctx.
+     */
+    private CONTEXT_LENGTH = 2048;
 
     /**
      * According to the llama.cpp documentation:
@@ -40,9 +38,10 @@ export default class OnDeviceEmbedderProvider {
     private _isWorking: boolean = false;
     private model = EMBEDDING_MODEL.modelId;
     private modelPath = resolveDestinationPathFromGGUFUrl(EMBEDDING_MODEL.tag);
-    private keepAliveTimer: NodeJS.Timeout | null = null;
+    private keepAliveTimer: ReturnType<typeof setTimeout> | null = null;
     private keepAliveInterval = 1000 * (60 * 3); // 3 minutes
-    private cactusLmContext: CactusLM | null = null;
+    private context: LlamaContext | null = null;
+    private initializing: Promise<boolean> | null = null;
 
     // Singleton, there are no props so nothing to ever reload.
     // Just keep the singleton instance alive.
@@ -82,21 +81,38 @@ export default class OnDeviceEmbedderProvider {
         }
     }
 
+    /**
+     * Loads the embedding model. Concurrent callers share the same in-flight load
+     * so a burst of chunks never creates more than one context.
+     */
     private async initialize(): Promise<boolean> {
-        try {
-            if (!!this.cactusLmContext) return true;
-            if (!(await RNFS.exists(this.modelPath))) await this.downloadModel();
+        if (this.context) return true;
+        if (this.initializing) return this.initializing;
 
-            this.cactusLmContext = await CactusLM.init({
-                model: this.modelPath,
-                n_gpu_layers: Platform.OS === 'ios' ? 99 : 0,
-                embedding: true,
-            }).then(result => result.lm)
-            return true;
-        } catch (error) {
-            console.error('Failed to initialize model:', error);
-            throw error;
-        }
+        this.initializing = (async () => {
+            try {
+                if (!(await RNFS.exists(this.modelPath))) await this.downloadModel();
+                this.context = await initLlama({
+                    model: this.modelPath,
+                    embedding: true,
+                    embd_normalize: this.EMBEDDING_NORMALIZATION,
+                    n_ctx: this.CONTEXT_LENGTH,
+                    n_batch: this.CONTEXT_LENGTH,
+                    n_ubatch: this.CONTEXT_LENGTH,
+                    use_mlock: true,
+                    use_mmap: true,
+                    n_gpu_layers: 0, // CPU only
+                });
+                this.log(`${this.model} loaded`);
+                return true;
+            } catch (error) {
+                console.error('Failed to initialize model:', error);
+                throw error;
+            } finally {
+                this.initializing = null;
+            }
+        })();
+        return this.initializing;
     }
 
     private keepAlive() {
@@ -118,9 +134,15 @@ export default class OnDeviceEmbedderProvider {
     }
 
     private async unloadModel(): Promise<void> {
+        if (this.keepAliveTimer) {
+            clearTimeout(this.keepAliveTimer);
+            this.keepAliveTimer = null;
+        }
+        if (!this.context) return;
         this.log('Unloading model');
-        if (this.cactusLmContext) await this.cactusLmContext.release();
-        this.cactusLmContext = null;
+        const context = this.context;
+        this.context = null;
+        await context.release();
     }
 
     /**
@@ -157,12 +179,12 @@ export default class OnDeviceEmbedderProvider {
     async embed(text: string, as: 'query' | 'embed_document' = 'query') {
         return this.wrapInKeepAlive(async () => {
             await this.initialize();
-            if (!this.cactusLmContext) throw new Error('OnDeviceEmbedderProvider::embed: could not initialize');
+            if (!this.context) throw new Error('OnDeviceEmbedderProvider::embed: could not initialize');
 
             this.keepAlive();
             const prefixedText = `${this.EMBED_PREFIXES[as]}${text}`;
             this.log(`Embedding text with prefix: ${prefixedText}`);
-            const msgResult: NativeEmbeddingResult = await this.cactusLmContext.embedding(prefixedText, { embd_normalize: this.EMBEDDING_NORMALIZATION });
+            const msgResult: NativeEmbeddingResult = await this.context.embedding(prefixedText, { embd_normalize: this.EMBEDDING_NORMALIZATION });
             return msgResult.embedding;
         });
     }
@@ -180,7 +202,7 @@ export default class OnDeviceEmbedderProvider {
     /**
      * Splits the document text into chunks and embeds them.
      * Returns an array of embeddings with their respective metadata.
-     * 
+     *
      * Assumes this is a document that is being embedded for semantic search.
      */
     async splitAndEmbed(documentText: string, options: TextSplitterConfig, as: EmbedderPrefixType = 'embed_document') {

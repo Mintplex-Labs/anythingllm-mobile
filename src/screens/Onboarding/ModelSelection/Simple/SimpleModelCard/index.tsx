@@ -28,9 +28,11 @@ export default function ModelCard({
         <Image source={{ uri: model.imageUrl }} style={{ width: 48, height: 48 }} className="shrink-0 grow-0 bg-white rounded-lg flex items-center justify-center" />
       );
     }
-    const defaultCard = MODEL_CARDS.find(
-      card => card.modelId === model.modelId,
-    );
+    // Preset alias rows use their phosphor icon; matched on the preset id, not the
+    // modelId, which is shared with the catalog entry for the same model.
+    const defaultCard = model.isPreset
+      ? MODEL_CARDS.find(card => card.id === model.id)
+      : undefined;
     const Icon = defaultCard?.Icon || Cube;
     return (
       <View style={{ width: 48, height: 48 }} className="shrink-0 grow-0 bg-white rounded-lg flex items-center justify-center">

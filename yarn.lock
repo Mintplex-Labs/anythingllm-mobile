@@ -2336,6 +2336,11 @@
     "@langchain/core" "~0.1"
     js-tiktoken "^1.0.11"
 
+"@lobehub/icons-static-svg@^1.95.0":
+  version "1.95.0"
+  resolved "https://registry.yarnpkg.com/@lobehub/icons-static-svg/-/icons-static-svg-1.95.0.tgz#6b330b35069187a3b8ca8dd6b654fa60317d3bfa"
+  integrity sha512-VSObF66DUVQe0EK3xbIoFcw+Fcia1+bLVFkMsQbmz0zCceMxPmoLImS5VM5SM7zL+/NarZ11/ySNfkekcomIkQ==
+
 "@native-html/css-processor@1.11.0":
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/@native-html/css-processor/-/css-processor-1.11.0.tgz#27d02e5123b0849f4986d44060ba3f235a15f552"
@@ -3895,11 +3900,6 @@ bytes@3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-3.1.2.tgz#8b0beeb98605adf1b128fa4386403c009e0221a5"
   integrity sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==
-
-cactus-react-native@0.2.10:
-  version "0.2.10"
-  resolved "https://registry.yarnpkg.com/cactus-react-native/-/cactus-react-native-0.2.10.tgz#e1381074473f9262dd0d5c39b3e114479a4a5341"
-  integrity sha512-Q+bubTZN56DLwGkaW/mA7iaK1xytjTSNwvO+odb1kGrpuHmFmyA8st2a8vGVYmJu7wwnxJwpalQ8Akvm5w0TqQ==
 
 call-bind@^1.0.2, call-bind@^1.0.5, call-bind@^1.0.6, call-bind@^1.0.7:
   version "1.0.7"
@@ -6908,6 +6908,11 @@ linkify-it@^2.0.0:
   integrity sha512-GnAl/knGn+i1U/wjBz3akz2stz+HrHLsxMwHQGofCDfPvlf+gDKN58UtfmUquTY4/MXeE2x7k19KQmeoZi94Iw==
   dependencies:
     uc.micro "^1.0.1"
+
+llama.rn@0.12.9:
+  version "0.12.9"
+  resolved "https://registry.yarnpkg.com/llama.rn/-/llama.rn-0.12.9.tgz#97c434394b598bf9fa82ed871ed424a633982c33"
+  integrity sha512-uRsTVARp1KnDkDg00FvOGIrN6SZfMqYVJfCOdxN9FSyGufLC+Aad6oFWZVEO8vmtNqu+JBlsCGevP4sJGifAvg==
 
 locate-path@^3.0.0:
   version "3.0.0"

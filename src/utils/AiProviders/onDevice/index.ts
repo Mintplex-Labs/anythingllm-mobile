@@ -1,13 +1,31 @@
 import { defaultModels } from "@/utils/models";
 import GenieWrapper, { IGenieStreamCallback } from "./genie";
-import CactusLmWrapper, { ICactusLmStreamCallback } from "./cactus";
+import LlamaRnWrapper, { ILlamaRnStreamCallback, OnDeviceRuntimeInfo } from "./llamaRn";
 import BaseOpenAILikeProvider, { IAvailableModel, ICompleteResponse, IStreamCallback, IStreamEvent } from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
-import MODEL_CARDS from "@/utils/models/defaults";
+import MODEL_CARDS, { EMBEDDING_MODEL } from "@/utils/models/defaults";
+import { DEFAULT_GGUF_FOLDER } from "@/utils/models/manager";
+import * as RNFS from '@dr.pogodin/react-native-fs';
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
 
-export type IOnDeviceStreamCallback = IGenieStreamCallback | ICactusLmStreamCallback;
+export type IOnDeviceStreamCallback = IGenieStreamCallback | ILlamaRnStreamCallback;
+
+/** Shape of an entry returned by `OnDeviceProvider.availableModels()` */
+export type IOnDeviceAvailableModel = {
+  id: string;
+  modelId: string;
+  name: string;
+  description: string;
+  size: number | string;
+  downloadUrl: string;
+  isPreset: boolean;
+  /** Display name of the organisation behind the model (Google, IBM Research, ...). Used to group lists. */
+  provider?: string;
+  /** True when the model was found in storage but is not in any list we know about */
+  isUnknown?: boolean;
+  imageUrl?: string | null;
+}
 export type OnDeviceProviderConstructorProps = { config: { model: string | null } }
 
 export default class OnDeviceProvider extends BaseOpenAILikeProvider {
@@ -19,7 +37,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   // @ts-ignore - this is a valid property for this class
   public model: string | null;
 
-  protected submodule: GenieWrapper | CactusLmWrapper | null = null;
+  protected submodule: GenieWrapper | LlamaRnWrapper | null = null;
   protected client: OpenAILite;
   protected isOTypeModel: boolean;
   protected temperature: number;
@@ -59,7 +77,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     if (this.computeRuntime === 'NPU') {
       return new GenieWrapper({ model, parent: this });
     } else {
-      return new CactusLmWrapper({ model, parent: this });
+      return new LlamaRnWrapper({ model, parent: this });
     }
   }
 
@@ -79,6 +97,21 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
   get name() {
     return this.provider;
+  }
+
+  /**
+   * Runtime details of the currently loaded GGUF model (null when nothing is loaded).
+   */
+  get runtimeInfo(): OnDeviceRuntimeInfo | null {
+    if (this.submodule instanceof LlamaRnWrapper) return this.submodule.runtimeInfo;
+    return null;
+  }
+
+  /**
+   * Interrupts the response currently being generated, if any.
+   */
+  async stopGeneration() {
+    if (this.submodule instanceof LlamaRnWrapper) await this.submodule.stop();
   }
 
   async loadNewModel(model: string | null) {
@@ -102,9 +135,68 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     this.log(`${this.name}::${this.submodule.name} re-initialized with model ${this.model}`);
   }
 
+  /**
+   * Turns a storage folder name like "Lucy-gguf" or "Qwen3-1.7B-GGUF" into a
+   * readable title like "Lucy" or "Qwen3 1.7B".
+   */
+  static humanizeModelFolderName(folderName: string) {
+    return folderName
+      .replace(/[-_.]?gguf$/i, '')
+      .replace(/[-_]+/g, ' ')
+      .trim()
+      .replace(/^./, c => c.toUpperCase());
+  }
+
+  /**
+   * Scans the gguf storage folder for models that are installed on the device
+   * but are not part of any list we know about (eg: a model we removed from
+   * the catalog, or one added by hand). These are returned as generic entries
+   * so the user can still see, select and uninstall them.
+   *
+   * Storage layout is `models/gguf/<creator>/<model>/<file>.gguf`, mirroring
+   * the HuggingFace url the file was downloaded from, so we can rebuild a url
+   * that `resolveDestinationPathFromGGUFUrl` resolves back to the same path.
+   */
+  async discoverUnknownStoredModels(knownModelIds: string[]): Promise<IOnDeviceAvailableModel[]> {
+    const known = new Set([...knownModelIds, EMBEDDING_MODEL.modelId]);
+    const unknownModels: IOnDeviceAvailableModel[] = [];
+
+    try {
+      if (!(await RNFS.exists(DEFAULT_GGUF_FOLDER))) return [];
+      const creators = (await RNFS.readDir(DEFAULT_GGUF_FOLDER)).filter(item => item.isDirectory());
+
+      for (const creator of creators) {
+        const modelDirs = (await RNFS.readDir(creator.path)).filter(item => item.isDirectory());
+        for (const modelDir of modelDirs) {
+          const modelId = `${creator.name}/${modelDir.name}`;
+          if (known.has(modelId)) continue;
+
+          const ggufFile = (await RNFS.readDir(modelDir.path)).find(file => file.isFile() && file.name.toLowerCase().endsWith('.gguf'));
+          if (!ggufFile) continue;
+
+          unknownModels.push({
+            id: modelId,
+            modelId,
+            name: OnDeviceProvider.humanizeModelFolderName(modelDir.name),
+            description: `Found on this device in ${modelId} but it is not in our model list. You can still use it or uninstall it.`,
+            size: Number(ggufFile.size),
+            downloadUrl: `https://huggingface.co/${modelId}/resolve/main/${ggufFile.name}`,
+            isPreset: false,
+            isUnknown: true,
+            imageUrl: null,
+          });
+        }
+      }
+    } catch (error) {
+      this.log('Failed to scan storage for unknown models', error);
+    }
+
+    return unknownModels;
+  }
+
   // @ts-ignore
-  override async availableModels(): Promise<object[]> {
-    const basicModels = MODEL_CARDS.map(m => ({
+  override async availableModels(): Promise<IOnDeviceAvailableModel[]> {
+    const basicModels: IOnDeviceAvailableModel[] = MODEL_CARDS.map(m => ({
       id: m.id,
       name: m.name,
       description: m.description,
@@ -114,7 +206,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
       isPreset: true,
     }));
 
-    const crossPlatformModels = defaultModels
+    const crossPlatformModels: IOnDeviceAvailableModel[] = defaultModels
       .filter(m => m.runtime === 'CPU')
       .map(m => ({ ...m, id: m.id.endsWith('.gguf') ? m.id.split('/').slice(0, -1).join('/') : m.id }))
       .map(m => {
@@ -127,13 +219,16 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
           modelId: m.id,
           downloadUrl: m.downloadUrl || '',
           isPreset: false,
+          provider: m.author,
           // @ts-ignore
           imageUrl: m.imageUrl ?? null,
         }
       });
+    const knownModels = [...basicModels, ...crossPlatformModels];
+    const unknownModels = await this.discoverUnknownStoredModels(knownModels.map(m => m.modelId));
     return [
-      ...basicModels,
-      ...crossPlatformModels
+      ...knownModels,
+      ...unknownModels,
     ];
   }
 

@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, Image } from 'react-native';
-import { DownloadSimple, Cube } from 'phosphor-react-native';
+import { DownloadSimple, Cube, Question } from 'phosphor-react-native';
 import MODEL_CARDS from '@/utils/models/defaults';
+import { findMonoProviderIcon } from '@/components/MonoProviderIcon';
 import truncate from 'truncate';
 
 interface ModelCardProps {
@@ -24,6 +25,36 @@ export default function ModelCard({
   onUninstall,
 }: ModelCardProps) {
   const getModelIcon = () => {
+    // Only the preset alias rows (Lightweight/Balanced/Powerful) use their phosphor icon.
+    // The catalog entry for the same model keeps its provider mark, so match on the
+    // preset id rather than the shared modelId.
+    const defaultCard = model.isPreset
+      ? MODEL_CARDS.find(card => card.id === model.id)
+      : undefined;
+    if (defaultCard?.Icon) {
+      const Icon = defaultCard.Icon;
+      return (
+        <View className="w-[38px] h-[38px] rounded-lg justify-center items-center bg-white">
+          <Icon size={32} color="#000" />
+        </View>
+      );
+    }
+
+    // Bundled mono brand mark, resolved from the model name/id or its provider.
+    // No network fetch needed so new models get a logo as soon as they are added.
+    const MonoIcon = findMonoProviderIcon({
+      provider: model.provider,
+      modelName: model.modelId || model.id || model.name,
+    });
+    if (MonoIcon) {
+      return (
+        <View className="w-[38px] h-[38px] rounded-lg justify-center items-center bg-white">
+          <MonoIcon width={26} height={26} color="#000" style={{}} />
+        </View>
+      );
+    }
+
+    // Legacy remote avatar for anything we could not match to a bundled icon.
     if (model.imageUrl) {
       return (
         <Image
@@ -33,10 +64,8 @@ export default function ModelCard({
         />
       );
     }
-    const defaultCard = MODEL_CARDS.find(
-      card => card.modelId === model.modelId,
-    );
-    const Icon = defaultCard?.Icon || Cube;
+
+    const Icon = model.isUnknown ? Question : Cube;
     return (
       <View className="w-[38px] h-[38px] rounded-lg justify-center items-center bg-white">
         <Icon size={32} color="#000" />
@@ -60,9 +89,16 @@ export default function ModelCard({
             {getModelIcon()}
           </View>
           <View className="flex-1">
-            <Text className="text-white text-base font-medium">
-              {model.name}
-            </Text>
+            <View className="flex-row items-center gap-2">
+              <Text className="text-white text-base font-medium" numberOfLines={1}>
+                {model.name}
+              </Text>
+              {model.isUnknown && (
+                <View className="rounded-full px-2 py-0.5 bg-yellow-500/30">
+                  <Text className="text-yellow-200 text-[10px] font-medium">Unknown</Text>
+                </View>
+              )}
+            </View>
             {model.description && (
               <Text className="text-sm text-[#9F9FA0]">
                 {truncate(model.description, 100)}

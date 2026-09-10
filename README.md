@@ -38,7 +38,7 @@ The design thesis of a "Local AI First" of AnythingLLM applies to the mobile app
 
 ### Features
 
-- **On-device LLM inference** — Run GGUF models locally on your phone using [Cactus Compute](https://github.com/cactus-compute/cactus) (llama.cpp for React Native).
+- **On-device LLM inference** — Run GGUF models locally on your phone using [llama.rn](https://github.com/mybigday/llama.rn) (llama.cpp for React Native).
 - **Connect to AnythingLLM** — Pair with your self-hosted AnythingLLM desktop or server instance for full workspace access.
 - **Multiple AI providers** — Use Ollama, LM Studio, OpenRouter, or any OpenAI-compatible API.
 - **Workspace chat** — Organize conversations into workspaces, just like the desktop app.
@@ -50,7 +50,7 @@ The design thesis of a "Local AI First" of AnythingLLM applies to the mobile app
 
 | Provider | Type |
 |----------|------|
-| On-device (GGUF via cactus) | Local inference |
+| On-device (GGUF via llama.rn) | Local inference |
 | AnythingLLM Instance | Delegated (LAN/remote) |
 | Ollama | Local/remote |
 | LM Studio | Local/remote |
@@ -89,6 +89,20 @@ cd ios && pod install && cd ..
 npx react-native run-ios
 ```
 
+### On-device runtime (llama.rn)
+
+On-device inference uses [llama.rn](https://github.com/mybigday/llama.rn), which requires the React Native
+**New Architecture** (`newArchEnabled=true` in `android/gradle.properties`). During `yarn install` its
+postinstall script downloads the prebuilt `librnllama*.so` libraries from the matching GitHub release into
+`node_modules/llama.rn/android/src/main/jniLibs`.
+
+If that download fails (no network, or on Windows when `yarn` runs inside Git Bash where GNU `tar` mis-reads
+the `C:` drive letter as a remote host) re-run it from PowerShell / cmd:
+
+```bash
+node ./node_modules/llama.rn/install/download-native-artifacts.js --force
+```
+
 ### Building for Release
 
 1. Place your `anythingllm-upload-key.keystore` in `android/app/`
@@ -104,7 +118,7 @@ This is a React Native application targeting Android (with iOS support planned).
 - **NativeWind / Tailwind CSS** — Styling
 - **MobX** — State management
 - **WatermelonDB** — Local database
-- **cactus-react-native** — On-device LLM inference (llama.cpp bindings)
+- **llama.rn** — On-device LLM inference (llama.cpp bindings, requires the React Native New Architecture)
 - **React Navigation** — Routing and navigation
 
 ### Project Structure
@@ -130,7 +144,7 @@ src/
 
 - **[AnythingLLM](https://github.com/Mintplex-Labs/anything-llm):** The all-in-one AI app for desktop and self-hosting.
 - **[AnythingLLM Embed](https://github.com/Mintplex-Labs/anythingllm-embed):** Embeddable chat widget for websites.
-- **[Cactus Compute](https://github.com/cactus-compute/cactus):** The runtime for running LLMs on-device.
+- **[llama.rn](https://github.com/mybigday/llama.rn):** The runtime for running LLMs on-device.
 
 <div align="right">
 

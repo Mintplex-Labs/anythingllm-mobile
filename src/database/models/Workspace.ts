@@ -43,8 +43,8 @@ export default class Workspace extends Model {
   static defaultSystemPrompt = `You are a helpful assistant that can answer questions and help with tasks.`;
 
   /**
-   * Inherit the default values from the CactusLmWrapper class so no weirdness happens during inference.
-   * https://github.com/cactus-compute/cactus/tree/main/react/src/NativeCactus.ts#L10
+   * Mirror the defaults of the on-device LlamaRnWrapper (src/utils/AiProviders/onDevice/llamaRn)
+   * so no weirdness happens during inference when a workspace has no override.
    */
   static defaultTemperature = 0.7;
   static defaultContextLength = 1024;

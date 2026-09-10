@@ -1,6 +1,6 @@
 import { defaultModels } from "@/utils/models";
 import GenieWrapper, { IGenieStreamCallback } from "./genie";
-import CactusLmWrapper, { ICactusLmStreamCallback } from "./cactus";
+import LlamaRnWrapper, { ILlamaRnStreamCallback, OnDeviceRuntimeInfo } from "./llamaRn";
 import BaseOpenAILikeProvider, { IAvailableModel, ICompleteResponse, IStreamCallback, IStreamEvent } from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
 import MODEL_CARDS, { EMBEDDING_MODEL } from "@/utils/models/defaults";
@@ -9,7 +9,7 @@ import * as RNFS from '@dr.pogodin/react-native-fs';
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
 
-export type IOnDeviceStreamCallback = IGenieStreamCallback | ICactusLmStreamCallback;
+export type IOnDeviceStreamCallback = IGenieStreamCallback | ILlamaRnStreamCallback;
 
 /** Shape of an entry returned by `OnDeviceProvider.availableModels()` */
 export type IOnDeviceAvailableModel = {
@@ -37,7 +37,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   // @ts-ignore - this is a valid property for this class
   public model: string | null;
 
-  protected submodule: GenieWrapper | CactusLmWrapper | null = null;
+  protected submodule: GenieWrapper | LlamaRnWrapper | null = null;
   protected client: OpenAILite;
   protected isOTypeModel: boolean;
   protected temperature: number;
@@ -77,7 +77,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     if (this.computeRuntime === 'NPU') {
       return new GenieWrapper({ model, parent: this });
     } else {
-      return new CactusLmWrapper({ model, parent: this });
+      return new LlamaRnWrapper({ model, parent: this });
     }
   }
 
@@ -97,6 +97,21 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
   get name() {
     return this.provider;
+  }
+
+  /**
+   * Runtime details of the currently loaded GGUF model (null when nothing is loaded).
+   */
+  get runtimeInfo(): OnDeviceRuntimeInfo | null {
+    if (this.submodule instanceof LlamaRnWrapper) return this.submodule.runtimeInfo;
+    return null;
+  }
+
+  /**
+   * Interrupts the response currently being generated, if any.
+   */
+  async stopGeneration() {
+    if (this.submodule instanceof LlamaRnWrapper) await this.submodule.stop();
   }
 
   async loadNewModel(model: string | null) {

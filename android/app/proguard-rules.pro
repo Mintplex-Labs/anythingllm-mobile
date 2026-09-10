@@ -9,3 +9,6 @@
 
 # Add any project specific keep options here:
 ‑dontobfuscate
+
+# llama.rn
+-keep class com.rnllama.** { *; }

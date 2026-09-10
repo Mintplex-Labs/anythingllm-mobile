@@ -19,9 +19,12 @@ import {
 export default function ProviderSelection({
   selection,
   onChange,
+  excludeProviders = [],
 }: {
   selection: ISelection;
   onChange: (provider: string) => void;
+  /** Provider values to hide from the picker (eg: 'native' during external-provider onboarding) */
+  excludeProviders?: string[];
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef(null);
@@ -31,12 +34,13 @@ export default function ProviderSelection({
     () =>
       AVAILABLE_LLM_PROVIDERS.filter(
         provider =>
-          provider.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          provider.description
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()),
+          !excludeProviders.includes(provider.value) &&
+          (provider.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            provider.description
+              .toLowerCase()
+              .includes(searchQuery.toLowerCase())),
       ),
-    [searchQuery],
+    [searchQuery, excludeProviders],
   );
   const selectedProviderObject =
     AVAILABLE_LLM_PROVIDERS.find(p => p.value === selection.provider) ??

@@ -25,10 +25,12 @@ export default function ModelCard({
   onUninstall,
 }: ModelCardProps) {
   const getModelIcon = () => {
-    // Presets keep their dedicated icon (Feather/Scales/Barbell).
-    const defaultCard = MODEL_CARDS.find(
-      card => card.modelId === model.modelId,
-    );
+    // Only the preset alias rows (Lightweight/Balanced/Powerful) use their phosphor icon.
+    // The catalog entry for the same model keeps its provider mark, so match on the
+    // preset id rather than the shared modelId.
+    const defaultCard = model.isPreset
+      ? MODEL_CARDS.find(card => card.id === model.id)
+      : undefined;
     if (defaultCard?.Icon) {
       const Icon = defaultCard.Icon;
       return (

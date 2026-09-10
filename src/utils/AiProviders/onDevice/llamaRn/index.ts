@@ -11,6 +11,7 @@ import { defaultModels } from '@/utils/models';
 import { stops } from '@/utils/chat';
 import { ICompleteResponse } from '@/utils/AiProviders/baseOpenAILikeProvider';
 import type OnDeviceProvider from '@/utils/AiProviders/onDevice/index';
+import { getDefaultContextLength } from '@/utils/contextLength';
 
 export type NativeLlamaChatMessage = {
   role: string;
@@ -43,7 +44,10 @@ export default class LlamaRnWrapper {
    * On overflow, the oldest chat turns are dropped before the prompt is sent (see `fitMessagesToContext`)
    * and llama.cpp context shifting is enabled as a last line of defence during generation.
    */
-  static DEFAULT_CONTEXT_LENGTH = 1024;
+  /** Scales with device RAM up to a max of 2048 - see src/utils/contextLength.ts */
+  static get DEFAULT_CONTEXT_LENGTH(): number {
+    return getDefaultContextLength();
+  }
   static DEFAULT_TEMPERATURE = 0.7;
 
   /**

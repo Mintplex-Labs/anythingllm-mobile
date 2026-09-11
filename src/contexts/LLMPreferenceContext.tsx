@@ -2,10 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import uiStore from '@/store/UIStore';
 import getLLM, { LLMProvider } from '@/utils/AiProviders';
 import { OnDeviceProviderConstructorProps } from '@/utils/AiProviders/onDevice';
-import { OpenAICompatibleConfig } from '@/utils/AiProviders/openAICompatible';
-import { OllamaProviderConfig } from '@/utils/AiProviders/OllamaProvider';
-import { LMStudioProviderConfig } from '@/utils/AiProviders/LMStudioProvider';
-import { OpenRouterProviderConfig } from '@/utils/AiProviders/OpenRouterProvider';
+import { findProviderDefinition, providerDisplayName } from '@/utils/llmproviders';
 
 interface LLMPreferenceContextType {
     llmPreferences: { provider: string; config: any };
@@ -20,22 +17,7 @@ interface LLMPreferenceContextType {
 const LLMPreferenceContext = createContext<LLMPreferenceContextType | null>(null);
 
 function providerToName(provider: string) {
-    switch (provider) {
-        case 'openai':
-            return 'OpenAI';
-        case 'generic-openai':
-            return 'OpenAI (Generic)';
-        case 'lmstudio':
-            return 'LMStudio';
-        case 'ollama':
-            return 'Ollama';
-        case 'native':
-            return 'On-Device';
-        case 'openrouter':
-            return 'OpenRouter';
-        default:
-            return 'Unknown';
-    }
+    return providerDisplayName(provider);
 }
 
 export function LLMPreferenceProvider({ children }: { children: ReactNode }) {
@@ -77,35 +59,24 @@ export function LLMPreferenceProvider({ children }: { children: ReactNode }) {
 
     // Listen for changes to the LLM preference so we can update the LLM provider across the app
     useEffect(() => {
-        const handleLLMPreferenceChange = (event: { details: { provider: string, config: OnDeviceProviderConstructorProps['config'] | OpenAICompatibleConfig['config'] } }) => {
+        const handleLLMPreferenceChange = (event: { details: { provider: string, config: Record<string, any> } }) => {
             setLlmPreferences(event.details);
             let llmProvider: LLMProvider | null = null;
             switch (event.details.provider) {
-                case 'native':
+                case 'native': {
                     const onDeviceConfig = event.details.config as OnDeviceProviderConstructorProps['config'];
                     llmProvider = getLLM(event.details.provider, onDeviceConfig);
                     llmProvider.loadNewModel(onDeviceConfig!.model as string);
                     break;
-                case 'openai':
-                    const openAIConfig = event.details.config as OpenAICompatibleConfig['config'];
-                    llmProvider = getLLM(event.details.provider, openAIConfig);
-                    llmProvider.loadNewModel(openAIConfig!.model!);
+                }
+                default: {
+                    // Every external provider (OpenAI, OpenRouter, Anthropic, Ollama, ...) is built the same way
+                    // from its saved `{ apiKey, baseUrl, model, region }` config.
+                    if (!findProviderDefinition(event.details.provider)) break;
+                    llmProvider = getLLM(event.details.provider, event.details.config);
+                    if (event.details.config?.model) llmProvider.loadNewModel(event.details.config.model);
                     break;
-                case 'openrouter':
-                    const openRouterConfig = event.details.config as OpenRouterProviderConfig['config'];
-                    llmProvider = getLLM(event.details.provider, openRouterConfig);
-                    llmProvider.loadNewModel(openRouterConfig!.model!);
-                    break;
-                case 'ollama':
-                    const ollamaConfig = event.details.config as OllamaProviderConfig['config'];
-                    llmProvider = getLLM(event.details.provider, ollamaConfig);
-                    llmProvider.loadNewModel(ollamaConfig!.model!);
-                    break;
-                case 'lmstudio':
-                    const lmStudioConfig = event.details.config as LMStudioProviderConfig['config'];
-                    llmProvider = getLLM(event.details.provider, lmStudioConfig);
-                    llmProvider.loadNewModel(lmStudioConfig!.model!);
-                    break;
+                }
             }
             setLLMProvider(llmProvider);
         };

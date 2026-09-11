@@ -71,7 +71,21 @@ This release turns AnythingLLM Mobile from a chat app into a proper assistant.
 | AnythingLLM Instance | Your own desktop or server (LAN/remote) |
 | Ollama | Local/remote |
 | LM Studio | Local/remote |
+| LocalAI | Local/remote |
+| Lemonade | Local/remote |
+| LiteLLM | Local/remote |
+| Anthropic | Cloud |
+| AWS Bedrock | Cloud |
+| DeepSeek | Cloud |
+| Fireworks AI | Cloud |
+| Gemini | Cloud |
+| MiniMax | Cloud |
+| Moonshot AI | Cloud |
+| Novita AI | Cloud |
+| OpenAI | Cloud |
 | OpenRouter | Cloud |
+| Together AI | Cloud |
+| xAI | Cloud |
 | Any OpenAI-compatible API | Cloud/local |
 
 ### Supported Operating Systems

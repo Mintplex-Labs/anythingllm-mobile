@@ -66,13 +66,36 @@ class OllamaProvider extends BaseOpenAILikeProvider {
     console.log(`\x1b[36m[${this.constructor.name}]\x1b[0m ${text}`, ...args);
   }
 
+  /**
+   * Ollama lists installed models on its native `/api/tags` endpoint (not under `/v1`).
+   * Response shape: `{ models: [{ name, model, details: { family, ... } }] }` - mapped to the
+   * OpenAI style `{ id, object, owned_by }` every other provider returns.
+   */
   override async availableModels(): Promise<OllamaModel[]> {
-    return await this.client.models.list()
-      .then((models) => models.data.map((model: OllamaModel) => model))
-      .catch((error) => {
-        this.log(`Error fetching models: ${error}`);
-        return [];
+    try {
+      if (!this.baseURL) throw new Error('No base URL configured');
+      const apiBaseUrl = new URL(this.baseURL).origin; // api/tags is not under v1/
+      const res = await fetch(`${apiBaseUrl}/api/tags`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(this.apiKey ? { 'Authorization': `Bearer ${this.apiKey}` } : {}),
+        },
       });
+      if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
+      const data: { models?: { name?: string; model?: string; details?: { family?: string } }[] } = await res.json();
+      if (!Array.isArray(data?.models)) throw new Error('Response did not contain a "models" array.');
+      return data.models
+        .map((model) => ({
+          id: model.name || model.model || '',
+          object: 'model',
+          owned_by: model.details?.family || 'ollama',
+        }))
+        .filter((model) => !!model.id);
+    } catch (error) {
+      this.log(`Error fetching models: ${error}`);
+      return [];
+    }
   }
 
   async loadNewModel(model: string) {

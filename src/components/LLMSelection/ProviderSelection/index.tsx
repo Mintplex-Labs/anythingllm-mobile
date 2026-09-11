@@ -4,16 +4,15 @@ import {
   TouchableOpacity,
   View,
   TextInput,
-  ScrollView,
 } from 'react-native';
 import { useState, useRef, useCallback, useMemo } from 'react';
 import { ISelection } from '@/screens/Onboarding/ModelSelection';
 import { X, MagnifyingGlass, CaretDown, Circle } from 'phosphor-react-native';
-import { AVAILABLE_LLM_PROVIDERS } from '@/utils/llmproviders';
+import { AVAILABLE_LLM_PROVIDERS, groupProvidersForPicker } from '@/utils/llmproviders';
 import {
   BottomSheetModal,
   BottomSheetBackdrop,
-  BottomSheetView,
+  BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 
 export default function ProviderSelection({
@@ -30,18 +29,22 @@ export default function ProviderSelection({
   const searchInputRef = useRef(null);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-  const filteredProviders = useMemo(
+  // Providers matching the search, grouped into "Local Providers" / "Cloud Providers" sections.
+  const providerSections = useMemo(
     () =>
-      AVAILABLE_LLM_PROVIDERS.filter(
-        provider =>
-          !excludeProviders.includes(provider.value) &&
-          (provider.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            provider.description
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase())),
+      groupProvidersForPicker(
+        AVAILABLE_LLM_PROVIDERS.filter(
+          provider =>
+            !excludeProviders.includes(provider.value) &&
+            (provider.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              provider.description
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())),
+        ),
       ),
     [searchQuery, excludeProviders],
   );
+  const hasResults = providerSections.length > 0;
   const selectedProviderObject =
     AVAILABLE_LLM_PROVIDERS.find(p => p.value === selection.provider) ??
     AVAILABLE_LLM_PROVIDERS[0];
@@ -96,7 +99,11 @@ export default function ProviderSelection({
             width: 45,
             margin: 10,
           }}>
-          <BottomSheetView className="flex-1 bg-[#1B1B1E]">
+          {/* BottomSheetScrollView (not a plain ScrollView) so the list scrolls instead of dragging the sheet */}
+          <BottomSheetScrollView
+            className="flex-1 bg-[#1B1B1E]"
+            contentContainerStyle={{ paddingBottom: 100 }}
+            keyboardShouldPersistTaps="handled">
             <Text className="text-white text-lg font-semibold py-4 text-center">
               Choose your provider
             </Text>
@@ -117,60 +124,65 @@ export default function ProviderSelection({
                 </TouchableOpacity>
               )}
             </View>
-            <ScrollView
-              className="flex-1 px-4 py-2"
-              contentContainerStyle={{ paddingBottom: 100, gap: 10 }}>
-              {filteredProviders.length === 0 && (
+            <View className="px-4 py-2" style={{ gap: 10 }}>
+              {!hasResults && (
                 <Text className="text-white text-center pt-4">
                   No providers found for "{searchQuery}"
                 </Text>
               )}
-              {filteredProviders.map(provider => (
-                <TouchableOpacity
-                  key={provider.value}
-                  className="flex flex-row items-center justify-between w-full p-2 rounded-lg"
-                  onPress={() => updateProviderChoice(provider.value)}>
-                  <View className="flex flex-row items-center flex-1">
-                    <Image
-                      source={provider.logo}
-                      style={{ width: 40, height: 40 }}
-                      className="rounded-lg"
-                      resizeMode="contain"
-                    />
-                    <View className="ml-4 flex-1">
-                      <Text className="text-white text-lg">
-                        {provider.name}
-                      </Text>
-                      {provider.description && (
-                        <Text className="text-[#9F9FA0] text-sm">
-                          {provider.description}
-                        </Text>
-                      )}
-                    </View>
-                  </View>
-                  <View className="flex flex-row items-center justify-center">
-                    {selection.provider === provider.value ? (
-                      <View className="relative">
-                        <Circle size={24} color="#FFF" />
-                        <Circle
-                          size={16}
-                          color="#36bffa"
-                          weight="fill"
-                          style={{
-                            position: 'absolute',
-                            top: (24 - 16) / 2,
-                            left: (24 - 16) / 2,
-                          }}
+              {providerSections.map(section => (
+                <View key={section.title} style={{ gap: 10 }}>
+                  <Text className="text-[#9F9FA0] text-xs uppercase font-semibold px-2 pt-2">
+                    {section.title}
+                  </Text>
+                  {section.providers.map(provider => (
+                    <TouchableOpacity
+                      key={provider.value}
+                      className="flex flex-row items-center justify-between w-full p-2 rounded-lg"
+                      onPress={() => updateProviderChoice(provider.value)}>
+                      <View className="flex flex-row items-center flex-1">
+                        <Image
+                          source={provider.logo}
+                          style={{ width: 40, height: 40 }}
+                          className="rounded-lg"
+                          resizeMode="contain"
                         />
+                        <View className="ml-4 flex-1">
+                          <Text className="text-white text-lg">
+                            {provider.name}
+                          </Text>
+                          {provider.description && (
+                            <Text className="text-[#9F9FA0] text-sm">
+                              {provider.description}
+                            </Text>
+                          )}
+                        </View>
                       </View>
-                    ) : (
-                      <Circle size={24} color="#888" />
-                    )}
-                  </View>
-                </TouchableOpacity>
+                      <View className="flex flex-row items-center justify-center">
+                        {selection.provider === provider.value ? (
+                          <View className="relative">
+                            <Circle size={24} color="#FFF" />
+                            <Circle
+                              size={16}
+                              color="#36bffa"
+                              weight="fill"
+                              style={{
+                                position: 'absolute',
+                                top: (24 - 16) / 2,
+                                left: (24 - 16) / 2,
+                              }}
+                            />
+                          </View>
+                        ) : (
+                          <Circle size={24} color="#888" />
+                        )}
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               ))}
-            </ScrollView>
-          </BottomSheetView>
+            </View>
+          </BottomSheetScrollView>
         </BottomSheetModal>
       </View>
     </View>

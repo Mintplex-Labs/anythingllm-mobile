@@ -8,6 +8,7 @@ import LLMPerformanceMonitor from "@/utils/chat/LLMPerformanceMonitor";
 import getEmbedder from "@/utils/Embedder";
 import OpenAILite from "@/utils/openai";
 import VectorDB, { SemanticSearchResult } from "@/utils/VectorDB";
+import DocumentReranker from "@/utils/DocumentReranker";
 import { type IAgentAction } from "@/database/models/WorkspaceChat";
 import ToolsManager from "@/utils/ToolsManager";
 import { isAbortError, linkAbortSignal, throwIfAborted } from "@/utils/chat/abort";
@@ -369,23 +370,48 @@ export default abstract class BaseOpenAILikeProvider {
 
   /**
    * Gets the context texts for the user prompt from semantic search
-   * of the workspace's vector store.
+   * of the workspace's vector store. When the reranker model is available,
+   * performs a wider vector search then reranks with a cross-encoder for
+   * significantly better retrieval on follow-up and adjacent questions.
    */
   async getContextTexts(userPrompt: string, onStatus?: (status: string) => void): Promise<SemanticSearchResult[]> {
     try {
       if (!this.workspace) throw new SilentError('No workspace attached to provider');
       if (userPrompt.length < 10) throw new SilentError('User prompt is too short to get context texts');
-      if (await VectorDB.getWorkspaceVectorCount(this.workspace.slug) === 0) throw new SilentError('No vectors in vector store');
+      const totalEmbeddings = await VectorDB.getWorkspaceVectorCount(this.workspace.slug);
+      if (totalEmbeddings === 0) throw new SilentError('No vectors in vector store');
       onStatus?.('Searching your documents');
 
       const embedder = getEmbedder('native');
       const queryVector = await embedder.embed(userPrompt, 'query');
-      const results = await VectorDB
-        .runSemanticSearch(this.workspace.slug, queryVector, this.topN)
-        .then((results) => this.filterSemanticSearchResults(results));
+
+      const reranker = new DocumentReranker();
+      const canRerank = await reranker.isModelReady();
+
+      let results: SemanticSearchResult[];
+      if (canRerank) {
+        const searchLimit = DocumentReranker.searchLimit(totalEmbeddings);
+        const wideResults = await VectorDB.runSemanticSearch(this.workspace.slug, queryVector, searchLimit);
+        onStatus?.('Reranking results');
+        const reranked = await reranker.rerank(userPrompt, wideResults, this.topN);
+        results = reranked
+          .filter(r => {
+            const similarity = 1 - r.score;
+            if (similarity < this.minRelevanceScore) {
+              this.log(`Semantic search result "${r.metadata.name}" is not relevant enough (${similarity})`);
+              return false;
+            }
+            return true;
+          })
+          .map(r => ({ ...r, score: r.rerankScore }));
+      } else {
+        results = await VectorDB
+          .runSemanticSearch(this.workspace.slug, queryVector, this.topN)
+          .then((results) => this.filterSemanticSearchResults(results));
+      }
 
       if (results.length === 0) return [];
-      this.log(`\nGot ${results.length} contexts:`, JSON.stringify({ topN: this.topN, minRelevanceScore: this.minRelevanceScore, dimensions: queryVector.length, query: `${userPrompt.slice(0, 50)}...`, results: results.map((r) => r.score) }, null, 2));
+      this.log(`\nGot ${results.length} contexts (reranked: ${canRerank}):`, JSON.stringify({ topN: this.topN, minRelevanceScore: this.minRelevanceScore, dimensions: queryVector.length, query: `${userPrompt.slice(0, 50)}...`, results: results.map((r) => r.score) }, null, 2));
       return results;
     } catch (e) {
       if (e instanceof Error) this.log(e.message);

@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import VectorDB from "@/utils/VectorDB";
+import Document from "@/database/models/Document";
 import AwaitableAlert from "@/components/AwaitableAlert";
 import { showToast } from "@/utils/Notification";
+import { deleteProcessedFilesByName } from "@/utils/fs";
 
 export default function useVectorCount(workspaceSlug: string) {
     const [vectorCount, setVectorCount] = useState<number>(0);
@@ -12,7 +14,11 @@ export default function useVectorCount(workspaceSlug: string) {
     }, [workspaceSlug]);
 
     const resetVectorsForWorkspace = useCallback(async () => {
+        const documents = await Document.find([{ field: 'workspace_slug', value: workspaceSlug }]);
         await VectorDB.resetVectorsForWorkspace(workspaceSlug);
+        await Document.delete([{ field: 'workspace_slug', value: workspaceSlug }]);
+        const filenames = documents.map((doc: { name: string }) => doc.name).filter(Boolean);
+        await deleteProcessedFilesByName(filenames);
         setVectorCount(0);
     }, [workspaceSlug]);
 

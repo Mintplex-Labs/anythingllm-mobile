@@ -266,6 +266,33 @@ export default class WorkspaceChat extends Model {
     return true;
   }
 
+  /**
+   * Copy every chat of one thread into another thread, preserving order and timestamps.
+   * Copies get fresh uuids so the two threads never share a row identity.
+   * @returns the number of chats copied
+   */
+  static async fork({ fromThreadSlug, toThreadSlug }: { fromThreadSlug: string, toThreadSlug: string }): Promise<number> {
+    if (!fromThreadSlug || !toThreadSlug) throw new Error('Both source and destination thread slugs are required');
+    const chats = await this.find(
+      [{ field: 'workspace_thread_slug', value: fromThreadSlug }],
+      [{ field: 'created_at', direction: 'asc' }]
+    );
+    if (chats.length === 0) return 0;
+
+    await database.write(async () => {
+      const collection = database.get(WorkspaceChat.table);
+      await database.batch(chats.map((chat) => collection.prepareCreate((record: any) => {
+        record.uuid = generateUUID();
+        record.workspaceThreadSlug = toThreadSlug;
+        record.prompt = chat.prompt;
+        record.response = chat.response;
+        record.createdAt = chat.createdAt;
+      })));
+    });
+    this.log(`forked ${chats.length} chats`, { fromThreadSlug, toThreadSlug });
+    return chats.length;
+  }
+
   static async directCreate(data: Partial<WorkspaceChatType>): Promise<WorkspaceChatType> {
     let newWorkspaceChat: any;
     await database.write(async () => {

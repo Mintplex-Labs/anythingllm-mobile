@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { Warning } from "phosphor-react-native";
 import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import { BASE_MESSAGE_STYLES } from "./styles";
@@ -7,6 +7,7 @@ import ActivityChain from "./ActivityChain";
 import CitationsContainer from "./Citations";
 import ActionsContainer from "./Actions";
 import TextResponseContainer from "./TextResponse";
+import { focusMessageActions } from "../focusMessageActions";
 
 /**
  * The assistant half of a chat row. Receives the latest snapshot of the chat
@@ -15,13 +16,14 @@ import TextResponseContainer from "./TextResponse";
  */
 export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessage }) {
     const response = chat.response;
+    const handleLongPress = () => focusMessageActions(chat, 'assistant');
     return (
         <View className="flex flex-col items-start w-full justify-start" style={{ gap: 11 }}>
             <ActivityChain chat={chat} />
             {chat.type === 'error' ? (
-                <ErrorContainer message={response?.textResponse} />
+                <ErrorContainer message={response?.textResponse} onLongPress={handleLongPress} />
             ) : (
-                <TextResponseContainer uuid={chat.uuid} textResponse={response?.textResponse} metrics={response?.metrics} />
+                <TextResponseContainer uuid={chat.uuid} textResponse={response?.textResponse} metrics={response?.metrics} onLongPress={handleLongPress} />
             )}
             <ActionsContainer actions={response?.actions} />
             <CitationsContainer citations={response?.citations} isLoading={chat.isLoading} />
@@ -29,14 +31,19 @@ export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessa
     );
 });
 
-function ErrorContainer({ message }: { message?: string }) {
+function ErrorContainer({ message, onLongPress }: { message?: string; onLongPress?: () => void }) {
     if (!message) return null;
     return (
         <View className="flex flex-row items-start w-full justify-start">
-            <View className="rounded-lg flex flex-row items-center" style={[BASE_MESSAGE_STYLES, { gap: 4, borderWidth: 1, borderColor: '#F97066', maxWidth: '100%', backgroundColor: 'rgba(122,39,26,0.2)' }]}>
+            <TouchableOpacity
+                onLongPress={onLongPress}
+                delayLongPress={500}
+                activeOpacity={0.7}
+                className="rounded-lg flex flex-row items-center"
+                style={[BASE_MESSAGE_STYLES, { gap: 4, borderWidth: 1, borderColor: '#F97066', maxWidth: '100%', backgroundColor: 'rgba(122,39,26,0.2)' }]}>
                 <Warning size={18} color="#F97066" />
                 <Text style={{ color: '#F97066', flexShrink: 1 }} className="text-lg">{message}</Text>
-            </View>
+            </TouchableOpacity>
         </View>
     );
 }

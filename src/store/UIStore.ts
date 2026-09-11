@@ -18,6 +18,8 @@ type StorageKeys =
 export const GLOBAL_EVENTS = {
   REDIRECT: 'REDIRECT',
   CITATIONS_FOCUSED: 'CITATIONS_FOCUSED',
+  /** A chat message was long-pressed - payload is { chat, role } - opens the message actions sheet */
+  MESSAGE_ACTIONS_FOCUSED: 'MESSAGE_ACTIONS_FOCUSED',
   SUBMIT_PROMPT: 'SUBMIT_PROMPT',
   REFRESH_WORKSPACES: 'REFRESH_WORKSPACES',
   CHAT_HISTORY_REFRESHED: 'CHAT_HISTORY_REFRESHED',

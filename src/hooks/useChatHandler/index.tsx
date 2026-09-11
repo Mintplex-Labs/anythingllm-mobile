@@ -49,6 +49,16 @@ export interface ChatHandlerInterface {
      * or remote instance) and discards the unfinished chat - nothing is saved.
      */
     abortChat: () => void;
+    /**
+     * Remove a user/assistant pair from the thread - both from the on-screen history
+     * and the database. Chats still being generated cannot be deleted (abort instead).
+     */
+    deleteChat: (uuid: string) => Promise<boolean>;
+    /**
+     * Replay a pair as if it never happened: the pair is deleted and its prompt is
+     * re-submitted so the model answers it again without the old exchange in context.
+     */
+    retryChat: (uuid: string) => Promise<void>;
     /** Whether the chat workspace/thread is remote */
     isRemote: boolean;
 }
@@ -127,6 +137,26 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
             return newMap;
         });
     }, []);
+
+    const deleteChat = useCallback(async (uuid: string) => {
+        const chat = chatsMapRef.current.get(uuid);
+        if (!chat) return false;
+        if (chat.isLoading) {
+            debug('Refusing to delete a chat that is still generating', uuid);
+            return false;
+        }
+
+        // Update the ref synchronously so a prompt submitted right after this call builds its
+        // message history without the removed pair - the effect syncing the ref runs too late.
+        const next = new Map(chatsMapRef.current);
+        next.delete(uuid);
+        chatsMapRef.current = next;
+        removeChat(uuid);
+
+        const deleted = await WorkspaceChat.delete([{ field: 'uuid', value: uuid }]);
+        debug('Deleted chat', { uuid, deleted });
+        return deleted;
+    }, [removeChat]);
 
     /**
      * Controller for the turn currently being generated. Its signal is handed to the
@@ -349,6 +379,18 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
         if (autoSubmit) submitPrompt(promptToSet);
     }, [submitPrompt]);
 
+    const retryChat = useCallback(async (uuid: string) => {
+        if (isWorking) return debug('Cannot retry while a reply is generating');
+        const chat = chatsMapRef.current.get(uuid);
+        if (!chat?.prompt) return debug('Cannot retry - chat not found or has no prompt', uuid);
+        await deleteChat(uuid);
+        Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.CHAT_RETRIED, {
+            llmProvider: llmProvider.name,
+            llmModel: llmProvider.model,
+        });
+        await submitPrompt(chat.prompt);
+    }, [isWorking, deleteChat, submitPrompt, llmProvider]);
+
     const hideKeyboard = useCallback(() => {
         Keyboard.dismiss();
     }, []);
@@ -395,8 +437,10 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
         setPrompt,
         submitPrompt,
         abortChat,
+        deleteChat,
+        retryChat,
         isRemote,
-    }), [isWorking, fetchChats, reset, prompt, _promptDisabled, setPrompt, submitPrompt, abortChat, isRemote]);
+    }), [isWorking, fetchChats, reset, prompt, _promptDisabled, setPrompt, submitPrompt, abortChat, deleteChat, retryChat, isRemote]);
 
     const history = useMemo<ChatHistoryInterface>(() => ({
         chats: chatsArray,

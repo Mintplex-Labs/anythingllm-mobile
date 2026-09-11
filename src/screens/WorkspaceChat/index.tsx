@@ -19,6 +19,7 @@ import SettingsActionSheet from "./PromptInput/Actions/Settings";
 import ToolsActionSheet from "./PromptInput/Actions/Settings/Tools";
 import WorkspaceFilesActionSheet from "./PromptInput/Actions/Settings/Files";
 import CitationsActionSheet from "./ChatHistory/CitationsActionSheet";
+import MessageActionsSheet from "./ChatHistory/MessageActionsSheet";
 
 export default function WorkspaceChat() {
   useRedirect();
@@ -42,6 +43,8 @@ export default function WorkspaceChat() {
       <ChatHandlerWrapper workspace={workspace} thread={thread} llmProvider={LLMProvider!}>
         <ChatHistory />
         <PromptInput attachmentHandler={attachmentHandler} />
+        {/* Long-press message actions - needs the chat handler context, so it lives inside the wrapper */}
+        <MessageActionsSheet workspace={workspace} thread={thread} />
       </ChatHandlerWrapper>
 
       <SettingsActionSheet workspace={workspace} thread={thread} />

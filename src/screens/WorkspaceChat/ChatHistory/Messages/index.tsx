@@ -11,7 +11,7 @@ import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 export default memo(function UserAssistantPair({ chat }: { chat: DynamicChatMessage }) {
     return (
         <View style={{ gap: 20 }} className="flex flex-col items-start w-full">
-            <UserMessage prompt={chat.prompt} />
+            <UserMessage chat={chat} />
             <AssistantMessage chat={chat} />
         </View>
     )

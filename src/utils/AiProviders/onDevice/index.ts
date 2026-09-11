@@ -1,6 +1,6 @@
 import { defaultModels } from "@/utils/models";
 import LlamaRnWrapper, { ILlamaRnStreamCallback, OnDeviceRuntimeInfo } from "./llamaRn";
-import BaseOpenAILikeProvider, { IAvailableModel, ICompleteResponse, IStreamCallback, IStreamEvent, PromptShape } from "../baseOpenAILikeProvider";
+import BaseOpenAILikeProvider, { IAvailableModel, ICompleteResponse, IStreamCallback, IStreamEvent, PromptShape, withoutImageAttachments } from "../baseOpenAILikeProvider";
 import ContextCompactor from "@/utils/chat/contextCompaction";
 import OpenAILite from "@/utils/openai";
 import MODEL_CARDS, { EMBEDDING_MODEL } from "@/utils/models/defaults";
@@ -10,6 +10,7 @@ import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
 import ImportedModels from "@/utils/models/imported";
 import { throwIfAborted } from "@/utils/chat/abort";
+import { type Model } from "@/utils/types";
 
 export type IOnDeviceStreamCallback = ILlamaRnStreamCallback;
 
@@ -29,6 +30,8 @@ export type IOnDeviceAvailableModel = {
   /** True when the user added this model from Hugging Face (see `utils/models/imported`) */
   isImported?: boolean;
   imageUrl?: string | null;
+  /** Vision projector that must be downloaded next to the model for image input - catalog models only. */
+  mmproj?: Model['mmproj'];
 }
 export type OnDeviceProviderConstructorProps = { config: { model: string | null } }
 
@@ -95,6 +98,23 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
    */
   get runtimeInfo(): OnDeviceRuntimeInfo | null {
     return this.submodule?.runtimeInfo ?? null;
+  }
+
+  /**
+   * Whether the selected model can take image input right now (vision capability + mmproj on disk).
+   * This is a filesystem check, not a model load, so it is cheap enough to call from the UI.
+   */
+  async supportsVision(): Promise<boolean> {
+    return OnDeviceProvider.modelSupportsVision(this.model);
+  }
+
+  static modelSupportsVision(modelId: string | null | undefined): Promise<boolean> {
+    return LlamaRnWrapper.modelSupportsVision(modelId);
+  }
+
+  /** Reload the loaded model before the next prompt (eg: its vision projector was just downloaded). */
+  requestReload() {
+    this.submodule?.requestReload();
   }
 
   /**
@@ -223,6 +243,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
           provider: m.author,
           // @ts-ignore
           imageUrl: m.imageUrl ?? null,
+          mmproj: m.mmproj,
         }
       });
     const importedModels: IOnDeviceAvailableModel[] = (await ImportedModels.list()).map(m => ({
@@ -256,8 +277,12 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
    * Compaction normally runs in the background after each reply (`scheduleCompaction`), so this
    * only summarises inline when history outgrew the budget since then - the user sees a status line for it.
    */
-  protected override async shapePrompt(shape: PromptShape, { threadSlug, onStatus }: { threadSlug: string | null; onStatus?: (status: string) => void }): Promise<PromptShape> {
-    if (!this.submodule) return shape;
+  protected override async shapePrompt(rawShape: PromptShape, { threadSlug, onStatus }: { threadSlug: string | null; onStatus?: (status: string) => void }): Promise<PromptShape> {
+    if (!this.submodule) return rawShape;
+    // Photos from earlier turns are never re-sent on-device: each one costs hundreds of tokens of a
+    // 1-2k window and seconds of CPU to re-encode. Only the images on the prompt being sent go to the
+    // model (see `buildPrompt`); the summariser also only ever sees text (`ContextCompactor.toMessages`).
+    const shape: PromptShape = { ...rawShape, history: withoutImageAttachments(rawShape.history) };
     const contextTexts = await this.submodule.fitContextTexts(shape.contextTexts);
     if (!threadSlug || !shape.history.length) return { ...shape, contextTexts };
 

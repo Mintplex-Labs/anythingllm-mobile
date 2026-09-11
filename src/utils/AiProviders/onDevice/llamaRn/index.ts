@@ -8,6 +8,7 @@ import {
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { Model } from '@/utils/types';
 import { defaultModels } from '@/utils/models';
+import { resolveDestinationPathFromGGUFUrl } from '@/utils/models/defaults';
 import { stops } from '@/utils/chat';
 import { ICompleteResponse } from '@/utils/AiProviders/baseOpenAILikeProvider';
 import type OnDeviceProvider from '@/utils/AiProviders/onDevice/index';
@@ -30,6 +31,8 @@ export type OnDeviceRuntimeInfo = {
   contextLength: number;
   supportsTools: boolean;
   supportsJinja: boolean;
+  /** True when the mmproj projector is loaded and llama.cpp reports vision support for it. */
+  supportsVision: boolean;
 };
 
 /**
@@ -81,6 +84,12 @@ export default class LlamaRnWrapper {
   static TOOL_RESULT_BUDGET_RATIO = 0.25;
   /** Rough English chars-per-token used to turn token budgets into character caps. */
   static CHARS_PER_TOKEN = 3.5;
+  /**
+   * Cap on the tokens one image may occupy in the prompt. Phones run a 1-2k token window, so a
+   * photo must leave room for the system prompt, history and the reply. Images are also downscaled
+   * before they reach us (see `useAttachments`), this is the backstop inside llama.cpp.
+   */
+  static IMAGE_MAX_TOKENS = 512;
 
   private parent: OnDeviceProvider;
   private model: string;
@@ -93,6 +102,10 @@ export default class LlamaRnWrapper {
   private keepAliveTimer: ReturnType<typeof setTimeout> | null = null;
   private keepAliveInterval = 1000 * 60 * 5;
   private isGenerating = false;
+  /** Set once `initMultimodal` succeeded on the live context and llama.cpp confirmed vision support. */
+  private visionEnabled = false;
+  /** Set by `requestReload` while a generation is running - honoured before the next completion. */
+  private reloadRequested = false;
 
   constructor({ model, parent }: { model: string; parent: OnDeviceProvider }) {
     this.model = model;
@@ -110,6 +123,50 @@ export default class LlamaRnWrapper {
 
   get modelDefinition(): Model | undefined {
     return defaultModels.find(model => model.id === this.model) as Model | undefined;
+  }
+
+  /** Where the model's mmproj file lives once downloaded (null when the model has no projector). */
+  get mmprojFilePath(): string | null {
+    return LlamaRnWrapper.mmprojFilePathFor(this.modelDefinition);
+  }
+
+  static mmprojFilePathFor(model: Model | undefined): string | null {
+    if (!model?.mmproj?.downloadUrl) return null;
+    return resolveDestinationPathFromGGUFUrl(model.mmproj.downloadUrl);
+  }
+
+  /**
+   * Whether a catalog model can take image input right now: it must be flagged with the `vision`
+   * capability AND its mmproj projector must already be on disk. Anything else (imported/unknown
+   * models, projector not downloaded) is a hard no - we never guess about on-device vision.
+   */
+  static async modelSupportsVision(modelId: string | null | undefined): Promise<boolean> {
+    if (!modelId) return false;
+    const definition = defaultModels.find(model => model.id === modelId) as Model | undefined;
+    if (!definition?.capabilities?.includes('vision')) return false;
+    const mmprojPath = LlamaRnWrapper.mmprojFilePathFor(definition);
+    if (!mmprojPath) return false;
+    return RNFS.exists(mmprojPath).catch(() => false);
+  }
+
+  /** True while the loaded context has a working vision projector. */
+  get supportsVision(): boolean {
+    return this.visionEnabled;
+  }
+
+  /**
+   * Drops the loaded context so the next completion rebuilds it - used when the vision projector
+   * finishes downloading while the model is already loaded text-only. Never interrupts a running
+   * generation: in that case the reload happens right before the next prompt.
+   */
+  requestReload() {
+    if (!this.context) return;
+    if (this.isGenerating) {
+      this.reloadRequested = true;
+      return;
+    }
+    this.log('Reload requested - unloading so the next prompt picks up the new configuration');
+    this.unloadModel().catch((e) => this.log('Failed to unload for reload', e));
   }
 
   get temperature() {
@@ -187,6 +244,7 @@ export default class LlamaRnWrapper {
       contextLength: this.contextLength,
       supportsTools: this.supportsNativeToolCalling,
       supportsJinja: this.context.isJinjaSupported(),
+      supportsVision: this.visionEnabled,
     };
   }
 
@@ -238,11 +296,22 @@ export default class LlamaRnWrapper {
         if (!this.ggufFilePath) throw new Error(`LlamaRnWrapper::initialize: No gguf file found for model ${this.model}`);
 
         this.log(`Loading ${this.model} @ ${this.contextLength} context length`);
-        this.context = await this.createContext();
+        const mmprojPath = await this.availableMmprojPath();
+        this.context = await this.createContext({ multimodal: !!mmprojPath });
+        if (mmprojPath) {
+          this.visionEnabled = await this.attachMultimodal(this.context, mmprojPath);
+          if (!this.visionEnabled) {
+            // A text-only context must keep ctx_shift on (see createContext) - rebuild it without the projector.
+            this.log('Vision projector could not be loaded - falling back to a text-only context');
+            await this.context.release();
+            this.context = await this.createContext({ multimodal: false });
+          }
+        }
         this.log(`${this.name} initialized`, {
           devices: this.context.devices,
           nativeToolCalling: this.supportsNativeToolCalling,
           jinja: this.context.isJinjaSupported(),
+          vision: this.visionEnabled,
         });
         return true;
       } catch (error) {
@@ -255,7 +324,44 @@ export default class LlamaRnWrapper {
     return this.initializing;
   }
 
-  private async createContext() {
+  /** The mmproj path for this model if the file has been downloaded, otherwise null. */
+  private async availableMmprojPath(): Promise<string | null> {
+    const path = this.mmprojFilePath;
+    if (!path) return null;
+    if (await RNFS.exists(path)) return path;
+    this.log(`Model declares a vision projector but ${path} is not downloaded - loading text-only`);
+    return null;
+  }
+
+  /**
+   * Loads the mmproj projector into the context and confirms llama.cpp sees vision support.
+   * Never throws - a failed projector just means the model runs text-only.
+   * https://github.com/mybigday/llama.rn#multimodal-vision--audio
+   */
+  private async attachMultimodal(context: LlamaContext, mmprojPath: string): Promise<boolean> {
+    try {
+      const ok = await context.initMultimodal({
+        path: mmprojPath,
+        // CPU only, same as the text model - see createContext.
+        use_gpu: false,
+        image_max_tokens: LlamaRnWrapper.IMAGE_MAX_TOKENS,
+      });
+      if (!ok) return false;
+      const support = await context.getMultimodalSupport();
+      if (!support.vision) {
+        this.log('Projector loaded but reports no vision support - releasing it');
+        await context.releaseMultimodal().catch(() => { });
+        return false;
+      }
+      this.log(`Vision projector loaded from ${mmprojPath}`);
+      return true;
+    } catch (error) {
+      this.log('Failed to load vision projector', error);
+      return false;
+    }
+  }
+
+  private async createContext({ multimodal }: { multimodal: boolean }) {
     const nCtx = this.contextLength;
     return initLlama({
       model: this.ggufFilePath!,
@@ -265,7 +371,9 @@ export default class LlamaRnWrapper {
       use_mlock: true,
       use_mmap: true,
       // Shift the KV cache instead of failing if a long answer runs past the window.
-      ctx_shift: true,
+      // llama.rn requires shifting OFF for multimodal contexts so media token positions stay put;
+      // `runCompletion` already sizes n_predict to the room left so this rarely matters in practice.
+      ctx_shift: !multimodal,
       // CPU only. The Hexagon NPU / OpenCL backends in llama.cpp are experimental and slower
       // than the CPU path on the phones we target, so we never offload layers.
       n_gpu_layers: 0,
@@ -311,7 +419,11 @@ export default class LlamaRnWrapper {
       tool_choice: tools?.length ? 'auto' : undefined,
     });
     const { tokens } = await this.context.tokenize(formatted.prompt);
-    return tokens.length;
+    // Images are rendered as a `<__media__>` marker which tokenizes as a few text tokens, so budget each
+    // one at the cap handed to the projector instead. Over-estimating only shrinks n_predict a little;
+    // under-estimating would overflow a multimodal context, which cannot shift (see createContext).
+    const mediaCount = (formatted as { media_paths?: string[] }).media_paths?.length ?? 0;
+    return tokens.length + mediaCount * LlamaRnWrapper.IMAGE_MAX_TOKENS;
   }
 
   /** Tokens `messages` render to through the model's chat template. Loads the model if needed. */
@@ -456,6 +568,10 @@ export default class LlamaRnWrapper {
   ): Promise<NativeCompletionResult & { cappedByContext: boolean }> {
     this.keepAlive();
     throwIfAborted(signal); // may have been stopped while queued behind another round
+    if (this.reloadRequested) {
+      this.reloadRequested = false;
+      await this.unloadModel();
+    }
     if (!this.context) await this.initialize();
     if (!this.context) throw new Error('LlamaRnWrapper::runCompletion: Model not initialized');
 
@@ -463,7 +579,7 @@ export default class LlamaRnWrapper {
     if (availableTools.length && !useTools) this.log(`Model template has no tool support - ${availableTools.length} tool(s) will not be offered.`);
 
     const tools = useTools ? availableTools : undefined;
-    const { messages: fitted, promptTokens } = await this.fitMessagesToContext(messages, tools);
+    const { messages: fitted, promptTokens } = await this.fitMessagesToContext(this.dropUnsupportedMedia(messages), tools);
 
     // Ask for no more tokens than the window has left so the reply ends cleanly (stopped_limit)
     // instead of llama.cpp shifting the KV cache and evicting the start of the prompt.
@@ -500,6 +616,25 @@ export default class LlamaRnWrapper {
       signal?.removeEventListener('abort', onAbort);
       this.keepAlive();
     }
+  }
+
+  /**
+   * Without a loaded projector llama.rn cannot tokenize `image_url` parts, so flatten any structured
+   * content back to its text. Only reachable when a chat with images is retried after switching to a
+   * text-only model - the UI never offers images unless `modelSupportsVision` is true.
+   */
+  private dropUnsupportedMedia(messages: NativeLlamaChatMessage[]): NativeLlamaChatMessage[] {
+    if (this.visionEnabled) return messages;
+    let dropped = 0;
+    const cleaned = messages.map((message) => {
+      if (!Array.isArray(message.content)) return message;
+      const parts = message.content as any[];
+      const textParts = parts.filter((part) => part?.type === 'text');
+      dropped += parts.length - textParts.length;
+      return { ...message, content: textParts.map((part) => String(part.text ?? '')).join('\n') };
+    });
+    if (dropped) this.log(`Dropped ${dropped} media part(s) - this context has no vision projector loaded`);
+    return cleaned;
   }
 
   /**
@@ -556,6 +691,10 @@ export default class LlamaRnWrapper {
     this.log('Unloading model');
     const context = this.context;
     this.context = null;
+    if (this.visionEnabled) {
+      this.visionEnabled = false;
+      await context.releaseMultimodal().catch((e) => this.log('Failed to release vision projector', e));
+    }
     await context.release();
   }
 

@@ -265,6 +265,17 @@ export interface Model {
   name: string;
   type?: string;
   capabilities?: string[]; // Array of capability keys for localization
+  /**
+   * Multimodal projector (mmproj) that pairs with a vision model. When present the file is
+   * downloaded next to the model and loaded into llama.rn so the model can take image input.
+   * Vision is only offered to the user when `capabilities` includes 'vision' AND this file is on disk.
+   */
+  mmproj?: {
+    downloadUrl: string;
+    filename: string;
+    /** Size in bytes */
+    size: number;
+  };
   size: number; // Size in bytes
   params: number;
   isDownloaded: boolean;

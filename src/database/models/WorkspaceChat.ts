@@ -228,7 +228,7 @@ export default class WorkspaceChat extends Model {
    * Create a new chat with a given prompt for placeholder purposes
    * @param data - The data for the new chat
    */
-  static newChatItem(data: { workspaceThreadSlug: string, prompt: string }): Partial<DynamicChatMessage> & { workspaceThreadSlug: string } {
+  static newChatItem(data: { workspaceThreadSlug: string, prompt: string, attachments?: any[] }): Partial<DynamicChatMessage> & { workspaceThreadSlug: string } {
     if (!data.workspaceThreadSlug) throw new Error('Workspace thread slug is required');
     if (!data.prompt) throw new Error('Prompt is required');
     return {
@@ -247,7 +247,7 @@ export default class WorkspaceChat extends Model {
           outputTps: 0,
           duration: 0,
         },
-        attachments: [],
+        attachments: data.attachments ?? [],
         citations: [],
         activity: [],
       },

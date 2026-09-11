@@ -1,5 +1,4 @@
 import getLocation from './getLocation';
-import getCurrentTime from './getCurrentTime';
 import webSearch from './webSearch';
 import webScraping from './webScraping';
 import draftEmail from './draftEmail';
@@ -13,7 +12,6 @@ export default {
         webSearch,
         webScraping,
         getLocation,
-        getCurrentTime,
         summarize,
     },
     appConnections: {

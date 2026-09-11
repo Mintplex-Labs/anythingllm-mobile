@@ -255,11 +255,15 @@ export default abstract class BaseOpenAILikeProvider {
    */
   defaultSystemMessage(contextTexts: string[] = [], summary: string | null = null) {
     const baseMessage = this.workspace?.systemPrompt || BaseOpenAILikeProvider.DEFAULT_SYSTEM_MESSAGE;
-    // The summary lives in the system prompt (rather than as a fake turn) so it survives history
-    // pruning and works with templates that require strictly alternating user/assistant roles.
+    const now = new Date();
+    const currentDateTime = now.toLocaleString(undefined, {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+      hour: '2-digit', minute: '2-digit', timeZoneName: 'short',
+    });
+    const withDateTime = `${baseMessage}\nThe current date and time on the user's device is ${currentDateTime}.`;
     const withSummary = summary
-      ? `${baseMessage}\n\nSummary of the conversation so far (earlier messages are not shown):\n${summary}`
-      : baseMessage;
+      ? `${withDateTime}\n\nSummary of the conversation so far (earlier messages are not shown):\n${summary}`
+      : withDateTime;
     if (!contextTexts.length) return withSummary;
 
     const context = contextTexts

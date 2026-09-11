@@ -45,11 +45,11 @@ const smartMessages = {
         onClick: {
             before: async function () {
                 const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: true, getTime: true } as never);
+                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: true } as never);
             },
             after: async function () {
                 const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: false, getTime: false } as never);
+                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: false } as never);
             }
         },
     },

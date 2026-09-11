@@ -67,7 +67,6 @@ class ToolsManager {
     configurableTools = [
         Tools.default.webSearch,
         Tools.default.webScraping,
-        Tools.default.getCurrentTime,
         Tools.default.getLocation,
         Tools.default.summarize,
         Tools.appConnections.draftEmail,

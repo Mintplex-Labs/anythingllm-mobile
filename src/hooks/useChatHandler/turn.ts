@@ -7,6 +7,9 @@ import {
     type IAgentToolCall,
     type IChatCitation,
     type IThoughtActivity,
+    type IToolApprovalActivity,
+    type IToolApprovalRequest,
+    type IToolApprovalResult,
     type IToolCallActivity,
     type WorkspaceChatResponseType,
 } from "@/database/models/WorkspaceChat";
@@ -71,13 +74,14 @@ export default class AssistantTurn {
     }
 
     /**
-     * Stamps `endedAt` on thought/status nodes that are still open. Tool calls are
-     * left alone - they close when their result arrives so their duration reflects
-     * the actual execution time even when statuses are reported while they run.
+     * Stamps `endedAt` on thought/status nodes that are still open. Tool calls and
+     * approval requests are left alone - they close when their result arrives so
+     * their duration reflects the actual execution / waiting time even when
+     * statuses are reported while they run.
      */
     private closeOpenNodes(at: number = Date.now()) {
         for (const node of this.activity) {
-            if (node.type === 'toolCall') continue;
+            if (node.type === 'toolCall' || node.type === 'toolApproval') continue;
             if (!node.endedAt) node.endedAt = at;
         }
     }
@@ -138,6 +142,30 @@ export default class AssistantTurn {
                 const node = this.activity.find((n): n is IToolCallActivity => n.type === 'toolCall' && n.uuid === call?.uuid);
                 if (!node) return { changed: false, immediate: false };
                 node.result = call.result ?? '';
+                node.endedAt = Date.now();
+                return { changed: true, immediate: true };
+            }
+            case 'request_tool_approval': {
+                const request = data as IToolApprovalRequest;
+                if (!request?.requestId || !request.skillName) return { changed: false, immediate: false };
+                this.appendNode<IToolApprovalActivity>({
+                    type: 'toolApproval',
+                    uuid: request.requestId,
+                    requestId: request.requestId,
+                    skillName: request.skillName,
+                    description: request.description ?? null,
+                    payload: request.payload ?? {},
+                    timeoutMs: request.timeoutMs,
+                    approved: null,
+                });
+                return { changed: true, immediate: true };
+            }
+            case 'report_tool_approval_result': {
+                const result = data as IToolApprovalResult;
+                const node = this.activity.find((n): n is IToolApprovalActivity => n.type === 'toolApproval' && n.requestId === result?.requestId);
+                if (!node) return { changed: false, immediate: false };
+                node.approved = !!result.approved;
+                node.message = result.message;
                 node.endedAt = Date.now();
                 return { changed: true, immediate: true };
             }

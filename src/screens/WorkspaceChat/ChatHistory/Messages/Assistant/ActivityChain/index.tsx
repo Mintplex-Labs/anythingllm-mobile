@@ -1,8 +1,8 @@
 import { memo, useMemo, useState } from "react";
 import { ActivityIndicator, Pressable, Text, View } from "react-native";
-import { Brain, Wrench } from "phosphor-react-native";
+import { Brain, Check, Hammer, X, Wrench } from "phosphor-react-native";
 import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
-import { type IActivityNode, type IToolCallActivity } from "@/database/models/WorkspaceChat";
+import { type IActivityNode, type IToolApprovalActivity, type IToolCallActivity } from "@/database/models/WorkspaceChat";
 import {
     CHAIN_COLORS,
     CHAIN_SMALL_TEXT,
@@ -96,6 +96,8 @@ function ActivityStep({ node, status, isLast, seconds }: { node: IActivityNode; 
             return <ThoughtStep content={node.content} status={status} isLast={isLast} duration={duration} />;
         case 'toolCall':
             return <ToolCallStep signature={node.signature} result={node.result} status={status} isLast={isLast} duration={duration} />;
+        case 'toolApproval':
+            return <ToolApprovalStep skillName={node.skillName} approved={node.approved} message={node.message} status={status} isLast={isLast} duration={duration} />;
         default:
             return <ChainOfThoughtStep label={node.content} status={status} isLast={isLast} description={duration} />;
     }
@@ -150,6 +152,45 @@ const ToolCallStep = memo(function ToolCallStep({ signature, result, status, isL
                         {result.trim()}
                     </Text>
                 </Pressable>
+            )}
+        </ChainOfThoughtStep>
+    );
+});
+
+/** Approval colors mirror the desktop card: sky for the skill, green approved, red rejected */
+const APPROVAL_COLORS = { approved: '#4ADE80', rejected: '#F87171' } as const;
+
+/**
+ * Compact record of a consent request. While the user has not answered, the
+ * full approve/reject card renders outside the chain (see `ToolApprovalRequest`)
+ * so this step only needs to say the turn is waiting.
+ */
+const ToolApprovalStep = memo(function ToolApprovalStep({ skillName, approved, message, status, isLast, duration }: Pick<IToolApprovalActivity, 'skillName' | 'approved' | 'message'> & { status: ChainStepStatus; isLast: boolean; duration?: string }) {
+    const pending = approved === null;
+    const color = status === 'active' ? CHAIN_COLORS.active : CHAIN_COLORS.muted;
+    const label = pending
+        ? `Waiting for approval to run ${skillName}`
+        : approved ? `Approved ${skillName}` : `Rejected ${skillName}`;
+    return (
+        <ChainOfThoughtStep
+            icon={Hammer}
+            status={status}
+            isLast={isLast}
+            label={<Text style={[CHAIN_TEXT, { color }]}>{label}</Text>}
+            description={duration}
+        >
+            {pending ? (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                    <ActivityIndicator size="small" color={CHAIN_COLORS.muted} style={{ transform: [{ scale: 0.7 }] }} />
+                    <Text style={[CHAIN_SMALL_TEXT, { color: CHAIN_COLORS.muted }]}>Waiting for you</Text>
+                </View>
+            ) : (
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                    {approved ? <Check size={14} color={APPROVAL_COLORS.approved} weight="bold" /> : <X size={14} color={APPROVAL_COLORS.rejected} weight="bold" />}
+                    <Text style={[CHAIN_SMALL_TEXT, { color: approved ? APPROVAL_COLORS.approved : APPROVAL_COLORS.rejected, flexShrink: 1 }]}>
+                        {message || (approved ? 'Tool call was approved' : 'Tool call was rejected')}
+                    </Text>
+                </View>
             )}
         </ChainOfThoughtStep>
     );

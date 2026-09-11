@@ -98,6 +98,7 @@ export function chainHeaderLabel({
     if (thinkingActive) return 'Thinking...';
     if (workingActive) {
         const last = nodes[nodes.length - 1];
+        if (last?.type === 'toolApproval' && last.approved === null) return 'Waiting for your approval';
         if (last?.type === 'status') return last.content;
         if (last?.type === 'toolCall') return `Calling ${toolNameFromSignature(last.signature)}`;
         return 'Working...';

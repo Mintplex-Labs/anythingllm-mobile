@@ -7,6 +7,7 @@ import ActivityChain from "./ActivityChain";
 import CitationsContainer from "./Citations";
 import ActionsContainer from "./Actions";
 import TextResponseContainer from "./TextResponse";
+import ToolApprovalRequest from "./ToolApprovalRequest";
 import { focusMessageActions } from "../focusMessageActions";
 
 /**
@@ -29,6 +30,7 @@ export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessa
     return (
         <View className="flex flex-col items-start w-full justify-start" style={{ gap: 11, paddingBottom: hasTrailingChips ? TRAILING_CHIPS_BOTTOM_PADDING : 0 }}>
             <ActivityChain chat={chat} />
+            <ToolApprovalRequest chat={chat} />
             {chat.type === 'error' ? (
                 <ErrorContainer message={response?.textResponse} onLongPress={handleLongPress} />
             ) : (

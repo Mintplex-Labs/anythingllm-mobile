@@ -76,6 +76,7 @@ export default function ToggleSwitch({
             duration: 100,
             useNativeDriver: false,
         }).start();
+        onToggle();
     };
 
     const moveToggle = useMemo(
@@ -106,7 +107,6 @@ export default function ToggleSwitch({
             <Pressable
                 onTouchStart={onTouchStart}
                 onTouchEnd={onTouchEnd}
-                onPress={onToggle}
             >
                 <Animated.View
                     style={[

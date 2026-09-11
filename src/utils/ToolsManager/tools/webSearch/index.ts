@@ -101,7 +101,7 @@ export default {
     },
 
     /**
-     * Identifies this client to search providers, eg: `AnythingLLMMobile/1.0.9`.
+     * Identifies this client to search providers, eg: `AnythingLLMMobile/1.1.0`.
      */
     _getUserAgent(): string {
         let version = 'unknown';

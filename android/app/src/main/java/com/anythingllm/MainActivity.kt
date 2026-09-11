@@ -4,7 +4,6 @@ import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
-import androidx.activity.enableEdgeToEdge
 import android.os.Bundle  // Required for onCreate parameter
 
 
@@ -24,7 +23,7 @@ class MainActivity : ReactActivity() {
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
 
   override fun onCreate(savedInstanceState: Bundle?) {
-      enableEdgeToEdge()
+      // Edge-to-edge is applied by ReactActivity via the edgeToEdgeEnabled gradle property.
       // Pass null to prevent react-native-screens fragments from being restored
       // This fixes the "Screen fragments should never be restored" crash
       // See: https://github.com/software-mansion/react-native-screens/issues/17

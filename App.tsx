@@ -33,6 +33,13 @@ const App = observer(() => {
   const styles = rootStyles(theme);
   const { initialRoute, isLoading } = useInitialRoute();
   const { onboardingCompleted, loadingOnboardingCompleted } = useOnboardingCompleted();
+  // Once onboarding completes its screens are removed from the drawer, but initialRoute was
+  // resolved at launch and may still name one of them. React Navigation 7 throws on an unknown
+  // initialRouteName (v6 ignored it), so fall back to Home in that case.
+  const drawerInitialRoute =
+    onboardingCompleted && Object.values(PATHS.onboarding).includes(initialRoute.path)
+      ? PATHS.home
+      : initialRoute.path;
 
   if (isLoading || loadingOnboardingCompleted)
     return (
@@ -69,7 +76,7 @@ const App = observer(() => {
                 <LLMPreferenceProvider>
                   <BottomSheetModalProvider>
                     <NavigationContainer>
-                      <WorkspaceDrawer initialRouteName={initialRoute.path}>
+                      <WorkspaceDrawer initialRouteName={drawerInitialRoute}>
                         {!onboardingCompleted && (
                           <>
                             <Drawer.Screen

@@ -1,6 +1,5 @@
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View, ScrollView } from "react-native";
 import React, { useState } from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { PATHS } from "@/utils/paths";
 import uiStore from "@/store/UIStore";

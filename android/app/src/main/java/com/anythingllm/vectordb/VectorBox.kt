@@ -108,6 +108,7 @@ class VectorBox(reactContext: ReactApplicationContext) : ReactContextBaseJavaMod
             val vectorEntities = ArrayList<VectorEntity>()
             for (i in 0 until vectors.size()) {
                 val vector = vectors.getMap(i)
+                    ?: throw Exception("Vector at index $i is null")
                 val embeddingArray = vector.getArray("embedding")
                 if (embeddingArray == null) throw Exception("Embedding array is null")
                 

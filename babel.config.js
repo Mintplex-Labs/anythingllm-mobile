@@ -3,7 +3,7 @@ module.exports = {
   plugins: [
     ['module:react-native-dotenv', { moduleName: '@env' }],
     ['@babel/plugin-proposal-decorators', { legacy: true }],
-    'react-native-reanimated/plugin',
+    // No reanimated/worklets plugin here: the nativewind/babel preset (css-interop >= 0.2) already adds react-native-worklets/plugin.
     [
       'module-resolver',
       {

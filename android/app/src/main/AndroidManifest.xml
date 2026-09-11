@@ -27,8 +27,6 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28"/>
 
-    <uses-sdk android:minSdkVersion="23" android:targetSdkVersion="35" />
-
     <application
       android:largeHeap="true"
       android:allowBackup="true"

@@ -38,6 +38,13 @@ function debug(text: string, ...args: any[]) {
 
 export function BottomSheetProvider({ children }: { children: React.ReactNode }) {
     const [activeSheet, setActiveSheet] = useState<BottomSheetType>(null);
+    // Mirror of activeSheet that is safe to read inside callbacks fired synchronously by the
+    // bottom-sheet library (onDismiss can run before React commits the state update).
+    const activeSheetRef = useRef<BottomSheetType>(null);
+    const setActive = useCallback((type: BottomSheetType) => {
+        activeSheetRef.current = type;
+        setActiveSheet(type);
+    }, []);
     const sheetRefs = useRef<Map<BottomSheetType, React.RefObject<BottomSheetModal>>>(new Map());
 
     const registerSheet = useCallback((type: BottomSheetType, ref: React.RefObject<BottomSheetModal>) => {
@@ -51,32 +58,33 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
     }, []);
 
     const presentSheet = useCallback((type: BottomSheetType, force: boolean = false) => {
-        debug('presentSheet', { type, force, activeSheet });
-        if (activeSheet === type && !force) return;
+        const previous = activeSheetRef.current;
+        debug('presentSheet', { type, force, activeSheet: previous });
+        if (previous === type && !force) return;
 
-        // Dismiss all sheets except the one we are presenting
-        sheetRefs.current.forEach((ref, sheetType) => sheetType !== type && ref.current?.dismiss());
-        const newRef = sheetRefs.current.get(type);
-        if (newRef?.current) {
-            newRef.current.present();
-            setActiveSheet(type);
-        }
-    }, [activeSheet]);
+        // Only dismiss the sheet that is actually open. Since @gorhom/bottom-sheet 5.2, dismiss() on a
+        // sheet that is not presented still fires its onDismiss synchronously; several onDismiss handlers
+        // re-present the prompt input, so dismissing every registered sheet recursed until the stack blew.
+        const next = sheetRefs.current.get(type)?.current;
+        setActive(next ? type : null);
+        if (previous && previous !== type) sheetRefs.current.get(previous)?.current?.dismiss();
+        next?.present();
+    }, [setActive]);
 
     const dismissSheet = useCallback((type: BottomSheetType) => {
         debug('dismissSheet', { type });
-        const ref = sheetRefs.current.get(type);
-        if (ref?.current) {
-            ref.current.dismiss();
-            setActiveSheet(null);
-        }
-    }, []);
+        // onDismiss -> dismissSheet -> dismiss() -> onDismiss would loop; only act on the active sheet.
+        if (activeSheetRef.current !== type) return;
+        setActive(null);
+        sheetRefs.current.get(type)?.current?.dismiss();
+    }, [setActive]);
 
     const dismissAllSheets = useCallback(() => {
         debug('dismissAllSheets');
-        sheetRefs.current.forEach((ref) => ref.current?.dismiss());
-        setActiveSheet(null);
-    }, []);
+        const previous = activeSheetRef.current;
+        setActive(null);
+        if (previous) sheetRefs.current.get(previous)?.current?.dismiss();
+    }, [setActive]);
 
     useEffect(() => {
         uiStore.emitter.addListener(BOTTOM_SHEET_EVENTS.DISMISS_ALL_SHEETS, dismissAllSheets);

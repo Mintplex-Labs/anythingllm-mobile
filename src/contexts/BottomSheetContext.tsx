@@ -9,6 +9,7 @@ export const BOTTOM_SHEET_NAMES = {
     TOOLS: 'tools',
     WORKSPACE_FILES: 'workspace-files',
     CITATIONS: 'citations',
+    THREAD_MENU: 'thread-menu',
 } as const;
 export type BottomSheetType = (typeof BOTTOM_SHEET_NAMES)[keyof typeof BOTTOM_SHEET_NAMES] | null;
 

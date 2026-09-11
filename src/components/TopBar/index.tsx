@@ -13,7 +13,11 @@ import NewThreadIcon from '@/assets/new-thread.svg';
 import WorkspaceThread from '@/database/models/WorkspaceThread';
 import { PATHS } from '@/utils/paths';
 import ModelChip from './ModelChip';
+import ThreadMenuSheet, { ThreadMenuIcon } from './ThreadMenu';
 import uiStore from '@/store/UIStore';
+
+/** Left and right clusters share a width so the logo stays centered regardless of how many actions are shown */
+const SIDE_WIDTH = 72;
 
 export default function TopBar({
   workspace,
@@ -55,9 +59,11 @@ export default function TopBar({
 
   return (
     <View className="flex flex-row items-center justify-between h-fit min-h-[50px] pb-2">
-      <TouchableOpacity onPress={() => navigation.openDrawer()}>
-        <List size={34} color="white" />
-      </TouchableOpacity>
+      <View style={{ width: SIDE_WIDTH }} className="flex flex-row items-center justify-start">
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <List size={34} color="white" />
+        </TouchableOpacity>
+      </View>
       <View className="flex flex-col items-center gap-y-0">
         <TouchableOpacity
           onLongPress={showDebug}
@@ -74,13 +80,17 @@ export default function TopBar({
         </TouchableOpacity>
         <ModelChip workspace={workspace} />
       </View>
-      {canMakeThread ? (
-        <TouchableOpacity onPress={handleNewThread}>
-          <NewThreadIcon width={32} height={32} fill="white" />
-        </TouchableOpacity>
-      ) : (
-        <View className="w-[32px]" />
-      )}
+      <View style={{ width: SIDE_WIDTH, gap: 4 }} className="flex flex-row items-center justify-end">
+        {canMakeThread && (
+          <>
+            <TouchableOpacity onPress={handleNewThread}>
+              <NewThreadIcon width={32} height={32} fill="white" />
+            </TouchableOpacity>
+            <ThreadMenuIcon />
+          </>
+        )}
+      </View>
+      {canMakeThread && <ThreadMenuSheet workspace={workspace} thread={thread} />}
     </View>
   );
 }

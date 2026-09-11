@@ -29,6 +29,8 @@ class Telemetry {
             DOCUMENT_IMPORTED: 'document_added',
             TOOL_CALLED: 'tool_called',
             LLM_SETTINGS_UPDATED: 'llm_settings_updated',
+            /** A chat thread was exported (txt/json/pdf) and handed to the share sheet */
+            THREAD_EXPORTED: 'thread_exported',
 
             /** The user use the QR code to connect to an AnythingLLM intance */
             EXTERNAL_CONNECTION_ESTABLISHED: 'external_connection_established',

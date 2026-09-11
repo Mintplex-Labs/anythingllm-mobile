@@ -12,7 +12,6 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.soloader.OpenSourceMergedSoMapping
 import com.facebook.soloader.SoLoader
 import com.anythingllm.download.DownloadPackage
-// import com.anythingllm.chatqnn.ChatQnnPackage - QNN SDK (Genie Runtime LLM)
 import com.anythingllm.storage.StoragePackage
 import com.anythingllm.vector.VectorBoxPackage
 import com.anythingllm.webscraper.WebScraperPackage
@@ -27,7 +26,6 @@ class MainApplication : Application(), ReactApplication {
               add(DeviceInfoPackage())
               add(KeepAwakePackage())
               add(DownloadPackage())
-              // add(ChatQnnPackage()) - QNN SDK (Genie Runtime LLM)
               add(StoragePackage())
               add(VectorBoxPackage())
               add(WebScraperPackage())

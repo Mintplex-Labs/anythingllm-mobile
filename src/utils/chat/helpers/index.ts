@@ -42,10 +42,14 @@ export function formatChatHistory(
     }
 
     // Most providers expect the content to be a property of the message object formatted like OpenAI models.
+    // The formatter turns the prompt + image attachments into an OpenAI style content array.
     return [
       {
         role: "user",
-        content: historicalMessage.prompt,
+        content: formatterFunction({
+          content: historicalMessage.prompt,
+          attachments: historicalMessage.response.attachments,
+        }),
       },
       {
         role: "assistant",

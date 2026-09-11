@@ -37,6 +37,7 @@ export interface OpenRouterAPIModel {
 }
 
 class OpenRouterProvider extends BaseOpenAILikeProvider {
+  public isExternalProvider: boolean = true;
   private baseURL: string = 'https://openrouter.ai/api/v1';
   private apiKey: string | null = null;
 
@@ -69,6 +70,13 @@ class OpenRouterProvider extends BaseOpenAILikeProvider {
 
   protected log = (text: string, ...args: any[]) => {
     console.log(`\x1b[36m[${this.constructor.name}]\x1b[0m ${text}`, ...args);
+  }
+
+  /**
+   * OpenRouter only streams `delta.reasoning` when asked - same flag the desktop provider sends.
+   */
+  protected override extraRequestParams(): Record<string, any> {
+    return { include_reasoning: true };
   }
 
   override async availableModels(): Promise<IAvailableModel[]> {

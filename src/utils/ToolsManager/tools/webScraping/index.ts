@@ -41,6 +41,7 @@ export default {
             else if (validUrl.match(/^http:\/\//i)) validUrl = validUrl.replace(/^http:\/\//i, 'https://');
 
             validUrl = new URL(validUrl);
+            streamEmitter('report_status', `Reading ${validUrl.hostname}`);
             const scrapeResult = await webscraper.scrape(validUrl.toString());
 
             const citation = {

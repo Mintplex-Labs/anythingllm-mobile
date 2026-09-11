@@ -25,9 +25,15 @@ export function useOnboardingCompleted(): {
     }, []);
 
     useEffect(() => {
-        uiStore.emitter.addListener(uiStore.globalEvents.ONBOARDING_COMPLETED, () => setOnboardingCompleted(true));
+        const onCompleted = () => setOnboardingCompleted(true);
+        const onReset = () => setOnboardingCompleted(false);
+        const completedSub = uiStore.emitter.addListener(uiStore.globalEvents.ONBOARDING_COMPLETED, onCompleted);
+        const resetSub = uiStore.emitter.addListener(uiStore.globalEvents.ONBOARDING_RESET, onReset);
+        // Remove only this hook instance's subscriptions so other mounted
+        // consumers (e.g. the root navigator) keep receiving these events.
         return () => {
-            uiStore.emitter.removeAllListeners(uiStore.globalEvents.ONBOARDING_COMPLETED);
+            completedSub.remove();
+            resetSub.remove();
         };
     }, []);
     return { loadingOnboardingCompleted: loading, onboardingCompleted };

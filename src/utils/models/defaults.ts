@@ -12,35 +12,50 @@ export type DefaultModel = {
     isPreset: boolean;
 }
 
+/**
+ * Onboarding / "simple" presets. These are aliases for models that also live in
+ * the full catalog (`defaultModels`) - they share the same modelId + download url
+ * so a preset and its catalog entry resolve to the same file on disk. Both are
+ * listed in the model picker; only the preset row uses the phosphor icon below.
+ */
 export const MODEL_CARDS = [
     {
         id: 'lightweight',
         name: 'Lightweight',
         description: 'For quick responses and simple tasks.',
         Icon: Feather,
-        size: '639MB',
-        modelId: 'unsloth/Qwen3-0.6B-GGUF',
-        tag: 'https://huggingface.co/unsloth/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q8_0.gguf',
+        size: '812MB',
+        modelId: 'unsloth/Qwen3.5-0.8B-GGUF',
+        tag: 'https://huggingface.co/unsloth/Qwen3.5-0.8B-GGUF/resolve/main/Qwen3.5-0.8B-Q8_0.gguf',
     },
     {
         id: 'balanced',
         name: 'Balanced',
         description: 'For a balance of speed and accuracy.',
         Icon: Scales,
-        size: '1.83GB',
-        modelId: 'unsloth/Qwen3-1.7B-GGUF',
-        tag: 'https://huggingface.co/unsloth/Qwen3-1.7B-GGUF/resolve/main/Qwen3-1.7B-Q8_0.gguf',
+        size: '2.01GB',
+        modelId: 'unsloth/Qwen3.5-2B-GGUF',
+        tag: 'https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/main/Qwen3.5-2B-Q8_0.gguf',
     },
     {
         id: 'powerful',
         name: 'Powerful',
         description: 'Heavier models for the best accuracy.',
         Icon: Barbell,
-        size: '2.09GB',
-        modelId: 'unsloth/Llama-3.2-3B-Instruct-GGUF',
-        tag: 'https://huggingface.co/unsloth/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_1.gguf',
+        size: '3.53GB',
+        modelId: 'unsloth/Qwen3.5-4B-GGUF',
+        tag: 'https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-Q6_K.gguf',
     },
 ];
+
+export const RERANKER_MODEL = {
+    id: 'reranker',
+    name: 'Tool Reranker',
+    description: 'Cross-encoder reranker for intelligent tool selection.',
+    size: '22.6MB',
+    modelId: 'sinjab/ms-marco-MiniLM-L6-v2-Q8_0-GGUF',
+    tag: 'https://huggingface.co/sinjab/ms-marco-MiniLM-L6-v2-Q8_0-GGUF/resolve/main/ms-marco-MiniLM-L6-v2-Q8_0.gguf',
+}
 
 export const EMBEDDING_MODEL = {
     id: 'default',

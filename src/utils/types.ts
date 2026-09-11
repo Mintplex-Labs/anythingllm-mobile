@@ -1,4 +1,4 @@
-import { CompletionParams } from 'cactus-react-native';
+import { CompletionParams } from 'llama.rn';
 import { TemplateConfig } from 'chat-formatter';
 import * as React from 'react';
 import { ImageURISource, TextStyle } from 'react-native';
@@ -260,11 +260,22 @@ export interface Model {
   chatTemplateString?: string;
   imageUrl?: string;
 
-  runtime: 'CPU' | 'NPU';
+  runtime: 'CPU';
   author: string;
   name: string;
   type?: string;
   capabilities?: string[]; // Array of capability keys for localization
+  /**
+   * Multimodal projector (mmproj) that pairs with a vision model. When present the file is
+   * downloaded next to the model and loaded into llama.rn so the model can take image input.
+   * Vision is only offered to the user when `capabilities` includes 'vision' AND this file is on disk.
+   */
+  mmproj?: {
+    downloadUrl: string;
+    filename: string;
+    /** Size in bytes */
+    size: number;
+  };
   size: number; // Size in bytes
   params: number;
   isDownloaded: boolean;
@@ -288,27 +299,6 @@ export interface Model {
   hfModelFile?: ModelFile;
   hfModel?: HuggingFaceModel;
   hash?: string;
-}
-
-export interface NPUEnabledModel {
-  id: string;
-  runtime: 'NPU';
-  author: string;
-  name: string;
-  type?: string;
-  capabilities?: string[];
-  size: number;
-  params: number;
-  isDownloaded: boolean;
-  downloadUrl: string;
-  progress: number;
-  downloadSpeed?: string;
-  fullPath?: string;
-  origin: ModelOrigin.ANYTHINGLLM;
-  cdnUrls: string[];
-  modelId: string;
-  defaultChatTemplate: ChatTemplateConfig;
-  chatTemplate: ChatTemplateConfig;
 }
 
 export namespace MessageType {

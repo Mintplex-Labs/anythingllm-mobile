@@ -31,6 +31,7 @@ import { PATHS } from "@/utils/paths";
 import useRouteObserver from "@/hooks/useRouteObserver";
 import { useChatHandlerContext } from "@/hooks/useChatHandler/index";
 import useLlmPreference from "@/hooks/useLLMPreference";
+import useSpeechToText from "@/hooks/useSpeechToText";
 
 const defaultPadding = [0, 0, 32]; // top padding for snap points
 export const snapPointsDefault = ["22%", "60%", "100%"];
@@ -55,7 +56,10 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
   const [sheetIndex, setSheetIndex] = useState(0);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const [selection, setSelection] = useState({ start: 0, end: 0 });
+
+  const speechToText = useSpeechToText(
+    useCallback((text: string) => chatHandler.setPrompt(text), [chatHandler]),
+  );
 
   const hasModelSelected = useMemo(() => {
     return !!llmPreferences?.config?.model;
@@ -136,29 +140,15 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
     );
   }, [sheetIndex, keyboardHeight]);
 
+  // Do not manage the cursor/selection from JS here. IME-based keyboards
+  // (Japanese, Korean, Chinese, etc.) replace the composing text in place
+  // without changing the string length, so any cursor arithmetic based on
+  // length deltas fights the native IME and drags the caret back to 0.
+  // Leaving the TextInput uncontrolled for selection lets Android/iOS own
+  // composition and the long-press selection handles. See GH issue #30.
   const handleTextInputChange = useCallback(
-    (text: string) => {
-      const cursorAt = selection.start;
-      const oldLength = chatHandler.prompt.length;
-      chatHandler.setPrompt(text);
-
-      // For pasting keep cursor where the paste happened
-      if (Math.abs(text.length - oldLength) > 1) {
-        setSelection({
-          start: cursorAt + (text.length - oldLength),
-          end: cursorAt + (text.length - oldLength),
-        });
-        return;
-      }
-
-      // For normal typing/deletion move cursor one position
-      const newCursorPosition = cursorAt + (text.length > oldLength ? 1 : -1);
-      setSelection({
-        start: Math.max(0, newCursorPosition),
-        end: Math.max(0, newCursorPosition),
-      });
-    },
-    [chatHandler, selection],
+    (text: string) => chatHandler.setPrompt(text),
+    [chatHandler],
   );
 
   useEffect(() => {
@@ -255,8 +245,6 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
             }}
             defaultValue={chatHandler.prompt}
             onChangeText={handleTextInputChange}
-            onSelectionChange={event => setSelection(event.nativeEvent.selection)}
-            selection={selection}
             scrollEnabled={true}
             style={{
               textAlignVertical: "top",
@@ -272,6 +260,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
             sheetIndex={sheetIndex}
             attachmentHandler={attachmentHandler}
             chatHandler={chatHandler}
+            speechToText={speechToText}
           />
         </Animated.View>
       </BottomSheetModal>

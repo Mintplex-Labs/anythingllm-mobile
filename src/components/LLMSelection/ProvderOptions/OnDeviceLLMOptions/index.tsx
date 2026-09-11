@@ -1,15 +1,15 @@
 import { ISelection } from "@/screens/Onboarding/ModelSelection";
 import { View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { defaultModels } from "@/utils/models";
-import { Model, NPUEnabledModel } from "@/utils/types";
+import { Model } from "@/utils/types";
 import { formatBytes } from "@/utils/formatters";
 import { useState } from "react";
 
 export default function OnDeviceLLMOptions({ selection, onChange }: { selection: ISelection, onChange: (config: Record<string, any>, autoConfirm?: boolean) => void }) {
-  const [selectedModel, setSelectedModel] = useState<Model | NPUEnabledModel | null>(selection.config.model);
+  const [selectedModel, setSelectedModel] = useState<Model | null>(selection.config.model);
   const [isConfirming, setIsConfirming] = useState(false);
 
-  function handleModelSelection(model: Model | NPUEnabledModel) {
+  function handleModelSelection(model: Model) {
     if (isConfirming) return;
 
     setSelectedModel(model);
@@ -34,7 +34,6 @@ export default function OnDeviceLLMOptions({ selection, onChange }: { selection:
             const isSelected = model.id === selectedModel?.id;
             const bgColor = isSelected ? 'bg-blue-100' : ' bg-[--secondary-bg] ';
             const textColor = isSelected ? 'text-black' : 'text-white'
-            const badgeColor = model.runtime === 'NPU' ? 'bg-purple-500/50' : 'bg-green-300/50';
             return (
               <TouchableOpacity
                 key={model.id}
@@ -44,7 +43,7 @@ export default function OnDeviceLLMOptions({ selection, onChange }: { selection:
               >
                 <View className="flex-row items-center gap-x-2 justify-between w-full">
                   <Text className={`${textColor} text-sm font-bold`}>{model.name}</Text>
-                  <View className={`rounded-full px-2 py-1 ${badgeColor}`}>
+                  <View className="rounded-full px-2 py-1 bg-green-300/50">
                     <Text className="text-white text-xs">{model.runtime}</Text>
                   </View>
                 </View>

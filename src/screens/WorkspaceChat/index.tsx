@@ -16,9 +16,11 @@ import { ChatHandlerWrapper } from "@/hooks/useChatHandler";
 // DO NOT add sheets _inside_ the PromptInput component since they will be unmounted when the PromptInput is unmounted
 // thus nulling the ref and preventing the sheet from being dismissed
 import SettingsActionSheet from "./PromptInput/Actions/Settings";
+import AttachmentsActionSheet from "./PromptInput/Actions/Attachments";
 import ToolsActionSheet from "./PromptInput/Actions/Settings/Tools";
 import WorkspaceFilesActionSheet from "./PromptInput/Actions/Settings/Files";
 import CitationsActionSheet from "./ChatHistory/CitationsActionSheet";
+import MessageActionsSheet from "./ChatHistory/MessageActionsSheet";
 
 export default function WorkspaceChat() {
   useRedirect();
@@ -42,9 +44,12 @@ export default function WorkspaceChat() {
       <ChatHandlerWrapper workspace={workspace} thread={thread} llmProvider={LLMProvider!}>
         <ChatHistory />
         <PromptInput attachmentHandler={attachmentHandler} />
+        {/* Long-press message actions - needs the chat handler context, so it lives inside the wrapper */}
+        <MessageActionsSheet workspace={workspace} thread={thread} />
       </ChatHandlerWrapper>
 
       <SettingsActionSheet workspace={workspace} thread={thread} />
+      <AttachmentsActionSheet workspace={workspace} thread={thread} attachmentHandler={attachmentHandler} />
       <ToolsActionSheet />
       <WorkspaceFilesActionSheet workspace={workspace} />
       <CitationsActionSheet />

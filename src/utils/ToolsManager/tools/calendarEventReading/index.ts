@@ -37,6 +37,7 @@ export default {
             const parsedArgs = typeof args === 'string' ? safeJsonParse(args) : args;
             const { search = 'today', specificDate = moment().format('YYYY-MM-DD') } = parsedArgs;
             const { startDate, endDate } = this._searchTypeToDate(search, specificDate);
+            streamEmitter('report_status', `Reading your calendar for ${search === 'specific date' ? specificDate : search}`);
 
             const canRead = await RNCalendarEvents.checkPermissions();
             if (['denied', 'restricted', 'undetermined'].includes(canRead)) {

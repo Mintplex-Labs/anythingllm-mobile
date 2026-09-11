@@ -1,5 +1,5 @@
 import { applyTemplate, Templates } from 'chat-formatter';
-import { JinjaFormattedChatResult, LlamaContext } from 'cactus-react-native';
+import { JinjaFormattedChatResult, LlamaContext } from 'llama.rn';
 import { CompletionParams } from './completionTypes';
 import { defaultCompletionParams } from './completionSettingsVersions';
 import {
@@ -242,6 +242,7 @@ export const stops = [
   '<|end_of_turn|>',
   '<end_of_turn>',
   '<|endoftext|>',
+  '<turn|>', // Gemma 4
 ];
 
 /**

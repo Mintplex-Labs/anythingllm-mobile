@@ -12,6 +12,7 @@ import { EMBEDDING_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/mode
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Telemetry from "@/utils/Telemetry";
+import ToolReranker from "@/utils/ToolsManager/toolReranker";
 
 export default function DataHandling() {
   const navigation = useNavigation();
@@ -28,6 +29,9 @@ export default function DataHandling() {
     async function waitAtLeast(ms: number) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
+
+    // Pre-download the reranker model in the background (fire-and-forget, ~22.6 MB on WiFi)
+    new ToolReranker().downloadModel({ silent: true }).catch(() => {});
 
     // Wait at least 3 seconds on this page just for the user to see the progress
     const [workspace] = await Promise.all([

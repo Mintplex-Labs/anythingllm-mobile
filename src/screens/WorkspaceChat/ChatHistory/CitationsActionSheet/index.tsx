@@ -7,7 +7,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import uiStore from "@/store/UIStore";
 import { type WorkspaceChatType, type IDocumentCitation, type IAgentWebSearchCitation } from "@/database/models/WorkspaceChat";
 import { numberToPercentageString, getOrigin } from "@/utils/formatters";
-import { ArrowSquareOut, FileText, Globe } from "phosphor-react-native";
+import { ArrowSquareOut, FileText } from "phosphor-react-native";
+import Favicon from "./Favicon";
 
 const CITATION_COMPONENT = {
     document: DocumentCitation,
@@ -92,7 +93,7 @@ function WebSearchCitation({ citation }: { citation: IAgentWebSearchCitation }) 
             <View className='flex flex-col' style={{ gap: 2 }}>
                 <View className='flex flex-row items-center justify-between w-full'>
                     <View className='flex flex-row items-center' style={{ gap: 4, maxWidth: '95%' }}>
-                        <Globe size={18} color="#7cd4fd" />
+                        <Favicon url={citation.reference.url} size={18} />
                         <Text className='text-white text-lg font-semibold' numberOfLines={1} ellipsizeMode="tail">{citation.reference.title || getOrigin(citation.reference.url)}</Text>
                         <ArrowSquareOut size={18} color="#888" />
                     </View>

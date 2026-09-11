@@ -7,6 +7,10 @@ import AwaitableAlert from '@/components/AwaitableAlert';
 import uiStore from '@/store/UIStore';
 import PushNotifications from '@/utils/PushNotifications';
 import { activateKeepAwake, deactivateKeepAwake } from '@/utils/keepAwake';
+import ImportedModels from '@/utils/models/imported';
+
+const UI_PROGRESS_INTERVAL_MS = 250;
+const NOTIFICATION_PROGRESS_INTERVAL_MS = 5000;
 
 interface UseModelManagerProps {
   llmPreferences: any;
@@ -88,6 +92,68 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
    * @param runPrefetchChecks - If true, the model will be downloaded and the pre-download confirmation checks will be run. Otherwise, it is assumed these checks have already been run prior to calling this function.
    * @returns True if the model was downloaded, false otherwise
    */
+  /**
+   * Streams one file to disk while driving the in-app progress state and the system notification.
+   */
+  const downloadToStorage = async ({ fromUrl, toFile, title, body }: { fromUrl: string; toFile: string; title: string; body: string }) => {
+    // Create the directory if it doesn't exist
+    const dirPath = toFile.substring(0, toFile.lastIndexOf('/'));
+    await RNFS.mkdir(dirPath, { NSURLIsExcludedFromBackupKey: true });
+    setDownloadProgress(0);
+
+    const downloadNotificationId = await PushNotifications.send('progress', {
+      title,
+      body,
+      android: {
+        progress: {
+          indeterminate: true,
+        },
+      },
+    });
+
+    try {
+      // The in-app card animates every tick, so poll often. The system notification
+      // is rate-limited by Android, so only push to it every few seconds.
+      let lastNotifiedAt = 0;
+      await RNFS.downloadFile({
+        fromUrl,
+        toFile,
+        progress: res => {
+          const progress = Math.round((res.bytesWritten / res.contentLength) * 100);
+          setDownloadProgress(progress);
+          const now = Date.now();
+          if (now - lastNotifiedAt < NOTIFICATION_PROGRESS_INTERVAL_MS) return;
+          lastNotifiedAt = now;
+          PushNotifications.send('progress', {
+            id: downloadNotificationId,
+            title,
+            body,
+            android: {
+              progress: {
+                current: progress,
+                max: 100,
+              },
+            },
+          });
+        },
+        background: true,
+        discretionary: true,
+        progressInterval: UI_PROGRESS_INTERVAL_MS,
+      }).promise;
+
+      // The progress callback only fires every `progressInterval` ms, so the last
+      // reported value is usually short of 100. Snap to done before flipping state.
+      setDownloadProgress(100);
+    } finally {
+      PushNotifications.cancel('progress', downloadNotificationId);
+    }
+  };
+
+  /**
+   * Download a model. The vision projector (mmproj) of a multimodal model is NOT fetched here - the
+   * user opts into that from the attachments sheet the first time they want to send an image
+   * (see `utils/models/mmproj`).
+   */
   const downloadModel = async (model: any, runPrefetchChecks = true) => {
     if (!!modelDownloadUrl) return false;
 
@@ -103,46 +169,15 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     setModelDownloadUrl(model.downloadUrl);
     const storageLocation = resolveDestinationPathFromGGUFUrl(model.downloadUrl);
 
-    // Create the directory if it doesn't exist
-    const dirPath = storageLocation.substring(0, storageLocation.lastIndexOf('/'));
-    await RNFS.mkdir(dirPath, { NSURLIsExcludedFromBackupKey: true });
-
-    const downloadNotificationId = await PushNotifications.send('progress', {
-      title: 'Downloading model',
-      body: `Downloading ${model.modelId}`,
-      android: {
-        progress: {
-          indeterminate: true,
-        },
-      },
-    });
-
     try {
       activateKeepAwake();
       uiStore.setSessionKey('@downloadInProgress', true, uiStore.globalEvents.MODEL_DOWNLOAD_STARTED);
-      await RNFS.downloadFile({
+      await downloadToStorage({
         fromUrl: model.downloadUrl,
         toFile: storageLocation,
-        progress: res => {
-          const progress = Math.round((res.bytesWritten / res.contentLength) * 100);
-          setDownloadProgress(progress);
-          PushNotifications.send('progress', {
-            id: downloadNotificationId,
-            title: 'Downloading model',
-            body: `Downloading ${model.modelId}`,
-            android: {
-              progress: {
-                current: progress,
-                max: 100,
-              },
-            },
-          });
-        },
-        background: true,
-        discretionary: true,
-        progressInterval: 5000,
-      }).promise;
-
+        title: 'Downloading model',
+        body: `Downloading ${model.modelId}`,
+      });
       setDownloadedModels(prev => ({ ...prev, [model.modelId]: true }));
       PushNotifications.send('primary', {
         title: 'Download complete',
@@ -161,15 +196,17 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
         { text: 'Dismiss', style: 'default' },
         { text: 'OK', style: 'default' }
       );
-      setModelDownloadUrl(null);
-      setDownloadProgress(0);
       return false;
     } finally {
+      // Always clear the active download so cards leave the progress state on
+      // success as well as failure - previously this only happened in the catch.
+      setModelDownloadUrl(null);
+      setDownloadProgress(0);
       deactivateKeepAwake();
-      PushNotifications.cancel('progress', downloadNotificationId);
       uiStore.deleteSessionKey('@downloadInProgress', uiStore.globalEvents.MODEL_DOWNLOAD_COMPLETE);
     }
   };
+
 
   const uninstallModel = async (model: any) => {
     const shouldUninstall = await AwaitableAlert(
@@ -183,6 +220,12 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
 
     try {
       const path = resolveDestinationPathFromGGUFUrl(model.downloadUrl);
+      // Models added from Hugging Face only exist while installed - drop the entry too.
+      if (model.isImported) await ImportedModels.remove(model.modelId);
+      if (model.mmproj?.downloadUrl) {
+        const mmprojPath = resolveDestinationPathFromGGUFUrl(model.mmproj.downloadUrl);
+        if (await RNFS.exists(mmprojPath)) await RNFS.unlink(mmprojPath).catch(() => { });
+      }
       if (await RNFS.exists(path)) {
         await RNFS.unlink(path);
 
@@ -203,7 +246,15 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
         }
         return true;
       }
-      return false;
+      if (model.isImported && selectedModel === model.modelId) {
+        setSelectedModel(null);
+        await uiStore.setToStorage('llmPreference', {
+          ...llmPreferences,
+          config: { ...llmPreferences.config, model: null },
+        });
+        await fetchLLMPreference();
+      }
+      return model.isImported === true;
     } catch (error) {
       console.error('Failed to uninstall model:', error);
       return false;

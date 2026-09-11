@@ -1,0 +1,30 @@
+diff --git a/node_modules/@react-native-voice/voice/android/build.gradle b/node_modules/@react-native-voice/voice/android/build.gradle
+index 8fce879..3147125 100644
+--- a/node_modules/@react-native-voice/voice/android/build.gradle
++++ b/node_modules/@react-native-voice/voice/android/build.gradle
+@@ -62,6 +62,8 @@ def supportVersion = rootProject.hasProperty('supportLibVersion') ? rootProject.
+ dependencies {
+     implementation fileTree(dir: 'libs', include: ['*.jar'])
+     testImplementation 'junit:junit:4.12'
+-    implementation "com.android.support:appcompat-v7:${supportVersion}"
++    // The source only imports androidx.annotation; the legacy support library
++    // pulled in support-compat and broke manifest merging against androidx.core.
++    implementation "androidx.annotation:annotation:1.7.1"
+     implementation 'com.facebook.react:react-native:+'
+ }
+diff --git a/node_modules/@react-native-voice/voice/android/src/main/java/com/wenkesj/voice/VoiceModule.java b/node_modules/@react-native-voice/voice/android/src/main/java/com/wenkesj/voice/VoiceModule.java
+index f22833e..ba665b8 100644
+--- a/node_modules/@react-native-voice/voice/android/src/main/java/com/wenkesj/voice/VoiceModule.java
++++ b/node_modules/@react-native-voice/voice/android/src/main/java/com/wenkesj/voice/VoiceModule.java
+@@ -146,7 +146,10 @@ public class VoiceModule extends ReactContextBaseJavaModule implements Recogniti
+ 
+   @Override
+   public String getName() {
+-    return "RCTVoice";
++    // JS looks up NativeModules.Voice. The old bridge stripped the "RCT"
++    // prefix natively, but the New Architecture interop layer keys legacy
++    // modules by the exact getName() value, so "RCTVoice" resolves to null.
++    return "Voice";
+   }
+ 
+   @ReactMethod

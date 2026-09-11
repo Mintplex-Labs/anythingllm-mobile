@@ -1,32 +1,36 @@
-import { type WorkspaceThreadType } from "@/database/models/WorkspaceThread";
+import WorkspaceThread, { type WorkspaceThreadType } from "@/database/models/WorkspaceThread";
 import { type WorkspaceType } from "@/database/models/Workspace";
 import { type LLMProvider } from "@/utils/AiProviders";
 import { useState, useMemo, useEffect, createContext, useContext, useCallback, useRef } from "react";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import uiStore from "@/store/UIStore";
-import WorkspaceChat, { IAgentAction, IAgentToolCall, IChatCitation } from "@/database/models/WorkspaceChat";
-import { merge } from 'lodash';
-import { ICompleteResponse, IStreamEvent, IStreamResponse } from "@/utils/AiProviders/baseOpenAILikeProvider";
-import { parseStreamingChunksToResponse } from "./parser";
+import WorkspaceChat from "@/database/models/WorkspaceChat";
+import { IAttachment, IStreamEvent, IStreamResponse } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { activateKeepAwake, deactivateKeepAwake } from "@/utils/keepAwake";
 import { Keyboard } from "react-native";
 import DelegatedProvider from "@/utils/AiProviders/delegatedProvider";
 import AwaitableAlert from "@/components/AwaitableAlert";
 import Telemetry from "@/utils/Telemetry";
+import AssistantTurn from "./turn";
+import { isAbortError } from "@/utils/chat/abort";
 
 const SHOW_DEBUG_LOGS = true;
 
+/**
+ * Minimum gap between UI publishes while a reply streams. Tokens can arrive far
+ * faster than a phone can re-layout markdown, so events are folded into the
+ * working turn and the chat list only sees a snapshot every window. Turn
+ * boundaries (tool calls, statuses, completion) bypass the window.
+ */
+const STREAM_FLUSH_INTERVAL_MS = 60;
+
+/**
+ * Everything the prompt input and action sheets need. Deliberately excludes the
+ * chat list so typing in the prompt never re-renders the history.
+ */
 export interface ChatHandlerInterface {
-    /** The current chat history for the workspace thread */
-    chats: DynamicChatMessage[];
-    /** Whether the chat history is loading */
-    isLoadingChats: boolean;
     /** Whether the chat is currently working (could be streaming or not) */
     isWorking: boolean;
-    /** The error if the chat history fails to load */
-    errorLoadingChats: Error | null;
-    /** Whether the chat history can be scrolled */
-    canScrollChatHistory: boolean;
     /** Fetch the chats from the database wrt to the thread that is available in the context */
     fetchChats: () => Promise<void>;
     /** Reset the chat history */
@@ -38,10 +42,47 @@ export interface ChatHandlerInterface {
     promptDisabled: boolean;
     /** Set the prompt for the workspace thread with optional auto submit */
     setPrompt: (prompt: string, autoSubmit?: boolean) => void;
-    /** Submit the prompt for the workspace thread - if no prompt is passed, use the current prompt state */
-    submitPrompt: (prompt?: string) => void;
+    /**
+     * Submit the prompt for the workspace thread - if no prompt is passed, use the current prompt state.
+     * `attachments` are the images to send with this prompt (see `useAttachments.imageAttachments`).
+     */
+    submitPrompt: (prompt?: string, attachments?: IAttachment[]) => void;
+    /**
+     * Stop the reply currently being generated. Aborts the model (on-device, external API
+     * or remote instance) and discards the unfinished chat - nothing is saved.
+     */
+    abortChat: () => void;
+    /**
+     * Remove a user/assistant pair from the thread - both from the on-screen history
+     * and the database. Chats still being generated cannot be deleted (abort instead).
+     */
+    deleteChat: (uuid: string) => Promise<boolean>;
+    /**
+     * Replay a pair as if it never happened: the pair is deleted and its prompt is
+     * re-submitted so the model answers it again without the old exchange in context.
+     */
+    retryChat: (uuid: string) => Promise<void>;
     /** Whether the chat workspace/thread is remote */
     isRemote: boolean;
+}
+
+/**
+ * Everything the chat list needs. Changes only when history changes, so the
+ * list is isolated from prompt keystrokes and other input-side state.
+ */
+export interface ChatHistoryInterface {
+    /** The current chat history for the workspace thread */
+    chats: DynamicChatMessage[];
+    /** Whether the chat history is loading */
+    isLoadingChats: boolean;
+    /** The error if the chat history fails to load */
+    errorLoadingChats: Error | null;
+    /** Whether the chat history can be scrolled */
+    canScrollChatHistory: boolean;
+    /** Whether a reply is being generated */
+    isWorking: boolean;
+    /** Fetch the chats from the database wrt to the thread that is available in the context */
+    fetchChats: () => Promise<void>;
 }
 
 interface IChatHandlerInterfaceProps {
@@ -60,16 +101,14 @@ export const CHAT_HANDLER_EVENTS = {
     DISABLE_PROMPT_INPUT: 'disable_prompt_input',
     ENABLE_PROMPT_INPUT: 'enable_prompt_input',
     RESET_CHAT: 'reset_chat',
-    UPDATE_CHAT: 'update_chat',
     NEW_CHAT_STARTED: 'new_chat_started',
-    CHAT_SCROLL_EVENT: 'chat_scroll_event',
 }
 
 function debug(text: string, ...args: any[]) {
     if (SHOW_DEBUG_LOGS) console.log(`\x1b[33m[ChatHandler]\x1b[0m ${text}`, ...args);
 }
 
-export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHandlerInterfaceProps): ChatHandlerInterface {
+function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfaceProps): { handler: ChatHandlerInterface, history: ChatHistoryInterface } {
     const [chatsMap, setChatsMap] = useState<Map<string, DynamicChatMessage>>(new Map());
 
     const [prompt, _setPrompt] = useState('');
@@ -77,13 +116,63 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
     const [errorLoadingChats, setErrorLoadingChats] = useState<Error | null>(null);
     const [_promptDisabled, _setPromptDisabled] = useState<boolean>(false);
     const [isWorking, setIsWorking] = useState<boolean>(false);
-    const [isRemote, _] = useState<boolean>(workspace?.isRemote || thread?.isRemote);
+    const [isRemote] = useState<boolean>(!!(workspace?.isRemote || thread?.isRemote));
 
     // Keep the latest chatsMap in a ref to avoid stale closures inside callbacks
     const chatsMapRef = useRef(chatsMap);
     useEffect(() => {
         chatsMapRef.current = chatsMap;
     }, [chatsMap]);
+
+    const upsertChat = useCallback((chat: DynamicChatMessage) => {
+        setChatsMap((prevMap) => {
+            const newMap = new Map(prevMap);
+            newMap.set(chat.uuid as string, chat);
+            return newMap;
+        });
+    }, []);
+
+    const removeChat = useCallback((uuid: string) => {
+        setChatsMap((prevMap) => {
+            if (!prevMap.has(uuid)) return prevMap;
+            const newMap = new Map(prevMap);
+            newMap.delete(uuid);
+            return newMap;
+        });
+    }, []);
+
+    const deleteChat = useCallback(async (uuid: string) => {
+        const chat = chatsMapRef.current.get(uuid);
+        if (!chat) return false;
+        if (chat.isLoading) {
+            debug('Refusing to delete a chat that is still generating', uuid);
+            return false;
+        }
+
+        // Update the ref synchronously so a prompt submitted right after this call builds its
+        // message history without the removed pair - the effect syncing the ref runs too late.
+        const next = new Map(chatsMapRef.current);
+        next.delete(uuid);
+        chatsMapRef.current = next;
+        removeChat(uuid);
+
+        const deleted = await WorkspaceChat.delete([{ field: 'uuid', value: uuid }]);
+        debug('Deleted chat', { uuid, deleted });
+        return deleted;
+    }, [removeChat]);
+
+    /**
+     * Controller for the turn currently being generated. Its signal is handed to the
+     * provider so aborting it stops the model itself, not just the UI.
+     */
+    const abortControllerRef = useRef<AbortController | null>(null);
+
+    const abortChat = useCallback(() => {
+        const controller = abortControllerRef.current;
+        if (!controller || controller.signal.aborted) return;
+        debug('Aborting current chat generation');
+        controller.abort();
+    }, []);
 
     const fetchChats = useCallback(async () => {
         try {
@@ -123,25 +212,19 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         } finally {
             setIsLoadingChats(false);
         }
-    }, [thread.slug]);
+    }, [thread, workspace, isRemote]);
 
     const chatsArray = useMemo(() => {
         return Array.from(chatsMap.values());
     }, [chatsMap]);
 
-    const concludeChat = useCallback(async (newChat: DynamicChatMessage) => {
-        let chatToSave: DynamicChatMessage = { ...newChat, isLoading: false };
-        setChatsMap((prevMap) => {
-            const newMap = new Map(prevMap);
-            newMap.set(newChat.uuid as string, chatToSave);
-            return newMap;
-        });
+    const concludeChat = useCallback(async (turn: AssistantTurn) => {
+        const chatToSave = turn.finalize();
+        upsertChat(chatToSave);
 
         // Emit the assistant response complete event
-        uiStore.emitter.emit(CHAT_HANDLER_EVENTS.ASSISTANT_RESPONSE_COMPLETE, { uuid: newChat.uuid as string });
+        uiStore.emitter.emit(CHAT_HANDLER_EVENTS.ASSISTANT_RESPONSE_COMPLETE, { uuid: turn.uuid });
 
-        // Save to database after state update
-        if (!chatToSave) return debug('Failed to save chat to database!');
         await WorkspaceChat.create(chatToSave)
             .then(() => debug('Chat saved to database', chatToSave.uuid))
             .catch(err => debug('Error saving chat to database', err))
@@ -151,124 +234,65 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                     llmModel: llmProvider.model,
                 });
             });
-    }, []);
-
-    /**
-     * Add a new chat to the chat history and update the UI
-     */
-    const _addChat = useCallback((chat: DynamicChatMessage) => {
-        debug('Creating new chat', chat.uuid);
-        setChatsMap((prevMap) => {
-            const newMap = new Map(prevMap);
-            newMap.set(chat.uuid as string, chat);
-            return newMap;
-        });
-        uiStore.emitter.emit(CHAT_HANDLER_EVENTS.NEW_CHAT_STARTED, { uuid: chat.uuid as string, chat: chat });
-    }, []);
+    }, [upsertChat, llmProvider]);
 
     /**
      * Process a chat and add it to the chat history
      * as well as kick off the LLM inference
      */
-    const _processChat = useCallback(async (prompt: string) => {
-        let newChat = WorkspaceChat.newChatItem({ workspaceThreadSlug: thread.slug, prompt });
+    const _processChat = useCallback(async (prompt: string, attachments: IAttachment[] = []) => {
+        // Image attachments live on the user's chat row so they render in the history and are re-sent
+        // with the prompt. The remote (delegated) API cannot take images yet, so they are never offered there.
+        const newChat = WorkspaceChat.newChatItem({ workspaceThreadSlug: thread.slug, prompt, attachments }) as DynamicChatMessage;
+        const turn = new AssistantTurn(newChat);
+
+        // One abort controller per turn - the stop button fires it.
+        const abortController = new AbortController();
+        abortControllerRef.current = abortController;
+        const { signal } = abortController;
+        llmProvider.attachAbortSignal(signal);
+
+        // Throttled publisher - see STREAM_FLUSH_INTERVAL_MS.
+        let flushTimer: ReturnType<typeof setTimeout> | null = null;
+        const clearFlushTimer = () => {
+            if (flushTimer) clearTimeout(flushTimer);
+            flushTimer = null;
+        };
+        const flush = () => {
+            clearFlushTimer();
+            if (signal.aborted) return; // never publish partial output after a stop
+            upsertChat(turn.snapshot());
+        };
+        const scheduleFlush = (immediate: boolean) => {
+            if (immediate) return flush();
+            if (flushTimer) return;
+            flushTimer = setTimeout(flush, STREAM_FLUSH_INTERVAL_MS);
+        };
+
+        /** The user stopped the reply: drop the unfinished chat from the list and save nothing. */
+        const discardAbortedChat = () => {
+            debug('Chat aborted by user - discarding unsaved chat', turn.uuid);
+            clearFlushTimer();
+            removeChat(turn.uuid);
+            uiStore.emitter.emit(CHAT_HANDLER_EVENTS.ASSISTANT_RESPONSE_COMPLETE, { uuid: turn.uuid });
+            Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.CHAT_ABORTED, {
+                llmProvider: llmProvider.name,
+                llmModel: llmProvider.model,
+            });
+        };
+
         try {
             activateKeepAwake();
-            _addChat(newChat as DynamicChatMessage);
-            const messageHistory = Array.from(chatsMapRef.current.values()).concat([newChat as DynamicChatMessage]);
-            let accumulator = '';
+            debug('Creating new chat', turn.uuid);
+            upsertChat(turn.snapshot());
+            uiStore.emitter.emit(CHAT_HANDLER_EVENTS.NEW_CHAT_STARTED, { uuid: turn.uuid });
+            // First message in an unnamed thread names the thread after the prompt (non-blocking).
+            WorkspaceThread.autoRename({ thread, prompt }).catch(err => debug('Error auto-renaming thread', err));
 
-            // Internal function to handle stream events in a cleaner way
-            // without doing everything in the callback directly. Just my personal preference.
-            function handleStreamEvent(event: IStreamEvent, data: IStreamResponse) {
-                let emitUpdate = false;
-                switch (event) {
-                    case 'abort':
-                        throw new Error('Chat aborted');
-                    case 'timed_out':
-                        debug('Chat stream timed out');
-                        merge(newChat, { isLoading: false, type: 'error', response: { textResponse: 'The request timed out before a response was received. Connection may be lost.' } });
-                        emitUpdate = true;
-                        break;
-                    case 'complete':
-                        debug('Chat stream complete');
-                        merge(newChat, { isLoading: false });
-                        emitUpdate = true;
-                        break;
-                    case 'report_metrics':
-                        debug('Report metrics', data);
-                        merge(newChat, { response: { metrics: data as ICompleteResponse['metrics'] } });
-                        break;
-                    case 'report_citations':
-                        debug('Report citations', data);
-                        const citations = newChat.response?.citations || [];
-                        for (const citation of data as IChatCitation[]) citations.push(citation);
-                        merge(newChat, { response: { citations } });
-                        emitUpdate = true;
-                        break;
-                    case 'report_action':
-                        debug('Report action', data);
-                        const actions = newChat.response?.actions || [];
-                        actions.push(data as IAgentAction);
-                        merge(newChat, { response: { actions } });
-                        emitUpdate = true;
-                        break;
-                    case 'will_call_tools':
-                        // moves existing thoughts to the current thought chain so thoughts are cleared
-                        // nullifies the text response as it is not valid anymore
-                        debug('Will call tool', data);
-                        merge(newChat, {
-                            response: {
-                                currentThoughtChain: [...(newChat.response?.thoughts || [])],
-                                thoughts: [],
-                                toolCalls: [],
-                                textResponse: '',
-                            }
-                        });
-                        accumulator = '';
-                        emitUpdate = true;
-                        break;
-                    case 'report_tool_call':
-                        merge(newChat, { response: { toolCalls: [...(newChat.response?.toolCalls || []), data] } });
-                        emitUpdate = true;
-                        break;
-                    case 'report_tool_call_result':
-                        const toolCallResult = data as IAgentToolCall;
-                        if (!newChat.response?.toolCalls) return;
-
-                        const existingToolCall = newChat.response?.toolCalls.find(t => t.uuid === toolCallResult.uuid);
-                        if (!existingToolCall) return;
-
-                        debug('Updating tool call result', toolCallResult.uuid);
-                        existingToolCall.result = toolCallResult.result;
-                        merge(newChat, { response: { toolCalls: newChat.response?.toolCalls } });
-                        emitUpdate = true;
-                        break;
-                    case 'report_in_progress_thought':
-                        const inProgressThought = data as string;
-                        merge(newChat, {
-                            response: {
-                                thoughts: [...(newChat.response?.thoughts || []), inProgressThought],
-                                currentThoughtChain: [...(newChat.response?.currentThoughtChain || []), inProgressThought]
-                            }
-                        });
-                        emitUpdate = true;
-                        break;
-                    case 'chunk':
-                        const parsed = parseStreamingChunksToResponse(event, accumulator, data as string);
-                        accumulator += data;
-                        if (!parsed) return debug('No parsable content - skipping');
-                        merge(newChat, { response: { textResponse: parsed.textResponse, thoughts: [...(newChat.response?.currentThoughtChain || []), parsed.reasoningContent] } });
-                        emitUpdate = true;
-                        break;
-                    default:
-                        debug('Unhandled stream event', event, data);
-                }
-                if (emitUpdate) {
-                    uiStore.emitter.emit(CHAT_HANDLER_EVENTS.UPDATE_CHAT, { uuid: newChat.uuid as string, chat: newChat });
-                    uiStore.emitter.emit(CHAT_HANDLER_EVENTS.CHAT_SCROLL_EVENT);
-                }
-                return;
+            const messageHistory = Array.from(chatsMapRef.current.values()).concat([newChat]);
+            const handleStreamEvent = (event: IStreamEvent, data: IStreamResponse) => {
+                const { changed, immediate } = turn.applyEvent(event, data);
+                if (changed) scheduleFlush(immediate);
             };
 
             // Establish the caller as the local provider
@@ -278,8 +302,8 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
             let caller = () => llmProvider.chat({
                 messages: messageHistory,
                 streaming: true,
-                onComplete: (response) => merge(newChat, { type: 'error', response: { textResponse: response.textResponse, metrics: response.metrics } }),
-                onStream: (event, data) => handleStreamEvent(event, data),
+                onComplete: (response) => debug('Unexpected non-streaming completion', response),
+                onStream: handleStreamEvent,
             }) as Promise<any>;
 
             if (isRemote) {
@@ -288,11 +312,13 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                     deviceToken: workspace.remoteConfig.deviceToken,
                     workspaceSlug: workspace.remoteConfig.slug,
                     threadSlug: thread.remoteConfig.slug,
-                    onStream: (event, data) => handleStreamEvent(event, data),
+                    onStream: handleStreamEvent,
                     message: prompt,
+                    signal,
                 }
 
                 const validConfig = await DelegatedProvider.validateConfig(config);
+                if (signal.aborted) return discardAbortedChat(); // stopped while checking the remote
                 if (validConfig) caller = () => (new DelegatedProvider()).streamChat(config)
                 else {
                     const continueLocally = await AwaitableAlert(
@@ -305,31 +331,37 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
                 }
             }
 
-            await caller().catch(err => {
-                debug('Error processing chat', err);
-                merge(newChat, { type: 'error', response: { textResponse: err.message || 'Error processing chat' } });
-            }).finally(async () => {
-                await concludeChat(newChat as DynamicChatMessage);
-            });
+            let callerError: unknown = null;
+            await caller().catch(err => { callerError = err; });
+            clearFlushTimer();
+
+            // Providers may surface a stop as an abort error or as a normal resolve with partial
+            // text (llama.rn stopCompletion, SSE close) - the signal is the source of truth.
+            if (signal.aborted || isAbortError(callerError)) return discardAbortedChat();
+
+            if (callerError) {
+                debug('Error processing chat', callerError);
+                turn.fail((callerError as Error)?.message || 'Error processing chat');
+            }
+            await concludeChat(turn);
         } catch (err) {
+            clearFlushTimer();
+            if (signal.aborted || isAbortError(err)) return discardAbortedChat();
             debug('Error processing chat', err);
-            merge(newChat, { isLoading: false, type: 'error', response: { textResponse: (err as Error).message || 'Error processing chat' } });
-            uiStore.emitter.emit(CHAT_HANDLER_EVENTS.UPDATE_CHAT, { uuid: newChat.uuid as string, chat: newChat });
+            turn.fail((err as Error).message || 'Error processing chat');
+            upsertChat(turn.snapshot());
         } finally {
+            if (abortControllerRef.current === abortController) abortControllerRef.current = null;
+            llmProvider.attachAbortSignal(null);
             deactivateKeepAwake();
         }
-    }, [thread.slug, _addChat, llmProvider, concludeChat]);
+    }, [thread, upsertChat, removeChat, llmProvider, concludeChat, isRemote, workspace]);
 
     const canScrollChatHistory = useMemo(() => {
         return !isLoadingChats && chatsArray.length > 0;
     }, [isLoadingChats, chatsArray]);
 
-    const setPrompt = useCallback((promptToSet: string, autoSubmit: boolean = false) => {
-        _setPrompt(promptToSet);
-        if (autoSubmit) submitPrompt(promptToSet);
-    }, [prompt, _processChat]);
-
-    const submitPrompt = useCallback(async (promptToSubmit?: string) => {
+    const submitPrompt = useCallback(async (promptToSubmit?: string, attachments: IAttachment[] = []) => {
         if (!promptToSubmit) promptToSubmit = prompt;
         // Emit the submit prompt event to the UI store
         uiStore.emitter.emit(CHAT_HANDLER_EVENTS.PROMPT_SUBMITTED);
@@ -338,14 +370,31 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
             _setPrompt('');
             disablePromptInput();
             setIsWorking(true);
-            await _processChat(promptToSubmit);
+            await _processChat(promptToSubmit, attachments);
         } catch (err) {
             debug('Error submitting prompt', err);
         } finally {
             enablePromptInput();
             setIsWorking(false);
         }
-    }, [prompt]);
+    }, [prompt, _processChat, disablePromptInput, enablePromptInput]);
+
+    const setPrompt = useCallback((promptToSet: string, autoSubmit: boolean = false) => {
+        _setPrompt(promptToSet);
+        if (autoSubmit) submitPrompt(promptToSet);
+    }, [submitPrompt]);
+
+    const retryChat = useCallback(async (uuid: string) => {
+        if (isWorking) return debug('Cannot retry while a reply is generating');
+        const chat = chatsMapRef.current.get(uuid);
+        if (!chat?.prompt) return debug('Cannot retry - chat not found or has no prompt', uuid);
+        await deleteChat(uuid);
+        Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.CHAT_RETRIED, {
+            llmProvider: llmProvider.name,
+            llmModel: llmProvider.model,
+        });
+        await submitPrompt(chat.prompt, (chat.response?.attachments ?? []) as IAttachment[]);
+    }, [isWorking, deleteChat, submitPrompt, llmProvider]);
 
     const hideKeyboard = useCallback(() => {
         Keyboard.dismiss();
@@ -355,6 +404,8 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         fetchChats();
         // On initial load, if a model is downloading, disable the prompt input to prevent crashes
         if (uiStore.session.has('@downloadInProgress')) disablePromptInput();
+        // Leaving the thread/workspace mid-reply stops the model - the turn can no longer be shown or saved.
+        return () => abortControllerRef.current?.abort();
     }, []);
 
     useEffect(() => {
@@ -382,51 +433,54 @@ export function chatHandlerInterface({ workspace, thread, llmProvider }: IChatHa
         }
     }, [reset, disablePromptInput, enablePromptInput]);
 
-    const chatHandlerInterface = useMemo(() => {
-        return {
-            // Chat History
-            chats: chatsArray,
-            isLoadingChats,
-            errorLoadingChats,
-            canScrollChatHistory,
-            fetchChats,
-            reset,
+    const handler = useMemo<ChatHandlerInterface>(() => ({
+        isWorking,
+        fetchChats,
+        reset,
+        prompt,
+        promptDisabled: _promptDisabled,
+        setPrompt,
+        submitPrompt,
+        abortChat,
+        deleteChat,
+        retryChat,
+        isRemote,
+    }), [isWorking, fetchChats, reset, prompt, _promptDisabled, setPrompt, submitPrompt, abortChat, deleteChat, retryChat, isRemote]);
 
-            // Prompt Management
-            prompt,
-            promptDisabled: _promptDisabled,
-            setPrompt,
-            submitPrompt,
-            isWorking,
-            isRemote,
-        }
-    }, [
-        chatsMap,
+    const history = useMemo<ChatHistoryInterface>(() => ({
+        chats: chatsArray,
         isLoadingChats,
         errorLoadingChats,
         canScrollChatHistory,
-        fetchChats,
-        prompt,
-        _promptDisabled,
-        setPrompt,
-        submitPrompt,
-        chatsArray,
-        reset,
         isWorking,
-        isRemote,
-    ]);
+        fetchChats,
+    }), [chatsArray, isLoadingChats, errorLoadingChats, canScrollChatHistory, isWorking, fetchChats]);
 
-    return chatHandlerInterface;
+    return { handler, history };
 }
 
 const ChatHandlerContext = createContext<ChatHandlerInterface | null>(null);
+const ChatHistoryContext = createContext<ChatHistoryInterface | null>(null);
+
 export function ChatHandlerWrapper({ children, workspace, thread, llmProvider }: { children: React.ReactNode, workspace: WorkspaceType, thread: WorkspaceThreadType, llmProvider: LLMProvider }) {
-    const chatHandler = chatHandlerInterface({ workspace, thread, llmProvider });
-    return <ChatHandlerContext.Provider value={chatHandler}>{children}</ChatHandlerContext.Provider>;
+    const { handler, history } = useChatHandler({ workspace, thread, llmProvider });
+    return (
+        <ChatHandlerContext.Provider value={handler}>
+            <ChatHistoryContext.Provider value={history}>
+                {children}
+            </ChatHistoryContext.Provider>
+        </ChatHandlerContext.Provider>
+    );
 }
 
 export function useChatHandlerContext() {
     const chatHandler = useContext(ChatHandlerContext);
     if (!chatHandler) throw new Error('ChatHandlerContext not found');
     return chatHandler;
+}
+
+export function useChatHistoryContext() {
+    const chatHistory = useContext(ChatHistoryContext);
+    if (!chatHistory) throw new Error('ChatHistoryContext not found');
+    return chatHistory;
 }

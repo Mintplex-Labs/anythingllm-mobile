@@ -1,59 +1,60 @@
-import { ActivityIndicator, Text, View } from "react-native";
+import { memo } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import { Warning } from "phosphor-react-native";
 import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import { BASE_MESSAGE_STYLES } from "./styles";
-import ThinkingContainer from "./ThinkingContainer";
-import ToolCallContainer from "./ToolCallContainer";
+import ActivityChain from "./ActivityChain";
 import CitationsContainer from "./Citations";
 import ActionsContainer from "./Actions";
-import { Warning } from "phosphor-react-native";
-import useChatListeners from "./useChatListeners";
 import TextResponseContainer from "./TextResponse";
+import ToolApprovalRequest from "./ToolApprovalRequest";
+import { focusMessageActions } from "../focusMessageActions";
 
-function hasNothingToShow(chat: DynamicChatMessage): boolean {
-    if (!chat.isLoading) return false;
+/**
+ * The assistant half of a chat row. Receives the latest snapshot of the chat
+ * straight from the list - no per-message event listeners - and is memoised so
+ * only the row whose snapshot changed re-renders while a reply streams.
+ */
+/**
+ * The markdown body ends with the library's default paragraph margin (10), which is what
+ * normally separates this row from the next user bubble. When actions or citations render
+ * below the text they become the last child and have no margin of their own, so the next
+ * row sits flush against them - pad the block by the same amount in that case.
+ */
+const TRAILING_CHIPS_BOTTOM_PADDING = 10;
+
+export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessage }) {
+    const response = chat.response;
+    const handleLongPress = () => focusMessageActions(chat, 'assistant');
+    const hasTrailingChips = !!response?.actions?.length || (!!response?.citations?.length && !chat.isLoading);
     return (
-        !chat.response?.textResponse?.length &&
-        !chat.response?.thoughts?.length &&
-        !chat.response?.toolCalls?.length
+        <View className="flex flex-col items-start w-full justify-start" style={{ gap: 11, paddingBottom: hasTrailingChips ? TRAILING_CHIPS_BOTTOM_PADDING : 0 }}>
+            <ActivityChain chat={chat} />
+            <ToolApprovalRequest chat={chat} />
+            {chat.type === 'error' ? (
+                <ErrorContainer message={response?.textResponse} onLongPress={handleLongPress} />
+            ) : (
+                <TextResponseContainer uuid={chat.uuid} textResponse={response?.textResponse} metrics={response?.metrics} onLongPress={handleLongPress} />
+            )}
+            <ActionsContainer actions={response?.actions} />
+            <CitationsContainer citations={response?.citations} isLoading={chat.isLoading} />
+        </View>
     );
-}
+});
 
-export default function AssistantMessage(props: { chat: DynamicChatMessage }) {
-    const { chat, autoClose } = useChatListeners(props.chat);
-    if (hasNothingToShow(chat)) return <EmptyLoadingMessage />;
-    if (chat.type === 'error') return <ErrorContainer chat={chat} />;
-
-    return (
-        <View className="flex flex-col items-start w-full justify-start" style={{ gap: 11 }}>
-            <ToolCallContainer chat={chat} autoClose={autoClose} />
-            <ThinkingContainer chat={chat} autoClose={autoClose} />
-            <TextResponseContainer chat={chat} />
-            <ActionsContainer chat={chat} />
-            <CitationsContainer chat={chat} />
-        </View>
-    )
-}
-
-function EmptyLoadingMessage() {
+function ErrorContainer({ message, onLongPress }: { message?: string; onLongPress?: () => void }) {
+    if (!message) return null;
     return (
         <View className="flex flex-row items-start w-full justify-start">
-            <View className="rounded-lg" style={[BASE_MESSAGE_STYLES]}>
-                <ActivityIndicator size="large" color="white" />
-            </View>
-        </View>
-    )
-}
-
-function ErrorContainer({ chat }: { chat: DynamicChatMessage }) {
-    const textResponse = chat.response?.textResponse;
-    if (!textResponse) return null;
-
-    return (
-        <View className="flex flex-row items-start w-full justify-start">
-            <View className="rounded-lg flex flex-row items-center" style={[BASE_MESSAGE_STYLES, { gap: 4, borderWidth: 1, borderColor: '#F97066', maxWidth: '100%', backgroundColor: 'rgba(122,39,26,0.2)' }]}>
+            <TouchableOpacity
+                onLongPress={onLongPress}
+                delayLongPress={500}
+                activeOpacity={0.7}
+                className="rounded-lg flex flex-row items-center"
+                style={[BASE_MESSAGE_STYLES, { gap: 4, borderWidth: 1, borderColor: '#F97066', maxWidth: '100%', backgroundColor: 'rgba(122,39,26,0.2)' }]}>
                 <Warning size={18} color="#F97066" />
-                <Text style={{ color: '#F97066' }} className="text-lg">{chat.response?.textResponse}</Text>
-            </View>
+                <Text style={{ color: '#F97066', flexShrink: 1 }} className="text-lg">{message}</Text>
+            </TouchableOpacity>
         </View>
-    )
+    );
 }

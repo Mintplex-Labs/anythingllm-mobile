@@ -30,6 +30,65 @@ export type IAgentToolCall = {
   result: string;
 }
 
+/**
+ * One entry in the ordered activity timeline of an assistant turn. Everything the
+ * model did before (or between) visible answers - reasoning, tool calls and the
+ * statuses tools report while they run - is recorded here in arrival order so the
+ * UI can roll it up into a single expandable chain (mirrors the desktop
+ * StatusResponse/ChainOfThought grouping).
+ *
+ * `startedAt`/`endedAt` are wall-clock ms stamped by the chat handler so the chain
+ * can show per-step and total durations even when re-loaded from history.
+ */
+export type IActivityNodeBase = {
+  uuid: string;
+  startedAt?: number;
+  endedAt?: number;
+}
+export type IThoughtActivity = IActivityNodeBase & {
+  type: 'thought';
+  /** Reasoning text with the wrapping think tags already stripped */
+  content: string;
+}
+export type IStatusActivity = IActivityNodeBase & {
+  type: 'status';
+  /** Short human readable status eg: "Searching the web for cats" */
+  content: string;
+}
+export type IToolCallActivity = IActivityNodeBase & {
+  type: 'toolCall';
+  signature: string;
+  /** Raw result string returned by the tool - empty while the tool is still running */
+  result: string;
+}
+/** Payload of a `request_tool_approval` stream event - what a tool wants the user to sign off on */
+export type IToolApprovalRequest = {
+  requestId: string;
+  /** Tool / skill asking for consent, shown in the card header */
+  skillName: string;
+  /** Plain language explanation of what approving will do */
+  description?: string | null;
+  /** Optional arguments shown in the expandable details section */
+  payload?: Record<string, any>;
+  /** How long the request stays open before it is treated as rejected */
+  timeoutMs: number;
+}
+/** Payload of a `report_tool_approval_result` stream event */
+export type IToolApprovalResult = {
+  requestId: string;
+  approved: boolean;
+  /** Why it settled the way it did - user answer, timeout or abort */
+  message: string;
+}
+export type IToolApprovalActivity = IActivityNodeBase & IToolApprovalRequest & {
+  type: 'toolApproval';
+  /** null while the user has not answered yet */
+  approved: boolean | null;
+  /** Settlement reason once `approved` is no longer null */
+  message?: string;
+}
+export type IActivityNode = IThoughtActivity | IStatusActivity | IToolCallActivity | IToolApprovalActivity;
+
 export type IEmailAction = {
   type: 'email';
   action: {
@@ -68,8 +127,15 @@ export type WorkspaceChatResponseType = {
   metrics: ICompleteResponse['metrics'];
   attachments: any[]; // This would be IMAGES, not files - which are embedded on upload
   citations: IChatCitation[];
+  /** @deprecated transient scratch space used by the old handler - kept so old rows still type check */
   currentThoughtChain?: string[];
   actions: IAgentAction[];
+  /**
+   * Ordered timeline of thoughts, statuses and tool calls for this turn.
+   * Optional because rows written before this field existed only carry
+   * `thoughts` + `toolCalls` - see `deriveActivity` in the ActivityChain UI.
+   */
+  activity?: IActivityNode[];
   isLoading?: boolean;
 }
 
@@ -95,9 +161,10 @@ export default class WorkspaceChat extends Model {
   }
 
   static toWorkspaceChatObject(data: any): Partial<WorkspaceChatType> {
-    const { uuid, prompt, response, createdAt } = data;
+    const { uuid, workspaceThreadSlug, prompt, response, createdAt } = data;
     return {
       uuid,
+      workspaceThreadSlug,
       prompt,
       response,
       createdAt,
@@ -115,6 +182,19 @@ export default class WorkspaceChat extends Model {
       ...orderBy.map(({ field, direction }) => Q.sortBy(field, direction))
     ).fetch();
     return chats.map((chat) => this.toWorkspaceChatObject(chat) as WorkspaceChatType);
+  }
+
+  /**
+   * The most recently created chat across every thread, or null when none exist.
+   * Used to work out where the user was last talking.
+   */
+  static async latest(): Promise<WorkspaceChatType | null> {
+    const chats = await database.get(WorkspaceChat.table).query(
+      Q.sortBy('created_at', Q.desc),
+      Q.take(1),
+    ).fetch();
+    if (chats.length === 0) return null;
+    return this.toWorkspaceChatObject(chats[0]) as WorkspaceChatType;
   }
 
   /**
@@ -175,7 +255,7 @@ export default class WorkspaceChat extends Model {
    * Create a new chat with a given prompt for placeholder purposes
    * @param data - The data for the new chat
    */
-  static newChatItem(data: { workspaceThreadSlug: string, prompt: string }): Partial<DynamicChatMessage> & { workspaceThreadSlug: string } {
+  static newChatItem(data: { workspaceThreadSlug: string, prompt: string, attachments?: any[] }): Partial<DynamicChatMessage> & { workspaceThreadSlug: string } {
     if (!data.workspaceThreadSlug) throw new Error('Workspace thread slug is required');
     if (!data.prompt) throw new Error('Prompt is required');
     return {
@@ -194,8 +274,9 @@ export default class WorkspaceChat extends Model {
           outputTps: 0,
           duration: 0,
         },
-        attachments: [],
+        attachments: data.attachments ?? [],
         citations: [],
+        activity: [],
       },
       createdAt: Date.now(),
       isLoading: true,
@@ -210,6 +291,33 @@ export default class WorkspaceChat extends Model {
       await database.batch(chats.map((chat) => chat.prepareMarkAsDeleted()));
     });
     return true;
+  }
+
+  /**
+   * Copy every chat of one thread into another thread, preserving order and timestamps.
+   * Copies get fresh uuids so the two threads never share a row identity.
+   * @returns the number of chats copied
+   */
+  static async fork({ fromThreadSlug, toThreadSlug }: { fromThreadSlug: string, toThreadSlug: string }): Promise<number> {
+    if (!fromThreadSlug || !toThreadSlug) throw new Error('Both source and destination thread slugs are required');
+    const chats = await this.find(
+      [{ field: 'workspace_thread_slug', value: fromThreadSlug }],
+      [{ field: 'created_at', direction: 'asc' }]
+    );
+    if (chats.length === 0) return 0;
+
+    await database.write(async () => {
+      const collection = database.get(WorkspaceChat.table);
+      await database.batch(chats.map((chat) => collection.prepareCreate((record: any) => {
+        record.uuid = generateUUID();
+        record.workspaceThreadSlug = toThreadSlug;
+        record.prompt = chat.prompt;
+        record.response = chat.response;
+        record.createdAt = chat.createdAt;
+      })));
+    });
+    this.log(`forked ${chats.length} chats`, { fromThreadSlug, toThreadSlug });
+    return chats.length;
   }
 
   static async directCreate(data: Partial<WorkspaceChatType>): Promise<WorkspaceChatType> {

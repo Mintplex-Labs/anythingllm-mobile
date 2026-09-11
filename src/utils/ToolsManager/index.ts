@@ -1,10 +1,13 @@
 import uiStore from "@/store/UIStore";
-import { NativeCompletionResult } from "cactus-react-native";
+import { NativeCompletionResult } from "llama.rn";
 import { generateUUID } from "../constants";
 import { ICompleteResponse, IStreamCallback, IStreamEvent } from "../AiProviders/baseOpenAILikeProvider";
 import Tools from './tools';
+import ToolReranker from './toolReranker';
 import { safeJsonParse } from "../formatters";
 import Telemetry from "../Telemetry";
+import { throwIfAborted } from "../chat/abort";
+import { truncateMiddle } from "../chat/contextCompaction";
 
 type ToolManagerTool = {
     /** Definition of the tool - this can be used to generate a tool call */
@@ -31,7 +34,13 @@ type ToolManagerTool = {
     config: { [key: string]: any };
 
     /** Execute the tool with given arguments - should return a string */
-    execute: (args: any, streamEmitter: (event: IStreamEvent, data: any) => void) => Promise<string> | string;
+    execute: (args: any, streamEmitter: (event: IStreamEvent, data: any) => void, context?: ToolExecutionContext) => Promise<string> | string;
+}
+
+/** Per-turn context handed to every tool execution */
+export type ToolExecutionContext = {
+    /** Session abort signal - fires when the user stops the reply. Tools waiting on the user (eg: approval) should settle on it. */
+    signal?: AbortSignal | null;
 }
 
 type ToolCallLoopProps = {
@@ -39,8 +48,16 @@ type ToolCallLoopProps = {
     runStreamCompletion: (messages: any[], callback: IStreamCallback, availableTools: any[]) => Promise<ICompleteResponse>;
     streamEmitter: (event: IStreamEvent, data: any) => void;
     currentMessageHistory: any[];
+    /**
+     * Max characters of a tool result that are fed back to the model (the UI still gets the full
+     * result). Providers with small context windows set this so one big result cannot evict the
+     * system prompt. Unset = unlimited.
+     */
+    maxToolResultChars?: number;
     /** Whether to merge the tool call results into the previous message (this is the default behavior) */
     mergeToolCallResults?: boolean;
+    /** Session abort signal - when it fires the loop stops before the next tool execution / LLM round */
+    signal?: AbortSignal | null;
 }
 
 class ToolsManager {
@@ -125,6 +142,8 @@ class ToolsManager {
         toolCalls: NativeCompletionResult['tool_calls'],
         streamEmitter: (event: IStreamEvent, data: any) => void,
         currentMessageHistory: any[],
+        maxToolResultChars?: number,
+        context: ToolExecutionContext = {},
     ): Promise<any[]> {
         const nextMessages = [...currentMessageHistory];
 
@@ -151,21 +170,52 @@ class ToolsManager {
             }
 
             this.log(`ToolsManager::manageToolCallExecutions: Executing tool call: ${toolCallName}`);
-            const toolCallResult = await knownToolConfig.execute(toolCall.function.arguments, streamEmitter);
+            const toolCallResult = await knownToolConfig.execute(toolCall.function.arguments, streamEmitter, context);
             streamEmitter('report_tool_call_result', {
                 uuid: humanReadableToolCall.uuid,
                 signature: humanReadableToolCall.signature,
                 result: toolCallResult ?? 'Error: No result from tool call',
             });
+            const modelVisibleResult = maxToolResultChars ? truncateMiddle(String(toolCallResult ?? ''), maxToolResultChars) : toolCallResult;
+            if (modelVisibleResult !== toolCallResult) this.log(`ToolsManager::manageToolCallExecutions: Truncated ${toolCallName} result from ${String(toolCallResult).length} to ${maxToolResultChars} chars for the model`);
             nextMessages.push({
                 role: 'tool',
-                content: toolCallResult,
+                content: modelVisibleResult,
                 signature: humanReadableToolCall.signature,
                 function: toolCall.function.name,
             });
             Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.TOOL_CALLED, { tool: toolCall.function.name });
         }
         return nextMessages;
+    }
+
+    /**
+     * Filters tools by relevance to the user prompt using a cross-encoder reranker.
+     * Only runs when the tool count exceeds the threshold for the given provider type.
+     * Falls back to the full tool set on any failure.
+     */
+    async rerankTools(
+        tools: ToolManagerTool['definition'][],
+        prompt: string,
+        providerType: 'on-device' | 'cloud',
+        onStatus?: (message: string) => void,
+    ): Promise<ToolManagerTool['definition'][]> {
+        const threshold = providerType === 'on-device'
+            ? ToolReranker.ON_DEVICE_THRESHOLD
+            : ToolReranker.CLOUD_THRESHOLD;
+
+        if (tools.length <= threshold) {
+            this.log(`Tool count (${tools.length}) below ${providerType} threshold (${threshold}), skipping reranking`);
+            return tools;
+        }
+
+        const reranker = new ToolReranker();
+        return reranker.rerank({
+            prompt,
+            tools,
+            topN: threshold,
+            onStatus,
+        });
     }
 
     /**
@@ -186,6 +236,8 @@ class ToolsManager {
         streamEmitter,
         currentMessageHistory,
         mergeToolCallResults = true,
+        signal = null,
+        maxToolResultChars,
     }: ToolCallLoopProps): Promise<ICompleteResponse> {
         let willLoop = currentResponse.toolCalls && currentResponse.toolCalls.length > 0;
         if (!willLoop) return currentResponse;
@@ -195,7 +247,10 @@ class ToolsManager {
         let nextMessages = [...currentMessageHistory];
 
         do {
-            nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages);
+            // The user stopped the chat mid-round - do not execute tools or ask the LLM again.
+            throwIfAborted(signal);
+            nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages, maxToolResultChars, { signal });
+            throwIfAborted(signal);
             for (const [index, message] of nextMessages.entries()) {
                 if (message.role === 'tool' && mergeToolCallResults) {
                     const previousMessage = nextMessages[index - 1];

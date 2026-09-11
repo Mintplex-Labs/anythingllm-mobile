@@ -12,17 +12,21 @@ type StorageKeys =
   'llmPreference' |
   'tools' |
   'current_anythingllm_external_connection' |
-  'anythingllm_external_connections';
+  'anythingllm_external_connections' |
+  'hf_imported_models';
 
 export const GLOBAL_EVENTS = {
   REDIRECT: 'REDIRECT',
   CITATIONS_FOCUSED: 'CITATIONS_FOCUSED',
+  /** A chat message was long-pressed - payload is { chat, role } - opens the message actions sheet */
+  MESSAGE_ACTIONS_FOCUSED: 'MESSAGE_ACTIONS_FOCUSED',
   SUBMIT_PROMPT: 'SUBMIT_PROMPT',
   REFRESH_WORKSPACES: 'REFRESH_WORKSPACES',
   CHAT_HISTORY_REFRESHED: 'CHAT_HISTORY_REFRESHED',
   MODEL_DOWNLOAD_STARTED: 'MODEL_DOWNLOAD_STARTED',
   MODEL_DOWNLOAD_COMPLETE: 'MODEL_DOWNLOAD_COMPLETE',
   ONBOARDING_COMPLETED: 'ONBOARDING_COMPLETED',
+  ONBOARDING_RESET: 'ONBOARDING_RESET',
 } as const;
 
 export class UIStore {
@@ -42,6 +46,7 @@ export class UIStore {
     'tools',
     'current_anythingllm_external_connection',
     'anythingllm_external_connections',
+    'hf_imported_models',
   ] as const;
 
   pageStates = {

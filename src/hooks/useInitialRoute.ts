@@ -1,8 +1,7 @@
 import { PATHS } from "@/utils/paths";
 import uiStore from "@/store/UIStore";
 import { useState, useEffect } from "react";
-import Workspace from "@/database/models/Workspace";
-import WorkspaceThread from "@/database/models/WorkspaceThread";
+import { resolveDefaultChatRoute } from "@/utils/defaultChatRoute";
 
 const DEFAULT_INITIAL_ROUTE = PATHS.home;
 
@@ -49,20 +48,16 @@ export default function useInitialRoute(): { initialRoute: InitialRoute, isLoadi
         return;
       }
 
-      // If the user is onboarded and has no workspaces, we need to redirect them to the onboarding flow
-      const workspaces = await Workspace.find([], true);
-      if (workspaces.length === 0) {
-        setInitialRoute({ path: staticRoute, params: {} });
-        setIsLoading(false);
-        return;
-      }
-
-      // If the user is onboarded and has workspaces, we need to redirect them to the workspace chat of the first workspace/thread
-      const workspace = workspaces[0];
-      const thread = workspace.threads?.[0] || await WorkspaceThread.create({ workspaceSlug: workspace.slug });
-      setInitialRoute({ path: PATHS.workspace_chat, params: { wsSlug: workspace.slug, threadSlug: thread.slug } });
+      // Onboarded: open the thread they last chatted in (or the first workspace's
+      // thread). Home is only for the no-workspaces case - it also re-checks this
+      // itself on mount, so landing there with workspaces self-corrects.
+      const chatRoute = await resolveDefaultChatRoute();
+      const route: InitialRoute = chatRoute
+        ? { path: PATHS.workspace_chat, params: chatRoute }
+        : { path: staticRoute, params: {} };
+      console.log('[InitialRoute]', route.path, route.params);
+      setInitialRoute(route);
       setIsLoading(false);
-      return;
     }
 
     checkForInitialRoute();

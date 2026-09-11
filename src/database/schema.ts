@@ -1,7 +1,7 @@
 import { appSchema, tableSchema } from '@nozbe/watermelondb';
 
 export default appSchema({
-  version: 1,
+  version: 2,
   tables: [
     tableSchema({
       name: 'workspaces',
@@ -24,6 +24,8 @@ export default appSchema({
         { name: 'slug', type: 'string', isIndexed: true },
         { name: 'is_remote', type: 'boolean', isOptional: true },
         { name: 'remote_config', type: 'string', isOptional: true },
+        // Rolling summary of the oldest chats used to keep long threads inside small context windows (JSON, see ThreadContextSummary)
+        { name: 'context_summary', type: 'string', isOptional: true },
         { name: 'created_at', type: 'number' },
       ],
     }),

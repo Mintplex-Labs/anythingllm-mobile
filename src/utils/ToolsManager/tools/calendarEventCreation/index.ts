@@ -50,6 +50,7 @@ export default {
         try {
             const { beginTime, endTime, title, eventLocation, description, allDay = false } = typeof args === 'string' ? safeJsonParse(args) : args;
             if (!beginTime || !endTime || !title || !eventLocation || !description) return `No beginTime, endTime, title, eventLocation, or description provided. No calendar event was created.`;
+            streamEmitter('report_status', `Preparing calendar event "${title}"`);
             streamEmitter('report_action', {
                 type: 'calendar_event_creation',
                 action: {

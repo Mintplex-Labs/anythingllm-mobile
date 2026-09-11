@@ -6,9 +6,12 @@ export const BOTTOM_SHEET_NAMES = {
     PRIMARY_PROMPT_INPUT: 'primary-prompt-input',
     MODEL_CHIP_SELECTION: 'model-chip-selection',
     SETTINGS: 'settings',
+    ATTACHMENTS: 'attachments',
     TOOLS: 'tools',
     WORKSPACE_FILES: 'workspace-files',
     CITATIONS: 'citations',
+    THREAD_MENU: 'thread-menu',
+    MESSAGE_ACTIONS: 'message-actions',
 } as const;
 export type BottomSheetType = (typeof BOTTOM_SHEET_NAMES)[keyof typeof BOTTOM_SHEET_NAMES] | null;
 

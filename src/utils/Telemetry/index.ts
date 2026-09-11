@@ -24,9 +24,21 @@ class Telemetry {
         ACTIONS: {
             WORKSPACE_CREATED: 'workspace_created',
             CHAT_COMPLETED: 'chat_completed',
+            /** The user pressed stop while a reply was generating - nothing was saved */
+            CHAT_ABORTED: 'chat_aborted',
             DOCUMENT_IMPORTED: 'document_added',
+            /** An image was attached to a prompt from the gallery or the camera */
+            IMAGE_ATTACHED: 'image_attached',
             TOOL_CALLED: 'tool_called',
             LLM_SETTINGS_UPDATED: 'llm_settings_updated',
+            /** A chat thread was exported (txt/md/json/pdf) and handed to the share sheet */
+            THREAD_EXPORTED: 'thread_exported',
+            /** A chat thread was forked into a new thread with a copy of its history */
+            THREAD_FORKED: 'thread_forked',
+            /** A user/assistant message pair was deleted from a thread */
+            CHAT_DELETED: 'chat_deleted',
+            /** A user/assistant message pair was removed and its prompt re-submitted */
+            CHAT_RETRIED: 'chat_retried',
 
             /** The user use the QR code to connect to an AnythingLLM intance */
             EXTERNAL_CONNECTION_ESTABLISHED: 'external_connection_established',

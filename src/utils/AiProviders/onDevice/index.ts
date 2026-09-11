@@ -1,13 +1,38 @@
 import { defaultModels } from "@/utils/models";
-import GenieWrapper, { IGenieStreamCallback } from "./genie";
-import CactusLmWrapper, { ICactusLmStreamCallback } from "./cactus";
-import BaseOpenAILikeProvider, { IAvailableModel, ICompleteResponse, IStreamCallback, IStreamEvent } from "../baseOpenAILikeProvider";
+import LlamaRnWrapper, { ILlamaRnStreamCallback, OnDeviceRuntimeInfo } from "./llamaRn";
+import BaseOpenAILikeProvider, { IAvailableModel, ICompleteResponse, IStreamCallback, IStreamEvent, PromptShape, withoutImageAttachments } from "../baseOpenAILikeProvider";
+import ContextCompactor from "@/utils/chat/contextCompaction";
 import OpenAILite from "@/utils/openai";
-import MODEL_CARDS from "@/utils/models/defaults";
+import MODEL_CARDS, { EMBEDDING_MODEL } from "@/utils/models/defaults";
+import { DEFAULT_GGUF_FOLDER } from "@/utils/models/manager";
+import * as RNFS from '@dr.pogodin/react-native-fs';
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
+import ImportedModels from "@/utils/models/imported";
+import { throwIfAborted } from "@/utils/chat/abort";
+import { type Model } from "@/utils/types";
 
-export type IOnDeviceStreamCallback = IGenieStreamCallback | ICactusLmStreamCallback;
+export type IOnDeviceStreamCallback = ILlamaRnStreamCallback;
+
+/** Shape of an entry returned by `OnDeviceProvider.availableModels()` */
+export type IOnDeviceAvailableModel = {
+  id: string;
+  modelId: string;
+  name: string;
+  description: string;
+  size: number | string;
+  downloadUrl: string;
+  isPreset: boolean;
+  /** Display name of the organisation behind the model (Google, IBM Research, ...). Used to group lists. */
+  provider?: string;
+  /** True when the model was found in storage but is not in any list we know about */
+  isUnknown?: boolean;
+  /** True when the user added this model from Hugging Face (see `utils/models/imported`) */
+  isImported?: boolean;
+  imageUrl?: string | null;
+  /** Vision projector that must be downloaded next to the model for image input - catalog models only. */
+  mmproj?: Model['mmproj'];
+}
 export type OnDeviceProviderConstructorProps = { config: { model: string | null } }
 
 export default class OnDeviceProvider extends BaseOpenAILikeProvider {
@@ -15,11 +40,10 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
   protected provider: string;
   protected config: any;
-  protected computeRuntime: string = 'CPU';
   // @ts-ignore - this is a valid property for this class
   public model: string | null;
 
-  protected submodule: GenieWrapper | CactusLmWrapper | null = null;
+  protected submodule: LlamaRnWrapper | null = null;
   protected client: OpenAILite;
   protected isOTypeModel: boolean;
   protected temperature: number;
@@ -35,7 +59,6 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     this.provider = 'native';
     this.config = config;
     this.model = this.config.model;
-    this.computeRuntime = this.determineComputeRuntime(this.model);
 
     if (this.model) {
       this.submodule = this.setSubmodule(this.model);
@@ -47,20 +70,9 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     console.log(`\x1b[36m[${this.constructor.name}:${this.submodule?.name || 'no-model'}]\x1b[0m ${text}`, ...args);
   }
 
-  determineComputeRuntime = (modelName: string | null) => {
-    if (!modelName) return 'CPU';
-    if (modelName.endsWith('.gguf')) return 'CPU';
-    const definition = defaultModels.find(m => m.id === modelName);
-    return definition?.runtime || 'CPU';
-  }
-
   private setSubmodule(model: string) {
     if (!model) throw new Error('No model provided to setSubmodule');
-    if (this.computeRuntime === 'NPU') {
-      return new GenieWrapper({ model, parent: this });
-    } else {
-      return new CactusLmWrapper({ model, parent: this });
-    }
+    return new LlamaRnWrapper({ model, parent: this });
   }
 
   static getInstance(props: OnDeviceProviderConstructorProps) {
@@ -81,6 +93,46 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     return this.provider;
   }
 
+  /**
+   * Runtime details of the currently loaded GGUF model (null when nothing is loaded).
+   */
+  get runtimeInfo(): OnDeviceRuntimeInfo | null {
+    return this.submodule?.runtimeInfo ?? null;
+  }
+
+  /**
+   * Whether the selected model can take image input right now (vision capability + mmproj on disk).
+   * This is a filesystem check, not a model load, so it is cheap enough to call from the UI.
+   */
+  async supportsVision(): Promise<boolean> {
+    return OnDeviceProvider.modelSupportsVision(this.model);
+  }
+
+  static modelSupportsVision(modelId: string | null | undefined): Promise<boolean> {
+    return LlamaRnWrapper.modelSupportsVision(modelId);
+  }
+
+  /** Reload the loaded model before the next prompt (eg: its vision projector was just downloaded). */
+  requestReload() {
+    this.submodule?.requestReload();
+  }
+
+  /**
+   * Interrupts the response currently being generated, if any.
+   */
+  async stopGeneration() {
+    if (this.submodule) await this.submodule.stop();
+  }
+
+  /**
+   * Streams one LLM round through llama.rn, forwarding the turn's abort signal so
+   * generation can be interrupted mid-response.
+   */
+  private runSubmoduleStream(messages: any[], callback: (token: string) => void, availableTools: any[]): Promise<ICompleteResponse> {
+    if (!this.submodule) throw new Error('No model loaded. Please select a model first.');
+    return this.submodule.streamGetChatCompletion(messages, callback, availableTools, this.abortSignal);
+  }
+
   async loadNewModel(model: string | null) {
     if (!model) {
       this.log('No model provided to loadNewModel - cleaning up.');
@@ -94,7 +146,6 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
     if (this.model === model) return;
     this.model = model;
-    this.computeRuntime = this.determineComputeRuntime(this.model);
     if (this.submodule) {
       await this.submodule.cleanup();
     }
@@ -102,9 +153,72 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     this.log(`${this.name}::${this.submodule.name} re-initialized with model ${this.model}`);
   }
 
+  /**
+   * Turns a storage folder name like "Lucy-gguf" or "Qwen3-1.7B-GGUF" into a
+   * readable title like "Lucy" or "Qwen3 1.7B".
+   */
+  static humanizeModelFolderName(folderName: string) {
+    return folderName
+      .replace(/[-_.]?gguf$/i, '')
+      .replace(/[-_]+/g, ' ')
+      .trim()
+      .replace(/^./, c => c.toUpperCase());
+  }
+
+  /**
+   * Scans the gguf storage folder for models that are installed on the device
+   * but are not part of any list we know about (eg: a model we removed from
+   * the catalog, or one added by hand). These are returned as generic entries
+   * so the user can still see, select and uninstall them.
+   *
+   * Storage layout is `models/gguf/<creator>/<model>/<file>.gguf`, mirroring
+   * the HuggingFace url the file was downloaded from, so we can rebuild a url
+   * that `resolveDestinationPathFromGGUFUrl` resolves back to the same path.
+   */
+  async discoverUnknownStoredModels(knownModelIds: string[]): Promise<IOnDeviceAvailableModel[]> {
+    const known = new Set([...knownModelIds, EMBEDDING_MODEL.modelId]);
+    // Imported models are keyed `org/repo/file.gguf`, so their folder is known by prefix.
+    const knownFolders = new Set(
+      [...known].map(id => (id.endsWith('.gguf') ? id.split('/').slice(0, 2).join('/') : id)),
+    );
+    const unknownModels: IOnDeviceAvailableModel[] = [];
+
+    try {
+      if (!(await RNFS.exists(DEFAULT_GGUF_FOLDER))) return [];
+      const creators = (await RNFS.readDir(DEFAULT_GGUF_FOLDER)).filter(item => item.isDirectory());
+
+      for (const creator of creators) {
+        const modelDirs = (await RNFS.readDir(creator.path)).filter(item => item.isDirectory());
+        for (const modelDir of modelDirs) {
+          const modelId = `${creator.name}/${modelDir.name}`;
+          if (knownFolders.has(modelId)) continue;
+
+          const ggufFile = (await RNFS.readDir(modelDir.path)).find(file => file.isFile() && file.name.toLowerCase().endsWith('.gguf'));
+          if (!ggufFile) continue;
+
+          unknownModels.push({
+            id: modelId,
+            modelId,
+            name: OnDeviceProvider.humanizeModelFolderName(modelDir.name),
+            description: `Found on this device in ${modelId} but it is not in our model list. You can still use it or uninstall it.`,
+            size: Number(ggufFile.size),
+            downloadUrl: `https://huggingface.co/${modelId}/resolve/main/${ggufFile.name}`,
+            isPreset: false,
+            isUnknown: true,
+            imageUrl: null,
+          });
+        }
+      }
+    } catch (error) {
+      this.log('Failed to scan storage for unknown models', error);
+    }
+
+    return unknownModels;
+  }
+
   // @ts-ignore
-  override async availableModels(): Promise<object[]> {
-    const basicModels = MODEL_CARDS.map(m => ({
+  override async availableModels(): Promise<IOnDeviceAvailableModel[]> {
+    const basicModels: IOnDeviceAvailableModel[] = MODEL_CARDS.map(m => ({
       id: m.id,
       name: m.name,
       description: m.description,
@@ -114,8 +228,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
       isPreset: true,
     }));
 
-    const crossPlatformModels = defaultModels
-      .filter(m => m.runtime === 'CPU')
+    const crossPlatformModels: IOnDeviceAvailableModel[] = defaultModels
       .map(m => ({ ...m, id: m.id.endsWith('.gguf') ? m.id.split('/').slice(0, -1).join('/') : m.id }))
       .map(m => {
         return {
@@ -127,18 +240,86 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
           modelId: m.id,
           downloadUrl: m.downloadUrl || '',
           isPreset: false,
+          provider: m.author,
           // @ts-ignore
           imageUrl: m.imageUrl ?? null,
+          mmproj: m.mmproj,
         }
       });
+    const importedModels: IOnDeviceAvailableModel[] = (await ImportedModels.list()).map(m => ({
+      id: m.modelId,
+      modelId: m.modelId,
+      name: m.name,
+      description: m.description,
+      size: m.size,
+      downloadUrl: m.downloadUrl,
+      isPreset: false,
+      isImported: true,
+      provider: m.author,
+      imageUrl: null,
+    }));
+    const knownModels = [...basicModels, ...crossPlatformModels, ...importedModels];
+    const unknownModels = await this.discoverUnknownStoredModels(knownModels.map(m => m.modelId));
     return [
-      ...basicModels,
-      ...crossPlatformModels
+      ...knownModels,
+      ...unknownModels,
     ];
   }
 
   async runBasicChatCompletion(messages: any[]): Promise<ICompleteResponse> {
     return this.submodule!.getChatCompletion(messages);
+  }
+
+  /**
+   * Fits the prompt to the on-device context window before it is rendered:
+   *  - RAG chunks are capped to their share of the prompt budget (they sit in the system prompt, which pruning never touches)
+   *  - the oldest chats are replaced by the thread's rolling summary (see `ContextCompactor`)
+   * Compaction normally runs in the background after each reply (`scheduleCompaction`), so this
+   * only summarises inline when history outgrew the budget since then - the user sees a status line for it.
+   */
+  protected override async shapePrompt(rawShape: PromptShape, { threadSlug, onStatus }: { threadSlug: string | null; onStatus?: (status: string) => void }): Promise<PromptShape> {
+    if (!this.submodule) return rawShape;
+    // Photos from earlier turns are never re-sent on-device: each one costs hundreds of tokens of a
+    // 1-2k window and seconds of CPU to re-encode. Only the images on the prompt being sent go to the
+    // model (see `buildPrompt`); the summariser also only ever sees text (`ContextCompactor.toMessages`).
+    const shape: PromptShape = { ...rawShape, history: withoutImageAttachments(rawShape.history) };
+    const contextTexts = await this.submodule.fitContextTexts(shape.contextTexts);
+    if (!threadSlug || !shape.history.length) return { ...shape, contextTexts };
+
+    const compactor = this.submodule.compactor;
+    let resolved = ContextCompactor.resolve(shape.history, await ContextCompactor.load(threadSlug));
+    if (resolved.stale) await ContextCompactor.clear(threadSlug);
+
+    if (compactor.isRunning) {
+      this.log('A background compaction is still running - waiting for it before building the prompt');
+      onStatus?.('Summarizing earlier conversation');
+      resolved = await compactor.compact({ threadSlug, history: shape.history, trigger: 'inline before prompt, after waiting on background pass' });
+    } else if (await compactor.shouldCompact(resolved.recent)) {
+      this.log('History outgrew the prompt budget since the last background pass (or that pass was skipped/failed) - compacting before this prompt');
+      onStatus?.('Summarizing earlier conversation');
+      resolved = await compactor.compact({ threadSlug, history: shape.history, trigger: 'inline before prompt' });
+    }
+    if (resolved.summary) {
+      this.log(`Sending a summary in place of the ${resolved.coveredCount} oldest chat(s); ${resolved.recent.length} sent verbatim`);
+      onStatus?.(`Using a summary of ${resolved.coveredCount} earlier message${resolved.coveredCount === 1 ? '' : 's'}`);
+    }
+    return { history: resolved.recent, contextTexts, summary: resolved.summary };
+  }
+
+  /**
+   * Folds old chats into the thread summary once history is over the trigger, so the next prompt
+   * is already compacted when the user sends it. Fire-and-forget: the compactor never throws and
+   * llama.rn rounds are queued, so a prompt sent meanwhile simply waits its turn.
+   */
+  private scheduleCompaction(messages: DynamicChatMessage[], textResponse: string) {
+    if (!this.submodule) return;
+    const last = messages[messages.length - 1];
+    const threadSlug = last?.workspaceThreadSlug;
+    if (!threadSlug || !last.uuid) return;
+    const history = [...messages.slice(0, -1), { ...last, response: { ...(last.response as any), textResponse } }];
+    this.submodule.compactor
+      .compact({ threadSlug, history, trigger: 'background after reply' })
+      .catch((error) => this.log('Background context compaction failed', error));
   }
 
   override async chat({
@@ -153,7 +334,12 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     onStream?: IStreamCallback | IOnDeviceStreamCallback;
   }) {
     if (!this.submodule || !this.model) throw new Error('No model loaded. Please select a model first.');
-    const { formattedMessages, citations } = await this.buildPrompt(messages);
+    // Loading a GGUF into memory can take several seconds on first use - surface it in the
+    // activity chain instead of leaving the user staring at an empty bubble.
+    if (streaming && this.runtimeInfo === null) {
+      onStream('report_status', 'Loading model into memory');
+    }
+    const { formattedMessages, citations } = await this.buildPrompt(messages, streaming ? (status) => onStream('report_status', status) : undefined);
     if (!streaming) {
       const response = await this.submodule.getChatCompletion(formattedMessages as any);
       onComplete({
@@ -163,21 +349,39 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
       return;
     }
 
-    const availableTools = await ToolsManager.injectAvailableTools();
-    this.log(`Streaming ${this.model} with ${this.computeRuntime}`);
+    let availableTools = await ToolsManager.injectAvailableTools();
+    const lastUserMessage = [...formattedMessages].reverse().find(m => m.role === 'user');
+    const userPrompt = typeof lastUserMessage?.content === 'string' ? lastUserMessage.content : '';
+    availableTools = await ToolsManager.rerankTools(
+        availableTools, userPrompt, 'on-device',
+        (status) => onStream('report_status', status),
+    );
+    this.log(`Streaming ${this.model} on CPU`);
     this.log('Available tools:', availableTools.map(t => t.function.name));
-    let fullResult = await this.submodule.streamGetChatCompletion(formattedMessages as any, (token: string) => onStream('chunk', token), availableTools);
+    let fullResult = await this.runSubmoduleStream(formattedMessages as any, (token: string) => onStream('chunk', token), availableTools);
+    // `stopCompletion` makes llama.rn return the partial text as a normal result - never
+    // treat an aborted round as a finished reply (no tool calls, no completion event).
+    throwIfAborted(this.abortSignal);
 
     // Recursive tool call loop
-    await ToolsManager.toolCallLoop({
+    const finalResult = await ToolsManager.toolCallLoop({
       currentResponse: fullResult,
-      runStreamCompletion: (messages: any[], callback: IOnDeviceStreamCallback | IStreamCallback, availableTools: any[]) => this.submodule!.streamGetChatCompletion(messages, callback as any, availableTools),
+      runStreamCompletion: async (messages: any[], callback: IOnDeviceStreamCallback | IStreamCallback, availableTools: any[]) => {
+        const result = await this.runSubmoduleStream(messages, callback as any, availableTools);
+        throwIfAborted(this.abortSignal);
+        return result;
+      },
       streamEmitter: (event: IStreamEvent, data: any) => onStream(event, data),
       currentMessageHistory: formattedMessages,
+      signal: this.abortSignal,
+      maxToolResultChars: this.submodule.maxToolResultChars,
     });
 
+    throwIfAborted(this.abortSignal);
+    if (finalResult.truncatedByContext) onStream('report_status', 'Reply was cut short - the context window is full');
     if (!!fullResult.metrics) onStream('report_metrics', fullResult.metrics);
     if (!!citations) onStream('report_citations', citations);
     onStream('complete', '');
+    this.scheduleCompaction(messages, finalResult.textResponse);
   }
 }

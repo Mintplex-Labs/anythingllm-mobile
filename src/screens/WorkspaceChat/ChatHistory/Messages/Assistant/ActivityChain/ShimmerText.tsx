@@ -6,7 +6,8 @@ import LinearGradient from "react-native-linear-gradient";
 const SWEEP_DURATION_MS = 1800;
 
 /**
- * Single-line label that sweeps a highlight across itself while `active`.
+ * Single-line label that sweeps a highlight across itself once each time its
+ * text changes while `active`.
  * Native counterpart of the desktop `animate-shimmer` text - the text is used
  * as an alpha mask over a moving gradient so the shine follows the glyphs.
  * Falls back to a plain `Text` until it has been measured or when idle.
@@ -29,20 +30,21 @@ export default function ShimmerText({
     const [size, setSize] = useState({ width: 0, height: 0 });
     const progress = useRef(new Animated.Value(0)).current;
 
+    // One sweep per label. The band travels left-to-right once and parks just past
+    // the text, so the label settles to `dimColor` instead of looping forever. A new
+    // status message re-arms the sweep because `children` is in the deps.
     useEffect(() => {
         if (!active || size.width === 0) return;
         progress.setValue(0);
-        const loop = Animated.loop(
-            Animated.timing(progress, {
-                toValue: 1,
-                duration: SWEEP_DURATION_MS,
-                easing: Easing.linear,
-                useNativeDriver: true,
-            })
-        );
-        loop.start();
-        return () => loop.stop();
-    }, [active, size.width, progress]);
+        const sweep = Animated.timing(progress, {
+            toValue: 1,
+            duration: SWEEP_DURATION_MS,
+            easing: Easing.linear,
+            useNativeDriver: true,
+        });
+        sweep.start();
+        return () => sweep.stop();
+    }, [active, size.width, progress, children]);
 
     const onLayout = (event: LayoutChangeEvent) => {
         const { width, height } = event.nativeEvent.layout;

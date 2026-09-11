@@ -31,6 +31,7 @@ import { PATHS } from "@/utils/paths";
 import useRouteObserver from "@/hooks/useRouteObserver";
 import { useChatHandlerContext } from "@/hooks/useChatHandler/index";
 import useLlmPreference from "@/hooks/useLLMPreference";
+import useSpeechToText from "@/hooks/useSpeechToText";
 
 const defaultPadding = [0, 0, 32]; // top padding for snap points
 export const snapPointsDefault = ["22%", "60%", "100%"];
@@ -55,6 +56,10 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
   const [sheetIndex, setSheetIndex] = useState(0);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const speechToText = useSpeechToText(
+    useCallback((text: string) => chatHandler.setPrompt(text), [chatHandler]),
+  );
 
   const hasModelSelected = useMemo(() => {
     return !!llmPreferences?.config?.model;
@@ -255,6 +260,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
             sheetIndex={sheetIndex}
             attachmentHandler={attachmentHandler}
             chatHandler={chatHandler}
+            speechToText={speechToText}
           />
         </Animated.View>
       </BottomSheetModal>

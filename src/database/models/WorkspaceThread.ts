@@ -10,6 +10,21 @@ import uiStore from '@/store/UIStore';
 import truncate from 'truncate';
 import WorkspaceChat from './WorkspaceChat';
 
+/**
+ * Rolling summary of the oldest chats in a thread, produced by `ContextCompactor` so
+ * long conversations still fit small (on-device) context windows. `throughUuid` and
+ * `coveredCount` let the compactor verify the summary still lines up with the saved
+ * chats - deleting/retrying an earlier chat makes it stale and it is rebuilt.
+ */
+export type ThreadContextSummary = {
+  summary: string;
+  /** uuid of the newest chat folded into the summary */
+  throughUuid: string;
+  /** Number of chats (user/assistant pairs), counted from the start of the thread, folded into the summary */
+  coveredCount: number;
+  updatedAt: number;
+};
+
 export type WorkspaceThreadType = {
   name: string;
   workspaceSlug: string;
@@ -56,6 +71,7 @@ export default class WorkspaceThread extends Model {
   @immutableRelation('workspaces', 'workspace_slug') workspace!: Relation<Model & WorkspaceType>;
   @field('is_remote') isRemote!: boolean;
   @json('remote_config', (json: any) => json) remoteConfig!: WorkspaceThreadType['remoteConfig'];
+  @json('context_summary', (json: any) => json) contextSummary!: ThreadContextSummary | null;
   @field('created_at') createdAt!: number;
 
   static log(message: any, ...args: any[]) {
@@ -195,6 +211,42 @@ export default class WorkspaceThread extends Model {
     } catch (error) {
       console.error('Error updating workspace thread:', error);
       return null;
+    }
+  }
+
+  /**
+   * Rolling context summary for a thread - null when none has been built yet.
+   * Not part of `WorkspaceThreadType` on purpose: it is an inference detail, not thread metadata.
+   */
+  static async getContextSummary(threadSlug: string): Promise<ThreadContextSummary | null> {
+    try {
+      const thread = (await this.get([{ field: 'slug', value: threadSlug }]))?.[0] as (Model & { contextSummary: ThreadContextSummary | null }) | undefined;
+      const summary = thread?.contextSummary ?? null;
+      if (!summary?.summary || !summary.throughUuid || !summary.coveredCount) return null;
+      return summary;
+    } catch (error) {
+      console.error('Error reading thread context summary:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Persists (or clears with `null`) the rolling context summary for a thread.
+   */
+  static async setContextSummary(threadSlug: string, summary: ThreadContextSummary | null): Promise<boolean> {
+    try {
+      const thread = (await this.get([{ field: 'slug', value: threadSlug }]))?.[0];
+      if (!thread) return false;
+      await database.write(async () => {
+        await thread.update((record: any) => {
+          record.contextSummary = summary;
+        });
+      });
+      this.log(summary ? `saved context summary for thread ${threadSlug} (${summary.coveredCount} chats)` : `cleared context summary for thread ${threadSlug}`);
+      return true;
+    } catch (error) {
+      console.error('Error saving thread context summary:', error);
+      return false;
     }
   }
 

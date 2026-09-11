@@ -6,6 +6,7 @@ import Tools from './tools';
 import { safeJsonParse } from "../formatters";
 import Telemetry from "../Telemetry";
 import { throwIfAborted } from "../chat/abort";
+import { truncateMiddle } from "../chat/contextCompaction";
 
 type ToolManagerTool = {
     /** Definition of the tool - this can be used to generate a tool call */
@@ -40,6 +41,12 @@ type ToolCallLoopProps = {
     runStreamCompletion: (messages: any[], callback: IStreamCallback, availableTools: any[]) => Promise<ICompleteResponse>;
     streamEmitter: (event: IStreamEvent, data: any) => void;
     currentMessageHistory: any[];
+    /**
+     * Max characters of a tool result that are fed back to the model (the UI still gets the full
+     * result). Providers with small context windows set this so one big result cannot evict the
+     * system prompt. Unset = unlimited.
+     */
+    maxToolResultChars?: number;
     /** Whether to merge the tool call results into the previous message (this is the default behavior) */
     mergeToolCallResults?: boolean;
     /** Session abort signal - when it fires the loop stops before the next tool execution / LLM round */
@@ -128,6 +135,7 @@ class ToolsManager {
         toolCalls: NativeCompletionResult['tool_calls'],
         streamEmitter: (event: IStreamEvent, data: any) => void,
         currentMessageHistory: any[],
+        maxToolResultChars?: number,
     ): Promise<any[]> {
         const nextMessages = [...currentMessageHistory];
 
@@ -160,9 +168,11 @@ class ToolsManager {
                 signature: humanReadableToolCall.signature,
                 result: toolCallResult ?? 'Error: No result from tool call',
             });
+            const modelVisibleResult = maxToolResultChars ? truncateMiddle(String(toolCallResult ?? ''), maxToolResultChars) : toolCallResult;
+            if (modelVisibleResult !== toolCallResult) this.log(`ToolsManager::manageToolCallExecutions: Truncated ${toolCallName} result from ${String(toolCallResult).length} to ${maxToolResultChars} chars for the model`);
             nextMessages.push({
                 role: 'tool',
-                content: toolCallResult,
+                content: modelVisibleResult,
                 signature: humanReadableToolCall.signature,
                 function: toolCall.function.name,
             });
@@ -190,6 +200,7 @@ class ToolsManager {
         currentMessageHistory,
         mergeToolCallResults = true,
         signal = null,
+        maxToolResultChars,
     }: ToolCallLoopProps): Promise<ICompleteResponse> {
         let willLoop = currentResponse.toolCalls && currentResponse.toolCalls.length > 0;
         if (!willLoop) return currentResponse;
@@ -201,7 +212,7 @@ class ToolsManager {
         do {
             // The user stopped the chat mid-round - do not execute tools or ask the LLM again.
             throwIfAborted(signal);
-            nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages);
+            nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages, maxToolResultChars);
             throwIfAborted(signal);
             for (const [index, message] of nextMessages.entries()) {
                 if (message.role === 'tool' && mergeToolCallResults) {

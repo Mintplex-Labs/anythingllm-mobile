@@ -19,6 +19,8 @@ interface BaseLLMProviderConfig {
 
 export type ICompleteResponse = {
   textResponse: string;
+  /** True when the reply stopped because the context window was full rather than because the model finished. */
+  truncatedByContext?: boolean;
   toolCalls?: {
     type: 'function'
     function: {
@@ -95,6 +97,18 @@ export function extractReasoningContent(messageOrDelta: any): string | undefined
     undefined
   );
 }
+
+/**
+ * The pieces of a prompt a provider may reshape before it is rendered - see `shapePrompt`.
+ */
+export type PromptShape = {
+  /** Saved chats sent verbatim, oldest first (the new user prompt is not included). */
+  history: DynamicChatMessage[];
+  /** RAG chunks that go into the system prompt. */
+  contextTexts: string[];
+  /** Summary of earlier chats that `history` no longer contains - rendered into the system prompt. */
+  summary: string | null;
+};
 
 class SilentError extends Error {
   constructor(message: string) {
@@ -214,9 +228,14 @@ export default abstract class BaseOpenAILikeProvider {
    * 
    * Will also add the context texts to the system message if they are provided.
    */
-  defaultSystemMessage(contextTexts: string[] = []) {
+  defaultSystemMessage(contextTexts: string[] = [], summary: string | null = null) {
     const baseMessage = this.workspace?.systemPrompt || BaseOpenAILikeProvider.DEFAULT_SYSTEM_MESSAGE;
-    if (!contextTexts.length) return baseMessage;
+    // The summary lives in the system prompt (rather than as a fake turn) so it survives history
+    // pruning and works with templates that require strictly alternating user/assistant roles.
+    const withSummary = summary
+      ? `${baseMessage}\n\nSummary of the conversation so far (earlier messages are not shown):\n${summary}`
+      : baseMessage;
+    if (!contextTexts.length) return withSummary;
 
     const context = contextTexts
       .map((text, i) => {
@@ -224,7 +243,16 @@ export default abstract class BaseOpenAILikeProvider {
       })
       .join("\n\n");
 
-    return `${baseMessage}\n\n[CONTEXT_START]\n${context}\n[CONTEXT_END]`;
+    return `${withSummary}\n\n[CONTEXT_START]\n${context}\n[CONTEXT_END]`;
+  }
+
+  /**
+   * Hook for providers to fit the prompt to their context window before it is rendered:
+   * swap old history for a summary, trim RAG chunks, etc. The default sends everything.
+   * `threadSlug` identifies where a provider may persist per-thread state (eg: a rolling summary).
+   */
+  protected async shapePrompt(shape: PromptShape, _options: { threadSlug: string | null; onStatus?: (status: string) => void }): Promise<PromptShape> {
+    return shape;
   }
 
   /**
@@ -254,18 +282,20 @@ export default abstract class BaseOpenAILikeProvider {
     chatHistory = [],
     userPrompt = "",
     attachments = [],
+    summary = null,
   }: {
     contextTexts: string[];
     chatHistory: DynamicChatMessage[];
     userPrompt: string;
     attachments?: IAttachment[];
+    summary?: string | null;
   }) {
     // o1 Models do not support the "system" role
     // in order to combat this, we can use the "user" role as a replacement for now
     // https://community.openai.com/t/o1-models-do-not-support-system-role-in-chat-completion/953880
     const prompt = {
       role: this.isOTypeModel ? "user" : "system",
-      content: this.defaultSystemMessage(contextTexts),
+      content: this.defaultSystemMessage(contextTexts, summary),
     };
 
     return [
@@ -347,12 +377,18 @@ export default abstract class BaseOpenAILikeProvider {
       .filter((r) => r.metadata.content !== undefined && r.metadata.content !== null && r.metadata.content !== '')
       .map((r) => String(r.metadata.content));
 
+    const shaped = await this.shapePrompt(
+      { history, contextTexts, summary: null },
+      { threadSlug: userPrompt.workspaceThreadSlug ?? history[0]?.workspaceThreadSlug ?? null, onStatus },
+    );
+
     return {
       citations: this.buildDocumentCitations(vectorSearchResults),
       formattedMessages: this.constructMessages({
-        chatHistory: history,
+        chatHistory: shaped.history,
         userPrompt: userPrompt.prompt as string,
-        contextTexts,
+        contextTexts: shaped.contextTexts,
+        summary: shaped.summary,
       }),
     }
   }

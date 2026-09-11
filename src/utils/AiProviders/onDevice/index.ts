@@ -1,6 +1,7 @@
 import { defaultModels } from "@/utils/models";
 import LlamaRnWrapper, { ILlamaRnStreamCallback, OnDeviceRuntimeInfo } from "./llamaRn";
-import BaseOpenAILikeProvider, { IAvailableModel, ICompleteResponse, IStreamCallback, IStreamEvent } from "../baseOpenAILikeProvider";
+import BaseOpenAILikeProvider, { IAvailableModel, ICompleteResponse, IStreamCallback, IStreamEvent, PromptShape } from "../baseOpenAILikeProvider";
+import ContextCompactor from "@/utils/chat/contextCompaction";
 import OpenAILite from "@/utils/openai";
 import MODEL_CARDS, { EMBEDDING_MODEL } from "@/utils/models/defaults";
 import { DEFAULT_GGUF_FOLDER } from "@/utils/models/manager";
@@ -248,6 +249,54 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     return this.submodule!.getChatCompletion(messages);
   }
 
+  /**
+   * Fits the prompt to the on-device context window before it is rendered:
+   *  - RAG chunks are capped to their share of the prompt budget (they sit in the system prompt, which pruning never touches)
+   *  - the oldest chats are replaced by the thread's rolling summary (see `ContextCompactor`)
+   * Compaction normally runs in the background after each reply (`scheduleCompaction`), so this
+   * only summarises inline when history outgrew the budget since then - the user sees a status line for it.
+   */
+  protected override async shapePrompt(shape: PromptShape, { threadSlug, onStatus }: { threadSlug: string | null; onStatus?: (status: string) => void }): Promise<PromptShape> {
+    if (!this.submodule) return shape;
+    const contextTexts = await this.submodule.fitContextTexts(shape.contextTexts);
+    if (!threadSlug || !shape.history.length) return { ...shape, contextTexts };
+
+    const compactor = this.submodule.compactor;
+    let resolved = ContextCompactor.resolve(shape.history, await ContextCompactor.load(threadSlug));
+    if (resolved.stale) await ContextCompactor.clear(threadSlug);
+
+    if (compactor.isRunning) {
+      this.log('A background compaction is still running - waiting for it before building the prompt');
+      onStatus?.('Summarizing earlier conversation');
+      resolved = await compactor.compact({ threadSlug, history: shape.history, trigger: 'inline before prompt, after waiting on background pass' });
+    } else if (await compactor.shouldCompact(resolved.recent)) {
+      this.log('History outgrew the prompt budget since the last background pass (or that pass was skipped/failed) - compacting before this prompt');
+      onStatus?.('Summarizing earlier conversation');
+      resolved = await compactor.compact({ threadSlug, history: shape.history, trigger: 'inline before prompt' });
+    }
+    if (resolved.summary) {
+      this.log(`Sending a summary in place of the ${resolved.coveredCount} oldest chat(s); ${resolved.recent.length} sent verbatim`);
+      onStatus?.(`Using a summary of ${resolved.coveredCount} earlier message${resolved.coveredCount === 1 ? '' : 's'}`);
+    }
+    return { history: resolved.recent, contextTexts, summary: resolved.summary };
+  }
+
+  /**
+   * Folds old chats into the thread summary once history is over the trigger, so the next prompt
+   * is already compacted when the user sends it. Fire-and-forget: the compactor never throws and
+   * llama.rn rounds are queued, so a prompt sent meanwhile simply waits its turn.
+   */
+  private scheduleCompaction(messages: DynamicChatMessage[], textResponse: string) {
+    if (!this.submodule) return;
+    const last = messages[messages.length - 1];
+    const threadSlug = last?.workspaceThreadSlug;
+    if (!threadSlug || !last.uuid) return;
+    const history = [...messages.slice(0, -1), { ...last, response: { ...(last.response as any), textResponse } }];
+    this.submodule.compactor
+      .compact({ threadSlug, history, trigger: 'background after reply' })
+      .catch((error) => this.log('Background context compaction failed', error));
+  }
+
   override async chat({
     messages,
     streaming = false,
@@ -284,7 +333,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     throwIfAborted(this.abortSignal);
 
     // Recursive tool call loop
-    await ToolsManager.toolCallLoop({
+    const finalResult = await ToolsManager.toolCallLoop({
       currentResponse: fullResult,
       runStreamCompletion: async (messages: any[], callback: IOnDeviceStreamCallback | IStreamCallback, availableTools: any[]) => {
         const result = await this.runSubmoduleStream(messages, callback as any, availableTools);
@@ -294,11 +343,14 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
       streamEmitter: (event: IStreamEvent, data: any) => onStream(event, data),
       currentMessageHistory: formattedMessages,
       signal: this.abortSignal,
+      maxToolResultChars: this.submodule.maxToolResultChars,
     });
 
     throwIfAborted(this.abortSignal);
+    if (finalResult.truncatedByContext) onStream('report_status', 'Reply was cut short - the context window is full');
     if (!!fullResult.metrics) onStream('report_metrics', fullResult.metrics);
     if (!!citations) onStream('report_citations', citations);
     onStream('complete', '');
+    this.scheduleCompaction(messages, finalResult.textResponse);
   }
 }

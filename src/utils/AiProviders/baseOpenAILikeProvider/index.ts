@@ -1,5 +1,5 @@
 import Workspace, { type WorkspaceType } from "@/database/models/Workspace";
-import { IAgentCitation, IAgentToolCall, IDocumentCitation } from "@/database/models/WorkspaceChat";
+import { IAgentCitation, IAgentToolCall, IDocumentCitation, IToolApprovalRequest, IToolApprovalResult } from "@/database/models/WorkspaceChat";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import { formatChatHistory } from "@/utils/chat/helpers";
 import { StreamMetrics } from "@/utils/chat/LLMPerformanceMonitor";
@@ -64,8 +64,12 @@ export type IStreamEvent = 'chunk' |
   'report_action' |
   'report_in_progress_thought' |
   /** Short human readable progress line eg: "Searching the web for cats" - rolls up into the activity chain */
-  'report_status';
-export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[] | IAgentCitation[] | IAgentToolCall | IAgentAction;
+  'report_status' |
+  /** A tool is asking the user for consent before continuing - renders an approve/reject card (see ToolApprovalManager) */
+  'request_tool_approval' |
+  /** The approval request settled (user answer, timeout or abort) - collapses the card into the activity chain */
+  'report_tool_approval_result';
+export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[] | IAgentCitation[] | IAgentToolCall | IAgentAction | IToolApprovalRequest | IToolApprovalResult;
 export type IStreamCallback = (
   event: IStreamEvent,
   response: IStreamResponse

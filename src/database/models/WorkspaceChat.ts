@@ -61,7 +61,33 @@ export type IToolCallActivity = IActivityNodeBase & {
   /** Raw result string returned by the tool - empty while the tool is still running */
   result: string;
 }
-export type IActivityNode = IThoughtActivity | IStatusActivity | IToolCallActivity;
+/** Payload of a `request_tool_approval` stream event - what a tool wants the user to sign off on */
+export type IToolApprovalRequest = {
+  requestId: string;
+  /** Tool / skill asking for consent, shown in the card header */
+  skillName: string;
+  /** Plain language explanation of what approving will do */
+  description?: string | null;
+  /** Optional arguments shown in the expandable details section */
+  payload?: Record<string, any>;
+  /** How long the request stays open before it is treated as rejected */
+  timeoutMs: number;
+}
+/** Payload of a `report_tool_approval_result` stream event */
+export type IToolApprovalResult = {
+  requestId: string;
+  approved: boolean;
+  /** Why it settled the way it did - user answer, timeout or abort */
+  message: string;
+}
+export type IToolApprovalActivity = IActivityNodeBase & IToolApprovalRequest & {
+  type: 'toolApproval';
+  /** null while the user has not answered yet */
+  approved: boolean | null;
+  /** Settlement reason once `approved` is no longer null */
+  message?: string;
+}
+export type IActivityNode = IThoughtActivity | IStatusActivity | IToolCallActivity | IToolApprovalActivity;
 
 export type IEmailAction = {
   type: 'email';

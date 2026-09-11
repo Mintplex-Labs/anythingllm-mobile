@@ -33,7 +33,13 @@ type ToolManagerTool = {
     config: { [key: string]: any };
 
     /** Execute the tool with given arguments - should return a string */
-    execute: (args: any, streamEmitter: (event: IStreamEvent, data: any) => void) => Promise<string> | string;
+    execute: (args: any, streamEmitter: (event: IStreamEvent, data: any) => void, context?: ToolExecutionContext) => Promise<string> | string;
+}
+
+/** Per-turn context handed to every tool execution */
+export type ToolExecutionContext = {
+    /** Session abort signal - fires when the user stops the reply. Tools waiting on the user (eg: approval) should settle on it. */
+    signal?: AbortSignal | null;
 }
 
 type ToolCallLoopProps = {
@@ -136,6 +142,7 @@ class ToolsManager {
         streamEmitter: (event: IStreamEvent, data: any) => void,
         currentMessageHistory: any[],
         maxToolResultChars?: number,
+        context: ToolExecutionContext = {},
     ): Promise<any[]> {
         const nextMessages = [...currentMessageHistory];
 
@@ -162,7 +169,7 @@ class ToolsManager {
             }
 
             this.log(`ToolsManager::manageToolCallExecutions: Executing tool call: ${toolCallName}`);
-            const toolCallResult = await knownToolConfig.execute(toolCall.function.arguments, streamEmitter);
+            const toolCallResult = await knownToolConfig.execute(toolCall.function.arguments, streamEmitter, context);
             streamEmitter('report_tool_call_result', {
                 uuid: humanReadableToolCall.uuid,
                 signature: humanReadableToolCall.signature,
@@ -212,7 +219,7 @@ class ToolsManager {
         do {
             // The user stopped the chat mid-round - do not execute tools or ask the LLM again.
             throwIfAborted(signal);
-            nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages, maxToolResultChars);
+            nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages, maxToolResultChars, { signal });
             throwIfAborted(signal);
             for (const [index, message] of nextMessages.entries()) {
                 if (message.role === 'tool' && mergeToolCallResults) {

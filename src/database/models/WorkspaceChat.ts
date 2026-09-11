@@ -30,6 +30,39 @@ export type IAgentToolCall = {
   result: string;
 }
 
+/**
+ * One entry in the ordered activity timeline of an assistant turn. Everything the
+ * model did before (or between) visible answers - reasoning, tool calls and the
+ * statuses tools report while they run - is recorded here in arrival order so the
+ * UI can roll it up into a single expandable chain (mirrors the desktop
+ * StatusResponse/ChainOfThought grouping).
+ *
+ * `startedAt`/`endedAt` are wall-clock ms stamped by the chat handler so the chain
+ * can show per-step and total durations even when re-loaded from history.
+ */
+export type IActivityNodeBase = {
+  uuid: string;
+  startedAt?: number;
+  endedAt?: number;
+}
+export type IThoughtActivity = IActivityNodeBase & {
+  type: 'thought';
+  /** Reasoning text with the wrapping think tags already stripped */
+  content: string;
+}
+export type IStatusActivity = IActivityNodeBase & {
+  type: 'status';
+  /** Short human readable status eg: "Searching the web for cats" */
+  content: string;
+}
+export type IToolCallActivity = IActivityNodeBase & {
+  type: 'toolCall';
+  signature: string;
+  /** Raw result string returned by the tool - empty while the tool is still running */
+  result: string;
+}
+export type IActivityNode = IThoughtActivity | IStatusActivity | IToolCallActivity;
+
 export type IEmailAction = {
   type: 'email';
   action: {
@@ -68,8 +101,15 @@ export type WorkspaceChatResponseType = {
   metrics: ICompleteResponse['metrics'];
   attachments: any[]; // This would be IMAGES, not files - which are embedded on upload
   citations: IChatCitation[];
+  /** @deprecated transient scratch space used by the old handler - kept so old rows still type check */
   currentThoughtChain?: string[];
   actions: IAgentAction[];
+  /**
+   * Ordered timeline of thoughts, statuses and tool calls for this turn.
+   * Optional because rows written before this field existed only carry
+   * `thoughts` + `toolCalls` - see `deriveActivity` in the ActivityChain UI.
+   */
+  activity?: IActivityNode[];
   isLoading?: boolean;
 }
 
@@ -196,6 +236,7 @@ export default class WorkspaceChat extends Model {
         },
         attachments: [],
         citations: [],
+        activity: [],
       },
       createdAt: Date.now(),
       isLoading: true,

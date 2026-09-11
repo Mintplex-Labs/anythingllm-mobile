@@ -109,7 +109,9 @@ class DelegatedProvider {
                         citations.push(...this.parseSourcesFromResponse(data));
                         break;
                     case 'agentThought':
-                        onStream('report_in_progress_thought', data.thought as string);
+                        // The server relays its `statusResponse` items ("Searching the web for...")
+                        // under this name - they are progress statuses, not model reasoning.
+                        onStream('report_status', data.thought as string);
                         break;
                     case 'textResponse':
                         onStream('chunk', data.textResponse);

@@ -1,11 +1,10 @@
 import { Linking, Text, TouchableOpacity } from "react-native";
-import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
+import { memo } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { IAgentAction } from "@/database/models/WorkspaceChat";
 import IntentLauncher, { IntentConstant } from "@yz1311/react-native-intent-launcher";
 
-export default function ActionsContainer({ chat }: { chat: DynamicChatMessage }) {
-    const actions = chat.response?.actions || [];
+export default memo(function ActionsContainer({ actions = [] }: { actions?: IAgentAction[] }) {
     if (actions.length === 0) return null;
 
     function onPress(action: IAgentAction) {
@@ -59,4 +58,4 @@ export default function ActionsContainer({ chat }: { chat: DynamicChatMessage })
             })}
         </ScrollView>
     )
-}
+});

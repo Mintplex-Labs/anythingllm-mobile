@@ -1,59 +1,42 @@
-import { ActivityIndicator, Text, View } from "react-native";
+import { memo } from "react";
+import { Text, View } from "react-native";
+import { Warning } from "phosphor-react-native";
 import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import { BASE_MESSAGE_STYLES } from "./styles";
-import ThinkingContainer from "./ThinkingContainer";
-import ToolCallContainer from "./ToolCallContainer";
+import ActivityChain from "./ActivityChain";
 import CitationsContainer from "./Citations";
 import ActionsContainer from "./Actions";
-import { Warning } from "phosphor-react-native";
-import useChatListeners from "./useChatListeners";
 import TextResponseContainer from "./TextResponse";
 
-function hasNothingToShow(chat: DynamicChatMessage): boolean {
-    if (!chat.isLoading) return false;
-    return (
-        !chat.response?.textResponse?.length &&
-        !chat.response?.thoughts?.length &&
-        !chat.response?.toolCalls?.length
-    );
-}
-
-export default function AssistantMessage(props: { chat: DynamicChatMessage }) {
-    const { chat, autoClose } = useChatListeners(props.chat);
-    if (hasNothingToShow(chat)) return <EmptyLoadingMessage />;
-    if (chat.type === 'error') return <ErrorContainer chat={chat} />;
-
+/**
+ * The assistant half of a chat row. Receives the latest snapshot of the chat
+ * straight from the list - no per-message event listeners - and is memoised so
+ * only the row whose snapshot changed re-renders while a reply streams.
+ */
+export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessage }) {
+    const response = chat.response;
     return (
         <View className="flex flex-col items-start w-full justify-start" style={{ gap: 11 }}>
-            <ToolCallContainer chat={chat} autoClose={autoClose} />
-            <ThinkingContainer chat={chat} autoClose={autoClose} />
-            <TextResponseContainer chat={chat} />
-            <ActionsContainer chat={chat} />
-            <CitationsContainer chat={chat} />
+            <ActivityChain chat={chat} />
+            {chat.type === 'error' ? (
+                <ErrorContainer message={response?.textResponse} />
+            ) : (
+                <TextResponseContainer uuid={chat.uuid} textResponse={response?.textResponse} metrics={response?.metrics} />
+            )}
+            <ActionsContainer actions={response?.actions} />
+            <CitationsContainer citations={response?.citations} isLoading={chat.isLoading} />
         </View>
-    )
-}
+    );
+});
 
-function EmptyLoadingMessage() {
-    return (
-        <View className="flex flex-row items-start w-full justify-start">
-            <View className="rounded-lg" style={[BASE_MESSAGE_STYLES]}>
-                <ActivityIndicator size="large" color="white" />
-            </View>
-        </View>
-    )
-}
-
-function ErrorContainer({ chat }: { chat: DynamicChatMessage }) {
-    const textResponse = chat.response?.textResponse;
-    if (!textResponse) return null;
-
+function ErrorContainer({ message }: { message?: string }) {
+    if (!message) return null;
     return (
         <View className="flex flex-row items-start w-full justify-start">
             <View className="rounded-lg flex flex-row items-center" style={[BASE_MESSAGE_STYLES, { gap: 4, borderWidth: 1, borderColor: '#F97066', maxWidth: '100%', backgroundColor: 'rgba(122,39,26,0.2)' }]}>
                 <Warning size={18} color="#F97066" />
-                <Text style={{ color: '#F97066' }} className="text-lg">{chat.response?.textResponse}</Text>
+                <Text style={{ color: '#F97066', flexShrink: 1 }} className="text-lg">{message}</Text>
             </View>
         </View>
-    )
+    );
 }

@@ -1,4 +1,4 @@
-import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
+import { memo } from "react";
 import { type IChatCitation } from "@/database/models/WorkspaceChat";
 import { Text, TouchableOpacity, View } from "react-native";
 import { FileText } from "phosphor-react-native";
@@ -41,9 +41,8 @@ function SourceCircle({ citation }: { citation: IChatCitation }) {
     );
 }
 
-export default function CitationsContainer({ chat }: { chat: DynamicChatMessage }) {
-    const citations = chat.response?.citations;
-    if (!citations?.length || chat.isLoading) return null;
+export default memo(function CitationsContainer({ citations, isLoading }: { citations?: IChatCitation[]; isLoading?: boolean }) {
+    if (!citations?.length || isLoading) return null;
 
     const combined = combineLikeCitations(citations);
     const visible = combined.slice(0, MAX_VISIBLE);
@@ -83,4 +82,4 @@ export default function CitationsContainer({ chat }: { chat: DynamicChatMessage 
             {remaining > 0 && <Text style={{ color: '#FFF' }} className="text-xs">+ {remaining}</Text>}
         </TouchableOpacity>
     )
-}
+});

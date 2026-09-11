@@ -59,7 +59,9 @@ export type IStreamEvent = 'chunk' |
   'report_tool_call' |
   'report_tool_call_result' |
   'report_action' |
-  'report_in_progress_thought';
+  'report_in_progress_thought' |
+  /** Short human readable progress line eg: "Searching the web for cats" - rolls up into the activity chain */
+  'report_status';
 export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[] | IAgentCitation[] | IAgentToolCall | IAgentAction;
 export type IStreamCallback = (
   event: IStreamEvent,
@@ -269,11 +271,12 @@ export default abstract class BaseOpenAILikeProvider {
    * Gets the context texts for the user prompt from semantic search
    * of the workspace's vector store.
    */
-  async getContextTexts(userPrompt: string): Promise<SemanticSearchResult[]> {
+  async getContextTexts(userPrompt: string, onStatus?: (status: string) => void): Promise<SemanticSearchResult[]> {
     try {
       if (!this.workspace) throw new SilentError('No workspace attached to provider');
       if (userPrompt.length < 10) throw new SilentError('User prompt is too short to get context texts');
       if (await VectorDB.getWorkspaceVectorCount(this.workspace.slug) === 0) throw new SilentError('No vectors in vector store');
+      onStatus?.('Searching your documents');
 
       const embedder = getEmbedder('native');
       const queryVector = await embedder.embed(userPrompt, 'query');
@@ -294,11 +297,11 @@ export default abstract class BaseOpenAILikeProvider {
   /**
    * Builds the prompt from the message history.
    */
-  async buildPrompt(messages: DynamicChatMessage[]): Promise<{ citations: IDocumentCitation[], formattedMessages: any[] }> {
+  async buildPrompt(messages: DynamicChatMessage[], onStatus?: (status: string) => void): Promise<{ citations: IDocumentCitation[], formattedMessages: any[] }> {
     if (messages.length === 0) throw new Error("Messages array must contain at least one element");
     const history = messages.slice(0, -1);
     const userPrompt = messages[messages.length - 1];
-    const vectorSearchResults = await this.getContextTexts(userPrompt.prompt as string);
+    const vectorSearchResults = await this.getContextTexts(userPrompt.prompt as string, onStatus);
     const contextTexts = vectorSearchResults
       .filter((r) => r.metadata.content !== undefined && r.metadata.content !== null && r.metadata.content !== '')
       .map((r) => String(r.metadata.content));
@@ -337,7 +340,7 @@ export default abstract class BaseOpenAILikeProvider {
     /** On stream is for streaming responses - will fire for each token */
     onStream?: IStreamCallback;
   }) {
-    const { formattedMessages, citations } = await this.buildPrompt(messages);
+    const { formattedMessages, citations } = await this.buildPrompt(messages, streaming ? (status) => onStream('report_status', status) : undefined);
     if (!streaming) {
       const response = await this.getChatCompletion(formattedMessages);
       onComplete({

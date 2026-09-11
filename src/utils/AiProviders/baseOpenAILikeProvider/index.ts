@@ -144,7 +144,9 @@ export default abstract class BaseOpenAILikeProvider {
   protected _provider: string;
   protected _config: any;
   private _workspace: WorkspaceType | null = null;
-  private streamingTimeoutLimit: number = 10_000; // Wait 10 seconds before assuming the request is timed out
+  // Effectively infinite (~1h). The user can cancel a generation manually now, so we no longer
+  // bail out when a slow connector takes a while to emit its first token (see issue #58).
+  private streamingTimeoutLimit: number = 3_600_000;
   protected abstract client: OpenAILite;
   protected abstract isOTypeModel: boolean;
   protected abstract model: string;

@@ -53,6 +53,19 @@ export async function searchProcessedFilesFor(filename: string, searchMethod: Fs
 }
 
 /**
+ * Delete specific processed files by name
+ * @param filenames - The names of the files to delete
+ */
+export async function deleteProcessedFilesByName(filenames: string[]) {
+    if (!filenames.length) return;
+    if (!await RNFS.exists(PROCESSED_FOLDER_PATH)) return;
+    for (const filename of filenames) {
+        const filePath = `${PROCESSED_FOLDER_PATH}/${filename}`;
+        if (await RNFS.exists(filePath)) await RNFS.unlink(filePath);
+    }
+}
+
+/**
  * Delete all files in the processed folder by removing the folder itself
  */
 export async function deleteProcessedFiles() {

@@ -3,7 +3,7 @@ import LlamaRnWrapper, { ILlamaRnStreamCallback, OnDeviceRuntimeInfo } from "./l
 import BaseOpenAILikeProvider, { IAvailableModel, ICompleteResponse, IStreamCallback, IStreamEvent, PromptShape, withoutImageAttachments } from "../baseOpenAILikeProvider";
 import ContextCompactor from "@/utils/chat/contextCompaction";
 import OpenAILite from "@/utils/openai";
-import MODEL_CARDS, { EMBEDDING_MODEL } from "@/utils/models/defaults";
+import MODEL_CARDS, { EMBEDDING_MODEL, RERANKER_MODEL } from "@/utils/models/defaults";
 import { DEFAULT_GGUF_FOLDER } from "@/utils/models/manager";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
@@ -176,7 +176,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
    * that `resolveDestinationPathFromGGUFUrl` resolves back to the same path.
    */
   async discoverUnknownStoredModels(knownModelIds: string[]): Promise<IOnDeviceAvailableModel[]> {
-    const known = new Set([...knownModelIds, EMBEDDING_MODEL.modelId]);
+    const known = new Set([...knownModelIds, EMBEDDING_MODEL.modelId, RERANKER_MODEL.modelId]);
     // Imported models are keyed `org/repo/file.gguf`, so their folder is known by prefix.
     const knownFolders = new Set(
       [...known].map(id => (id.endsWith('.gguf') ? id.split('/').slice(0, 2).join('/') : id)),

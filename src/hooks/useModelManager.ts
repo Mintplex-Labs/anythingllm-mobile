@@ -144,6 +144,9 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
         progressInterval: 5000,
       }).promise;
 
+      // The progress callback only fires every `progressInterval` ms, so the last
+      // reported value is usually short of 100. Snap to done before flipping state.
+      setDownloadProgress(100);
       setDownloadedModels(prev => ({ ...prev, [model.modelId]: true }));
       PushNotifications.send('primary', {
         title: 'Download complete',
@@ -162,10 +165,12 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
         { text: 'Dismiss', style: 'default' },
         { text: 'OK', style: 'default' }
       );
-      setModelDownloadUrl(null);
-      setDownloadProgress(0);
       return false;
     } finally {
+      // Always clear the active download so cards leave the progress state on
+      // success as well as failure - previously this only happened in the catch.
+      setModelDownloadUrl(null);
+      setDownloadProgress(0);
       deactivateKeepAwake();
       PushNotifications.cancel('progress', downloadNotificationId);
       uiStore.deleteSessionKey('@downloadInProgress', uiStore.globalEvents.MODEL_DOWNLOAD_COMPLETE);

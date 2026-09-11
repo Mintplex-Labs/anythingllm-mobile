@@ -27,6 +27,8 @@ class Telemetry {
             /** The user pressed stop while a reply was generating - nothing was saved */
             CHAT_ABORTED: 'chat_aborted',
             DOCUMENT_IMPORTED: 'document_added',
+            /** An image was attached to a prompt from the gallery or the camera */
+            IMAGE_ATTACHED: 'image_attached',
             TOOL_CALLED: 'tool_called',
             LLM_SETTINGS_UPDATED: 'llm_settings_updated',
             /** A chat thread was exported (txt/json/pdf) and handed to the share sheet */

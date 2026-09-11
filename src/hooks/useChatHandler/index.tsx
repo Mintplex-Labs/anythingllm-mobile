@@ -5,7 +5,7 @@ import { useState, useMemo, useEffect, createContext, useContext, useCallback, u
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import uiStore from "@/store/UIStore";
 import WorkspaceChat from "@/database/models/WorkspaceChat";
-import { IStreamEvent, IStreamResponse } from "@/utils/AiProviders/baseOpenAILikeProvider";
+import { IAttachment, IStreamEvent, IStreamResponse } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { activateKeepAwake, deactivateKeepAwake } from "@/utils/keepAwake";
 import { Keyboard } from "react-native";
 import DelegatedProvider from "@/utils/AiProviders/delegatedProvider";
@@ -42,8 +42,11 @@ export interface ChatHandlerInterface {
     promptDisabled: boolean;
     /** Set the prompt for the workspace thread with optional auto submit */
     setPrompt: (prompt: string, autoSubmit?: boolean) => void;
-    /** Submit the prompt for the workspace thread - if no prompt is passed, use the current prompt state */
-    submitPrompt: (prompt?: string) => void;
+    /**
+     * Submit the prompt for the workspace thread - if no prompt is passed, use the current prompt state.
+     * `attachments` are the images to send with this prompt (see `useAttachments.imageAttachments`).
+     */
+    submitPrompt: (prompt?: string, attachments?: IAttachment[]) => void;
     /**
      * Stop the reply currently being generated. Aborts the model (on-device, external API
      * or remote instance) and discards the unfinished chat - nothing is saved.
@@ -237,8 +240,10 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
      * Process a chat and add it to the chat history
      * as well as kick off the LLM inference
      */
-    const _processChat = useCallback(async (prompt: string) => {
-        const newChat = WorkspaceChat.newChatItem({ workspaceThreadSlug: thread.slug, prompt }) as DynamicChatMessage;
+    const _processChat = useCallback(async (prompt: string, attachments: IAttachment[] = []) => {
+        // Image attachments live on the user's chat row so they render in the history and are re-sent
+        // with the prompt. The remote (delegated) API cannot take images yet, so they are never offered there.
+        const newChat = WorkspaceChat.newChatItem({ workspaceThreadSlug: thread.slug, prompt, attachments }) as DynamicChatMessage;
         const turn = new AssistantTurn(newChat);
 
         // One abort controller per turn - the stop button fires it.
@@ -356,7 +361,7 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
         return !isLoadingChats && chatsArray.length > 0;
     }, [isLoadingChats, chatsArray]);
 
-    const submitPrompt = useCallback(async (promptToSubmit?: string) => {
+    const submitPrompt = useCallback(async (promptToSubmit?: string, attachments: IAttachment[] = []) => {
         if (!promptToSubmit) promptToSubmit = prompt;
         // Emit the submit prompt event to the UI store
         uiStore.emitter.emit(CHAT_HANDLER_EVENTS.PROMPT_SUBMITTED);
@@ -365,7 +370,7 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
             _setPrompt('');
             disablePromptInput();
             setIsWorking(true);
-            await _processChat(promptToSubmit);
+            await _processChat(promptToSubmit, attachments);
         } catch (err) {
             debug('Error submitting prompt', err);
         } finally {
@@ -388,7 +393,7 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
             llmProvider: llmProvider.name,
             llmModel: llmProvider.model,
         });
-        await submitPrompt(chat.prompt);
+        await submitPrompt(chat.prompt, (chat.response?.attachments ?? []) as IAttachment[]);
     }, [isWorking, deleteChat, submitPrompt, llmProvider]);
 
     const hideKeyboard = useCallback(() => {

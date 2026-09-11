@@ -6,6 +6,7 @@ export const BOTTOM_SHEET_NAMES = {
     PRIMARY_PROMPT_INPUT: 'primary-prompt-input',
     MODEL_CHIP_SELECTION: 'model-chip-selection',
     SETTINGS: 'settings',
+    ATTACHMENTS: 'attachments',
     TOOLS: 'tools',
     WORKSPACE_FILES: 'workspace-files',
     CITATIONS: 'citations',

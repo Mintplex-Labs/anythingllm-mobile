@@ -71,8 +71,27 @@ export type IStreamCallback = (
   response: IStreamResponse
 ) => void;
 
+/**
+ * An image sent along with a prompt. `contentString` is a base64 data URL (`data:image/jpeg;base64,...`)
+ * of the already downscaled image - see `useAttachments` for the sizing rules. Stored verbatim on the
+ * chat row (`response.attachments`) so the image can be shown in the history and re-sent to the model.
+ */
 export type IAttachment = {
+  name: string;
+  mime: string;
   contentString: string;
+}
+
+/**
+ * Returns a shallow copy of the chats with their image attachments removed. Used where images would
+ * only bloat the prompt: on-device history (re-encoding every old photo each turn is slow and eats the
+ * context window) and any transcript handed to the summariser.
+ */
+export function withoutImageAttachments(chats: DynamicChatMessage[]): DynamicChatMessage[] {
+  return chats.map((chat) => {
+    if (!chat.response?.attachments?.length) return chat;
+    return { ...chat, response: { ...chat.response, attachments: [] } };
+  });
 }
 
 export type IAvailableModel = {
@@ -387,6 +406,7 @@ export default abstract class BaseOpenAILikeProvider {
       formattedMessages: this.constructMessages({
         chatHistory: shaped.history,
         userPrompt: userPrompt.prompt as string,
+        attachments: (userPrompt.response?.attachments ?? []) as IAttachment[],
         contextTexts: shaped.contextTexts,
         summary: shaped.summary,
       }),

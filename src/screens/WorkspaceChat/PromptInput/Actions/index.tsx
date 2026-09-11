@@ -33,7 +33,8 @@ export default function ActionMenu({ isFullScreen, chatHandler, ...props }: { is
                 ) : (
                     <TouchableOpacity
                         onLongPress={chatHandler.reset}
-                        onPress={() => chatHandler.submitPrompt()}
+                        // Images ride along with the prompt; documents were already embedded when attached.
+                        onPress={() => chatHandler.submitPrompt(undefined, props.attachmentHandler.imageAttachments)}
                         disabled={chatHandler.promptDisabled}
                         accessibilityLabel='Send prompt'
                         className='flex flex-row items-center gap-x-2 disabled:opacity-50'

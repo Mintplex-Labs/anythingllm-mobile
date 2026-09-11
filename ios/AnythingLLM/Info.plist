@@ -33,6 +33,10 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
+	<key>NSCameraUsageDescription</key>
+	<string>AnythingLLM uses the camera to scan connection QR codes and to take photos to send to your model.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>AnythingLLM needs access to your photos so you can attach an image to a prompt.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>MaterialIcons.ttf</string>

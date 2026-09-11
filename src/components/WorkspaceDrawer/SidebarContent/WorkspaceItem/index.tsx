@@ -6,7 +6,6 @@ import { NativeEventEmitter } from "react-native";
 import Workspace from "@/database/models/Workspace";
 import WorkspaceThread from "@/database/models/WorkspaceThread";
 import { PATHS } from "@/utils/paths";
-import uiStore from "@/store/UIStore";
 import { useNavigation } from "@react-navigation/native";
 
 interface IWorkspaceItem {
@@ -24,6 +23,17 @@ function WorkspaceItem({ workspace, isActive = false, currentThreadSlug }: IWork
   const [activeThreadIdx, setActiveThreadIdx] = useState(_activeThreadIdx !== -1 ? _activeThreadIdx : 0);
   const [newThreadName, setNewThreadName] = useState(workspace.threads?.[_activeThreadIdx]?.name || '');
   const [isExpanded, setIsExpanded] = useState(isActive);
+
+  // The active workspace/thread arrive as props after mount (and change as the user
+  // navigates) - keep the expansion and highlighted thread in step with them.
+  useEffect(() => {
+    if (isActive) setIsExpanded(true);
+  }, [isActive]);
+
+  useEffect(() => {
+    if (_activeThreadIdx === undefined || _activeThreadIdx === -1) return;
+    setActiveThreadIdx(_activeThreadIdx);
+  }, [_activeThreadIdx]);
 
   async function handleThreadDelete(threadSlug: string) {
     Alert.alert('Delete thread', 'Are you sure you want to delete this thread? All chat history will be lost.', [
@@ -223,15 +233,9 @@ interface IWorkspaceThreadsContainer {
 function WorkspaceThreadsContainer({ workspace, activeThreadIdx, setActiveThreadIdx, handleThreadDelete, setThreadSlug, setIsRenameModalVisible }: IWorkspaceThreadsContainer) {
   const navigation = useNavigation();
 
-  useEffect(() => {
-    if (!workspace.threads) return;
-    uiStore.emitter.addListener(uiStore.globalEvents.REDIRECT, (event) => {
-      if (event.path !== PATHS.workspace_chat) return;
-      if (event.params.wsSlug !== workspace.slug) return;
-      setActiveThreadIdx(workspace.threads?.findIndex((t: any) => t.slug === event.params.threadSlug) || 0);
-    });
-    return () => uiStore.emitter.removeAllListeners(uiStore.globalEvents.REDIRECT);
-  }, [workspace.threads]);
+  // Note: this used to subscribe to REDIRECT and call removeAllListeners on unmount,
+  // which also tore down the app-wide navigation listener in useRedirect. The
+  // highlighted thread now follows `currentThreadSlug` from the parent instead.
   if (!workspace.threads) return null;
 
   return (

@@ -158,6 +158,19 @@ export default class WorkspaceChat extends Model {
   }
 
   /**
+   * The most recently created chat across every thread, or null when none exist.
+   * Used to work out where the user was last talking.
+   */
+  static async latest(): Promise<WorkspaceChatType | null> {
+    const chats = await database.get(WorkspaceChat.table).query(
+      Q.sortBy('created_at', Q.desc),
+      Q.take(1),
+    ).fetch();
+    if (chats.length === 0) return null;
+    return this.toWorkspaceChatObject(chats[0]) as WorkspaceChatType;
+  }
+
+  /**
    * Returns watermelon db model instance
    */
   static async get(where: { field: string, value: string }[] = []): Promise<Model | null> {

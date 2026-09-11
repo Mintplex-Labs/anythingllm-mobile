@@ -110,7 +110,9 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
     } else setModelName(getPresetModelName(llmPreferences));
 
     return () => uiStore.emitter.removeAllListeners(uiStore.globalEvents.CHAT_HISTORY_REFRESHED);
-  }, [workspace]);
+    // llmPreferences loads async after mount - without it in the deps a chip mounted before the
+    // preference resolved (Home, the loading view) stays on "No model loaded".
+  }, [workspace, llmPreferences]);
 
   // If the model name is not set and the workspace is remote, we don't want to show the model chip
   // since it will show "No model loaded" which is confusing

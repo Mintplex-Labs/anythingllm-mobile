@@ -1,4 +1,4 @@
-import { polyfill as polyfillFetch } from 'react-native-polyfill-globals/src/fetch';
+import { getStreamingFetch, readSSEDataLines } from '@/utils/streamingFetch';
 import { safeParseJSON } from '../device';
 
 type IMessage = {
@@ -21,10 +21,21 @@ export type IRequestOptions = {
   signal?: AbortSignal;
 }
 
+export type IOpenAILiteOptions = {
+  apiKey?: string | null;
+  baseURL?: string;
+  /**
+   * Extra headers sent with every request. Used for provider attribution
+   * (eg: OpenRouter's `HTTP-Referer`/`X-Title`) or vendor specific auth headers.
+   */
+  defaultHeaders?: Record<string, string>;
+}
+
 export default class OpenAILite {
   private baseURL: string = 'https://api.openai.com/v1';
   private apiKey: string | null = null;
-  private streamingFetch: typeof fetch | null = null;
+  private defaultHeaders: Record<string, string> = {};
+  private streamingFetch: typeof fetch;
 
   public models = {
     list: () => this.listModels()
@@ -39,19 +50,11 @@ export default class OpenAILite {
     },
   }
 
-  private setupStreamingFetch() {
-    this.log('setupStreamingFetch');
-    const originalFetch = global.fetch;
-    polyfillFetch();
-    this.streamingFetch = global.fetch;
-    global.fetch = originalFetch;
-    this.log('setupStreamingFetch completed - original fetch restored');
-  }
-
-  constructor({ apiKey, baseURL }: { apiKey?: string | null, baseURL?: string } = {}) {
+  constructor({ apiKey, baseURL, defaultHeaders }: IOpenAILiteOptions = {}) {
     this.apiKey = apiKey || this.apiKey;
     this.baseURL = baseURL || this.baseURL;
-    this.setupStreamingFetch();
+    this.defaultHeaders = defaultHeaders || {};
+    this.streamingFetch = getStreamingFetch();
   }
 
   private log = (text: string, ...args: any[]) => {
@@ -68,6 +71,7 @@ export default class OpenAILite {
       'Content-Type': 'application/json',
       'ngrok-skip-browser-warning': 'true',
       ...(this.apiKey ? { 'Authorization': `Bearer ${this.apiKey}` } : {}),
+      ...this.defaultHeaders,
     };
   }
 
@@ -98,7 +102,7 @@ export default class OpenAILite {
 
   async createChatCompletion(body: IAsyncChatCompletionRequestBody, options: IRequestOptions = {}) {
     const formattedURL = this.formatURL(`${this.baseURL}/chat/completions`);
-    console.log('createChatCompletion', formattedURL, { hasApiKey: !!this.apiKey });
+    this.log('createChatCompletion', formattedURL, { hasApiKey: !!this.apiKey });
     const signal = this.signalFromOptions(options);
     return await fetch(formattedURL, {
       method: 'POST',
@@ -120,9 +124,9 @@ export default class OpenAILite {
 
   async *streamChatCompletion(body: IAsyncChatCompletionRequestBody, options: IRequestOptions = {}) {
     const formattedURL = this.formatURL(`${this.baseURL}/chat/completions`);
-    console.log('streamingChatCompletion', formattedURL, { hasApiKey: !!this.apiKey });
+    this.log('streamingChatCompletion', formattedURL, { hasApiKey: !!this.apiKey });
     const signal = this.signalFromOptions(options);
-    const response = await this.streamingFetch!(formattedURL, {
+    const response = await this.streamingFetch(formattedURL, {
       method: 'POST',
       headers: this.baseHeaders(),
       body: JSON.stringify(body),
@@ -131,39 +135,31 @@ export default class OpenAILite {
       reactNative: { textStreaming: true },
     });
 
-    const stream = response.body;
+    // Non-2xx responses carry a JSON error body rather than an event stream - surface the message
+    // so the chat shows "Invalid API key" instead of silently ending with no tokens.
+    if (!response.ok) {
+      const text = await response.text().catch(() => '');
+      const parsed = safeParseJSON(text);
+      const message = parsed?.error?.message || parsed?.message || text.slice(0, 200) || response.statusText;
+      throw new Error(`Request failed with status ${response.status}: ${message}`);
+    }
+
+    const stream = (response as any).body;
     if (!stream) return;
 
-    const reader = stream.getReader();
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const text = new TextDecoder().decode(value);
-        const lines = text.split('\n');
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6);
-            if (data === '[DONE]') continue;
-
-            try {
-              const parsed = safeParseJSON(data);
-              yield parsed;
-            } catch (e) {
-              console.error('Failed to parse streaming response:', e);
-            }
-          }
-        }
+    for await (const data of readSSEDataLines(stream)) {
+      try {
+        const parsed = safeParseJSON(data);
+        yield parsed;
+      } catch (e) {
+        console.error('Failed to parse streaming response:', e);
       }
-    } finally {
-      reader.releaseLock();
     }
   }
 
   async listModels() {
     const formattedURL = this.formatURL(`${this.baseURL}/models`);
-    console.log('listModels', formattedURL, { hasApiKey: !!this.apiKey });
+    this.log('listModels', formattedURL, { hasApiKey: !!this.apiKey });
     const res = await fetch(formattedURL, {
       method: 'GET',
       headers: this.baseHeaders(),
@@ -182,6 +178,8 @@ export default class OpenAILite {
         : `Endpoint returned a non-JSON response: ${text.slice(0, 200)}`);
     }
 
+    // Some providers (eg: Together AI) return the bare array instead of the OpenAI `{ data: [] }` envelope.
+    if (Array.isArray(parsed)) parsed = { object: 'list', data: parsed };
     if (!Array.isArray(parsed?.data)) throw new Error('Endpoint response did not contain a "data" array of models.');
     return parsed;
   }

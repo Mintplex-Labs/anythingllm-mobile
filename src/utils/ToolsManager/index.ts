@@ -179,6 +179,9 @@ class ToolsManager {
             if (modelVisibleResult !== toolCallResult) this.log(`ToolsManager::manageToolCallExecutions: Truncated ${toolCallName} result from ${String(toolCallResult).length} to ${maxToolResultChars} chars for the model`);
             nextMessages.push({
                 role: 'tool',
+                // Pairs this result with the assistant `tool_calls` entry appended in `toolCallLoop`
+                // (absent in the merge flow, where the result is folded into the previous message).
+                ...(toolCall.id ? { tool_call_id: toolCall.id } : {}),
                 content: modelVisibleResult,
                 signature: humanReadableToolCall.signature,
                 function: toolCall.function.name,
@@ -218,6 +221,33 @@ class ToolsManager {
     }
 
     /**
+     * Builds the OpenAI-shaped assistant message for a round that ended in tool calls:
+     * the visible reply text (reasoning stripped) plus `tool_calls` carrying the ids the results
+     * will reference. Providers that do not send tool call ids get one generated here, and the id is
+     * written back onto the tool call so `manageToolCallExecutions` tags the result with the same id.
+     */
+    private assistantToolCallMessage(response: ICompleteResponse) {
+        const toolCalls = (response.toolCalls ?? []).map((toolCall) => {
+            if (!toolCall.id) toolCall.id = `call_${generateUUID().replace(/-/g, '').slice(0, 24)}`;
+            return {
+                id: toolCall.id,
+                type: 'function' as const,
+                // Gemini requires its thought_signature back on multi-turn tool calls.
+                ...(toolCall.extra_content ? { extra_content: toolCall.extra_content } : {}),
+                function: {
+                    name: toolCall.function.name,
+                    arguments: typeof toolCall.function.arguments === 'string'
+                        ? toolCall.function.arguments
+                        : JSON.stringify(toolCall.function.arguments ?? {}),
+                },
+            };
+        });
+        // Reasoning was folded into <think> tags for the UI - never send it back to the model.
+        const content = (response.textResponse ?? '').replace(/<think>[\s\S]*?<\/think>/g, '').trim();
+        return { role: 'assistant', content, tool_calls: toolCalls };
+    }
+
+    /**
      * This is the main loop that manages the tool calls.
      * It will loop until there are no more tool calls to make.
      * It will also manage the tool call responses and update the message history.
@@ -248,6 +278,11 @@ class ToolsManager {
         do {
             // The user stopped the chat mid-round - do not execute tools or ask the LLM again.
             throwIfAborted(signal);
+            // Cloud providers get the round echoed back as a real assistant `tool_calls` message so the
+            // model sees that *it* already made this call before it sees the result. Without it, models
+            // that reply then call a tool see a result for a call that is not in the history and call
+            // the same tool again on every round. The on-device merge flow keeps its text-only history.
+            if (!mergeToolCallResults) nextMessages.push(this.assistantToolCallMessage(nextResponse));
             nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages, maxToolResultChars, { signal });
             throwIfAborted(signal);
             for (const [index, message] of nextMessages.entries()) {

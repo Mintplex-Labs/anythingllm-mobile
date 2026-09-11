@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View, ActivityIndicator, ScrollView } from 'react-native';
+import { Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import SafeView from '@/components/SafeView';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'phosphor-react-native';
@@ -7,12 +7,12 @@ import useLLMPreference from '@/hooks/useLLMPreference';
 import ProviderSelection from '@/components/LLMSelection/ProviderSelection';
 import { screenDimensions } from '@/utils/constants';
 import Telemetry from '@/utils/Telemetry';
+import { findProviderDefinition, type ProviderConfig } from '@/utils/llmproviders';
 
 import NativeOptions from './providers/nativeOptions';
 import LMStudioOptions from './providers/LMStudioOptions';
 import GenericOpenAiOptions from './providers/genericOpenAiOptions';
 import OllamaOptions from './providers/OllamaOptions';
-import OpenRouterOptions from './providers/OpenRouterOptions';
 
 interface AdvancedModelPreferencesProps {
   goToPage: (page: IWorkspacePageKey) => void;
@@ -28,7 +28,7 @@ export default function AdvancedModelPreferences({
     fetchLLMPreference,
     updateLLMPreference,
   } = useLLMPreference();
-  async function updateProviderSettings(provider: string, settings: { apiKey?: string, baseUrl?: string, model?: string }) {
+  async function updateProviderSettings(provider: string, settings: ProviderConfig) {
     await updateLLMPreference(provider, {
       ...llmPreferences.config,
       ...settings,
@@ -37,45 +37,17 @@ export default function AdvancedModelPreferences({
     Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.LLM_SETTINGS_UPDATED, { provider, model: settings?.model ?? '' });
   }
 
+  /**
+   * Switching provider starts from that provider's default (empty) config - see `AVAILABLE_LLM_PROVIDERS`.
+   * On-device keeps the currently selected model.
+   */
   async function handleProviderSelection(provider: string) {
-    switch (provider) {
-      case 'openai':
-        await updateLLMPreference('openai', {
-          apiKey: llmPreferences.config.apiKey,
-          modelId: 'gpt-3.5-turbo',
-          baseUrl: 'https://api.openai.com/v1',
-        });
-        break;
-      case 'openrouter':
-        await updateLLMPreference('openrouter', {
-          apiKey: llmPreferences.config.apiKey,
-          modelId: 'qwen/qwen3-4b:free'
-        });
-        break;
-      case 'lmstudio':
-        await updateLLMPreference('lmstudio', {
-          baseUrl: '',
-          modelId: ''
-        });
-        break;
-      case 'ollama':
-        await updateLLMPreference('ollama', {
-          baseUrl: '',
-          model: '',
-        });
-        break;
-      case 'generic-openai':
-        await updateLLMPreference('generic-openai', {
-          apiKey: '',
-          baseUrl: '',
-          model: '',
-        });
-        break;
-      default:
-        await updateLLMPreference('native', {
-          model: llmPreferences.config.model,
-        });
+    if (provider === 'native') {
+      await updateLLMPreference('native', { model: llmPreferences.config.model });
+      return;
     }
+    const definition = findProviderDefinition(provider);
+    await updateLLMPreference(provider, { ...(definition?.defaultConfig ?? {}) });
   }
 
   const renderProviderOptions = () => {
@@ -96,38 +68,7 @@ export default function AdvancedModelPreferences({
           onBaseUrlChange={updateProviderSettings}
           onModelChange={updateProviderSettings}
         />
-      case 'openai':
-        return <GenericOpenAiOptions
-          provider={llmPreferences.provider}
-          apiKey={llmPreferences.config.apiKey || ''}
-          baseUrl={llmPreferences.config.baseUrl || ''}
-          model={llmPreferences.config.model || ''}
-          onApiKeyChange={updateProviderSettings}
-          onBaseUrlChange={updateProviderSettings}
-          onModelChange={updateProviderSettings}
-        />
-      case 'openrouter':
-        return <OpenRouterOptions
-          provider="openrouter"
-          apiKey={llmPreferences.config.apiKey || ''}
-          model={llmPreferences.config.model || ''}
-          onApiKeyChange={updateProviderSettings}
-          onModelChange={updateProviderSettings}
-        />
-      case 'generic-openai':
-        return (
-          <GenericOpenAiOptions
-            provider="generic-openai"
-            apiKey={llmPreferences.config.apiKey || ''}
-            baseUrl={llmPreferences.config.baseUrl || ''}
-            model={llmPreferences.config.model || ''}
-            onApiKeyChange={updateProviderSettings}
-            onBaseUrlChange={updateProviderSettings}
-            onModelChange={updateProviderSettings}
-          />
-        );
       case 'native':
-      default:
         return (
           <NativeOptions
             llmPreferences={llmPreferences}
@@ -135,6 +76,33 @@ export default function AdvancedModelPreferences({
             LLMProvider={LLMProvider}
           />
         );
+      default: {
+        // Every other external provider (OpenAI, Anthropic, Gemini, OpenRouter, Bedrock, ...)
+        // shares the generic form - the fields shown come from the provider definition.
+        if (!findProviderDefinition(llmPreferences.provider)) {
+          return (
+            <NativeOptions
+              llmPreferences={llmPreferences}
+              fetchLLMPreference={fetchLLMPreference}
+              LLMProvider={LLMProvider}
+            />
+          );
+        }
+        return (
+          <GenericOpenAiOptions
+            key={llmPreferences.provider}
+            provider={llmPreferences.provider}
+            apiKey={llmPreferences.config.apiKey || ''}
+            baseUrl={llmPreferences.config.baseUrl || ''}
+            region={llmPreferences.config.region || ''}
+            model={llmPreferences.config.model || ''}
+            onApiKeyChange={updateProviderSettings}
+            onBaseUrlChange={updateProviderSettings}
+            onRegionChange={updateProviderSettings}
+            onModelChange={updateProviderSettings}
+          />
+        );
+      }
     }
   };
 

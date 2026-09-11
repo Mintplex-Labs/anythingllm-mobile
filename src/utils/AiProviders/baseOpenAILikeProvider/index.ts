@@ -29,6 +29,8 @@ export type ICompleteResponse = {
       arguments: string
     }
     id?: string
+    /** Provider specific payload that must be echoed back with the call (Gemini thought signatures). */
+    extra_content?: any
   }[];
   metrics: {
     prompt_tokens: number;
@@ -179,8 +181,22 @@ export default abstract class BaseOpenAILikeProvider {
    * Provider specific fields merged into every chat completion request body.
    * eg: OpenRouter needs `include_reasoning: true` to stream reasoning tokens.
    */
-  protected extraRequestParams(): Record<string, any> {
+  protected extraRequestParams(_hasTools: boolean = false): Record<string, any> {
     return {};
+  }
+
+  /**
+   * Whether `temperature` is sent at all. Some APIs (Moonshot's Kimi models) reject any value
+   * other than their fixed default, so those providers omit the parameter entirely.
+   */
+  protected supportsTemperature(): boolean {
+    return true;
+  }
+
+  /** `{ temperature }` for the request body, or nothing when the provider does not accept it. */
+  private temperatureParam(): Record<string, number> {
+    if (!this.supportsTemperature()) return {};
+    return { temperature: this.isOTypeModel ? 1 : this.temperature };
   }
 
   private DEFAULT_TOP_N = 2;
@@ -518,6 +534,22 @@ export default abstract class BaseOpenAILikeProvider {
   }
 
   /**
+   * Shapes the working history into what an OpenAI-style API accepts. ToolsManager annotates tool
+   * result messages with bookkeeping fields (`signature`, `function`) that strict APIs reject as
+   * unknown properties, so `tool` messages are reduced to `{ role, tool_call_id, content }`.
+   */
+  protected formatMessagesForRequest(messages: any[] = []): any[] {
+    return messages.map((message) => {
+      if (message?.role !== 'tool') return message;
+      return {
+        role: 'tool',
+        ...(message.tool_call_id ? { tool_call_id: message.tool_call_id } : {}),
+        content: typeof message.content === 'string' ? message.content : JSON.stringify(message.content ?? ''),
+      };
+    });
+  }
+
+  /**
    * Gets the chat completion from the model.
    * Returns the text response and metrics in a single call, no streaming.
    */
@@ -528,10 +560,10 @@ export default abstract class BaseOpenAILikeProvider {
       this.client.chat.completions
         .create({
           model: this.model,
-          messages,
-          temperature: this.isOTypeModel ? 1 : this.temperature,
+          messages: this.formatMessagesForRequest(messages),
+          ...this.temperatureParam(),
           tools: availableTools,
-          ...this.extraRequestParams(),
+          ...this.extraRequestParams(availableTools.length > 0),
         }, { signal: this.abortSignal ?? undefined })
     ) as unknown as { duration: number, output: Partial<any> & MonitoredStream & { usage: StreamMetrics } };
 
@@ -566,10 +598,10 @@ export default abstract class BaseOpenAILikeProvider {
       this.client.chat.completions.create({
         model: this.model,
         stream: true,
-        messages,
-        temperature: this.isOTypeModel ? 1 : this.temperature,
+        messages: this.formatMessagesForRequest(messages),
+        ...this.temperatureParam(),
         ...(availableTools.length > 0 ? { tools: availableTools, tool_choice: 'auto' } : {}),
-        ...this.extraRequestParams(),
+        ...this.extraRequestParams(availableTools.length > 0),
       }, { controller: abortController }),
       messages,
     );
@@ -583,10 +615,13 @@ export default abstract class BaseOpenAILikeProvider {
       prompt_tokens: 0,
       completion_tokens: 0,
     };
-    let toolToCall: { type: 'function', function: { name: string, arguments: string } } | null = null;
+    let toolToCall: { type: 'function', id?: string, extra_content?: any, function: { name: string, arguments: string } } | null = null;
+    // Stream `index` of the tool call we are assembling. One call is executed per round, so any
+    // parallel call the model streams under another index is ignored rather than merged into it.
+    let toolCallIndex: number | null = null;
     let timeout: NodeJS.Timeout | null = null;
 
-    return new Promise(async (resolve) => {
+    return new Promise(async (resolve, reject) => {
       let fullText = "";
       // Reasoning tokens seen so far in this round, already wrapped with the opening
       // <think> tag. Non-empty means the tag is still open.
@@ -643,7 +678,7 @@ export default abstract class BaseOpenAILikeProvider {
           const delta = chunk?.choices?.[0]?.delta;
           const content = delta?.content;
           const reasoningToken = extractReasoningContent(delta);
-          const toolCall = delta?.tool_calls?.[0];
+          const toolCallDeltas: any[] = Array.isArray(delta?.tool_calls) ? delta.tool_calls : [];
           const finishReason = chunk?.choices?.[0]?.finish_reason;
 
           // Handle usage metrics if present
@@ -678,21 +713,40 @@ export default abstract class BaseOpenAILikeProvider {
             handler('chunk', content);
           }
 
-          // Handle tool calls if present
-          if (toolCall) {
-            // If we don't have a tool to call yet, create one to track the tool call
+          // Handle tool calls if present. Providers split one call over many chunks (name first, then
+          // argument fragments, each chunk carrying only some fields) and may stream several calls
+          // in parallel under different `index` values.
+          for (const toolCall of toolCallDeltas) {
+            if (!toolCall) continue;
+            const index = typeof toolCall.index === 'number' ? toolCall.index : 0;
+
             if (toolToCall === null) {
+              toolCallIndex = index;
               toolToCall = {
                 type: 'function',
+                // Kept so the tool loop can echo this call back as an assistant `tool_calls` message
+                // and pair the result to it via `tool_call_id`. Missing ids are generated in the loop.
+                ...(toolCall.id ? { id: toolCall.id } : {}),
+                // Gemini attaches `extra_content.google.thought_signature` to its tool calls and
+                // rejects the follow-up request (400) unless it is echoed back with the call.
+                ...(toolCall.extra_content ? { extra_content: toolCall.extra_content } : {}),
                 function: {
-                  name: toolCall.function.name,
-                  arguments: toolCall.function.arguments,
+                  name: toolCall.function?.name ?? '',
+                  arguments: toolCall.function?.arguments ?? '',
                 }
               }
-            } else {
-              // If we already have a tool to call, append the arguments to the existing tool call
-              toolToCall.function.arguments += toolCall.function.arguments;
+              continue;
             }
+
+            // A second parallel call - only one tool runs per round, so it is dropped rather than
+            // having its arguments glued onto the first call's JSON.
+            if (index !== toolCallIndex) continue;
+
+            // Later fragments of the call we are assembling - fill in whatever fields they carry.
+            if (!toolToCall.id && toolCall.id) toolToCall.id = toolCall.id;
+            if (!toolToCall.extra_content && toolCall.extra_content) toolToCall.extra_content = toolCall.extra_content;
+            if (!toolToCall.function.name && toolCall.function?.name) toolToCall.function.name = toolCall.function.name;
+            if (typeof toolCall.function?.arguments === 'string') toolToCall.function.arguments += toolCall.function.arguments;
           }
 
           // Check for completion
@@ -720,19 +774,12 @@ export default abstract class BaseOpenAILikeProvider {
         // partial result and the caller checks the signal, so there is nothing to report.
         if (isAbortError(e) || abortController.signal.aborted) return;
         console.log(`\x1b[43m\x1b[34m[STREAMING ERROR]\x1b[0m ${e.message}`);
-        handler('abort', e.message);
         stream?.endMeasurement(usage);
-        resolve({
-          textResponse: fullText,
-          metrics: {
-            prompt_tokens: usage.prompt_tokens,
-            completion_tokens: usage.completion_tokens,
-            total_tokens: usage.prompt_tokens + usage.completion_tokens,
-            outputTps: usage.completion_tokens / stream.duration,
-            duration: stream.duration,
-            ...stream.metrics,
-          },
-        });
+        // Reject so `chat()` throws and the chat handler marks the turn failed with the real API
+        // message. Emitting 'abort' here used to throw inside this executor instead, which left the
+        // promise pending forever - the turn "hung" whenever a follow-up request (eg: after a tool
+        // call) was rejected by the provider.
+        reject(e instanceof Error ? e : new Error(String(e)));
       } finally {
         if (timeout) clearTimeout(timeout);
       }

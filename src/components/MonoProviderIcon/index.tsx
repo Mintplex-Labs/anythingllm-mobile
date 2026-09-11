@@ -27,6 +27,13 @@ import Liquid from '@lobehub/icons-static-svg/icons/liquid.svg';
 import Menlo from '@lobehub/icons-static-svg/icons/menlo.svg';
 import Unsloth from '@lobehub/icons-static-svg/icons/unsloth.svg';
 import Nvidia from '@lobehub/icons-static-svg/icons/nvidia.svg';
+import Bedrock from '@lobehub/icons-static-svg/icons/bedrock.svg';
+import Fireworks from '@lobehub/icons-static-svg/icons/fireworks.svg';
+import MiniMax from '@lobehub/icons-static-svg/icons/minimax.svg';
+import Moonshot from '@lobehub/icons-static-svg/icons/moonshot.svg';
+import Novita from '@lobehub/icons-static-svg/icons/novita.svg';
+import Together from '@lobehub/icons-static-svg/icons/together.svg';
+import XAI from '@lobehub/icons-static-svg/icons/xai.svg';
 
 export type MonoIcon = React.FC<SvgProps>;
 
@@ -67,6 +74,17 @@ const providerIcons: Record<string, MonoIcon> = {
   menlo: Menlo,
   unsloth: Unsloth,
   nvidia: Nvidia,
+  // External provider keys (see AVAILABLE_LLM_PROVIDERS). LiteLLM/LocalAI/Lemonade have no
+  // lobehub mark and fall back to their png logo in ModelChip.
+  bedrock: Bedrock,
+  fireworksai: Fireworks,
+  fireworks: Fireworks,
+  minimax: MiniMax,
+  moonshot: Moonshot,
+  novita: Novita,
+  togetherai: Together,
+  together: Together,
+  xai: XAI,
 };
 
 /**
@@ -96,6 +114,8 @@ const modelPatterns: { pattern: RegExp; icon: MonoIcon }[] = [
   { pattern: /^lfm/i, icon: Liquid },
   { pattern: /^lucy/i, icon: Menlo },
   { pattern: /^nemotron/i, icon: Nvidia },
+  { pattern: /^grok/i, icon: XAI },
+  { pattern: /^minimax/i, icon: MiniMax },
 ];
 
 function stripOrg(modelName: string) {

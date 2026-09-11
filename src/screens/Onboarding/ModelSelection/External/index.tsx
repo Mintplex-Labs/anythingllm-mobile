@@ -6,39 +6,20 @@ import uiStore from "@/store/UIStore";
 import ProviderSelection from "@/components/LLMSelection/ProviderSelection";
 import Telemetry from "@/utils/Telemetry";
 import type { SelectionModeProps } from "../index";
+import { findProviderDefinition, validateProviderConfig, type ProviderConfig } from "@/utils/llmproviders";
 
 import LMStudioOptions from "@/screens/UserSettings/AdvancedModelPreferences/providers/LMStudioOptions";
 import GenericOpenAiOptions from "@/screens/UserSettings/AdvancedModelPreferences/providers/genericOpenAiOptions";
 import OllamaOptions from "@/screens/UserSettings/AdvancedModelPreferences/providers/OllamaOptions";
-import OpenRouterOptions from "@/screens/UserSettings/AdvancedModelPreferences/providers/OpenRouterOptions";
-
-type ProviderConfig = { apiKey?: string; baseUrl?: string; model?: string };
-
-/**
- * Default (empty) config for each external provider when it is first selected.
- * Mirrors the defaults used in UserSettings > AdvancedModelPreferences.
- */
-const PROVIDER_DEFAULTS: Record<string, ProviderConfig> = {
-  openai: { apiKey: '', baseUrl: 'https://api.openai.com/v1', model: '' },
-  openrouter: { apiKey: '', model: '' },
-  lmstudio: { baseUrl: '', model: '' },
-  ollama: { baseUrl: '', model: '' },
-  'generic-openai': { apiKey: '', baseUrl: '', model: '' },
-};
 
 const DEFAULT_PROVIDER = 'ollama';
 
 /**
- * Returns a human readable reason why the config is incomplete, or null when the
- * provider can be saved and used for chatting.
+ * Default (empty) config for an external provider when it is first selected.
+ * Comes from `AVAILABLE_LLM_PROVIDERS` so onboarding and UserSettings > AdvancedModelPreferences agree.
  */
-function validateConfig(provider: string, config: ProviderConfig): string | null {
-  const needsApiKey = ['openai', 'openrouter'].includes(provider);
-  const needsBaseUrl = ['ollama', 'lmstudio', 'generic-openai'].includes(provider);
-  if (needsApiKey && !config.apiKey?.trim()) return 'Please enter an API key for this provider.';
-  if (needsBaseUrl && !config.baseUrl?.trim()) return 'Please enter the base URL of your provider.';
-  if (!config.model?.trim()) return 'Please select a model to use.';
-  return null;
+function defaultConfigFor(provider: string): ProviderConfig {
+  return { ...(findProviderDefinition(provider)?.defaultConfig ?? {}) };
 }
 
 /**
@@ -49,20 +30,20 @@ function validateConfig(provider: string, config: ProviderConfig): string | null
 export default function ExternalProviderSelection({ setMode }: SelectionModeProps) {
   const navigation = useNavigation<NavigationProp<any>>();
   const [provider, setProvider] = useState<string>(DEFAULT_PROVIDER);
-  const [config, setConfig] = useState<ProviderConfig>(PROVIDER_DEFAULTS[DEFAULT_PROVIDER]);
+  const [config, setConfig] = useState<ProviderConfig>(defaultConfigFor(DEFAULT_PROVIDER));
   const [saving, setSaving] = useState(false);
 
   const handleProviderSelection = (nextProvider: string) => {
     if (nextProvider === provider) return;
     setProvider(nextProvider);
-    setConfig(PROVIDER_DEFAULTS[nextProvider] ?? {});
+    setConfig(defaultConfigFor(nextProvider));
   };
 
   const updateProviderSettings = async (_provider: string, settings: ProviderConfig) => {
     setConfig(prev => ({ ...prev, ...settings }));
   };
 
-  const validationError = validateConfig(provider, config);
+  const validationError = validateProviderConfig(provider, config);
 
   const saveAndNavigate = async () => {
     if (validationError) return Alert.alert('Incomplete provider setup', validationError);
@@ -95,36 +76,20 @@ export default function ExternalProviderSelection({ setMode }: SelectionModeProp
           onBaseUrlChange={updateProviderSettings}
           onModelChange={updateProviderSettings}
         />
-      case 'openai':
-        return <GenericOpenAiOptions
-          provider="openai"
-          apiKey={config.apiKey || ''}
-          baseUrl={config.baseUrl || ''}
-          model={config.model || ''}
-          onApiKeyChange={updateProviderSettings}
-          onBaseUrlChange={updateProviderSettings}
-          onModelChange={updateProviderSettings}
-        />
-      case 'openrouter':
-        return <OpenRouterOptions
-          provider="openrouter"
-          apiKey={config.apiKey || ''}
-          model={config.model || ''}
-          onApiKeyChange={updateProviderSettings}
-          onModelChange={updateProviderSettings}
-        />
-      case 'generic-openai':
-        return <GenericOpenAiOptions
-          provider="generic-openai"
-          apiKey={config.apiKey || ''}
-          baseUrl={config.baseUrl || ''}
-          model={config.model || ''}
-          onApiKeyChange={updateProviderSettings}
-          onBaseUrlChange={updateProviderSettings}
-          onModelChange={updateProviderSettings}
-        />
       default:
-        return null;
+        if (!findProviderDefinition(provider)) return null;
+        // Every other external provider shares the generic form - see AVAILABLE_LLM_PROVIDERS `fields`.
+        return <GenericOpenAiOptions
+          provider={provider}
+          apiKey={config.apiKey || ''}
+          baseUrl={config.baseUrl || ''}
+          region={config.region || ''}
+          model={config.model || ''}
+          onApiKeyChange={updateProviderSettings}
+          onBaseUrlChange={updateProviderSettings}
+          onRegionChange={updateProviderSettings}
+          onModelChange={updateProviderSettings}
+        />
     }
   };
 

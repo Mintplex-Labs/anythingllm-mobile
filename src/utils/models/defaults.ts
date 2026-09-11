@@ -33,20 +33,29 @@ export const MODEL_CARDS = [
         name: 'Balanced',
         description: 'For a balance of speed and accuracy.',
         Icon: Scales,
-        size: '1.57GB',
+        size: '2.01GB',
         modelId: 'unsloth/Qwen3.5-2B-GGUF',
-        tag: 'https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/main/Qwen3.5-2B-Q6_K.gguf',
+        tag: 'https://huggingface.co/unsloth/Qwen3.5-2B-GGUF/resolve/main/Qwen3.5-2B-Q8_0.gguf',
     },
     {
         id: 'powerful',
         name: 'Powerful',
         description: 'Heavier models for the best accuracy.',
         Icon: Barbell,
-        size: '2.74GB',
+        size: '3.53GB',
         modelId: 'unsloth/Qwen3.5-4B-GGUF',
-        tag: 'https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-Q4_K_M.gguf',
+        tag: 'https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-Q6_K.gguf',
     },
 ];
+
+export const RERANKER_MODEL = {
+    id: 'reranker',
+    name: 'Tool Reranker',
+    description: 'Cross-encoder reranker for intelligent tool selection.',
+    size: '22.6MB',
+    modelId: 'sinjab/ms-marco-MiniLM-L6-v2-Q8_0-GGUF',
+    tag: 'https://huggingface.co/sinjab/ms-marco-MiniLM-L6-v2-Q8_0-GGUF/resolve/main/ms-marco-MiniLM-L6-v2-Q8_0.gguf',
+}
 
 export const EMBEDDING_MODEL = {
     id: 'default',

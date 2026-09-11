@@ -451,7 +451,13 @@ export default abstract class BaseOpenAILikeProvider {
       return;
     }
 
-    const availableTools = await ToolsManager.injectAvailableTools();
+    let availableTools = await ToolsManager.injectAvailableTools();
+    const lastUserMessage = [...formattedMessages].reverse().find(m => m.role === 'user');
+    const userPrompt = typeof lastUserMessage?.content === 'string' ? lastUserMessage.content : '';
+    availableTools = await ToolsManager.rerankTools(
+        availableTools, userPrompt, 'cloud',
+        (status) => onStream('report_status', status),
+    );
     this.log(`Streaming ${this.model} with ${availableTools.length} available tools`);
     const { stream, abortController } = await this.streamGetChatCompletion(formattedMessages, availableTools);
     const fullResult = await this.handleDefaultStreamResponse(stream, onStream, abortController);

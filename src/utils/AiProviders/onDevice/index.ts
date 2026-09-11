@@ -349,7 +349,13 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
       return;
     }
 
-    const availableTools = await ToolsManager.injectAvailableTools();
+    let availableTools = await ToolsManager.injectAvailableTools();
+    const lastUserMessage = [...formattedMessages].reverse().find(m => m.role === 'user');
+    const userPrompt = typeof lastUserMessage?.content === 'string' ? lastUserMessage.content : '';
+    availableTools = await ToolsManager.rerankTools(
+        availableTools, userPrompt, 'on-device',
+        (status) => onStream('report_status', status),
+    );
     this.log(`Streaming ${this.model} on CPU`);
     this.log('Available tools:', availableTools.map(t => t.function.name));
     let fullResult = await this.runSubmoduleStream(formattedMessages as any, (token: string) => onStream('chunk', token), availableTools);

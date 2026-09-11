@@ -3,6 +3,7 @@ import { NativeCompletionResult } from "llama.rn";
 import { generateUUID } from "../constants";
 import { ICompleteResponse, IStreamCallback, IStreamEvent } from "../AiProviders/baseOpenAILikeProvider";
 import Tools from './tools';
+import ToolReranker from './toolReranker';
 import { safeJsonParse } from "../formatters";
 import Telemetry from "../Telemetry";
 import { throwIfAborted } from "../chat/abort";
@@ -186,6 +187,35 @@ class ToolsManager {
             Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.TOOL_CALLED, { tool: toolCall.function.name });
         }
         return nextMessages;
+    }
+
+    /**
+     * Filters tools by relevance to the user prompt using a cross-encoder reranker.
+     * Only runs when the tool count exceeds the threshold for the given provider type.
+     * Falls back to the full tool set on any failure.
+     */
+    async rerankTools(
+        tools: ToolManagerTool['definition'][],
+        prompt: string,
+        providerType: 'on-device' | 'cloud',
+        onStatus?: (message: string) => void,
+    ): Promise<ToolManagerTool['definition'][]> {
+        const threshold = providerType === 'on-device'
+            ? ToolReranker.ON_DEVICE_THRESHOLD
+            : ToolReranker.CLOUD_THRESHOLD;
+
+        if (tools.length <= threshold) {
+            this.log(`Tool count (${tools.length}) below ${providerType} threshold (${threshold}), skipping reranking`);
+            return tools;
+        }
+
+        const reranker = new ToolReranker();
+        return reranker.rerank({
+            prompt,
+            tools,
+            topN: threshold,
+            onStatus,
+        });
     }
 
     /**

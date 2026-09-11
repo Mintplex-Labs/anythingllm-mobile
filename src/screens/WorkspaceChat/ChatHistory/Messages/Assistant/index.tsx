@@ -14,11 +14,20 @@ import { focusMessageActions } from "../focusMessageActions";
  * straight from the list - no per-message event listeners - and is memoised so
  * only the row whose snapshot changed re-renders while a reply streams.
  */
+/**
+ * The markdown body ends with the library's default paragraph margin (10), which is what
+ * normally separates this row from the next user bubble. When actions or citations render
+ * below the text they become the last child and have no margin of their own, so the next
+ * row sits flush against them - pad the block by the same amount in that case.
+ */
+const TRAILING_CHIPS_BOTTOM_PADDING = 10;
+
 export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessage }) {
     const response = chat.response;
     const handleLongPress = () => focusMessageActions(chat, 'assistant');
+    const hasTrailingChips = !!response?.actions?.length || (!!response?.citations?.length && !chat.isLoading);
     return (
-        <View className="flex flex-col items-start w-full justify-start" style={{ gap: 11 }}>
+        <View className="flex flex-col items-start w-full justify-start" style={{ gap: 11, paddingBottom: hasTrailingChips ? TRAILING_CHIPS_BOTTOM_PADDING : 0 }}>
             <ActivityChain chat={chat} />
             {chat.type === 'error' ? (
                 <ErrorContainer message={response?.textResponse} onLongPress={handleLongPress} />

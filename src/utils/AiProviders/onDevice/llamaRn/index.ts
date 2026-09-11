@@ -12,6 +12,7 @@ import { stops } from '@/utils/chat';
 import { ICompleteResponse } from '@/utils/AiProviders/baseOpenAILikeProvider';
 import type OnDeviceProvider from '@/utils/AiProviders/onDevice/index';
 import { getDefaultContextLength } from '@/utils/contextLength';
+import ContextCompactor, { type CompactionChatMessage, truncateMiddle } from '@/utils/chat/contextCompaction';
 import { throwIfAborted } from '@/utils/chat/abort';
 
 export type NativeLlamaChatMessage = {
@@ -42,8 +43,11 @@ export type OnDeviceRuntimeInfo = {
 export default class LlamaRnWrapper {
   /**
    * Defaults are shared with `Workspace` so inference behaves the same when a workspace has no override.
-   * On overflow, the oldest chat turns are dropped before the prompt is sent (see `fitMessagesToContext`)
-   * and llama.cpp context shifting is enabled as a last line of defence during generation.
+   * Keeping inside the window, in order:
+   *  1. `OnDeviceProvider.shapePrompt` swaps the oldest chats for a rolling summary (`compactor`) and caps RAG chunks.
+   *  2. `fitMessagesToContext` drops the oldest remaining turns, then shrinks the latest message if it alone overflows.
+   *  3. `runCompletion` sizes `n_predict` to the room actually left so the reply ends cleanly instead of shifting.
+   *  4. llama.cpp context shifting stays on as a last line of defence.
    */
   /** Scales with device RAM up to a max of 2048 - see src/utils/contextLength.ts */
   static get DEFAULT_CONTEXT_LENGTH(): number {
@@ -65,10 +69,26 @@ export default class LlamaRnWrapper {
    */
   static RESPONSE_RESERVE_RATIO = 0.35;
 
+  /** Tokens left unused between prompt and reply for template/BOS slack when sizing `n_predict`. */
+  static CONTEXT_SAFETY_MARGIN = 16;
+  /** Smallest reply we ask for once the prompt has crowded the window. Below this, context shifting takes over. */
+  static MIN_N_PREDICT = 64;
+  /** A message is never truncated below this many characters by `fitMessagesToContext`. */
+  static MIN_TRUNCATED_MESSAGE_CHARS = 200;
+  /** Share of the prompt budget RAG chunks may occupy - they live in the system prompt which pruning cannot touch. */
+  static CONTEXT_TEXTS_BUDGET_RATIO = 0.35;
+  /** Share of the prompt budget a single tool result may occupy. */
+  static TOOL_RESULT_BUDGET_RATIO = 0.25;
+  /** Rough English chars-per-token used to turn token budgets into character caps. */
+  static CHARS_PER_TOKEN = 3.5;
+
   private parent: OnDeviceProvider;
   private model: string;
   private ggufFilePath: string | null = null;
   private context: LlamaContext | null = null;
+  /** Serialises everything that touches `context.completion` - llama.rn owns one context and cannot run two completions at once. */
+  private completionQueue: Promise<unknown> = Promise.resolve();
+  private _compactor: { contextLength: number; instance: ContextCompactor } | null = null;
   private initializing: Promise<boolean> | null = null;
   private keepAliveTimer: ReturnType<typeof setTimeout> | null = null;
   private keepAliveInterval = 1000 * 60 * 5;
@@ -102,6 +122,46 @@ export default class LlamaRnWrapper {
 
   get contextLength() {
     return this.parent.workspace?.contextLength ?? LlamaRnWrapper.DEFAULT_CONTEXT_LENGTH;
+  }
+
+  /** Tokens kept free for the reply when fitting the prompt. */
+  get responseReserve(): number {
+    return Math.min(this.nPredict, Math.max(128, Math.floor(this.contextLength * LlamaRnWrapper.RESPONSE_RESERVE_RATIO)));
+  }
+
+  /** Tokens the rendered prompt (system + summary + RAG + history + user message) may occupy. */
+  get promptBudget(): number {
+    return Math.max(64, this.contextLength - this.responseReserve);
+  }
+
+  /** Character cap applied to each tool result before it is fed back to the model. */
+  get maxToolResultChars(): number {
+    return Math.floor(this.promptBudget * LlamaRnWrapper.TOOL_RESULT_BUDGET_RATIO * LlamaRnWrapper.CHARS_PER_TOKEN);
+  }
+
+  /** Token budget shared by all RAG chunks in one prompt. */
+  get contextTextsTokenBudget(): number {
+    return Math.floor(this.promptBudget * LlamaRnWrapper.CONTEXT_TEXTS_BUDGET_RATIO);
+  }
+
+  /**
+   * Rolling-summary compactor bound to this model's window and tokenizer. Rebuilt when the
+   * workspace context length changes so its budgets stay in step.
+   */
+  get compactor(): ContextCompactor {
+    if (!this._compactor || this._compactor.contextLength !== this.contextLength) {
+      this._compactor = {
+        contextLength: this.contextLength,
+        instance: new ContextCompactor({
+          contextWindow: this.contextLength,
+          promptBudget: this.promptBudget,
+          countTokens: (messages) => this.countTokens(messages),
+          complete: (messages, { maxTokens }) => this.completeUtility(messages, maxTokens),
+          log: (message, ...args) => this.log(message, ...args),
+        }),
+      };
+    }
+    return this._compactor.instance;
   }
 
   get isLoaded() {
@@ -254,6 +314,54 @@ export default class LlamaRnWrapper {
     return tokens.length;
   }
 
+  /** Tokens `messages` render to through the model's chat template. Loads the model if needed. */
+  async countTokens(messages: CompactionChatMessage[]): Promise<number> {
+    if (!this.context) await this.initialize();
+    return this.countPromptTokens(messages as any);
+  }
+
+  private async countText(text: string): Promise<number> {
+    if (!this.context) await this.initialize();
+    if (!this.context) throw new Error('LlamaRnWrapper::countText: Model not initialized');
+    const { tokens } = await this.context.tokenize(text);
+    return tokens.length;
+  }
+
+  /**
+   * Keeps RAG chunks inside their share of the prompt budget. Whole chunks are kept in
+   * relevance order; the first one that does not fit is cut to the remaining room and the rest dropped.
+   */
+  async fitContextTexts(contextTexts: string[]): Promise<string[]> {
+    if (!contextTexts.length) return contextTexts;
+    const budget = this.contextTextsTokenBudget;
+    const kept: string[] = [];
+    let used = 0;
+    for (const text of contextTexts) {
+      const tokens = await this.countText(text);
+      if (used + tokens <= budget) {
+        kept.push(text);
+        used += tokens;
+        continue;
+      }
+      const remaining = budget - used;
+      if (remaining >= 48) kept.push(`${text.slice(0, Math.floor(remaining * LlamaRnWrapper.CHARS_PER_TOKEN))}...`);
+      break;
+    }
+    if (kept.length !== contextTexts.length || kept.some((text, i) => text !== contextTexts[i])) {
+      this.log(`Fitted ${contextTexts.length} context chunk(s) into a ${budget} token budget - kept ${kept.length}`);
+    }
+    return kept;
+  }
+
+  /**
+   * One-off, tool-free completion for housekeeping (eg: context summaries). Queued behind
+   * any running generation and never aborted by the user's stop button.
+   */
+  async completeUtility(messages: CompactionChatMessage[], maxTokens: number): Promise<string> {
+    const result = await this.runCompletion(messages as any, [], undefined, null, { nPredict: maxTokens });
+    return result.content ?? result.text ?? '';
+  }
+
   /**
    * Drops the oldest chat turns until the rendered prompt leaves room for a response.
    * The system prompt (index 0) and the latest user message are always kept.
@@ -261,8 +369,7 @@ export default class LlamaRnWrapper {
    */
   async fitMessagesToContext(messages: NativeLlamaChatMessage[], tools?: any[]): Promise<{ messages: NativeLlamaChatMessage[]; promptTokens: number; dropped: number }> {
     const nCtx = this.contextLength;
-    const reserve = Math.min(this.nPredict, Math.max(128, Math.floor(nCtx * LlamaRnWrapper.RESPONSE_RESERVE_RATIO)));
-    const budget = Math.max(64, nCtx - reserve);
+    const budget = this.promptBudget;
 
     let working = [...messages];
     let dropped = 0;
@@ -279,16 +386,36 @@ export default class LlamaRnWrapper {
     }
 
     if (dropped) this.log(`Dropped ${dropped} oldest message(s) to fit ${nCtx} token context (prompt now ${promptTokens} tokens, budget ${budget})`);
-    if (promptTokens > budget) this.log(`Prompt is ${promptTokens} tokens which exceeds the ${budget} token budget even after trimming - relying on context shifting.`);
+    // Nothing left to drop but still over budget: the latest message itself (a long prompt, or a
+    // user message with tool results merged in) is the culprit. Shrink it rather than let
+    // llama.cpp's context shift evict the system prompt mid-generation.
+    if (promptTokens > budget) {
+      const lastIndex = working.length - 1;
+      const original = working[lastIndex];
+      const content = typeof original?.content === 'string' ? original.content : null;
+      if (content && content.length > LlamaRnWrapper.MIN_TRUNCATED_MESSAGE_CHARS) {
+        let maxChars = Math.floor(content.length * 0.75);
+        while (promptTokens > budget && maxChars >= LlamaRnWrapper.MIN_TRUNCATED_MESSAGE_CHARS) {
+          working[lastIndex] = { ...original, content: truncateMiddle(content, maxChars) } as NativeLlamaChatMessage;
+          promptTokens = await this.countPromptTokens(working, tools);
+          maxChars = Math.floor(maxChars * 0.75);
+        }
+        this.log(`Truncated the latest message from ${content.length} to ${String(working[lastIndex].content).length} chars to fit the ${budget} token budget (prompt now ${promptTokens} tokens)`);
+      }
+      if (promptTokens > budget) this.log(`Prompt is ${promptTokens} tokens which exceeds the ${budget} token budget even after trimming - relying on context shifting.`);
+    }
     return { messages: working, promptTokens, dropped };
   }
 
-  private toCompleteResponse(result: NativeCompletionResult): ICompleteResponse {
-    if (result.context_full) this.log('Context window filled during generation - the response may have been cut short. Consider raising the workspace context length.');
+  private toCompleteResponse(result: NativeCompletionResult & { cappedByContext?: boolean }): ICompleteResponse {
+    // Either llama.cpp filled the window, or we shrank n_predict to the remaining room and the model used all of it.
+    const truncatedByContext = !!result.context_full || (!!result.cappedByContext && !!result.stopped_limit && !result.stopped_eos && !result.stopped_word);
+    if (truncatedByContext) this.log('Reply hit the context window limit and was cut short. Consider raising the workspace context length.');
     if (result.truncated) this.log('Prompt was truncated by llama.cpp to fit the context window.');
     return {
       // `content` has reasoning/tool call markup already parsed out by chat.cpp; `text` is the raw output.
       textResponse: result.content ?? result.text ?? '',
+      truncatedByContext,
       toolCalls: result.tool_calls?.length ? result.tool_calls : undefined,
       metrics: {
         prompt_tokens: result.timings.prompt_n,
@@ -300,13 +427,35 @@ export default class LlamaRnWrapper {
     };
   }
 
-  private async runCompletion(
+  private runExclusive<T>(task: () => Promise<T>): Promise<T> {
+    const run = this.completionQueue.catch(() => null).then(task);
+    this.completionQueue = run.catch(() => null);
+    return run;
+  }
+
+  /**
+   * One llama.rn round. Rounds are queued so a background context summary and the user's
+   * next prompt never hit the single native context at the same time.
+   */
+  private runCompletion(
     messages: NativeLlamaChatMessage[],
     availableTools: any[] = [],
     onToken?: (data: TokenData) => void,
     signal?: AbortSignal | null,
-  ): Promise<NativeCompletionResult> {
+    options: { nPredict?: number } = {},
+  ): Promise<NativeCompletionResult & { cappedByContext: boolean }> {
+    return this.runExclusive(() => this.runCompletionUnlocked(messages, availableTools, onToken, signal, options));
+  }
+
+  private async runCompletionUnlocked(
+    messages: NativeLlamaChatMessage[],
+    availableTools: any[],
+    onToken: ((data: TokenData) => void) | undefined,
+    signal: AbortSignal | null | undefined,
+    options: { nPredict?: number },
+  ): Promise<NativeCompletionResult & { cappedByContext: boolean }> {
     this.keepAlive();
+    throwIfAborted(signal); // may have been stopped while queued behind another round
     if (!this.context) await this.initialize();
     if (!this.context) throw new Error('LlamaRnWrapper::runCompletion: Model not initialized');
 
@@ -314,7 +463,15 @@ export default class LlamaRnWrapper {
     if (availableTools.length && !useTools) this.log(`Model template has no tool support - ${availableTools.length} tool(s) will not be offered.`);
 
     const tools = useTools ? availableTools : undefined;
-    const { messages: fitted } = await this.fitMessagesToContext(messages, tools);
+    const { messages: fitted, promptTokens } = await this.fitMessagesToContext(messages, tools);
+
+    // Ask for no more tokens than the window has left so the reply ends cleanly (stopped_limit)
+    // instead of llama.cpp shifting the KV cache and evicting the start of the prompt.
+    const requestedPredict = options.nPredict ?? this.nPredict;
+    const room = this.contextLength - promptTokens - LlamaRnWrapper.CONTEXT_SAFETY_MARGIN;
+    const nPredict = Math.max(LlamaRnWrapper.MIN_N_PREDICT, Math.min(requestedPredict, room));
+    const cappedByContext = nPredict < requestedPredict;
+    if (cappedByContext) this.log(`Reply capped at ${nPredict} tokens - prompt uses ${promptTokens} of the ${this.contextLength} token window`);
 
     // The user may have stopped while the model was loading or the prompt was being fitted -
     // never start generating in that case. Once generating, an abort interrupts the native loop.
@@ -324,10 +481,10 @@ export default class LlamaRnWrapper {
 
     this.isGenerating = true;
     try {
-      return await this.context.completion(
+      const result = await this.context.completion(
         {
           messages: fitted as any,
-          n_predict: this.nPredict,
+          n_predict: nPredict,
           stop: [...stops],
           jinja: this.context.isJinjaSupported(),
           // Keep <think> blocks inline - the chat UI already extracts them into the thought chain.
@@ -337,6 +494,7 @@ export default class LlamaRnWrapper {
         },
         onToken,
       );
+      return { ...result, cappedByContext };
     } finally {
       this.isGenerating = false;
       signal?.removeEventListener('abort', onAbort);

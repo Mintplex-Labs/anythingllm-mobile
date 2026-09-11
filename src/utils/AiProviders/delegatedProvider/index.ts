@@ -4,6 +4,7 @@ import EventSource from "react-native-sse";
 import { getOrigin, safeJsonParse } from "@/utils/formatters";
 import AnythingLLMExternal, { CommandBodies, CommandResponses, Commands } from "@/utils/AnythingLLMExternal";
 import { IAgentCitation, IAgentWebSearchCitation, IChatCitation, IDocumentCitation } from "@/database/models/WorkspaceChat";
+import { ChatAbortedError, throwIfAborted } from "@/utils/chat/abort";
 
 type DelegatedProviderConfig = {
     connectionUrl: string;
@@ -20,6 +21,12 @@ type IStreamChatConfig = {
     threadSlug?: string | null;
     message: string;
     onStream: IStreamCallback | IOnDeviceStreamCallback;
+    /**
+     * Aborting closes the SSE connection. The AnythingLLM server cancels the in-flight
+     * LLM request when the response closes (`abortConnectorOnClientDisconnect`), so this
+     * is a real stop on the remote side, not just the phone no longer listening.
+     */
+    signal?: AbortSignal | null;
 }
 
 type AnythingLLMExternalSource = {
@@ -84,7 +91,9 @@ class DelegatedProvider {
         threadSlug = null,
         message,
         onStream,
+        signal = null,
     }: IStreamChatConfig): Promise<void> {
+        throwIfAborted(signal);
         return new Promise((resolve, reject) => {
             const citations: any[] = [];
             const es = new EventSource(`${connectionUrl}/send/stream-chat`, {
@@ -99,6 +108,13 @@ class DelegatedProvider {
                     message,
                 }),
             });
+
+            const onAbort = () => {
+                this.log("Chat aborted by user - closing SSE connection to AnythingLLM");
+                reject(new ChatAbortedError());
+                es.close();
+            };
+            signal?.addEventListener("abort", onAbort, { once: true });
 
             es.addEventListener("open", () => this.log("Opened SSE connection to AnythingLLM"));
             es.addEventListener("message", (event) => {
@@ -143,6 +159,7 @@ class DelegatedProvider {
 
             es.addEventListener("close", () => {
                 this.log("Closed SSE connection to AnythingLLM");
+                signal?.removeEventListener("abort", onAbort);
                 es.removeAllEventListeners();
                 resolve();
             });

@@ -12,6 +12,15 @@ type IAsyncChatCompletionRequestBody = {
   temperature?: number;
 }
 
+/**
+ * Per-request options. Aborting the `controller` or `signal` cancels the underlying
+ * fetch so the provider stops generating (and billing) for a response nobody will read.
+ */
+export type IRequestOptions = {
+  controller?: AbortController;
+  signal?: AbortSignal;
+}
+
 export default class OpenAILite {
   private baseURL: string = 'https://api.openai.com/v1';
   private apiKey: string | null = null;
@@ -79,9 +88,18 @@ export default class OpenAILite {
     }
   }
 
-  async createChatCompletion(body: IAsyncChatCompletionRequestBody, _options: any = {}) {
+  /**
+   * Resolves the abort signal for a request from the request options.
+   * Callers may pass either a `controller` (legacy) or a bare `signal`.
+   */
+  private signalFromOptions(options: IRequestOptions = {}): AbortSignal | undefined {
+    return options.signal ?? options.controller?.signal ?? undefined;
+  }
+
+  async createChatCompletion(body: IAsyncChatCompletionRequestBody, options: IRequestOptions = {}) {
     const formattedURL = this.formatURL(`${this.baseURL}/chat/completions`);
     console.log('createChatCompletion', formattedURL, { hasApiKey: !!this.apiKey });
+    const signal = this.signalFromOptions(options);
     return await fetch(formattedURL, {
       method: 'POST',
       headers: this.baseHeaders(),
@@ -89,6 +107,7 @@ export default class OpenAILite {
         ...body,
         stream: false,
       }),
+      ...(signal ? { signal } : {}),
       // @ts-ignore
       reactNative: { textStreaming: true }
     })
@@ -99,14 +118,15 @@ export default class OpenAILite {
       });
   }
 
-  async *streamChatCompletion(body: IAsyncChatCompletionRequestBody, options: { controller?: AbortController } = {}) {
+  async *streamChatCompletion(body: IAsyncChatCompletionRequestBody, options: IRequestOptions = {}) {
     const formattedURL = this.formatURL(`${this.baseURL}/chat/completions`);
     console.log('streamingChatCompletion', formattedURL, { hasApiKey: !!this.apiKey });
+    const signal = this.signalFromOptions(options);
     const response = await this.streamingFetch!(formattedURL, {
       method: 'POST',
       headers: this.baseHeaders(),
       body: JSON.stringify(body),
-      ...(options.controller ? { signal: options.controller.signal } : {}),
+      ...(signal ? { signal } : {}),
       // @ts-ignore
       reactNative: { textStreaming: true },
     });

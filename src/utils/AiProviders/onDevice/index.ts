@@ -9,6 +9,7 @@ import * as RNFS from '@dr.pogodin/react-native-fs';
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
 import ImportedModels from "@/utils/models/imported";
+import { throwIfAborted } from "@/utils/chat/abort";
 
 export type IOnDeviceStreamCallback = IGenieStreamCallback | ILlamaRnStreamCallback;
 
@@ -115,6 +116,17 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
    */
   async stopGeneration() {
     if (this.submodule instanceof LlamaRnWrapper) await this.submodule.stop();
+  }
+
+  /**
+   * Streams one LLM round through the active runtime, forwarding the turn's abort
+   * signal where the runtime supports interruption (llama.rn). Genie has no stop
+   * hook - an abort there is honoured by the caller once the round returns.
+   */
+  private runSubmoduleStream(messages: any[], callback: (token: string) => void, availableTools: any[]): Promise<ICompleteResponse> {
+    if (!this.submodule) throw new Error('No model loaded. Please select a model first.');
+    if (this.submodule instanceof LlamaRnWrapper) return this.submodule.streamGetChatCompletion(messages, callback, availableTools, this.abortSignal);
+    return this.submodule.streamGetChatCompletion(messages, callback);
   }
 
   async loadNewModel(model: string | null) {
@@ -285,16 +297,25 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     const availableTools = await ToolsManager.injectAvailableTools();
     this.log(`Streaming ${this.model} with ${this.computeRuntime}`);
     this.log('Available tools:', availableTools.map(t => t.function.name));
-    let fullResult = await this.submodule.streamGetChatCompletion(formattedMessages as any, (token: string) => onStream('chunk', token), availableTools);
+    let fullResult = await this.runSubmoduleStream(formattedMessages as any, (token: string) => onStream('chunk', token), availableTools);
+    // `stopCompletion` makes llama.rn return the partial text as a normal result - never
+    // treat an aborted round as a finished reply (no tool calls, no completion event).
+    throwIfAborted(this.abortSignal);
 
     // Recursive tool call loop
     await ToolsManager.toolCallLoop({
       currentResponse: fullResult,
-      runStreamCompletion: (messages: any[], callback: IOnDeviceStreamCallback | IStreamCallback, availableTools: any[]) => this.submodule!.streamGetChatCompletion(messages, callback as any, availableTools),
+      runStreamCompletion: async (messages: any[], callback: IOnDeviceStreamCallback | IStreamCallback, availableTools: any[]) => {
+        const result = await this.runSubmoduleStream(messages, callback as any, availableTools);
+        throwIfAborted(this.abortSignal);
+        return result;
+      },
       streamEmitter: (event: IStreamEvent, data: any) => onStream(event, data),
       currentMessageHistory: formattedMessages,
+      signal: this.abortSignal,
     });
 
+    throwIfAborted(this.abortSignal);
     if (!!fullResult.metrics) onStream('report_metrics', fullResult.metrics);
     if (!!citations) onStream('report_citations', citations);
     onStream('complete', '');

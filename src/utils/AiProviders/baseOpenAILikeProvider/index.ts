@@ -10,6 +10,7 @@ import OpenAILite from "@/utils/openai";
 import VectorDB, { SemanticSearchResult } from "@/utils/VectorDB";
 import { type IAgentAction } from "@/database/models/WorkspaceChat";
 import ToolsManager from "@/utils/ToolsManager";
+import { isAbortError, linkAbortSignal, throwIfAborted } from "@/utils/chat/abort";
 
 interface BaseLLMProviderConfig {
   provider: string;
@@ -116,6 +117,21 @@ export default abstract class BaseOpenAILikeProvider {
   protected abstract unloadModel(): Promise<void>;
   public isExternalProvider: boolean = false;
   abstract availableModels(): Promise<IAvailableModel[]>;
+
+  /**
+   * Abort signal for the chat turn currently being generated, attached by the chat handler.
+   * Every request the provider makes while it is set is cancelled when it fires (stop button),
+   * so the model stops generating instead of the UI merely no longer listening.
+   */
+  protected abortSignal: AbortSignal | null = null;
+
+  /**
+   * Attach (or clear with `null`) the abort signal for the next chat turn.
+   * Request methods read the signal at call time, so this can be called once per turn.
+   */
+  attachAbortSignal(signal: AbortSignal | null = null) {
+    this.abortSignal = signal;
+  }
 
   static DEFAULT_SYSTEM_MESSAGE = 'You are a helpful assistant that can answer questions and help with tasks.';
 
@@ -379,18 +395,25 @@ export default abstract class BaseOpenAILikeProvider {
     this.log(`Streaming ${this.model} with ${availableTools.length} available tools`);
     const { stream, abortController } = await this.streamGetChatCompletion(formattedMessages, availableTools);
     const fullResult = await this.handleDefaultStreamResponse(stream, onStream, abortController);
+    // A user abort resolves the stream handler with whatever was generated so far - never
+    // treat that as a finished reply (no tool calls, no completion event).
+    throwIfAborted(this.abortSignal);
 
     await ToolsManager.toolCallLoop({
       currentResponse: fullResult,
       runStreamCompletion: async (messages: any[], _callback: IStreamCallback, availableTools: any[]) => {
         const { stream, abortController } = await this.streamGetChatCompletion(messages, availableTools);
-        return await this.handleDefaultStreamResponse(stream, (event: IStreamEvent, data: any) => onStream(event, data), abortController);
+        const result = await this.handleDefaultStreamResponse(stream, (event: IStreamEvent, data: any) => onStream(event, data), abortController);
+        throwIfAborted(this.abortSignal);
+        return result;
       },
       streamEmitter: (event: IStreamEvent, data: any) => onStream(event, data),
       currentMessageHistory: formattedMessages,
       mergeToolCallResults: false,
+      signal: this.abortSignal,
     });
 
+    throwIfAborted(this.abortSignal);
     if (!!fullResult.metrics) onStream('report_metrics', fullResult.metrics);
     if (!!citations) onStream('report_citations', citations);
     onStream('complete', '');
@@ -411,7 +434,7 @@ export default abstract class BaseOpenAILikeProvider {
           temperature: this.isOTypeModel ? 1 : this.temperature,
           tools: availableTools,
           ...this.extraRequestParams(),
-        })
+        }, { signal: this.abortSignal ?? undefined })
     ) as unknown as { duration: number, output: Partial<any> & MonitoredStream & { usage: StreamMetrics } };
 
     const choices = result.output?.choices;
@@ -436,7 +459,10 @@ export default abstract class BaseOpenAILikeProvider {
   }
 
   async streamGetChatCompletion(messages: any[] = [], availableTools: any[] = []): Promise<IStreamableResponse> {
+    // One controller per request (the stream handler uses it for its own timeout), chained
+    // to the turn-level signal so the stop button tears this request down too.
     const abortController = new AbortController();
+    linkAbortSignal(abortController, this.abortSignal);
     const stream = await LLMPerformanceMonitor.measureStream(
       // @ts-ignore
       this.client.chat.completions.create({
@@ -592,6 +618,9 @@ export default abstract class BaseOpenAILikeProvider {
           }
         }
       } catch (e: any) {
+        // A cancelled fetch rejects the iterator - `handleAbort` already resolved with the
+        // partial result and the caller checks the signal, so there is nothing to report.
+        if (isAbortError(e) || abortController.signal.aborted) return;
         console.log(`\x1b[43m\x1b[34m[STREAMING ERROR]\x1b[0m ${e.message}`);
         handler('abort', e.message);
         stream?.endMeasurement(usage);

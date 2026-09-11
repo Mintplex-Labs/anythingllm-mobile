@@ -12,6 +12,7 @@ import { stops } from '@/utils/chat';
 import { ICompleteResponse } from '@/utils/AiProviders/baseOpenAILikeProvider';
 import type OnDeviceProvider from '@/utils/AiProviders/onDevice/index';
 import { getDefaultContextLength } from '@/utils/contextLength';
+import { throwIfAborted } from '@/utils/chat/abort';
 
 export type NativeLlamaChatMessage = {
   role: string;
@@ -303,6 +304,7 @@ export default class LlamaRnWrapper {
     messages: NativeLlamaChatMessage[],
     availableTools: any[] = [],
     onToken?: (data: TokenData) => void,
+    signal?: AbortSignal | null,
   ): Promise<NativeCompletionResult> {
     this.keepAlive();
     if (!this.context) await this.initialize();
@@ -313,6 +315,12 @@ export default class LlamaRnWrapper {
 
     const tools = useTools ? availableTools : undefined;
     const { messages: fitted } = await this.fitMessagesToContext(messages, tools);
+
+    // The user may have stopped while the model was loading or the prompt was being fitted -
+    // never start generating in that case. Once generating, an abort interrupts the native loop.
+    throwIfAborted(signal);
+    const onAbort = () => { this.stop().catch((e) => this.log('Failed to stop generation on abort', e)); };
+    signal?.addEventListener('abort', onAbort, { once: true });
 
     this.isGenerating = true;
     try {
@@ -331,6 +339,7 @@ export default class LlamaRnWrapper {
       );
     } finally {
       this.isGenerating = false;
+      signal?.removeEventListener('abort', onAbort);
       this.keepAlive();
     }
   }
@@ -353,6 +362,7 @@ export default class LlamaRnWrapper {
     messages: NativeLlamaChatMessage[],
     callback: ILlamaRnStreamCallback,
     availableTools: any[] = [],
+    signal: AbortSignal | null = null,
   ): Promise<ICompleteResponse> {
     let streamed = '';
     const result = await this.runCompletion(messages, availableTools, (data: TokenData) => {
@@ -369,7 +379,7 @@ export default class LlamaRnWrapper {
         streamed += data.token;
         callback(data.token);
       }
-    });
+    }, signal);
     return this.toCompleteResponse(result);
   }
 

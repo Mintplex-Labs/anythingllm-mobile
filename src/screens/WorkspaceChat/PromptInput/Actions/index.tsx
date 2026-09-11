@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import { PaperPlaneRight } from "phosphor-react-native";
+import { PaperPlaneRight, Stop } from "phosphor-react-native";
 import { AttachmentInterface } from '@/hooks/useAttachments';
 import AttachmentsButton from './AttachmentsButton';
 import { SettingsActionIcon } from './Settings';
@@ -20,14 +20,27 @@ export default function ActionMenu({ isFullScreen, chatHandler, ...props }: { is
             )}
 
             <View className='flex flex-row items-center gap-x-4'>
-                <TouchableOpacity
-                    onLongPress={chatHandler.reset}
-                    onPress={() => chatHandler.submitPrompt()}
-                    disabled={chatHandler.promptDisabled}
-                    className='flex flex-row items-center gap-x-2 disabled:opacity-50'
-                >
-                    <PaperPlaneRight size={25} color="#FFF" weight='fill' />
-                </TouchableOpacity>
+                {chatHandler.isWorking ? (
+                    // While a reply is generating the send button becomes a stop button. Stopping
+                    // aborts the model (local, external or remote) and discards the unfinished chat.
+                    <TouchableOpacity
+                        onPress={chatHandler.abortChat}
+                        accessibilityLabel='Stop generating'
+                        className='flex flex-row items-center gap-x-2'
+                    >
+                        <Stop size={25} color="#FFF" weight='fill' />
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity
+                        onLongPress={chatHandler.reset}
+                        onPress={() => chatHandler.submitPrompt()}
+                        disabled={chatHandler.promptDisabled}
+                        accessibilityLabel='Send prompt'
+                        className='flex flex-row items-center gap-x-2 disabled:opacity-50'
+                    >
+                        <PaperPlaneRight size={25} color="#FFF" weight='fill' />
+                    </TouchableOpacity>
+                )}
             </View>
         </View>
     );

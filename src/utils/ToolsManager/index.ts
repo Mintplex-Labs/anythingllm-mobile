@@ -5,6 +5,7 @@ import { ICompleteResponse, IStreamCallback, IStreamEvent } from "../AiProviders
 import Tools from './tools';
 import { safeJsonParse } from "../formatters";
 import Telemetry from "../Telemetry";
+import { throwIfAborted } from "../chat/abort";
 
 type ToolManagerTool = {
     /** Definition of the tool - this can be used to generate a tool call */
@@ -41,6 +42,8 @@ type ToolCallLoopProps = {
     currentMessageHistory: any[];
     /** Whether to merge the tool call results into the previous message (this is the default behavior) */
     mergeToolCallResults?: boolean;
+    /** Session abort signal - when it fires the loop stops before the next tool execution / LLM round */
+    signal?: AbortSignal | null;
 }
 
 class ToolsManager {
@@ -186,6 +189,7 @@ class ToolsManager {
         streamEmitter,
         currentMessageHistory,
         mergeToolCallResults = true,
+        signal = null,
     }: ToolCallLoopProps): Promise<ICompleteResponse> {
         let willLoop = currentResponse.toolCalls && currentResponse.toolCalls.length > 0;
         if (!willLoop) return currentResponse;
@@ -195,7 +199,10 @@ class ToolsManager {
         let nextMessages = [...currentMessageHistory];
 
         do {
+            // The user stopped the chat mid-round - do not execute tools or ask the LLM again.
+            throwIfAborted(signal);
             nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages);
+            throwIfAborted(signal);
             for (const [index, message] of nextMessages.entries()) {
                 if (message.role === 'tool' && mergeToolCallResults) {
                     const previousMessage = nextMessages[index - 1];

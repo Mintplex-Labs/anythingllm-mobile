@@ -12,6 +12,7 @@ import DelegatedProvider from "@/utils/AiProviders/delegatedProvider";
 import AwaitableAlert from "@/components/AwaitableAlert";
 import Telemetry from "@/utils/Telemetry";
 import AssistantTurn from "./turn";
+import { isAbortError } from "@/utils/chat/abort";
 
 const SHOW_DEBUG_LOGS = true;
 
@@ -43,6 +44,11 @@ export interface ChatHandlerInterface {
     setPrompt: (prompt: string, autoSubmit?: boolean) => void;
     /** Submit the prompt for the workspace thread - if no prompt is passed, use the current prompt state */
     submitPrompt: (prompt?: string) => void;
+    /**
+     * Stop the reply currently being generated. Aborts the model (on-device, external API
+     * or remote instance) and discards the unfinished chat - nothing is saved.
+     */
+    abortChat: () => void;
     /** Whether the chat workspace/thread is remote */
     isRemote: boolean;
 }
@@ -111,6 +117,28 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
             newMap.set(chat.uuid as string, chat);
             return newMap;
         });
+    }, []);
+
+    const removeChat = useCallback((uuid: string) => {
+        setChatsMap((prevMap) => {
+            if (!prevMap.has(uuid)) return prevMap;
+            const newMap = new Map(prevMap);
+            newMap.delete(uuid);
+            return newMap;
+        });
+    }, []);
+
+    /**
+     * Controller for the turn currently being generated. Its signal is handed to the
+     * provider so aborting it stops the model itself, not just the UI.
+     */
+    const abortControllerRef = useRef<AbortController | null>(null);
+
+    const abortChat = useCallback(() => {
+        const controller = abortControllerRef.current;
+        if (!controller || controller.signal.aborted) return;
+        debug('Aborting current chat generation');
+        controller.abort();
     }, []);
 
     const fetchChats = useCallback(async () => {
@@ -183,17 +211,39 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
         const newChat = WorkspaceChat.newChatItem({ workspaceThreadSlug: thread.slug, prompt }) as DynamicChatMessage;
         const turn = new AssistantTurn(newChat);
 
+        // One abort controller per turn - the stop button fires it.
+        const abortController = new AbortController();
+        abortControllerRef.current = abortController;
+        const { signal } = abortController;
+        llmProvider.attachAbortSignal(signal);
+
         // Throttled publisher - see STREAM_FLUSH_INTERVAL_MS.
         let flushTimer: ReturnType<typeof setTimeout> | null = null;
-        const flush = () => {
+        const clearFlushTimer = () => {
             if (flushTimer) clearTimeout(flushTimer);
             flushTimer = null;
+        };
+        const flush = () => {
+            clearFlushTimer();
+            if (signal.aborted) return; // never publish partial output after a stop
             upsertChat(turn.snapshot());
         };
         const scheduleFlush = (immediate: boolean) => {
             if (immediate) return flush();
             if (flushTimer) return;
             flushTimer = setTimeout(flush, STREAM_FLUSH_INTERVAL_MS);
+        };
+
+        /** The user stopped the reply: drop the unfinished chat from the list and save nothing. */
+        const discardAbortedChat = () => {
+            debug('Chat aborted by user - discarding unsaved chat', turn.uuid);
+            clearFlushTimer();
+            removeChat(turn.uuid);
+            uiStore.emitter.emit(CHAT_HANDLER_EVENTS.ASSISTANT_RESPONSE_COMPLETE, { uuid: turn.uuid });
+            Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.CHAT_ABORTED, {
+                llmProvider: llmProvider.name,
+                llmModel: llmProvider.model,
+            });
         };
 
         try {
@@ -229,9 +279,11 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
                     threadSlug: thread.remoteConfig.slug,
                     onStream: handleStreamEvent,
                     message: prompt,
+                    signal,
                 }
 
                 const validConfig = await DelegatedProvider.validateConfig(config);
+                if (signal.aborted) return discardAbortedChat(); // stopped while checking the remote
                 if (validConfig) caller = () => (new DelegatedProvider()).streamChat(config)
                 else {
                     const continueLocally = await AwaitableAlert(
@@ -244,24 +296,31 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
                 }
             }
 
-            await caller().catch(err => {
-                debug('Error processing chat', err);
-                turn.fail(err?.message || 'Error processing chat');
-            }).finally(async () => {
-                if (flushTimer) clearTimeout(flushTimer);
-                flushTimer = null;
-                await concludeChat(turn);
-            });
+            let callerError: unknown = null;
+            await caller().catch(err => { callerError = err; });
+            clearFlushTimer();
+
+            // Providers may surface a stop as an abort error or as a normal resolve with partial
+            // text (llama.rn stopCompletion, SSE close) - the signal is the source of truth.
+            if (signal.aborted || isAbortError(callerError)) return discardAbortedChat();
+
+            if (callerError) {
+                debug('Error processing chat', callerError);
+                turn.fail((callerError as Error)?.message || 'Error processing chat');
+            }
+            await concludeChat(turn);
         } catch (err) {
+            clearFlushTimer();
+            if (signal.aborted || isAbortError(err)) return discardAbortedChat();
             debug('Error processing chat', err);
-            if (flushTimer) clearTimeout(flushTimer);
-            flushTimer = null;
             turn.fail((err as Error).message || 'Error processing chat');
             upsertChat(turn.snapshot());
         } finally {
+            if (abortControllerRef.current === abortController) abortControllerRef.current = null;
+            llmProvider.attachAbortSignal(null);
             deactivateKeepAwake();
         }
-    }, [thread, upsertChat, llmProvider, concludeChat, isRemote, workspace]);
+    }, [thread, upsertChat, removeChat, llmProvider, concludeChat, isRemote, workspace]);
 
     const canScrollChatHistory = useMemo(() => {
         return !isLoadingChats && chatsArray.length > 0;
@@ -298,6 +357,8 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
         fetchChats();
         // On initial load, if a model is downloading, disable the prompt input to prevent crashes
         if (uiStore.session.has('@downloadInProgress')) disablePromptInput();
+        // Leaving the thread/workspace mid-reply stops the model - the turn can no longer be shown or saved.
+        return () => abortControllerRef.current?.abort();
     }, []);
 
     useEffect(() => {
@@ -333,8 +394,9 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
         promptDisabled: _promptDisabled,
         setPrompt,
         submitPrompt,
+        abortChat,
         isRemote,
-    }), [isWorking, fetchChats, reset, prompt, _promptDisabled, setPrompt, submitPrompt, isRemote]);
+    }), [isWorking, fetchChats, reset, prompt, _promptDisabled, setPrompt, submitPrompt, abortChat, isRemote]);
 
     const history = useMemo<ChatHistoryInterface>(() => ({
         chats: chatsArray,

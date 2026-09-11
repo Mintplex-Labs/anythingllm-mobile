@@ -12,7 +12,8 @@ type StorageKeys =
   'llmPreference' |
   'tools' |
   'current_anythingllm_external_connection' |
-  'anythingllm_external_connections';
+  'anythingllm_external_connections' |
+  'hf_imported_models';
 
 export const GLOBAL_EVENTS = {
   REDIRECT: 'REDIRECT',
@@ -43,6 +44,7 @@ export class UIStore {
     'tools',
     'current_anythingllm_external_connection',
     'anythingllm_external_connections',
+    'hf_imported_models',
   ] as const;
 
   pageStates = {

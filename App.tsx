@@ -6,7 +6,6 @@ import { ActivityIndicator, Provider as PaperProvider } from 'react-native-paper
 import { StatusBar } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { KeyboardProvider } from 'react-native-keyboard-controller';
 import {
   gestureHandlerRootHOC,
   GestureHandlerRootView,
@@ -57,7 +56,15 @@ const App = observer(() => {
         <GestureHandlerRootView style={styles.root}>
           <SafeAreaProvider>
             <StatusBar barStyle='default' backgroundColor="transparent" translucent />
-            <KeyboardProvider statusBarTranslucent navigationBarTranslucent>
+            {/*
+              No KeyboardProvider (react-native-keyboard-controller) here on purpose.
+              Its native view dispatches focus/keyboard events on the UI thread which
+              Reanimated turns into a synchronous Fabric commit. When that races a
+              commit from the JS thread the two threads deadlock on the Binding
+              mutex and Android reports an ANR - reproducible by typing in the
+              prompt after a message has been sent. Nothing in the app consumed
+              its values; keyboard height comes from RN's Keyboard events instead.
+            */}
               <PaperProvider theme={theme}>
                 <LLMPreferenceProvider>
                   <BottomSheetModalProvider>
@@ -172,7 +179,6 @@ const App = observer(() => {
                   </BottomSheetModalProvider>
                 </LLMPreferenceProvider>
               </PaperProvider>
-            </KeyboardProvider>
           </SafeAreaProvider>
         </GestureHandlerRootView>
       </Suspense>

@@ -7,6 +7,7 @@ import AwaitableAlert from '@/components/AwaitableAlert';
 import uiStore from '@/store/UIStore';
 import PushNotifications from '@/utils/PushNotifications';
 import { activateKeepAwake, deactivateKeepAwake } from '@/utils/keepAwake';
+import ImportedModels from '@/utils/models/imported';
 
 interface UseModelManagerProps {
   llmPreferences: any;
@@ -183,6 +184,8 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
 
     try {
       const path = resolveDestinationPathFromGGUFUrl(model.downloadUrl);
+      // Models added from Hugging Face only exist while installed - drop the entry too.
+      if (model.isImported) await ImportedModels.remove(model.modelId);
       if (await RNFS.exists(path)) {
         await RNFS.unlink(path);
 
@@ -203,7 +206,15 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
         }
         return true;
       }
-      return false;
+      if (model.isImported && selectedModel === model.modelId) {
+        setSelectedModel(null);
+        await uiStore.setToStorage('llmPreference', {
+          ...llmPreferences,
+          config: { ...llmPreferences.config, model: null },
+        });
+        await fetchLLMPreference();
+      }
+      return model.isImported === true;
     } catch (error) {
       console.error('Failed to uninstall model:', error);
       return false;

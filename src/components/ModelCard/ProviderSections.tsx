@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import type { IOnDeviceAvailableModel } from '@/utils/AiProviders/onDevice';
 
 export const UNKNOWN_PROVIDER_LABEL = 'Found on this device';
+export const IMPORTED_PROVIDER_LABEL = 'Added from Hugging Face';
 export const OTHER_PROVIDER_LABEL = 'Other';
 /** Providers listed first, in this order, before the remaining providers are sorted alphabetically. */
 export const PINNED_PROVIDERS = ['Qwen'];
@@ -17,16 +18,20 @@ export type ModelSection<T extends IOnDeviceAvailableModel = IOnDeviceAvailableM
  * Groups on-device models for display:
  *  1. Preset models first, with no header.
  *  2. Everything else grouped by provider, pinned providers (Qwen) first then the rest alphabetically.
- *  3. Models discovered in storage that we know nothing about, last.
+ *  3. Models the user added from Hugging Face.
+ *  4. Models discovered in storage that we know nothing about, last.
  */
 export function groupModelsByProvider<T extends IOnDeviceAvailableModel>(models: T[]): ModelSection<T>[] {
   const presets: T[] = [];
+  const imported: T[] = [];
   const unknown: T[] = [];
   const byProvider = new Map<string, T[]>();
 
   for (const model of models) {
     if (model.isPreset) {
       presets.push(model);
+    } else if (model.isImported) {
+      imported.push(model);
     } else if (model.isUnknown) {
       unknown.push(model);
     } else {
@@ -48,6 +53,7 @@ export function groupModelsByProvider<T extends IOnDeviceAvailableModel>(models:
   const providers = [...byProvider.keys()].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
   for (const provider of providers) sections.push({ title: provider, models: byProvider.get(provider)! });
 
+  if (imported.length) sections.push({ title: IMPORTED_PROVIDER_LABEL, models: imported });
   if (unknown.length) sections.push({ title: UNKNOWN_PROVIDER_LABEL, models: unknown });
   return sections;
 }

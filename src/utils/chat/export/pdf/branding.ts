@@ -17,10 +17,14 @@ export async function applyBranding(pdfDoc: PDFDocument): Promise<void> {
     logoImage = null;
   }
 
-  const logoWidth = 80;
+  // The source PNG carries transparent padding around the mark, so this is a little wider than the
+  // desktop's 80 to end up with a similar visible wordmark size.
+  const logoWidth = 96;
   const logoHeight = logoImage ? (logoImage.height / logoImage.width) * logoWidth : 0;
-  const marginRight = 20;
-  const marginBottom = 20;
+  const marginRight = 16;
+  const marginBottom = 14;
+  /** Pull the caption down into the image's transparent top padding so it hugs the mark */
+  const captionOverlap = 4;
   const gray = rgb(0.6, 0.6, 0.6);
 
   for (const page of pages) {
@@ -34,7 +38,7 @@ export async function applyBranding(pdfDoc: PDFDocument): Promise<void> {
 
       page.drawText(createdWithText, {
         x: logoX + (logoWidth - textWidth) / 2,
-        y: marginBottom + logoHeight + 2,
+        y: marginBottom + logoHeight - captionOverlap,
         size: fontSize,
         font,
         color: gray,

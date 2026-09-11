@@ -161,9 +161,10 @@ export default class WorkspaceChat extends Model {
   }
 
   static toWorkspaceChatObject(data: any): Partial<WorkspaceChatType> {
-    const { uuid, prompt, response, createdAt } = data;
+    const { uuid, workspaceThreadSlug, prompt, response, createdAt } = data;
     return {
       uuid,
+      workspaceThreadSlug,
       prompt,
       response,
       createdAt,

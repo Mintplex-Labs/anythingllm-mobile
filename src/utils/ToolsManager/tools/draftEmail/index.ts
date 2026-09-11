@@ -38,6 +38,7 @@ export default {
         try {
             const { subject, body, to } = typeof args === 'string' ? safeJsonParse(args) : args;
             if (!subject || !body) return `No subject or body provided. No email was drafted.`;
+            streamEmitter('report_status', `Drafting email "${subject}"`);
             streamEmitter('report_action', {
                 type: 'email',
                 action: {

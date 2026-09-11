@@ -78,6 +78,7 @@ export default {
         try {
             const query = typeof args === 'string' ? safeJsonParse(args)?.query : args?.query;
             if (!query) return `No query provided. No results were found.`;
+            streamEmitter('report_status', `Searching the web for "${query}"`);
 
             let data = await this._youSearch(query);
             if (data === null) {
@@ -87,6 +88,7 @@ export default {
             if (data.length === 0) return `No information was found online for the search query.`;
             console.log(`I found ${data.length} results - reviewing top ${this.config.maxResults} results now`);
             data = data.slice(0, this.config.maxResults);
+            streamEmitter('report_status', `Reviewing ${data.length} search result${data.length === 1 ? '' : 's'}`);
 
             // Report the citations to the UI
             const citations = this._extractWebSearchCitations(data);

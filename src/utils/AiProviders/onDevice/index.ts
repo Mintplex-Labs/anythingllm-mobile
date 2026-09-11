@@ -267,7 +267,12 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     onStream?: IStreamCallback | IOnDeviceStreamCallback;
   }) {
     if (!this.submodule || !this.model) throw new Error('No model loaded. Please select a model first.');
-    const { formattedMessages, citations } = await this.buildPrompt(messages);
+    // Loading a GGUF into memory can take several seconds on first use - surface it in the
+    // activity chain instead of leaving the user staring at an empty bubble.
+    if (streaming && this.submodule instanceof LlamaRnWrapper && this.runtimeInfo === null) {
+      onStream('report_status', 'Loading model into memory');
+    }
+    const { formattedMessages, citations } = await this.buildPrompt(messages, streaming ? (status) => onStream('report_status', status) : undefined);
     if (!streaming) {
       const response = await this.submodule.getChatCompletion(formattedMessages as any);
       onComplete({

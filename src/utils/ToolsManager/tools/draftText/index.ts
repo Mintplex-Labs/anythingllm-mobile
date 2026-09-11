@@ -34,6 +34,7 @@ export default {
         try {
             const { recipient, body } = typeof args === 'string' ? safeJsonParse(args) : args;
             if (!body) return `No body provided. No text was drafted.`;
+            streamEmitter('report_status', recipient ? `Drafting a text to ${recipient}` : 'Drafting a text message');
             streamEmitter('report_action', {
                 type: 'sms',
                 action: {

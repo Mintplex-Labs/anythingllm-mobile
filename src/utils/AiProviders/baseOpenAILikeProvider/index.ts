@@ -59,7 +59,9 @@ export type IStreamEvent = 'chunk' |
   'report_tool_call' |
   'report_tool_call_result' |
   'report_action' |
-  'report_in_progress_thought';
+  'report_in_progress_thought' |
+  /** Short human readable progress line eg: "Searching the web for cats" - rolls up into the activity chain */
+  'report_status';
 export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[] | IAgentCitation[] | IAgentToolCall | IAgentAction;
 export type IStreamCallback = (
   event: IStreamEvent,
@@ -74,6 +76,23 @@ export type IAvailableModel = {
   id: string;
   object: string;
   owned_by: string;
+}
+
+/**
+ * Reasoning models send their thinking as a separate delta/message field rather
+ * than inline think tags, and every API names it differently. Mirrors
+ * `extractReasoningContent` in the desktop server (utils/helpers/chat/responses.js).
+ * - `reasoning_content`: DeepSeek, LM Studio, vLLM, Ollama's OpenAI endpoint
+ * - `reasoning`: OpenRouter
+ * - `thinking`: Ollama native
+ */
+export function extractReasoningContent(messageOrDelta: any): string | undefined {
+  return (
+    messageOrDelta?.reasoning_content ||
+    messageOrDelta?.reasoning ||
+    messageOrDelta?.thinking ||
+    undefined
+  );
 }
 
 class SilentError extends Error {
@@ -99,6 +118,14 @@ export default abstract class BaseOpenAILikeProvider {
   abstract availableModels(): Promise<IAvailableModel[]>;
 
   static DEFAULT_SYSTEM_MESSAGE = 'You are a helpful assistant that can answer questions and help with tasks.';
+
+  /**
+   * Provider specific fields merged into every chat completion request body.
+   * eg: OpenRouter needs `include_reasoning: true` to stream reasoning tokens.
+   */
+  protected extraRequestParams(): Record<string, any> {
+    return {};
+  }
 
   private DEFAULT_TOP_N = 2;
   private SEMANTIC_SEARCH_MIN_RELEVANCE_SCORE = 0.45;
@@ -269,11 +296,12 @@ export default abstract class BaseOpenAILikeProvider {
    * Gets the context texts for the user prompt from semantic search
    * of the workspace's vector store.
    */
-  async getContextTexts(userPrompt: string): Promise<SemanticSearchResult[]> {
+  async getContextTexts(userPrompt: string, onStatus?: (status: string) => void): Promise<SemanticSearchResult[]> {
     try {
       if (!this.workspace) throw new SilentError('No workspace attached to provider');
       if (userPrompt.length < 10) throw new SilentError('User prompt is too short to get context texts');
       if (await VectorDB.getWorkspaceVectorCount(this.workspace.slug) === 0) throw new SilentError('No vectors in vector store');
+      onStatus?.('Searching your documents');
 
       const embedder = getEmbedder('native');
       const queryVector = await embedder.embed(userPrompt, 'query');
@@ -294,11 +322,11 @@ export default abstract class BaseOpenAILikeProvider {
   /**
    * Builds the prompt from the message history.
    */
-  async buildPrompt(messages: DynamicChatMessage[]): Promise<{ citations: IDocumentCitation[], formattedMessages: any[] }> {
+  async buildPrompt(messages: DynamicChatMessage[], onStatus?: (status: string) => void): Promise<{ citations: IDocumentCitation[], formattedMessages: any[] }> {
     if (messages.length === 0) throw new Error("Messages array must contain at least one element");
     const history = messages.slice(0, -1);
     const userPrompt = messages[messages.length - 1];
-    const vectorSearchResults = await this.getContextTexts(userPrompt.prompt as string);
+    const vectorSearchResults = await this.getContextTexts(userPrompt.prompt as string, onStatus);
     const contextTexts = vectorSearchResults
       .filter((r) => r.metadata.content !== undefined && r.metadata.content !== null && r.metadata.content !== '')
       .map((r) => String(r.metadata.content));
@@ -337,7 +365,7 @@ export default abstract class BaseOpenAILikeProvider {
     /** On stream is for streaming responses - will fire for each token */
     onStream?: IStreamCallback;
   }) {
-    const { formattedMessages, citations } = await this.buildPrompt(messages);
+    const { formattedMessages, citations } = await this.buildPrompt(messages, streaming ? (status) => onStream('report_status', status) : undefined);
     if (!streaming) {
       const response = await this.getChatCompletion(formattedMessages);
       onComplete({
@@ -382,14 +410,20 @@ export default abstract class BaseOpenAILikeProvider {
           messages,
           temperature: this.isOTypeModel ? 1 : this.temperature,
           tools: availableTools,
+          ...this.extraRequestParams(),
         })
     ) as unknown as { duration: number, output: Partial<any> & MonitoredStream & { usage: StreamMetrics } };
 
     const choices = result.output?.choices;
     if (!choices || choices.length === 0 || !choices[0].message.content) throw new Error('No response from LLM');
 
+    // Reasoning arrives as its own field - fold it back into the think-tag format the UI parses.
+    let textResponse: string = choices[0].message.content;
+    const reasoning = extractReasoningContent(choices[0].message);
+    if (reasoning && reasoning.trim().length > 0) textResponse = `<think>${reasoning}</think>${textResponse}`;
+
     return {
-      textResponse: choices[0].message.content,
+      textResponse,
       toolCalls: choices?.[0]?.message?.tool_calls || [],
       metrics: {
         prompt_tokens: result.output.usage?.prompt_tokens || 0,
@@ -411,6 +445,7 @@ export default abstract class BaseOpenAILikeProvider {
         messages,
         temperature: this.isOTypeModel ? 1 : this.temperature,
         ...(availableTools.length > 0 ? { tools: availableTools, tool_choice: 'auto' } : {}),
+        ...this.extraRequestParams(),
       }, { controller: abortController }),
       messages,
     );
@@ -429,6 +464,17 @@ export default abstract class BaseOpenAILikeProvider {
 
     return new Promise(async (resolve) => {
       let fullText = "";
+      // Reasoning tokens seen so far in this round, already wrapped with the opening
+      // <think> tag. Non-empty means the tag is still open.
+      let reasoningText = "";
+
+      /** Closes an open <think> block - once content starts, or at the very end if no content ever came. */
+      const closeReasoning = () => {
+        if (!reasoningText) return;
+        handler('chunk', '</think>');
+        fullText += `${reasoningText}</think>`;
+        reasoningText = "";
+      };
 
       const handleAbort = () => {
         stream?.endMeasurement(usage);
@@ -470,8 +516,10 @@ export default abstract class BaseOpenAILikeProvider {
 
         for await (const chunk of stream) {
           if (timeout) clearTimeout(timeout); // on the first chunk, clear the timeout since we know the service is responding
-          const content = chunk?.choices?.[0]?.delta?.content;
-          const toolCall = chunk?.choices?.[0]?.delta?.tool_calls?.[0];
+          const delta = chunk?.choices?.[0]?.delta;
+          const content = delta?.content;
+          const reasoningToken = extractReasoningContent(delta);
+          const toolCall = delta?.tool_calls?.[0];
           const finishReason = chunk?.choices?.[0]?.finish_reason;
 
           // Handle usage metrics if present
@@ -485,8 +533,22 @@ export default abstract class BaseOpenAILikeProvider {
             }
           }
 
+          // Reasoning models return the reasoning text before the token text. Stream it
+          // inside think tags so the parser/UI treat it exactly like inline <think> output.
+          if (reasoningToken) {
+            if (reasoningText.length === 0) {
+              handler('chunk', `<think>${reasoningToken}`);
+              reasoningText = `<think>${reasoningToken}`;
+            } else {
+              handler('chunk', reasoningToken);
+              reasoningText += reasoningToken;
+            }
+          }
+
           // Handle content if present
           if (content) {
+            // First visible token after reasoning closes the think block.
+            if (!reasoningToken) closeReasoning();
             fullText += content;
             if (!hasUsageMetrics) usage.completion_tokens++;
             handler('chunk', content);
@@ -511,6 +573,8 @@ export default abstract class BaseOpenAILikeProvider {
 
           // Check for completion
           if (finishReason) {
+            // A tool-call-only round can end with reasoning and no content - close the tag.
+            closeReasoning();
             stream?.endMeasurement(usage);
             resolve({
               textResponse: fullText,

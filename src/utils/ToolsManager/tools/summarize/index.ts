@@ -60,6 +60,7 @@ export default {
             let citation: IAgentWebSearchCitation | IDocumentCitation | null = null;
 
             if (type === 'url') {
+                streamEmitter('report_status', `Reading ${getOrigin(input) || input}`);
                 const scrapeResult = await webscraper.scrape(input);
                 contentToSummarize = scrapeResult.content;
                 citation = {
@@ -73,6 +74,7 @@ export default {
             }
 
             if (type === 'filename') {
+                streamEmitter('report_status', `Looking for "${input}" in your files`);
                 contentToSummarize = await searchProcessedFilesFor(input, 'fuzzy') ?? '';
                 citation = {
                     type: 'document',
@@ -90,7 +92,7 @@ export default {
             if (!llmProvider) return `Error: Could not initialize LLM provider for summarization.`;
 
             // Split content into manageable chunks
-            streamEmitter('report_in_progress_thought', 'Analyzing document structure...');
+            streamEmitter('report_status', 'Analyzing document structure');
             const textSplitter = new TextSplitter({
                 chunkSize: this.config.chunkSize,
                 chunkOverlap: this.config.chunkOverlap,
@@ -99,9 +101,9 @@ export default {
 
             const textChunks = await textSplitter.splitText(contentToSummarize);
             const limitedChunks = textChunks.slice(0, this.config.maxChunks);
-            if (limitedChunks.length !== textChunks.length) streamEmitter('report_in_progress_thought', `Document was very long. Processing first ${limitedChunks.length} sections for summary.`);
+            if (limitedChunks.length !== textChunks.length) streamEmitter('report_status', `Document is long - summarizing the first ${limitedChunks.length} sections`);
             const finalSummary = await this._createHierarchicalSummary(limitedChunks, llmProvider, streamEmitter);
-            streamEmitter('report_in_progress_thought', 'Summary complete!');
+            streamEmitter('report_status', 'Summary complete');
             if (citation) streamEmitter('report_citations', [citation]);
 
             return finalSummary;
@@ -137,17 +139,17 @@ export default {
         }
     },
     _createHierarchicalSummary: async function (chunks: string[], llmProvider: any, streamEmitter: (event: IStreamEvent, data: any) => void): Promise<string> {
-        streamEmitter('report_in_progress_thought', 'Summarizing document sections...');
+        streamEmitter('report_status', 'Summarizing document sections');
 
         const chunkSummaries: string[] = [];
         for (let i = 0; i < chunks.length; i++) {
-            streamEmitter('report_in_progress_thought', `Processing section ${i + 1}/${chunks.length}...`);
+            streamEmitter('report_status', `Summarizing section ${i + 1} of ${chunks.length}`);
             const summary = await this._summarizeChunk(chunks[i], llmProvider);
             chunkSummaries.push(summary);
         }
 
         if (chunkSummaries.length === 1) return chunkSummaries[0];
-        streamEmitter('report_in_progress_thought', 'Combining summaries into final document summary...');
+        streamEmitter('report_status', 'Combining section summaries');
 
         const combinedSummaries = chunkSummaries.join('\n\n');
         const finalSystemPrompt = `You are a helpful assistant that creates comprehensive document summaries. 

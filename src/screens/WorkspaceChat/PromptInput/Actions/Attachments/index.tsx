@@ -26,7 +26,7 @@ import { GenericSettingsItem } from '../Settings';
  */
 export default function AttachmentsActionSheet({ workspace, thread, attachmentHandler }: { workspace: WorkspaceType, thread: WorkspaceThreadType, attachmentHandler: AttachmentInterface }) {
     const sheetRef = useRef<BottomSheetModal>(null);
-    const { registerSheet, presentSheet, activeSheet } = useBottomSheet();
+    const { registerSheet, presentSheet, activeSheet, isSheetActive } = useBottomSheet();
     const { llmPreferences } = useLlmPreference();
     const isRemote = !!(workspace?.isRemote || thread?.isRemote);
     const vision = useVisionSupport({ isRemote });
@@ -68,7 +68,7 @@ export default function AttachmentsActionSheet({ workspace, thread, attachmentHa
             backgroundStyle={{ backgroundColor: '#1B1B1E' }}
             handleIndicatorStyle={{ backgroundColor: '#9F9FA0', width: 45, margin: 10 }}
             // If this sheet is dismissed AND was the current focused, present the primary prompt input sheet
-            onDismiss={() => activeSheet === BOTTOM_SHEET_NAMES.ATTACHMENTS && presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)}
+            onDismiss={() => isSheetActive(BOTTOM_SHEET_NAMES.ATTACHMENTS) && presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)}
         >
             <View style={{ paddingHorizontal: 30 }} className='flex flex-col'>
                 <View className='flex flex-row items-start justify-between'>

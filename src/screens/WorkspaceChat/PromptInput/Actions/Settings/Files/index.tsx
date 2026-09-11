@@ -13,7 +13,7 @@ import { showToast } from "@/utils/Notification";
 export default function WorkspaceFilesActionSheet({ workspace }: { workspace: WorkspaceType }) {
     const insets = useSafeAreaInsets();
     const bottomSheetRef = useRef<BottomSheetModal>(null);
-    const { registerSheet, presentSheet, activeSheet } = useBottomSheet();
+    const { registerSheet, presentSheet, activeSheet, isSheetActive } = useBottomSheet();
     const [optionsActive, setOptionsActive] = useState(false);
     const [selectedFileUuids, setSelectedFileUuids] = useState<string[]>([]);
     const { files, isLoading, error, fetchFiles } = useWorkspaceFiles(workspace.slug, { runOnMount: false });
@@ -60,7 +60,7 @@ export default function WorkspaceFilesActionSheet({ workspace }: { workspace: Wo
             enablePanDownToClose={true}
             backgroundStyle={{ backgroundColor: '#1B1B1E' }}
             handleIndicatorStyle={{ display: 'none' }}
-            onDismiss={() => presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)}
+            onDismiss={() => isSheetActive(BOTTOM_SHEET_NAMES.WORKSPACE_FILES) && presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)}
         >
             <View style={{ paddingHorizontal: 30, paddingBottom: insets.bottom, paddingTop: insets.top, flex: 1 }}>
                 <View style={{ marginBottom: 24 }} className='flex w-full flex-row items-center justify-between'>

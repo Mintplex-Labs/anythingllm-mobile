@@ -22,6 +22,8 @@ export type BottomSheetEvent = (typeof BOTTOM_SHEET_EVENTS)[keyof typeof BOTTOM_
 
 interface BottomSheetContextType {
     activeSheet: BottomSheetType;
+    /** Ref-backed check that is correct even inside callbacks the sheet library fires synchronously. */
+    isSheetActive: (type: BottomSheetType) => boolean;
     registerSheet: (type: BottomSheetType, ref: React.RefObject<BottomSheetModal>) => void;
     unregisterSheet: (type: BottomSheetType) => void;
     presentSheet: (type: BottomSheetType, force?: boolean) => void;
@@ -71,6 +73,8 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
         next?.present();
     }, [setActive]);
 
+    const isSheetActive = useCallback((type: BottomSheetType) => activeSheetRef.current === type, []);
+
     const dismissSheet = useCallback((type: BottomSheetType) => {
         debug('dismissSheet', { type });
         // onDismiss -> dismissSheet -> dismiss() -> onDismiss would loop; only act on the active sheet.
@@ -97,6 +101,7 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
         <BottomSheetContext.Provider
             value={{
                 activeSheet,
+                isSheetActive,
                 registerSheet,
                 unregisterSheet,
                 presentSheet,

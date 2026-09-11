@@ -1,9 +1,6 @@
 import { memo, useState } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import Markdown, { MarkdownIt } from 'react-native-markdown-display';
-import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import Clipboard from '@react-native-clipboard/clipboard';
-import { hapticOptions } from '@/utils/clipboard';
 import { type WorkspaceChatResponseType } from '@/database/models/WorkspaceChat';
 import { markdownRules, markdownStyles } from './rules';
 
@@ -17,10 +14,13 @@ export default memo(function TextResponseContainer({
   uuid,
   textResponse,
   metrics,
+  onLongPress,
 }: {
   uuid?: string;
   textResponse?: string;
   metrics?: WorkspaceChatResponseType['metrics'];
+  /** Opens the message actions sheet for this pair (copy, delete, fork) */
+  onLongPress?: () => void;
 }) {
   const [showMetrics, setShowMetrics] = useState(false);
   if (!textResponse) return null;
@@ -30,16 +30,11 @@ export default memo(function TextResponseContainer({
     setShowMetrics(!showMetrics);
   };
 
-  const handleLongPress = () => {
-    ReactNativeHapticFeedback.trigger('impactLight', hapticOptions);
-    Clipboard.setString(textResponse.trim());
-  };
-
   return (
     <View key={`${uuid}-text-response-container`} className="flex flex-row items-start w-full justify-start">
       <TouchableOpacity
         onPress={handlePress}
-        onLongPress={handleLongPress}
+        onLongPress={onLongPress}
         delayLongPress={500}
         activeOpacity={0.7}
         style={{ width: '100%' }}>

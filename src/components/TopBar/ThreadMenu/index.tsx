@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { CaretLeft, CaretRight, CheckCircle, DotsThreeVertical, Export, FileCode, FilePdf, FileText, FolderOpen, ShareNetwork } from 'phosphor-react-native';
+import { CheckCircle, DotsThreeVertical, Export, FileCode, FilePdf, FileText, FolderOpen, ShareNetwork } from 'phosphor-react-native';
+import { MenuRow, SheetHeader, MUTED_TEXT, ROW_ICON_BACKGROUND, SHEET_BACKGROUND, SUCCESS } from '@/components/SheetMenu';
 import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
 import useLlmPreference from '@/hooks/useLLMPreference';
 import { type WorkspaceType } from '@/database/models/Workspace';
@@ -22,11 +23,6 @@ import {
 } from '@/utils/chat/export';
 
 type MenuPage = 'menu' | 'export' | 'saved';
-
-const SHEET_BACKGROUND = '#1B1B1E';
-const ROW_ICON_BACKGROUND = '#3f3f42';
-const MUTED_TEXT = '#9F9FA0';
-const SUCCESS = '#46C08A';
 
 const EXPORT_ICONS: Record<ExportFormat, React.ReactNode> = {
   txt: <FileText size={22} color="#FFF" />,
@@ -147,63 +143,6 @@ export default function ThreadMenuSheet({ workspace, thread }: { workspace: Work
         )}
       </BottomSheetView>
     </BottomSheetModal>
-  );
-}
-
-function SheetHeader({ title, subtitle, onBack }: { title: string; subtitle?: string; onBack?: () => void }) {
-  return (
-    <View style={{ marginBottom: 18 }} className="flex flex-col items-center">
-      <View className="flex w-full flex-row items-center justify-center" style={{ minHeight: 28 }}>
-        {onBack && (
-          <TouchableOpacity
-            onPress={onBack}
-            style={{ position: 'absolute', left: 0 }}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            accessibilityLabel="Back">
-            <CaretLeft size={24} color="#FFF" />
-          </TouchableOpacity>
-        )}
-        <Text className="text-white text-lg font-medium">{title}</Text>
-      </View>
-      {!!subtitle && (
-        <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: MUTED_TEXT, marginTop: 2, maxWidth: '80%' }} className="text-sm">
-          {subtitle}
-        </Text>
-      )}
-    </View>
-  );
-}
-
-function MenuRow({
-  icon,
-  title,
-  description,
-  onPress,
-  disabled = false,
-  trailing,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description?: string;
-  onPress: () => void;
-  disabled?: boolean;
-  trailing?: React.ReactNode;
-}) {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      disabled={disabled}
-      style={{ gap: 14, paddingVertical: 10, opacity: disabled ? 0.5 : 1 }}
-      className="flex flex-row items-center">
-      <View style={{ backgroundColor: ROW_ICON_BACKGROUND, width: 44, height: 44 }} className="flex items-center justify-center rounded-full">
-        {icon}
-      </View>
-      <View className="flex-1 flex flex-col">
-        <Text className="text-white text-lg font-medium">{title}</Text>
-        {!!description && <Text style={{ color: MUTED_TEXT }} className="text-sm">{description}</Text>}
-      </View>
-      {trailing ?? <CaretRight size={20} color={MUTED_TEXT} />}
-    </TouchableOpacity>
   );
 }
 

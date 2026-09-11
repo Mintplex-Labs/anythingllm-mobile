@@ -31,6 +31,12 @@ class Telemetry {
             LLM_SETTINGS_UPDATED: 'llm_settings_updated',
             /** A chat thread was exported (txt/json/pdf) and handed to the share sheet */
             THREAD_EXPORTED: 'thread_exported',
+            /** A chat thread was forked into a new thread with a copy of its history */
+            THREAD_FORKED: 'thread_forked',
+            /** A user/assistant message pair was deleted from a thread */
+            CHAT_DELETED: 'chat_deleted',
+            /** A user/assistant message pair was removed and its prompt re-submitted */
+            CHAT_RETRIED: 'chat_retried',
 
             /** The user use the QR code to connect to an AnythingLLM intance */
             EXTERNAL_CONNECTION_ESTABLISHED: 'external_connection_established',

@@ -24,6 +24,8 @@ class Telemetry {
         ACTIONS: {
             WORKSPACE_CREATED: 'workspace_created',
             CHAT_COMPLETED: 'chat_completed',
+            /** The user pressed stop while a reply was generating - nothing was saved */
+            CHAT_ABORTED: 'chat_aborted',
             DOCUMENT_IMPORTED: 'document_added',
             TOOL_CALLED: 'tool_called',
             LLM_SETTINGS_UPDATED: 'llm_settings_updated',

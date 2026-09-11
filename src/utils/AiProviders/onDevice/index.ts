@@ -1,5 +1,4 @@
 import { defaultModels } from "@/utils/models";
-import GenieWrapper, { IGenieStreamCallback } from "./genie";
 import LlamaRnWrapper, { ILlamaRnStreamCallback, OnDeviceRuntimeInfo } from "./llamaRn";
 import BaseOpenAILikeProvider, { IAvailableModel, ICompleteResponse, IStreamCallback, IStreamEvent } from "../baseOpenAILikeProvider";
 import OpenAILite from "@/utils/openai";
@@ -11,7 +10,7 @@ import ToolsManager from "@/utils/ToolsManager";
 import ImportedModels from "@/utils/models/imported";
 import { throwIfAborted } from "@/utils/chat/abort";
 
-export type IOnDeviceStreamCallback = IGenieStreamCallback | ILlamaRnStreamCallback;
+export type IOnDeviceStreamCallback = ILlamaRnStreamCallback;
 
 /** Shape of an entry returned by `OnDeviceProvider.availableModels()` */
 export type IOnDeviceAvailableModel = {
@@ -37,11 +36,10 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
   protected provider: string;
   protected config: any;
-  protected computeRuntime: string = 'CPU';
   // @ts-ignore - this is a valid property for this class
   public model: string | null;
 
-  protected submodule: GenieWrapper | LlamaRnWrapper | null = null;
+  protected submodule: LlamaRnWrapper | null = null;
   protected client: OpenAILite;
   protected isOTypeModel: boolean;
   protected temperature: number;
@@ -57,7 +55,6 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     this.provider = 'native';
     this.config = config;
     this.model = this.config.model;
-    this.computeRuntime = this.determineComputeRuntime(this.model);
 
     if (this.model) {
       this.submodule = this.setSubmodule(this.model);
@@ -69,20 +66,9 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     console.log(`\x1b[36m[${this.constructor.name}:${this.submodule?.name || 'no-model'}]\x1b[0m ${text}`, ...args);
   }
 
-  determineComputeRuntime = (modelName: string | null) => {
-    if (!modelName) return 'CPU';
-    if (modelName.endsWith('.gguf')) return 'CPU';
-    const definition = defaultModels.find(m => m.id === modelName);
-    return definition?.runtime || 'CPU';
-  }
-
   private setSubmodule(model: string) {
     if (!model) throw new Error('No model provided to setSubmodule');
-    if (this.computeRuntime === 'NPU') {
-      return new GenieWrapper({ model, parent: this });
-    } else {
-      return new LlamaRnWrapper({ model, parent: this });
-    }
+    return new LlamaRnWrapper({ model, parent: this });
   }
 
   static getInstance(props: OnDeviceProviderConstructorProps) {
@@ -107,26 +93,23 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
    * Runtime details of the currently loaded GGUF model (null when nothing is loaded).
    */
   get runtimeInfo(): OnDeviceRuntimeInfo | null {
-    if (this.submodule instanceof LlamaRnWrapper) return this.submodule.runtimeInfo;
-    return null;
+    return this.submodule?.runtimeInfo ?? null;
   }
 
   /**
    * Interrupts the response currently being generated, if any.
    */
   async stopGeneration() {
-    if (this.submodule instanceof LlamaRnWrapper) await this.submodule.stop();
+    if (this.submodule) await this.submodule.stop();
   }
 
   /**
-   * Streams one LLM round through the active runtime, forwarding the turn's abort
-   * signal where the runtime supports interruption (llama.rn). Genie has no stop
-   * hook - an abort there is honoured by the caller once the round returns.
+   * Streams one LLM round through llama.rn, forwarding the turn's abort signal so
+   * generation can be interrupted mid-response.
    */
   private runSubmoduleStream(messages: any[], callback: (token: string) => void, availableTools: any[]): Promise<ICompleteResponse> {
     if (!this.submodule) throw new Error('No model loaded. Please select a model first.');
-    if (this.submodule instanceof LlamaRnWrapper) return this.submodule.streamGetChatCompletion(messages, callback, availableTools, this.abortSignal);
-    return this.submodule.streamGetChatCompletion(messages, callback);
+    return this.submodule.streamGetChatCompletion(messages, callback, availableTools, this.abortSignal);
   }
 
   async loadNewModel(model: string | null) {
@@ -142,7 +125,6 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
     if (this.model === model) return;
     this.model = model;
-    this.computeRuntime = this.determineComputeRuntime(this.model);
     if (this.submodule) {
       await this.submodule.cleanup();
     }
@@ -226,7 +208,6 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     }));
 
     const crossPlatformModels: IOnDeviceAvailableModel[] = defaultModels
-      .filter(m => m.runtime === 'CPU')
       .map(m => ({ ...m, id: m.id.endsWith('.gguf') ? m.id.split('/').slice(0, -1).join('/') : m.id }))
       .map(m => {
         return {
@@ -281,7 +262,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     if (!this.submodule || !this.model) throw new Error('No model loaded. Please select a model first.');
     // Loading a GGUF into memory can take several seconds on first use - surface it in the
     // activity chain instead of leaving the user staring at an empty bubble.
-    if (streaming && this.submodule instanceof LlamaRnWrapper && this.runtimeInfo === null) {
+    if (streaming && this.runtimeInfo === null) {
       onStream('report_status', 'Loading model into memory');
     }
     const { formattedMessages, citations } = await this.buildPrompt(messages, streaming ? (status) => onStream('report_status', status) : undefined);
@@ -295,7 +276,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     }
 
     const availableTools = await ToolsManager.injectAvailableTools();
-    this.log(`Streaming ${this.model} with ${this.computeRuntime}`);
+    this.log(`Streaming ${this.model} on CPU`);
     this.log('Available tools:', availableTools.map(t => t.function.name));
     let fullResult = await this.runSubmoduleStream(formattedMessages as any, (token: string) => onStream('chunk', token), availableTools);
     // `stopCompletion` makes llama.rn return the partial text as a normal result - never

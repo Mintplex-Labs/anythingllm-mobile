@@ -1,37 +1,10 @@
-import { NPUEnabledModel, Model, ModelOrigin } from '@/utils/types';
+import { Model, ModelOrigin } from '@/utils/types';
 import { chatTemplates } from '@/utils/chat';
 import { Platform } from 'react-native';
 
 export const MODEL_LIST_VERSION = 13;
 const iosOnlyModels: Model[] = [];
-const androidOnlyModels: NPUEnabledModel[] = [
-  // -------- Phi --------
-  {
-    id: 'qualcomm/phi-3.5-mini-instruct',
-    runtime: 'NPU',
-    author: 'Microsfot',
-    name: 'Phi-3.5 mini 4k instruct',
-    type: 'Phi',
-    capabilities: ['reasoning', 'multilingual'],
-    size: 2e+9,
-    params: 3.8e+9,
-    isDownloaded: false,
-    downloadUrl: '',
-    origin: ModelOrigin.ANYTHINGLLM,
-    defaultChatTemplate: { ...chatTemplates.phi3 },
-    chatTemplate: chatTemplates.phi3,
-    cdnUrls: [
-      // 'https://cdn.anythingllm.com/mobile/tokenizer.json',
-      // 'https://cdn.anythingllm.com/mobile/genie_config.json',
-      // 'https://cdn.anythingllm.com/mobile/bin_1_of_4.bin',
-      // 'https://cdn.anythingllm.com/mobile/bin_2_of_4.bin',
-      // 'https://cdn.anythingllm.com/mobile/bin_3_of_4.bin',
-      // 'https://cdn.anythingllm.com/mobile/bin_4_of_4.bin',
-    ],
-    modelId: 'phi-3.5-mini-instruct',
-    progress: 0,
-  },
-];
+const androidOnlyModels: Model[] = [];
 
 const crossPlatformModels: Model[] = [
   // -------- Gemma --------

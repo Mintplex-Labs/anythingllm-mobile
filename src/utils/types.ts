@@ -260,7 +260,7 @@ export interface Model {
   chatTemplateString?: string;
   imageUrl?: string;
 
-  runtime: 'CPU' | 'NPU';
+  runtime: 'CPU';
   author: string;
   name: string;
   type?: string;
@@ -288,27 +288,6 @@ export interface Model {
   hfModelFile?: ModelFile;
   hfModel?: HuggingFaceModel;
   hash?: string;
-}
-
-export interface NPUEnabledModel {
-  id: string;
-  runtime: 'NPU';
-  author: string;
-  name: string;
-  type?: string;
-  capabilities?: string[];
-  size: number;
-  params: number;
-  isDownloaded: boolean;
-  downloadUrl: string;
-  progress: number;
-  downloadSpeed?: string;
-  fullPath?: string;
-  origin: ModelOrigin.ANYTHINGLLM;
-  cdnUrls: string[];
-  modelId: string;
-  defaultChatTemplate: ChatTemplateConfig;
-  chatTemplate: ChatTemplateConfig;
 }
 
 export namespace MessageType {

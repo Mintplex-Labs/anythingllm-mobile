@@ -37,6 +37,10 @@
 	<string>AnythingLLM uses the camera to scan connection QR codes and to take photos to send to your model.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>AnythingLLM needs access to your photos so you can attach an image to a prompt.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>AnythingLLM uses the microphone to transcribe your speech into a prompt.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>AnythingLLM uses speech recognition to convert your voice into text for chat prompts.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>MaterialIcons.ttf</string>

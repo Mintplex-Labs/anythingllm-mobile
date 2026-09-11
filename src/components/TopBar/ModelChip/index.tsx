@@ -19,8 +19,8 @@ import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetModal,
+  BottomSheetFlatList,
 } from '@gorhom/bottom-sheet';
-import { FlatList } from 'react-native-gesture-handler';
 import { ArrowsClockwise, Check, MagnifyingGlass, Tag, WarningCircle, X } from 'phosphor-react-native';
 import { findIconByModelName, findIconByProvider } from '@/components/MonoProviderIcon';
 import useLlmPreference from '@/hooks/useLLMPreference';
@@ -326,7 +326,7 @@ function AvailableModels({
         </View>
       )}
       {filteredModels.length > 0 && (
-        <FlatList
+        <BottomSheetFlatList
           data={listItems}
           keyExtractor={item => item.key}
           className="w-full"
@@ -494,7 +494,7 @@ function ExternalProviderModels({
         </Text>
       )}
       {filteredModels.length > 0 && (
-        <FlatList
+        <BottomSheetFlatList
           data={filteredModels}
           keyExtractor={model => model.id}
           className="w-full"

@@ -13,7 +13,7 @@ import uiStore from '@/store/UIStore';
 
 export default function SettingsActionSheet({ workspace, thread }: { workspace: WorkspaceType, thread: WorkspaceThreadType }) {
     const settingsSheetRef = useRef<BottomSheetModal>(null);
-    const { registerSheet, presentSheet, activeSheet } = useBottomSheet();
+    const { registerSheet, presentSheet, isSheetActive } = useBottomSheet();
     const isRemote = workspace.isRemote || thread.isRemote;
 
     function goToSettings() {
@@ -38,7 +38,7 @@ export default function SettingsActionSheet({ workspace, thread }: { workspace: 
             backgroundStyle={{ backgroundColor: '#1B1B1E' }}
             handleIndicatorStyle={{ backgroundColor: '#9F9FA0', width: 45, margin: 10 }}
             // If the settings sheet is dismissed AND was the current focused, present the primary prompt input sheet
-            onDismiss={() => activeSheet === BOTTOM_SHEET_NAMES.SETTINGS && presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)}
+            onDismiss={() => isSheetActive(BOTTOM_SHEET_NAMES.SETTINGS) && presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)}
         >
             <View style={{ paddingHorizontal: 30 }} className='flex flex-row items-center justify-between'>
                 <WorkspaceFilesActionButton disabled={isRemote} />

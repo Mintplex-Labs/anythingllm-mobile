@@ -8,7 +8,7 @@ import {
   Keyboard,
   Linking,
 } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import Clipboard from '@react-native-clipboard/clipboard';
 import DeviceInfo from 'react-native-device-info';
 import {
@@ -219,7 +219,7 @@ export default function HuggingFaceImport({
         : [];
 
   return (
-    <FlatList
+    <BottomSheetFlatList
       data={items}
       keyExtractor={item => item.key}
       className="w-full"

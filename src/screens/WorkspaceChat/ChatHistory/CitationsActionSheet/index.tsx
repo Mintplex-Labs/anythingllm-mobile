@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
 import { View, Text, TouchableOpacity, Linking } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ScrollView } from "react-native-gesture-handler";
 import uiStore from "@/store/UIStore";
 import { type WorkspaceChatType, type IDocumentCitation, type IAgentWebSearchCitation } from "@/database/models/WorkspaceChat";
 import { numberToPercentageString, getOrigin } from "@/utils/formatters";
@@ -55,7 +54,7 @@ export default function CitationsActionSheet() {
             handleIndicatorStyle={{ backgroundColor: '#9F9FA0', width: 45, margin: 10 }}
             onDismiss={() => dismissSheet(BOTTOM_SHEET_NAMES.CITATIONS)}
         >
-            <ScrollView style={{ paddingHorizontal: 30, paddingBottom: insets.bottom }}>
+            <BottomSheetScrollView style={{ paddingHorizontal: 30, paddingBottom: insets.bottom }}>
                 <View style={{ marginBottom: 24 }} className='flex w-full flex-row items-center justify-center'>
                     <Text className='text-white text-lg font-medium'>Citations</Text>
                 </View>
@@ -67,7 +66,7 @@ export default function CitationsActionSheet() {
                         return <Component key={`${citation.type}-${index}`} citation={citation} />
                     })}
                 </View>
-            </ScrollView>
+            </BottomSheetScrollView>
         </BottomSheetModal>
     );
 }

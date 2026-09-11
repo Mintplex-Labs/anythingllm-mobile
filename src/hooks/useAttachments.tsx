@@ -3,7 +3,7 @@ import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { generateUUID, getCurrentDeviceInfo, screenDimensions, } from "@/utils/constants";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import Storage from "@/utils/storage";
-import { pick } from 'react-native-document-picker';
+import { pick, isErrorWithCode, errorCodes } from '@react-native-documents/picker';
 import { launchCamera, launchImageLibrary, type ImageLibraryOptions, type CameraOptions } from 'react-native-image-picker';
 import getEmbedder from "@/utils/Embedder";
 import VectorDB from "@/utils/VectorDB";
@@ -224,10 +224,17 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
     }, []);
 
     const askForAttachment = useCallback(async () => {
-        const result = await pick({
-            allowMultiSelection: false,
-            type: ['text/plain', 'application/pdf', 'text/markdown'],
-        });
+        let result: Awaited<ReturnType<typeof pick>>;
+        try {
+            result = await pick({
+                allowMultiSelection: false,
+                type: ['text/plain', 'application/pdf', 'text/markdown'],
+            });
+        } catch (e) {
+            // The picker rejects when the user backs out of the system dialog; that is not an error.
+            if (isErrorWithCode(e) && e.code === errorCodes.OPERATION_CANCELED) return;
+            throw e;
+        }
         if (result.length === 0) return;
         const attachment = result[0];
         const attachmentObject: Attachment = {

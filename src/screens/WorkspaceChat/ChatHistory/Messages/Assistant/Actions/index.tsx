@@ -1,6 +1,5 @@
-import { Linking, Text, TouchableOpacity } from "react-native";
+import { Linking, Text, TouchableOpacity, ScrollView } from "react-native";
 import { memo } from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import { IAgentAction } from "@/database/models/WorkspaceChat";
 import IntentLauncher, { IntentConstant } from "@yz1311/react-native-intent-launcher";
 

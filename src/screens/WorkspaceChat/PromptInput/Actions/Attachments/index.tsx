@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { Camera, DownloadSimple, Images, Paperclip, X } from "phosphor-react-native";
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
@@ -56,12 +56,13 @@ export default function AttachmentsActionSheet({ workspace, thread, attachmentHa
 
     const filesDisabled = isRemote || attachmentHandler.isMaxAttachments;
     const imagesDisabled = !supportsVision || attachmentHandler.isMaxAttachments;
+    const snapPoints = useMemo(() => [vision.needsProjectorDownload ? '29%' : '25%'], [vision.needsProjectorDownload]);
 
     return (
         <BottomSheetModal
             ref={sheetRef}
             index={0}
-            snapPoints={['25%']}
+            snapPoints={snapPoints}
             enableDynamicSizing={false}
             enablePanDownToClose={true}
             backgroundStyle={{ backgroundColor: '#1B1B1E' }}

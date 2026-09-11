@@ -2,8 +2,6 @@ import { IAgentWebSearchCitation } from "@/database/models/WorkspaceChat";
 import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { safeJsonParse } from "@/utils/formatters";
 import DeviceInfo from "react-native-device-info";
-import ToolApproval from "@/utils/ToolsManager/toolApproval";
-import { type ToolExecutionContext } from "@/utils/ToolsManager";
 
 type SearXNGResult = {
     url: string;
@@ -76,22 +74,10 @@ export default {
         anythingLLMPublicSearXNGKey: '1hwFZHYnPHyK1cynbPq9oYbA0tCWpmPss9q8NYUTPyBXpUBPu833fi',
         anythingLLMPublicSerpHeader: 'x-anythingllm-searxng-serp',
     },
-    execute: async function (args: { query: string } | string, streamEmitter: (event: IStreamEvent, data: any) => void, context: ToolExecutionContext = {}): Promise<string> {
+    execute: async function (args: { query: string } | string, streamEmitter: (event: IStreamEvent, data: any) => void): Promise<string> {
         try {
             const query = typeof args === 'string' ? safeJsonParse(args)?.query : args?.query;
             if (!query) return `No query provided. No results were found.`;
-
-            // TEMPORARY (QA): gate web search behind approval so the approval card is easy to trigger.
-            // Remove once the flow has been verified - summarize is the real consumer.
-            const approval = await ToolApproval.request({
-                skillName: this.definition.function.name,
-                description: `Search the web for "${query}"?`,
-                payload: { query },
-                streamEmitter,
-                signal: context.signal,
-            });
-            if (!approval.approved) return `${approval.message} The web search was not run.`;
-
             streamEmitter('report_status', `Searching the web for "${query}"`);
 
             let data = await this._youSearch(query);

@@ -2,7 +2,7 @@ import { NPUEnabledModel, Model, ModelOrigin } from '@/utils/types';
 import { chatTemplates } from '@/utils/chat';
 import { Platform } from 'react-native';
 
-export const MODEL_LIST_VERSION = 12;
+export const MODEL_LIST_VERSION = 13;
 const iosOnlyModels: Model[] = [];
 const androidOnlyModels: NPUEnabledModel[] = [
   // -------- Phi --------
@@ -463,6 +463,60 @@ const crossPlatformModels: Model[] = [
     chatTemplate: { ...chatTemplates.chatML },
     defaultCompletionSettings: { temperature: 0.7 },
     completionSettings: { temperature: 0.7 },
+    defaultStopWords: ['<|im_end|>'],
+    stopWords: ['<|im_end|>'],
+  },
+
+  // -------- Liquid AI --------
+  // Official LiquidAI GGUFs. LFM2.5 is a hybrid conv/attention architecture built for
+  // CPU inference, so it is fast on phones. Liquid recommends temperature 0.1 / top_k 50.
+  {
+    id: 'LiquidAI/LFM2.5-1.2B-Instruct-GGUF',
+    runtime: 'CPU',
+    author: 'Liquid AI',
+    name: 'LFM2.5 1.2B Instruct',
+    description: '(Q8_0) LFM2.5 1.2B is a very fast small model tuned for on-device chat, tool calling and 16 languages. Full quality quant.',
+    type: 'LFM',
+    capabilities: ['text-generation', 'tool-use', 'multilingual', 'questionAnswering'],
+    size: 1246253888,
+    params: 1_170_000_000,
+    isDownloaded: false,
+    downloadUrl: 'https://huggingface.co/LiquidAI/LFM2.5-1.2B-Instruct-GGUF/resolve/main/LFM2.5-1.2B-Instruct-Q8_0.gguf',
+    hfUrl: 'https://huggingface.co/LiquidAI/LFM2.5-1.2B-Instruct-GGUF',
+    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/61b8e2ba285851687028d395/EsTgVtnM2IqVRKgPdfqcB.png',
+    progress: 0,
+    filename: 'LFM2.5-1.2B-Instruct-Q8_0.gguf',
+    isLocal: false,
+    origin: ModelOrigin.HF,
+    defaultChatTemplate: { ...chatTemplates.chatML },
+    chatTemplate: { ...chatTemplates.chatML },
+    defaultCompletionSettings: { temperature: 0.1, top_k: 50 },
+    completionSettings: { temperature: 0.1, top_k: 50 },
+    defaultStopWords: ['<|im_end|>'],
+    stopWords: ['<|im_end|>'],
+  },
+  {
+    id: 'LiquidAI/LFM2.5-2.6B-GGUF',
+    runtime: 'CPU',
+    author: 'Liquid AI',
+    name: 'LFM2.5 2.6B',
+    description: '(Q5_K_M) LFM2.5 2.6B is the most capable Liquid model for phones with strong instruction following, tool calling and reasoning.',
+    type: 'LFM',
+    capabilities: ['text-generation', 'reasoning', 'tool-use', 'multilingual'],
+    size: 1939744768,
+    params: 2_700_000_000,
+    isDownloaded: false,
+    downloadUrl: 'https://huggingface.co/LiquidAI/LFM2.5-2.6B-GGUF/resolve/main/LFM2.5-2.6B-Q5_K_M.gguf',
+    hfUrl: 'https://huggingface.co/LiquidAI/LFM2.5-2.6B-GGUF',
+    imageUrl: 'https://cdn-avatars.huggingface.co/v1/production/uploads/61b8e2ba285851687028d395/EsTgVtnM2IqVRKgPdfqcB.png',
+    progress: 0,
+    filename: 'LFM2.5-2.6B-Q5_K_M.gguf',
+    isLocal: false,
+    origin: ModelOrigin.HF,
+    defaultChatTemplate: { ...chatTemplates.chatML },
+    chatTemplate: { ...chatTemplates.chatML },
+    defaultCompletionSettings: { temperature: 0.1, top_k: 50 },
+    completionSettings: { temperature: 0.1, top_k: 50 },
     defaultStopWords: ['<|im_end|>'],
     stopWords: ['<|im_end|>'],
   },

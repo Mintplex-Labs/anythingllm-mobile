@@ -41,6 +41,9 @@ import { WorkspaceType } from '@/database/models/Workspace';
 import { showToast } from '@/utils/Notification';
 import uiStore from '@/store/UIStore';
 import { AVAILABLE_LLM_PROVIDERS } from '@/utils/llmproviders';
+import HuggingFaceImport from '@/components/HuggingFaceImport';
+import AddFromHuggingFaceCard from '@/components/HuggingFaceImport/AddCard';
+import ImportedModels, { ImportedModel } from '@/utils/models/imported';
 
 function getPresetModelName(llmPreferences: { provider: string; config: any }) {
   if (llmPreferences.provider !== 'native') return llmPreferences.config.model;
@@ -53,7 +56,7 @@ function modelNameToDisplayName(modelName?: string | null) {
 
   // Full file path specific (windows: C:\Users\...\..., mac: /Users/...\...)
   if (modelName.includes('\\') || modelName.startsWith('/')) {
-    return modelName.split(/[\\/]/).pop()?.replaceAll(new RegExp('(-?)(gguf|GGUF|Gguf)$', 'g'), '') // Remove -gguf suffix
+    return modelName.split(/[\\/]/).pop()?.replaceAll(new RegExp('[-.]?gguf$', 'gi'), '') // Remove -gguf/.gguf suffix
       ?.replaceAll(new RegExp('[-_]', 'g'), ' ') // Replace - and _ with space
       ?.replaceAll(new RegExp('chat -*', 'g'), '') // Replace cgguf with gguf
       ?.replace(/^./, str => str.toUpperCase()); // Capitalize first letter
@@ -63,7 +66,7 @@ function modelNameToDisplayName(modelName?: string | null) {
   return modelName
     .split('/')
     .pop()
-    ?.replaceAll(new RegExp('(-?)(gguf|GGUF|Gguf)$', 'g'), '') // Remove -gguf suffix
+    ?.replaceAll(new RegExp('[-.]?gguf$', 'gi'), '') // Remove -gguf/.gguf suffix
     ?.replaceAll(new RegExp('-', 'g'), ' ') // Replace - with space
     ?.replace(/^./, str => str.toUpperCase()); // Capitalize first letter
 }
@@ -170,6 +173,7 @@ export interface AvailableModel {
   isPreset: boolean;
   provider?: string;
   isUnknown?: boolean;
+  isImported?: boolean;
   imageUrl?: string | null;
 }
 
@@ -181,7 +185,10 @@ function AvailableModels({
   const { llmPreferences, LLMProvider, isLoading, fetchLLMPreference } = useLlmPreference();
   const [availableModels, setAvailableModels] = useState<AvailableModel[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [view, setView] = useState<'list' | 'import'>('list');
+  const [importQuery, setImportQuery] = useState('');
   const searchInputRef = useRef(null);
+  const isNative = llmPreferences.provider === 'native';
 
   const {
     modelDownloadUrl,
@@ -193,17 +200,47 @@ function AvailableModels({
     selectModel,
   } = useModelManager({ llmPreferences, fetchLLMPreference, LLMProvider });
 
-  useEffect(() => {
-    const fetchModels = async () => {
-      // External providers (LM Studio, Ollama, OpenAI-compatible, ...) manage
-      // their models from the settings screen, not this on-device model sheet.
-      if (LLMProvider && !LLMProvider.isExternalProvider) {
-        const models = await LLMProvider.availableModels() as AvailableModel[];
-        setAvailableModels(models);
-      } else setAvailableModels([]);
-    };
-    fetchModels();
+  const fetchModels = useCallback(async () => {
+    // External providers (LM Studio, Ollama, OpenAI-compatible, ...) manage
+    // their models from the settings screen, not this on-device model sheet.
+    if (LLMProvider && !LLMProvider.isExternalProvider) {
+      const models = await LLMProvider.availableModels() as AvailableModel[];
+      setAvailableModels(models);
+    } else setAvailableModels([]);
   }, [LLMProvider]);
+
+  useEffect(() => {
+    fetchModels();
+  }, [fetchModels]);
+
+  const openImport = (prefill = '') => {
+    setImportQuery(prefill);
+    setView('import');
+  };
+
+  /**
+   * The user picked a quant in the import view: remember it so it shows up in the
+   * list (and survives restarts), then hand it to the regular download flow so the
+   * usual network / size confirmations and progress reporting apply.
+   */
+  const importAndDownload = async (imported: ImportedModel) => {
+    await ImportedModels.add(imported);
+    await fetchModels();
+    setView('list');
+    setSearchQuery('');
+    const model: AvailableModel = {
+      id: imported.modelId,
+      modelId: imported.modelId,
+      name: imported.name,
+      description: imported.description,
+      size: imported.size,
+      downloadUrl: imported.downloadUrl,
+      isPreset: false,
+      isImported: true,
+      provider: imported.author,
+    };
+    return downloadModel(model);
+  };
 
   const filteredModels = useMemo(() => {
     return availableModels.filter(
@@ -222,6 +259,22 @@ function AvailableModels({
   );
 
   if (isLoading) return <ActivityIndicator size="large" color="white" />;
+
+  if (view === 'import') {
+    return (
+      <View className="flex flex-col w-full h-full pt-2">
+        <HuggingFaceImport
+          initialQuery={importQuery}
+          onDownload={importAndDownload}
+          installedModelIds={availableModels.filter(m => m.isImported && downloadedModels[m.modelId]).map(m => m.modelId)}
+          activeDownloadUrl={modelDownloadUrl}
+          downloadProgress={downloadProgress}
+          onBack={() => setView('list')}
+          onInputFocus={() => bottomSheetRef.current?.snapToIndex(1)}
+        />
+      </View>
+    );
+  }
 
   return (
     <View className="flex flex-col items-center justify-center gap-y-4 w-full h-full">
@@ -256,9 +309,17 @@ function AvailableModels({
         )}
       </View>
       {!filteredModels.length && (
-        <Text className="text-white text-sm text-center pt-4">
-          No models found for "{searchQuery}"
-        </Text>
+        <View className="w-full px-5" style={{ gap: 12 }}>
+          <Text className="text-white text-sm text-center pt-4">
+            No models found for "{searchQuery}"
+          </Text>
+          {isNative && (
+            <AddFromHuggingFaceCard
+              onPress={() => openImport(searchQuery)}
+              hint={`Look up "${searchQuery}" on Hugging Face and download a GGUF version.`}
+            />
+          )}
+        </View>
       )}
       {filteredModels.length > 0 && (
         <FlatList
@@ -272,6 +333,7 @@ function AvailableModels({
           }}
           showsVerticalScrollIndicator={true}
           scrollEnabled={true}
+          ListFooterComponent={isNative ? <AddFromHuggingFaceCard onPress={() => openImport()} /> : null}
           renderItem={({ item }) => {
             if (item.type === 'header') return <ProviderSectionHeader title={item.title} />;
 

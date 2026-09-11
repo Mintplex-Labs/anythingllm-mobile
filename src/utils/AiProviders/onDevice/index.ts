@@ -8,6 +8,7 @@ import { DEFAULT_GGUF_FOLDER } from "@/utils/models/manager";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
+import ImportedModels from "@/utils/models/imported";
 
 export type IOnDeviceStreamCallback = IGenieStreamCallback | ILlamaRnStreamCallback;
 
@@ -24,6 +25,8 @@ export type IOnDeviceAvailableModel = {
   provider?: string;
   /** True when the model was found in storage but is not in any list we know about */
   isUnknown?: boolean;
+  /** True when the user added this model from Hugging Face (see `utils/models/imported`) */
+  isImported?: boolean;
   imageUrl?: string | null;
 }
 export type OnDeviceProviderConstructorProps = { config: { model: string | null } }
@@ -159,6 +162,10 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
    */
   async discoverUnknownStoredModels(knownModelIds: string[]): Promise<IOnDeviceAvailableModel[]> {
     const known = new Set([...knownModelIds, EMBEDDING_MODEL.modelId]);
+    // Imported models are keyed `org/repo/file.gguf`, so their folder is known by prefix.
+    const knownFolders = new Set(
+      [...known].map(id => (id.endsWith('.gguf') ? id.split('/').slice(0, 2).join('/') : id)),
+    );
     const unknownModels: IOnDeviceAvailableModel[] = [];
 
     try {
@@ -169,7 +176,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
         const modelDirs = (await RNFS.readDir(creator.path)).filter(item => item.isDirectory());
         for (const modelDir of modelDirs) {
           const modelId = `${creator.name}/${modelDir.name}`;
-          if (known.has(modelId)) continue;
+          if (knownFolders.has(modelId)) continue;
 
           const ggufFile = (await RNFS.readDir(modelDir.path)).find(file => file.isFile() && file.name.toLowerCase().endsWith('.gguf'));
           if (!ggufFile) continue;
@@ -224,7 +231,19 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
           imageUrl: m.imageUrl ?? null,
         }
       });
-    const knownModels = [...basicModels, ...crossPlatformModels];
+    const importedModels: IOnDeviceAvailableModel[] = (await ImportedModels.list()).map(m => ({
+      id: m.modelId,
+      modelId: m.modelId,
+      name: m.name,
+      description: m.description,
+      size: m.size,
+      downloadUrl: m.downloadUrl,
+      isPreset: false,
+      isImported: true,
+      provider: m.author,
+      imageUrl: null,
+    }));
+    const knownModels = [...basicModels, ...crossPlatformModels, ...importedModels];
     const unknownModels = await this.discoverUnknownStoredModels(knownModels.map(m => m.modelId));
     return [
       ...knownModels,

@@ -1,4 +1,4 @@
-import { PDFDocument, PDFFont, PDFPage, StandardFonts, rgb, type RGB } from 'pdf-lib';
+import { PDFDocument, PDFFont, PDFImage, PDFPage, StandardFonts, rgb, type RGB } from 'pdf-lib';
 import { marked } from 'marked';
 import { toWinAnsi, toAscii, unescapeHtml, stripHtml } from './encoding';
 
@@ -85,6 +85,12 @@ const LINE_HEIGHT = 1.45;
 const HEADING_SIZES: Record<number, number> = { 1: 18, 2: 15.5, 3: 13.5, 4: 12, 5: 11, 6: 10.5 };
 const LIST_INDENT = 18;
 const QUOTE_INDENT = 14;
+/** Side (pt) of each attachment thumbnail tile and the gap between tiles */
+const THUMBNAIL_SIZE = 72;
+const THUMBNAIL_GAP = 6;
+
+/** An image attachment as stored on a chat row - only the data URL is needed here */
+export type PdfImageAttachment = { name?: string; contentString?: string };
 
 export class PdfWriter {
   readonly doc: PDFDocument;
@@ -298,6 +304,59 @@ export class PdfWriter {
       color,
     });
     this.y -= thickness + 2;
+  }
+
+  /**
+   * Draw image attachments as a row of small square thumbnails, wrapping onto
+   * further rows when there are more than fit across the content width. Each
+   * image is scaled to fit inside its tile (letterboxed, never cropped) so the
+   * whole picture is visible. Anything pdf-lib can't decode falls back to a
+   * muted `[image: name]` line so the export never fails on a bad payload.
+   */
+  async drawImages(attachments: PdfImageAttachment[]) {
+    const embedded: { image: PDFImage; name?: string }[] = [];
+    const failed: string[] = [];
+    for (const attachment of attachments) {
+      const dataUrl = attachment?.contentString;
+      if (typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) continue;
+      try {
+        embedded.push({ image: await this.embedImage(dataUrl), name: attachment.name });
+      } catch {
+        failed.push(attachment.name || 'image');
+      }
+    }
+
+    const perRow = Math.max(1, Math.floor((this.contentWidth + THUMBNAIL_GAP) / (THUMBNAIL_SIZE + THUMBNAIL_GAP)));
+    for (let start = 0; start < embedded.length; start += perRow) {
+      this.ensureSpace(THUMBNAIL_SIZE);
+      const top = this.y;
+      embedded.slice(start, start + perRow).forEach(({ image }, column) => {
+        const tileX = this.contentLeft + column * (THUMBNAIL_SIZE + THUMBNAIL_GAP);
+        this.page.drawRectangle({ x: tileX, y: top - THUMBNAIL_SIZE, width: THUMBNAIL_SIZE, height: THUMBNAIL_SIZE, color: COLORS.codeBackground });
+        const scale = Math.min(THUMBNAIL_SIZE / image.width, THUMBNAIL_SIZE / image.height);
+        const width = image.width * scale;
+        const height = image.height * scale;
+        this.page.drawImage(image, {
+          x: tileX + (THUMBNAIL_SIZE - width) / 2,
+          y: top - THUMBNAIL_SIZE + (THUMBNAIL_SIZE - height) / 2,
+          width,
+          height,
+        });
+      });
+      this.y = top - THUMBNAIL_SIZE - THUMBNAIL_GAP;
+    }
+
+    for (const name of failed) {
+      this.drawText(`[image: ${name}]`, { size: 9, italic: true, color: COLORS.muted });
+    }
+  }
+
+  /** pdf-lib only decodes JPEG and PNG - anything else (HEIC, WebP, GIF) throws here */
+  private embedImage(dataUrl: string): Promise<PDFImage> {
+    const mime = dataUrl.slice(5, dataUrl.indexOf(';')).toLowerCase();
+    if (mime === 'image/jpeg' || mime === 'image/jpg') return this.doc.embedJpg(dataUrl);
+    if (mime === 'image/png') return this.doc.embedPng(dataUrl);
+    throw new Error(`Unsupported image type: ${mime}`);
   }
 
   /**

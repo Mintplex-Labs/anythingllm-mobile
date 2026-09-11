@@ -2,7 +2,7 @@ import { type WorkspaceType } from '@/database/models/Workspace';
 import { type WorkspaceThreadType } from '@/database/models/WorkspaceThread';
 import { type WorkspaceChatType } from '@/database/models/WorkspaceChat';
 
-export type ExportFormat = 'txt' | 'json' | 'pdf';
+export type ExportFormat = 'txt' | 'md' | 'json' | 'pdf';
 
 /**
  * Everything an exporter needs to build a transcript. Built once by the UI and
@@ -35,6 +35,13 @@ export const EXPORT_FORMATS: Record<ExportFormat, ExportFormatDefinition> = {
     extension: 'txt',
     mimeType: 'text/plain',
     description: 'Plain text transcript',
+  },
+  md: {
+    format: 'md',
+    label: 'Markdown',
+    extension: 'md',
+    mimeType: 'text/markdown',
+    description: 'Formatted transcript for notes apps',
   },
   json: {
     format: 'json',

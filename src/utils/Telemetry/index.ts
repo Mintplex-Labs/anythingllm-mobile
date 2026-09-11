@@ -31,7 +31,7 @@ class Telemetry {
             IMAGE_ATTACHED: 'image_attached',
             TOOL_CALLED: 'tool_called',
             LLM_SETTINGS_UPDATED: 'llm_settings_updated',
-            /** A chat thread was exported (txt/json/pdf) and handed to the share sheet */
+            /** A chat thread was exported (txt/md/json/pdf) and handed to the share sheet */
             THREAD_EXPORTED: 'thread_exported',
             /** A chat thread was forked into a new thread with a copy of its history */
             THREAD_FORKED: 'thread_forked',

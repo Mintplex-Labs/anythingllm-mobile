@@ -11,7 +11,8 @@ const LABEL_SIZE = 8.5;
  * Render a thread to a PDF and return it base64 encoded (ready for RNFS.writeFile).
  *
  * Layout: title block, then each exchange as a small colored role label followed
- * by the message body. User prompts are drawn as plain text (line breaks kept);
+ * by the message body. User prompts are drawn as plain text (line breaks kept)
+ * with any image attachments as a row of thumbnails beneath them;
  * assistant replies go through the markdown renderer so headings, lists, code
  * and tables come out styled. Ends with a light-gray italic "generated with"
  * footer and the AnythingLLM watermark on every page.
@@ -42,9 +43,14 @@ export async function buildThreadPdfBase64(ctx: ThreadExportContext): Promise<st
   }
 
   // --- Messages --------------------------------------------------------------
-  chats.forEach((chat, index) => {
+  for (const [index, chat] of chats.entries()) {
     drawRoleLabel(writer, 'You', COLORS.userLabel);
     writer.drawText(chat.prompt?.trim() || '(empty)', { size: BODY_SIZE });
+    const attachments = chat.response?.attachments;
+    if (Array.isArray(attachments) && attachments.length) {
+      writer.space(6);
+      await writer.drawImages(attachments);
+    }
     writer.space(12);
 
     drawRoleLabel(writer, 'Assistant', COLORS.assistantLabel);
@@ -57,7 +63,7 @@ export async function buildThreadPdfBase64(ctx: ThreadExportContext): Promise<st
       writer.drawRule();
       writer.space(14);
     }
-  });
+  }
 
   // --- Footer ----------------------------------------------------------------
   writer.space(22);

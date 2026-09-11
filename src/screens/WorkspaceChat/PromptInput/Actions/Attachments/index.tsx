@@ -61,7 +61,7 @@ export default function AttachmentsActionSheet({ workspace, thread, attachmentHa
         <BottomSheetModal
             ref={sheetRef}
             index={0}
-            snapPoints={['32%']}
+            snapPoints={['25%']}
             enableDynamicSizing={false}
             enablePanDownToClose={true}
             backgroundStyle={{ backgroundColor: '#1B1B1E' }}

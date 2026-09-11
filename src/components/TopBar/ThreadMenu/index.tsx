@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { CheckCircle, DotsThreeVertical, Export, FileCode, FilePdf, FileText, FolderOpen, ShareNetwork } from 'phosphor-react-native';
+import { CheckCircle, DotsThreeVertical, Export, FileCode, FileMd, FilePdf, FileText, FolderOpen, ShareNetwork } from 'phosphor-react-native';
 import { MenuRow, SheetHeader, MUTED_TEXT, ROW_ICON_BACKGROUND, SHEET_BACKGROUND, SUCCESS } from '@/components/SheetMenu';
 import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
 import useLlmPreference from '@/hooks/useLLMPreference';
@@ -26,6 +26,7 @@ type MenuPage = 'menu' | 'export' | 'saved';
 
 const EXPORT_ICONS: Record<ExportFormat, React.ReactNode> = {
   txt: <FileText size={22} color="#FFF" />,
+  md: <FileMd size={22} color="#FFF" />,
   json: <FileCode size={22} color="#FFF" />,
   pdf: <FilePdf size={22} color="#FFF" />,
 };
@@ -134,9 +135,9 @@ export default function ThreadMenuSheet({ workspace, thread }: { workspace: Work
       handleIndicatorStyle={{ backgroundColor: MUTED_TEXT, width: 45, margin: 10 }}
       onDismiss={handleDismiss}>
       <BottomSheetView style={{ paddingHorizontal: 20, paddingBottom: Math.max(insets.bottom, 16) + 8 }}>
-        {page === 'menu' && <MenuPageContent threadName={thread.name} onExport={() => setPage('export')} />}
+        {page === 'menu' && <MenuPageContent onExport={() => setPage('export')} />}
         {page === 'export' && (
-          <ExportPageContent threadName={thread.name} exporting={exporting} onBack={() => setPage('menu')} onSelect={handleExport} />
+          <ExportPageContent exporting={exporting} onBack={() => setPage('menu')} onSelect={handleExport} />
         )}
         {page === 'saved' && saved && (
           <SavedPageContent saved={saved} sharing={sharing} onShare={handleShare} onOpenLocation={handleOpenLocation} onDone={dismissAllSheets} />
@@ -146,29 +147,26 @@ export default function ThreadMenuSheet({ workspace, thread }: { workspace: Work
   );
 }
 
-function MenuPageContent({ threadName, onExport }: { threadName: string; onExport: () => void }) {
+function MenuPageContent({ onExport }: { onExport: () => void }) {
   return (
-    <View>
-      <SheetHeader title="Thread options" subtitle={threadName} />
-      <MenuRow icon={<Export size={22} color="#FFF" />} title="Export Chat Thread" description="Save this conversation to your device" onPress={onExport} />
+    <View style={{ paddingTop: 8 }}>
+      <MenuRow icon={<Export size={22} color="#FFF" />} title="Export Chat Thread" onPress={onExport} />
     </View>
   );
 }
 
 function ExportPageContent({
-  threadName,
   exporting,
   onBack,
   onSelect,
 }: {
-  threadName: string;
   exporting: ExportFormat | null;
   onBack: () => void;
   onSelect: (format: ExportFormat) => void;
 }) {
   return (
     <View>
-      <SheetHeader title="Export Chat Thread" subtitle={threadName} onBack={onBack} />
+      <SheetHeader title="Export Chat Thread" onBack={onBack} />
       {Object.values(EXPORT_FORMATS).map(definition => (
         <MenuRow
           key={definition.format}

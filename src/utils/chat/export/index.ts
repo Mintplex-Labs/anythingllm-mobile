@@ -8,6 +8,7 @@ import { type WorkspaceType } from '@/database/models/Workspace';
 import { type WorkspaceThreadType } from '@/database/models/WorkspaceThread';
 import { defaultModels } from '@/utils/models';
 import { buildThreadText } from './text';
+import { buildThreadMarkdown } from './markdown';
 import { buildThreadJsonString } from './json';
 import { buildThreadPdfBase64 } from './pdf';
 import { EXPORT_FORMATS, type ExportFormat, type ThreadExportContext } from './types';
@@ -92,6 +93,8 @@ export async function buildThreadExport(
   switch (format) {
     case 'txt':
       return { content: buildThreadText(ctx), encoding: 'utf8' };
+    case 'md':
+      return { content: buildThreadMarkdown(ctx), encoding: 'utf8' };
     case 'json':
       return { content: buildThreadJsonString(ctx), encoding: 'utf8' };
     case 'pdf':

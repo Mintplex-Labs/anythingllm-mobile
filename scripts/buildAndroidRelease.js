@@ -2,6 +2,21 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
+// Load the root .env (the same file Gradle reads via react-native-config) so the
+// signing password is available even when it is not exported in the shell.
+function loadDotEnv(envPath = '.env') {
+    if (!fs.existsSync(envPath)) return;
+    for (const line of fs.readFileSync(envPath, 'utf8').split(/\r?\n/)) {
+        if (line.trim().startsWith('#')) continue;
+        const match = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/);
+        if (!match) continue;
+        const key = match[1];
+        const value = match[2].replace(/^(["'])(.*)\1$/, '$2');
+        if (!process.env[key]) process.env[key] = value;
+    }
+}
+loadDotEnv();
+
 // Read package.json to get version
 const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 const version = packageJson.version;

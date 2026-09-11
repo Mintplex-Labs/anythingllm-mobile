@@ -5,8 +5,8 @@
 </p>
 
 <p align="center">
-    <b>AnythingLLM Mobile:</b> Your private AI assistant, on the go.<br />
-    Run LLMs on-device, connect to your AnythingLLM instance, or use any compatible provider — all from your phone.
+    <b>AnythingLLM Mobile:</b> A real AI assistant that lives in your pocket, not in the cloud.<br />
+    See, hear, search, and remember — powered by models running right on your phone.
 </p>
 
 <p align="center">
@@ -25,33 +25,50 @@
 </p>
 
 <p align="center">
-👉 AnythingLLM for desktop Android! <a href="https://play.google.com/store/apps/details?id=com.anythingllm" target="_blank">Download Now</a>
+👉 Download on Google Play! <a href="https://play.google.com/store/apps/details?id=com.anythingllm" target="_blank">Download Now</a>
 </p>
 
 ---
 
 ### Product Overview
 
-AnythingLLM Mobile brings the power of AnythingLLM to your Android device. Run large language models directly on your phone, connect to a self-hosted AnythingLLM instance over your local network, or chat with any OpenAI-compatible provider — all with a beautiful, native experience.
+Most "AI apps" on your phone are a thin wrapper around someone else's server. AnythingLLM Mobile is different: it runs full language models directly on your Android device, so your chats, photos, and documents never have to leave your hand.
 
-The design thesis of a "Local AI First" of AnythingLLM applies to the mobile app as well. So anything that you can do in the mobile app will always be local first.
+Want more horsepower? Pair it with your self-hosted AnythingLLM instance, or point it at Ollama, LM Studio, OpenRouter, or any OpenAI-compatible API. Either way, you decide where your data goes.
+
+AnythingLLM is **Local AI First**, and the mobile app is no exception. Everything you can do in the app works offline first — the cloud is optional, never required.
+
+### What's new in 1.1.0
+
+This release turns AnythingLLM Mobile from a chat app into a proper assistant.
+
+- 👁️ **Vision Support** Attach a photo and ask about it. Vision runs on-device.
+- 🎙️ **Speech to text** Tap the mic and just talk. Speech-to-text uses your phone's native recognition.
+- 🧠 **Agentic memory** Long threads stay coherent with a rolling summary that keeps you inside the context window instead of hitting a wall.
+- 🛠️ **Smart tool selection** Smarter tool selection means the model picks web search, scraping, or summarizing when it actually helps keeping context windows workable for small models.
+- 🤗 **Download direct from HuggingFace** Search Hugging Face right in the app, pick a model, and download it.
+- 📄 **Export Chats** Export any thread to PDF (images included), Markdown, JSON, or plain text.
+- 📈 **Tuned to your device.** Context windows and capabilities scale to your phone's RAM, so you get the most out of whatever you're holding.
 
 ### Features
 
-- **On-device LLM inference** — Run GGUF models locally on your phone using [llama.rn](https://github.com/mybigday/llama.rn) (llama.cpp for React Native).
-- **Connect to AnythingLLM** — Pair with your self-hosted AnythingLLM desktop or server instance for full workspace access.
-- **Multiple AI providers** — Use Ollama, LM Studio, OpenRouter, or any OpenAI-compatible API.
-- **Workspace chat** — Organize conversations into workspaces, just like the desktop app.
-- **Document chat** — Upload and chat with your documents via a connected AnythingLLM instance.
-- **Beautiful native UI** — Built with React Native, NativeWind, and a polished dark-mode-first design.
+- **On-device LLM inference** — Run GGUF models locally with [llama.rn](https://github.com/mybigday/llama.rn) (llama.cpp for React Native). Works with no signal at all.
+- **On-device vision** — Attach images and chat about them using multimodal models, fully offline.
+- **Voice input** — Speak your prompts with native OS speech recognition.
+- **Built-in tools** — Web search, web page reading, summarization, location, time, calendar, and drafting emails or texts.
+- **Hugging Face model browser** — Discover, download, and manage models without leaving the app.
+- **Connect to AnythingLLM** — Pair with your desktop or server instance for full workspace and document chat.
+- **Bring your own provider** — Ollama, LM Studio, OpenRouter, or any OpenAI-compatible API, with automatic model discovery.
+- **Chat export** — PDF, Markdown, JSON, or text.
+- **Thoughtful chat UX** — Chain-of-thought display, citations, fork and retry, auto-named threads, and more.
 - **Privacy-first** — Your data stays on your device or your own server. No third-party telemetry.
 
 ### Supported Providers
 
 | Provider | Type |
 |----------|------|
-| On-device (GGUF via llama.rn) | Local inference |
-| AnythingLLM Instance | Delegated (LAN/remote) |
+| On-device (GGUF via llama.rn) | Local inference, works offline |
+| AnythingLLM Instance | Your own desktop or server (LAN/remote) |
 | Ollama | Local/remote |
 | LM Studio | Local/remote |
 | OpenRouter | Cloud |

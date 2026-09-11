@@ -6,6 +6,9 @@ import { generateUUID } from '@/utils/constants';
 import Workspace, { type WorkspaceType } from './Workspace';
 import AnythingLLMExternal from '@/utils/AnythingLLMExternal';
 import { showToast } from '@/utils/Notification';
+import uiStore from '@/store/UIStore';
+import truncate from 'truncate';
+import WorkspaceChat from './WorkspaceChat';
 
 export type WorkspaceThreadType = {
   name: string;
@@ -27,6 +30,8 @@ export type WorkspaceThreadType = {
 export default class WorkspaceThread extends Model {
   static table = 'workspace_threads';
   static defaultName = 'New Thread';
+  /** Max length (ellipsis included) of an auto-generated thread name. Kept short so it fits the sidebar on small screens. */
+  static autoRenameMaxLength = 20;
   static writableFields = {
     name: {
       validate: (value: string) => {
@@ -189,6 +194,44 @@ export default class WorkspaceThread extends Model {
       return this.toWorkspaceThreadObject(updatedThread);
     } catch (error) {
       console.error('Error updating workspace thread:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Rename a thread from its first prompt if the user has not named it yet.
+   * Mirrors the desktop `autoRenameThread` - only runs for local (non-mirrored) threads that
+   * still have the default name and have no saved chats (ie: this is the first message being sent).
+   * Emits the same UI events as a manual rename so the sidebar and chat screen update.
+   * @returns the updated thread or null if no rename happened
+   */
+  static async autoRename({ thread, prompt }: { thread: WorkspaceThreadType | null, prompt: string | null }): Promise<WorkspaceThreadType | null> {
+    try {
+      if (!thread || !prompt) return null;
+      if (thread.isRemote) return null; // mirrored threads are named by the remote instance - leave them alone
+      if (thread.name !== WorkspaceThread.defaultName) return null; // already named by the user
+
+      const existingChats = await WorkspaceChat.find([{ field: 'workspace_thread_slug', value: thread.slug }]);
+      if (existingChats.length !== 0) return null;
+
+      const newName = truncate(prompt.replace(/\s+/g, ' ').trim(), WorkspaceThread.autoRenameMaxLength);
+      if (!WorkspaceThread.writableFields.name.validate(newName).valid) return null;
+
+      const updatedThread = await this.update(
+        [{ field: 'workspace_slug', value: thread.workspaceSlug }, { field: 'slug', value: thread.slug }],
+        { name: newName }
+      );
+      if (!updatedThread) return null;
+
+      uiStore.emitter.emit('workspaceUpdate', {
+        type: 'rename-thread',
+        details: { workspaceSlug: thread.workspaceSlug, threadSlug: thread.slug, newName },
+      });
+      uiStore.emitter.emit('workspaceThreadPageInfo', { type: 'update', details: { thread: updatedThread } });
+      this.log('auto-renamed thread', { thread: thread.slug, newName });
+      return updatedThread;
+    } catch (error) {
+      console.error('Error auto-renaming workspace thread:', error);
       return null;
     }
   }

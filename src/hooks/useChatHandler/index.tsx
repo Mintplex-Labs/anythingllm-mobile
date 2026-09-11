@@ -1,4 +1,4 @@
-import { type WorkspaceThreadType } from "@/database/models/WorkspaceThread";
+import WorkspaceThread, { type WorkspaceThreadType } from "@/database/models/WorkspaceThread";
 import { type WorkspaceType } from "@/database/models/Workspace";
 import { type LLMProvider } from "@/utils/AiProviders";
 import { useState, useMemo, useEffect, createContext, useContext, useCallback, useRef } from "react";
@@ -201,6 +201,8 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
             debug('Creating new chat', turn.uuid);
             upsertChat(turn.snapshot());
             uiStore.emitter.emit(CHAT_HANDLER_EVENTS.NEW_CHAT_STARTED, { uuid: turn.uuid });
+            // First message in an unnamed thread names the thread after the prompt (non-blocking).
+            WorkspaceThread.autoRename({ thread, prompt }).catch(err => debug('Error auto-renaming thread', err));
 
             const messageHistory = Array.from(chatsMapRef.current.values()).concat([newChat]);
             const handleStreamEvent = (event: IStreamEvent, data: IStreamResponse) => {
@@ -259,7 +261,7 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
         } finally {
             deactivateKeepAwake();
         }
-    }, [thread.slug, upsertChat, llmProvider, concludeChat, isRemote, workspace]);
+    }, [thread, upsertChat, llmProvider, concludeChat, isRemote, workspace]);
 
     const canScrollChatHistory = useMemo(() => {
         return !isLoadingChats && chatsArray.length > 0;

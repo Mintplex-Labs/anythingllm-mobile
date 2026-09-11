@@ -20,7 +20,7 @@ export default function OpenRouterOptions({
   apiKey: string;
   model: string;
   onApiKeyChange?: (provider: string, settings: { apiKey?: string }) => Promise<void>;
-  onModelChange?: (provider: string, settings: { model?: string }) => Promise<void>;
+  onModelChange?: (provider: string, settings: { model?: string; apiKey?: string }) => Promise<void>;
 }) {
   const insets = useSafeAreaInsets();
   const keyboardHeight = useKeyboardHeight();
@@ -29,6 +29,11 @@ export default function OpenRouterOptions({
   const [searchQuery, setSearchQuery] = useState('');
   const [availableModels, setAvailableModels] = useState<OpenAICompatibleModel[]>([]);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
+  // Refs so the debounced fetch (created once) always sees the latest selection and handler.
+  const currentModelIdRef = useRef(currentModelId);
+  const onModelChangeRef = useRef(onModelChange);
+  currentModelIdRef.current = currentModelId;
+  onModelChangeRef.current = onModelChange;
 
   const handlePropertyChange = async (key: string, value: string) => {
     switch (key) {
@@ -71,7 +76,12 @@ export default function OpenRouterOptions({
           const models = await (getLLM('openrouter', { apiKey }) as OpenAICompatible).availableModels();
           setAvailableModels(models.map((model: OpenAICompatibleModel) => model));
           // Keep the user's existing selection; only default to the first model when nothing is selected yet.
-          setCurrentModelId(prev => prev || models[0]?.id || '');
+          // The default must be persisted too, otherwise the picker shows a model that was never saved.
+          const firstModelId = models[0]?.id;
+          if (!currentModelIdRef.current && firstModelId) {
+            setCurrentModelId(firstModelId);
+            await onModelChangeRef.current?.(provider, { model: firstModelId, apiKey });
+          }
         } catch (error) {
           console.log(`Error fetching models:`, error);
           setAvailableModels([]);

@@ -51,6 +51,11 @@ export default function GenericOpenAiOptions({
   const [hasAttemptedFetch, setHasAttemptedFetch] = useState(false);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const fetchRequestId = useRef(0);
+  // Refs so the debounced fetch (created once) always sees the latest selection and handler.
+  const currentModelRef = useRef(currentModel);
+  const onModelChangeRef = useRef(onModelChange);
+  currentModelRef.current = currentModel;
+  onModelChangeRef.current = onModelChange;
 
   const filteredModels = useMemo(() => {
     return availableModels.filter(m => m.id.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -118,6 +123,14 @@ export default function GenericOpenAiOptions({
       if (models.length > 0 && resolvedBaseUrl !== baseUrl) {
         setCurrentBaseUrl(resolvedBaseUrl);
         await onBaseUrlChange?.(provider, { baseUrl: resolvedBaseUrl });
+      }
+
+      // Nothing selected yet - default to the first discovered model and persist it so the
+      // picker never shows a model that was not actually saved.
+      const firstModelId = models[0]?.id;
+      if (!currentModelRef.current && firstModelId) {
+        setCurrentModel(firstModelId);
+        await onModelChangeRef.current?.(provider, { model: firstModelId, baseUrl: resolvedBaseUrl, apiKey });
       }
     }, 500)
   ).current;

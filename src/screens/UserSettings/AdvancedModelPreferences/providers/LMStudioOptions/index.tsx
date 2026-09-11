@@ -20,7 +20,7 @@ export default function LMStudioOptions({
   baseUrl: string;
   model: string;
   onBaseUrlChange?: (provider: string, settings: { baseUrl?: string }) => Promise<void>;
-  onModelChange?: (provider: string, settings: { model?: string }) => Promise<void>;
+  onModelChange?: (provider: string, settings: { model?: string; baseUrl?: string }) => Promise<void>;
 }) {
   const insets = useSafeAreaInsets();
   const keyboardHeight = useKeyboardHeight();
@@ -29,6 +29,11 @@ export default function LMStudioOptions({
   const [searchQuery, setSearchQuery] = useState('');
   const [availableModels, setAvailableModels] = useState<LMStudioModel[]>([]);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
+  // Refs so the debounced fetch (created once) always sees the latest selection and handler.
+  const currentModelIdRef = useRef(currentModelId);
+  const onModelChangeRef = useRef(onModelChange);
+  currentModelIdRef.current = currentModelId;
+  onModelChangeRef.current = onModelChange;
 
   const handlePropertyChange = async (key: string, value: string) => {
     switch (key) {
@@ -71,7 +76,12 @@ export default function LMStudioOptions({
           const models = await (getLLM('lmstudio', { baseUrl: url }) as LMStudioProvider).availableModels();
           setAvailableModels(models.map((model: LMStudioModel) => model));
           // Keep the user's existing selection; only default to the first model when nothing is selected yet.
-          setCurrentModelId(prev => prev || models[0]?.id || '');
+          // The default must be persisted too, otherwise the picker shows a model that was never saved.
+          const firstModelId = models[0]?.id;
+          if (!currentModelIdRef.current && firstModelId) {
+            setCurrentModelId(firstModelId);
+            await onModelChangeRef.current?.(provider, { model: firstModelId, baseUrl: url });
+          }
         } catch (error) {
           console.log(`Error fetching models: (${url})`, error);
           setAvailableModels([]);

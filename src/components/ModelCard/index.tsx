@@ -4,6 +4,7 @@ import { DownloadSimple, Cube, Question } from 'phosphor-react-native';
 import MODEL_CARDS from '@/utils/models/defaults';
 import { findMonoProviderIcon } from '@/components/MonoProviderIcon';
 import truncate from 'truncate';
+import { DownloadRing } from '@/components/DownloadSurface';
 
 interface ModelCardProps {
   model: any;
@@ -73,6 +74,8 @@ export default function ModelCard({
     );
   };
 
+  const isDownloading = modelDownloadUrl === model.downloadUrl;
+
   return (
     <TouchableOpacity
       disabled={!!modelDownloadUrl && modelDownloadUrl !== model.downloadUrl}
@@ -105,17 +108,9 @@ export default function ModelCard({
               </Text>
             )}
           </View>
-          {modelDownloadUrl === model.downloadUrl ? (
-            <View className="flex-row items-center gap-2 ml-4">
-              <View className="w-[80px] h-[4px] bg-[#323235] rounded-full overflow-hidden">
-                <View
-                  className="h-full bg-[#6ce9a6] rounded-full"
-                  style={{ width: `${downloadProgress}%` }}
-                />
-              </View>
-              <Text className="text-xs text-white min-w-[32px]">
-                {downloadProgress}%
-              </Text>
+          {isDownloading ? (
+            <View className="flex-row items-center ml-4">
+              <DownloadRing progress={downloadProgress} />
             </View>
           ) : isDownloaded ? (
             <TouchableOpacity onPress={onUninstall} className="px-3 py-1 ml-4">

@@ -9,6 +9,9 @@ import PushNotifications from '@/utils/PushNotifications';
 import { activateKeepAwake, deactivateKeepAwake } from '@/utils/keepAwake';
 import ImportedModels from '@/utils/models/imported';
 
+const UI_PROGRESS_INTERVAL_MS = 250;
+const NOTIFICATION_PROGRESS_INTERVAL_MS = 5000;
+
 interface UseModelManagerProps {
   llmPreferences: any;
   fetchLLMPreference: () => Promise<void>;
@@ -121,12 +124,18 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     try {
       activateKeepAwake();
       uiStore.setSessionKey('@downloadInProgress', true, uiStore.globalEvents.MODEL_DOWNLOAD_STARTED);
+      // The in-app card animates every tick, so poll often. The system notification
+      // is rate-limited by Android, so only push to it every few seconds.
+      let lastNotifiedAt = 0;
       await RNFS.downloadFile({
         fromUrl: model.downloadUrl,
         toFile: storageLocation,
         progress: res => {
           const progress = Math.round((res.bytesWritten / res.contentLength) * 100);
           setDownloadProgress(progress);
+          const now = Date.now();
+          if (now - lastNotifiedAt < NOTIFICATION_PROGRESS_INTERVAL_MS) return;
+          lastNotifiedAt = now;
           PushNotifications.send('progress', {
             id: downloadNotificationId,
             title: 'Downloading model',
@@ -141,7 +150,7 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
         },
         background: true,
         discretionary: true,
-        progressInterval: 5000,
+        progressInterval: UI_PROGRESS_INTERVAL_MS,
       }).promise;
 
       // The progress callback only fires every `progressInterval` ms, so the last

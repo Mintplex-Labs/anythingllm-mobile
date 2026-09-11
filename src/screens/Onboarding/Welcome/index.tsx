@@ -32,11 +32,11 @@ export default function OnboardingWelcome() {
           <Image
             source={require("@/assets/onboarding/welcome.png")}
             resizeMode="contain"
-            className="max-w-[380px] max-h-[60%] mx-auto py-4"
+            className="max-w-[350px] max-h-[60%] mx-auto py-4"
           />
           <View className="flex max-w-[75%] mx-auto">
             <Text className="text-white text-regular text-center">
-              Transform your phone into a personal AI assistant to chat with documents, AI agents, and more - all private and on-device.
+              An AI agent that lives on your phone. Chat with documents, search the web, and integrate into your apps.
             </Text>
           </View>
 

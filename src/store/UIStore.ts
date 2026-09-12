@@ -4,7 +4,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeEventEmitter } from 'react-native';
 
-type StorageKeys =
+export type StorageKeys =
   'onboarding_welcome_completed' |
   'onboarding_model_selection_completed' |
   'onboarding_survey_completed' |
@@ -48,6 +48,7 @@ export class UIStore {
     'current_anythingllm_external_connection',
     'anythingllm_external_connections',
     'hf_imported_models',
+    'provider_config_cache',
   ] as const;
 
   pageStates = {

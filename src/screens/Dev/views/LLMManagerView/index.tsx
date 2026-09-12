@@ -1,74 +1,123 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { useEffect, useState } from 'react';
+import { KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import uiStore from '@/store/UIStore';
 import { showToast } from '@/utils/Notification';
+import { Button, Card, DEV_COLORS, DevHeader, Section } from '../../components';
 
-export default function LLMManagerView() {
-  const [llmpref, setLlmPref] = useState<{
-    provider: string;
-    config: { model: string };
-  } | null>(null);
+type StoredLLMPreference = {
+  provider: string;
+  config: { model: string; [key: string]: any };
+};
+
+const DEFAULT_PREFERENCE: StoredLLMPreference = {
+  provider: 'openai',
+  config: { model: 'gpt-4' },
+};
+
+const inputStyle = {
+  backgroundColor: DEV_COLORS.input,
+  padding: 16,
+  textAlignVertical: 'center' as const,
+};
+
+export default function LLMManagerView({ onExit }: { onExit: () => void }) {
+  const insets = useSafeAreaInsets();
+  const [stored, setStored] = useState<StoredLLMPreference | null>(null);
+  const [draft, setDraft] = useState<StoredLLMPreference | null>(null);
 
   useEffect(() => {
-    uiStore
-      .getFromStorage('llmPreference', {
-        provider: 'openai',
-        config: { model: 'gpt-4' },
-      })
-      .then(value => {
-        setLlmPref(value);
-      });
+    uiStore.getFromStorage('llmPreference', DEFAULT_PREFERENCE).then(value => {
+      setStored(value);
+      setDraft(value);
+    });
   }, []);
 
+  const dirty =
+    !!draft &&
+    !!stored &&
+    (draft.provider !== stored.provider || draft.config.model !== stored.config.model);
+
+  async function save() {
+    if (!draft) return;
+    const next = {
+      ...draft,
+      provider: draft.provider.trim(),
+      config: { ...draft.config, model: draft.config.model.trim() },
+    };
+    await uiStore.setToStorage('llmPreference', next);
+    setStored(next);
+    setDraft(next);
+    showToast('LLM preference saved');
+  }
+
   return (
-    <View className="bg-[--secondary-bg] rounded-xl p-4 mb-4">
-      <Text className="text-white text-2xl font-bold mb-4">
-        LLM Configuration
-      </Text>
-      <View className="flex flex-col gap-y-4">
-        <View>
-          <Text className="text-white font-medium mb-2">Provider</Text>
-          <TextInput
-            placeholder="e.g. openai"
-            placeholderTextColor="#6c757d"
-            className="p-4 rounded-lg bg-[--primary-bg] text-white border-none"
-            value={llmpref?.provider}
-            onChangeText={(text: string) =>
-              setLlmPref(prev => (prev ? { ...prev, provider: text } : null))
-            }
-          />
-        </View>
-
-        <View>
-          <Text className="text-white font-medium mb-2">Model</Text>
-          <TextInput
-            placeholder="e.g. gpt-4"
-            placeholderTextColor="#6c757d"
-            className="p-4 rounded-lg bg-[--primary-bg] text-white border-none"
-            value={llmpref?.config?.model}
-            onChangeText={(text: string) =>
-              setLlmPref(prev =>
-                prev
-                  ? { ...prev, config: { ...prev.config, model: text } }
-                  : null,
-              )
-            }
-          />
-        </View>
-
-        <TouchableOpacity
-          className="bg-[--cta-light-blue] rounded-lg p-4 mt-2"
-          onPress={() => {
-            if (llmpref) {
-              uiStore.setToStorage('llmPreference', llmpref);
-              showToast('LLM configuration saved');
-            }
+    <>
+      <DevHeader title="LLM Preference" onBack={onExit} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="interactive"
+          contentContainerStyle={{
+            paddingHorizontal: 8,
+            paddingBottom: insets.bottom + 20,
+            gap: 24,
+            flexGrow: 1,
           }}>
-          <Text className="text-[--dark] font-bold text-center">
-            Save Configuration
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+          <Section
+            title="Override"
+            description="Writes directly to the stored preference. Other config keys (API key, base URL, etc.) are kept as-is. Use Settings for the normal flow.">
+            <View className="flex flex-col" style={{ gap: 12 }}>
+              <View className="flex flex-col" style={{ gap: 8 }}>
+                <Text style={{ color: DEV_COLORS.muted }} className="text-sm uppercase">
+                  Provider
+                </Text>
+                <TextInput
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  style={inputStyle}
+                  className="rounded-lg text-white placeholder:text-white/50"
+                  placeholder="e.g. openai"
+                  value={draft?.provider ?? ''}
+                  onChangeText={text =>
+                    setDraft(prev => (prev ? { ...prev, provider: text } : prev))
+                  }
+                />
+              </View>
+              <View className="flex flex-col" style={{ gap: 8 }}>
+                <Text style={{ color: DEV_COLORS.muted }} className="text-sm uppercase">
+                  Model
+                </Text>
+                <TextInput
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  style={inputStyle}
+                  className="rounded-lg text-white placeholder:text-white/50"
+                  placeholder="e.g. gpt-4"
+                  value={draft?.config?.model ?? ''}
+                  onChangeText={text =>
+                    setDraft(prev =>
+                      prev ? { ...prev, config: { ...prev.config, model: text } } : prev,
+                    )
+                  }
+                />
+              </View>
+              <Button label="Save preference" disabled={!dirty} onPress={save} />
+            </View>
+          </Section>
+
+          <Section title="Stored value">
+            <Card>
+              <Text selectable className="text-white text-sm font-mono">
+                {stored ? JSON.stringify(stored, null, 2) : 'Loading...'}
+              </Text>
+            </Card>
+          </Section>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </>
   );
 }

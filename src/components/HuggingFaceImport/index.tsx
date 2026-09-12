@@ -67,19 +67,19 @@ type Status =
   | { kind: 'search'; query: string; results: HfGGUFSearchResult[] };
 
 /**
- * Same budget used by `useMemoryCheck`: llama.cpp needs the weights in memory plus
- * some headroom for the KV cache, so anything above ~65% of device RAM is flagged.
+ * Returns the device's total RAM and a usable budget (total minus ~2.5 GB
+ * reserved for the OS, the app, and the KV cache which is allocated separately
+ * from the model weights).
  */
-function memoryBudgetBytes() {
+function memoryLimits(): { total: number; budget: number } | null {
   try {
     const total = DeviceInfo.getTotalMemorySync();
     if (!total) return null;
-    return Math.min(total * 0.65, total - 1.2e9);
+    return { total, budget: total - 2.5e9 };
   } catch {
     return null;
   }
 }
-const estimatedRuntimeBytes = (fileSize: number) => 0.43e9 + 0.92 * fileSize;
 
 export default function HuggingFaceImport({
   initialQuery = '',
@@ -94,7 +94,7 @@ export default function HuggingFaceImport({
   const [query, setQuery] = useState(initialQuery);
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
   const requestId = useRef(0);
-  const memoryBudget = useMemo(memoryBudgetBytes, []);
+  const memory = useMemo(memoryLimits, []);
   const installed = useMemo(() => new Set(installedModelIds), [installedModelIds]);
 
   const lookup = useCallback(async (input: string) => {
@@ -196,7 +196,16 @@ export default function HuggingFaceImport({
         </View>
       )}
 
-      {status.kind === 'repo' && <RepoHeader repo={status.data.repo} />}
+      {status.kind === 'repo' && (
+        <>
+          <RepoHeader repo={status.data.repo} />
+          {status.data.quants.length > 0 && (
+            <Text className="text-[#9F9FA0] text-xs font-medium mt-1">
+              {status.data.quants.length} GGUF {status.data.quants.length === 1 ? 'file' : 'files'} available to download
+            </Text>
+          )}
+        </>
+      )}
 
       {status.kind === 'search' && (
         <Text className="text-[#9F9FA0] text-xs">
@@ -238,7 +247,13 @@ export default function HuggingFaceImport({
 
         const { repo } = status.data;
         const modelId = importedModelId(repo.id, item.quant.filename);
-        const runtimeEstimate = estimatedRuntimeBytes(item.quant.size);
+        const fit: 'ok' | 'tight' | 'impossible' = !memory
+          ? 'ok'
+          : item.quant.size > memory.total
+            ? 'impossible'
+            : item.quant.size > memory.budget
+              ? 'tight'
+              : 'ok';
         return (
           <QuantRow
             quant={item.quant}
@@ -246,7 +261,7 @@ export default function HuggingFaceImport({
             isDownloading={activeDownloadUrl === item.quant.downloadUrl}
             downloadProgress={downloadProgress}
             disabled={!!activeDownloadUrl && activeDownloadUrl !== item.quant.downloadUrl}
-            exceedsMemory={memoryBudget !== null && runtimeEstimate > memoryBudget}
+            memoryFit={fit}
             gated={repo.gated}
             onPress={() => onDownload(buildImportedModel(repo, item.quant))}
           />
@@ -266,7 +281,11 @@ function RepoHeader({ repo }: { repo: HfGGUFRepo['repo'] }) {
   ].filter(Boolean);
 
   return (
-    <View className="bg-[#2A2A2E] rounded-xl p-4" style={{ gap: 6 }}>
+    <TouchableOpacity
+      onPress={() => Linking.openURL(hfRepoWebUrl(repo.id))}
+      activeOpacity={0.7}
+      className="bg-[#2A2A2E] rounded-xl p-4"
+      style={{ gap: 6 }}>
       <View className="flex flex-row items-center" style={{ gap: 10 }}>
         {MonoIcon && (
           <View className="w-[34px] h-[34px] rounded-lg justify-center items-center bg-white">
@@ -277,9 +296,7 @@ function RepoHeader({ repo }: { repo: HfGGUFRepo['repo'] }) {
           <Text className="text-white text-base font-medium" numberOfLines={1}>{repo.title}</Text>
           <Text className="text-[#9F9FA0] text-xs" numberOfLines={1}>{repo.id}</Text>
         </View>
-        <TouchableOpacity onPress={() => Linking.openURL(hfRepoWebUrl(repo.id))} hitSlop={8}>
-          <ArrowSquareOut size={18} color="#9F9FA0" />
-        </TouchableOpacity>
+        <ArrowSquareOut size={18} color="#9F9FA0" />
       </View>
       {facts.length > 0 && <Text className="text-[#9F9FA0] text-xs">{facts.join(' · ')}</Text>}
       {repo.gated && (
@@ -290,7 +307,7 @@ function RepoHeader({ repo }: { repo: HfGGUFRepo['repo'] }) {
           </Text>
         </View>
       )}
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -320,7 +337,7 @@ function QuantRow({
   isDownloading,
   downloadProgress,
   disabled,
-  exceedsMemory,
+  memoryFit,
   gated,
   onPress,
 }: {
@@ -329,7 +346,7 @@ function QuantRow({
   isDownloading: boolean;
   downloadProgress: number;
   disabled: boolean;
-  exceedsMemory: boolean;
+  memoryFit: 'ok' | 'tight' | 'impossible';
   gated: boolean;
   onPress: () => void;
 }) {
@@ -337,8 +354,8 @@ function QuantRow({
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || gated}
-      style={{ opacity: disabled || gated ? 0.5 : 1 }}
-      className="w-full p-4 rounded-xl bg-[#2A2A2E] flex-row items-center justify-between">
+      style={{ opacity: disabled || gated ? 0.5 : 1, borderWidth: 1, borderColor: '#2A2A2E' }}
+      className="w-full p-3 rounded-xl flex-row items-center justify-between">
       <View className="flex-1" style={{ gap: 2 }}>
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
           <Text className="text-white text-base font-medium">{quant.quant ?? 'GGUF'}</Text>
@@ -347,9 +364,14 @@ function QuantRow({
               <Text className="text-[#6ce9a6] text-[10px] font-medium">Installed</Text>
             </View>
           )}
-          {exceedsMemory && !isInstalled && (
+          {memoryFit === 'tight' && !isInstalled && (
             <View className="rounded-full px-2 py-0.5 bg-yellow-500/30">
               <Text className="text-yellow-200 text-[10px] font-medium">May not fit in memory</Text>
+            </View>
+          )}
+          {memoryFit === 'impossible' && !isInstalled && (
+            <View className="rounded-full px-2 py-0.5 bg-red-500/30">
+              <Text className="text-red-300 text-[10px] font-medium">Too large for this device</Text>
             </View>
           )}
         </View>

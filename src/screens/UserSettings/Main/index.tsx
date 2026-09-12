@@ -10,13 +10,14 @@ import {
   FileLock,
   GithubLogo,
   MoneyWavy,
+  Scroll,
 } from 'phosphor-react-native';
 import { IWorkspacePageKey } from '../index';
 import uiStore from '@/store/UIStore';
 import { PATHS } from '@/utils/paths';
 import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';
 import AwaitableAlert from '@/components/AwaitableAlert';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import useLLMPreference from '@/hooks/useLLMPreference';
 import { startCase } from 'lodash';
@@ -29,6 +30,9 @@ import { deleteProcessedFiles } from '@/utils/fs';
 import { showToast } from '@/utils/Notification';
 import MonoProviderIcon from '@/components/MonoProviderIcon';
 import ApkVersion from './ApkVersion';
+import DeviceInfo from 'react-native-device-info';
+import { getChangelogForVersion } from '@/utils/changelog';
+import ChangelogModal from '@/components/ChangelogModal';
 
 interface MainViewProps {
   goToPage: (page: IWorkspacePageKey) => void;
@@ -94,11 +98,14 @@ const LEGAL_LINKS: SupportLink[] = [
   },
 ]
 
+const changelogEntry = getChangelogForVersion(DeviceInfo.getVersion());
+
 export function MainView({ goToPage }: MainViewProps) {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const { llmPreferences, providerToName } = useLLMPreference();
   const scrollViewRef = useRef<ScrollView>(null);
+  const [changelogVisible, setChangelogVisible] = useState(false);
   function goBack() {
     navigation.reset({
       index: 0,
@@ -225,6 +232,14 @@ export function MainView({ goToPage }: MainViewProps) {
                 gap: 12,
                 borderRadius: 8,
               }}>
+              {changelogEntry && (
+                <SupportItem
+                  title={`What's new in v${changelogEntry.version}`}
+                  icon={<Scroll size={18} color="#FFF" />}
+                  onPress={() => setChangelogVisible(true)}
+                  borderBottom={ABOUT_LINKS.length > 0}
+                />
+              )}
               {ABOUT_LINKS.map((link, index) => {
                 return (
                   <SupportItem
@@ -310,6 +325,13 @@ export function MainView({ goToPage }: MainViewProps) {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      {changelogEntry && (
+        <ChangelogModal
+          visible={changelogVisible}
+          content={changelogEntry.content}
+          onClose={() => setChangelogVisible(false)}
+        />
+      )}
     </SafeView>
   );
 }

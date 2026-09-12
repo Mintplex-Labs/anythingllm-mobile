@@ -38,7 +38,7 @@ export async function syncFromRemote({
             name: workspace.name,
             slug: generateUUID(), // generate a new uuid for the workspace in case it already exists (imported previously)
             systemPrompt: workspace.openAiPrompt,
-            temperature: workspace.openAiTemp,
+            temperature: workspace.openAiTemp ?? null, // null = inherit the provider default
             isRemote: true,
             remoteConfig: {
                 connectionUrl: module.connectionUrl,

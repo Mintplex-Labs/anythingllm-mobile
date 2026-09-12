@@ -46,7 +46,6 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
   protected submodule: LlamaRnWrapper | null = null;
   protected client: OpenAILite;
   protected isOTypeModel: boolean;
-  protected temperature: number;
 
   constructor({ config }: OnDeviceProviderConstructorProps) {
     super({ provider: 'native', config });
@@ -54,7 +53,6 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     // For compilance with the base class - we stub it here.
     this.client = new OpenAILite();
     this.isOTypeModel = false;
-    this.temperature = 0.7;
 
     this.provider = 'native';
     this.config = config;

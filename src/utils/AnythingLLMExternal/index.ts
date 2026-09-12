@@ -3,9 +3,9 @@ import { getDeviceName } from "react-native-device-info";
 
 export type Commands = 'workspaces' | 'workspace-content' | 'model-tag' | 'reset-chat' | 'new-thread' | 'unregister-device';
 export type CommandResponses = {
-    'workspaces': { workspaces: Array<{ id: number; name: string, slug: string, threadCount: number, chatCount: number, openAiPrompt: string, openAiTemp: number, topN: number, platform: 'server' | 'desktop' }> };
+    'workspaces': { workspaces: Array<{ id: number; name: string, slug: string, threadCount: number, chatCount: number, openAiPrompt: string, openAiTemp: number | null, topN: number, platform: 'server' | 'desktop' }> };
     'workspace-content': {
-        workspace: { id: number; name: string, slug: string, openAiPrompt: string, openAiTemp: number, topN: number };
+        workspace: { id: number; name: string, slug: string, openAiPrompt: string, openAiTemp: number | null, topN: number };
         threads: Array<{ id: number; name: string, slug: string, workspace_id: number }>;
         chats: Array<{ id: number; workspaceId: number, thread_id: number, prompt: string, response: string, createdAt: number }>;
     };

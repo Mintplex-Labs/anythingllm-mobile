@@ -136,7 +136,7 @@ export function MainView({ workspace, goToPage, initialThreadSlug }: MainViewPro
                         </View>
                         <View className="flex flex-1 flex-row gap-2 items-center justify-between">
                             <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: '#9F9FA0' }} className="text-lg flex-1 text-right">
-                                {workspace?.temperature || Workspace.defaultTemperature}
+                                {workspace?.temperature ?? 'Default'}
                             </Text>
                             <CaretRight size={18} color="#FFF" />
                         </View>

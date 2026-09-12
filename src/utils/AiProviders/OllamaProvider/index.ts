@@ -35,7 +35,6 @@ class OllamaProvider extends BaseOpenAILikeProvider {
   public model: string;
   private connectionProvider: string;
   protected client: OpenAILite;
-  protected temperature: number = 0.7;
   protected isOTypeModel: boolean = false; // always false for LMStudio
   public isExternalProvider: boolean = true;
 

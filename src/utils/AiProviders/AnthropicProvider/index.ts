@@ -22,7 +22,6 @@ class AnthropicProvider extends BaseOpenAILikeProvider {
   private connectionProvider: string;
   // AnthropicLite is structurally compatible with the OpenAILite surface the base class uses.
   protected client: any;
-  protected temperature: number = 0.7;
   protected isOTypeModel: boolean = false;
 
   constructor({ provider = 'anthropic', config = {} }: AnthropicProviderConfig) {

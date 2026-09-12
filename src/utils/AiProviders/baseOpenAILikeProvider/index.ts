@@ -153,7 +153,6 @@ export default abstract class BaseOpenAILikeProvider {
   protected abstract client: OpenAILite;
   protected abstract isOTypeModel: boolean;
   protected abstract model: string;
-  protected abstract temperature: number;
   protected abstract log: (message: string, ...args: any[]) => void;
   protected abstract loadNewModel(model: string): Promise<void>;
   protected abstract unloadModel(): Promise<void>;
@@ -193,10 +192,15 @@ export default abstract class BaseOpenAILikeProvider {
     return true;
   }
 
-  /** `{ temperature }` for the request body, or nothing when the provider does not accept it. */
+  /**
+   * `{ temperature }` for the request body, or nothing when the provider does not accept it
+   * or the workspace has no temperature set (`null`) - in which case the provider/model default applies.
+   */
   private temperatureParam(): Record<string, number> {
     if (!this.supportsTemperature()) return {};
-    return { temperature: this.isOTypeModel ? 1 : this.temperature };
+    const temperature = this.workspace?.temperature;
+    if (typeof temperature !== 'number') return {};
+    return { temperature: this.isOTypeModel ? 1 : temperature };
   }
 
   private DEFAULT_TOP_N = 2;

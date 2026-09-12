@@ -35,8 +35,9 @@ const PAGES = {
       {...props}
       field="temperature"
       title="Temperature"
-      placeholder="Enter your temperature here..."
+      placeholder="Default (provider decides)"
       resetValue={Workspace.defaultTemperature}
+      hint="Leave empty to use the default temperature of your LLM provider and model. Set a value between 0 and 1 to override it."
       reattachProviderOnSave={true}
     />
   ),

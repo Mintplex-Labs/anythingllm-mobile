@@ -43,7 +43,6 @@ class OpenRouterProvider extends BaseOpenAILikeProvider {
   public model: string;
   private connectionProvider: string;
   protected client;
-  protected temperature: number = 0.7;
   protected isOTypeModel: boolean = false;
 
   constructor({ provider = 'OpenRouterProvider', config = {} }: OpenRouterProviderConfig) {

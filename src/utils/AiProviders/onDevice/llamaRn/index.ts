@@ -45,7 +45,7 @@ export type OnDeviceRuntimeInfo = {
  */
 export default class LlamaRnWrapper {
   /**
-   * Defaults are shared with `Workspace` so inference behaves the same when a workspace has no override.
+   * Context length default is shared with `Workspace` so inference behaves the same when a workspace has no override.
    * Keeping inside the window, in order:
    *  1. `OnDeviceProvider.shapePrompt` swaps the oldest chats for a rolling summary (`compactor`) and caps RAG chunks.
    *  2. `fitMessagesToContext` drops the oldest remaining turns, then shrinks the latest message if it alone overflows.
@@ -56,8 +56,6 @@ export default class LlamaRnWrapper {
   static get DEFAULT_CONTEXT_LENGTH(): number {
     return getDefaultContextLength();
   }
-  static DEFAULT_TEMPERATURE = 0.7;
-
   /**
    * llama.rn defaults to -1 (unbounded) which we never want on a phone.
    */
@@ -169,8 +167,12 @@ export default class LlamaRnWrapper {
     this.unloadModel().catch((e) => this.log('Failed to unload for reload', e));
   }
 
-  get temperature() {
-    return this.parent.workspace?.temperature ?? LlamaRnWrapper.DEFAULT_TEMPERATURE;
+  /**
+   * Workspace temperature override, or `null` to defer to the model definition's
+   * `completionSettings.temperature` and finally llama.rn's own default (0.8, `common_params_sampling::temp`).
+   */
+  get temperature(): number | null {
+    return this.parent.workspace?.temperature ?? null;
   }
 
   get nPredict() {
@@ -383,14 +385,16 @@ export default class LlamaRnWrapper {
 
   /**
    * Sampling params recommended by the model author (from the model definition) that
-   * are not user configurable, plus the workspace temperature which always wins.
+   * are not user configurable, plus the workspace temperature which wins when it is set.
+   * When the workspace temperature is `null` the key is left as the model author's value,
+   * or omitted entirely so llama.rn falls back to its native default.
    */
   private get completionParams(): Partial<CompletionParams> {
     const params: Record<string, any> = {};
     if (this.modelDefinition?.completionSettings) {
       for (const [key, value] of Object.entries(this.modelDefinition.completionSettings)) params[key] = value;
     }
-    params.temperature = this.temperature;
+    if (this.temperature !== null) params.temperature = this.temperature;
     return params;
   }
 

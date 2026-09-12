@@ -1,10 +1,10 @@
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ArrowLeft, CheckCircle, CircleNotch } from "phosphor-react-native";
+import { ArrowLeft, CheckCircle } from "phosphor-react-native";
 import { WorkspaceType } from "@/database/models/Workspace";
 import { IWorkspacePageKey } from "../index";
-import { useState, useEffect, useRef, useCallback, Fragment } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { screenDimensions } from "@/utils/constants";
 import useKeyboardHeight from "@/hooks/useKeyboardHeight";
 import debounce from 'lodash/debounce';
@@ -17,7 +17,11 @@ interface NumericInputViewProps {
     workspace: WorkspaceType;
     goToPage: (page: IWorkspacePageKey) => void;
     field: keyof WorkspaceType;
-    resetValue: number;
+    /**
+     * Value applied when the user taps "Reset". `null` means the field is optional:
+     * reset clears the input and the workspace stores `null` (eg: temperature -> provider default).
+     */
+    resetValue: number | null;
     title: string;
     hint?: string;
     placeholder: string;
@@ -30,19 +34,24 @@ const DEFAULT_SAVE_STATUS = {
     state: 'waiting' as 'waiting' | 'saving' | 'saved',
 };
 
+/** How a numeric (or null) workspace value is shown in the input. */
+const toText = (value: number | null | undefined) => (typeof value === 'number' ? value.toString() : '');
+
 export function NumericInputView({ workspace, goToPage, field, title, placeholder, resetValue, hint, reattachProviderOnSave = false, suggestions = [] }: NumericInputViewProps) {
     useHighjackBackButtonPress(() => { goToPage('main'); return true; });
     const insets = useSafeAreaInsets();
     const keyboardHeight = useKeyboardHeight();
     const { LLMProvider } = useLLMProvider();
-    const [value, setValue] = useState(workspace[field] ?? resetValue);
+    const allowEmpty = resetValue === null;
+    // The raw text is kept separately from the parsed number so partial input like "0." is not rewritten while typing.
+    const [text, setText] = useState(toText((workspace[field] as number | null | undefined) ?? resetValue));
     const [saveStatus, setSaveStatus] = useState(DEFAULT_SAVE_STATUS);
 
     const debouncedSave = useRef(
-        debounce(async (newValue: number) => {
+        debounce(async (newValue: number | null) => {
             if (
                 newValue === workspace[field] ||
-                !Workspace.writableFields[field].validate(newValue).valid
+                !Workspace.writableFields[field].validate(newValue as any).valid
             ) {
                 setSaveStatus(DEFAULT_SAVE_STATUS);
                 return;
@@ -62,25 +71,33 @@ export function NumericInputView({ workspace, goToPage, field, title, placeholde
 
                 setSaveStatus({ text: 'Autosaved!', state: 'saved' });
             } catch (err) {
-                console.error('Error saving context length:', err);
-                showToast('Error saving temperature');
+                console.error(`Error saving ${field}:`, err);
+                showToast(`Error saving ${title.toLowerCase()}`);
             } finally {
                 setTimeout(() => setSaveStatus(DEFAULT_SAVE_STATUS), 2000);
             }
         }, 1000)
     ).current;
 
-    const handleValueChange = useCallback((text: string) => {
-        const value = parseFloat(text);
-        if (isNaN(value)) return;
+    const handleValueChange = useCallback((nextText: string) => {
+        setText(nextText);
 
-        setValue(value);
+        if (nextText.trim() === '') {
+            // Empty input only means something for optional fields - otherwise wait for a number.
+            if (allowEmpty) debouncedSave(null);
+            return;
+        }
+
+        const value = parseFloat(nextText);
+        if (isNaN(value)) return;
         debouncedSave(value);
-    }, [debouncedSave]);
+    }, [debouncedSave, allowEmpty]);
 
     useEffect(() => {
         return () => debouncedSave.cancel();
     }, [debouncedSave]);
+
+    const resetText = toText(resetValue);
 
     return (
         <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" safeAreaStyle={{ backgroundColor: '#1B1B1E' }}>
@@ -112,12 +129,12 @@ export function NumericInputView({ workspace, goToPage, field, title, placeholde
                             padding: 16
                         }}
                         className="rounded-lg text-white placeholder:text-white/50 text-left"
-                        defaultValue={value.toString()}
+                        value={text}
                         onChangeText={handleValueChange}
                         placeholder={placeholder}
                     />
-                    {value !== resetValue && (
-                        <TouchableOpacity onPress={() => handleValueChange(resetValue.toString())} className="flex flex-row items-center justify-center">
+                    {text !== resetText && (
+                        <TouchableOpacity onPress={() => handleValueChange(resetText)} className="flex flex-row items-center justify-center">
                             <Text className="text-white">Reset</Text>
                         </TouchableOpacity>
                     )}
@@ -130,7 +147,7 @@ export function NumericInputView({ workspace, goToPage, field, title, placeholde
                         <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">Suggested {title}</Text>
                         <View style={{ gap: 10, flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'flex-start' }} className="flex flex-row items-center justify-center">
                             {suggestions
-                                .filter((suggestion) => suggestion.toString() !== value.toString())
+                                .filter((suggestion) => suggestion.toString() !== text)
                                 .map((suggestion) => (
                                     <TouchableOpacity key={suggestion} style={{ paddingHorizontal: 10, paddingVertical: 5 }} onPress={() => handleValueChange(suggestion)} className="flex flex-row items-center justify-center bg-white/10 rounded-full">
                                         <Text className="text-white">{suggestion}</Text>

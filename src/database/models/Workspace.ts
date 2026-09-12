@@ -16,7 +16,8 @@ export type WorkspaceType = {
   slug: string;
   createdAt: number;
   systemPrompt: string;
-  temperature: number;
+  /** `null` means no override - the provider/model default is used and the param is omitted from requests. */
+  temperature: number | null;
   contextLength: number;
   isRemote: boolean;
   remoteConfig: {
@@ -44,10 +45,10 @@ export default class Workspace extends Model {
   static defaultSystemPrompt = `You are a helpful assistant that can answer questions and help with tasks.`;
 
   /**
-   * Mirror the defaults of the on-device LlamaRnWrapper (src/utils/AiProviders/onDevice/llamaRn)
-   * so no weirdness happens during inference when a workspace has no override.
+   * `null` = no override. Providers then omit `temperature` from the request so the provider's
+   * (or model's) own default applies, without us having to track model-specific temperature rules.
    */
-  static defaultTemperature = 0.7;
+  static defaultTemperature: number | null = null;
   /** Scales with device RAM up to a max of 2048 - see src/utils/contextLength.ts */
   static get defaultContextLength(): number {
     return getDefaultContextLength();
@@ -76,10 +77,11 @@ export default class Workspace extends Model {
       },
     },
     temperature: {
-      validate: (value: number) => {
+      validate: (value: number | null) => {
         let error = '';
+        if (value === null) return { valid: true, error }; // null = use the provider default
         if (typeof value !== 'number' || isNaN(Number(value))) error = 'Temperature must be a number';
-        if (value < 0 || value > 1) error = 'Temperature must be between 0 and 1';
+        else if (value < 0 || value > 1) error = 'Temperature must be between 0 and 1';
         return { valid: !error, error };
       },
     },
@@ -109,7 +111,7 @@ export default class Workspace extends Model {
   @text('name') name!: string;
   @text('slug') slug!: string; // unique!!
   @text('system_prompt') systemPrompt!: string;
-  @field('temperature') temperature!: number;
+  @field('temperature') temperature!: number | null;
   @field('context_length') contextLength!: number;
   @field('is_remote') isRemote!: boolean;
   @json('remote_config', (json: any) => json) remoteConfig!: WorkspaceType['remoteConfig'];
@@ -212,7 +214,7 @@ export default class Workspace extends Model {
         workspace.name = name;
         workspace.slug = slug;
         workspace.system_prompt = Workspace.defaultSystemPrompt;
-        workspace.temperature = Workspace.defaultTemperature;
+        workspace.temperature = Workspace.defaultTemperature; // null - inherit the provider default
         workspace.context_length = Workspace.defaultContextLength;
         workspace.is_remote = false;
         workspace.remote_config = null;
@@ -317,7 +319,7 @@ export default class Workspace extends Model {
         if (!workspace.name) workspace.name = Workspace.defaultName;
         if (!workspace.slug) workspace.slug = slugify(workspace.name).toLowerCase();
         if (!workspace.system_prompt) workspace.system_prompt = Workspace.defaultSystemPrompt;
-        if (!workspace.temperature) workspace.temperature = Workspace.defaultTemperature;
+        if (workspace.temperature === undefined) workspace.temperature = Workspace.defaultTemperature;
         if (!workspace.context_length) workspace.context_length = Workspace.defaultContextLength;
         if (!workspace.is_remote) workspace.is_remote = data.isRemote ?? false;
         if (!workspace.remote_config) workspace.remote_config = data.remoteConfig ?? null;

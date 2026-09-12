@@ -13,7 +13,8 @@ type StorageKeys =
   'tools' |
   'current_anythingllm_external_connection' |
   'anythingllm_external_connections' |
-  'hf_imported_models';
+  'hf_imported_models' |
+  'provider_config_cache';
 
 export const GLOBAL_EVENTS = {
   REDIRECT: 'REDIRECT',

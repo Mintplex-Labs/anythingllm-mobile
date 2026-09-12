@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { useState, useRef, useCallback, useMemo } from 'react';
 import { ISelection } from '@/screens/Onboarding/ModelSelection';
-import { X, MagnifyingGlass, CaretDown, Circle } from 'phosphor-react-native';
+import { X, MagnifyingGlass, CaretDown, Circle, CheckCircle } from 'phosphor-react-native';
 import { AVAILABLE_LLM_PROVIDERS, groupProvidersForPicker } from '@/utils/llmproviders';
 import {
   BottomSheetModal,
@@ -19,11 +19,14 @@ export default function ProviderSelection({
   selection,
   onChange,
   excludeProviders = [],
+  cachedProviders = [],
 }: {
   selection: ISelection;
   onChange: (provider: string) => void;
   /** Provider values to hide from the picker (eg: 'native' during external-provider onboarding) */
   excludeProviders?: string[];
+  /** Provider values that have a saved config in the cache */
+  cachedProviders?: string[];
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef(null);
@@ -148,9 +151,14 @@ export default function ProviderSelection({
                           resizeMode="contain"
                         />
                         <View className="ml-4 flex-1">
-                          <Text className="text-white text-lg">
-                            {provider.name}
-                          </Text>
+                          <View className="flex flex-row items-center" style={{ gap: 6 }}>
+                            <Text className="text-white text-lg">
+                              {provider.name}
+                            </Text>
+                            {cachedProviders.includes(provider.value) && (
+                              <CheckCircle size={16} color="#22C55E" />
+                            )}
+                          </View>
                           {provider.description && (
                             <Text className="text-[#9F9FA0] text-sm">
                               {provider.description}

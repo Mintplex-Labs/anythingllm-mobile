@@ -2,12 +2,14 @@ import { Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import SafeView from '@/components/SafeView';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'phosphor-react-native';
+import { useEffect, useState } from 'react';
 import { IWorkspacePageKey } from '../index';
 import useLLMPreference from '@/hooks/useLLMPreference';
 import ProviderSelection from '@/components/LLMSelection/ProviderSelection';
 import { screenDimensions } from '@/utils/constants';
 import Telemetry from '@/utils/Telemetry';
 import { findProviderDefinition, type ProviderConfig } from '@/utils/llmproviders';
+import useProviderConfigCache from '@/hooks/useProviderConfigCache';
 
 import NativeOptions from './providers/nativeOptions';
 import LMStudioOptions from './providers/LMStudioOptions';
@@ -28,26 +30,38 @@ export default function AdvancedModelPreferences({
     fetchLLMPreference,
     updateLLMPreference,
   } = useLLMPreference();
-  async function updateProviderSettings(provider: string, settings: ProviderConfig) {
-    await updateLLMPreference(provider, {
-      ...llmPreferences.config,
-      ...settings,
-    });
-    await fetchLLMPreference();
-    Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.LLM_SETTINGS_UPDATED, { provider, model: settings?.model ?? '' });
+  const configCache = useProviderConfigCache();
+  const [cachedProviderKeys, setCachedProviderKeys] = useState<string[]>([]);
+
+  useEffect(() => {
+    configCache.cachedProviders().then(setCachedProviderKeys);
+  }, []);
+
+  async function refreshCachedKeys() {
+    setCachedProviderKeys(await configCache.cachedProviders());
   }
 
-  /**
-   * Switching provider starts from that provider's default (empty) config - see `AVAILABLE_LLM_PROVIDERS`.
-   * On-device keeps the currently selected model.
-   */
+  async function updateProviderSettings(provider: string, settings: ProviderConfig) {
+    const merged = { ...llmPreferences.config, ...settings };
+    await updateLLMPreference(provider, merged);
+    await fetchLLMPreference();
+    Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.LLM_SETTINGS_UPDATED, { provider, model: settings?.model ?? '' });
+    await configCache.save(provider, merged);
+    await refreshCachedKeys();
+  }
+
   async function handleProviderSelection(provider: string) {
+    await configCache.save(llmPreferences.provider, llmPreferences.config);
+    await refreshCachedKeys();
+
     if (provider === 'native') {
       await updateLLMPreference('native', { model: llmPreferences.config.model });
       return;
     }
+
     const definition = findProviderDefinition(provider);
-    await updateLLMPreference(provider, { ...(definition?.defaultConfig ?? {}) });
+    const cached = await configCache.restore(provider);
+    await updateLLMPreference(provider, cached ?? { ...(definition?.defaultConfig ?? {}) });
   }
 
   const renderProviderOptions = () => {
@@ -140,6 +154,7 @@ export default function AdvancedModelPreferences({
             config: llmPreferences.config,
           }}
           onChange={handleProviderSelection}
+          cachedProviders={cachedProviderKeys}
         />
       </View>
 

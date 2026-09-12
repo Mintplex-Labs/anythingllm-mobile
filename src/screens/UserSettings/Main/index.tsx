@@ -27,6 +27,7 @@ import WorkspaceChat from '@/database/models/WorkspaceChat';
 import uninstallAllModels from '@/utils/models/manager';
 import { deleteProcessedFiles } from '@/utils/fs';
 import { showToast } from '@/utils/Notification';
+import MonoProviderIcon from '@/components/MonoProviderIcon';
 import ApkVersion from './ApkVersion';
 
 interface MainViewProps {
@@ -186,6 +187,11 @@ export function MainView({ goToPage }: MainViewProps) {
               className="w-full flex flex-row items-center rounded-lg"
               onPress={() => goToPage('advanced_model_preferences')}>
               <View className="flex flex-row gap-2 items-center">
+                <MonoProviderIcon
+                  provider={llmPreferences.provider}
+                  size={22}
+                  color="#FFF"
+                />
                 <Text className="text-white text-lg">
                   {providerToName(llmPreferences.provider)}
                 </Text>

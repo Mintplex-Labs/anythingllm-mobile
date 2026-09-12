@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Keyboard,
   Linking,
+  FlatList,
 } from 'react-native';
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -54,6 +55,8 @@ type Props = {
   downloadProgress?: number;
   onBack: () => void;
   onInputFocus?: () => void;
+  /** Use a regular FlatList instead of BottomSheetFlatList (for rendering outside a BottomSheet). */
+  useStandardFlatList?: boolean;
 };
 
 type Status =
@@ -86,6 +89,7 @@ export default function HuggingFaceImport({
   downloadProgress = 0,
   onBack,
   onInputFocus,
+  useStandardFlatList = false,
 }: Props) {
   const [query, setQuery] = useState(initialQuery);
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
@@ -218,8 +222,10 @@ export default function HuggingFaceImport({
         ? status.results.map(result => ({ key: result.id, kind: 'result' as const, result }))
         : [];
 
+  const ListComponent = useStandardFlatList ? FlatList : BottomSheetFlatList;
+
   return (
-    <BottomSheetFlatList
+    <ListComponent
       data={items}
       keyExtractor={item => item.key}
       className="w-full"

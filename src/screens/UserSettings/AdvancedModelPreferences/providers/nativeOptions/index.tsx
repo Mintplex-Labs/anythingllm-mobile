@@ -1,5 +1,6 @@
 import useModelManager from '@/hooks/useModelManager';
-import { Modal, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import ModelCard from '@/components/ModelCard';
 import { groupModelsByProvider, ProviderSectionHeader } from '@/components/ModelCard/ProviderSections';
 import { useState, useEffect, Fragment, useCallback } from 'react';
@@ -130,6 +131,7 @@ export default function NativeOptions({
               activeDownloadUrl={modelDownloadUrl}
               downloadProgress={downloadProgress}
               onBack={() => setShowImport(false)}
+              useStandardFlatList
             />
           </View>
         </SafeAreaView>

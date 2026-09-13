@@ -1,4 +1,4 @@
-import { Image, ImageBackground, Text, TouchableOpacity, View } from "react-native";
+import { Image, ImageBackground, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import uiStore from "@/store/UIStore";
 import { useNavigation } from "@react-navigation/native";
@@ -11,6 +11,8 @@ import { showToast } from "@/utils/Notification";
 export default function OnboardingWelcome() {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const { width: screenWidth } = useWindowDimensions();
+  const imageWidth = Math.min(screenWidth * 0.85, 350);
   const handleGetStarted = () => {
     uiStore.setToStorage('onboarding_welcome_completed', true);
     navigation.navigate(PATHS.onboarding.model_selection as never);
@@ -32,7 +34,7 @@ export default function OnboardingWelcome() {
           <Image
             source={require("@/assets/onboarding/welcome.png")}
             resizeMode="contain"
-            className="max-w-[350px] max-h-[60%] mx-auto py-4"
+            style={{ width: imageWidth, maxHeight: '60%', alignSelf: 'center', marginVertical: 16 }}
           />
           <View className="flex max-w-[75%] mx-auto">
             <Text className="text-white text-regular text-center">

@@ -6,7 +6,8 @@ import { useEffect, useState } from 'react';
 import { IWorkspacePageKey } from '../index';
 import useLLMPreference from '@/hooks/useLLMPreference';
 import ProviderSelection from '@/components/LLMSelection/ProviderSelection';
-import { screenDimensions } from '@/utils/constants';
+
+
 import Telemetry from '@/utils/Telemetry';
 import { findProviderDefinition, type ProviderConfig } from '@/utils/llmproviders';
 import useProviderConfigCache from '@/hooks/useProviderConfigCache';
@@ -124,7 +125,7 @@ export default function AdvancedModelPreferences({
     <SafeView
       scrollable={false}
       safeAreaClassNames="pt-[21px]"
-      containerClassNames="flex flex-col"
+      containerClassNames="flex flex-col flex-1"
       safeAreaStyle={{ backgroundColor: '#0E0F0F' }}>
       {/* Header */}
       <View
@@ -158,22 +159,21 @@ export default function AdvancedModelPreferences({
         />
       </View>
 
-      <View style={{ gap: 16 }} className="flex flex-col">
+      <View style={{ gap: 16 }} className="flex flex-col flex-1">
         <Text className="text-white font-semibold text-lg">
           {llmPreferences.provider === 'native' ? 'LLM Model' : 'Provider Settings'}
         </Text>
-        <View style={{ height: screenDimensions.height - insets.bottom - 300 }}>
-          <ScrollView
-            contentContainerStyle={{
-              paddingHorizontal: 8,
-              paddingBottom: 100,
-              gap: 16,
-            }}
-            showsVerticalScrollIndicator={true}
-          >
-            {renderProviderOptions()}
-          </ScrollView>
-        </View>
+        <ScrollView
+          className="flex-1"
+          contentContainerStyle={{
+            paddingHorizontal: 8,
+            paddingBottom: insets.bottom + 20,
+            gap: 16,
+          }}
+          showsVerticalScrollIndicator={true}
+        >
+          {renderProviderOptions()}
+        </ScrollView>
       </View>
     </SafeView>
   );

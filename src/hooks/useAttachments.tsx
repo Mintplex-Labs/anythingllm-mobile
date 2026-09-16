@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View, Alert, ActivityIndicator, ScrollView, Image, PermissionsAndroid } from "react-native";
+import { View, Alert, ScrollView, PermissionsAndroid } from "react-native";
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { generateUUID, getCurrentDeviceInfo, screenDimensions, } from "@/utils/constants";
 import * as RNFS from '@dr.pogodin/react-native-fs';
@@ -18,6 +18,7 @@ import { storeProcessedFileAsText } from "@/utils/fs";
 import Telemetry from "@/utils/Telemetry";
 import { type IAttachment } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { ImageLightbox } from "@/components/ImageAttachmentGrid";
+import AttachmentChip, { ATTACHMENT_CHIP_HEIGHT } from "@/components/AttachmentChip";
 
 const MAX_ATTACHMENTS = 4;
 
@@ -315,44 +316,23 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
             >
                 <View className="flex flex-row gap-x-2">
                     {attachments.map((attachment) => {
-                        const isProcessing = attachment.processing;
                         const isImage = attachment.kind === 'image' && !!attachment.contentString;
+                        const confirmRemove = () => Alert.alert('Remove Attachment', 'Are you sure you want to remove this attachment from chat?', [
+                            { text: 'Cancel', style: 'cancel' },
+                            { text: 'Remove', style: 'destructive', onPress: () => removeAttachment(attachment) }
+                        ]);
                         return (
-                            <TouchableOpacity
+                            <AttachmentChip
                                 key={attachment.uuid}
-                                disabled={isProcessing}
-                                style={{
-                                    height: 40,
-                                    paddingHorizontal: isImage ? 6 : 14,
-                                    maxWidth: 250,
-                                    ...(isProcessing ? {
-                                        backgroundColor: 'transparent',
-                                        borderWidth: 1,
-                                        borderColor: '#6F6F71'
-                                    } : {
-                                        backgroundColor: '#333333'
-                                    }),
-                                }}
-                                className="flex flex-row gap-x-2 items-center rounded-full justify-center"
-                                onPress={() => {
-                                    // Images open in the lightbox (which offers remove); documents ask to remove directly.
-                                    if (isImage) return setPreviewUuid(attachment.uuid);
-                                    Alert.alert('Remove Attachment', 'Are you sure you want to remove this attachment from chat?', [
-                                        { text: 'Cancel', style: 'cancel' },
-                                        { text: 'Remove', style: 'destructive', onPress: () => removeAttachment(attachment) }
-                                    ]);
-                                }}
-                            >
-                                {isProcessing && <ActivityIndicator size="small" color="#fff" />}
-                                {isImage && (
-                                    <Image
-                                        source={{ uri: attachment.contentString }}
-                                        style={{ width: 28, height: 28, borderRadius: 14 }}
-                                        resizeMode="cover"
-                                    />
-                                )}
-                                <Text numberOfLines={1} ellipsizeMode="middle" className="text-white" style={isImage ? { paddingRight: 8 } : undefined}>{attachment.name}</Text>
-                            </TouchableOpacity>
+                                name={attachment.name}
+                                size={attachment.size}
+                                processing={attachment.processing}
+                                imageUri={isImage ? attachment.contentString : undefined}
+                                // Images open in the lightbox (which also offers remove); documents have no preview.
+                                onPress={isImage ? () => setPreviewUuid(attachment.uuid) : undefined}
+                                // Images are cheap to re-add; documents were parsed and embedded, so confirm first.
+                                onRemove={isImage ? () => removeAttachment(attachment) : confirmRemove}
+                            />
                         );
                     })}
                 </View>
@@ -403,7 +383,7 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
     return attachmentInterface;
 }
 
-const ATTACHMENTS_SECTION_HEIGHT = 40; // height for the attachment items and the bottom padding
+const ATTACHMENTS_SECTION_HEIGHT = ATTACHMENT_CHIP_HEIGHT; // height of one chip row; the container adds bottom padding
 export function ChatWindowAttachmentsContainer({ attachmentHandler }: { attachmentHandler: AttachmentInterface }) {
     const insets = useSafeAreaInsets();
     const getTopPosition = useCallback(() => {

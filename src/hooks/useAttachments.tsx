@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View, Alert, ActivityIndicator, ScrollView, Image, PermissionsAndroid } from "react-native";
+import { View, Alert, ScrollView, PermissionsAndroid } from "react-native";
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { generateUUID, getCurrentDeviceInfo, screenDimensions, } from "@/utils/constants";
 import * as RNFS from '@dr.pogodin/react-native-fs';
@@ -13,11 +13,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { snapPointsDefault } from "@/screens/WorkspaceChat/PromptInput";
 import { CHAT_HANDLER_EVENTS } from "@/hooks/useChatHandler";
 import uiStore from "@/store/UIStore";
-import PDFParser from "@/utils/PDFParser";
+import DocumentParser from "@/utils/DocumentParser";
 import { storeProcessedFileAsText } from "@/utils/fs";
 import Telemetry from "@/utils/Telemetry";
 import { type IAttachment } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { ImageLightbox } from "@/components/ImageAttachmentGrid";
+import AttachmentChip, { ATTACHMENT_CHIP_HEIGHT } from "@/components/AttachmentChip";
 
 const MAX_ATTACHMENTS = 4;
 
@@ -156,8 +157,8 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
                 throw new Error('Attachment could not be found');
             });
 
-            const result = await extractTextContentFromFile(realPath, attachment.type);
-            if (!result) throw new Error('Attachment content was empty or could not be read');
+            // Throws UnsupportedDocumentError / a descriptive Error which surfaces as the toast below.
+            const result = await DocumentParser.extractText(realPath, attachment.name, attachment.type);
 
             // Store the attachment as a plain text file in the local folder with the same name
             // but as text/plain so that it can be read as plain text later on but refer to it as
@@ -201,34 +202,12 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
         }
     }, []);
 
-    const extractTextContentFromFile = useCallback(async (fileStoragePath: string, mimeType: string): Promise<string | null> => {
-        let result: string | null = null;
-        try {
-            switch (mimeType) {
-                case 'application/pdf':
-                    result = (await PDFParser.extract(fileStoragePath))?.textContent || null;
-                    break;
-                default:
-                    const stats = await RNFS.stat(fileStoragePath).catch((e) => {
-                        console.log('error', e);
-                        throw new Error('Attachment could not be read');
-                    });
-                    result = await RNFS.read(fileStoragePath, stats.size, 0, 'utf8');
-                    break;
-            }
-            return result;
-        } catch (e) {
-            console.log('error', e);
-            return null;
-        }
-    }, []);
-
     const askForAttachment = useCallback(async () => {
         let result: Awaited<ReturnType<typeof pick>>;
         try {
             result = await pick({
                 allowMultiSelection: false,
-                type: ['text/plain', 'application/pdf', 'text/markdown'],
+                type: DocumentParser.PICKER_FILE_TYPES, // mime types on Android, UTIs on iOS
             });
         } catch (e) {
             // The picker rejects when the user backs out of the system dialog; that is not an error.
@@ -237,9 +216,12 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
         }
         if (result.length === 0) return;
         const attachment = result[0];
+        // Prefer the mime type derived from the extension: Android providers often report
+        // application/octet-stream (or null) for markdown, csv and similar files.
+        const resolved = DocumentParser.resolveDocument(attachment.name, attachment.type);
         const attachmentObject: Attachment = {
             uuid: generateUUID(),
-            type: attachment.type || 'text/plain',
+            type: resolved?.mimeType || attachment.type || 'application/octet-stream',
             uri: decodeURI(attachment.uri),
             name: attachment.name || 'attachment',
             size: attachment.size || 0,
@@ -334,44 +316,23 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
             >
                 <View className="flex flex-row gap-x-2">
                     {attachments.map((attachment) => {
-                        const isProcessing = attachment.processing;
                         const isImage = attachment.kind === 'image' && !!attachment.contentString;
+                        const confirmRemove = () => Alert.alert('Remove Attachment', 'Are you sure you want to remove this attachment from chat?', [
+                            { text: 'Cancel', style: 'cancel' },
+                            { text: 'Remove', style: 'destructive', onPress: () => removeAttachment(attachment) }
+                        ]);
                         return (
-                            <TouchableOpacity
+                            <AttachmentChip
                                 key={attachment.uuid}
-                                disabled={isProcessing}
-                                style={{
-                                    height: 40,
-                                    paddingHorizontal: isImage ? 6 : 14,
-                                    maxWidth: 250,
-                                    ...(isProcessing ? {
-                                        backgroundColor: 'transparent',
-                                        borderWidth: 1,
-                                        borderColor: '#6F6F71'
-                                    } : {
-                                        backgroundColor: '#333333'
-                                    }),
-                                }}
-                                className="flex flex-row gap-x-2 items-center rounded-full justify-center"
-                                onPress={() => {
-                                    // Images open in the lightbox (which offers remove); documents ask to remove directly.
-                                    if (isImage) return setPreviewUuid(attachment.uuid);
-                                    Alert.alert('Remove Attachment', 'Are you sure you want to remove this attachment from chat?', [
-                                        { text: 'Cancel', style: 'cancel' },
-                                        { text: 'Remove', style: 'destructive', onPress: () => removeAttachment(attachment) }
-                                    ]);
-                                }}
-                            >
-                                {isProcessing && <ActivityIndicator size="small" color="#fff" />}
-                                {isImage && (
-                                    <Image
-                                        source={{ uri: attachment.contentString }}
-                                        style={{ width: 28, height: 28, borderRadius: 14 }}
-                                        resizeMode="cover"
-                                    />
-                                )}
-                                <Text numberOfLines={1} ellipsizeMode="middle" className="text-white" style={isImage ? { paddingRight: 8 } : undefined}>{attachment.name}</Text>
-                            </TouchableOpacity>
+                                name={attachment.name}
+                                size={attachment.size}
+                                processing={attachment.processing}
+                                imageUri={isImage ? attachment.contentString : undefined}
+                                // Images open in the lightbox (which also offers remove); documents have no preview.
+                                onPress={isImage ? () => setPreviewUuid(attachment.uuid) : undefined}
+                                // Images are cheap to re-add; documents were parsed and embedded, so confirm first.
+                                onRemove={isImage ? () => removeAttachment(attachment) : confirmRemove}
+                            />
                         );
                     })}
                 </View>
@@ -422,7 +383,7 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
     return attachmentInterface;
 }
 
-const ATTACHMENTS_SECTION_HEIGHT = 40; // height for the attachment items and the bottom padding
+const ATTACHMENTS_SECTION_HEIGHT = ATTACHMENT_CHIP_HEIGHT; // height of one chip row; the container adds bottom padding
 export function ChatWindowAttachmentsContainer({ attachmentHandler }: { attachmentHandler: AttachmentInterface }) {
     const insets = useSafeAreaInsets();
     const getTopPosition = useCallback(() => {

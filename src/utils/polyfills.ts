@@ -8,6 +8,7 @@ import { polyfill as polyfillEncoding } from 'react-native-polyfill-globals/src/
 import { polyfill as polyfillURL } from 'react-native-polyfill-globals/src/url';
 // import { polyfill as polyfillFetch } from 'react-native-polyfill-globals/src/fetch';
 import { polyfill as polyfillCrypto } from 'react-native-polyfill-globals/src/crypto';
+import { Buffer } from 'buffer';
 
 (async () => {
   let polyfilled: string[] = [];
@@ -48,6 +49,12 @@ import { polyfill as polyfillCrypto } from 'react-native-polyfill-globals/src/cr
 
   polyfillCrypto();
   polyfilled.push('crypto');
+
+  // Node Buffer global - required by mammoth (docx parsing) and handy for base64 <-> bytes.
+  if (typeof globalThis.Buffer === 'undefined') {
+    polyfillGlobal('Buffer', () => Buffer);
+    polyfilled.push('Buffer');
+  }
 
   console.log(`🛠️ \x1b[33m[polyfills]\x1b[0m Patched ${polyfilled.length} globals. ${polyfilled.join(', ')}`);
 })();

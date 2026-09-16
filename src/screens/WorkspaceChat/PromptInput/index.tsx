@@ -253,6 +253,9 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
               paddingTop: 16,
               paddingHorizontal: 20,
               opacity: hasModelSelected ? 1 : 0.5,
+              // Italicize while voice typing so the user can tell the text is
+              // still being transcribed; revert once listening stops.
+              fontStyle: speechToText.isListening ? "italic" : "normal",
             }}
           />
           <ActionMenu

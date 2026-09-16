@@ -134,9 +134,7 @@ export default function useWorkspaces(withThreads: boolean = false) {
     fetchWorkspaces(withThreads);
   }, []);
 
-  // Consumers mounted before onboarding finished (the sidebar mounts with the drawer at
-  // app launch) fetched an empty list because no workspace existed yet. Refetch when the
-  // onboarding-created workspace lands so the user does not have to pull-to-refresh.
+  // Fetch when the onboarding-created workspace happens to prevent stale sidebar
   useEffect(() => {
     const onOnboardingCompleted = () => fetchWorkspaces(withThreads);
     const sub = uiStore.emitter.addListener(

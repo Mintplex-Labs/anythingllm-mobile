@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import Clipboard from '@react-native-clipboard/clipboard';
-import DeviceInfo from 'react-native-device-info';
 import {
   ArrowLeft,
   ArrowSquareOut,
@@ -35,6 +34,8 @@ import {
 import { buildImportedModel, ImportedModel, importedModelId } from '@/utils/models/imported';
 import { formatBytes, formatNumber } from '@/utils/formatters';
 import { findIconByModelName } from '@/components/MonoProviderIcon';
+import { MemoryFitBadge } from '@/components/ModelCard/FitBadges';
+import { getDeviceMemory, MemoryFit, memoryFitForSize } from '@/utils/models/memoryFit';
 
 /**
  * Lets the user paste a Hugging Face repo id / url (or search the hub) and pick
@@ -66,21 +67,6 @@ type Status =
   | { kind: 'repo'; data: HfGGUFRepo }
   | { kind: 'search'; query: string; results: HfGGUFSearchResult[] };
 
-/**
- * Returns the device's total RAM and a usable budget (total minus ~2.5 GB
- * reserved for the OS, the app, and the KV cache which is allocated separately
- * from the model weights).
- */
-function memoryLimits(): { total: number; budget: number } | null {
-  try {
-    const total = DeviceInfo.getTotalMemorySync();
-    if (!total) return null;
-    return { total, budget: total - 2.5e9 };
-  } catch {
-    return null;
-  }
-}
-
 export default function HuggingFaceImport({
   initialQuery = '',
   onDownload,
@@ -94,7 +80,8 @@ export default function HuggingFaceImport({
   const [query, setQuery] = useState(initialQuery);
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
   const requestId = useRef(0);
-  const memory = useMemo(memoryLimits, []);
+  // Same verdict the catalog and onboarding cards show (see `utils/models/memoryFit`).
+  const memory = useMemo(getDeviceMemory, []);
   const installed = useMemo(() => new Set(installedModelIds), [installedModelIds]);
 
   const lookup = useCallback(async (input: string) => {
@@ -247,13 +234,7 @@ export default function HuggingFaceImport({
 
         const { repo } = status.data;
         const modelId = importedModelId(repo.id, item.quant.filename);
-        const fit: 'ok' | 'tight' | 'impossible' = !memory
-          ? 'ok'
-          : item.quant.size > memory.total
-            ? 'impossible'
-            : item.quant.size > memory.budget
-              ? 'tight'
-              : 'ok';
+        const fit = memoryFitForSize(item.quant.size, memory);
         return (
           <QuantRow
             quant={item.quant}
@@ -346,7 +327,7 @@ function QuantRow({
   isDownloading: boolean;
   downloadProgress: number;
   disabled: boolean;
-  memoryFit: 'ok' | 'tight' | 'impossible';
+  memoryFit: MemoryFit | null;
   gated: boolean;
   onPress: () => void;
 }) {
@@ -364,16 +345,7 @@ function QuantRow({
               <Text className="text-[#6ce9a6] text-[10px] font-medium">Installed</Text>
             </View>
           )}
-          {memoryFit === 'tight' && !isInstalled && (
-            <View className="rounded-full px-2 py-0.5 bg-yellow-500/30">
-              <Text className="text-yellow-200 text-[10px] font-medium">May not fit in memory</Text>
-            </View>
-          )}
-          {memoryFit === 'impossible' && !isInstalled && (
-            <View className="rounded-full px-2 py-0.5 bg-red-500/30">
-              <Text className="text-red-300 text-[10px] font-medium">Too large for this device</Text>
-            </View>
-          )}
+          {!isInstalled && <MemoryFitBadge fit={memoryFit} />}
         </View>
         <Text className="text-[#9F9FA0] text-xs" numberOfLines={1}>{quant.path}</Text>
         <Text className="text-[#9F9FA0] text-xs">{formatBytes(quant.size)}</Text>

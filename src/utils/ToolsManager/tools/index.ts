@@ -6,6 +6,7 @@ import draftText from './draftText';
 import calendarEventCreation from './calendarEventCreation';
 import calendarEventReading from './calendarEventReading';
 import summarize from './summarize';
+import createFiles from './createFiles';
 
 export default {
     default: {
@@ -14,6 +15,7 @@ export default {
         getLocation,
         summarize,
     },
+    createFiles,
     appConnections: {
         draftEmail,
         draftText,

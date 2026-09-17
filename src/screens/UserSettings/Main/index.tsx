@@ -27,6 +27,7 @@ import Document from '@/database/models/Document';
 import WorkspaceChat from '@/database/models/WorkspaceChat';
 import uninstallAllModels from '@/utils/models/manager';
 import { deleteProcessedFiles } from '@/utils/fs';
+import { deleteGeneratedDocuments } from '@/utils/fs/generatedDocuments';
 import { showToast } from '@/utils/Notification';
 import MonoProviderIcon from '@/components/MonoProviderIcon';
 import ApkVersion from './ApkVersion';
@@ -79,7 +80,8 @@ const UTILITY_LINKS: SupportLink[] = [
     title: 'Clear temporary files',
     icon: <File size={18} color="#FFF" />,
     onPress: async () => {
-      await deleteProcessedFiles();
+      // Processed upload text plus every file the assistant generated (download cards go to their "missing" state)
+      await Promise.all([deleteProcessedFiles(), deleteGeneratedDocuments()]);
       showToast('Temporary files cleared');
     },
   },
@@ -129,6 +131,7 @@ export function MainView({ goToPage }: MainViewProps) {
       Document.deleteAll(true),
       uninstallAllModels(),
       deleteProcessedFiles(),
+      deleteGeneratedDocuments(),
     ]);
     await uiStore.resetAllStorage();
     uiStore.emitter.emit(uiStore.globalEvents.ONBOARDING_RESET);

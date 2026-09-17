@@ -3,6 +3,8 @@ import { View, TouchableOpacity, Text, Image, StyleProp, ViewStyle } from 'react
 import { Cube } from 'phosphor-react-native';
 import MODEL_CARDS from '@/utils/models/defaults';
 import { DownloadSurface, DownloadStatus } from '@/components/DownloadSurface';
+import { MemoryFitBadge, RecommendedBadge, RECOMMENDED_COLOR } from '@/components/ModelCard/FitBadges';
+import type { MemoryFit } from '@/utils/models/memoryFit';
 
 interface ModelCardProps {
   model: any;
@@ -12,6 +14,10 @@ interface ModelCardProps {
   downloadProgress: number;
   onSelect: () => void;
   containerStyle?: StyleProp<ViewStyle>;
+  /** Device-memory verdict for this preset, see `useModelFit`. null/undefined shows no badge. */
+  memoryFit?: MemoryFit | null;
+  /** Calls the preset out as the best pick for this phone. */
+  isRecommended?: boolean;
 }
 
 export default function ModelCard({
@@ -22,6 +28,8 @@ export default function ModelCard({
   downloadProgress,
   onSelect,
   containerStyle = {},
+  memoryFit = null,
+  isRecommended = false,
 }: ModelCardProps) {
   const getModelIcon = () => {
     if (model.imageUrl) {
@@ -43,6 +51,7 @@ export default function ModelCard({
   };
 
   const isDownloading = modelDownloadUrl === model.downloadUrl && !isDownloaded;
+  const hasBadge = isRecommended || (!!memoryFit && memoryFit !== 'ok');
 
   return (
     <TouchableOpacity
@@ -50,11 +59,12 @@ export default function ModelCard({
       style={{
         width: '90%',
         maxWidth: 380,
-        maxHeight: 82,
         padding: 16,
         backgroundColor: isSelected ? '#7cd4fd65' : 'rgba(255, 255, 255, 0.1)',
-        borderWidth: isSelected ? 2 : 0,
-        borderColor: isDownloading ? '#6ce9a6' : isSelected ? '#7cd4fd' : 'transparent',
+        // Selection and an active download win; otherwise the recommended preset gets a
+        // thin accent border so it stands out before the user reads the badge.
+        borderWidth: isSelected ? 2 : isRecommended || isDownloading ? 1 : 0,
+        borderColor: isDownloading ? '#6ce9a6' : isSelected ? '#7cd4fd' : isRecommended ? RECOMMENDED_COLOR : 'transparent',
         overflow: 'hidden',
         ...(containerStyle as object),
       }}
@@ -63,11 +73,17 @@ export default function ModelCard({
       onPress={onSelect}
     >
       <DownloadSurface active={isDownloading} progress={downloadProgress} borderRadius={8} />
-      <View className="flex flex-row gap-x-4 items-center justify-between">
+      <View className="flex flex-row gap-x-4 items-center flex-1">
         {getModelIcon()}
-        <View className="flex flex-col gap-y-1">
-          <View className="flex flex-row gap-x-2 items-center">
+        <View className="flex flex-col gap-y-1 flex-1">
+          <View className="flex flex-row gap-x-2 items-center" style={{ flexWrap: 'wrap', rowGap: 4 }}>
             <Text className="text-white text-2xl font-bold">{model.name}</Text>
+            {hasBadge && !isDownloading && (
+              <View className="flex flex-row items-center" style={{ gap: 6 }}>
+                {/* Recommended already implies a good fit, so only one of the two pills shows. */}
+                {isRecommended ? <RecommendedBadge size="md" /> : <MemoryFitBadge fit={memoryFit} size="md" compact />}
+              </View>
+            )}
             {isDownloading ? (
               <View className="flex-row items-center ml-4">
                 <DownloadStatus progress={downloadProgress} size="lg" />
@@ -76,7 +92,6 @@ export default function ModelCard({
           </View>
           <Text
             numberOfLines={2}
-            style={{ maxWidth: '90%' }}
             ellipsizeMode="tail"
             className="text-white/60 text-sm">
             {model.description}

@@ -216,11 +216,14 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
   // @ts-ignore
   override async availableModels(): Promise<IOnDeviceAvailableModel[]> {
+    // Presets alias a catalog entry (same modelId + url). Prefer the catalog's exact byte
+    // count over the preset's display string so memory-fit badges and the download
+    // confirmation work from the same number.
     const basicModels: IOnDeviceAvailableModel[] = MODEL_CARDS.map(m => ({
       id: m.id,
       name: m.name,
       description: m.description,
-      size: m.size,
+      size: defaultModels.find(d => d.id === m.modelId)?.size ?? m.size,
       modelId: m.modelId,
       downloadUrl: m.tag,
       isPreset: true,

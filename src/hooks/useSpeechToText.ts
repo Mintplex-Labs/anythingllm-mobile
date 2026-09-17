@@ -32,6 +32,11 @@ const SILENCE_TIMEOUT_MS = 2_000;
 const ANDROID_START_OPTIONS = {
     EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS: SILENCE_TIMEOUT_MS,
     EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS: SILENCE_TIMEOUT_MS,
+    // Android 13+ masks profanity with asterisks by default. The user is
+    // dictating their own prompt, so transcribe what they actually said.
+    // Forwarded by our patch-package patch of @react-native-voice/voice;
+    // the upstream module drops unknown extras.
+    EXTRA_MASK_OFFENSIVE_WORDS: false,
 };
 
 async function ensureMicPermission(): Promise<boolean> {

@@ -6,6 +6,7 @@ import { BASE_MESSAGE_STYLES } from "./styles";
 import ActivityChain from "./ActivityChain";
 import CitationsContainer from "./Citations";
 import ActionsContainer from "./Actions";
+import FileDownloadCards from "./FileDownloadCard";
 import TextResponseContainer from "./TextResponse";
 import ToolApprovalRequest from "./ToolApprovalRequest";
 import { focusMessageActions } from "../focusMessageActions";
@@ -26,7 +27,10 @@ const TRAILING_CHIPS_BOTTOM_PADDING = 10;
 export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessage }) {
     const response = chat.response;
     const handleLongPress = () => focusMessageActions(chat, 'assistant');
-    const hasTrailingChips = !!response?.actions?.length || (!!response?.citations?.length && !chat.isLoading);
+    // File download cards and citations wait for the reply to finish so streaming text does not keep pushing them down the page.
+    const hasLinkChips = !!response?.actions?.some(action => action.type !== 'file_download');
+    const hasDeferredChips = !chat.isLoading && (!!response?.citations?.length || !!response?.actions?.some(action => action.type === 'file_download'));
+    const hasTrailingChips = hasLinkChips || hasDeferredChips;
     return (
         <View className="flex flex-col items-start w-full justify-start" style={{ gap: 11, paddingBottom: hasTrailingChips ? TRAILING_CHIPS_BOTTOM_PADDING : 0 }}>
             <ActivityChain chat={chat} />
@@ -36,6 +40,7 @@ export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessa
             ) : (
                 <TextResponseContainer uuid={chat.uuid} textResponse={response?.textResponse} metrics={response?.metrics} onLongPress={handleLongPress} />
             )}
+            <FileDownloadCards actions={response?.actions} isLoading={chat.isLoading} />
             <ActionsContainer actions={response?.actions} />
             <CitationsContainer citations={response?.citations} isLoading={chat.isLoading} />
         </View>

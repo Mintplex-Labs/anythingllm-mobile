@@ -117,9 +117,27 @@ export type ICalendarEventAction = {
   }
 }
 
+/**
+ * A file the assistant generated for the user (see the create-files tools). Rendered as a
+ * persistent download card in the chat history. The file itself lives in the app's
+ * `generated-documents` folder under `storageFilename`; the card checks it still exists
+ * because "Clear temporary files" in settings removes the folder.
+ */
+export type IFileDownloadAction = {
+  type: 'file_download';
+  action: {
+    /** User-facing filename eg: "quarterly-report.docx" */
+    title: string;
+    /** Name of the file on disk inside the generated-documents folder eg: "docx-<uuid>.docx" */
+    storageFilename: string;
+    fileSize: number;
+    mimeType: string;
+  }
+}
+
 export type IAgentCitation = IAgentWebSearchCitation;
 export type IChatCitation = IDocumentCitation | IAgentCitation;
-export type IAgentAction = IEmailAction | ITextAction | ICalendarEventAction;
+export type IAgentAction = IEmailAction | ITextAction | ICalendarEventAction | IFileDownloadAction;
 export type WorkspaceChatResponseType = {
   textResponse: string;
   thoughts: string[];

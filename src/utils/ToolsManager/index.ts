@@ -8,14 +8,39 @@ import { safeJsonParse } from "../formatters";
 import Telemetry from "../Telemetry";
 import { throwIfAborted } from "../chat/abort";
 import { truncateMiddle } from "../chat/contextCompaction";
+import { isOnDeviceProvider, toolSupportsProvider } from "./providerGuards";
 
-type ToolManagerTool = {
+export { isOnDeviceProvider, isOnDeviceProviderName, toolSupportsProvider } from "./providerGuards";
+
+/**
+ * Tools that belong together in the tools sheet. A group renders as a single row on the main
+ * page that opens a sub-page with one toggle per tool (mirrors how the desktop app groups the
+ * create-files skills).
+ */
+export type ToolGroupId = 'createFiles';
+export const TOOL_GROUPS: Record<ToolGroupId, { id: ToolGroupId; name: string; description: string }> = {
+    createFiles: {
+        id: 'createFiles',
+        name: 'Create Files',
+        description: 'Let the assistant write documents you can download and share.',
+    },
+};
+
+export type ToolManagerTool = {
     /** Definition of the tool - this can be used to generate a tool call */
     id: string;
     name: string;
     description: string;
     defaultEnabled: boolean;
     category: 'default' | 'appConnections';
+    /** Grouped tools live on a sub-page of the tools sheet instead of the main list */
+    group?: ToolGroupId;
+    /**
+     * Set to false for tools the on-device provider cannot run (they are pruned from the tool
+     * list and shown disabled in the tools sheet while the on-device provider is selected).
+     * Defaults to true.
+     */
+    supportsOnDevice?: boolean;
     definition: {
         type: 'function';
         function: {
@@ -64,11 +89,15 @@ class ToolsManager {
     static instance: ToolsManager;
     private _tools: ToolManagerTool[] | null = null;
 
-    configurableTools = [
+    configurableTools: ToolManagerTool[] = [
         Tools.default.webSearch,
         Tools.default.webScraping,
         Tools.default.getLocation,
         Tools.default.summarize,
+        Tools.createFiles.createTextFile,
+        Tools.createFiles.createPdfFile,
+        Tools.createFiles.createDocxFile,
+        Tools.createFiles.createPptxPresentation,
         Tools.appConnections.draftEmail,
         Tools.appConnections.draftText,
         Tools.appConnections.calendarEventCreation,
@@ -94,8 +123,14 @@ class ToolsManager {
      */
     async getTools(): Promise<ToolManagerTool[]> {
         const userSettings = await uiStore.getFromStorage('tools', {});
+        const onDevice = await isOnDeviceProvider();
         let enabledTools: ToolManagerTool[] = [];
         for (const tool of this.configurableTools) {
+            // Some tools cannot run on the on-device provider regardless of the user's toggle
+            if (onDevice && !toolSupportsProvider(tool, 'native')) {
+                this.log(`ToolsManager::getTools: Skipping ${tool.id} - not supported by the on-device provider`);
+                continue;
+            }
             // If the tool is not a key in the user settings, and it is default enabled, add it to the enabled tools
             if (!userSettings.hasOwnProperty(tool.id) && tool.defaultEnabled) {
                 enabledTools.push(tool);

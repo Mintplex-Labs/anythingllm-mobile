@@ -76,6 +76,7 @@ export default class MemoryManager {
   static async setEnabled(enabled: boolean): Promise<MemorySettings> {
     const settings = { ...(await this.getSettings()), enabled };
     await uiStore.setToStorage('memories', settings);
+    if (enabled) Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.MEMORIES_ENABLED);
     this.log(`memories ${enabled ? 'enabled' : 'disabled'}`);
     return settings;
   }

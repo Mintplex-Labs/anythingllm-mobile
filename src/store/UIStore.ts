@@ -15,7 +15,8 @@ export type StorageKeys =
   'anythingllm_external_connections' |
   'hf_imported_models' |
   'provider_config_cache' |
-  'memories';
+  'memories' |
+  'fs_cleanup_last_run';
 
 export const GLOBAL_EVENTS = {
   REDIRECT: 'REDIRECT',
@@ -51,6 +52,7 @@ export class UIStore {
     'hf_imported_models',
     'provider_config_cache',
     'memories',
+    'fs_cleanup_last_run',
   ] as const;
 
   pageStates = {

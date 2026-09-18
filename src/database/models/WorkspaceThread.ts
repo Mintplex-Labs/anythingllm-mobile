@@ -288,19 +288,27 @@ export default class WorkspaceThread extends Model {
     }
   }
 
+  /**
+   * Delete threads matching the where clauses. Every chat in those threads (and the generated
+   * files those chats produced) is removed as well so nothing is orphaned.
+   */
   static async delete(where: { field: string, value: string }[] = []): Promise<any> {
     try {
-      await database.write(async () => {
+      const threadSlugs: string[] = await database.write(async () => {
         const workspaceThread = await database.get(WorkspaceThread.table).query(
           where.map(({ field, value }) => Q.where(field, value))
-        ).fetch();
-        if (workspaceThread.length === 0) return;
+        ).fetch() as (Model & WorkspaceThreadType)[];
+        if (workspaceThread.length === 0) return [];
 
         this.log(`deleting ${workspaceThread.length} workspace threads`);
-        await database.batch(workspaceThread.map((thread) => thread.prepareMarkAsDeleted()));
+        await database.batch(workspaceThread.map((thread) => thread.prepareDestroyPermanently()));
         this.log(`deleted ${workspaceThread.length} workspace threads`);
-        return true;
+        return workspaceThread.map((thread) => thread.slug);
       });
+
+      for (const slug of threadSlugs) {
+        await WorkspaceChat.delete([{ field: 'workspace_thread_slug', value: slug }]);
+      }
       return true;
     } catch (error) {
       console.error('Error deleting workspace thread:', error);
@@ -313,7 +321,7 @@ export default class WorkspaceThread extends Model {
     if (!threads || threads.length === 0) return true;
     await database.write(async () => {
       this.log(`deleting ${threads.length} threads`);
-      await database.batch(threads.map((thread) => thread.prepareMarkAsDeleted()));
+      await database.batch(threads.map((thread) => thread.prepareDestroyPermanently()));
     });
     return true;
   }

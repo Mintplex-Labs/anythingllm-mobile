@@ -26,6 +26,7 @@ import { LLMPreferenceProvider } from '@/contexts/LLMPreferenceContext';
 import { useEnablePushNotifications, useNotificationTapNavigation } from '@/utils/PushNotifications';
 import { navigationRef, flushPendingNavigation } from '@/utils/navigationRef';
 import { useOnboardingCompleted } from '@/hooks/useOnboardingHook';
+import { purgeOrphanedFiles } from '@/utils/fs/cleanup';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
@@ -35,6 +36,8 @@ const App = observer(() => {
   const styles = rootStyles(theme);
   const { initialRoute, isLoading } = useInitialRoute();
   const { onboardingCompleted, loadingOnboardingCompleted } = useOnboardingCompleted();
+  // Sweep processed text, generated documents and picker temp files nothing references anymore.
+  React.useEffect(() => { purgeOrphanedFiles(); }, []);
   // Once onboarding completes its screens are removed from the drawer, but initialRoute was
   // resolved at launch and may still name one of them. React Navigation 7 throws on an unknown
   // initialRouteName (v6 ignored it), so fall back to Home in that case.

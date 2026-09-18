@@ -15,6 +15,7 @@ import { CHAT_HANDLER_EVENTS } from "@/hooks/useChatHandler";
 import uiStore from "@/store/UIStore";
 import DocumentParser from "@/utils/DocumentParser";
 import { storeProcessedFileAsText } from "@/utils/fs";
+import { removePickerTempFile } from "@/utils/fs/cleanup";
 import Telemetry from "@/utils/Telemetry";
 import { type IAttachment } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { ImageLightbox } from "@/components/ImageAttachmentGrid";
@@ -276,8 +277,12 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
 
             if (result.didCancel) return;
             if (result.errorCode) throw new Error(result.errorMessage || `Could not open the ${source === 'camera' ? 'camera' : 'gallery'}`);
-            const assets = (result.assets ?? []).slice(0, remaining);
+            const allAssets = result.assets ?? [];
+            const assets = allAssets.slice(0, remaining);
             const readable = assets.filter((asset) => !!asset.base64);
+            // The picker writes a downscaled copy of every image to the cache dir (rn_image_picker_*).
+            // We only keep the base64 it handed us, so drop those files right away.
+            await Promise.all(allAssets.map((asset) => removePickerTempFile(asset.uri)));
             if (!readable.length) throw new Error('The selected image could not be read');
             if (readable.length < assets.length) showToast(`${assets.length - readable.length} image(s) could not be read and were skipped`);
 

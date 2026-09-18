@@ -310,8 +310,9 @@ const crossPlatformModels: Model[] = [
     origin: ModelOrigin.HF,
     defaultChatTemplate: { ...chatTemplates.chatML },
     chatTemplate: { ...chatTemplates.chatML },
-    defaultCompletionSettings: { temperature: 0.7, top_p: 0.8, top_k: 20, min_p: 0 },
-    completionSettings: { temperature: 0.7, top_p: 0.8, top_k: 20, min_p: 0 },
+    // Thinking is disabled: at 0.8B the reasoning trace burns tokens (and time) without improving the answer.
+    defaultCompletionSettings: { temperature: 0.7, top_p: 0.8, top_k: 20, min_p: 0, enable_thinking: false },
+    completionSettings: { temperature: 0.7, top_p: 0.8, top_k: 20, min_p: 0, enable_thinking: false },
     defaultStopWords: ['<|im_end|>'],
     stopWords: ['<|im_end|>'],
   },

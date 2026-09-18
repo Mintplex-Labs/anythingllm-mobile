@@ -417,10 +417,13 @@ export default class LlamaRnWrapper {
    */
   private async countPromptTokens(messages: NativeLlamaChatMessage[], tools?: any[]): Promise<number> {
     if (!this.context) throw new Error('LlamaRnWrapper::countPromptTokens: Model not initialized');
+    const { enable_thinking } = this.completionParams;
     const formatted = await this.context.getFormattedChat(messages as any, null, {
       jinja: this.context.isJinjaSupported(),
       tools: tools?.length ? tools : undefined,
       tool_choice: tools?.length ? 'auto' : undefined,
+      // Must match what `completion()` renders - disabling thinking injects an empty <think> block into the prompt.
+      ...(enable_thinking !== undefined ? { enable_thinking } : {}),
     });
     const { tokens } = await this.context.tokenize(formatted.prompt);
     // Images are rendered as a `<__media__>` marker which tokenizes as a few text tokens, so budget each

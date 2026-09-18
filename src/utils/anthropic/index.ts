@@ -104,6 +104,9 @@ export default class AnthropicLite {
     this.streamingFetch = getStreamingFetch();
   }
 
+  /** Ephemeral (5 minute) prompt cache marker - the only kind the Messages API accepts. */
+  static CACHE_CONTROL = { type: 'ephemeral' } as const;
+
   private log = (text: string, ...args: any[]) => {
     console.log(`🛠️ \x1b[33m[AnthropicLite]\x1b[0m ${text}`, ...args);
   };
@@ -345,7 +348,14 @@ export default class AnthropicLite {
       model: body.model,
       max_tokens: maxTokens,
       stream,
-      ...(system ? { system } : {}),
+      // Prompt caching is always on - it only ever saves money and latency. Two breakpoints:
+      //  - an explicit marker on the system prompt, so the stable prefix has a guaranteed read point
+      //    whatever happens later in `messages`;
+      //  - top-level automatic caching, which the API places on the last cacheable block and walks
+      //    forward as the conversation grows, so each turn reads the previous turn's prefix.
+      // Prefixes below the model's minimum (512-4096 tokens) silently skip caching - no error.
+      ...(system ? { system: [{ type: 'text', text: system, cache_control: AnthropicLite.CACHE_CONTROL }] } : {}),
+      cache_control: AnthropicLite.CACHE_CONTROL,
       messages,
       ...(typeof body.temperature === 'number' && AnthropicLite.supportsTemperature(body.model)
         ? { temperature: Math.min(Math.max(body.temperature, 0), 1) }

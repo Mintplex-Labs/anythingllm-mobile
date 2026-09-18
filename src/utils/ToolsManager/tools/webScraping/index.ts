@@ -2,6 +2,7 @@ import { IAgentWebSearchCitation } from "@/database/models/WorkspaceChat";
 import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { getOrigin, safeJsonParse } from "@/utils/formatters";
 import webscraper from "./webscraper";
+import { DownloadDeclinedError, getContentTypeFromURL, processLinkAsFile, resolveLinkAsFile } from "./linkAsFile";
 
 export default {
     id: 'webScraping',
@@ -13,7 +14,7 @@ export default {
         type: 'function',
         function: {
             name: 'web_scraper',
-            description: 'Scrape a single specific website for information. Returns the content of the websites page as text.',
+            description: 'Scrape a single specific website for information. Returns the content of the websites page as text. If the URL points directly to a document (PDF, Word, Excel, PowerPoint) its text content is returned instead.',
             parameters: {
                 type: 'object',
                 properties: {
@@ -42,20 +43,38 @@ export default {
 
             validUrl = new URL(validUrl);
             streamEmitter('report_status', `Reading ${validUrl.hostname}`);
-            const scrapeResult = await webscraper.scrape(validUrl.toString());
+
+            // If the link is really a document we can parse (by Content-Type only), download it,
+            // extract the text and throw the file away. Everything else is a regular web page.
+            const { contentType, contentLength } = await getContentTypeFromURL(validUrl.toString());
+            const asFile = resolveLinkAsFile(validUrl.toString(), contentType);
+
+            let title: string;
+            let content: string;
+            if (asFile && contentType) {
+                streamEmitter('report_status', `Reading document ${asFile.fileName}`);
+                const fileResult = await processLinkAsFile({ url: validUrl.toString(), contentType, contentLength });
+                title = fileResult.fileName;
+                content = fileResult.content;
+            } else {
+                const scrapeResult = await webscraper.scrape(validUrl.toString());
+                title = scrapeResult.title ?? hostname;
+                content = scrapeResult.content;
+            }
 
             const citation = {
                 type: 'web-search',
                 reference: {
-                    title: scrapeResult.title ?? hostname,
+                    title,
                     url: validUrl.toString(),
-                    content: scrapeResult.content,
+                    content,
                 },
             } as IAgentWebSearchCitation;
 
             streamEmitter('report_citations', [citation]);
-            return scrapeResult.content;
+            return content;
         } catch (e) {
+            if (e instanceof DownloadDeclinedError) return `The user declined to download the document at this URL over cellular data. Do not retry.`;
             console.error(`Web Scraping Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
             return `There was an error scraping the website. No content was found.`;
         }

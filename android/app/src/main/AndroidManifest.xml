@@ -18,6 +18,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <!-- Local notifications (chat reply finished while the phone is locked, model download progress) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <!-- Needed only for devices running Android 9 (API 28) or lower -->
     <!-- Currently it is used only for storing chat sessions (/Download)-->
     <uses-permission

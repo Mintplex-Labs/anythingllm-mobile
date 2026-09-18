@@ -23,12 +23,14 @@ import useInitialRoute from '@/hooks/useInitialRoute';
 import './src/utils/polyfills';
 import { BottomSheetProvider } from '@/contexts/BottomSheetContext';
 import { LLMPreferenceProvider } from '@/contexts/LLMPreferenceContext';
-import { useEnablePushNotifications } from '@/utils/PushNotifications';
+import { useEnablePushNotifications, useNotificationTapNavigation } from '@/utils/PushNotifications';
+import { navigationRef, flushPendingNavigation } from '@/utils/navigationRef';
 import { useOnboardingCompleted } from '@/hooks/useOnboardingHook';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
   useEnablePushNotifications();
+  useNotificationTapNavigation();
   const theme = useTheme();
   const styles = rootStyles(theme);
   const { initialRoute, isLoading } = useInitialRoute();
@@ -75,7 +77,7 @@ const App = observer(() => {
               <PaperProvider theme={theme}>
                 <LLMPreferenceProvider>
                   <BottomSheetModalProvider>
-                    <NavigationContainer>
+                    <NavigationContainer ref={navigationRef} onReady={flushPendingNavigation}>
                       <WorkspaceDrawer initialRouteName={drawerInitialRoute}>
                         {!onboardingCompleted && (
                           <>

@@ -89,6 +89,50 @@ export async function generatedDocumentExists(storageFilename: string): Promise<
     }
 }
 
+/**
+ * Delete specific generated documents by their storage filename.
+ * Called when the chats that reference them are deleted so nothing lingers on disk.
+ */
+export async function deleteGeneratedDocumentsByStorageFilenames(storageFilenames: string[]): Promise<void> {
+    if (!storageFilenames.length) return;
+    if (!(await RNFS.exists(GENERATED_DOCUMENTS_FOLDER_PATH))) return;
+    let removed = 0;
+    for (const storageFilename of new Set(storageFilenames)) {
+        const path = generatedDocumentPath(storageFilename);
+        if (!path) continue;
+        try {
+            if (await RNFS.exists(path)) {
+                await RNFS.unlink(path);
+                removed++;
+            }
+        } catch (e) {
+            console.error('[GeneratedDocuments] could not remove', storageFilename, e);
+        }
+    }
+    if (removed) log(`Deleted ${removed} generated document(s) referenced by removed chats`);
+}
+
+/**
+ * Delete every generated document that is not in `referencedStorageFilenames`.
+ * @returns the storage filenames that were removed
+ */
+export async function deleteGeneratedDocumentsNotIn(referencedStorageFilenames: string[]): Promise<string[]> {
+    if (!(await RNFS.exists(GENERATED_DOCUMENTS_FOLDER_PATH))) return [];
+    const referenced = new Set(referencedStorageFilenames);
+    const files = await RNFS.readDir(GENERATED_DOCUMENTS_FOLDER_PATH);
+    const removed: string[] = [];
+    for (const file of files) {
+        if (referenced.has(file.name)) continue;
+        try {
+            await RNFS.unlink(file.path);
+            removed.push(file.name);
+        } catch (e) {
+            console.error('[GeneratedDocuments] could not remove orphan', file.name, e);
+        }
+    }
+    return removed;
+}
+
 /** Delete every generated document by removing the folder itself */
 export async function deleteGeneratedDocuments(): Promise<void> {
     if (!(await RNFS.exists(GENERATED_DOCUMENTS_FOLDER_PATH))) return;

@@ -271,29 +271,30 @@ export default abstract class BaseOpenAILikeProvider {
    * Generates the system message for the provider.
    * If the workspace has a system prompt, it will be used.
    * Otherwise, the default system message will be used.
-   * 
-   * Will also add the context texts to the system message if they are provided.
+   *
+   * Only stable content lives here so the prefix stays byte-identical across turns and provider-side
+   * prompt caches (llama.cpp KV reuse, OpenAI/Anthropic prefix caching) keep hitting. Per-turn content
+   * (RAG chunks) goes on the user message - see `withContextTexts`. The current time is a tool
+   * (`get_current_datetime`), never a system prompt line.
+   * The rolling summary only changes on compaction, which rewrites the history after it anyway.
    */
-  defaultSystemMessage(contextTexts: string[] = [], summary: string | null = null) {
+  defaultSystemMessage(summary: string | null = null) {
     const baseMessage = this.workspace?.systemPrompt || BaseOpenAILikeProvider.DEFAULT_SYSTEM_MESSAGE;
-    const now = new Date();
-    const currentDateTime = now.toLocaleString(undefined, {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-      hour: '2-digit', minute: '2-digit', timeZoneName: 'short',
-    });
-    const withDateTime = `${baseMessage}\nThe current date and time on the user's device is ${currentDateTime}.`;
-    const withSummary = summary
-      ? `${withDateTime}\n\nSummary of the conversation so far (earlier messages are not shown):\n${summary}`
-      : withDateTime;
-    if (!contextTexts.length) return withSummary;
+    if (!summary) return baseMessage;
+    return `${baseMessage}\n\nSummary of the conversation so far (earlier messages are not shown):\n${summary}`;
+  }
 
+  /**
+   * Prepends the RAG chunks for this turn to the user's prompt, context first and question last so the
+   * model attends to what it is being asked. The chunks are only sent with the live prompt - history
+   * replays the raw stored prompt (see `formatChatHistory`) so stale chunks never pile up in later turns.
+   */
+  static withContextTexts(userPrompt: string, contextTexts: string[] = []): string {
+    if (!contextTexts.length) return userPrompt;
     const context = contextTexts
-      .map((text, i) => {
-        return `Context ${i + 1}: ${text}`;
-      })
+      .map((text, i) => `Context ${i + 1}: ${text}`)
       .join("\n\n");
-
-    return `${withSummary}\n\n[CONTEXT_START]\n${context}\n[CONTEXT_END]`;
+    return `[CONTEXT_START]\n${context}\n[CONTEXT_END]\n\n${userPrompt}`;
   }
 
   /**
@@ -345,7 +346,7 @@ export default abstract class BaseOpenAILikeProvider {
     // https://community.openai.com/t/o1-models-do-not-support-system-role-in-chat-completion/953880
     const prompt = {
       role: this.isOTypeModel ? "user" : "system",
-      content: this.defaultSystemMessage(contextTexts, summary),
+      content: this.defaultSystemMessage(summary),
     };
 
     return [
@@ -353,7 +354,10 @@ export default abstract class BaseOpenAILikeProvider {
       ...formatChatHistory(chatHistory, this.generateContent),
       {
         role: "user",
-        content: this.generateContent({ content: userPrompt, attachments }),
+        content: this.generateContent({
+          content: BaseOpenAILikeProvider.withContextTexts(userPrompt, contextTexts),
+          attachments,
+        }),
       },
     ];
   }

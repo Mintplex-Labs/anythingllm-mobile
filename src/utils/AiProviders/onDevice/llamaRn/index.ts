@@ -76,7 +76,7 @@ export default class LlamaRnWrapper {
   static MIN_N_PREDICT = 64;
   /** A message is never truncated below this many characters by `fitMessagesToContext`. */
   static MIN_TRUNCATED_MESSAGE_CHARS = 200;
-  /** Share of the prompt budget RAG chunks may occupy - they live in the system prompt which pruning cannot touch. */
+  /** Share of the prompt budget RAG chunks may occupy - they are prepended to the latest user message, which pruning only shrinks as a last resort. */
   static CONTEXT_TEXTS_BUDGET_RATIO = 0.35;
   /** Share of the prompt budget a single tool result may occupy. */
   static TOOL_RESULT_BUDGET_RATIO = 0.25;

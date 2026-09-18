@@ -93,6 +93,7 @@ class ToolsManager {
         Tools.default.webSearch,
         Tools.default.webScraping,
         Tools.default.getLocation,
+        Tools.default.getCurrentTime,
         Tools.default.summarize,
         Tools.createFiles.createTextFile,
         Tools.createFiles.createPdfFile,

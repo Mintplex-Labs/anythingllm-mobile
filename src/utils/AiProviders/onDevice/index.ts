@@ -273,7 +273,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
   /**
    * Fits the prompt to the on-device context window before it is rendered:
-   *  - RAG chunks are capped to their share of the prompt budget (they sit in the system prompt, which pruning never touches)
+   *  - RAG chunks are capped to their share of the prompt budget (they are prepended to the latest user message, which pruning only shrinks as a last resort)
    *  - the oldest chats are replaced by the thread's rolling summary (see `ContextCompactor`)
    * Compaction normally runs in the background after each reply (`scheduleCompaction`), so this
    * only summarises inline when history outgrew the budget since then - the user sees a status line for it.

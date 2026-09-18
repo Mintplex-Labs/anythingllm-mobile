@@ -5,6 +5,8 @@ import MODEL_CARDS from '@/utils/models/defaults';
 import { findMonoProviderIcon } from '@/components/MonoProviderIcon';
 import truncate from 'truncate';
 import { DownloadRing } from '@/components/DownloadSurface';
+import { MemoryFitBadge, RecommendedBadge, RECOMMENDED_COLOR } from '@/components/ModelCard/FitBadges';
+import type { MemoryFit } from '@/utils/models/memoryFit';
 
 interface ModelCardProps {
   model: any;
@@ -14,6 +16,10 @@ interface ModelCardProps {
   downloadProgress: number;
   onSelect: () => void;
   onUninstall: () => void;
+  /** Device-memory verdict for this model's weights, see `useModelFit`. null/undefined shows no badge. */
+  memoryFit?: MemoryFit | null;
+  /** Marks the row as the best pick for this phone. */
+  isRecommended?: boolean;
 }
 
 export default function ModelCard({
@@ -24,6 +30,8 @@ export default function ModelCard({
   downloadProgress,
   onSelect,
   onUninstall,
+  memoryFit = null,
+  isRecommended = false,
 }: ModelCardProps) {
   const getModelIcon = () => {
     // Only the preset alias rows (Lightweight/Balanced/Powerful) use their phosphor icon.
@@ -81,8 +89,10 @@ export default function ModelCard({
       disabled={!!modelDownloadUrl && modelDownloadUrl !== model.downloadUrl}
       onPress={onSelect}
       style={{
-        borderWidth: isSelected ? 2 : 0,
-        borderColor: isSelected ? '#7cd4fd' : 'transparent',
+        // Selection wins; otherwise the recommended row gets a thin accent border so it
+        // stands out in the list even before the user reads the badge.
+        borderWidth: isSelected ? 2 : isRecommended ? 1 : 0,
+        borderColor: isSelected ? '#7cd4fd' : isRecommended ? RECOMMENDED_COLOR : 'transparent',
         backgroundColor: isSelected ? '#2e404b' : '#2A2A2E',
       }}
       className="w-full p-4 rounded-xl flex-row items-center justify-between">
@@ -92,8 +102,8 @@ export default function ModelCard({
             {getModelIcon()}
           </View>
           <View className="flex-1">
-            <View className="flex-row items-center gap-2">
-              <Text className="text-white text-base font-medium" numberOfLines={1}>
+            <View className="flex-row items-center gap-2" style={{ flexWrap: 'wrap', rowGap: 4 }}>
+              <Text className="text-white text-base font-medium" numberOfLines={1} style={{ flexShrink: 1 }}>
                 {model.name}
               </Text>
               {model.isUnknown && (
@@ -101,6 +111,8 @@ export default function ModelCard({
                   <Text className="text-yellow-200 text-[10px] font-medium">Unknown</Text>
                 </View>
               )}
+              {/* Recommended already implies a good fit, so only one of the two pills shows. */}
+              {isRecommended ? <RecommendedBadge /> : <MemoryFitBadge fit={memoryFit} />}
             </View>
             {model.description && (
               <Text className="text-sm text-[#9F9FA0]">

@@ -12,6 +12,7 @@ import DocumentReranker from "@/utils/DocumentReranker";
 import { type IAgentAction } from "@/database/models/WorkspaceChat";
 import ToolsManager from "@/utils/ToolsManager";
 import { isAbortError, linkAbortSignal, throwIfAborted } from "@/utils/chat/abort";
+import MemoryManager, { type PromptMemories } from "@/utils/Memories";
 
 interface BaseLLMProviderConfig {
   provider: string;
@@ -271,29 +272,48 @@ export default abstract class BaseOpenAILikeProvider {
    * Generates the system message for the provider.
    * If the workspace has a system prompt, it will be used.
    * Otherwise, the default system message will be used.
-   * 
-   * Will also add the context texts to the system message if they are provided.
+   *
+   * Only stable content lives here so the prefix stays byte-identical across turns and provider-side
+   * prompt caches (llama.cpp KV reuse, OpenAI/Anthropic prefix caching) keep hitting. Per-turn content
+   * (RAG chunks) goes on the user message - see `withContextTexts`. The current time is a tool
+   * (`get_current_datetime`), never a system prompt line.
+   * The rolling summary only changes on compaction, which rewrites the history after it anyway.
+   * The memory block (user-authored facts, see `MemoryManager`) only changes when the user edits their
+   * memories, so it sits before the summary to keep the shared prefix as long as possible.
    */
-  defaultSystemMessage(contextTexts: string[] = [], summary: string | null = null) {
+  defaultSystemMessage(summary: string | null = null, memoryBlock: string | null = null) {
     const baseMessage = this.workspace?.systemPrompt || BaseOpenAILikeProvider.DEFAULT_SYSTEM_MESSAGE;
-    const now = new Date();
-    const currentDateTime = now.toLocaleString(undefined, {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-      hour: '2-digit', minute: '2-digit', timeZoneName: 'short',
-    });
-    const withDateTime = `${baseMessage}\nThe current date and time on the user's device is ${currentDateTime}.`;
-    const withSummary = summary
-      ? `${withDateTime}\n\nSummary of the conversation so far (earlier messages are not shown):\n${summary}`
-      : withDateTime;
-    if (!contextTexts.length) return withSummary;
+    const parts = [baseMessage];
+    if (memoryBlock) parts.push(memoryBlock);
+    if (summary) parts.push(`Summary of the conversation so far (earlier messages are not shown):\n${summary}`);
+    return parts.join('\n\n');
+  }
 
-    const context = contextTexts
-      .map((text, i) => {
-        return `Context ${i + 1}: ${text}`;
-      })
-      .join("\n\n");
+  /**
+   * Tokens the always-on memory block may occupy in the system prompt. Cloud models have room to
+   * spare; the on-device provider overrides this with a slice of its prompt budget.
+   */
+  protected memoryTokenBudget(): number {
+    return BaseOpenAILikeProvider.DEFAULT_MEMORY_TOKEN_BUDGET;
+  }
+  static DEFAULT_MEMORY_TOKEN_BUDGET = 600;
 
-    return `${withSummary}\n\n[CONTEXT_START]\n${context}\n[CONTEXT_END]`;
+  /**
+   * Prepends the RAG chunks for this turn to the user's prompt, context first and question last so the
+   * model attends to what it is being asked. The chunks are only sent with the live prompt - history
+   * replays the raw stored prompt (see `formatChatHistory`) so stale chunks never pile up in later turns.
+   */
+  static withContextTexts(userPrompt: string, contextTexts: string[] = [], memoryBlock: string | null = null): string {
+    const blocks: string[] = [];
+    if (memoryBlock) blocks.push(memoryBlock);
+    if (contextTexts.length) {
+      const context = contextTexts
+        .map((text, i) => `Context ${i + 1}: ${text}`)
+        .join("\n\n");
+      blocks.push(`[CONTEXT_START]\n${context}\n[CONTEXT_END]`);
+    }
+    if (!blocks.length) return userPrompt;
+    return `${blocks.join('\n\n')}\n\n${userPrompt}`;
   }
 
   /**
@@ -333,19 +353,21 @@ export default abstract class BaseOpenAILikeProvider {
     userPrompt = "",
     attachments = [],
     summary = null,
+    memories = null,
   }: {
     contextTexts: string[];
     chatHistory: DynamicChatMessage[];
     userPrompt: string;
     attachments?: IAttachment[];
     summary?: string | null;
+    memories?: PromptMemories | null;
   }) {
     // o1 Models do not support the "system" role
     // in order to combat this, we can use the "user" role as a replacement for now
     // https://community.openai.com/t/o1-models-do-not-support-system-role-in-chat-completion/953880
     const prompt = {
       role: this.isOTypeModel ? "user" : "system",
-      content: this.defaultSystemMessage(contextTexts, summary),
+      content: this.defaultSystemMessage(summary, memories?.systemBlock ?? null),
     };
 
     return [
@@ -353,7 +375,10 @@ export default abstract class BaseOpenAILikeProvider {
       ...formatChatHistory(chatHistory, this.generateContent),
       {
         role: "user",
-        content: this.generateContent({ content: userPrompt, attachments }),
+        content: this.generateContent({
+          content: BaseOpenAILikeProvider.withContextTexts(userPrompt, contextTexts, memories?.promptBlock ?? null),
+          attachments,
+        }),
       },
     ];
   }
@@ -452,6 +477,14 @@ export default abstract class BaseOpenAILikeProvider {
       .filter((r) => r.metadata.content !== undefined && r.metadata.content !== null && r.metadata.content !== '')
       .map((r) => String(r.metadata.content));
 
+    // User-authored memories. Disabled or empty -> null blocks and nothing changes in the prompt.
+    const memories = await MemoryManager.forPrompt({
+      workspaceSlug: this.workspace?.slug ?? null,
+      userPrompt: userPrompt.prompt as string,
+      budgetTokens: this.memoryTokenBudget(),
+      onStatus,
+    });
+
     const shaped = await this.shapePrompt(
       { history, contextTexts, summary: null },
       { threadSlug: userPrompt.workspaceThreadSlug ?? history[0]?.workspaceThreadSlug ?? null, onStatus },
@@ -465,6 +498,7 @@ export default abstract class BaseOpenAILikeProvider {
         attachments: (userPrompt.response?.attachments ?? []) as IAttachment[],
         contextTexts: shaped.contextTexts,
         summary: shaped.summary,
+        memories,
       }),
     }
   }

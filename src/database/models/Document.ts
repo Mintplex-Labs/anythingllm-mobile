@@ -3,6 +3,7 @@ import { database } from '@/database';
 import { Q, Model } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
 import VectorDB from '@/utils/VectorDB';
+import { deleteProcessedFilesNotIn } from '@/utils/fs';
 
 export type DocumentType = {
   name: string;
@@ -82,6 +83,21 @@ export default class Document extends Model {
     return newDocument;
   }
 
+  /**
+   * Remove processed text files that no remaining document (in any workspace) refers to.
+   * The processed folder is keyed by filename only, so a file is kept while any workspace still uses it.
+   */
+  static async purgeUnreferencedProcessedFiles(): Promise<void> {
+    try {
+      const remaining = await database.get(Document.table).query().fetch() as (Model & DocumentType)[];
+      const referenced = remaining.map((doc) => doc.name).filter(Boolean);
+      const removed = await deleteProcessedFilesNotIn(referenced);
+      if (removed.length) this.log(`removed ${removed.length} processed file(s) no document references`);
+    } catch (error) {
+      console.error('Error purging processed files:', error);
+    }
+  }
+
   static async deleteByUuids(uuids: string[], withVectors: boolean = false): Promise<any> {
     try {
       if (!uuids.length) return true;
@@ -108,6 +124,7 @@ export default class Document extends Model {
         await VectorDB.deleteVectorsByIds(vectorBoxIds);
       }
 
+      await this.purgeUnreferencedProcessedFiles();
       this.log('documents successfully deleted');
       return true;
     } catch (error) {
@@ -142,6 +159,7 @@ export default class Document extends Model {
         await VectorDB.deleteVectorsByIds(vectorBoxIds);
       }
 
+      await this.purgeUnreferencedProcessedFiles();
       this.log('documents successfully deleted');
       return true;
     } catch (error) {
@@ -155,8 +173,9 @@ export default class Document extends Model {
     if (!documents || documents.length === 0) return true;
     await database.write(async () => {
       this.log(`deleting ${documents.length} documents`);
-      await database.batch(documents.map((document) => document.prepareMarkAsDeleted()));
+      await database.batch(documents.map((document) => document.prepareDestroyPermanently()));
     });
     if (withVectors) await VectorDB.reset();
+    await this.purgeUnreferencedProcessedFiles();
   }
 }

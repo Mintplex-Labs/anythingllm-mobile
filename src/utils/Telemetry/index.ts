@@ -39,6 +39,10 @@ class Telemetry {
             CHAT_DELETED: 'chat_deleted',
             /** A user/assistant message pair was removed and its prompt re-submitted */
             CHAT_RETRIED: 'chat_retried',
+            /** The user switched the memory system on (disabling is not tracked) */
+            MEMORIES_ENABLED: 'memories_enabled',
+            /** The user saved a memory from the thread menu (payload: scope) */
+            MEMORY_SAVED: 'memory_saved',
 
             /** The user use the QR code to connect to an AnythingLLM intance */
             EXTERNAL_CONNECTION_ESTABLISHED: 'external_connection_established',

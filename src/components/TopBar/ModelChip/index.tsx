@@ -43,6 +43,7 @@ import uiStore from '@/store/UIStore';
 import { AVAILABLE_LLM_PROVIDERS } from '@/utils/llmproviders';
 import HuggingFaceImport from '@/components/HuggingFaceImport';
 import AddFromHuggingFaceCard from '@/components/HuggingFaceImport/AddCard';
+import useModelFit from '@/hooks/useModelFit';
 import ImportedModels, { ImportedModel } from '@/utils/models/imported';
 import { IAvailableModel } from '@/utils/AiProviders/baseOpenAILikeProvider';
 
@@ -262,6 +263,10 @@ function AvailableModels({
     [filteredModels],
   );
 
+  // Memory badges for every row plus a "Recommended" callout on the preset that suits this phone.
+  const presets = useMemo(() => availableModels.filter(m => m.isPreset), [availableModels]);
+  const { fitFor, recommendedId } = useModelFit(presets);
+
   if (isLoading) return <ActivityIndicator size="large" color="white" />;
 
   if (view === 'import') {
@@ -349,6 +354,8 @@ function AvailableModels({
                 isDownloaded={downloadedModels[model.modelId]}
                 modelDownloadUrl={modelDownloadUrl}
                 downloadProgress={downloadProgress}
+                memoryFit={isNative ? fitFor(model) : null}
+                isRecommended={isNative && model.id === recommendedId}
                 onSelect={() => {
                   if (llmPreferences.provider === 'native') return downloadModel(model);
                   else return selectModel({ modelId: model.id }); // Generic OpenAI /models results

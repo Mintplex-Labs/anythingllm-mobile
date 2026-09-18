@@ -23,6 +23,7 @@ class MainApplication : Application(), ReactApplication {
             PackageList(this).packages.apply {
               add(DeviceInfoPackage())
               add(KeepAwakePackage())
+              add(ScreenLockPackage())
               add(DownloadPackage())
               add(StoragePackage())
               add(VectorBoxPackage())

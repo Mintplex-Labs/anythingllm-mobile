@@ -9,6 +9,7 @@ import { AvailableModel } from "@/components/TopBar/ModelChip";
 import SimpleModelCard from "./SimpleModelCard";
 import getLLM from '@/utils/AiProviders';
 import PushNotifications from "@/utils/PushNotifications";
+import useModelFit from "@/hooks/useModelFit";
 import type { SelectionModeProps } from "../index";
 
 // During onboarding, this config will not yet be set in the UIStore, so we need set the default here
@@ -28,6 +29,8 @@ export default function SimpleModelSelection({ setMode }: SelectionModeProps) {
     downloadModel,
     runPreDownloadConfirmations,
   } = useModelManager({ llmPreferences, fetchLLMPreference, LLMProvider });
+  // Badge each preset with how it fits this phone's RAM and call out the best one.
+  const { fitFor, recommended } = useModelFit(availableModels);
 
   const saveAndNavigate = async (modelOverride?: AvailableModel) => {
     const model = modelOverride || availableModels.find((card) => card.modelId === selectedModel);
@@ -65,6 +68,8 @@ export default function SimpleModelSelection({ setMode }: SelectionModeProps) {
             isDownloaded={downloadedModels[card.modelId]}
             modelDownloadUrl={modelDownloadUrl}
             downloadProgress={downloadProgress}
+            memoryFit={fitFor(card)}
+            isRecommended={recommended?.id === card.id}
             onSelect={async () => {
               // If the user has not granted permissions to receive notifications we cannot download models in the background
               // so we need to await the entire download process

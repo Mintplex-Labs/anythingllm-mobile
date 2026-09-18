@@ -4,7 +4,8 @@ import { CHAT_HANDLER_EVENTS, useChatHandlerContext } from "@/hooks/useChatHandl
 import LocationAgentTool from "@/utils/ToolsManager/tools/getLocation";
 import { useEffect, useState } from "react";
 import uiStore from "@/store/UIStore";
-import { listProcessedFiles } from "@/utils/fs";
+import Document from "@/database/models/Document";
+import { useRoute } from "@react-navigation/native";
 
 const noop = () => { };
 const smartMessages = {
@@ -45,11 +46,11 @@ const smartMessages = {
         onClick: {
             before: async function () {
                 const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: true } as never);
+                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: true, getTime: true } as never);
             },
             after: async function () {
                 const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: false } as never);
+                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: false, getTime: false } as never);
             }
         },
     },
@@ -67,16 +68,17 @@ const smartMessages = {
         }
     },
     summarize: {
-        text: async function () {
+        text: async function (workspaceSlug?: string) {
             const mode = ['filename', 'url'];
             const randomMode = mode[Math.floor(Math.random() * mode.length)];
             let text = 'Summarize paulgraham.com/foundermode.html';
-            if (randomMode === 'url') return text;
+            if (randomMode === 'url' || !workspaceSlug) return text;
 
-            const files = await listProcessedFiles();
-            if (randomMode === 'filename' && files.length) {
-                const randomFile = files[Math.floor(Math.random() * files.length)];
-                text = `Summarize ${randomFile.name}`;
+            // Only suggest files that were uploaded to _this_ workspace - never whatever is on disk.
+            const documents: { name: string }[] = await Document.find([{ field: 'workspace_slug', value: workspaceSlug }]);
+            if (documents.length) {
+                const randomDoc = documents[Math.floor(Math.random() * documents.length)];
+                text = `Summarize ${randomDoc.name}`;
             }
             return text;
         },
@@ -94,6 +96,8 @@ const smartMessages = {
 };
 
 export default function EmptyList({ height }: { height: number }) {
+    // Same route params the chat screen reads - the workspace whose empty thread we are showing
+    const { wsSlug } = (useRoute().params ?? {}) as { wsSlug?: string };
     const [messages, setMessages] = useState<{ text: string, onClick: () => void }[]>([]);
     const [loading, setLoading] = useState(false);
     async function getRandomMessages(limit = 3) {
@@ -103,7 +107,7 @@ export default function EmptyList({ height }: { height: number }) {
             const keys = Object.keys(availableMessages);
             const randomKey = keys[Math.floor(Math.random() * keys.length)];
             const message = availableMessages[randomKey as keyof typeof availableMessages]
-            const text = typeof message.text === 'function' ? await message.text() : message.text;
+            const text = typeof message.text === 'function' ? await (message.text as (slug?: string) => any)(wsSlug) : message.text;
             if (!!text) messages.push({ text, onClick: message.onClick } as never);
             delete availableMessages[randomKey];
             if (messages.length >= limit) break;

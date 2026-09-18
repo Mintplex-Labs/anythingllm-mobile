@@ -3,13 +3,14 @@ import { Modal, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ModelCard from '@/components/ModelCard';
 import { groupModelsByProvider, ProviderSectionHeader } from '@/components/ModelCard/ProviderSections';
-import { useState, useEffect, Fragment, useCallback } from 'react';
+import { useState, useEffect, Fragment, useCallback, useMemo } from 'react';
 import OnDeviceProvider from '@/utils/AiProviders/onDevice';
 import { resolveDestinationPathFromGGUFUrl } from '@/utils/models/defaults';
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import HuggingFaceImport from '@/components/HuggingFaceImport';
 import AddFromHuggingFaceCard from '@/components/HuggingFaceImport/AddCard';
 import ImportedModels, { ImportedModel } from '@/utils/models/imported';
+import useModelFit from '@/hooks/useModelFit';
 
 interface NativeOptionsProps {
   llmPreferences: any;
@@ -88,6 +89,10 @@ export default function NativeOptions({
 
   const sections = groupModelsByProvider(displayedModels);
 
+  // Memory badges for every row plus a "Recommended" callout on the preset that suits this phone.
+  const presets = useMemo(() => availableModels.filter(model => model.isPreset), [availableModels]);
+  const { fitFor, recommendedId } = useModelFit(presets);
+
   return (
     <Fragment>
       {sections.map((section, sectionIndex) => (
@@ -101,6 +106,8 @@ export default function NativeOptions({
               isDownloaded={model.isDownloaded}
               modelDownloadUrl={modelDownloadUrl}
               downloadProgress={downloadProgress}
+              memoryFit={fitFor(model)}
+              isRecommended={model.id === recommendedId}
               onSelect={() => downloadModel(model)}
               onUninstall={() => handleUninstall(model)}
             />

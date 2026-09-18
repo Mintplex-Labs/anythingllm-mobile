@@ -54,6 +54,18 @@ export default class OnDeviceEmbedderProvider {
         console.log(`\x1b[35m[OnDeviceEmbedderProvider]\x1b[0m ${text}`, ...args);
     }
 
+    /**
+     * Filesystem check only - true when the embedding model is already on the device. Callers that
+     * must not trigger the download (eg: saving a memory) check this before calling `embed`.
+     */
+    static async isModelDownloaded(): Promise<boolean> {
+        try {
+            return await RNFS.exists(resolveDestinationPathFromGGUFUrl(EMBEDDING_MODEL.tag));
+        } catch {
+            return false;
+        }
+    }
+
     private async downloadModel() {
         try {
             this.log('Downloading embedding model now to save time later...');

@@ -3,6 +3,7 @@ import uiStore from '@/store/UIStore';
 import getLLM, { LLMProvider } from '@/utils/AiProviders';
 import { OnDeviceProviderConstructorProps } from '@/utils/AiProviders/onDevice';
 import { findProviderDefinition, providerDisplayName } from '@/utils/llmproviders';
+import ToolsManager from '@/utils/ToolsManager';
 
 interface LLMPreferenceContextType {
     llmPreferences: { provider: string; config: any };
@@ -51,6 +52,8 @@ export function LLMPreferenceProvider({ children }: { children: ReactNode }) {
             await uiStore.setToStorage('llmPreference', newPreferences);
             setLlmPreferences(newPreferences);
             setLLMProvider(getLLM(provider, config));
+            // Some tools are only offered to cloud providers - rebuild the cached tool list
+            ToolsManager.resetTools();
         } catch (error) {
             console.error('Error updating LLM preferences:', error);
             setError(error as Error);
@@ -61,6 +64,7 @@ export function LLMPreferenceProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         const handleLLMPreferenceChange = (event: { details: { provider: string, config: Record<string, any> } }) => {
             setLlmPreferences(event.details);
+            ToolsManager.resetTools();
             let llmProvider: LLMProvider | null = null;
             switch (event.details.provider) {
                 case 'native': {

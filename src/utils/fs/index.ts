@@ -66,6 +66,28 @@ export async function deleteProcessedFilesByName(filenames: string[]) {
 }
 
 /**
+ * Delete every processed file whose name is not in `referencedNames`.
+ * Used to purge text that no longer backs any workspace document.
+ * @returns the names that were removed
+ */
+export async function deleteProcessedFilesNotIn(referencedNames: string[]): Promise<string[]> {
+    if (!await RNFS.exists(PROCESSED_FOLDER_PATH)) return [];
+    const referenced = new Set(referencedNames);
+    const files = await RNFS.readDir(PROCESSED_FOLDER_PATH);
+    const removed: string[] = [];
+    for (const file of files) {
+        if (referenced.has(file.name)) continue;
+        try {
+            await RNFS.unlink(file.path);
+            removed.push(file.name);
+        } catch (e) {
+            console.error('[fs] could not remove processed file', file.name, e);
+        }
+    }
+    return removed;
+}
+
+/**
  * Delete all files in the processed folder by removing the folder itself
  */
 export async function deleteProcessedFiles() {

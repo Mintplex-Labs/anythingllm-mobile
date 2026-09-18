@@ -216,11 +216,14 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
   // @ts-ignore
   override async availableModels(): Promise<IOnDeviceAvailableModel[]> {
+    // Presets alias a catalog entry (same modelId + url). Prefer the catalog's exact byte
+    // count over the preset's display string so memory-fit badges and the download
+    // confirmation work from the same number.
     const basicModels: IOnDeviceAvailableModel[] = MODEL_CARDS.map(m => ({
       id: m.id,
       name: m.name,
       description: m.description,
-      size: m.size,
+      size: defaultModels.find(d => d.id === m.modelId)?.size ?? m.size,
       modelId: m.modelId,
       downloadUrl: m.tag,
       isPreset: true,
@@ -270,11 +273,23 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
   /**
    * Fits the prompt to the on-device context window before it is rendered:
-   *  - RAG chunks are capped to their share of the prompt budget (they sit in the system prompt, which pruning never touches)
+   *  - RAG chunks are capped to their share of the prompt budget (they are prepended to the latest user message, which pruning only shrinks as a last resort)
    *  - the oldest chats are replaced by the thread's rolling summary (see `ContextCompactor`)
    * Compaction normally runs in the background after each reply (`scheduleCompaction`), so this
    * only summarises inline when history outgrew the budget since then - the user sees a status line for it.
    */
+  /**
+   * Memories share the small on-device window with history and RAG, so the always-on block gets a
+   * fixed slice of the prompt budget (a 2k window with 35% held for the reply leaves ~130 tokens,
+   * about four or five short facts). Anything beyond it is retrieved per prompt instead.
+   */
+  static MEMORY_BUDGET_RATIO = 0.1;
+  protected override memoryTokenBudget(): number {
+    const promptBudget = this.submodule?.promptBudget
+      ?? Math.floor((this.workspace?.contextLength ?? LlamaRnWrapper.DEFAULT_CONTEXT_LENGTH) * (1 - LlamaRnWrapper.RESPONSE_RESERVE_RATIO));
+    return Math.max(48, Math.floor(promptBudget * OnDeviceProvider.MEMORY_BUDGET_RATIO));
+  }
+
   protected override async shapePrompt(rawShape: PromptShape, { threadSlug, onStatus }: { threadSlug: string | null; onStatus?: (status: string) => void }): Promise<PromptShape> {
     if (!this.submodule) return rawShape;
     // Photos from earlier turns are never re-sent on-device: each one costs hundreds of tokens of a

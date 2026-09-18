@@ -76,7 +76,7 @@ export default class LlamaRnWrapper {
   static MIN_N_PREDICT = 64;
   /** A message is never truncated below this many characters by `fitMessagesToContext`. */
   static MIN_TRUNCATED_MESSAGE_CHARS = 200;
-  /** Share of the prompt budget RAG chunks may occupy - they live in the system prompt which pruning cannot touch. */
+  /** Share of the prompt budget RAG chunks may occupy - they are prepended to the latest user message, which pruning only shrinks as a last resort. */
   static CONTEXT_TEXTS_BUDGET_RATIO = 0.35;
   /** Share of the prompt budget a single tool result may occupy. */
   static TOOL_RESULT_BUDGET_RATIO = 0.25;
@@ -417,10 +417,13 @@ export default class LlamaRnWrapper {
    */
   private async countPromptTokens(messages: NativeLlamaChatMessage[], tools?: any[]): Promise<number> {
     if (!this.context) throw new Error('LlamaRnWrapper::countPromptTokens: Model not initialized');
+    const { enable_thinking } = this.completionParams;
     const formatted = await this.context.getFormattedChat(messages as any, null, {
       jinja: this.context.isJinjaSupported(),
       tools: tools?.length ? tools : undefined,
       tool_choice: tools?.length ? 'auto' : undefined,
+      // Must match what `completion()` renders - disabling thinking injects an empty <think> block into the prompt.
+      ...(enable_thinking !== undefined ? { enable_thinking } : {}),
     });
     const { tokens } = await this.context.tokenize(formatted.prompt);
     // Images are rendered as a `<__media__>` marker which tokenizes as a few text tokens, so budget each

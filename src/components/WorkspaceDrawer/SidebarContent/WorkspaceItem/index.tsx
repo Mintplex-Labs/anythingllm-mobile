@@ -63,14 +63,14 @@ function WorkspaceItem({ workspace, isActive = false, currentThreadSlug }: IWork
             navigation.reset({
               index: 0,
               // @ts-ignore
-              routes: [{ name: PATHS.workspace_chat, params: { workspaceSlug: workspace.slug, threadSlug: newThread.slug } }],
+              routes: [{ name: PATHS.workspace_chat, params: { wsSlug: workspace.slug, threadSlug: newThread.slug } }],
             });
           } else {
             const thread = threads[0];
             navigation.reset({
               index: 0,
               // @ts-ignore
-              routes: [{ name: PATHS.workspace_chat, params: { workspaceSlug: workspace.slug, threadSlug: thread.slug } }],
+              routes: [{ name: PATHS.workspace_chat, params: { wsSlug: workspace.slug, threadSlug: thread.slug } }],
             });
           }
         }
@@ -105,7 +105,7 @@ function WorkspaceItem({ workspace, isActive = false, currentThreadSlug }: IWork
             navigation.reset({
               index: 0,
               // @ts-ignore
-              routes: [{ name: PATHS.workspace_chat, params: { workspaceSlug: workspace.slug, threadSlug: workspace.threads[0].slug } }],
+              routes: [{ name: PATHS.workspace_chat, params: { wsSlug: workspace.slug, threadSlug: workspace.threads[0].slug } }],
             });
           }
         }

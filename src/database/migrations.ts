@@ -30,5 +30,41 @@ export default schemaMigrations({
         }),
       ],
     },
+    // v3 -> v4: scheduled jobs and their runs (see utils/ScheduledJobs)
+    {
+      toVersion: 4,
+      steps: [
+        createTable({
+          name: 'scheduled_jobs',
+          columns: [
+            { name: 'uuid', type: 'string', isIndexed: true },
+            { name: 'name', type: 'string' },
+            { name: 'prompt', type: 'string' },
+            { name: 'tools', type: 'string' },
+            { name: 'schedule', type: 'string' },
+            { name: 'enabled', type: 'boolean' },
+            { name: 'notify_on_complete', type: 'boolean' },
+            { name: 'last_run_at', type: 'number', isOptional: true },
+            { name: 'next_run_at', type: 'number', isOptional: true },
+            { name: 'created_at', type: 'number' },
+            { name: 'updated_at', type: 'number' },
+          ],
+        }),
+        createTable({
+          name: 'scheduled_job_runs',
+          columns: [
+            { name: 'uuid', type: 'string', isIndexed: true },
+            { name: 'job_uuid', type: 'string', isIndexed: true },
+            { name: 'status', type: 'string', isIndexed: true },
+            { name: 'trigger', type: 'string' },
+            { name: 'result', type: 'string', isOptional: true },
+            { name: 'error', type: 'string', isOptional: true },
+            { name: 'started_at', type: 'number' },
+            { name: 'completed_at', type: 'number', isOptional: true },
+            { name: 'read_at', type: 'number', isOptional: true },
+          ],
+        }),
+      ],
+    },
   ],
 });

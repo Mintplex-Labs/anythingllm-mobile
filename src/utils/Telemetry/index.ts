@@ -43,6 +43,10 @@ class Telemetry {
             MEMORIES_ENABLED: 'memories_enabled',
             /** The user saved a memory from the thread menu (payload: scope) */
             MEMORY_SAVED: 'memory_saved',
+            /** A scheduled job was created (payload: tools count, notify) */
+            SCHEDULED_JOB_CREATED: 'scheduled_job_created',
+            /** A scheduled job run finished (payload: status, trigger, tools count) */
+            SCHEDULED_JOB_RAN: 'scheduled_job_ran',
 
             /** The user use the QR code to connect to an AnythingLLM intance */
             EXTERNAL_CONNECTION_ESTABLISHED: 'external_connection_established',

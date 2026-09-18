@@ -27,11 +27,14 @@ import { useEnablePushNotifications, useNotificationTapNavigation } from '@/util
 import { navigationRef, flushPendingNavigation } from '@/utils/navigationRef';
 import { useOnboardingCompleted } from '@/hooks/useOnboardingHook';
 import { purgeOrphanedFiles } from '@/utils/fs/cleanup';
+import { useScheduledJobsTicker } from '@/utils/ScheduledJobs/scheduler';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
   useEnablePushNotifications();
   useNotificationTapNavigation();
+  // Runs due scheduled jobs while the app is open and keeps the background wake-up armed.
+  useScheduledJobsTicker();
   const theme = useTheme();
   const styles = rootStyles(theme);
   const { initialRoute, isLoading } = useInitialRoute();
@@ -175,6 +178,14 @@ const App = observer(() => {
                           name={PATHS.user_settings}
                           component={gestureHandlerRootHOC(
                             Screens.UserSettings,
+                          )}
+                          options={{ headerShown: false }}
+                        />
+
+                        <Drawer.Screen
+                          name={PATHS.scheduled_jobs}
+                          component={gestureHandlerRootHOC(
+                            Screens.ScheduledJobs,
                           )}
                           options={{ headerShown: false }}
                         />

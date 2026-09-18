@@ -15,10 +15,12 @@ const BLOCKED_NUDGE_SHOWN_KEY = '@pushNotifications:blockedNudgeShown';
 
 /** Where a notification should take the user when tapped. Carried in the notification `data`. */
 export type ChatNotificationRoute = { wsSlug: string; threadSlug: string };
+/** A finished scheduled job run - opens the run detail in the scheduled jobs screen. */
+export type ScheduledJobNotificationRoute = { jobUuid: string; runUuid: string };
 
 class PushNotifications {
     private static instance: PushNotifications;
-    private channels = { primary: '', progress: '', chat: '' };
+    private channels = { primary: '', progress: '', chat: '', jobs: '' };
 
     /**
      * Whether the user has granted permissions to receive notifications
@@ -94,6 +96,17 @@ class PushNotifications {
             vibrationPattern: [50, 250],
             sound: 'default',
         }).then(createdChannelId => this.channels.chat = createdChannelId);
+
+        // A scheduled job finished with something to show. Same heads-up treatment as chat replies.
+        notifee.createChannel({
+            id: 'anythingllm-scheduled-jobs',
+            name: 'Scheduled Jobs',
+            description: 'Alerts when a scheduled job finishes running',
+            importance: AndroidImportance.HIGH,
+            vibration: true,
+            vibrationPattern: [50, 250],
+            sound: 'default',
+        }).then(createdChannelId => this.channels.jobs = createdChannelId);
     }
 
     /**
@@ -228,6 +241,40 @@ class PushNotifications {
             this.log('Failed to send chat complete notification', error);
         }
     }
+
+    /**
+     * Tell the user a scheduled job finished. Unlike chat replies this fires whether or not the
+     * phone is locked - the user opted in per job and is not looking at the result anywhere else.
+     * Never throws.
+     */
+    public async notifyScheduledJobComplete({ jobName, preview, jobUuid, runUuid }: {
+        jobName: string;
+        preview: string;
+        jobUuid: string;
+        runUuid: string;
+    }) {
+        if (!this.notificationsEnabled) return;
+        try {
+            await this.send('jobs', {
+                title: `${jobName} finished`,
+                body: truncatePreview(stripThinkTags(preview)) || 'Your scheduled job has a result for you.',
+                data: { jobUuid, runUuid },
+                android: {
+                    pressAction: { id: 'default' },
+                },
+                ios: {
+                    sound: 'default',
+                },
+            });
+        } catch (error) {
+            this.log('Failed to send scheduled job notification', error);
+        }
+    }
+}
+
+/** Drop any reasoning block a model left in its reply so the preview shows the answer. */
+function stripThinkTags(text: string): string {
+    return (text || '').replace(/<think>[\s\S]*?<\/think>/g, '').trim();
 }
 
 /** Collapse whitespace and clip a reply to a one-line preview for the notification body. */
@@ -244,6 +291,13 @@ function routeFromNotification(notification?: Notification | null): ChatNotifica
     return { wsSlug: data.wsSlug, threadSlug: data.threadSlug };
 }
 
+/** Reads the scheduled job run off a tapped notification, if it carries one. */
+function jobRouteFromNotification(notification?: Notification | null): ScheduledJobNotificationRoute | null {
+    const data = notification?.data as Partial<Record<keyof ScheduledJobNotificationRoute, unknown>> | undefined;
+    if (typeof data?.jobUuid !== 'string' || typeof data?.runUuid !== 'string') return null;
+    return { jobUuid: data.jobUuid, runUuid: data.runUuid };
+}
+
 export default PushNotifications.getInstance();
 export function useEnablePushNotifications() {
     useEffect(() => { PushNotifications.getInstance(); }, []);
@@ -257,6 +311,8 @@ export function useEnablePushNotifications() {
 export function useNotificationTapNavigation() {
     useEffect(() => {
         const openRoute = (notification?: Notification | null) => {
+            const jobRoute = jobRouteFromNotification(notification);
+            if (jobRoute) return navigateWhenReady(PATHS.scheduled_jobs, jobRoute);
             const route = routeFromNotification(notification);
             if (route) navigateWhenReady(PATHS.workspace_chat, route);
         };

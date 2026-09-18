@@ -30,6 +30,7 @@ export type ToolApprovalResult = {
 
 export const TOOL_APPROVAL_MESSAGES = {
     approved: 'User approved the tool execution.',
+    autoApproved: 'Approved automatically - this ran as a scheduled job with nobody to ask.',
     rejected: 'Tool call was rejected by the user.',
     timedOut: 'Tool approval request timed out. User did not respond in time.',
     aborted: 'Session was aborted while awaiting tool approval.',
@@ -62,6 +63,7 @@ class ToolApprovalManager {
      * @param streamEmitter - the tool's stream emitter, so the request lands in the current turn
      * @param signal - session abort signal; aborting settles the request as denied
      * @param timeoutMs - defaults to TOOL_APPROVAL_TIMEOUT_MS
+     * @param autoApprove - resolve approved right away without asking (unattended scheduled jobs - see `ToolExecutionContext.autoApproveTools`)
      */
     request({
         skillName,
@@ -70,6 +72,7 @@ class ToolApprovalManager {
         streamEmitter,
         signal = null,
         timeoutMs = TOOL_APPROVAL_TIMEOUT_MS,
+        autoApprove = false,
     }: {
         skillName: string;
         description?: string | null;
@@ -77,9 +80,15 @@ class ToolApprovalManager {
         streamEmitter: (event: IStreamEvent, data: any) => void;
         signal?: AbortSignal | null;
         timeoutMs?: number;
+        autoApprove?: boolean;
     }): Promise<ToolApprovalResult> {
         const requestId = generateUUID();
         if (signal?.aborted) return Promise.resolve({ approved: false, message: TOOL_APPROVAL_MESSAGES.aborted });
+        if (autoApprove) {
+            this.log(`Auto-approving ${skillName} (unattended run)`);
+            streamEmitter('report_status', `Approved ${skillName} automatically`);
+            return Promise.resolve({ approved: true, message: TOOL_APPROVAL_MESSAGES.autoApproved });
+        }
 
         return new Promise<ToolApprovalResult>((resolve) => {
             let timeoutId: ReturnType<typeof setTimeout> | null = null;

@@ -7,6 +7,7 @@ import ActivityChain from "./ActivityChain";
 import CitationsContainer from "./Citations";
 import ActionsContainer from "./Actions";
 import FileDownloadCards from "./FileDownloadCard";
+import ScheduledJobCreatedCards from "./ScheduledJobCreatedCard";
 import TextResponseContainer from "./TextResponse";
 import ToolApprovalRequest from "./ToolApprovalRequest";
 import { focusMessageActions } from "../focusMessageActions";
@@ -28,8 +29,9 @@ export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessa
     const response = chat.response;
     const handleLongPress = () => focusMessageActions(chat, 'assistant');
     // File download cards and citations wait for the reply to finish so streaming text does not keep pushing them down the page.
-    const hasLinkChips = !!response?.actions?.some(action => action.type !== 'file_download');
-    const hasDeferredChips = !chat.isLoading && (!!response?.citations?.length || !!response?.actions?.some(action => action.type === 'file_download'));
+    const isCardAction = (type: string) => type === 'file_download' || type === 'scheduled_job_created';
+    const hasLinkChips = !!response?.actions?.some(action => !isCardAction(action.type));
+    const hasDeferredChips = !chat.isLoading && (!!response?.citations?.length || !!response?.actions?.some(action => isCardAction(action.type)));
     const hasTrailingChips = hasLinkChips || hasDeferredChips;
     return (
         <View className="flex flex-col items-start w-full justify-start" style={{ gap: 11, paddingBottom: hasTrailingChips ? TRAILING_CHIPS_BOTTOM_PADDING : 0 }}>
@@ -41,6 +43,7 @@ export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessa
                 <TextResponseContainer uuid={chat.uuid} textResponse={response?.textResponse} metrics={response?.metrics} onLongPress={handleLongPress} />
             )}
             <FileDownloadCards actions={response?.actions} isLoading={chat.isLoading} />
+            <ScheduledJobCreatedCards actions={response?.actions} isLoading={chat.isLoading} />
             <ActionsContainer actions={response?.actions} />
             <CitationsContainer citations={response?.citations} isLoading={chat.isLoading} />
         </View>

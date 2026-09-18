@@ -14,7 +14,8 @@ export type StorageKeys =
   'current_anythingllm_external_connection' |
   'anythingllm_external_connections' |
   'hf_imported_models' |
-  'provider_config_cache';
+  'provider_config_cache' |
+  'memories';
 
 export const GLOBAL_EVENTS = {
   REDIRECT: 'REDIRECT',
@@ -49,6 +50,7 @@ export class UIStore {
     'anythingllm_external_connections',
     'hf_imported_models',
     'provider_config_cache',
+    'memories',
   ] as const;
 
   pageStates = {

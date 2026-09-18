@@ -8,6 +8,7 @@ import Workspace from './models/Workspace';
 import WorkspaceThread from './models/WorkspaceThread';
 import Document from './models/Document';
 import WorkspaceChat from './models/WorkspaceChat';
+import Memory from './models/Memory';
 
 const adapter = new SQLiteAdapter({
   schema,
@@ -19,5 +20,5 @@ const adapter = new SQLiteAdapter({
 
 export const database = new Database({
   adapter,
-  modelClasses: [Workspace, WorkspaceThread, Document, WorkspaceChat],
+  modelClasses: [Workspace, WorkspaceThread, Document, WorkspaceChat, Memory],
 });

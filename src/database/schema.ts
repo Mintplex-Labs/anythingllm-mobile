@@ -1,7 +1,7 @@
 import { appSchema, tableSchema } from '@nozbe/watermelondb';
 
 export default appSchema({
-  version: 2,
+  version: 3,
   tables: [
     tableSchema({
       name: 'workspaces',
@@ -37,6 +37,21 @@ export default appSchema({
         { name: 'workspace_slug', type: 'string', isIndexed: true },
         { name: 'vector_box_ids', type: 'string', isOptional: true },
         { name: 'created_at', type: 'number' },
+      ],
+    }),
+    tableSchema({
+      // User-authored memories injected into prompts - see utils/Memories. Global memories apply to every
+      // workspace; workspace memories carry the slug they belong to and are pruned with the workspace.
+      name: 'memories',
+      columns: [
+        { name: 'uuid', type: 'string', isIndexed: true },
+        { name: 'scope', type: 'string', isIndexed: true },
+        { name: 'workspace_slug', type: 'string', isOptional: true, isIndexed: true },
+        { name: 'content', type: 'string' },
+        // JSON float array from the on-device embedder, filled lazily - null until embedded
+        { name: 'embedding', type: 'string', isOptional: true },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
       ],
     }),
     tableSchema({

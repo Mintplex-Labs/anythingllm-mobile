@@ -1,8 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
-import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
+import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { CheckCircle, DotsThreeVertical, Export, FileCode, FileMd, FilePdf, FileText, FolderOpen, ShareNetwork } from 'phosphor-react-native';
+import { Brain, CheckCircle, DotsThreeVertical, Export, FileCode, FileMd, FilePdf, FileText, FolderOpen, ShareNetwork } from 'phosphor-react-native';
+import { screenDimensions } from '@/utils/constants';
+import useKeyboardHeight from '@/hooks/useKeyboardHeight';
+import MemoriesPage from './MemoriesPage';
 import { MenuRow, SheetHeader, MUTED_TEXT, ROW_ICON_BACKGROUND, SHEET_BACKGROUND, SUCCESS } from '@/components/SheetMenu';
 import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
 import useLlmPreference from '@/hooks/useLLMPreference';
@@ -22,7 +25,7 @@ import {
   type SavedThreadExport,
 } from '@/utils/chat/export';
 
-type MenuPage = 'menu' | 'export' | 'saved';
+type MenuPage = 'menu' | 'memories' | 'export' | 'saved';
 
 const EXPORT_ICONS: Record<ExportFormat, React.ReactNode> = {
   txt: <FileText size={22} color="#FFF" />,
@@ -45,13 +48,16 @@ export function ThreadMenuIcon() {
 }
 
 /**
- * Bottom sheet with per-thread actions. Three "pages" live inside the one sheet:
- * the option list, the export format picker, and a confirmation once the file is
- * saved to the device with an optional share step. The user can go back from the
- * export page or pull the sheet down at any time.
+ * Bottom sheet with per-thread actions. Four "pages" live inside the one sheet:
+ * the option list, the memory manager, the export format picker, and a confirmation
+ * once the file is saved to the device with an optional share step. The user can go
+ * back from any sub-page or pull the sheet down at any time.
  */
 export default function ThreadMenuSheet({ workspace, thread }: { workspace: WorkspaceType; thread: WorkspaceThreadType }) {
   const insets = useSafeAreaInsets();
+  // Dynamic-sized sheets do not grow for the keyboard on their own: pad the content by its height so
+  // the sheet extends and the memory input stays above it (see PromptInput for the same trick).
+  const keyboardHeight = useKeyboardHeight();
   const sheetRef = useRef<BottomSheetModal>(null);
   const { registerSheet, dismissSheet, dismissAllSheets } = useBottomSheet();
   const { llmPreferences } = useLlmPreference();
@@ -129,27 +135,40 @@ export default function ThreadMenuSheet({ workspace, thread }: { workspace: Work
       ref={sheetRef}
       index={0}
       enableDynamicSizing
+      maxDynamicContentSize={screenDimensions.height * 0.85}
       enablePanDownToClose
+      keyboardBehavior="extend"
+      keyboardBlurBehavior="restore"
+      android_keyboardInputMode="adjustResize"
       backdropComponent={renderBackdrop}
       backgroundStyle={{ backgroundColor: SHEET_BACKGROUND }}
       handleIndicatorStyle={{ backgroundColor: MUTED_TEXT, width: 45, margin: 10 }}
       onDismiss={handleDismiss}>
-      <BottomSheetView style={{ paddingHorizontal: 20, paddingBottom: Math.max(insets.bottom, 16) + 8 }}>
-        {page === 'menu' && <MenuPageContent onExport={() => setPage('export')} />}
+      <BottomSheetScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: Math.max(insets.bottom, 16) + 8 + keyboardHeight }}>
+        {page === 'menu' && <MenuPageContent onMemories={() => setPage('memories')} onExport={() => setPage('export')} />}
+        {page === 'memories' && <MemoriesPage workspace={workspace} onBack={() => setPage('menu')} />}
         {page === 'export' && (
           <ExportPageContent exporting={exporting} onBack={() => setPage('menu')} onSelect={handleExport} />
         )}
         {page === 'saved' && saved && (
           <SavedPageContent saved={saved} sharing={sharing} onShare={handleShare} onOpenLocation={handleOpenLocation} onDone={dismissAllSheets} />
         )}
-      </BottomSheetView>
+      </BottomSheetScrollView>
     </BottomSheetModal>
   );
 }
 
-function MenuPageContent({ onExport }: { onExport: () => void }) {
+function MenuPageContent({ onMemories, onExport }: { onMemories: () => void; onExport: () => void }) {
   return (
     <View style={{ paddingTop: 8 }}>
+      <MenuRow
+        icon={<Brain size={22} color="#FFF" />}
+        title="Memories"
+        description="See memories about you or your preferences"
+        onPress={onMemories}
+      />
       <MenuRow icon={<Export size={22} color="#FFF" />} title="Export Chat Thread" onPress={onExport} />
     </View>
   );

@@ -24,6 +24,7 @@ import { startCase } from 'lodash';
 import Workspace from '@/database/models/Workspace';
 import WorkspaceThread from '@/database/models/WorkspaceThread';
 import Document from '@/database/models/Document';
+import Memory from '@/database/models/Memory';
 import WorkspaceChat from '@/database/models/WorkspaceChat';
 import uninstallAllModels from '@/utils/models/manager';
 import { deleteProcessedFiles } from '@/utils/fs';
@@ -129,6 +130,7 @@ export function MainView({ goToPage }: MainViewProps) {
       WorkspaceChat.deleteAll(),
       WorkspaceThread.deleteAll(),
       Document.deleteAll(true),
+      Memory.deleteAll(),
       uninstallAllModels(),
       deleteProcessedFiles(),
       deleteGeneratedDocuments(),

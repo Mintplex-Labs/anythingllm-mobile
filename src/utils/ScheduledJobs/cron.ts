@@ -232,9 +232,13 @@ export function cronToBuilderState(expression: string): { state: BuilderState; m
     if (isNumber(m) && isNumber(h) && dom === '*' && dow === '*') {
         return { state: { ...DEFAULT_BUILDER_STATE, frequency: 'day', hour: parseInt(h, 10), minute: parseInt(m, 10) }, matched: true };
     }
-    if (isNumber(m) && isNumber(h) && dom === '*' && /^\d+(,\d+)*$/.test(dow)) {
-        const weekdays = [...new Set(dow.split(',').map((d) => parseInt(d, 10) % 7))].sort((a, b) => a - b);
-        return { state: { ...DEFAULT_BUILDER_STATE, frequency: 'week', hour: parseInt(h, 10), minute: parseInt(m, 10), weekdays }, matched: true };
+    // Weekly: any day-of-week list/range the parser accepts (eg: "1,3,5", "1-5", "1-5,0"), no steps
+    if (isNumber(m) && isNumber(h) && dom === '*' && dow !== '*' && !dow.includes('/')) {
+        const days = parseField(dow, ...FIELD_RANGES.dayOfWeek);
+        if (days) {
+            const weekdays = [...new Set([...days].map((d) => d % 7))].sort((a, b) => a - b);
+            return { state: { ...DEFAULT_BUILDER_STATE, frequency: 'week', hour: parseInt(h, 10), minute: parseInt(m, 10), weekdays }, matched: true };
+        }
     }
     if (isNumber(m) && isNumber(h) && isNumber(dom) && dow === '*') {
         return { state: { ...DEFAULT_BUILDER_STATE, frequency: 'month', hour: parseInt(h, 10), minute: parseInt(m, 10), dayOfMonth: parseInt(dom, 10) }, matched: true };

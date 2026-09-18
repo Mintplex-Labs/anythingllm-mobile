@@ -8,6 +8,7 @@ import calendarEventCreation from './calendarEventCreation';
 import calendarEventReading from './calendarEventReading';
 import summarize from './summarize';
 import createFiles from './createFiles';
+import createScheduledJob from './createScheduledJob';
 
 export default {
     default: {
@@ -16,6 +17,7 @@ export default {
         getLocation,
         getCurrentTime,
         summarize,
+        createScheduledJob,
     },
     createFiles,
     appConnections: {

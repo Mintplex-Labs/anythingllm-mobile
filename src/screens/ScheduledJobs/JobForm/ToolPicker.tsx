@@ -13,11 +13,12 @@ export default function ToolPicker({ selected, onChange }: { selected: string[];
         onChange(selected.includes(tool.id) ? selected.filter((id) => id !== tool.id) : [...selected, tool.id]);
     };
 
-    const ungrouped = ToolsManager.configurableTools.filter((tool) => tool.category === 'default' && !tool.group);
-    const appConnections = ToolsManager.configurableTools.filter((tool) => tool.category === 'appConnections');
+    const eligible = ToolsManager.scheduledJobEligibleTools;
+    const ungrouped = eligible.filter((tool) => tool.category === 'default' && !tool.group);
+    const appConnections = eligible.filter((tool) => tool.category === 'appConnections');
     const groups = (Object.keys(TOOL_GROUPS) as ToolGroupId[]).map((groupId) => ({
         ...TOOL_GROUPS[groupId],
-        tools: ToolsManager.configurableTools.filter((tool) => tool.group === groupId),
+        tools: eligible.filter((tool) => tool.group === groupId),
     }));
 
     return (

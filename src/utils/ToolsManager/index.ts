@@ -41,6 +41,11 @@ export type ToolManagerTool = {
      * Defaults to true.
      */
     supportsOnDevice?: boolean;
+    /**
+     * Set to true for tools that only make sense with a person in the loop (eg: creating another
+     * scheduled job). They are left out of the per-job tool picker and never handed to a job run.
+     */
+    hiddenFromScheduledJobs?: boolean;
     definition: {
         type: 'function';
         function: {
@@ -107,6 +112,7 @@ class ToolsManager {
         Tools.default.getLocation,
         Tools.default.getCurrentTime,
         Tools.default.summarize,
+        Tools.default.createScheduledJob,
         Tools.createFiles.createTextFile,
         Tools.createFiles.createPdfFile,
         Tools.createFiles.createDocxFile,
@@ -162,6 +168,11 @@ class ToolsManager {
     getToolsByIds(ids: string[]): ToolManagerTool[] {
         const wanted = new Set(ids);
         return this.configurableTools.filter(tool => wanted.has(tool.id));
+    }
+
+    /** Tools a scheduled job may be given - everything not flagged `hiddenFromScheduledJobs` */
+    get scheduledJobEligibleTools(): ToolManagerTool[] {
+        return this.configurableTools.filter(tool => !tool.hiddenFromScheduledJobs);
     }
 
     /**

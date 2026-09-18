@@ -211,7 +211,7 @@ class ScheduledJobRunner {
             provider.attachWorkspaceToProvider(scheduledJobsWorkspace());
             provider.attachAbortSignal(abortController.signal);
 
-            const toolset = ToolsManager.getToolsByIds(job.tools);
+            const toolset = ToolsManager.getToolsByIds(job.tools).filter(tool => !tool.hiddenFromScheduledJobs);
             this.log(`Job "${job.name}" tools: ${toolset.map(t => t.id).join(', ') || 'none'}`);
 
             await Promise.race([

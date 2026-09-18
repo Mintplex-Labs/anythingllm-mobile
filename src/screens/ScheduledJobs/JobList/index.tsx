@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { CalendarCheck, CaretRight, Plus } from 'phosphor-react-native';
+import { ClockCountdown, CaretRight, Plus } from 'phosphor-react-native';
 import SafeView from '@/components/SafeView';
 import ToggleSwitch from '@/components/ToggleSwitch';
 import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';
@@ -158,7 +158,7 @@ function EmptyState({ blocked, onCreate }: { blocked: boolean; onCreate: () => v
     return (
         <Card style={{ alignItems: 'center', paddingVertical: 32, gap: 16 }}>
             <View style={{ backgroundColor: JOB_COLORS.chip, width: 64, height: 64 }} className="flex items-center justify-center rounded-full">
-                <CalendarCheck size={32} color="#FFF" />
+                <ClockCountdown size={32} color="#FFF" />
             </View>
             <View className="flex flex-col items-center" style={{ gap: 6 }}>
                 <Text className="text-white text-lg font-medium">No scheduled jobs yet</Text>

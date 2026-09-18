@@ -13,6 +13,7 @@ import AwaitableAlert from "@/components/AwaitableAlert";
 import Telemetry from "@/utils/Telemetry";
 import AssistantTurn from "./turn";
 import { isAbortError } from "@/utils/chat/abort";
+import PushNotifications from "@/utils/PushNotifications";
 
 const SHOW_DEBUG_LOGS = true;
 
@@ -218,9 +219,24 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
         return Array.from(chatsMap.values());
     }, [chatsMap]);
 
+    /**
+     * If the user locked their phone while the reply was generating, buzz them now that it is done.
+     * No-op when the phone is unlocked or notifications are off. Fire-and-forget so a slow or
+     * failing notification never delays saving the chat.
+     */
+    const notifyIfLocked = useCallback((chat: DynamicChatMessage) => {
+        PushNotifications.notifyChatComplete({
+            workspaceName: workspace?.name,
+            preview: chat.response?.textResponse || '',
+            failed: chat.type === 'error',
+            route: { wsSlug: workspace.slug, threadSlug: thread.slug },
+        });
+    }, [workspace, thread]);
+
     const concludeChat = useCallback(async (turn: AssistantTurn) => {
         const chatToSave = turn.finalize();
         upsertChat(chatToSave);
+        notifyIfLocked(chatToSave);
 
         // Emit the assistant response complete event
         uiStore.emitter.emit(CHAT_HANDLER_EVENTS.ASSISTANT_RESPONSE_COMPLETE, { uuid: turn.uuid });
@@ -234,7 +250,7 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
                     llmModel: llmProvider.model,
                 });
             });
-    }, [upsertChat, llmProvider]);
+    }, [upsertChat, llmProvider, notifyIfLocked]);
 
     /**
      * Process a chat and add it to the chat history
@@ -349,13 +365,15 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
             if (signal.aborted || isAbortError(err)) return discardAbortedChat();
             debug('Error processing chat', err);
             turn.fail((err as Error).message || 'Error processing chat');
-            upsertChat(turn.snapshot());
+            const failedChat = turn.snapshot();
+            upsertChat(failedChat);
+            notifyIfLocked(failedChat);
         } finally {
             if (abortControllerRef.current === abortController) abortControllerRef.current = null;
             llmProvider.attachAbortSignal(null);
             deactivateKeepAwake();
         }
-    }, [thread, upsertChat, removeChat, llmProvider, concludeChat, isRemote, workspace]);
+    }, [thread, upsertChat, removeChat, llmProvider, concludeChat, isRemote, workspace, notifyIfLocked]);
 
     const canScrollChatHistory = useMemo(() => {
         return !isLoadingChats && chatsArray.length > 0;
@@ -370,6 +388,10 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
             _setPrompt('');
             disablePromptInput();
             setIsWorking(true);
+            // Sending a chat is the natural moment to ask for notifications: they exist so we can tell
+            // the user their reply finished if they lock the phone while it generates. Shows the OS
+            // dialog if never asked, or a one-time nudge to system settings if the app is blocked.
+            await PushNotifications.promptToEnableForChat();
             await _processChat(promptToSubmit, attachments);
         } catch (err) {
             debug('Error submitting prompt', err);

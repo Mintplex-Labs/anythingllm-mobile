@@ -10,7 +10,7 @@ import OpenAILite from "@/utils/openai";
 import VectorDB, { SemanticSearchResult } from "@/utils/VectorDB";
 import DocumentReranker from "@/utils/DocumentReranker";
 import { type IAgentAction } from "@/database/models/WorkspaceChat";
-import ToolsManager from "@/utils/ToolsManager";
+import ToolsManager, { type ToolManagerTool } from "@/utils/ToolsManager";
 import { isAbortError, linkAbortSignal, throwIfAborted } from "@/utils/chat/abort";
 import MemoryManager, { type PromptMemories } from "@/utils/Memories";
 
@@ -519,6 +519,8 @@ export default abstract class BaseOpenAILikeProvider {
     streaming = false,
     onComplete = (response: ICompleteResponse) => { console.log('Debug: onComplete - if you are seeing this you forgot to handle completion responses but got one.', response) },
     onStream = (event: IStreamEvent, data: any) => { console.log('Debug: onStream - if you are seeing this you forgot to handle stream responses but got one.', event, data) },
+    toolset,
+    autoApproveTools = false,
   }: {
     messages: DynamicChatMessage[];
     streaming?: boolean;
@@ -526,6 +528,13 @@ export default abstract class BaseOpenAILikeProvider {
     onComplete?: (response: ICompleteResponse) => void;
     /** On stream is for streaming responses - will fire for each token */
     onStream?: IStreamCallback;
+    /**
+     * Exactly these tools instead of the user's enabled set, with no relevance reranking - the
+     * caller has already curated them (scheduled jobs). An empty array means no tools at all.
+     */
+    toolset?: ToolManagerTool[];
+    /** Unattended turn - tools that ask the user for consent proceed without waiting (scheduled jobs) */
+    autoApproveTools?: boolean;
   }) {
     const { formattedMessages, citations } = await this.buildPrompt(messages, streaming ? (status) => onStream('report_status', status) : undefined);
     if (!streaming) {
@@ -537,13 +546,19 @@ export default abstract class BaseOpenAILikeProvider {
       return;
     }
 
-    let availableTools = await ToolsManager.injectAvailableTools();
-    const lastUserMessage = [...formattedMessages].reverse().find(m => m.role === 'user');
-    const userPrompt = typeof lastUserMessage?.content === 'string' ? lastUserMessage.content : '';
-    availableTools = await ToolsManager.rerankTools(
-        availableTools, userPrompt, 'cloud',
-        (status) => onStream('report_status', status),
-    );
+    let availableTools: ToolManagerTool['definition'][];
+    if (toolset) {
+      // Pre-curated by the caller - offer them all, no reranking.
+      availableTools = toolset.map(tool => tool.definition);
+    } else {
+      availableTools = await ToolsManager.injectAvailableTools();
+      const lastUserMessage = [...formattedMessages].reverse().find(m => m.role === 'user');
+      const userPrompt = typeof lastUserMessage?.content === 'string' ? lastUserMessage.content : '';
+      availableTools = await ToolsManager.rerankTools(
+          availableTools, userPrompt, 'cloud',
+          (status) => onStream('report_status', status),
+      );
+    }
     this.log(`Streaming ${this.model} with ${availableTools.length} available tools`);
     const { stream, abortController } = await this.streamGetChatCompletion(formattedMessages, availableTools);
     const fullResult = await this.handleDefaultStreamResponse(stream, onStream, abortController);
@@ -563,6 +578,8 @@ export default abstract class BaseOpenAILikeProvider {
       currentMessageHistory: formattedMessages,
       mergeToolCallResults: false,
       signal: this.abortSignal,
+      toolset,
+      executionContext: { autoApproveTools },
     });
 
     throwIfAborted(this.abortSignal);

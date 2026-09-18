@@ -345,6 +345,9 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     streaming?: boolean;
     onComplete?: (response: any) => void;
     onStream?: IStreamCallback | IOnDeviceStreamCallback;
+    /** Accepted for signature parity with the cloud providers - scheduled jobs never run on-device */
+    toolset?: unknown;
+    autoApproveTools?: boolean;
   }) {
     if (!this.submodule || !this.model) throw new Error('No model loaded. Please select a model first.');
     // Loading a GGUF into memory can take several seconds on first use - surface it in the

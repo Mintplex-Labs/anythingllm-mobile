@@ -66,6 +66,11 @@ export type ToolManagerTool = {
 export type ToolExecutionContext = {
     /** Session abort signal - fires when the user stops the reply. Tools waiting on the user (eg: approval) should settle on it. */
     signal?: AbortSignal | null;
+    /**
+     * Nobody is watching this turn (scheduled job) - tools that would normally ask the user for
+     * consent before slow or costly work proceed as if approved instead of waiting for a tap.
+     */
+    autoApproveTools?: boolean;
 }
 
 type ToolCallLoopProps = {
@@ -83,6 +88,13 @@ type ToolCallLoopProps = {
     mergeToolCallResults?: boolean;
     /** Session abort signal - when it fires the loop stops before the next tool execution / LLM round */
     signal?: AbortSignal | null;
+    /**
+     * Restrict the loop to exactly these tools instead of the user's enabled set. Used by scheduled
+     * jobs, where the user pre-selects the tools per job (see `getToolsByIds`).
+     */
+    toolset?: ToolManagerTool[];
+    /** Extra per-turn context handed to every tool execution (merged with `signal`) */
+    executionContext?: Omit<ToolExecutionContext, 'signal'>;
 }
 
 class ToolsManager {
@@ -144,6 +156,15 @@ class ToolsManager {
     }
 
     /**
+     * The configured tools with these ids, in catalog order. Unknown ids are ignored. Used by
+     * scheduled jobs, which store the tool ids the user picked for each job.
+     */
+    getToolsByIds(ids: string[]): ToolManagerTool[] {
+        const wanted = new Set(ids);
+        return this.configurableTools.filter(tool => wanted.has(tool.id));
+    }
+
+    /**
      * Gets all of the tools that are enabled by the user or the default tools
      * in the format that any supported LLM can use for function calling
      */
@@ -179,8 +200,10 @@ class ToolsManager {
         currentMessageHistory: any[],
         maxToolResultChars?: number,
         context: ToolExecutionContext = {},
+        toolset: ToolManagerTool[] | null = null,
     ): Promise<any[]> {
         const nextMessages = [...currentMessageHistory];
+        const knownTools = toolset ?? this._tools;
 
         if (!toolCalls || toolCalls.length === 0) return nextMessages;
         streamEmitter('will_call_tools', '');
@@ -193,7 +216,7 @@ class ToolsManager {
             }
             streamEmitter('report_tool_call', humanReadableToolCall);
 
-            const knownToolConfig = this._tools?.find(tool => tool.definition.function.name === toolCall.function.name);
+            const knownToolConfig = knownTools?.find(tool => tool.definition.function.name === toolCall.function.name);
             if (!knownToolConfig) {
                 this.log(`ToolsManager::manageToolCallExecutions: Tool not found or available: ${toolCallName}`);
                 streamEmitter('report_tool_call_result', {
@@ -303,11 +326,13 @@ class ToolsManager {
         mergeToolCallResults = true,
         signal = null,
         maxToolResultChars,
+        toolset,
+        executionContext = {},
     }: ToolCallLoopProps): Promise<ICompleteResponse> {
         let willLoop = currentResponse.toolCalls && currentResponse.toolCalls.length > 0;
         if (!willLoop) return currentResponse;
 
-        let availableTools = await this.injectAvailableTools();
+        let availableTools = toolset ? toolset.map(tool => tool.definition) : await this.injectAvailableTools();
         let nextResponse = currentResponse;
         let nextMessages = [...currentMessageHistory];
 
@@ -319,7 +344,7 @@ class ToolsManager {
             // that reply then call a tool see a result for a call that is not in the history and call
             // the same tool again on every round. The on-device merge flow keeps its text-only history.
             if (!mergeToolCallResults) nextMessages.push(this.assistantToolCallMessage(nextResponse));
-            nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages, maxToolResultChars, { signal });
+            nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages, maxToolResultChars, { ...executionContext, signal }, toolset ?? null);
             throwIfAborted(signal);
             for (const [index, message] of nextMessages.entries()) {
                 if (message.role === 'tool' && mergeToolCallResults) {

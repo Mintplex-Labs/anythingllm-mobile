@@ -14,6 +14,7 @@ import com.anythingllm.storage.StoragePackage
 import com.anythingllm.vector.VectorBoxPackage
 import com.anythingllm.webscraper.WebScraperPackage
 import com.anythingllm.pdfparser.PdfParserPackage
+import com.anythingllm.scheduledjobs.ScheduledJobsPackage
 
 class MainApplication : Application(), ReactApplication {
 
@@ -29,6 +30,7 @@ class MainApplication : Application(), ReactApplication {
               add(VectorBoxPackage())
               add(WebScraperPackage())
               add(PdfParserPackage())
+              add(ScheduledJobsPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

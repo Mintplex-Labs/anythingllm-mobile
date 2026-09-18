@@ -4,7 +4,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
-import { Gear, QrCode } from 'phosphor-react-native';
+import { CalendarCheck, Gear, QrCode } from 'phosphor-react-native';
+import useUnreadScheduledJobRuns from '@/hooks/useUnreadScheduledJobRuns';
 import WorkspaceItem from './WorkspaceItem';
 import useWorkspaces from '@/hooks/useWorkspaces';
 import NewWorkspaceModal, { useNewWorkspaceModal } from '@/components/NewWorkspaceModal';
@@ -20,6 +21,18 @@ export default function SidebarContent({ navigation }: { navigation: any }) {
   const { loadingWorkspaces, workspaces, activeWorkspaceSlug, activeThreadSlug, fetchWorkspaces } = useWorkspaces(true);
   const { showNewWorkspaceModal, openNewWorkspaceModal, closeNewWorkspaceModal } = useNewWorkspaceModal();
   const [refreshing, setRefreshing] = useState(false);
+  const unseenJobRuns = useUnreadScheduledJobRuns();
+
+  const goToScheduledJobs = () => {
+    uiStore.emitter.emit(uiStore.globalEvents.REDIRECT, {
+      path: PATHS.scheduled_jobs,
+    });
+    navigation.reset({
+      index: 0,
+      // @ts-ignore
+      routes: [{ name: PATHS.scheduled_jobs }],
+    });
+  }
 
   const goToUserSettings = () => {
     uiStore.emitter.emit(uiStore.globalEvents.REDIRECT, {
@@ -69,9 +82,18 @@ export default function SidebarContent({ navigation }: { navigation: any }) {
           {/* Topbar */}
           <View className='flex flex-row items-center justify-between pt-[20px] w-full p-[16px] border-b border-[--hex-gray-8] shrink-0'>
             <Text className='text-2xl font-semibold text-white'>Workspaces</Text>
-            <TouchableOpacity activeOpacity={0.6} onPress={goToUserSettings}>
-              <Gear size={30} color='#FFF' />
-            </TouchableOpacity>
+            <View className='flex flex-row items-center' style={{ gap: 18 }}>
+              <TouchableOpacity activeOpacity={0.6} onPress={goToScheduledJobs} accessibilityLabel={unseenJobRuns > 0 ? `Scheduled jobs, ${unseenJobRuns} unseen result${unseenJobRuns === 1 ? '' : 's'}` : 'Scheduled jobs'}>
+                <CalendarCheck size={30} color='#FFF' />
+                {unseenJobRuns > 0 && (
+                  // Unseen job results - same accent as the dots on the job and run rows
+                  <View style={{ position: 'absolute', top: -2, right: -2, width: 10, height: 10, borderRadius: 5, backgroundColor: '#84CAFF', borderWidth: 2, borderColor: '#1B1B1E' }} />
+                )}
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.6} onPress={goToUserSettings}>
+                <Gear size={30} color='#FFF' />
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Workspaces List */}

@@ -1,6 +1,7 @@
-import { PDFDocument, PDFFont, PDFImage, PDFPage, StandardFonts, rgb, type RGB } from 'pdf-lib';
+import { PDFDocument, PDFFont, PDFImage, PDFPage, StandardFonts, degrees, decodeFromBase64DataUri, rgb, type RGB } from 'pdf-lib';
 import { marked } from 'marked';
 import { toWinAnsi, toAscii, unescapeHtml, stripHtml } from './encoding';
+import { orientationToClockwiseDegrees, readJpegOrientation } from './exif';
 
 /**
  * A tiny flow-layout engine on top of pdf-lib.
@@ -91,6 +92,8 @@ const THUMBNAIL_GAP = 6;
 
 /** An image attachment as stored on a chat row - only the data URL is needed here */
 export type PdfImageAttachment = { name?: string; contentString?: string };
+/** An embedded image plus the clockwise turn (from EXIF) needed to show it upright */
+type EmbeddedImage = { image: PDFImage; rotation: 0 | 90 | 180 | 270 };
 
 export class PdfWriter {
   readonly doc: PDFDocument;
@@ -310,17 +313,19 @@ export class PdfWriter {
    * Draw image attachments as a row of small square thumbnails, wrapping onto
    * further rows when there are more than fit across the content width. Each
    * image is scaled to fit inside its tile (letterboxed, never cropped) so the
-   * whole picture is visible. Anything pdf-lib can't decode falls back to a
-   * muted `[image: name]` line so the export never fails on a bad payload.
+   * whole picture is visible. JPEGs are turned per their EXIF orientation so
+   * camera photos come out upright like they do in the chat. Anything pdf-lib
+   * can't decode falls back to a muted `[image: name]` line so the export never
+   * fails on a bad payload.
    */
   async drawImages(attachments: PdfImageAttachment[]) {
-    const embedded: { image: PDFImage; name?: string }[] = [];
+    const embedded: EmbeddedImage[] = [];
     const failed: string[] = [];
     for (const attachment of attachments) {
       const dataUrl = attachment?.contentString;
       if (typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) continue;
       try {
-        embedded.push({ image: await this.embedImage(dataUrl), name: attachment.name });
+        embedded.push(await this.embedImage(dataUrl));
       } catch {
         failed.push(attachment.name || 'image');
       }
@@ -330,18 +335,10 @@ export class PdfWriter {
     for (let start = 0; start < embedded.length; start += perRow) {
       this.ensureSpace(THUMBNAIL_SIZE);
       const top = this.y;
-      embedded.slice(start, start + perRow).forEach(({ image }, column) => {
+      embedded.slice(start, start + perRow).forEach((image, column) => {
         const tileX = this.contentLeft + column * (THUMBNAIL_SIZE + THUMBNAIL_GAP);
         this.page.drawRectangle({ x: tileX, y: top - THUMBNAIL_SIZE, width: THUMBNAIL_SIZE, height: THUMBNAIL_SIZE, color: COLORS.codeBackground });
-        const scale = Math.min(THUMBNAIL_SIZE / image.width, THUMBNAIL_SIZE / image.height);
-        const width = image.width * scale;
-        const height = image.height * scale;
-        this.page.drawImage(image, {
-          x: tileX + (THUMBNAIL_SIZE - width) / 2,
-          y: top - THUMBNAIL_SIZE + (THUMBNAIL_SIZE - height) / 2,
-          width,
-          height,
-        });
+        this.drawImageInTile(image, tileX, top - THUMBNAIL_SIZE, THUMBNAIL_SIZE);
       });
       this.y = top - THUMBNAIL_SIZE - THUMBNAIL_GAP;
     }
@@ -351,11 +348,44 @@ export class PdfWriter {
     }
   }
 
+  /**
+   * Letterbox `image` inside the square tile whose bottom-left corner is (tileX, tileY),
+   * applying its EXIF rotation. pdf-lib rotates counter-clockwise about the image's own
+   * bottom-left corner, so for each quarter turn we compute where that corner must sit
+   * for the rotated image's bounding box to land centered in the tile.
+   */
+  private drawImageInTile({ image, rotation }: EmbeddedImage, tileX: number, tileY: number, tile: number) {
+    const swapped = rotation === 90 || rotation === 270;
+    // Dimensions as the viewer will see them, after rotation
+    const uprightWidth = swapped ? image.height : image.width;
+    const uprightHeight = swapped ? image.width : image.height;
+    const scale = Math.min(tile / uprightWidth, tile / uprightHeight);
+    const width = image.width * scale; // drawn (pre-rotation) size
+    const height = image.height * scale;
+    const boxWidth = uprightWidth * scale;
+    const boxHeight = uprightHeight * scale;
+    const boxX = tileX + (tile - boxWidth) / 2;
+    const boxY = tileY + (tile - boxHeight) / 2;
+
+    // PDF angles are counter-clockwise, so a clockwise EXIF turn becomes its complement
+    let x = boxX;
+    let y = boxY;
+    if (rotation === 90) { x = boxX; y = boxY + width; }
+    else if (rotation === 180) { x = boxX + width; y = boxY + height; }
+    else if (rotation === 270) { x = boxX + height; y = boxY; }
+
+    this.page.drawImage(image, { x, y, width, height, rotate: degrees((360 - rotation) % 360) });
+  }
+
   /** pdf-lib only decodes JPEG and PNG - anything else (HEIC, WebP, GIF) throws here */
-  private embedImage(dataUrl: string): Promise<PDFImage> {
+  private async embedImage(dataUrl: string): Promise<EmbeddedImage> {
     const mime = dataUrl.slice(5, dataUrl.indexOf(';')).toLowerCase();
-    if (mime === 'image/jpeg' || mime === 'image/jpg') return this.doc.embedJpg(dataUrl);
-    if (mime === 'image/png') return this.doc.embedPng(dataUrl);
+    if (mime === 'image/jpeg' || mime === 'image/jpg') {
+      const bytes = decodeFromBase64DataUri(dataUrl);
+      const image = await this.doc.embedJpg(bytes);
+      return { image, rotation: orientationToClockwiseDegrees(readJpegOrientation(bytes)) };
+    }
+    if (mime === 'image/png') return { image: await this.doc.embedPng(dataUrl), rotation: 0 };
     throw new Error(`Unsupported image type: ${mime}`);
   }
 

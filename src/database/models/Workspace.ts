@@ -7,6 +7,7 @@ import WorkspaceThread, { WorkspaceThreadType } from './WorkspaceThread';
 import Document from './Document';
 import uiStore from '@/store/UIStore';
 import WorkspaceChat from './WorkspaceChat';
+import Memory from './Memory';
 import AnythingLLMExternal from '@/utils/AnythingLLMExternal';
 import Telemetry from '@/utils/Telemetry';
 import { getDefaultContextLength } from '@/utils/contextLength';
@@ -287,8 +288,9 @@ export default class Workspace extends Model {
       await Promise.all(workspaceThreadSlugs.map((wsThreadSlug) => WorkspaceChat.delete([{ field: 'workspace_thread_slug', value: wsThreadSlug }])));
       await Promise.all(workspaceThreadSlugs.map((wsThreadSlug) => WorkspaceThread.delete([{ field: 'slug', value: wsThreadSlug }])));
       await Promise.all(workspaceSlugs.map((wsSlug) => Document.delete([{ field: 'workspace_slug', value: wsSlug }], true)));
+      await Memory.deleteForWorkspaces(workspaceSlugs);
 
-      this.log(`${workspaceSlugs.length} workspaces, children threads, and dependent documents/vectors successfully deleted`);
+      this.log(`${workspaceSlugs.length} workspaces, children threads, and dependent documents/vectors/memories successfully deleted`);
       return true;
     } catch (error) {
       console.error('Error deleting workspace:', error);

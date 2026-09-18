@@ -278,6 +278,18 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
    * Compaction normally runs in the background after each reply (`scheduleCompaction`), so this
    * only summarises inline when history outgrew the budget since then - the user sees a status line for it.
    */
+  /**
+   * Memories share the small on-device window with history and RAG, so the always-on block gets a
+   * fixed slice of the prompt budget (a 2k window with 35% held for the reply leaves ~130 tokens,
+   * about four or five short facts). Anything beyond it is retrieved per prompt instead.
+   */
+  static MEMORY_BUDGET_RATIO = 0.1;
+  protected override memoryTokenBudget(): number {
+    const promptBudget = this.submodule?.promptBudget
+      ?? Math.floor((this.workspace?.contextLength ?? LlamaRnWrapper.DEFAULT_CONTEXT_LENGTH) * (1 - LlamaRnWrapper.RESPONSE_RESERVE_RATIO));
+    return Math.max(48, Math.floor(promptBudget * OnDeviceProvider.MEMORY_BUDGET_RATIO));
+  }
+
   protected override async shapePrompt(rawShape: PromptShape, { threadSlug, onStatus }: { threadSlug: string | null; onStatus?: (status: string) => void }): Promise<PromptShape> {
     if (!this.submodule) return rawShape;
     // Photos from earlier turns are never re-sent on-device: each one costs hundreds of tokens of a

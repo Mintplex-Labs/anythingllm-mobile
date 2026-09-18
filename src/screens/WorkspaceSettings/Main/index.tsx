@@ -53,7 +53,7 @@ export function MainView({ workspace, goToPage, initialThreadSlug }: MainViewPro
             navigation.reset({
                 index: 0,
                 // @ts-ignore
-                routes: [{ name: PATHS.workspace_chat, params: { workspaceSlug: workspace.slug, threadSlug: workspace.threads[0].slug } }],
+                routes: [{ name: PATHS.workspace_chat, params: { wsSlug: workspace.slug, threadSlug: workspace.threads[0].slug } }],
             });
         }
     }

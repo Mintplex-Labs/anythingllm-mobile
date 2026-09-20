@@ -136,9 +136,23 @@ export type IFileDownloadAction = {
   }
 }
 
+/**
+ * A scheduled job the assistant created for the user (see the create-scheduled-job tool).
+ * Rendered as a card in the chat history that opens the job's run history.
+ */
+export type IScheduledJobCreatedAction = {
+  type: 'scheduled_job_created';
+  action: {
+    jobUuid: string;
+    jobName: string;
+    /** Cron expression, local time */
+    schedule: string;
+  }
+}
+
 export type IAgentCitation = IAgentWebSearchCitation;
 export type IChatCitation = IDocumentCitation | IAgentCitation;
-export type IAgentAction = IEmailAction | ITextAction | ICalendarEventAction | IFileDownloadAction;
+export type IAgentAction = IEmailAction | ITextAction | ICalendarEventAction | IFileDownloadAction | IScheduledJobCreatedAction;
 export type WorkspaceChatResponseType = {
   textResponse: string;
   thoughts: string[];

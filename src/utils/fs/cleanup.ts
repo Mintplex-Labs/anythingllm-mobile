@@ -4,6 +4,7 @@ import { Q } from '@nozbe/watermelondb';
 import { database } from '@/database';
 import Document from '@/database/models/Document';
 import WorkspaceChat from '@/database/models/WorkspaceChat';
+import ScheduledJobRun from '@/database/models/ScheduledJobRun';
 import uiStore from '@/store/UIStore';
 import { deleteProcessedFiles, deleteProcessedFilesNotIn, listProcessedFiles } from '@/utils/fs';
 import { deleteGeneratedDocuments, deleteGeneratedDocumentsNotIn, GENERATED_DOCUMENTS_FOLDER_PATH } from '@/utils/fs/generatedDocuments';
@@ -58,10 +59,17 @@ export async function purgeOrphanedProcessedFiles(): Promise<number> {
  * Only rows whose serialized response mentions a file_download action are fetched.
  */
 async function referencedGeneratedDocumentNames(): Promise<string[]> {
-    const rows = await database.get(WorkspaceChat.table).query(
+    const chatRows = await database.get(WorkspaceChat.table).query(
         Q.unsafeSqlQuery(`select response from ${WorkspaceChat.table} where _status is not 'deleted' and response like '%file_download%'`)
     ).unsafeFetchRaw() as { response: string }[];
-    return WorkspaceChat.storageFilenamesFrom(rows);
+    // Scheduled job runs store their reply the same way (see ScheduledJobRun.result)
+    const runRows = await database.get(ScheduledJobRun.table).query(
+        Q.unsafeSqlQuery(`select result from ${ScheduledJobRun.table} where _status is not 'deleted' and result like '%file_download%'`)
+    ).unsafeFetchRaw() as { result: string }[];
+    return [
+        ...WorkspaceChat.storageFilenamesFrom(chatRows),
+        ...ScheduledJobRun.storageFilenamesFrom(runRows),
+    ];
 }
 
 /** Delete every generated document no chat references anymore */

@@ -122,6 +122,7 @@ export default {
                 payload: { filename: displayFilename, title, theme: theme.name, sections: sections.map(section => section.title) },
                 streamEmitter,
                 signal: context.signal,
+                autoApprove: context.autoApproveTools,
             });
             if (!approval.approved) {
                 streamEmitter('report_status', 'Presentation was not approved');

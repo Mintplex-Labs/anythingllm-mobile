@@ -25,6 +25,8 @@ import Workspace from '@/database/models/Workspace';
 import WorkspaceThread from '@/database/models/WorkspaceThread';
 import Document from '@/database/models/Document';
 import Memory from '@/database/models/Memory';
+import ScheduledJob from '@/database/models/ScheduledJob';
+import { syncNativeSchedule } from '@/utils/ScheduledJobs/scheduler';
 import WorkspaceChat from '@/database/models/WorkspaceChat';
 import uninstallAllModels from '@/utils/models/manager';
 import { deleteAllAppFiles } from '@/utils/fs/cleanup';
@@ -131,9 +133,11 @@ export function MainView({ goToPage }: MainViewProps) {
       WorkspaceThread.deleteAll(),
       Document.deleteAll(true),
       Memory.deleteAll(),
+      ScheduledJob.deleteAll(),
       uninstallAllModels(),
       deleteAllAppFiles(),
     ]);
+    await syncNativeSchedule();
     await uiStore.resetAllStorage();
     uiStore.emitter.emit(uiStore.globalEvents.ONBOARDING_RESET);
     // Defer navigation reset to the next frame so the component tree

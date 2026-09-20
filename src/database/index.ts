@@ -9,6 +9,8 @@ import WorkspaceThread from './models/WorkspaceThread';
 import Document from './models/Document';
 import WorkspaceChat from './models/WorkspaceChat';
 import Memory from './models/Memory';
+import ScheduledJob from './models/ScheduledJob';
+import ScheduledJobRun from './models/ScheduledJobRun';
 
 const adapter = new SQLiteAdapter({
   schema,
@@ -20,7 +22,7 @@ const adapter = new SQLiteAdapter({
 
 export const database = new Database({
   adapter,
-  modelClasses: [Workspace, WorkspaceThread, Document, WorkspaceChat, Memory],
+  modelClasses: [Workspace, WorkspaceThread, Document, WorkspaceChat, Memory, ScheduledJob, ScheduledJobRun],
 });
 
-export const databaseTables = [Workspace.table, WorkspaceThread.table, Document.table, WorkspaceChat.table, Memory.table];
+export const databaseTables = [Workspace.table, WorkspaceThread.table, Document.table, WorkspaceChat.table, Memory.table, ScheduledJob.table, ScheduledJobRun.table];

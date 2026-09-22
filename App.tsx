@@ -28,11 +28,14 @@ import { navigationRef, flushPendingNavigation } from '@/utils/navigationRef';
 import { useOnboardingCompleted } from '@/hooks/useOnboardingHook';
 import { purgeOrphanedFiles } from '@/utils/fs/cleanup';
 import { useScheduledJobsTicker } from '@/utils/ScheduledJobs/scheduler';
+import { useSharedContentNavigation } from '@/utils/SharedContent';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
   useEnablePushNotifications();
   useNotificationTapNavigation();
+  // Files and images other apps share to AnythingLLM open in a new thread with the content attached.
+  useSharedContentNavigation();
   // Runs due scheduled jobs while the app is open and keeps the background wake-up armed.
   useScheduledJobsTicker();
   const theme = useTheme();

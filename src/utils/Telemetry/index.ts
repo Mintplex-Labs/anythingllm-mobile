@@ -26,9 +26,12 @@ class Telemetry {
             CHAT_COMPLETED: 'chat_completed',
             /** The user pressed stop while a reply was generating - nothing was saved */
             CHAT_ABORTED: 'chat_aborted',
+            /** A document was attached to a workspace (payload: documentType, mode = embedded | full) */
             DOCUMENT_IMPORTED: 'document_added',
-            /** An image was attached to a prompt from the gallery or the camera */
+            /** An image was attached to a prompt from the gallery, the camera or the share sheet (payload: source) */
             IMAGE_ATTACHED: 'image_attached',
+            /** Another app shared files/images to AnythingLLM through the share sheet (payload: files, images) */
+            CONTENT_SHARED: 'content_shared',
             TOOL_CALLED: 'tool_called',
             LLM_SETTINGS_UPDATED: 'llm_settings_updated',
             /** A chat thread was exported (txt/md/json/pdf) and handed to the share sheet */

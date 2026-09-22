@@ -27,7 +27,7 @@ export default function WorkspaceChat() {
   const { wsSlug, threadSlug } = useChatInfoEmit();
   const { LLMProvider, isLoading: isLoadingProvider, error, fetchLLMPreference } = useLlmPreference();
   const { loadingWorkspaceThread, workspace, thread, error: errorWorkspaceThread } = useWorkspaceThread(wsSlug, threadSlug);
-  const attachmentHandler = useAttachments(wsSlug);
+  const attachmentHandler = useAttachments(wsSlug, threadSlug);
 
   useEffect(() => {
     fetchLLMPreference();
@@ -51,7 +51,7 @@ export default function WorkspaceChat() {
       <SettingsActionSheet workspace={workspace} thread={thread} />
       <AttachmentsActionSheet workspace={workspace} thread={thread} attachmentHandler={attachmentHandler} />
       <ToolsActionSheet />
-      <WorkspaceFilesActionSheet workspace={workspace} />
+      <WorkspaceFilesActionSheet workspace={workspace} thread={thread} />
       <CitationsActionSheet />
     </SafeView >
   );

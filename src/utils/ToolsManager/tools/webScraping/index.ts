@@ -4,6 +4,49 @@ import { getOrigin, safeJsonParse } from "@/utils/formatters";
 import webscraper from "./webscraper";
 import { DownloadDeclinedError, getContentTypeFromURL, processLinkAsFile, resolveLinkAsFile } from "./linkAsFile";
 
+export type UrlDocument = {
+    /** Page title, or the document's file name when the link points at a file */
+    title: string;
+    /** Page text (or extracted document text) */
+    content: string;
+    /** The URL that was actually read, normalised to https */
+    url: string;
+};
+
+/**
+ * Read a URL the way the web scraper tool does and return its text: a web page is scraped, while a
+ * link that serves a document (PDF, Word, Excel, PowerPoint) is downloaded and parsed instead. Shared
+ * by the tool and by URLs shared to the app (see utils/SharedContent).
+ * @throws on an invalid URL, network failure, or when the user declines a cellular download.
+ */
+export async function readUrlAsDocument(url: string, onStatus?: (status: string) => void): Promise<UrlDocument> {
+    const hostname = getOrigin(url);
+
+    // Ensure the URL is valid and always starts with https
+    // Since we are using a webview we should do this.
+    let normalised = url.trim();
+    const protocolRegex = /^https?:\/\//i;
+    if (!protocolRegex.test(normalised)) normalised = `https://${normalised}`;
+    else if (normalised.match(/^http:\/\//i)) normalised = normalised.replace(/^http:\/\//i, 'https://');
+
+    const validUrl = new URL(normalised);
+    onStatus?.(`Reading ${validUrl.hostname}`);
+
+    // If the link is really a document we can parse (by Content-Type only), download it,
+    // extract the text and throw the file away. Everything else is a regular web page.
+    const { contentType, contentLength } = await getContentTypeFromURL(validUrl.toString());
+    const asFile = resolveLinkAsFile(validUrl.toString(), contentType);
+
+    if (asFile && contentType) {
+        onStatus?.(`Reading document ${asFile.fileName}`);
+        const fileResult = await processLinkAsFile({ url: validUrl.toString(), contentType, contentLength });
+        return { title: fileResult.fileName, content: fileResult.content, url: validUrl.toString() };
+    }
+
+    const scrapeResult = await webscraper.scrape(validUrl.toString());
+    return { title: scrapeResult.title ?? hostname, content: scrapeResult.content, url: validUrl.toString() };
+}
+
 export default {
     id: 'webScraping',
     name: 'Web Scraping',
@@ -32,41 +75,13 @@ export default {
         try {
             const url = typeof args === 'string' ? safeJsonParse(args)?.url : args?.url;
             if (!url) return `No URL provided. No results were found.`;
-            const hostname = getOrigin(url);
-
-            // Ensure the URL is valid and always starts with https
-            // Since we are using a webview we should do this.
-            let validUrl = url;
-            const protocolRegex = /^https?:\/\//i;
-            if (!protocolRegex.test(validUrl)) validUrl = `https://${validUrl}`;
-            else if (validUrl.match(/^http:\/\//i)) validUrl = validUrl.replace(/^http:\/\//i, 'https://');
-
-            validUrl = new URL(validUrl);
-            streamEmitter('report_status', `Reading ${validUrl.hostname}`);
-
-            // If the link is really a document we can parse (by Content-Type only), download it,
-            // extract the text and throw the file away. Everything else is a regular web page.
-            const { contentType, contentLength } = await getContentTypeFromURL(validUrl.toString());
-            const asFile = resolveLinkAsFile(validUrl.toString(), contentType);
-
-            let title: string;
-            let content: string;
-            if (asFile && contentType) {
-                streamEmitter('report_status', `Reading document ${asFile.fileName}`);
-                const fileResult = await processLinkAsFile({ url: validUrl.toString(), contentType, contentLength });
-                title = fileResult.fileName;
-                content = fileResult.content;
-            } else {
-                const scrapeResult = await webscraper.scrape(validUrl.toString());
-                title = scrapeResult.title ?? hostname;
-                content = scrapeResult.content;
-            }
+            const { title, content, url: readUrl } = await readUrlAsDocument(url, (status) => streamEmitter('report_status', status));
 
             const citation = {
                 type: 'web-search',
                 reference: {
                     title,
-                    url: validUrl.toString(),
+                    url: readUrl,
                     content,
                 },
             } as IAgentWebSearchCitation;

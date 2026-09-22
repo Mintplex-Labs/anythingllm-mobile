@@ -9,6 +9,7 @@ import { showToast } from '@/utils/Notification';
 import uiStore from '@/store/UIStore';
 import truncate from 'truncate';
 import WorkspaceChat from './WorkspaceChat';
+import Document from './Document';
 
 /**
  * Rolling summary of the oldest chats in a thread, produced by `ContextCompactor` so
@@ -308,6 +309,8 @@ export default class WorkspaceThread extends Model {
 
       for (const slug of threadSlugs) {
         await WorkspaceChat.delete([{ field: 'workspace_thread_slug', value: slug }]);
+        // Full-context documents only ever applied to this thread - nothing else can reach them now.
+        await Document.delete([{ field: 'thread_slug', value: slug }], true);
       }
       return true;
     } catch (error) {

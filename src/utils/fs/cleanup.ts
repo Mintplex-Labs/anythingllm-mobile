@@ -114,6 +114,34 @@ export async function purgeUploadScratchFolder(): Promise<void> {
     }
 }
 
+/** Folders SharedContentModule copies shared files into (`cacheDir` on Android, `NSTemporaryDirectory` on iOS) */
+const SHARED_CONTENT_FOLDERS = [...new Set([RNFS.CachesDirectoryPath, RNFS.TemporaryDirectoryPath].filter(Boolean))]
+    .map((folder) => `${folder}/shared`);
+const SHARED_CONTENT_MAX_AGE_MS = 60 * 60 * 1000;
+
+/**
+ * Remove copies of files shared to the app (see utils/SharedContent). They are normally deleted as
+ * soon as they are attached; the age guard leaves a share that is being processed right now alone.
+ * Pass `maxAgeMs: 0` to remove everything.
+ */
+export async function purgeStaleSharedContent({ maxAgeMs = SHARED_CONTENT_MAX_AGE_MS }: { maxAgeMs?: number } = {}): Promise<number> {
+    let removed = 0;
+    for (const folder of SHARED_CONTENT_FOLDERS) {
+        try {
+            if (!(await RNFS.exists(folder))) continue;
+            for (const entry of await RNFS.readDir(folder)) {
+                const modified = entry.mtime ? new Date(entry.mtime).getTime() : 0;
+                if (maxAgeMs > 0 && Date.now() - modified < maxAgeMs) continue;
+                await RNFS.unlink(entry.path).then(() => removed++).catch(() => null);
+            }
+        } catch (e) {
+            log('could not scan shared content folder', folder, e);
+        }
+    }
+    if (removed) log(`Removed ${removed} shared content folder(s)`);
+    return removed;
+}
+
 /**
  * Best-effort removal of a temp file a picker handed us. Only touches `file://` paths
  * (content:// URIs on Android belong to another app) and never throws.
@@ -136,6 +164,7 @@ export async function runFileSweep(): Promise<void> {
         purgeOrphanedGeneratedDocuments(),
         purgeImagePickerTempFiles(),
         purgeUploadScratchFolder(),
+        purgeStaleSharedContent(),
     ]);
     log(`Sweep finished in ${Date.now() - started}ms`);
 }
@@ -151,6 +180,7 @@ export async function deleteAllAppFiles(): Promise<void> {
         deleteGeneratedDocuments(),
         purgeImagePickerTempFiles(),
         purgeUploadScratchFolder(),
+        purgeStaleSharedContent({ maxAgeMs: 0 }),
     ]);
     log('Removed all app-managed files');
 }

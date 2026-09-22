@@ -13,6 +13,8 @@ import { type IAgentAction } from "@/database/models/WorkspaceChat";
 import ToolsManager, { type ToolManagerTool } from "@/utils/ToolsManager";
 import { isAbortError, linkAbortSignal, throwIfAborted } from "@/utils/chat/abort";
 import MemoryManager, { type PromptMemories } from "@/utils/Memories";
+import Document from "@/database/models/Document";
+import { estimateTokens, formatDocumentsBlock, type FullContextDocument } from "@/utils/documents/fullContext";
 
 interface BaseLLMProviderConfig {
   provider: string;
@@ -278,12 +280,15 @@ export default abstract class BaseOpenAILikeProvider {
    * (RAG chunks) goes on the user message - see `withContextTexts`. The current time is a tool
    * (`get_current_datetime`), never a system prompt line.
    * The rolling summary only changes on compaction, which rewrites the history after it anyway.
+   * The documents block (full text of files attached with an external provider, see
+   * utils/documents/fullContext) only changes when the user adds or removes a file, so it comes first.
    * The memory block (user-authored facts, see `MemoryManager`) only changes when the user edits their
    * memories, so it sits before the summary to keep the shared prefix as long as possible.
    */
-  defaultSystemMessage(summary: string | null = null, memoryBlock: string | null = null) {
+  defaultSystemMessage(summary: string | null = null, memoryBlock: string | null = null, documentsBlock: string | null = null) {
     const baseMessage = this.workspace?.systemPrompt || BaseOpenAILikeProvider.DEFAULT_SYSTEM_MESSAGE;
     const parts = [baseMessage];
+    if (documentsBlock) parts.push(documentsBlock);
     if (memoryBlock) parts.push(memoryBlock);
     if (summary) parts.push(`Summary of the conversation so far (earlier messages are not shown):\n${summary}`);
     return parts.join('\n\n');
@@ -354,6 +359,7 @@ export default abstract class BaseOpenAILikeProvider {
     attachments = [],
     summary = null,
     memories = null,
+    documentsBlock = null,
   }: {
     contextTexts: string[];
     chatHistory: DynamicChatMessage[];
@@ -361,13 +367,15 @@ export default abstract class BaseOpenAILikeProvider {
     attachments?: IAttachment[];
     summary?: string | null;
     memories?: PromptMemories | null;
+    /** Full text of the workspace's non-embedded documents, rendered by `formatDocumentsBlock` */
+    documentsBlock?: string | null;
   }) {
     // o1 Models do not support the "system" role
     // in order to combat this, we can use the "user" role as a replacement for now
     // https://community.openai.com/t/o1-models-do-not-support-system-role-in-chat-completion/953880
     const prompt = {
       role: this.isOTypeModel ? "user" : "system",
-      content: this.defaultSystemMessage(summary, memories?.systemBlock ?? null),
+      content: this.defaultSystemMessage(summary, memories?.systemBlock ?? null, documentsBlock),
     };
 
     return [
@@ -485,13 +493,22 @@ export default abstract class BaseOpenAILikeProvider {
       onStatus,
     });
 
+    const threadSlug = userPrompt.workspaceThreadSlug ?? history[0]?.workspaceThreadSlug ?? null;
     const shaped = await this.shapePrompt(
       { history, contextTexts, summary: null },
-      { threadSlug: userPrompt.workspaceThreadSlug ?? history[0]?.workspaceThreadSlug ?? null, onStatus },
+      { threadSlug, onStatus },
     );
 
+    // Files attached with an external provider were never embedded - the model gets them whole, but
+    // only the ones attached in this thread. The on-device provider never reads these: its window only
+    // has room for retrieved chunks.
+    const fullDocuments = this.isExternalProvider ? await this.getFullContextDocuments(threadSlug, onStatus) : [];
+
     return {
-      citations: this.buildDocumentCitations(vectorSearchResults),
+      citations: [
+        ...this.buildDocumentCitations(vectorSearchResults),
+        ...this.buildFullDocumentCitations(fullDocuments),
+      ],
       formattedMessages: this.constructMessages({
         chatHistory: shaped.history,
         userPrompt: userPrompt.prompt as string,
@@ -499,8 +516,42 @@ export default abstract class BaseOpenAILikeProvider {
         contextTexts: shaped.contextTexts,
         summary: shaped.summary,
         memories,
+        documentsBlock: formatDocumentsBlock(fullDocuments),
       }),
     }
+  }
+
+  /**
+   * The documents sent in full with prompts in `threadSlug` (see `Document.fullContextDocumentsFor`).
+   * Only external providers call this; failures degrade to "no documents" rather than blocking the chat.
+   */
+  protected async getFullContextDocuments(threadSlug: string | null, onStatus?: (status: string) => void): Promise<FullContextDocument[]> {
+    if (!this.workspace?.slug) return [];
+    try {
+      const documents = await Document.fullContextDocumentsFor(this.workspace.slug, threadSlug);
+      if (!documents.length) return [];
+      onStatus?.(`Reading ${documents.length} attached document${documents.length === 1 ? '' : 's'}`);
+      const tokens = documents.reduce((sum, doc) => sum + estimateTokens(doc.content), 0);
+      this.log(`Sending ${documents.length} document(s) in full (~${tokens} tokens): ${documents.map((doc) => doc.name).join(', ')}`);
+      return documents;
+    } catch (e) {
+      this.log('Could not load the workspace documents to send in full:', e);
+      return [];
+    }
+  }
+
+  /** Full-context documents show up as sources too, so the user can see what the model was given. */
+  private buildFullDocumentCitations(documents: FullContextDocument[]): IDocumentCitation[] {
+    const PREVIEW_CHARS = 300;
+    return documents.map((doc) => ({
+      type: 'document',
+      document: {
+        uuid: doc.uuid,
+        name: doc.name,
+        chunk: doc.content.length > PREVIEW_CHARS ? `${doc.content.slice(0, PREVIEW_CHARS).trimEnd()}...` : doc.content,
+        score: 1, // the whole document was sent - shown as 100% in the citations sheet
+      },
+    }));
   }
 
   /**

@@ -78,5 +78,46 @@
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<!--
+	  Share sheet / "Open in" destination: images and the document types our parser understands
+	  (see src/utils/DocumentParser/registry.ts - keep these in sync). Files arrive in
+	  AppDelegate application:openURL:options: and are handled by SharedContentModule.
+	-->
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Image</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.image</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Document</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.text</string>
+				<string>public.json</string>
+				<string>public.xml</string>
+				<string>public.yaml</string>
+				<string>com.adobe.pdf</string>
+				<string>org.openxmlformats.wordprocessingml.document</string>
+				<string>org.openxmlformats.spreadsheetml.sheet</string>
+				<string>com.microsoft.excel.xls</string>
+				<string>org.oasis-open.opendocument.spreadsheet</string>
+				<string>org.openxmlformats.presentationml.presentation</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

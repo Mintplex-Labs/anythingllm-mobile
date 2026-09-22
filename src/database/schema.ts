@@ -1,7 +1,7 @@
 import { appSchema, tableSchema } from '@nozbe/watermelondb';
 
 export default appSchema({
-  version: 4,
+  version: 5,
   tables: [
     tableSchema({
       name: 'workspaces',
@@ -35,6 +35,9 @@ export default appSchema({
         { name: 'name', type: 'string' },
         { name: 'uuid', type: 'string', isIndexed: true },
         { name: 'workspace_slug', type: 'string', isIndexed: true },
+        // Set for documents sent in full (external providers): they only apply to the thread they were
+        // attached in. Null for embedded documents, which are searched workspace-wide (see utils/documents/fullContext).
+        { name: 'thread_slug', type: 'string', isOptional: true, isIndexed: true },
         { name: 'vector_box_ids', type: 'string', isOptional: true },
         { name: 'created_at', type: 'number' },
       ],

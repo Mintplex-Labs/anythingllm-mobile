@@ -2,6 +2,16 @@ import { schemaMigrations, addColumns, createTable } from '@nozbe/watermelondb/S
 
 export default schemaMigrations({
   migrations: [
+    // v4 -> v5: full-context documents are scoped to the thread they were attached in (see utils/documents/fullContext)
+    {
+      toVersion: 5,
+      steps: [
+        addColumns({
+          table: 'workspace_documents',
+          columns: [{ name: 'thread_slug', type: 'string', isOptional: true, isIndexed: true }],
+        }),
+      ],
+    },
     // v1 -> v2: rolling context summary per thread (see utils/chat/contextCompaction)
     {
       toVersion: 2,

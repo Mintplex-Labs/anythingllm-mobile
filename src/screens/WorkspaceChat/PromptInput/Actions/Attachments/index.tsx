@@ -5,7 +5,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
 import { WorkspaceType } from '@/database/models/Workspace';
 import { WorkspaceThreadType } from '@/database/models/WorkspaceThread';
-import { AttachmentInterface, IMAGE_MAX_DIMENSION, type ImageSource } from '@/hooks/useAttachments';
+import { AttachmentInterface, IMAGE_MAX_DIMENSION, type DocumentAttachmentMode, type ImageSource } from '@/hooks/useAttachments';
 import useVisionSupport, { VISION_UNSUPPORTED_REASONS, type VisionSupport } from '@/hooks/useVisionSupport';
 import useMmprojDownload from '@/hooks/useMmprojDownload';
 import useLlmPreference from '@/hooks/useLLMPreference';
@@ -16,7 +16,8 @@ import { GenericSettingsItem } from '../Settings';
  * Bottom sheet opened by the "+" in the prompt input. Mirrors the sliders (settings) sheet.
  *
  * Actions:
- *  - Attach files: parse + embed a text/pdf/markdown file into the workspace (local workspaces only)
+ *  - Attach files: parse a text/pdf/markdown/office file into the workspace (local workspaces only).
+ *    Embedded for on-device models, sent whole to external providers - see `DocumentAttachmentMode`.
  *  - Gallery / Take photo: attach an image to the prompt. Only offered when the current model can
  *    read images - always for hosted providers, only with a downloaded vision projector on-device, and
  *    never for remote workspaces since the mobile API cannot take images yet (see `useVisionSupport`).
@@ -94,6 +95,7 @@ export default function AttachmentsActionSheet({ workspace, thread, attachmentHa
                 <SheetHint
                     isRemote={isRemote}
                     isMaxAttachments={attachmentHandler.isMaxAttachments}
+                    documentMode={attachmentHandler.documentMode}
                     vision={vision}
                 />
             </View>
@@ -101,12 +103,19 @@ export default function AttachmentsActionSheet({ workspace, thread, attachmentHa
     );
 }
 
+/** What happens to an attached file with the current provider - shown when nothing else needs explaining. */
+const DOCUMENT_MODE_HINTS: Record<DocumentAttachmentMode, string> = {
+    embed: 'Files are split up and embedded so your on-device model can search them.',
+    full: 'Files are sent to your model in full with every message in this workspace.',
+};
+
 /**
  * One line under the actions explaining why something is disabled. For an on-device vision model
  * that is missing its projector this becomes the download action itself (tap to start, progress bar
- * with cancel while running, and vision unlocks when it finishes).
+ * with cancel while running, and vision unlocks when it finishes). When everything is available it
+ * tells the user how files reach the model instead.
  */
-function SheetHint({ isRemote, isMaxAttachments, vision }: { isRemote: boolean; isMaxAttachments: boolean; vision: VisionSupport }) {
+function SheetHint({ isRemote, isMaxAttachments, documentMode, vision }: { isRemote: boolean; isMaxAttachments: boolean; documentMode: DocumentAttachmentMode; vision: VisionSupport }) {
     const { supportsVision, reason, needsProjectorDownload, model, refresh } = vision;
     const download = useMmprojDownload(model);
 
@@ -117,7 +126,7 @@ function SheetHint({ isRemote, isMaxAttachments, vision }: { isRemote: boolean; 
 
     if (isMaxAttachments) return <HintText>You have reached the maximum number of attachments for one prompt.</HintText>;
     if (isRemote) return <HintText>{VISION_UNSUPPORTED_REASONS.REMOTE}</HintText>;
-    if (supportsVision) return null;
+    if (supportsVision) return <HintText>{DOCUMENT_MODE_HINTS[documentMode]}</HintText>;
 
     if (needsProjectorDownload && model?.mmproj) {
         if (download.isDownloading) {

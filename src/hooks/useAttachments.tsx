@@ -20,8 +20,42 @@ import Telemetry from "@/utils/Telemetry";
 import { type IAttachment } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { ImageLightbox } from "@/components/ImageAttachmentGrid";
 import AttachmentChip, { ATTACHMENT_CHIP_HEIGHT } from "@/components/AttachmentChip";
+import AwaitableAlert from "@/components/AwaitableAlert";
+import useLlmPreference from "@/hooks/useLLMPreference";
+import OnDeviceProvider from "@/utils/AiProviders/onDevice";
+import { providerDisplayName } from "@/utils/llmproviders";
+import { estimateTokens, formatTokenEstimate, isLargeDocument } from "@/utils/documents/fullContext";
+import { consumePendingShare, prepareSharedImage, removeSharedFile, sharedItemPath, SHARED_CONTENT_READY, type SharedAttachable, type SharedFileItem, type SharedUrlItem } from "@/utils/SharedContent";
+import { readUrlAsDocument } from "@/utils/ToolsManager/tools/webScraping";
 
 const MAX_ATTACHMENTS = 4;
+
+/**
+ * How a document attachment reaches the model:
+ *  - `embed`: chunked and embedded into the workspace vector store, retrieved per prompt (on-device).
+ *  - `full`: stored as text only and sent whole in the system prompt on every turn (external providers).
+ * See utils/documents/fullContext for the reasoning.
+ */
+export type DocumentAttachmentMode = 'embed' | 'full';
+
+/** Thrown to abandon an attachment without showing an error (the user declined a warning). */
+class AttachmentCancelled extends Error {
+    constructor() {
+        super('Attachment cancelled');
+        this.name = 'AttachmentCancelled';
+    }
+}
+
+/**
+ * Whether images shared to the app can be attached for the current provider/model. Mirrors
+ * `useVisionSupport`: external providers are assumed capable, on-device needs a vision model with
+ * its projector downloaded.
+ */
+async function sharedImagesSupported(provider?: string, model?: string): Promise<boolean> {
+    if (!provider || provider === 'unknown' || !model) return false;
+    if (provider !== 'native') return true;
+    return await OnDeviceProvider.modelSupportsVision(model).catch(() => false);
+}
 
 /**
  * Longest edge (px) an attached image is scaled down to before it is base64 encoded. Aspect ratio is
@@ -47,7 +81,8 @@ export interface Attachment {
     content: string | null;
     processing: boolean;
     /**
-     * `document` attachments are parsed and embedded into the workspace vector store (files).
+     * `document` attachments are parsed into the workspace (files) - embedded for on-device models,
+     * kept whole for external providers (see `DocumentAttachmentMode`).
      * `image` attachments ride along with the prompt as a base64 data URL in `contentString`.
      */
     kind: 'document' | 'image';
@@ -68,14 +103,32 @@ export interface AttachmentInterface {
      * each downscaled to `maxDimension` px on its longest edge.
      */
     askForImage: (source: ImageSource, options?: { maxDimension?: number }) => Promise<void>;
+    /**
+     * Attach files and images another app shared to AnythingLLM (see utils/SharedContent). Documents
+     * are created in `targetWorkspaceSlug`, which travels with the share so they land in the right
+     * workspace even while this screen's route params are still catching up with the navigation.
+     */
+    addSharedItems: (items: SharedAttachable[], target: { wsSlug: string; threadSlug: string }) => Promise<void>;
+    /** How document attachments reach the model with the currently selected provider */
+    documentMode: DocumentAttachmentMode;
     clearWorkspaceVectors: () => Promise<void>;
     isMaxAttachments: boolean;
 }
 
-export default function useAttachments(wsSlug: string): AttachmentInterface {
+export default function useAttachments(wsSlug: string, threadSlug: string | null = null): AttachmentInterface {
     const embedder = getEmbedder('native');
     const deviceInfo = getCurrentDeviceInfo();
+    const { LLMProvider, llmPreferences, isLoading: isLoadingProvider } = useLlmPreference();
     const [workspaceSlug, setWorkspaceSlug] = useState(wsSlug);
+    // The chat screen keeps this hook instance across param changes, so callbacks created once read the slug from a ref.
+    const workspaceSlugRef = useRef(wsSlug);
+    const threadSlugRef = useRef(threadSlug);
+    // On-device embeds (RAG); every external provider gets the whole document instead.
+    const documentMode: DocumentAttachmentMode = LLMProvider?.isExternalProvider ? 'full' : 'embed';
+    const providerRef = useRef({ documentMode, provider: llmPreferences?.provider as string | undefined, model: llmPreferences?.config?.model as string | undefined });
+    useEffect(() => {
+        providerRef.current = { documentMode, provider: llmPreferences?.provider, model: llmPreferences?.config?.model };
+    }, [documentMode, llmPreferences?.provider, llmPreferences?.config?.model]);
     const [attachments, setAttachments] = useState<Attachment[]>([]);
     /** uuid of the image chip currently open in the lightbox */
     const [previewUuid, setPreviewUuid] = useState<string | null>(null);
@@ -128,59 +181,102 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
      *
      * If they use the file directly from the file manager, then subsequent
      * attempts from recent files will work. Weird, idk.
+     *
+     * What happens to the parsed text depends on the selected provider (`DocumentAttachmentMode`):
+     * on-device models get it chunked and embedded for retrieval, external providers get the whole
+     * document in every prompt - after a warning when it is very large.
      * @param attachment - The attachment to process
+     * @param target - Workspace (and thread, for full-context scoping) the document belongs to. Defaults to the open chat.
+     * @param extract - Produces the document text. Defaults to parsing the file at `attachment.uri`;
+     *   shared links pass a scraper instead (see `addSharedItems`).
      */
-    const processAttachment = useCallback(async (attachment: Attachment) => {
+    const processAttachment = useCallback(async (
+        attachment: Attachment,
+        target: { wsSlug: string; threadSlug: string | null } = { wsSlug: workspaceSlugRef.current, threadSlug: threadSlugRef.current },
+        extract?: () => Promise<string>,
+    ) => {
+        const targetWorkspaceSlug = target.wsSlug;
         let temporaryFilePath: string | null = null;
-        if (!attachment.uri) return;
+        if (!attachment.uri && !extract) return;
         try {
             uiStore.emitter.emit(CHAT_HANDLER_EVENTS.DISABLE_PROMPT_INPUT);
 
-            /**
-             * On Android, if the API level is less than 29, we need to copy the file to the temporary directory
-             * because the file URI is not valid for the app to read - this mainly happens on newer devices that have no real file manager
-             * eg: QRD device for android 16 (API 36) at this time cannot be used to read the file. We can always copy the file and then
-             * read it directly since the file will then be app-owned so we can process it.
-             *
-             * The temporary file is removed after the attachment is processed. This workaround is not needed for Android 15 (API 35) and below.
-             */
-            if (deviceInfo.isAndroid) {
-                console.log(`Android device detected, using copy file workaround...`);
-                await RNFS.mkdir(RNFS.TemporaryDirectoryPath + '/uploads');
-                temporaryFilePath = `${RNFS.TemporaryDirectoryPath}/uploads/${attachment.uuid}-${attachment.name}`;
-                await RNFS.copyFile(attachment.uri, temporaryFilePath);
-                attachment.uri = temporaryFilePath;
-                console.log(`Temporary file created: ${temporaryFilePath}`);
+            const extractFromFile = async () => {
+                /**
+                 * On Android, if the API level is less than 29, we need to copy the file to the temporary directory
+                 * because the file URI is not valid for the app to read - this mainly happens on newer devices that have no real file manager
+                 * eg: QRD device for android 16 (API 36) at this time cannot be used to read the file. We can always copy the file and then
+                 * read it directly since the file will then be app-owned so we can process it.
+                 *
+                 * The temporary file is removed after the attachment is processed. This workaround is not needed for Android 15 (API 35) and below.
+                 */
+                if (deviceInfo.isAndroid) {
+                    console.log(`Android device detected, using copy file workaround...`);
+                    await RNFS.mkdir(RNFS.TemporaryDirectoryPath + '/uploads');
+                    temporaryFilePath = `${RNFS.TemporaryDirectoryPath}/uploads/${attachment.uuid}-${attachment.name}`;
+                    await RNFS.copyFile(attachment.uri, temporaryFilePath);
+                    attachment.uri = temporaryFilePath;
+                    console.log(`Temporary file created: ${temporaryFilePath}`);
+                }
+
+                const realPath = await Storage.getRealPathFromUri(attachment.uri).catch((e) => {
+                    console.log('error', e);
+                    throw new Error('Attachment could not be found');
+                });
+
+                // Throws UnsupportedDocumentError / a descriptive Error which surfaces as the toast below.
+                return await DocumentParser.extractText(realPath, attachment.name, attachment.type);
+            };
+
+            const result = await (extract ? extract() : extractFromFile());
+            if (!result?.trim()) throw new Error('Attachment content was empty or could not be read');
+
+            const { documentMode: mode, provider } = providerRef.current;
+            if (mode === 'full' && isLargeDocument(result)) {
+                // The whole file rides along with every prompt in this workspace - make sure the user wants that.
+                const providerName = provider ? providerDisplayName(provider) : 'your model provider';
+                const proceed = await AwaitableAlert(
+                    'Large document',
+                    `"${attachment.name}" is roughly ${formatTokenEstimate(estimateTokens(result))} tokens. With ${providerName} the whole document is sent with every message in this workspace, which can be slow and costly. Attach it anyway?`,
+                    { text: 'Cancel', style: 'cancel' },
+                    { text: 'Attach', style: 'default' },
+                );
+                if (!proceed) throw new AttachmentCancelled();
             }
-
-            const realPath = await Storage.getRealPathFromUri(attachment.uri).catch((e) => {
-                console.log('error', e);
-                throw new Error('Attachment could not be found');
-            });
-
-            // Throws UnsupportedDocumentError / a descriptive Error which surfaces as the toast below.
-            const result = await DocumentParser.extractText(realPath, attachment.name, attachment.type);
 
             // Store the attachment as a plain text file in the local folder with the same name
             // but as text/plain so that it can be read as plain text later on but refer to it as
             // the original filename.
             await storeProcessedFileAsText(attachment.name, result);
 
-            // Embed the processed file
-            const document = await embedder
-                .splitAndEmbed(result, { chunkSize: 2048, chunkOverlap: 20 })
-                .then(embedResults => embedResults.map(embedResult => {
-                    const metadata = { ...embedResult.metadata, name: attachment.name };
-                    return { embedding: embedResult.embedding, metadata };
-                }))
-                .then(async (embeddings) => await VectorDB.bulkInsert(workspaceSlug, embeddings))
-                .then(async ({ ids }) => {
-                    return await Document.create({
-                        name: attachment.name,
-                        workspaceSlug: workspaceSlug,
-                        vectorBoxIds: ids,
-                    });
+            let document: Awaited<ReturnType<typeof Document.create>>;
+            if (mode === 'full') {
+                // External provider: nothing to embed. An empty vector id list marks the document as
+                // "send in full" - the provider reads the processed text back on every prompt in this
+                // thread only, so documents from different conversations never pile up together.
+                document = await Document.create({
+                    name: attachment.name,
+                    workspaceSlug: targetWorkspaceSlug,
+                    threadSlug: target.threadSlug,
+                    vectorBoxIds: [],
                 });
+            } else {
+                // On-device: chunk and embed so the small context window only ever sees relevant pieces.
+                document = await embedder
+                    .splitAndEmbed(result, { chunkSize: 2048, chunkOverlap: 20 })
+                    .then(embedResults => embedResults.map(embedResult => {
+                        const metadata = { ...embedResult.metadata, name: attachment.name };
+                        return { embedding: embedResult.embedding, metadata };
+                    }))
+                    .then(async (embeddings) => await VectorDB.bulkInsert(targetWorkspaceSlug, embeddings))
+                    .then(async ({ ids }) => {
+                        return await Document.create({
+                            name: attachment.name,
+                            workspaceSlug: targetWorkspaceSlug,
+                            vectorBoxIds: ids,
+                        });
+                    });
+            }
 
             if (!document) throw new Error('Failed to create document for attachment');
             const newAttachment: Attachment = {
@@ -190,9 +286,9 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
                 uuid: document.uuid, // update the attachment with the new uuid so we can manage the DB record associated with it
             };
             setAttachments(prev => prev.map(a => a.uuid === attachment.uuid ? newAttachment : a));
-            Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.DOCUMENT_IMPORTED, { documentType: attachment.type });
+            Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.DOCUMENT_IMPORTED, { documentType: attachment.type, mode: mode === 'full' ? 'full' : 'embedded' });
         } catch (e) {
-            showToast((e as Error).message);
+            if (!(e instanceof AttachmentCancelled)) showToast((e as Error).message);
             removeAttachment(attachment);
         } finally {
             uiStore.emitter.emit(CHAT_HANDLER_EVENTS.ENABLE_PROMPT_INPUT);
@@ -309,6 +405,96 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
         }
     }, [ensureCameraPermission]);
 
+    const addSharedItems = useCallback(async (items: SharedAttachable[], target: { wsSlug: string; threadSlug: string }) => {
+        const remaining = Math.max(0, MAX_ATTACHMENTS - attachmentsRef.current.length);
+        const accepted = items.slice(0, remaining);
+        const skipped = items.slice(accepted.length);
+        if (skipped.length) showToast(`You can attach up to ${MAX_ATTACHMENTS} items per prompt - ${skipped.length} skipped`, 'long');
+        await Promise.all(skipped.filter((item): item is SharedFileItem => item.kind !== 'url').map(removeSharedFile));
+
+        const images = accepted.filter((item): item is SharedFileItem => item.kind === 'image');
+        const files = accepted.filter((item): item is SharedFileItem => item.kind === 'file');
+        const urls = accepted.filter((item): item is SharedUrlItem => item.kind === 'url');
+
+        // Links are read with the web scraper (pages as text, document links parsed) and stored like a file.
+        for (const { url } of urls) {
+            let hostname = url;
+            try { hostname = new URL(url).hostname; } catch { /* keep the raw url as the label */ }
+            const attachment: Attachment = {
+                uuid: generateUUID(),
+                type: 'text/markdown',
+                uri: '',
+                name: `${hostname}.md`,
+                size: 0,
+                content: null,
+                processing: true,
+                kind: 'document',
+            };
+            addAttachment(attachment);
+            await processAttachment(attachment, target, async () => {
+                const page = await readUrlAsDocument(url, (status) => console.log(`[SharedContent] ${status}`));
+                const title = page.title?.trim() || hostname;
+                // Name the document after the page so it reads well in the Files list and in citations.
+                attachment.name = `${title.replace(/[\\/:*?"<>|]/g, '_').slice(0, 80)}.md`;
+                setAttachments(prev => prev.map(a => a.uuid === attachment.uuid ? { ...a, name: attachment.name } : a));
+                return `# ${title}\n\nSource: ${page.url}\n\n${page.content}`;
+            });
+        }
+
+        if (images.length) {
+            const { provider, model } = providerRef.current;
+            if (!(await sharedImagesSupported(provider, model))) {
+                showToast(`Your current model cannot read images - ${images.length} image${images.length === 1 ? ' was' : 's were'} skipped`, 'long');
+            } else {
+                // Same sizing rules as the gallery picker: on-device images share a 1-2k token window.
+                const maxDimension = provider === 'native' ? IMAGE_MAX_DIMENSION.onDevice : IMAGE_MAX_DIMENSION.external;
+                const prepared: Attachment[] = [];
+                for (const image of images) {
+                    try {
+                        const { base64, mime } = await prepareSharedImage(image.uri, { maxDimension, quality: IMAGE_QUALITY });
+                        prepared.push({
+                            uuid: generateUUID(),
+                            type: mime,
+                            uri: image.uri,
+                            name: image.name,
+                            size: image.size || 0,
+                            content: null,
+                            processing: false,
+                            kind: 'image',
+                            contentString: `data:${mime};base64,${base64}`,
+                        });
+                    } catch (e) {
+                        console.log('shared image could not be prepared', image.name, e);
+                        showToast(`Could not read ${image.name}`);
+                    }
+                }
+                if (prepared.length) {
+                    setAttachments(prev => [...prev, ...prepared]);
+                    Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.IMAGE_ATTACHED, { source: 'share', maxDimension, count: prepared.length });
+                }
+            }
+            await Promise.all(images.map(removeSharedFile));
+        }
+
+        for (const file of files) {
+            const resolved = DocumentParser.resolveDocument(file.name, file.mimeType);
+            const attachment: Attachment = {
+                uuid: generateUUID(),
+                type: resolved?.mimeType || file.mimeType || 'application/octet-stream',
+                uri: sharedItemPath(file),
+                name: file.name || 'attachment',
+                size: file.size || 0,
+                content: null,
+                processing: true,
+                kind: 'document',
+            };
+            addAttachment(attachment);
+            // Unsupported types and parse failures surface as a toast inside processAttachment.
+            await processAttachment(attachment, target);
+            await removeSharedFile(file);
+        }
+    }, [addAttachment, processAttachment]);
+
     const renderAttachments = useCallback(() => {
         if (attachments.length === 0) return null;
         const images = attachments.filter(a => a.kind === 'image' && !!a.contentString);
@@ -353,7 +539,27 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
 
     useEffect(() => {
         setWorkspaceSlug(wsSlug);
-    }, [wsSlug]);
+        workspaceSlugRef.current = wsSlug;
+        threadSlugRef.current = threadSlug;
+    }, [wsSlug, threadSlug]);
+
+    // Content shared from another app is stashed for one specific thread and only the screen showing
+    // that thread attaches it. Wait for the provider preference so documents take the right route
+    // (embed vs full) - the stash keeps until then.
+    useEffect(() => {
+        if (isLoadingProvider) return;
+        const consume = () => {
+            const pending = consumePendingShare(wsSlug, threadSlug);
+            if (!pending) return;
+            addSharedItems(pending.items, { wsSlug: pending.wsSlug, threadSlug: pending.threadSlug }).catch((e) => {
+                console.log('shared content could not be attached', e);
+                showToast('Could not attach the shared content');
+            });
+        };
+        consume();
+        const subscription = uiStore.emitter.addListener(SHARED_CONTENT_READY, consume);
+        return () => subscription.remove();
+    }, [wsSlug, threadSlug, isLoadingProvider, addSharedItems]);
 
     useEffect(() => {
         uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.PROMPT_SUBMITTED, () => setAttachments([]));
@@ -380,10 +586,12 @@ export default function useAttachments(wsSlug: string): AttachmentInterface {
             renderAttachments,
             askForAttachment,
             askForImage,
+            addSharedItems,
+            documentMode,
             clearWorkspaceVectors,
             isMaxAttachments: attachments.length >= MAX_ATTACHMENTS
         }
-    }, [attachments, imageAttachments, addAttachment, removeAttachment, clearAttachments, renderAttachments, askForAttachment, askForImage, clearWorkspaceVectors]);
+    }, [attachments, imageAttachments, addAttachment, removeAttachment, clearAttachments, renderAttachments, askForAttachment, askForImage, addSharedItems, documentMode, clearWorkspaceVectors]);
 
     return attachmentInterface;
 }

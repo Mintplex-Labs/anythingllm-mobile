@@ -56,6 +56,29 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
+
+        <!--
+          Share sheet destination: images and the document types our parser understands
+          (see utils/DocumentParser/registry.ts - keep these in sync). Handled by SharedContentModule.
+        -->
+        <intent-filter>
+            <action android:name="android.intent.action.SEND" />
+            <action android:name="android.intent.action.SEND_MULTIPLE" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <data android:mimeType="image/*" />
+            <data android:mimeType="text/*" />
+            <data android:mimeType="application/pdf" />
+            <data android:mimeType="application/json" />
+            <data android:mimeType="application/xml" />
+            <data android:mimeType="application/yaml" />
+            <data android:mimeType="application/x-yaml" />
+            <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+            <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+            <data android:mimeType="application/vnd.ms-excel.sheet.macroenabled.12" />
+            <data android:mimeType="application/vnd.ms-excel" />
+            <data android:mimeType="application/vnd.oasis.opendocument.spreadsheet" />
+            <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation" />
+        </intent-filter>
       </activity>
 
       <uses-native-library android:name="libadsprpc.so" android:required="false" />

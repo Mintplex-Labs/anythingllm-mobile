@@ -2,6 +2,7 @@
   "name": "AnythingLLM",
   "version": "1.1.0",
   "private": true,
+  "license": "GPL-3.0-or-later",
   "scripts": {
     "prepare": "husky",
     "postinstall": "patch-package",

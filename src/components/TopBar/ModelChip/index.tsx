@@ -106,12 +106,14 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
   }, [registerSheet]);
 
   useEffect(() => {
+    let subscription: { remove: () => void } | null = null;
     if (workspace?.isRemote) {
       fetchRemoteModelName();
-      uiStore.emitter.addListener(uiStore.globalEvents.CHAT_HISTORY_REFRESHED, fetchRemoteModelName);
+      subscription = uiStore.emitter.addListener(uiStore.globalEvents.CHAT_HISTORY_REFRESHED, fetchRemoteModelName);
     } else setModelName(getPresetModelName(llmPreferences));
 
-    return () => uiStore.emitter.removeAllListeners(uiStore.globalEvents.CHAT_HISTORY_REFRESHED);
+    // Only drop our own subscription - the chip is also mounted by the Quick Actions card.
+    return () => subscription?.remove();
     // llmPreferences loads async after mount - without it in the deps a chip mounted before the
     // preference resolved (Home, the loading view) stays on "No model loaded".
   }, [workspace, llmPreferences]);

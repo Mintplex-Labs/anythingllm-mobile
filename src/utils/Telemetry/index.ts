@@ -32,6 +32,10 @@ class Telemetry {
             IMAGE_ATTACHED: 'image_attached',
             /** Another app shared files/images to AnythingLLM through the share sheet (payload: files, images) */
             CONTENT_SHARED: 'content_shared',
+            /** Text highlighted in another app was sent to the Quick Actions card (payload: mode, action) */
+            QUICK_CONTEXT_USED: 'quick_context_used',
+            /** The selection-toolbar entry was switched on or off in Settings > Special tools (payload: enabled) */
+            QUICK_CONTEXT_TOGGLED: 'quick_context_toggled',
             TOOL_CALLED: 'tool_called',
             LLM_SETTINGS_UPDATED: 'llm_settings_updated',
             /** A chat thread was exported (txt/md/json/pdf) and handed to the share sheet */

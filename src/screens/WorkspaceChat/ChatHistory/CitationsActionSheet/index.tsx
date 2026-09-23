@@ -36,11 +36,12 @@ export default function CitationsActionSheet() {
     }, [registerSheet]);
 
     useEffect(() => {
-        uiStore.emitter.addListener(uiStore.globalEvents.CITATIONS_FOCUSED, (citations: WorkspaceChatType['response']['citations']) => {
+        const subscription = uiStore.emitter.addListener(uiStore.globalEvents.CITATIONS_FOCUSED, (citations: WorkspaceChatType['response']['citations']) => {
             setFocusedCitations(citations);
             if (citations.length) presentSheet(BOTTOM_SHEET_NAMES.CITATIONS, true);
         });
-        return () => uiStore.emitter.removeAllListeners(uiStore.globalEvents.CITATIONS_FOCUSED);
+        // Only drop our own subscription - the Quick Actions card mounts this sheet as well.
+        return () => subscription.remove();
     }, []);
 
     return (

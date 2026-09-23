@@ -3,12 +3,14 @@ import { useEffect, useState } from 'react';
 import { NativeEventEmitter } from 'react-native';
 import { MainView } from './Main';
 import AdvancedModelPreferences from './AdvancedModelPreferences';
+import SpecialTools from './SpecialTools';
 
 const PAGES = {
   main: (props: any) => <MainView {...props} />,
   advanced_model_preferences: (props: any) => (
     <AdvancedModelPreferences {...props} />
   ),
+  special_tools: (props: any) => <SpecialTools {...props} />,
 };
 export type IWorkspacePageKey = keyof typeof PAGES;
 

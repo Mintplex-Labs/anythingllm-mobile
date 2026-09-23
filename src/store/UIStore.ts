@@ -30,6 +30,11 @@ export const GLOBAL_EVENTS = {
   MODEL_DOWNLOAD_COMPLETE: 'MODEL_DOWNLOAD_COMPLETE',
   ONBOARDING_COMPLETED: 'ONBOARDING_COMPLETED',
   ONBOARDING_RESET: 'ONBOARDING_RESET',
+  /**
+   * Another React root (the Quick Actions card) used the shared LLM provider with its own workspace and
+   * has gone away - mounted chat screens re-attach their workspace so RAG and the system prompt are right.
+   */
+  WORKSPACE_REATTACH_REQUESTED: 'WORKSPACE_REATTACH_REQUESTED',
 } as const;
 
 export class UIStore {

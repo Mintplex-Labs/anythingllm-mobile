@@ -6,7 +6,7 @@
 
 <p align="center">
     <b>AnythingLLM Mobile:</b> A real AI assistant that lives in your pocket, not in the cloud.<br />
-    See, hear, search, and remember — powered by models running right on your phone.
+    See, hear, search, and remember - powered by models running right on your phone.
 </p>
 
 <p align="center">
@@ -36,36 +36,85 @@ Most "AI apps" on your phone are a thin wrapper around someone else's server. An
 
 Want more horsepower? Pair it with your self-hosted AnythingLLM instance, or point it at Ollama, LM Studio, OpenRouter, or any OpenAI-compatible API. Either way, you decide where your data goes.
 
-AnythingLLM is **Local AI First**, and the mobile app is no exception. Everything you can do in the app works offline first — the cloud is optional, never required.
+AnythingLLM is **Local AI First**, and the mobile app is no exception. Everything you can do in the app works offline first - the cloud is _optional_.
+
+### See it in action
+
+<table>
+  <tr>
+    <td width="25%" align="center" valign="top">
+      <video src="https://github.com/user-attachments/assets/a8cdb6fa-bcc5-4b5b-8223-d28c2f5d865b" width="100%" muted loop playsinline></video>
+      <br /><b>Chat with your documents</b><br />
+      <sub>On-device RAG over PDFs, Word, Excel and more. Nothing leaves your phone.</sub>
+    </td>
+    <td width="25%" align="center" valign="top">
+      <video src="https://github.com/user-attachments/assets/d8fb22c9-3fe8-40e8-ba3c-43bcd06e98af" width="100%" muted loop playsinline></video>
+      <br /><b>Agentic web search</b><br />
+      <sub>Search, open and read pages, then answer with citations.</sub>
+    </td>
+    <td width="25%" align="center" valign="top">
+      <video src="https://github.com/user-attachments/assets/ffd523eb-5954-4414-881e-b6b6e1f91e1d" width="100%" muted loop playsinline></video>
+      <br /><b>Document generation</b><br />
+      <sub>Turn a conversation into a Word, PDF, PowerPoint or text file.</sub>
+    </td>
+    <td width="25%" align="center" valign="top">
+      <img src="images/demos/memories.png" width="100%" alt="Memory system" />
+      <br /><b>Memory</b><br />
+      <sub>Remembers what you tell it, globally or per workspace, and recalls it when relevant.</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="25%" align="center" valign="top">
+      <video src="https://github.com/user-attachments/assets/025ef147-083d-4d05-9737-80b2d968065e" width="100%" muted loop playsinline></video>
+      <br /><b>Background jobs</b><br />
+      <sub>Recurring tasks that run on schedule, even with the app closed, and notify you when done.</sub>
+    </td>
+    <td width="25%" align="center" valign="top">
+      <video src="https://github.com/user-attachments/assets/2529a9ea-1be6-4ef4-9195-6f8bfffeddf2" width="100%" muted loop playsinline></video>
+      <br /><b>Ask with AnythingLLM</b><br />
+      <sub>Select text in any app and polish, summarize or explain it from the selection toolbar.</sub>
+    </td>
+    <td width="25%" align="center" valign="top">
+      <img src="images/demos/hf-browser.png" width="100%" alt="Browse Huggingface directly" />
+      <br /><b>Hugging Face model browser</b><br />
+      <sub>Find, download and manage GGUF models, with a fit badge for your phone.</sub>
+    </td>
+    <td width="25%" align="center" valign="top">
+      <img src="images/demos/export-chats.png" width="100%" alt="Export Chats" />
+      <br /><b>Export chats</b><br />
+      <sub>PDF with images, Markdown, JSON or plain text.</sub>
+    </td>
+  </tr>
+</table>
 
 ### Features
 
 **Models**
 
-- **On-device LLM inference** — Run GGUF models locally with [llama.rn](https://github.com/mybigday/llama.rn) (llama.cpp for React Native). Works with no signal at all.
-- **On-device vision** — Attach images and chat about them using multimodal models, fully offline.
-- **Hugging Face model browser** — Discover, download, and manage models without leaving the app, with a fit badge that tells you whether a model will run well on your phone.
-- **Tuned to your device** — Context windows and capabilities scale to your phone's RAM; prompts are laid out to preserve the KV cache between turns so on-device replies start fast.
-- **Connect to AnythingLLM** — Pair with your desktop or server instance for full workspace and document chat.
-- **Bring your own provider** — Ollama, LM Studio, OpenRouter, Anthropic, OpenAI, or any OpenAI-compatible API, with automatic model discovery and prompt caching where the provider supports it.
+- **On-device LLM inference** - Run GGUF models locally with [llama.rn](https://github.com/mybigday/llama.rn) (llama.cpp for React Native). Works with no signal at all.
+- **On-device vision** - Attach images and chat about them using multimodal models, fully offline.
+- **Hugging Face model browser** - Discover, download, and manage models without leaving the app, with a fit badge that tells you whether a model will run well on your phone.
+- **Tuned to your device** - Context windows and capabilities scale to your phone's RAM; prompts are laid out to preserve the KV cache between turns so on-device replies start fast.
+- **Connect to AnythingLLM** - Pair with your desktop or server instance for full workspace and document chat.
+- **Bring your own provider** - Ollama, LM Studio, OpenRouter, Anthropic, OpenAI, or any OpenAI-compatible API, with automatic model discovery and prompt caching where the provider supports it.
 
 **Everywhere on your phone**
 
-- 📝 **Ask with AnythingLLM** — Select text in any app and it appears in the selection toolbar. Polish, shorten, fix grammar or make it formal, or summarize, pull key points, explain and research what you're reading — with the model you chose, not the OEM assistant. Edits are ephemeral; summaries are saved as threads. Switch it off under Settings › Special tools.
-- 📤 **Share to AnythingLLM** — Send photos, documents and links from any app straight into a chat. Links are scraped, documents are parsed, and the empty thread suggests what to do with them.
-- ⏰ **Scheduled jobs** — Ask for a recurring task (a morning news digest, a weekly check-in) and the assistant runs it on schedule, even in the background.
-- 🔔 **Lock-screen notifications** — Get told when a reply finishes while your phone is locked.
+- 📝 **Ask with AnythingLLM** - Select text in any app and it appears in the selection toolbar. Polish, shorten, fix grammar or make it formal, or summarize, pull key points, explain and research what you're reading - with the model you chose, not the OEM assistant. Edits are ephemeral; summaries are saved as threads. Switch it off under Settings › Special tools.
+- 📤 **Share to AnythingLLM** - Send photos, documents and links from any app straight into a chat. Links are scraped, documents are parsed, and the empty thread suggests what to do with them.
+- ⏰ **Scheduled jobs** - Ask for a recurring task (a morning news digest, a weekly check-in) and the assistant runs it on schedule, even in the background.
+- 🔔 **Lock-screen notifications** - Get told when a reply finishes while your phone is locked.
 
 **Chat**
 
-- 🎙️ **Voice input** — Tap the mic and talk. Speech-to-text uses your phone's native recognition and keeps up with natural pauses.
-- 🧠 **Memory** — The assistant remembers what you tell it, globally or per workspace, and recalls it when relevant. Long threads stay coherent with a rolling summary that keeps you inside the context window.
-- 🛠️ **Built-in tools** — Web search, web page reading, summarization, location, time, calendar reading and creation, drafting emails or texts, creating files and scheduling jobs. Smart tool selection picks the right one so small models keep a workable context window.
-- 📎 **Documents** — Attach PDFs, Word, Excel, PowerPoint, text and more. On-device models retrieve the relevant passages; external providers get the full document. Files linked in chat are downloaded and read automatically.
-- 📄 **Create documents** — Generate Word, PDF, PowerPoint and text files from a conversation.
-- 💾 **Chat export** — PDF (images included), Markdown, JSON, or plain text.
-- ✨ **Thoughtful chat UX** — Chain-of-thought display, citations, fork and retry, auto-named threads, and more.
-- 🔒 **Privacy-first** — Your data stays on your device or your own server. No third-party telemetry.
+- 🎙️ **Voice input** - Tap the mic and talk. Speech-to-text uses your phone's native recognition and keeps up with natural pauses.
+- 🧠 **Memory** - The assistant remembers what you tell it, globally or per workspace, and recalls it when relevant. Long threads stay coherent with a rolling summary that keeps you inside the context window.
+- 🛠️ **Built-in tools** - Web search, web page reading, summarization, location, time, calendar reading and creation, drafting emails or texts, creating files and scheduling jobs. Smart tool selection picks the right one so small models keep a workable context window.
+- 📎 **Documents** - Attach PDFs, Word, Excel, PowerPoint, text and more. On-device models retrieve the relevant passages; external providers get the full document. Files linked in chat are downloaded and read automatically.
+- 📄 **Create documents** - Generate Word, PDF, PowerPoint and text files from a conversation.
+- 💾 **Chat export** - PDF (images included), Markdown, JSON, or plain text.
+- ✨ **Thoughtful chat UX** - Chain-of-thought display, citations, fork and retry, auto-named threads, and more.
+- 🔒 **Privacy-first** - Your data stays on your device or your own server. No third-party telemetry.
 
 ### Supported Providers
 
@@ -104,7 +153,7 @@ Setup, on-device runtime notes, release builds and the project layout live in [D
 ## 👋 Contributing
 
 - Create issues for bugs or feature requests
-- PRs are welcome — please follow existing code style and run `yarn lint` before submitting
+- PRs are welcome - please follow existing code style and run `yarn lint` before submitting
 
 ## 🔗 Related Projects
 
@@ -123,7 +172,7 @@ Setup, on-device runtime notes, release builds and the project layout live in [D
 Copyright © 2025 [Mintplex Labs][profile-link]. <br />
 This project is licensed under the [GNU General Public License v3.0 or later](./LICENSE). <br />
 Releases prior to 1.2.0 were published under the MIT License and remain available under those terms. <br />
-Contributors must sign our [Contributor License Agreement](./CLA.md) — a bot will prompt you on your first pull request.
+Contributors must sign our [Contributor License Agreement](./CLA.md) - a bot will prompt you on your first pull request.
 
 <!-- LINK GROUP -->
 

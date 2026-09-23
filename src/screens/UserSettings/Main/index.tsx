@@ -8,8 +8,8 @@ import {
   DiscordLogo,
   FileText,
   FileLock,
+  ChartBar,
   GithubLogo,
-  MoneyWavy,
   Scroll,
   TextAa,
 } from 'phosphor-react-native';
@@ -71,11 +71,6 @@ const ABOUT_LINKS: SupportLink[] = [
     title: 'Join the Discord',
     link: 'https://discord.gg/6UyHPeGZAC',
     icon: <DiscordLogo size={18} color="#FFF" />,
-  },
-  {
-    title: 'Become a Patron',
-    link: "https://donate.stripe.com/6oU9ATe44f4F1NBeSh1B601",
-    icon: <MoneyWavy size={18} color="#FFF" />,
   },
 ]
 
@@ -296,6 +291,12 @@ export function MainView({ goToPage }: MainViewProps) {
                 gap: 12,
                 borderRadius: 8,
               }}>
+              <SupportItem
+                title="Anonymous telemetry"
+                icon={<ChartBar size={18} color="#FFF" />}
+                onPress={() => goToPage('anonymous_telemetry')}
+                borderBottom={UTILITY_LINKS.length > 0}
+              />
               {UTILITY_LINKS.map((link, index) => {
                 return (
                   <SupportItem

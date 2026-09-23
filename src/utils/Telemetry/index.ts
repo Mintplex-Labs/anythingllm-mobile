@@ -1,6 +1,10 @@
 import { getApp } from '@react-native-firebase/app'
-import { getAnalytics, logEvent } from '@react-native-firebase/analytics'
+import { getAnalytics, logEvent, setAnalyticsCollectionEnabled } from '@react-native-firebase/analytics'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isDebugMode } from '@/utils/constants';
+
+/** AsyncStorage key holding "false" once the user opts out under Settings > Utility > Anonymous telemetry */
+const TELEMETRY_ENABLED_KEY = 'anythingllm_telemetry_enabled';
 
 /**
  * Telemetry class for logging events to Firebase Analytics
@@ -11,6 +15,12 @@ import { isDebugMode } from '@/utils/constants';
 class Telemetry {
     private static instance: Telemetry;
     private analytics: ReturnType<typeof getAnalytics> | null = null;
+    /**
+     * Cached opt-out state so `logEvent` can bail synchronously. Defaults to enabled and is
+     * hydrated from storage on construction; only an explicit "false" turns it off.
+     */
+    private enabled = true;
+    private ready: Promise<void> = Promise.resolve();
 
     /**
      * Custom events are events that are not predefined by Firebase Analytics
@@ -60,14 +70,21 @@ class Telemetry {
             EXTERNAL_CONNECTION_ESTABLISHED: 'external_connection_established',
             /** External workspace imported from the AnythingLLM Desktop */
             EXTERNAL_WORKSPACE_IMPORTED: 'external_workspace_imported',
-            /** External workspace imported from the AnythingLLM Desktop */
-        }
+        },
+        /** The user switched anonymous telemetry off - the final event we send before going quiet */
+        DISABLED_TELEMETRY: 'disabled_telemetry',
     } as const;
 
     constructor() {
         if (Telemetry.instance) return Telemetry.instance;
         Telemetry.instance = this;
         this.analytics = getAnalytics(getApp());
+        this.ready = AsyncStorage.getItem(TELEMETRY_ENABLED_KEY)
+            .then((value) => {
+                this.enabled = value !== 'false';
+                if (!this.enabled) return setAnalyticsCollectionEnabled(this.analytics!, false);
+            })
+            .catch((e) => console.error('[Telemetry] could not read opt-out setting', e));
     }
 
     log(message: any, ...args: any[]) {
@@ -79,8 +96,32 @@ class Telemetry {
      * https://rnfirebase.io/analytics/usage#custom-events
      */
     logEvent(name: string, params: Record<string, any> = {}) {
+        if (!this.enabled) return;
         if (isDebugMode) this.log(`Tracking event: ${name}`, params);
         logEvent(this.analytics!, name, params);
+    }
+
+    /** Whether anonymous telemetry is currently on. Resolves once the stored setting has been read. */
+    async isEnabled(): Promise<boolean> {
+        await this.ready;
+        return this.enabled;
+    }
+
+    /**
+     * Turn anonymous telemetry on or off and persist the choice.
+     * Disabling sends one last `DISABLED_TELEMETRY` event so we can count opt-outs, then stops
+     * Firebase collection; every later `logEvent` call returns early.
+     */
+    async setEnabled(enabled: boolean): Promise<void> {
+        await this.ready;
+        if (enabled === this.enabled) return;
+        if (!enabled) this.logEvent(this.CUSTOM_EVENTS.DISABLED_TELEMETRY);
+        this.enabled = enabled;
+        await Promise.all([
+            AsyncStorage.setItem(TELEMETRY_ENABLED_KEY, String(enabled)),
+            setAnalyticsCollectionEnabled(this.analytics!, enabled),
+        ]);
+        if (isDebugMode) this.log(`Anonymous telemetry ${enabled ? 'enabled' : 'disabled'}`);
     }
 }
 

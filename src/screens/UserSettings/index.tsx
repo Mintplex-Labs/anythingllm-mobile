@@ -4,6 +4,7 @@ import { NativeEventEmitter } from 'react-native';
 import { MainView } from './Main';
 import AdvancedModelPreferences from './AdvancedModelPreferences';
 import SpecialTools from './SpecialTools';
+import AnonymousTelemetry from './AnonymousTelemetry';
 
 const PAGES = {
   main: (props: any) => <MainView {...props} />,
@@ -11,6 +12,7 @@ const PAGES = {
     <AdvancedModelPreferences {...props} />
   ),
   special_tools: (props: any) => <SpecialTools {...props} />,
+  anonymous_telemetry: (props: any) => <AnonymousTelemetry {...props} />,
 };
 export type IWorkspacePageKey = keyof typeof PAGES;
 

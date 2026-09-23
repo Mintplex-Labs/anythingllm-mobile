@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Q } from '@nozbe/watermelondb';
-import { CaretDown, CaretRight, Trash, Warning } from 'phosphor-react-native';
+import { CaretDown, CaretRight, Stop, Trash, Warning } from 'phosphor-react-native';
 import SafeView from '@/components/SafeView';
 import AwaitableAlert from '@/components/AwaitableAlert';
 import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';
@@ -15,6 +15,7 @@ import TextResponseContainer from '@/screens/WorkspaceChat/ChatHistory/Messages/
 import FileDownloadCards from '@/screens/WorkspaceChat/ChatHistory/Messages/Assistant/FileDownloadCard';
 import ActionsContainer from '@/screens/WorkspaceChat/ChatHistory/Messages/Assistant/Actions';
 import { formatDuration } from '@/screens/WorkspaceChat/ChatHistory/Messages/Assistant/ActivityChain/utils';
+import ScheduledJobRunner from '@/utils/ScheduledJobs/runner';
 import { showToast } from '@/utils/Notification';
 import { Card, JOB_COLORS, RunStatusLabel, ScreenHeader, SectionLabel, formatDateTime } from '../components';
 
@@ -29,6 +30,7 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
     const [run, setRun] = useState<ScheduledJobRunType | null>(null);
     const [loading, setLoading] = useState(true);
     const [promptOpen, setPromptOpen] = useState(false);
+    const [stopping, setStopping] = useState(false);
     /** Set once the user deletes this run from here, so the row vanishing is not reported as "no longer exists" */
     const deletedHere = useRef(false);
     useHighjackBackButtonPress(() => { onBack(); return true; });
@@ -91,6 +93,19 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
         onBack();
     };
 
+    const stop = async () => {
+        if (!run || ScheduledJobRun.isTerminal(run.status)) return;
+        setStopping(true);
+        try {
+            const stopped = await ScheduledJobRunner.cancelRun(run.uuid);
+            if (!stopped) showToast('That run had already finished');
+        } catch (error: any) {
+            showToast(error?.message || 'Could not stop the run');
+        } finally {
+            setStopping(false);
+        }
+    };
+
     const duration = run?.completedAt ? formatDuration((run.completedAt - run.startedAt) / 1000) : null;
     const hasResult = !!run?.result && (!!run.result.textResponse || !!run.result.activity?.length || !!run.result.actions?.length);
 
@@ -100,11 +115,15 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
                 title={job?.name ?? 'Run'}
                 subtitle={run ? formatDateTime(run.startedAt) : undefined}
                 onBack={onBack}
-                right={run && ScheduledJobRun.isTerminal(run.status) ? (
+                right={!run ? undefined : ScheduledJobRun.isTerminal(run.status) ? (
                     <TouchableOpacity onPress={remove} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} accessibilityLabel="Delete run">
                         <Trash size={22} color={JOB_COLORS.danger} />
                     </TouchableOpacity>
-                ) : undefined}
+                ) : (
+                    <TouchableOpacity onPress={stop} disabled={stopping} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} accessibilityLabel="Stop run">
+                        {stopping ? <ActivityIndicator size="small" color={JOB_COLORS.danger} /> : <Stop size={22} color={JOB_COLORS.danger} weight="fill" />}
+                    </TouchableOpacity>
+                )}
             />
             {loading || !run || !chat ? (
                 <View className="flex-1 items-center justify-center"><ActivityIndicator size="large" color="#FFF" /></View>
@@ -159,7 +178,7 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
                                 {!ScheduledJobRun.isTerminal(run.status) && !chat.response?.textResponse && (
                                     <View className="flex flex-row items-center" style={{ gap: 8 }}>
                                         <ActivityIndicator size="small" color={JOB_COLORS.accent} />
-                                        <Text style={{ color: JOB_COLORS.muted }} className="text-sm">Working on it…</Text>
+                                        <Text style={{ color: JOB_COLORS.muted }} className="text-sm">{stopping ? 'Stopping…' : 'Working on it…'}</Text>
                                     </View>
                                 )}
                                 <TextResponseContainer uuid={run.uuid} textResponse={chat.response?.textResponse} metrics={chat.response?.metrics} />

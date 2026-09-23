@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { CaretRight, PencilSimple, Play } from 'phosphor-react-native';
+import { CaretRight, PencilSimple, Play, Stop } from 'phosphor-react-native';
 import SafeView from '@/components/SafeView';
 import ToggleSwitch from '@/components/ToggleSwitch';
 import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';
@@ -24,6 +24,7 @@ export default function JobRuns({ jobUuid, onBack, onEdit, onOpenRun }: { jobUui
     const [runs, setRuns] = useState<ScheduledJobRunType[]>([]);
     const [loading, setLoading] = useState(true);
     const [starting, setStarting] = useState(false);
+    const [stopping, setStopping] = useState(false);
     useHighjackBackButtonPress(() => { onBack(); return true; });
 
     const load = useCallback(async () => {
@@ -40,7 +41,8 @@ export default function JobRuns({ jobUuid, onBack, onEdit, onOpenRun }: { jobUui
     useEffect(() => { load(); }, [load]);
     useTableChanges([ScheduledJob.table, ScheduledJobRun.table], load);
 
-    const inFlight = runs.some((run) => run.status === 'running' || run.status === 'queued');
+    const inFlightRun = runs.find((run) => run.status === 'running' || run.status === 'queued') ?? null;
+    const inFlight = !!inFlightRun;
 
     const runNow = async () => {
         if (!job) return;
@@ -54,6 +56,19 @@ export default function JobRuns({ jobUuid, onBack, onEdit, onOpenRun }: { jobUui
             .catch((error) => showToast(error?.message || 'Could not start the job'))
             .finally(() => syncNativeSchedule());
         setTimeout(() => setStarting(false), 800);
+    };
+
+    const stopRun = async () => {
+        if (!inFlightRun) return;
+        setStopping(true);
+        try {
+            const stopped = await ScheduledJobRunner.cancelRun(inFlightRun.uuid);
+            if (!stopped) showToast('That run had already finished');
+        } catch (error: any) {
+            showToast(error?.message || 'Could not stop the run');
+        } finally {
+            setStopping(false);
+        }
     };
 
     const toggleEnabled = async () => {
@@ -107,14 +122,24 @@ export default function JobRuns({ jobUuid, onBack, onEdit, onOpenRun }: { jobUui
                             <Meta label="Notify" value={job.notifyOnComplete ? 'On' : 'Off'} />
                             <Meta label="Last run" value={job.lastRunAt ? formatRelativeTime(job.lastRunAt) : 'Never'} />
                         </View>
-                        <ActionButton
-                            title={inFlight ? 'Running…' : 'Run now'}
-                            tone="secondary"
-                            icon={<Play size={18} color="#FFF" weight="fill" />}
-                            onPress={runNow}
-                            loading={starting}
-                            disabled={inFlight || !!blocked}
-                        />
+                        {inFlight ? (
+                            <ActionButton
+                                title="Stop run"
+                                tone="danger"
+                                icon={<Stop size={18} color={JOB_COLORS.danger} weight="fill" />}
+                                onPress={stopRun}
+                                loading={stopping}
+                            />
+                        ) : (
+                            <ActionButton
+                                title="Run now"
+                                tone="secondary"
+                                icon={<Play size={18} color="#FFF" weight="fill" />}
+                                onPress={runNow}
+                                loading={starting}
+                                disabled={!!blocked}
+                            />
+                        )}
                     </Card>
 
                     {/* Runs */}

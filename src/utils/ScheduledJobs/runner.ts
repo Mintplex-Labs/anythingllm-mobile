@@ -66,6 +66,13 @@ class JobTimeoutError extends Error {
     }
 }
 
+class JobCancelledError extends Error {
+    constructor() {
+        super('SCHEDULED_JOB_CANCELLED');
+        this.name = 'JobCancelledError';
+    }
+}
+
 /** Whether a finished reply has anything worth telling the user about. */
 export function runHasContent(result: WorkspaceChatResponseType | null | undefined): boolean {
     if (!result) return false;
@@ -92,6 +99,10 @@ class ScheduledJobRunner {
     private pass: Promise<RunDueJobsResult> | null = null;
     /** uuid of the job executing right now, if any */
     public runningJobUuid: string | null = null;
+    /** Aborts the run in flight (LLM request + waiting turn). Set for the lifetime of `execute`. */
+    private activeAbortController: AbortController | null = null;
+    /** Set when the abort came from `cancelRun` rather than the timeout, so the run lands on `cancelled`. */
+    private cancelRequested = false;
 
     constructor() {
         if (ScheduledJobRunner.instance) return ScheduledJobRunner.instance;
@@ -173,6 +184,29 @@ class ScheduledJobRunner {
     }
 
     /**
+     * Stop a run the user no longer wants. If the run is executing in this JS context the abort
+     * signal tears down the LLM request and `execute` records the run as cancelled with whatever
+     * was produced so far. If it is not (the row was left in flight by a run in another context,
+     * or a crash before `failOrphanedRuns` caught it) the row is settled directly so the job is
+     * free to run again. Resolves true when a run was stopped.
+     */
+    async cancelRun(runUuid: string): Promise<boolean> {
+        const run = await ScheduledJobRun.findByUuid(runUuid);
+        if (!run || ScheduledJobRun.isTerminal(run.status)) return false;
+
+        if (this.activeAbortController && this.runningJobUuid === run.jobUuid) {
+            this.log(`Cancelling run=${run.uuid} of job ${run.jobUuid}`);
+            this.cancelRequested = true;
+            this.activeAbortController.abort();
+            return true;
+        }
+
+        this.log(`Cancelling run=${run.uuid} that is not executing here - settling the row`);
+        const settled = await ScheduledJobRun.cancel(run.uuid);
+        return settled?.status === 'cancelled';
+    }
+
+    /**
      * Executes one job start to finish and returns its run row, or null if a run was already in
      * flight. Never throws - failures land on the run row.
      */
@@ -197,8 +231,11 @@ class ScheduledJobRunner {
         const chat = WorkspaceChat.newChatItem({ workspaceThreadSlug: SCHEDULED_JOBS_WORKSPACE_SLUG, prompt: job.prompt }) as DynamicChatMessage;
         const turn = new AssistantTurn(chat);
         const abortController = new AbortController();
+        this.activeAbortController = abortController;
+        this.cancelRequested = false;
         let timedOut = false;
         const timeout = setTimeout(() => {
+            if (abortController.signal.aborted) return;
             timedOut = true;
             abortController.abort();
         }, SCHEDULED_JOB_TIMEOUT_MS);
@@ -222,8 +259,10 @@ class ScheduledJobRunner {
                     toolset,
                     autoApproveTools: true,
                 }),
+                // Tools holding native work (eg. the browsing WebView) do not observe the signal, so
+                // stop waiting on the provider the moment the run is aborted for either reason.
                 new Promise<never>((_, reject) => {
-                    abortController.signal.addEventListener('abort', () => reject(new JobTimeoutError()), { once: true });
+                    abortController.signal.addEventListener('abort', () => reject(this.cancelRequested ? new JobCancelledError() : new JobTimeoutError()), { once: true });
                 }),
             ]);
             provider.attachAbortSignal(null);
@@ -243,7 +282,11 @@ class ScheduledJobRunner {
             }
         } catch (error: any) {
             const partial = safeFinalize(turn);
-            if (timedOut || error instanceof JobTimeoutError || (isAbortError(error) && timedOut)) {
+            if (this.cancelRequested || error instanceof JobCancelledError) {
+                this.log(`Job "${job.name}" cancelled by the user`);
+                finalRun = await ScheduledJobRun.cancel(run.uuid, partial);
+                Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.SCHEDULED_JOB_RAN, { status: 'cancelled', trigger, tools: job.tools.length });
+            } else if (timedOut || error instanceof JobTimeoutError || (isAbortError(error) && timedOut)) {
                 this.log(`Job "${job.name}" timed out`);
                 finalRun = await ScheduledJobRun.timeout(run.uuid, partial);
                 Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.SCHEDULED_JOB_RAN, { status: 'timed_out', trigger, tools: job.tools.length });
@@ -256,6 +299,8 @@ class ScheduledJobRunner {
         } finally {
             clearTimeout(timeout);
             this.runningJobUuid = null;
+            this.activeAbortController = null;
+            this.cancelRequested = false;
             try { deactivateKeepAwake(); } catch { /* see above */ }
         }
         return finalRun;

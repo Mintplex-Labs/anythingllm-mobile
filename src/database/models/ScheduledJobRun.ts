@@ -5,7 +5,7 @@ import { generateUUID } from '@/utils/constants';
 import { deleteGeneratedDocumentsByStorageFilenames } from '@/utils/fs/generatedDocuments';
 import WorkspaceChat, { type WorkspaceChatResponseType } from './WorkspaceChat';
 
-export type ScheduledJobRunStatus = 'queued' | 'running' | 'completed' | 'failed' | 'timed_out';
+export type ScheduledJobRunStatus = 'queued' | 'running' | 'completed' | 'failed' | 'timed_out' | 'cancelled';
 export type ScheduledJobRunTrigger = 'schedule' | 'manual';
 
 export const RUN_STATUSES: Record<ScheduledJobRunStatus, ScheduledJobRunStatus> = {
@@ -14,6 +14,7 @@ export const RUN_STATUSES: Record<ScheduledJobRunStatus, ScheduledJobRunStatus> 
   completed: 'completed',
   failed: 'failed',
   timed_out: 'timed_out',
+  cancelled: 'cancelled',
 };
 export const NON_TERMINAL_RUN_STATUSES: ScheduledJobRunStatus[] = ['queued', 'running'];
 
@@ -35,7 +36,7 @@ export type ScheduledJobRunDBType = Model & Omit<ScheduledJobRunType, 'result'> 
 type Where = { field: string; value: any }[];
 
 /**
- * One execution of a `ScheduledJob`. Lifecycle: queued -> running -> completed | failed | timed_out.
+ * One execution of a `ScheduledJob`. Lifecycle: queued -> running -> completed | failed | timed_out | cancelled.
  * `result` stores the finished `WorkspaceChatResponseType` (text, activity chain, actions with any
  * generated files) so the run detail screen reuses the chat message components. `readAt` stays
  * null until the user opens the run - that is what drives the unseen dots in the UI.
@@ -204,6 +205,17 @@ export default class ScheduledJobRun extends Model {
     return this.patch(uuid, (run) => {
       run.status = RUN_STATUSES.timed_out;
       run.error = 'The job took too long and was stopped';
+      if (partialResult) run.result = JSON.stringify(partialResult);
+      run.completedAt = Date.now();
+    });
+  }
+
+  /** The user stopped the run. Keeps whatever was produced so far, like a timeout does. */
+  static async cancel(uuid: string, partialResult: WorkspaceChatResponseType | null = null): Promise<ScheduledJobRunType | null> {
+    return this.patch(uuid, (run) => {
+      if (!NON_TERMINAL_RUN_STATUSES.includes(run.status)) return; // already settled - do not overwrite the real outcome
+      run.status = RUN_STATUSES.cancelled;
+      run.error = 'You stopped this run';
       if (partialResult) run.result = JSON.stringify(partialResult);
       run.completedAt = Date.now();
     });

@@ -82,7 +82,7 @@ export default appSchema({
       columns: [
         { name: 'uuid', type: 'string', isIndexed: true },
         { name: 'job_uuid', type: 'string', isIndexed: true },
-        // queued | running | completed | failed | timed_out
+        // queued | running | completed | failed | timed_out | cancelled
         { name: 'status', type: 'string', isIndexed: true },
         // 'schedule' | 'manual'
         { name: 'trigger', type: 'string' },

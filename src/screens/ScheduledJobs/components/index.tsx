@@ -110,13 +110,15 @@ export const RUN_STATUS_LABELS: Record<ScheduledJobRunStatus, string> = {
     completed: 'Completed',
     failed: 'Failed',
     timed_out: 'Timed out',
+    cancelled: 'Stopped',
 };
 
 export function runStatusColor(status: ScheduledJobRunStatus): string {
     switch (status) {
         case 'completed': return JOB_COLORS.success;
         case 'failed': return JOB_COLORS.danger;
-        case 'timed_out': return JOB_COLORS.warning;
+        case 'timed_out':
+        case 'cancelled': return JOB_COLORS.warning;
         case 'running':
         case 'queued':
         default: return JOB_COLORS.accent;

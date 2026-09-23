@@ -7,7 +7,7 @@ import useChatInfoEmit from "@/hooks/useChatInfoEmit";
 import { useEffect } from "react";
 import useWorkspaceThread from "@/hooks/useWorkspaceThread";
 import PromptInput from "./PromptInput";
-import useAttachments from "@/hooks/useAttachments";
+import useAttachments, { AttachmentsProvider } from "@/hooks/useAttachments";
 import ChatHistory from "./ChatHistory";
 import { ChatHandlerWrapper } from "@/hooks/useChatHandler";
 
@@ -42,8 +42,11 @@ export default function WorkspaceChat() {
 
       {/* Chat Handler Wrapper manage updates to the chat history and prompt input easily*/}
       <ChatHandlerWrapper workspace={workspace} thread={thread} llmProvider={LLMProvider!}>
-        <ChatHistory />
-        <PromptInput attachmentHandler={attachmentHandler} />
+        {/* The empty-thread suggestions adapt to shared attachments, so the history needs to see them too */}
+        <AttachmentsProvider value={attachmentHandler}>
+          <ChatHistory />
+          <PromptInput attachmentHandler={attachmentHandler} />
+        </AttachmentsProvider>
         {/* Long-press message actions - needs the chat handler context, so it lives inside the wrapper */}
         <MessageActionsSheet workspace={workspace} thread={thread} />
       </ChatHandlerWrapper>

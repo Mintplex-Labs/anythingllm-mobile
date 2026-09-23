@@ -1,5 +1,5 @@
 import { View, Alert, ScrollView, PermissionsAndroid } from "react-native";
-import { useState, useCallback, useMemo, useEffect, useRef } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef, createContext, useContext } from "react";
 import { generateUUID, getCurrentDeviceInfo, screenDimensions, } from "@/utils/constants";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import Storage from "@/utils/storage";
@@ -87,6 +87,8 @@ export interface Attachment {
      */
     kind: 'document' | 'image';
     contentString?: string;
+    /** Set for documents the web scraper made from a shared link, so the UI can call it a website. */
+    origin?: 'url';
 }
 
 export interface AttachmentInterface {
@@ -113,6 +115,16 @@ export interface AttachmentInterface {
     documentMode: DocumentAttachmentMode;
     clearWorkspaceVectors: () => Promise<void>;
     isMaxAttachments: boolean;
+}
+
+/**
+ * Lets components inside the chat screen that do not receive the handler as a prop (eg: the
+ * empty-thread suggestions) see what is attached. Provided by the WorkspaceChat screen; null elsewhere.
+ */
+const AttachmentsContext = createContext<AttachmentInterface | null>(null);
+export const AttachmentsProvider = AttachmentsContext.Provider;
+export function useAttachmentsContext(): AttachmentInterface | null {
+    return useContext(AttachmentsContext);
 }
 
 export default function useAttachments(wsSlug: string, threadSlug: string | null = null): AttachmentInterface {
@@ -429,6 +441,7 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
                 content: null,
                 processing: true,
                 kind: 'document',
+                origin: 'url',
             };
             addAttachment(attachment);
             await processAttachment(attachment, target, async () => {

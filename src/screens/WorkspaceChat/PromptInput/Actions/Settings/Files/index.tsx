@@ -5,12 +5,18 @@ import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContex
 import { View, Text, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { WorkspaceType } from "@/database/models/Workspace";
+import { WorkspaceThreadType } from "@/database/models/WorkspaceThread";
 import useWorkspaceFiles from "./useWorkspaceFiles";
 import FilesListContainer from "./Container";
 import Document from "@/database/models/Document";
 import { showToast } from "@/utils/Notification";
 
-export default function WorkspaceFilesActionSheet({ workspace }: { workspace: WorkspaceType }) {
+/**
+ * Every document in the workspace: embedded ones (searched from any thread) and full-context ones
+ * (sent whole, but only in the thread they were attached in). `thread` lets the list say which
+ * full-context documents apply to the open conversation. Both kinds can be deleted from here.
+ */
+export default function WorkspaceFilesActionSheet({ workspace, thread }: { workspace: WorkspaceType, thread?: WorkspaceThreadType | null }) {
     const insets = useSafeAreaInsets();
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const { registerSheet, presentSheet, activeSheet, isSheetActive } = useBottomSheet();
@@ -91,6 +97,7 @@ export default function WorkspaceFilesActionSheet({ workspace }: { workspace: Wo
                     selectedFileUuids={selectedFileUuids}
                     setSelectedFileUuids={setSelectedFileUuids}
                     files={files}
+                    currentThreadSlug={thread?.slug ?? null}
                     error={error}
                     isLoading={isLoading}
                     optionsActive={optionsActive}

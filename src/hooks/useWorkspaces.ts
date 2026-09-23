@@ -134,5 +134,15 @@ export default function useWorkspaces(withThreads: boolean = false) {
     fetchWorkspaces(withThreads);
   }, []);
 
+  // Fetch when the onboarding-created workspace happens to prevent stale sidebar
+  useEffect(() => {
+    const onOnboardingCompleted = () => fetchWorkspaces(withThreads);
+    const sub = uiStore.emitter.addListener(
+      uiStore.globalEvents.ONBOARDING_COMPLETED,
+      onOnboardingCompleted
+    );
+    return () => sub.remove();
+  }, []);
+
   return { loadingWorkspaces: isLoading, workspaces, activeWorkspaceSlug, setActiveWorkspaceSlug, activeThreadSlug, fetchWorkspaces };
 }

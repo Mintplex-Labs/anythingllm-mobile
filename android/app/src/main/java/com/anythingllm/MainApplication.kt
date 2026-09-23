@@ -14,6 +14,9 @@ import com.anythingllm.storage.StoragePackage
 import com.anythingllm.vector.VectorBoxPackage
 import com.anythingllm.webscraper.WebScraperPackage
 import com.anythingllm.pdfparser.PdfParserPackage
+import com.anythingllm.scheduledjobs.ScheduledJobsPackage
+import com.anythingllm.sharedcontent.SharedContentPackage
+import com.anythingllm.quickcontext.QuickContextPackage
 
 class MainApplication : Application(), ReactApplication {
 
@@ -23,11 +26,15 @@ class MainApplication : Application(), ReactApplication {
             PackageList(this).packages.apply {
               add(DeviceInfoPackage())
               add(KeepAwakePackage())
+              add(ScreenLockPackage())
               add(DownloadPackage())
               add(StoragePackage())
               add(VectorBoxPackage())
               add(WebScraperPackage())
               add(PdfParserPackage())
+              add(ScheduledJobsPackage())
+              add(SharedContentPackage())
+              add(QuickContextPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

@@ -1,10 +1,13 @@
 import { screenDimensions } from "@/utils/constants";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { CHAT_HANDLER_EVENTS, useChatHandlerContext } from "@/hooks/useChatHandler";
+import { type IAttachment } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import LocationAgentTool from "@/utils/ToolsManager/tools/getLocation";
 import { useEffect, useState } from "react";
 import uiStore from "@/store/UIStore";
-import { listProcessedFiles } from "@/utils/fs";
+import Document from "@/database/models/Document";
+import { useRoute } from "@react-navigation/native";
+import { useAttachmentsContext, type Attachment } from "@/hooks/useAttachments";
 
 const noop = () => { };
 const smartMessages = {
@@ -45,11 +48,11 @@ const smartMessages = {
         onClick: {
             before: async function () {
                 const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: true } as never);
+                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: true, getTime: true } as never);
             },
             after: async function () {
                 const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: false } as never);
+                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: false, getTime: false } as never);
             }
         },
     },
@@ -67,16 +70,17 @@ const smartMessages = {
         }
     },
     summarize: {
-        text: async function () {
+        text: async function (workspaceSlug?: string) {
             const mode = ['filename', 'url'];
             const randomMode = mode[Math.floor(Math.random() * mode.length)];
             let text = 'Summarize paulgraham.com/foundermode.html';
-            if (randomMode === 'url') return text;
+            if (randomMode === 'url' || !workspaceSlug) return text;
 
-            const files = await listProcessedFiles();
-            if (randomMode === 'filename' && files.length) {
-                const randomFile = files[Math.floor(Math.random() * files.length)];
-                text = `Summarize ${randomFile.name}`;
+            // Only suggest files that were uploaded to _this_ workspace - never whatever is on disk.
+            const documents: { name: string }[] = await Document.find([{ field: 'workspace_slug', value: workspaceSlug }]);
+            if (documents.length) {
+                const randomDoc = documents[Math.floor(Math.random() * documents.length)];
+                text = `Summarize ${randomDoc.name}`;
             }
             return text;
         },
@@ -93,7 +97,56 @@ const smartMessages = {
     }
 };
 
+/**
+ * One-tap prompts for content another app shared into this empty thread (see utils/SharedContent):
+ * the attachment stays on the prompt, only the question is filled in. One suggestion per kind present.
+ */
+function suggestionsForAttachments(attachments: Attachment[]): string[] {
+    const websites = attachments.filter((a) => a.kind === 'document' && a.origin === 'url').length;
+    const documents = attachments.filter((a) => a.kind === 'document' && a.origin !== 'url').length;
+    const images = attachments.filter((a) => a.kind === 'image').length;
+    const suggestions: string[] = [];
+    if (websites) suggestions.push(websites === 1 ? 'Summarize this website' : 'Summarize these websites');
+    if (documents) suggestions.push(documents === 1 ? 'Summarize this document' : 'Summarize these documents');
+    if (images) suggestions.push(images === 1 ? 'Explain this image' : 'Explain these images');
+    return suggestions;
+}
+
 export default function EmptyList({ height }: { height: number }) {
+    const attachmentHandler = useAttachmentsContext();
+    // Something was shared or attached before the first message: suggest what to do with it instead
+    // of the generic starters.
+    if (attachmentHandler && attachmentHandler.attachments.length > 0) {
+        return <AttachedSuggestions height={height} attachments={attachmentHandler.attachments} imageAttachments={attachmentHandler.imageAttachments} />;
+    }
+    return <RandomSuggestions height={height} />;
+}
+
+function AttachedSuggestions({ height, attachments, imageAttachments }: { height: number; attachments: Attachment[]; imageAttachments: IAttachment[] }) {
+    const chatHandler = useChatHandlerContext();
+    const suggestions = suggestionsForAttachments(attachments);
+    // Documents are still being parsed (and embedded) - sending now would leave them out of the answer.
+    const processing = attachments.some((a) => a.processing);
+    return (
+        <View style={{ height, gap: 14 }} className='flex flex-col items-center justify-center'>
+            {processing && <ActivityIndicator size="small" color="#888" />}
+            {suggestions.map((text) => (
+                <TouchableOpacity
+                    key={text}
+                    disabled={processing || chatHandler.promptDisabled}
+                    onPress={() => chatHandler.submitPrompt(text, imageAttachments)}
+                    style={{ width: screenDimensions.width / 1.6, paddingVertical: 10, paddingHorizontal: 8, opacity: processing ? 0.5 : 1 }}
+                    className="bg-white/10 rounded-lg">
+                    <Text className='text-white text-center'>{text}</Text>
+                </TouchableOpacity>
+            ))}
+        </View>
+    );
+}
+
+function RandomSuggestions({ height }: { height: number }) {
+    // Same route params the chat screen reads - the workspace whose empty thread we are showing
+    const { wsSlug } = (useRoute().params ?? {}) as { wsSlug?: string };
     const [messages, setMessages] = useState<{ text: string, onClick: () => void }[]>([]);
     const [loading, setLoading] = useState(false);
     async function getRandomMessages(limit = 3) {
@@ -103,7 +156,7 @@ export default function EmptyList({ height }: { height: number }) {
             const keys = Object.keys(availableMessages);
             const randomKey = keys[Math.floor(Math.random() * keys.length)];
             const message = availableMessages[randomKey as keyof typeof availableMessages]
-            const text = typeof message.text === 'function' ? await message.text() : message.text;
+            const text = typeof message.text === 'function' ? await (message.text as (slug?: string) => any)(wsSlug) : message.text;
             if (!!text) messages.push({ text, onClick: message.onClick } as never);
             delete availableMessages[randomKey];
             if (messages.length >= limit) break;

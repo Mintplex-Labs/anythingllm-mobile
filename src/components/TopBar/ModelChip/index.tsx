@@ -25,6 +25,8 @@ import { ArrowsClockwise, Check, MagnifyingGlass, Tag, WarningCircle, X } from '
 import { findIconByModelName, findIconByProvider } from '@/components/MonoProviderIcon';
 import useLlmPreference from '@/hooks/useLLMPreference';
 import useModelManager from '@/hooks/useModelManager';
+import * as RNFS from '@dr.pogodin/react-native-fs';
+import { resolveDestinationPathFromGGUFUrl } from '@/utils/models/defaults';
 import {
   useBottomSheet,
   BOTTOM_SHEET_NAMES,
@@ -43,6 +45,7 @@ import uiStore from '@/store/UIStore';
 import { AVAILABLE_LLM_PROVIDERS } from '@/utils/llmproviders';
 import HuggingFaceImport from '@/components/HuggingFaceImport';
 import AddFromHuggingFaceCard from '@/components/HuggingFaceImport/AddCard';
+import useModelFit from '@/hooks/useModelFit';
 import ImportedModels, { ImportedModel } from '@/utils/models/imported';
 import { IAvailableModel } from '@/utils/AiProviders/baseOpenAILikeProvider';
 
@@ -105,12 +108,14 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
   }, [registerSheet]);
 
   useEffect(() => {
+    let subscription: { remove: () => void } | null = null;
     if (workspace?.isRemote) {
       fetchRemoteModelName();
-      uiStore.emitter.addListener(uiStore.globalEvents.CHAT_HISTORY_REFRESHED, fetchRemoteModelName);
+      subscription = uiStore.emitter.addListener(uiStore.globalEvents.CHAT_HISTORY_REFRESHED, fetchRemoteModelName);
     } else setModelName(getPresetModelName(llmPreferences));
 
-    return () => uiStore.emitter.removeAllListeners(uiStore.globalEvents.CHAT_HISTORY_REFRESHED);
+    // Only drop our own subscription - the chip is also mounted by the Quick Actions card.
+    return () => subscription?.remove();
     // llmPreferences loads async after mount - without it in the deps a chip mounted before the
     // preference resolved (Home, the loading view) stays on "No model loaded".
   }, [workspace, llmPreferences]);
@@ -202,6 +207,7 @@ function AvailableModels({
     downloadModel,
     uninstallModel,
     selectModel,
+    runPreDownloadConfirmations,
   } = useModelManager({ llmPreferences, fetchLLMPreference, LLMProvider });
 
   const fetchModels = useCallback(async () => {
@@ -223,15 +229,11 @@ function AvailableModels({
   };
 
   /**
-   * The user picked a quant in the import view: remember it so it shows up in the
-   * list (and survives restarts), then hand it to the regular download flow so the
-   * usual network / size confirmations and progress reporting apply.
+   * The user picked a quant in the import view. Run the usual network / size confirmations
+   * first so a "Cancel" leaves them on the quant list; only once approved do we remember the
+   * model so it shows up in the list (and survives restarts), go back to the list and download.
    */
   const importAndDownload = async (imported: ImportedModel) => {
-    await ImportedModels.add(imported);
-    await fetchModels();
-    setView('list');
-    setSearchQuery('');
     const model: AvailableModel = {
       id: imported.modelId,
       modelId: imported.modelId,
@@ -243,7 +245,13 @@ function AvailableModels({
       isImported: true,
       provider: imported.author,
     };
-    return downloadModel(model);
+    const onDisk = await RNFS.exists(resolveDestinationPathFromGGUFUrl(model.downloadUrl));
+    if (!onDisk && !(await runPreDownloadConfirmations(model))) return false;
+    await ImportedModels.add(imported);
+    await fetchModels();
+    setView('list');
+    setSearchQuery('');
+    return downloadModel(model, false);
   };
 
   const filteredModels = useMemo(() => {
@@ -261,6 +269,10 @@ function AvailableModels({
     () => flattenModelSections(groupModelsByProvider(filteredModels)),
     [filteredModels],
   );
+
+  // Memory badges for every row plus a "Recommended" callout on the preset that suits this phone.
+  const presets = useMemo(() => availableModels.filter(m => m.isPreset), [availableModels]);
+  const { fitFor, recommendedId } = useModelFit(presets);
 
   if (isLoading) return <ActivityIndicator size="large" color="white" />;
 
@@ -349,6 +361,8 @@ function AvailableModels({
                 isDownloaded={downloadedModels[model.modelId]}
                 modelDownloadUrl={modelDownloadUrl}
                 downloadProgress={downloadProgress}
+                memoryFit={isNative ? fitFor(model) : null}
+                isRecommended={isNative && model.id === recommendedId}
                 onSelect={() => {
                   if (llmPreferences.provider === 'native') return downloadModel(model);
                   else return selectModel({ modelId: model.id }); // Generic OpenAI /models results

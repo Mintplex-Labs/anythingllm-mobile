@@ -1,5 +1,6 @@
 import { field, json, text } from '@nozbe/watermelondb/decorators';
 import { database } from '@/database';
+import { deleteGeneratedDocumentsByStorageFilenames } from '@/utils/fs/generatedDocuments';
 import { Q, Model } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
 import { DynamicChatMessage } from '@/screens/WorkspaceChat/ChatHistory';
@@ -117,9 +118,41 @@ export type ICalendarEventAction = {
   }
 }
 
+/**
+ * A file the assistant generated for the user (see the create-files tools). Rendered as a
+ * persistent download card in the chat history. The file itself lives in the app's
+ * `generated-documents` folder under `storageFilename`; the card checks it still exists
+ * because "Clear temporary files" in settings removes the folder.
+ */
+export type IFileDownloadAction = {
+  type: 'file_download';
+  action: {
+    /** User-facing filename eg: "quarterly-report.docx" */
+    title: string;
+    /** Name of the file on disk inside the generated-documents folder eg: "docx-<uuid>.docx" */
+    storageFilename: string;
+    fileSize: number;
+    mimeType: string;
+  }
+}
+
+/**
+ * A scheduled job the assistant created for the user (see the create-scheduled-job tool).
+ * Rendered as a card in the chat history that opens the job's run history.
+ */
+export type IScheduledJobCreatedAction = {
+  type: 'scheduled_job_created';
+  action: {
+    jobUuid: string;
+    jobName: string;
+    /** Cron expression, local time */
+    schedule: string;
+  }
+}
+
 export type IAgentCitation = IAgentWebSearchCitation;
 export type IChatCitation = IDocumentCitation | IAgentCitation;
-export type IAgentAction = IEmailAction | ITextAction | ICalendarEventAction;
+export type IAgentAction = IEmailAction | ITextAction | ICalendarEventAction | IFileDownloadAction | IScheduledJobCreatedAction;
 export type WorkspaceChatResponseType = {
   textResponse: string;
   thoughts: string[];
@@ -228,23 +261,51 @@ export default class WorkspaceChat extends Model {
   }
 
   /**
-   * Delete a workspace chat by a given set of where clauses
+   * Storage filenames of every generated file (`file_download` action) referenced by these chats.
+   * Handles rows whose `response` is still a JSON string.
+   */
+  static storageFilenamesFrom(chats: Array<Partial<WorkspaceChatType> | { response?: any }>): string[] {
+    const names: string[] = [];
+    for (const chat of chats) {
+      let response: any = chat?.response;
+      if (typeof response === 'string') {
+        try { response = JSON.parse(response); } catch { response = null; }
+      }
+      const actions: IAgentAction[] = Array.isArray(response?.actions) ? response.actions : [];
+      for (const action of actions) {
+        if (action?.type !== 'file_download') continue;
+        const storageFilename = (action as IFileDownloadAction).action?.storageFilename;
+        if (storageFilename) names.push(storageFilename);
+      }
+    }
+    return names;
+  }
+
+  /**
+   * Delete a workspace chat by a given set of where clauses.
+   * Rows are destroyed permanently (no sync engine keeps tombstones useful) and every
+   * generated file the chats produced is removed from disk with them.
    * @param where - An array of where clauses
    * @returns True if the chats were deleted, false otherwise
    */
   static async delete(where: { field: string, value: string }[] = []): Promise<boolean> {
     try {
-      return await database.write(async () => {
-        const chat = await database.get(WorkspaceChat.table).query(
+      const storageFilenames = await database.write(async () => {
+        const chats = await database.get(WorkspaceChat.table).query(
           where.map(({ field, value }) => Q.where(field, value))
         ).fetch() as (Model & WorkspaceChatType)[];
-        if (chat.length === 0) return false;
+        if (chats.length === 0) return null;
 
-        this.log(`preparing to delete ${chat.length} workspace chats`);
-        await database.batch(chat.map((chat) => chat.prepareMarkAsDeleted()));
-        this.log(`deleted ${chat.length} workspace chats`);
-        return true;
+        // @ts-ignore - _raw holds the serialized column
+        const filenames = this.storageFilenamesFrom(chats.map((chat) => ({ response: chat._raw?.response ?? chat.response })));
+        this.log(`preparing to delete ${chats.length} workspace chats`);
+        await database.batch(chats.map((chat) => chat.prepareDestroyPermanently()));
+        this.log(`deleted ${chats.length} workspace chats`);
+        return filenames;
       });
+      if (storageFilenames === null) return false;
+      await deleteGeneratedDocumentsByStorageFilenames(storageFilenames);
+      return true;
     } catch (error) {
       this.log('error deleting workspace chats', error);
       return false;
@@ -286,10 +347,13 @@ export default class WorkspaceChat extends Model {
   static async deleteAll() {
     const chats = await database.get(WorkspaceChat.table).query().fetch() as (Model & WorkspaceChatType)[];
     if (!chats || chats.length === 0) return true;
+    // @ts-ignore - _raw holds the serialized column
+    const storageFilenames = this.storageFilenamesFrom(chats.map((chat) => ({ response: chat._raw?.response ?? chat.response })));
     await database.write(async () => {
       this.log(`deleting ${chats.length} chats`);
-      await database.batch(chats.map((chat) => chat.prepareMarkAsDeleted()));
+      await database.batch(chats.map((chat) => chat.prepareDestroyPermanently()));
     });
+    await deleteGeneratedDocumentsByStorageFilenames(storageFilenames);
     return true;
   }
 

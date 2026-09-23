@@ -10,8 +10,11 @@ import OpenAILite from "@/utils/openai";
 import VectorDB, { SemanticSearchResult } from "@/utils/VectorDB";
 import DocumentReranker from "@/utils/DocumentReranker";
 import { type IAgentAction } from "@/database/models/WorkspaceChat";
-import ToolsManager from "@/utils/ToolsManager";
+import ToolsManager, { type ToolManagerTool } from "@/utils/ToolsManager";
 import { isAbortError, linkAbortSignal, throwIfAborted } from "@/utils/chat/abort";
+import MemoryManager, { type PromptMemories } from "@/utils/Memories";
+import Document from "@/database/models/Document";
+import { estimateTokens, formatDocumentsBlock, type FullContextDocument } from "@/utils/documents/fullContext";
 
 interface BaseLLMProviderConfig {
   provider: string;
@@ -271,29 +274,51 @@ export default abstract class BaseOpenAILikeProvider {
    * Generates the system message for the provider.
    * If the workspace has a system prompt, it will be used.
    * Otherwise, the default system message will be used.
-   * 
-   * Will also add the context texts to the system message if they are provided.
+   *
+   * Only stable content lives here so the prefix stays byte-identical across turns and provider-side
+   * prompt caches (llama.cpp KV reuse, OpenAI/Anthropic prefix caching) keep hitting. Per-turn content
+   * (RAG chunks) goes on the user message - see `withContextTexts`. The current time is a tool
+   * (`get_current_datetime`), never a system prompt line.
+   * The rolling summary only changes on compaction, which rewrites the history after it anyway.
+   * The documents block (full text of files attached with an external provider, see
+   * utils/documents/fullContext) only changes when the user adds or removes a file, so it comes first.
+   * The memory block (user-authored facts, see `MemoryManager`) only changes when the user edits their
+   * memories, so it sits before the summary to keep the shared prefix as long as possible.
    */
-  defaultSystemMessage(contextTexts: string[] = [], summary: string | null = null) {
+  defaultSystemMessage(summary: string | null = null, memoryBlock: string | null = null, documentsBlock: string | null = null) {
     const baseMessage = this.workspace?.systemPrompt || BaseOpenAILikeProvider.DEFAULT_SYSTEM_MESSAGE;
-    const now = new Date();
-    const currentDateTime = now.toLocaleString(undefined, {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-      hour: '2-digit', minute: '2-digit', timeZoneName: 'short',
-    });
-    const withDateTime = `${baseMessage}\nThe current date and time on the user's device is ${currentDateTime}.`;
-    const withSummary = summary
-      ? `${withDateTime}\n\nSummary of the conversation so far (earlier messages are not shown):\n${summary}`
-      : withDateTime;
-    if (!contextTexts.length) return withSummary;
+    const parts = [baseMessage];
+    if (documentsBlock) parts.push(documentsBlock);
+    if (memoryBlock) parts.push(memoryBlock);
+    if (summary) parts.push(`Summary of the conversation so far (earlier messages are not shown):\n${summary}`);
+    return parts.join('\n\n');
+  }
 
-    const context = contextTexts
-      .map((text, i) => {
-        return `Context ${i + 1}: ${text}`;
-      })
-      .join("\n\n");
+  /**
+   * Tokens the always-on memory block may occupy in the system prompt. Cloud models have room to
+   * spare; the on-device provider overrides this with a slice of its prompt budget.
+   */
+  protected memoryTokenBudget(): number {
+    return BaseOpenAILikeProvider.DEFAULT_MEMORY_TOKEN_BUDGET;
+  }
+  static DEFAULT_MEMORY_TOKEN_BUDGET = 600;
 
-    return `${withSummary}\n\n[CONTEXT_START]\n${context}\n[CONTEXT_END]`;
+  /**
+   * Prepends the RAG chunks for this turn to the user's prompt, context first and question last so the
+   * model attends to what it is being asked. The chunks are only sent with the live prompt - history
+   * replays the raw stored prompt (see `formatChatHistory`) so stale chunks never pile up in later turns.
+   */
+  static withContextTexts(userPrompt: string, contextTexts: string[] = [], memoryBlock: string | null = null): string {
+    const blocks: string[] = [];
+    if (memoryBlock) blocks.push(memoryBlock);
+    if (contextTexts.length) {
+      const context = contextTexts
+        .map((text, i) => `Context ${i + 1}: ${text}`)
+        .join("\n\n");
+      blocks.push(`[CONTEXT_START]\n${context}\n[CONTEXT_END]`);
+    }
+    if (!blocks.length) return userPrompt;
+    return `${blocks.join('\n\n')}\n\n${userPrompt}`;
   }
 
   /**
@@ -333,19 +358,24 @@ export default abstract class BaseOpenAILikeProvider {
     userPrompt = "",
     attachments = [],
     summary = null,
+    memories = null,
+    documentsBlock = null,
   }: {
     contextTexts: string[];
     chatHistory: DynamicChatMessage[];
     userPrompt: string;
     attachments?: IAttachment[];
     summary?: string | null;
+    memories?: PromptMemories | null;
+    /** Full text of the workspace's non-embedded documents, rendered by `formatDocumentsBlock` */
+    documentsBlock?: string | null;
   }) {
     // o1 Models do not support the "system" role
     // in order to combat this, we can use the "user" role as a replacement for now
     // https://community.openai.com/t/o1-models-do-not-support-system-role-in-chat-completion/953880
     const prompt = {
       role: this.isOTypeModel ? "user" : "system",
-      content: this.defaultSystemMessage(contextTexts, summary),
+      content: this.defaultSystemMessage(summary, memories?.systemBlock ?? null, documentsBlock),
     };
 
     return [
@@ -353,7 +383,10 @@ export default abstract class BaseOpenAILikeProvider {
       ...formatChatHistory(chatHistory, this.generateContent),
       {
         role: "user",
-        content: this.generateContent({ content: userPrompt, attachments }),
+        content: this.generateContent({
+          content: BaseOpenAILikeProvider.withContextTexts(userPrompt, contextTexts, memories?.promptBlock ?? null),
+          attachments,
+        }),
       },
     ];
   }
@@ -452,21 +485,73 @@ export default abstract class BaseOpenAILikeProvider {
       .filter((r) => r.metadata.content !== undefined && r.metadata.content !== null && r.metadata.content !== '')
       .map((r) => String(r.metadata.content));
 
+    // User-authored memories. Disabled or empty -> null blocks and nothing changes in the prompt.
+    const memories = await MemoryManager.forPrompt({
+      workspaceSlug: this.workspace?.slug ?? null,
+      userPrompt: userPrompt.prompt as string,
+      budgetTokens: this.memoryTokenBudget(),
+      onStatus,
+    });
+
+    const threadSlug = userPrompt.workspaceThreadSlug ?? history[0]?.workspaceThreadSlug ?? null;
     const shaped = await this.shapePrompt(
       { history, contextTexts, summary: null },
-      { threadSlug: userPrompt.workspaceThreadSlug ?? history[0]?.workspaceThreadSlug ?? null, onStatus },
+      { threadSlug, onStatus },
     );
 
+    // Files attached with an external provider were never embedded - the model gets them whole, but
+    // only the ones attached in this thread. The on-device provider never reads these: its window only
+    // has room for retrieved chunks.
+    const fullDocuments = this.isExternalProvider ? await this.getFullContextDocuments(threadSlug, onStatus) : [];
+
     return {
-      citations: this.buildDocumentCitations(vectorSearchResults),
+      citations: [
+        ...this.buildDocumentCitations(vectorSearchResults),
+        ...this.buildFullDocumentCitations(fullDocuments),
+      ],
       formattedMessages: this.constructMessages({
         chatHistory: shaped.history,
         userPrompt: userPrompt.prompt as string,
         attachments: (userPrompt.response?.attachments ?? []) as IAttachment[],
         contextTexts: shaped.contextTexts,
         summary: shaped.summary,
+        memories,
+        documentsBlock: formatDocumentsBlock(fullDocuments),
       }),
     }
+  }
+
+  /**
+   * The documents sent in full with prompts in `threadSlug` (see `Document.fullContextDocumentsFor`).
+   * Only external providers call this; failures degrade to "no documents" rather than blocking the chat.
+   */
+  protected async getFullContextDocuments(threadSlug: string | null, onStatus?: (status: string) => void): Promise<FullContextDocument[]> {
+    if (!this.workspace?.slug) return [];
+    try {
+      const documents = await Document.fullContextDocumentsFor(this.workspace.slug, threadSlug);
+      if (!documents.length) return [];
+      onStatus?.(`Reading ${documents.length} attached document${documents.length === 1 ? '' : 's'}`);
+      const tokens = documents.reduce((sum, doc) => sum + estimateTokens(doc.content), 0);
+      this.log(`Sending ${documents.length} document(s) in full (~${tokens} tokens): ${documents.map((doc) => doc.name).join(', ')}`);
+      return documents;
+    } catch (e) {
+      this.log('Could not load the workspace documents to send in full:', e);
+      return [];
+    }
+  }
+
+  /** Full-context documents show up as sources too, so the user can see what the model was given. */
+  private buildFullDocumentCitations(documents: FullContextDocument[]): IDocumentCitation[] {
+    const PREVIEW_CHARS = 300;
+    return documents.map((doc) => ({
+      type: 'document',
+      document: {
+        uuid: doc.uuid,
+        name: doc.name,
+        chunk: doc.content.length > PREVIEW_CHARS ? `${doc.content.slice(0, PREVIEW_CHARS).trimEnd()}...` : doc.content,
+        score: 1, // the whole document was sent - shown as 100% in the citations sheet
+      },
+    }));
   }
 
   /**
@@ -485,6 +570,8 @@ export default abstract class BaseOpenAILikeProvider {
     streaming = false,
     onComplete = (response: ICompleteResponse) => { console.log('Debug: onComplete - if you are seeing this you forgot to handle completion responses but got one.', response) },
     onStream = (event: IStreamEvent, data: any) => { console.log('Debug: onStream - if you are seeing this you forgot to handle stream responses but got one.', event, data) },
+    toolset,
+    autoApproveTools = false,
   }: {
     messages: DynamicChatMessage[];
     streaming?: boolean;
@@ -492,6 +579,13 @@ export default abstract class BaseOpenAILikeProvider {
     onComplete?: (response: ICompleteResponse) => void;
     /** On stream is for streaming responses - will fire for each token */
     onStream?: IStreamCallback;
+    /**
+     * Exactly these tools instead of the user's enabled set, with no relevance reranking - the
+     * caller has already curated them (scheduled jobs). An empty array means no tools at all.
+     */
+    toolset?: ToolManagerTool[];
+    /** Unattended turn - tools that ask the user for consent proceed without waiting (scheduled jobs) */
+    autoApproveTools?: boolean;
   }) {
     const { formattedMessages, citations } = await this.buildPrompt(messages, streaming ? (status) => onStream('report_status', status) : undefined);
     if (!streaming) {
@@ -503,13 +597,19 @@ export default abstract class BaseOpenAILikeProvider {
       return;
     }
 
-    let availableTools = await ToolsManager.injectAvailableTools();
-    const lastUserMessage = [...formattedMessages].reverse().find(m => m.role === 'user');
-    const userPrompt = typeof lastUserMessage?.content === 'string' ? lastUserMessage.content : '';
-    availableTools = await ToolsManager.rerankTools(
-        availableTools, userPrompt, 'cloud',
-        (status) => onStream('report_status', status),
-    );
+    let availableTools: ToolManagerTool['definition'][];
+    if (toolset) {
+      // Pre-curated by the caller - offer them all, no reranking.
+      availableTools = toolset.map(tool => tool.definition);
+    } else {
+      availableTools = await ToolsManager.injectAvailableTools();
+      const lastUserMessage = [...formattedMessages].reverse().find(m => m.role === 'user');
+      const userPrompt = typeof lastUserMessage?.content === 'string' ? lastUserMessage.content : '';
+      availableTools = await ToolsManager.rerankTools(
+          availableTools, userPrompt, 'cloud',
+          (status) => onStream('report_status', status),
+      );
+    }
     this.log(`Streaming ${this.model} with ${availableTools.length} available tools`);
     const { stream, abortController } = await this.streamGetChatCompletion(formattedMessages, availableTools);
     const fullResult = await this.handleDefaultStreamResponse(stream, onStream, abortController);
@@ -529,6 +629,8 @@ export default abstract class BaseOpenAILikeProvider {
       currentMessageHistory: formattedMessages,
       mergeToolCallResults: false,
       signal: this.abortSignal,
+      toolset,
+      executionContext: { autoApproveTools },
     });
 
     throwIfAborted(this.abortSignal);

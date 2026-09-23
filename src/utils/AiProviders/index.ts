@@ -10,6 +10,7 @@ import BedrockProvider from "./BedrockProvider";
 import DeepSeekProvider from "./DeepSeekProvider";
 import FireworksAIProvider from "./FireworksAIProvider";
 import LemonadeProvider from "./LemonadeProvider";
+import LlmmanProvider from "./LlmmanProvider";
 import LocalAIProvider from "./LocalAIProvider";
 import MiniMaxProvider from "./MiniMaxProvider";
 import MoonshotProvider from "./MoonshotProvider";
@@ -29,6 +30,7 @@ export type LLMProvider = OpenAICompatible |
   DeepSeekProvider |
   FireworksAIProvider |
   LemonadeProvider |
+  LlmmanProvider |
   LocalAIProvider |
   MiniMaxProvider |
   MoonshotProvider |
@@ -81,6 +83,8 @@ function getLLM(provider: string, config: { [key: string]: any } = {}): LLMProvi
       return new LocalAIProvider({ provider: 'localai', config: selfHosted });
     case 'lemonade':
       return new LemonadeProvider({ provider: 'lemonade', config: selfHosted });
+    case 'llmman':
+      return new LlmmanProvider({ provider: 'llmman', config: selfHosted });
     case 'lmstudio':
       return new LMStudioProvider({ provider: 'lmstudio', config: { baseURL: config.baseUrl, model: config.model } });
     case 'ollama':

@@ -7,6 +7,7 @@ import WorkspaceThread, { WorkspaceThreadType } from './WorkspaceThread';
 import Document from './Document';
 import uiStore from '@/store/UIStore';
 import WorkspaceChat from './WorkspaceChat';
+import Memory from './Memory';
 import AnythingLLMExternal from '@/utils/AnythingLLMExternal';
 import Telemetry from '@/utils/Telemetry';
 import { getDefaultContextLength } from '@/utils/contextLength';
@@ -272,23 +273,20 @@ export default class Workspace extends Model {
       const workspaceSlugs: string[] = workspaces.map((ws) => (ws as WorkspaceDBType).slug);
       await database.write(async () => {
         this.log(`deleting ${workspaces.length} workspaces`, where);
-        await database.batch(workspaces.map((ws) => ws.prepareMarkAsDeleted()));
+        await database.batch(workspaces.map((ws) => ws.prepareDestroyPermanently()));
         this.log(`deleted ${workspaces.length} workspaces`, where);
         return true;
       });
 
-      let workspaceThreadSlugs: string[] = [];
+      // Threads cascade to their chats, which in turn remove the generated files they produced.
+      // Documents cascade to their vectors and the processed text on disk.
       for (const wsSlug of workspaceSlugs) {
-        const threads = await WorkspaceThread.get([{ field: 'workspace_slug', value: wsSlug }]);
-        if (!threads || threads.length === 0) continue;
-        workspaceThreadSlugs.push(...threads.map((t) => (t as WorkspaceThread).slug));
+        await WorkspaceThread.delete([{ field: 'workspace_slug', value: wsSlug }]);
+        await Document.delete([{ field: 'workspace_slug', value: wsSlug }], true);
       }
+      await Memory.deleteForWorkspaces(workspaceSlugs);
 
-      await Promise.all(workspaceThreadSlugs.map((wsThreadSlug) => WorkspaceChat.delete([{ field: 'workspace_thread_slug', value: wsThreadSlug }])));
-      await Promise.all(workspaceThreadSlugs.map((wsThreadSlug) => WorkspaceThread.delete([{ field: 'slug', value: wsThreadSlug }])));
-      await Promise.all(workspaceSlugs.map((wsSlug) => Document.delete([{ field: 'workspace_slug', value: wsSlug }], true)));
-
-      this.log(`${workspaceSlugs.length} workspaces, children threads, and dependent documents/vectors successfully deleted`);
+      this.log(`${workspaceSlugs.length} workspaces, children threads, and dependent documents/vectors/memories successfully deleted`);
       return true;
     } catch (error) {
       console.error('Error deleting workspace:', error);
@@ -301,7 +299,7 @@ export default class Workspace extends Model {
     if (!workspaces || workspaces.length === 0) return true;
     await database.write(async () => {
       this.log(`deleting ${workspaces.length} workspaces`);
-      await database.batch(workspaces.map((ws) => ws.prepareMarkAsDeleted()));
+      await database.batch(workspaces.map((ws) => ws.prepareDestroyPermanently()));
     });
     return true;
   }

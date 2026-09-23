@@ -1,7 +1,7 @@
 import { appSchema, tableSchema } from '@nozbe/watermelondb';
 
 export default appSchema({
-  version: 2,
+  version: 5,
   tables: [
     tableSchema({
       name: 'workspaces',
@@ -35,8 +35,64 @@ export default appSchema({
         { name: 'name', type: 'string' },
         { name: 'uuid', type: 'string', isIndexed: true },
         { name: 'workspace_slug', type: 'string', isIndexed: true },
+        // Set for documents sent in full (external providers): they only apply to the thread they were
+        // attached in. Null for embedded documents, which are searched workspace-wide (see utils/documents/fullContext).
+        { name: 'thread_slug', type: 'string', isOptional: true, isIndexed: true },
         { name: 'vector_box_ids', type: 'string', isOptional: true },
         { name: 'created_at', type: 'number' },
+      ],
+    }),
+    tableSchema({
+      // User-authored memories injected into prompts - see utils/Memories. Global memories apply to every
+      // workspace; workspace memories carry the slug they belong to and are pruned with the workspace.
+      name: 'memories',
+      columns: [
+        { name: 'uuid', type: 'string', isIndexed: true },
+        { name: 'scope', type: 'string', isIndexed: true },
+        { name: 'workspace_slug', type: 'string', isOptional: true, isIndexed: true },
+        { name: 'content', type: 'string' },
+        // JSON float array from the on-device embedder, filled lazily - null until embedded
+        { name: 'embedding', type: 'string', isOptional: true },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+      ],
+    }),
+    tableSchema({
+      // Prompts the assistant runs unattended on a cron schedule - see utils/ScheduledJobs
+      name: 'scheduled_jobs',
+      columns: [
+        { name: 'uuid', type: 'string', isIndexed: true },
+        { name: 'name', type: 'string' },
+        { name: 'prompt', type: 'string' },
+        // JSON array of ToolsManager tool ids the job may use (empty = no tools)
+        { name: 'tools', type: 'string' },
+        // 5-field cron expression in local time
+        { name: 'schedule', type: 'string' },
+        { name: 'enabled', type: 'boolean' },
+        { name: 'notify_on_complete', type: 'boolean' },
+        { name: 'last_run_at', type: 'number', isOptional: true },
+        { name: 'next_run_at', type: 'number', isOptional: true },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+      ],
+    }),
+    tableSchema({
+      // One row per execution of a scheduled job
+      name: 'scheduled_job_runs',
+      columns: [
+        { name: 'uuid', type: 'string', isIndexed: true },
+        { name: 'job_uuid', type: 'string', isIndexed: true },
+        // queued | running | completed | failed | timed_out | cancelled
+        { name: 'status', type: 'string', isIndexed: true },
+        // 'schedule' | 'manual'
+        { name: 'trigger', type: 'string' },
+        // JSON WorkspaceChatResponseType (same shape as a chat reply) once the run finishes
+        { name: 'result', type: 'string', isOptional: true },
+        { name: 'error', type: 'string', isOptional: true },
+        { name: 'started_at', type: 'number' },
+        { name: 'completed_at', type: 'number', isOptional: true },
+        // null = the user has not opened this run yet
+        { name: 'read_at', type: 'number', isOptional: true },
       ],
     }),
     tableSchema({

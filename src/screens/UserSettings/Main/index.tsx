@@ -8,10 +8,12 @@ import {
   DiscordLogo,
   FileText,
   FileLock,
+  ChartBar,
   GithubLogo,
-  MoneyWavy,
   Scroll,
+  TextAa,
 } from 'phosphor-react-native';
+import { isQuickContextAvailable } from '@/quickContext';
 import { IWorkspacePageKey } from '../index';
 import uiStore from '@/store/UIStore';
 import { PATHS } from '@/utils/paths';
@@ -24,9 +26,12 @@ import { startCase } from 'lodash';
 import Workspace from '@/database/models/Workspace';
 import WorkspaceThread from '@/database/models/WorkspaceThread';
 import Document from '@/database/models/Document';
+import Memory from '@/database/models/Memory';
+import ScheduledJob from '@/database/models/ScheduledJob';
+import { syncNativeSchedule } from '@/utils/ScheduledJobs/scheduler';
 import WorkspaceChat from '@/database/models/WorkspaceChat';
 import uninstallAllModels from '@/utils/models/manager';
-import { deleteProcessedFiles } from '@/utils/fs';
+import { deleteAllAppFiles } from '@/utils/fs/cleanup';
 import { showToast } from '@/utils/Notification';
 import MonoProviderIcon from '@/components/MonoProviderIcon';
 import ApkVersion from './ApkVersion';
@@ -67,11 +72,6 @@ const ABOUT_LINKS: SupportLink[] = [
     link: 'https://discord.gg/6UyHPeGZAC',
     icon: <DiscordLogo size={18} color="#FFF" />,
   },
-  {
-    title: 'Become a Patron',
-    link: "https://donate.stripe.com/6oU9ATe44f4F1NBeSh1B601",
-    icon: <MoneyWavy size={18} color="#FFF" />,
-  },
 ]
 
 const UTILITY_LINKS: SupportLink[] = [
@@ -79,7 +79,9 @@ const UTILITY_LINKS: SupportLink[] = [
     title: 'Clear temporary files',
     icon: <File size={18} color="#FFF" />,
     onPress: async () => {
-      await deleteProcessedFiles();
+      // Processed upload text, every file the assistant generated (download cards go to their "missing" state),
+      // and any picker/upload scratch files
+      await deleteAllAppFiles();
       showToast('Temporary files cleared');
     },
   },
@@ -127,9 +129,12 @@ export function MainView({ goToPage }: MainViewProps) {
       WorkspaceChat.deleteAll(),
       WorkspaceThread.deleteAll(),
       Document.deleteAll(true),
+      Memory.deleteAll(),
+      ScheduledJob.deleteAll(),
       uninstallAllModels(),
-      deleteProcessedFiles(),
+      deleteAllAppFiles(),
     ]);
+    await syncNativeSchedule();
     await uiStore.resetAllStorage();
     uiStore.emitter.emit(uiStore.globalEvents.ONBOARDING_RESET);
     // Defer navigation reset to the next frame so the component tree
@@ -221,6 +226,23 @@ export function MainView({ goToPage }: MainViewProps) {
             </Text>
           </View>
 
+          {/* System-level integrations (Android only for now) - each can be switched off on its own page */}
+          {isQuickContextAvailable() && (
+            <View className="w-full flex flex-col" style={{ gap: 12 }}>
+              <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">
+                Special Tools
+              </Text>
+              <TouchableOpacity
+                style={{ backgroundColor: '#1B1B1E', padding: 14, gap: 12 }}
+                className="w-full flex flex-row items-center rounded-lg"
+                onPress={() => goToPage('special_tools')}>
+                <TextAa size={18} color="#FFF" />
+                <Text className="text-white text-lg flex-1">"Ask with AnythingLLM"</Text>
+                <CaretRight size={18} color="#FFF" />
+              </TouchableOpacity>
+            </View>
+          )}
+
           {/* About AnythingLLM */}
           <View className="w-full flex flex-col" style={{ gap: 12 }}>
             <ApkVersion />
@@ -234,7 +256,7 @@ export function MainView({ goToPage }: MainViewProps) {
               }}>
               {changelogEntry && (
                 <SupportItem
-                  title={`What's new in v${changelogEntry.version}`}
+                  title={`Release notes for v${changelogEntry.version}`}
                   icon={<Scroll size={18} color="#FFF" />}
                   onPress={() => setChangelogVisible(true)}
                   borderBottom={ABOUT_LINKS.length > 0}
@@ -269,6 +291,12 @@ export function MainView({ goToPage }: MainViewProps) {
                 gap: 12,
                 borderRadius: 8,
               }}>
+              <SupportItem
+                title="Anonymous telemetry"
+                icon={<ChartBar size={18} color="#FFF" />}
+                onPress={() => goToPage('anonymous_telemetry')}
+                borderBottom={UTILITY_LINKS.length > 0}
+              />
               {UTILITY_LINKS.map((link, index) => {
                 return (
                   <SupportItem

@@ -208,6 +208,16 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     baseUrlPlaceholder: "http://192.168.1.10:8000",
   },
   {
+    name: "llmman",
+    value: "llmman",
+    category: "local",
+    logo: require('@/assets/llmprovider/llmman.png'),
+    description: "Run LLMs locally using llmman.",
+    fields: { apiKey: 'optional', baseUrl: true },
+    defaultConfig: { apiKey: '', baseUrl: '', model: '' },
+    baseUrlPlaceholder: "http://192.168.1.10:17434",
+  },
+  {
     name: "Generic OpenAI",
     value: "generic-openai",
     category: "cloud",
@@ -221,7 +231,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
 ];
 
 /** Display order of the local section - on-device first, Ollama last. */
-const LOCAL_PROVIDER_ORDER = ['native', 'lmstudio', 'localai', 'lemonade', 'litellm', 'ollama'];
+const LOCAL_PROVIDER_ORDER = ['native', 'lmstudio', 'localai', 'lemonade', 'llmman', 'litellm', 'ollama'];
 
 export type LLMProviderSection = { title: string; providers: LLMProviderDefinition[] };
 

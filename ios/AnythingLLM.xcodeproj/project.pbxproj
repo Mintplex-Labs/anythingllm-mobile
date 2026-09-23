@@ -15,6 +15,10 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A85081982D6255F000BDE4BC /* KeepAwakeModule.h in Sources */ = {isa = PBXBuildFile; fileRef = A85081962D6255F000BDE4BC /* KeepAwakeModule.h */; };
 		A85081992D6255F000BDE4BC /* KeepAwakeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A85081972D6255F000BDE4BC /* KeepAwakeModule.m */; };
+		5C10CA112EF3A00100AB12C3 /* ScreenLockModule.h in Sources */ = {isa = PBXBuildFile; fileRef = 5C10CA0F2EF3A00100AB12C1 /* ScreenLockModule.h */; };
+		5C10CA122EF3A00100AB12C4 /* ScreenLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C10CA102EF3A00100AB12C2 /* ScreenLockModule.m */; };
+		7A5C0DE12F1B400100AB12D3 /* SharedContentModule.h in Sources */ = {isa = PBXBuildFile; fileRef = 7A5C0DE02F1B400100AB12D1 /* SharedContentModule.h */; };
+		7A5C0DE22F1B400100AB12D4 /* SharedContentModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5C0DE32F1B400100AB12D2 /* SharedContentModule.m */; };
 		A8894CE22D0E02AF00FA6CAC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A8894CE12D0E02AF00FA6CAC /* GoogleService-Info.plist */; };
 		A88DF87F2D0B6F7400239E77 /* DeviceInfoModule.h in Sources */ = {isa = PBXBuildFile; fileRef = A88DF87D2D0B6F7400239E77 /* DeviceInfoModule.h */; };
 		A88DF8802D0B6F7400239E77 /* DeviceInfoModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A88DF87E2D0B6F7400239E77 /* DeviceInfoModule.m */; };
@@ -50,6 +54,10 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AnythingLLM/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A85081962D6255F000BDE4BC /* KeepAwakeModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KeepAwakeModule.h; path = AnythingLLM/KeepAwakeModule.h; sourceTree = "<group>"; };
 		A85081972D6255F000BDE4BC /* KeepAwakeModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = KeepAwakeModule.m; path = AnythingLLM/KeepAwakeModule.m; sourceTree = "<group>"; };
+		5C10CA0F2EF3A00100AB12C1 /* ScreenLockModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ScreenLockModule.h; path = AnythingLLM/ScreenLockModule.h; sourceTree = "<group>"; };
+		5C10CA102EF3A00100AB12C2 /* ScreenLockModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ScreenLockModule.m; path = AnythingLLM/ScreenLockModule.m; sourceTree = "<group>"; };
+		7A5C0DE02F1B400100AB12D1 /* SharedContentModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SharedContentModule.h; path = AnythingLLM/SharedContentModule.h; sourceTree = "<group>"; };
+		7A5C0DE32F1B400100AB12D2 /* SharedContentModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SharedContentModule.m; path = AnythingLLM/SharedContentModule.m; sourceTree = "<group>"; };
 		A8894CE12D0E02AF00FA6CAC /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A88DF87D2D0B6F7400239E77 /* DeviceInfoModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DeviceInfoModule.h; path = AnythingLLM/DeviceInfoModule.h; sourceTree = "<group>"; };
 		A88DF87E2D0B6F7400239E77 /* DeviceInfoModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = DeviceInfoModule.m; path = AnythingLLM/DeviceInfoModule.m; sourceTree = "<group>"; };
@@ -137,6 +145,10 @@
 			children = (
 				A85081962D6255F000BDE4BC /* KeepAwakeModule.h */,
 				A85081972D6255F000BDE4BC /* KeepAwakeModule.m */,
+				5C10CA0F2EF3A00100AB12C1 /* ScreenLockModule.h */,
+				5C10CA102EF3A00100AB12C2 /* ScreenLockModule.m */,
+				7A5C0DE02F1B400100AB12D1 /* SharedContentModule.h */,
+				7A5C0DE32F1B400100AB12D2 /* SharedContentModule.m */,
 				13B07FAE1A68108700A75B9A /* AnythingLLM */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* AnythingLLMTests */,
@@ -440,6 +452,10 @@
 			files = (
 				A85081982D6255F000BDE4BC /* KeepAwakeModule.h in Sources */,
 				A85081992D6255F000BDE4BC /* KeepAwakeModule.m in Sources */,
+				5C10CA112EF3A00100AB12C3 /* ScreenLockModule.h in Sources */,
+				5C10CA122EF3A00100AB12C4 /* ScreenLockModule.m in Sources */,
+				7A5C0DE12F1B400100AB12D3 /* SharedContentModule.h in Sources */,
+				7A5C0DE22F1B400100AB12D4 /* SharedContentModule.m in Sources */,
 				A88DF87F2D0B6F7400239E77 /* DeviceInfoModule.h in Sources */,
 				A88DF8802D0B6F7400239E77 /* DeviceInfoModule.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,

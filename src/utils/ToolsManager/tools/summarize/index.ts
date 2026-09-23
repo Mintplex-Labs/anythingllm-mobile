@@ -118,6 +118,7 @@ export default {
                     payload: { type, input, sections: limitedChunks.length },
                     streamEmitter,
                     signal: context.signal,
+                    autoApprove: context.autoApproveTools,
                 });
                 if (!approval.approved) {
                     streamEmitter('report_status', 'Summarization was not approved');

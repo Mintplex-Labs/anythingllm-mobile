@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import Clipboard from '@react-native-clipboard/clipboard';
-import DeviceInfo from 'react-native-device-info';
 import {
   ArrowLeft,
   ArrowSquareOut,
@@ -35,6 +34,8 @@ import {
 import { buildImportedModel, ImportedModel, importedModelId } from '@/utils/models/imported';
 import { formatBytes, formatNumber } from '@/utils/formatters';
 import { findIconByModelName } from '@/components/MonoProviderIcon';
+import { MemoryFitBadge } from '@/components/ModelCard/FitBadges';
+import { getDeviceMemory, MemoryFit, memoryFitForSize } from '@/utils/models/memoryFit';
 
 /**
  * Lets the user paste a Hugging Face repo id / url (or search the hub) and pick
@@ -46,6 +47,12 @@ import { findIconByModelName } from '@/components/MonoProviderIcon';
 type Props = {
   /** Prefill the input, eg. with the text the user typed in the model search box. */
   initialQuery?: string;
+  /**
+   * GGUF file to call out in the quant list, eg. the one a Hugging Face "Use this model" deep link asked
+   * for. Matched by filename (case-insensitive). The row is highlighted and scrolled into view; the user
+   * still taps it to confirm the download.
+   */
+  highlightFilename?: string;
   /** Called when the user picks a quant. Should kick off the download and return whether it started. */
   onDownload: (model: ImportedModel) => Promise<boolean> | boolean;
   /** Ids (`org/repo/file.gguf`) that are already installed or already in the list. */
@@ -66,23 +73,9 @@ type Status =
   | { kind: 'repo'; data: HfGGUFRepo }
   | { kind: 'search'; query: string; results: HfGGUFSearchResult[] };
 
-/**
- * Returns the device's total RAM and a usable budget (total minus ~2.5 GB
- * reserved for the OS, the app, and the KV cache which is allocated separately
- * from the model weights).
- */
-function memoryLimits(): { total: number; budget: number } | null {
-  try {
-    const total = DeviceInfo.getTotalMemorySync();
-    if (!total) return null;
-    return { total, budget: total - 2.5e9 };
-  } catch {
-    return null;
-  }
-}
-
 export default function HuggingFaceImport({
   initialQuery = '',
+  highlightFilename,
   onDownload,
   installedModelIds = [],
   activeDownloadUrl,
@@ -94,7 +87,9 @@ export default function HuggingFaceImport({
   const [query, setQuery] = useState(initialQuery);
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
   const requestId = useRef(0);
-  const memory = useMemo(memoryLimits, []);
+  const listRef = useRef<FlatList<any> | null>(null);
+  // Same verdict the catalog and onboarding cards show (see `utils/models/memoryFit`).
+  const memory = useMemo(getDeviceMemory, []);
   const installed = useMemo(() => new Set(installedModelIds), [installedModelIds]);
 
   const lookup = useCallback(async (input: string) => {
@@ -126,6 +121,33 @@ export default function HuggingFaceImport({
     if (initialQuery.trim()) lookup(initialQuery);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Which quant a deep link asked for (if any) and where it sits in the list, so we can scroll to it.
+  const highlightIndex = useMemo(() => {
+    if (!highlightFilename || status.kind !== 'repo') return -1;
+    // Accept the full path, the filename with or without ".gguf", or just the quant label ("Q4_K_M").
+    const wanted = highlightFilename.trim().toLowerCase().replace(/\.gguf$/, '');
+    const { quants } = status.data;
+    const exact = quants.findIndex(quant =>
+      quant.path.toLowerCase() === wanted ||
+      quant.filename.toLowerCase().replace(/\.gguf$/, '') === wanted,
+    );
+    if (exact >= 0) return exact;
+    return quants.findIndex(quant => quant.quant?.toLowerCase() === wanted);
+  }, [highlightFilename, status]);
+  const highlightedPath = highlightIndex >= 0 && status.kind === 'repo' ? status.data.quants[highlightIndex].path : null;
+  const highlightMissing = !!highlightFilename && status.kind === 'repo' && highlightIndex < 0;
+
+  useEffect(() => {
+    if (highlightIndex < 0) return;
+    // Let the header and rows lay out first; scrollToIndex needs the list to have measured them.
+    const timer = setTimeout(() => {
+      try {
+        listRef.current?.scrollToIndex({ index: highlightIndex, viewPosition: 0.3, animated: true });
+      } catch { /* list not measured yet - the highlight alone still shows the file */ }
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [highlightIndex]);
 
   const pasteFromClipboard = async () => {
     const text = (await Clipboard.getString())?.trim();
@@ -204,6 +226,19 @@ export default function HuggingFaceImport({
               {status.data.quants.length} GGUF {status.data.quants.length === 1 ? 'file' : 'files'} available to download
             </Text>
           )}
+          {highlightedPath && (
+            <Text className="text-[#6ce9a6] text-xs">
+              The file you picked on Hugging Face is highlighted below. Tap it to download.
+            </Text>
+          )}
+          {highlightMissing && (
+            <View className="flex flex-row items-start bg-yellow-500/15 rounded-lg p-3" style={{ gap: 8 }}>
+              <Warning size={18} color="#fcd34d" weight="bold" />
+              <Text className="text-yellow-200 text-xs flex-1">
+                "{highlightFilename}" is not one of this repo's GGUF files. Pick another quant below.
+              </Text>
+            </View>
+          )}
         </>
       )}
 
@@ -235,10 +270,12 @@ export default function HuggingFaceImport({
 
   return (
     <ListComponent
+      ref={listRef as any}
       data={items}
       keyExtractor={item => item.key}
       className="w-full"
       keyboardShouldPersistTaps="handled"
+      onScrollToIndexFailed={() => { /* row is off-screen and unmeasured; the highlight still marks it */ }}
       ListHeaderComponent={header}
       contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 100, gap: 10 }}
       renderItem={({ item }) => {
@@ -247,16 +284,11 @@ export default function HuggingFaceImport({
 
         const { repo } = status.data;
         const modelId = importedModelId(repo.id, item.quant.filename);
-        const fit: 'ok' | 'tight' | 'impossible' = !memory
-          ? 'ok'
-          : item.quant.size > memory.total
-            ? 'impossible'
-            : item.quant.size > memory.budget
-              ? 'tight'
-              : 'ok';
+        const fit = memoryFitForSize(item.quant.size, memory);
         return (
           <QuantRow
             quant={item.quant}
+            isHighlighted={item.quant.path === highlightedPath}
             isInstalled={installed.has(modelId)}
             isDownloading={activeDownloadUrl === item.quant.downloadUrl}
             downloadProgress={downloadProgress}
@@ -333,6 +365,7 @@ function SearchResultRow({ result, onPress }: { result: HfGGUFSearchResult; onPr
 
 function QuantRow({
   quant,
+  isHighlighted = false,
   isInstalled,
   isDownloading,
   downloadProgress,
@@ -342,11 +375,13 @@ function QuantRow({
   onPress,
 }: {
   quant: HfGGUFQuant;
+  /** The file a deep link asked for - drawn with an accent border and a "Requested" pill. */
+  isHighlighted?: boolean;
   isInstalled: boolean;
   isDownloading: boolean;
   downloadProgress: number;
   disabled: boolean;
-  memoryFit: 'ok' | 'tight' | 'impossible';
+  memoryFit: MemoryFit | null;
   gated: boolean;
   onPress: () => void;
 }) {
@@ -354,26 +389,27 @@ function QuantRow({
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || gated}
-      style={{ opacity: disabled || gated ? 0.5 : 1, borderWidth: 1, borderColor: '#2A2A2E' }}
+      style={{
+        opacity: disabled || gated ? 0.5 : 1,
+        borderWidth: 1,
+        borderColor: isHighlighted ? '#6ce9a6' : '#2A2A2E',
+        backgroundColor: isHighlighted ? 'rgba(108, 233, 166, 0.08)' : undefined,
+      }}
       className="w-full p-3 rounded-xl flex-row items-center justify-between">
       <View className="flex-1" style={{ gap: 2 }}>
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
           <Text className="text-white text-base font-medium">{quant.quant ?? 'GGUF'}</Text>
+          {isHighlighted && !isInstalled && (
+            <View className="rounded-full px-2 py-0.5 bg-[#6ce9a6]/20">
+              <Text className="text-[#6ce9a6] text-[10px] font-medium">Requested</Text>
+            </View>
+          )}
           {isInstalled && (
             <View className="rounded-full px-2 py-0.5 bg-[#6ce9a6]/20">
               <Text className="text-[#6ce9a6] text-[10px] font-medium">Installed</Text>
             </View>
           )}
-          {memoryFit === 'tight' && !isInstalled && (
-            <View className="rounded-full px-2 py-0.5 bg-yellow-500/30">
-              <Text className="text-yellow-200 text-[10px] font-medium">May not fit in memory</Text>
-            </View>
-          )}
-          {memoryFit === 'impossible' && !isInstalled && (
-            <View className="rounded-full px-2 py-0.5 bg-red-500/30">
-              <Text className="text-red-300 text-[10px] font-medium">Too large for this device</Text>
-            </View>
-          )}
+          {!isInstalled && <MemoryFitBadge fit={memoryFit} />}
         </View>
         <Text className="text-[#9F9FA0] text-xs" numberOfLines={1}>{quant.path}</Text>
         <Text className="text-[#9F9FA0] text-xs">{formatBytes(quant.size)}</Text>

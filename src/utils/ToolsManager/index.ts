@@ -8,14 +8,44 @@ import { safeJsonParse } from "../formatters";
 import Telemetry from "../Telemetry";
 import { throwIfAborted } from "../chat/abort";
 import { truncateMiddle } from "../chat/contextCompaction";
+import { isOnDeviceProvider, toolSupportsProvider } from "./providerGuards";
 
-type ToolManagerTool = {
+export { isOnDeviceProvider, isOnDeviceProviderName, toolSupportsProvider } from "./providerGuards";
+
+/**
+ * Tools that belong together in the tools sheet. A group renders as a single row on the main
+ * page that opens a sub-page with one toggle per tool (mirrors how the desktop app groups the
+ * create-files skills).
+ */
+export type ToolGroupId = 'createFiles';
+export const TOOL_GROUPS: Record<ToolGroupId, { id: ToolGroupId; name: string; description: string }> = {
+    createFiles: {
+        id: 'createFiles',
+        name: 'Create Files',
+        description: 'Let the assistant write documents you can download and share.',
+    },
+};
+
+export type ToolManagerTool = {
     /** Definition of the tool - this can be used to generate a tool call */
     id: string;
     name: string;
     description: string;
     defaultEnabled: boolean;
     category: 'default' | 'appConnections';
+    /** Grouped tools live on a sub-page of the tools sheet instead of the main list */
+    group?: ToolGroupId;
+    /**
+     * Set to false for tools the on-device provider cannot run (they are pruned from the tool
+     * list and shown disabled in the tools sheet while the on-device provider is selected).
+     * Defaults to true.
+     */
+    supportsOnDevice?: boolean;
+    /**
+     * Set to true for tools that only make sense with a person in the loop (eg: creating another
+     * scheduled job). They are left out of the per-job tool picker and never handed to a job run.
+     */
+    hiddenFromScheduledJobs?: boolean;
     definition: {
         type: 'function';
         function: {
@@ -41,6 +71,11 @@ type ToolManagerTool = {
 export type ToolExecutionContext = {
     /** Session abort signal - fires when the user stops the reply. Tools waiting on the user (eg: approval) should settle on it. */
     signal?: AbortSignal | null;
+    /**
+     * Nobody is watching this turn (scheduled job) - tools that would normally ask the user for
+     * consent before slow or costly work proceed as if approved instead of waiting for a tap.
+     */
+    autoApproveTools?: boolean;
 }
 
 type ToolCallLoopProps = {
@@ -58,17 +93,30 @@ type ToolCallLoopProps = {
     mergeToolCallResults?: boolean;
     /** Session abort signal - when it fires the loop stops before the next tool execution / LLM round */
     signal?: AbortSignal | null;
+    /**
+     * Restrict the loop to exactly these tools instead of the user's enabled set. Used by scheduled
+     * jobs, where the user pre-selects the tools per job (see `getToolsByIds`).
+     */
+    toolset?: ToolManagerTool[];
+    /** Extra per-turn context handed to every tool execution (merged with `signal`) */
+    executionContext?: Omit<ToolExecutionContext, 'signal'>;
 }
 
 class ToolsManager {
     static instance: ToolsManager;
     private _tools: ToolManagerTool[] | null = null;
 
-    configurableTools = [
+    configurableTools: ToolManagerTool[] = [
         Tools.default.webSearch,
         Tools.default.webScraping,
         Tools.default.getLocation,
+        Tools.default.getCurrentTime,
         Tools.default.summarize,
+        Tools.default.createScheduledJob,
+        Tools.createFiles.createTextFile,
+        Tools.createFiles.createPdfFile,
+        Tools.createFiles.createDocxFile,
+        Tools.createFiles.createPptxPresentation,
         Tools.appConnections.draftEmail,
         Tools.appConnections.draftText,
         Tools.appConnections.calendarEventCreation,
@@ -94,8 +142,14 @@ class ToolsManager {
      */
     async getTools(): Promise<ToolManagerTool[]> {
         const userSettings = await uiStore.getFromStorage('tools', {});
+        const onDevice = await isOnDeviceProvider();
         let enabledTools: ToolManagerTool[] = [];
         for (const tool of this.configurableTools) {
+            // Some tools cannot run on the on-device provider regardless of the user's toggle
+            if (onDevice && !toolSupportsProvider(tool, 'native')) {
+                this.log(`ToolsManager::getTools: Skipping ${tool.id} - not supported by the on-device provider`);
+                continue;
+            }
             // If the tool is not a key in the user settings, and it is default enabled, add it to the enabled tools
             if (!userSettings.hasOwnProperty(tool.id) && tool.defaultEnabled) {
                 enabledTools.push(tool);
@@ -105,6 +159,20 @@ class ToolsManager {
             if (userSettings[tool.id]) enabledTools.push(tool);
         }
         return enabledTools;
+    }
+
+    /**
+     * The configured tools with these ids, in catalog order. Unknown ids are ignored. Used by
+     * scheduled jobs, which store the tool ids the user picked for each job.
+     */
+    getToolsByIds(ids: string[]): ToolManagerTool[] {
+        const wanted = new Set(ids);
+        return this.configurableTools.filter(tool => wanted.has(tool.id));
+    }
+
+    /** Tools a scheduled job may be given - everything not flagged `hiddenFromScheduledJobs` */
+    get scheduledJobEligibleTools(): ToolManagerTool[] {
+        return this.configurableTools.filter(tool => !tool.hiddenFromScheduledJobs);
     }
 
     /**
@@ -143,8 +211,10 @@ class ToolsManager {
         currentMessageHistory: any[],
         maxToolResultChars?: number,
         context: ToolExecutionContext = {},
+        toolset: ToolManagerTool[] | null = null,
     ): Promise<any[]> {
         const nextMessages = [...currentMessageHistory];
+        const knownTools = toolset ?? this._tools;
 
         if (!toolCalls || toolCalls.length === 0) return nextMessages;
         streamEmitter('will_call_tools', '');
@@ -157,7 +227,7 @@ class ToolsManager {
             }
             streamEmitter('report_tool_call', humanReadableToolCall);
 
-            const knownToolConfig = this._tools?.find(tool => tool.definition.function.name === toolCall.function.name);
+            const knownToolConfig = knownTools?.find(tool => tool.definition.function.name === toolCall.function.name);
             if (!knownToolConfig) {
                 this.log(`ToolsManager::manageToolCallExecutions: Tool not found or available: ${toolCallName}`);
                 streamEmitter('report_tool_call_result', {
@@ -267,11 +337,13 @@ class ToolsManager {
         mergeToolCallResults = true,
         signal = null,
         maxToolResultChars,
+        toolset,
+        executionContext = {},
     }: ToolCallLoopProps): Promise<ICompleteResponse> {
         let willLoop = currentResponse.toolCalls && currentResponse.toolCalls.length > 0;
         if (!willLoop) return currentResponse;
 
-        let availableTools = await this.injectAvailableTools();
+        let availableTools = toolset ? toolset.map(tool => tool.definition) : await this.injectAvailableTools();
         let nextResponse = currentResponse;
         let nextMessages = [...currentMessageHistory];
 
@@ -283,7 +355,7 @@ class ToolsManager {
             // that reply then call a tool see a result for a call that is not in the history and call
             // the same tool again on every round. The on-device merge flow keeps its text-only history.
             if (!mergeToolCallResults) nextMessages.push(this.assistantToolCallMessage(nextResponse));
-            nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages, maxToolResultChars, { signal });
+            nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages, maxToolResultChars, { ...executionContext, signal }, toolset ?? null);
             throwIfAborted(signal);
             for (const [index, message] of nextMessages.entries()) {
                 if (message.role === 'tool' && mergeToolCallResults) {

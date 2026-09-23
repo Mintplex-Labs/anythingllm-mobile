@@ -3,7 +3,9 @@ import { memo } from "react";
 import { IAgentAction } from "@/database/models/WorkspaceChat";
 import IntentLauncher, { IntentConstant } from "@yz1311/react-native-intent-launcher";
 
-export default memo(function ActionsContainer({ actions = [] }: { actions?: IAgentAction[] }) {
+/** Link-style chips for actions that open another app. Generated files and created jobs render as their own cards instead. */
+export default memo(function ActionsContainer({ actions: allActions = [] }: { actions?: IAgentAction[] }) {
+    const actions = allActions.filter(action => action.type !== 'file_download' && action.type !== 'scheduled_job_created');
     if (actions.length === 0) return null;
 
     function onPress(action: IAgentAction) {
@@ -28,7 +30,7 @@ export default memo(function ActionsContainer({ actions = [] }: { actions?: IAge
                 IntentLauncher.startActivity(intentPayload);
                 break;
             default:
-                Linking.openURL(action.action.link);
+                if ('link' in action.action) Linking.openURL(action.action.link);
                 break;
         }
     }
@@ -51,7 +53,7 @@ export default memo(function ActionsContainer({ actions = [] }: { actions?: IAge
                         className="flex flex-row items-start justify-start rounded-full"
                         style={{ borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 14, paddingVertical: 6 }}
                     >
-                        <Text style={{ color: '#7CD4FD' }} className="text-sm">{action.action.title}</Text>
+                        <Text style={{ color: '#7CD4FD' }} className="text-sm">{'title' in action.action ? action.action.title : ''}</Text>
                     </TouchableOpacity >
                 )
             })}

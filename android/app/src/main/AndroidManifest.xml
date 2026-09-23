@@ -18,6 +18,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
+    <!-- Local notifications (chat reply finished while the phone is locked, model download progress) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <!-- Needed only for devices running Android 9 (API 28) or lower -->
     <!-- Currently it is used only for storing chat sessions (/Download)-->
     <uses-permission
@@ -51,6 +55,63 @@
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+
+        <!--
+          anythingllm:// deep links (eg. Hugging Face "Use this model" -> anythingllm://pull-hf?repo=...&file=...).
+          Same scheme as AnythingLLM Desktop. Handled in JS by src/utils/DeepLinks.
+        -->
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="anythingllm" />
+        </intent-filter>
+
+        <!--
+          Share sheet destination: images and the document types our parser understands
+          (see utils/DocumentParser/registry.ts - keep these in sync). Handled by SharedContentModule.
+        -->
+        <intent-filter>
+            <action android:name="android.intent.action.SEND" />
+            <action android:name="android.intent.action.SEND_MULTIPLE" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <data android:mimeType="image/*" />
+            <data android:mimeType="text/*" />
+            <data android:mimeType="application/pdf" />
+            <data android:mimeType="application/json" />
+            <data android:mimeType="application/xml" />
+            <data android:mimeType="application/yaml" />
+            <data android:mimeType="application/x-yaml" />
+            <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+            <data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+            <data android:mimeType="application/vnd.ms-excel.sheet.macroenabled.12" />
+            <data android:mimeType="application/vnd.ms-excel" />
+            <data android:mimeType="application/vnd.oasis.opendocument.spreadsheet" />
+            <data android:mimeType="application/vnd.openxmlformats-officedocument.presentationml.presentation" />
+        </intent-filter>
+      </activity>
+
+      <!--
+        Quick Actions: "Ask with AnythingLLM" in the text-selection toolbar of other apps - edit or
+        summarize the selected text; a result is copied for the user to paste over the selection.
+        A translucent card over the calling app, in its own task so the main app is not brought forward.
+        See quickcontext/QuickContextActivity.kt and src/quickContext.
+      -->
+      <activity
+        android:name=".quickcontext.QuickContextActivity"
+        android:label="@string/quick_actions_action"
+        android:theme="@style/QuickContextTheme"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustNothing"
+        android:excludeFromRecents="true"
+        android:taskAffinity=""
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.PROCESS_TEXT" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <data android:mimeType="text/plain" />
         </intent-filter>
       </activity>
 

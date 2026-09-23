@@ -13,6 +13,7 @@ import AwaitableAlert from "@/components/AwaitableAlert";
 import Telemetry from "@/utils/Telemetry";
 import AssistantTurn from "./turn";
 import { isAbortError } from "@/utils/chat/abort";
+import PushNotifications from "@/utils/PushNotifications";
 
 const SHOW_DEBUG_LOGS = true;
 
@@ -89,6 +90,12 @@ interface IChatHandlerInterfaceProps {
     workspace: WorkspaceType;
     thread: WorkspaceThreadType;
     llmProvider: LLMProvider;
+    /**
+     * Keep the conversation in memory only: nothing is read from or written to the chats table and no
+     * notification is raised, so the workspace and thread need not exist in the database at all.
+     * Used by the Quick Actions card, whose exchanges must never show up in the app.
+     */
+    ephemeral?: boolean;
 }
 
 export const CHAT_HANDLER_EVENTS = {
@@ -108,7 +115,7 @@ function debug(text: string, ...args: any[]) {
     if (SHOW_DEBUG_LOGS) console.log(`\x1b[33m[ChatHandler]\x1b[0m ${text}`, ...args);
 }
 
-function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfaceProps): { handler: ChatHandlerInterface, history: ChatHistoryInterface } {
+function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: IChatHandlerInterfaceProps): { handler: ChatHandlerInterface, history: ChatHistoryInterface } {
     const [chatsMap, setChatsMap] = useState<Map<string, DynamicChatMessage>>(new Map());
 
     const [prompt, _setPrompt] = useState('');
@@ -156,10 +163,11 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
         chatsMapRef.current = next;
         removeChat(uuid);
 
+        if (ephemeral) return true;
         const deleted = await WorkspaceChat.delete([{ field: 'uuid', value: uuid }]);
         debug('Deleted chat', { uuid, deleted });
         return deleted;
-    }, [removeChat]);
+    }, [removeChat, ephemeral]);
 
     /**
      * Controller for the turn currently being generated. Its signal is handed to the
@@ -177,7 +185,7 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
     const fetchChats = useCallback(async () => {
         try {
             setIsLoadingChats(true);
-            if (!thread?.slug) return;
+            if (!thread?.slug || ephemeral) return;
             const chats = await WorkspaceChat.find(
                 [{ field: 'workspace_thread_slug', value: thread.slug }],
                 [{ field: 'created_at', direction: 'asc' }]
@@ -190,7 +198,7 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
         } finally {
             setIsLoadingChats(false);
         }
-    }, [thread?.slug]);
+    }, [thread?.slug, ephemeral]);
 
     const disablePromptInput = useCallback(() => {
         _setPromptDisabled(true);
@@ -205,6 +213,7 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
         try {
             setIsLoadingChats(true);
             setChatsMap(new Map());
+            if (ephemeral) return;
             await WorkspaceChat.delete([{ field: 'workspace_thread_slug', value: thread.slug }]);
             if (isRemote) await DelegatedProvider.sendCommand(workspace.remoteConfig, 'reset-chat', { workspaceSlug: workspace.remoteConfig.slug, threadSlug: thread.remoteConfig.slug });
         } catch (err) {
@@ -212,11 +221,25 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
         } finally {
             setIsLoadingChats(false);
         }
-    }, [thread, workspace, isRemote]);
+    }, [thread, workspace, isRemote, ephemeral]);
 
     const chatsArray = useMemo(() => {
         return Array.from(chatsMap.values());
     }, [chatsMap]);
+
+    /**
+     * If the user locked their phone while the reply was generating, buzz them now that it is done.
+     * No-op when the phone is unlocked or notifications are off. Fire-and-forget so a slow or
+     * failing notification never delays saving the chat.
+     */
+    const notifyIfLocked = useCallback((chat: DynamicChatMessage) => {
+        PushNotifications.notifyChatComplete({
+            workspaceName: workspace?.name,
+            preview: chat.response?.textResponse || '',
+            failed: chat.type === 'error',
+            route: { wsSlug: workspace.slug, threadSlug: thread.slug },
+        });
+    }, [workspace, thread]);
 
     const concludeChat = useCallback(async (turn: AssistantTurn) => {
         const chatToSave = turn.finalize();
@@ -225,16 +248,19 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
         // Emit the assistant response complete event
         uiStore.emitter.emit(CHAT_HANDLER_EVENTS.ASSISTANT_RESPONSE_COMPLETE, { uuid: turn.uuid });
 
+        const logCompleted = () => Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.CHAT_COMPLETED, {
+            llmProvider: llmProvider.name,
+            llmModel: llmProvider.model,
+        });
+        // An ephemeral exchange lives only in this handler's state - nothing to save, nowhere to notify about.
+        if (ephemeral) return logCompleted();
+
+        notifyIfLocked(chatToSave);
         await WorkspaceChat.create(chatToSave)
             .then(() => debug('Chat saved to database', chatToSave.uuid))
             .catch(err => debug('Error saving chat to database', err))
-            .finally(() => {
-                Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.CHAT_COMPLETED, {
-                    llmProvider: llmProvider.name,
-                    llmModel: llmProvider.model,
-                });
-            });
-    }, [upsertChat, llmProvider]);
+            .finally(logCompleted);
+    }, [upsertChat, llmProvider, notifyIfLocked, ephemeral]);
 
     /**
      * Process a chat and add it to the chat history
@@ -287,7 +313,7 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
             upsertChat(turn.snapshot());
             uiStore.emitter.emit(CHAT_HANDLER_EVENTS.NEW_CHAT_STARTED, { uuid: turn.uuid });
             // First message in an unnamed thread names the thread after the prompt (non-blocking).
-            WorkspaceThread.autoRename({ thread, prompt }).catch(err => debug('Error auto-renaming thread', err));
+            if (!ephemeral) WorkspaceThread.autoRename({ thread, prompt }).catch(err => debug('Error auto-renaming thread', err));
 
             const messageHistory = Array.from(chatsMapRef.current.values()).concat([newChat]);
             const handleStreamEvent = (event: IStreamEvent, data: IStreamResponse) => {
@@ -349,13 +375,15 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
             if (signal.aborted || isAbortError(err)) return discardAbortedChat();
             debug('Error processing chat', err);
             turn.fail((err as Error).message || 'Error processing chat');
-            upsertChat(turn.snapshot());
+            const failedChat = turn.snapshot();
+            upsertChat(failedChat);
+            if (!ephemeral) notifyIfLocked(failedChat);
         } finally {
             if (abortControllerRef.current === abortController) abortControllerRef.current = null;
             llmProvider.attachAbortSignal(null);
             deactivateKeepAwake();
         }
-    }, [thread, upsertChat, removeChat, llmProvider, concludeChat, isRemote, workspace]);
+    }, [thread, upsertChat, removeChat, llmProvider, concludeChat, isRemote, workspace, notifyIfLocked, ephemeral]);
 
     const canScrollChatHistory = useMemo(() => {
         return !isLoadingChats && chatsArray.length > 0;
@@ -370,6 +398,10 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
             _setPrompt('');
             disablePromptInput();
             setIsWorking(true);
+            // Sending a chat is the natural moment to ask for notifications: they exist so we can tell
+            // the user their reply finished if they lock the phone while it generates. Shows the OS
+            // dialog if never asked, or a one-time nudge to system settings if the app is blocked.
+            await PushNotifications.promptToEnableForChat();
             await _processChat(promptToSubmit, attachments);
         } catch (err) {
             debug('Error submitting prompt', err);
@@ -418,20 +450,23 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
      * Listen for events from the UI store to manage the prompt state
      */
     useEffect(() => {
-        uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.DISABLE_PROMPT_INPUT, disablePromptInput);
-        uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.ENABLE_PROMPT_INPUT, enablePromptInput);
-        uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.RESET_CHAT, reset);
-        uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.PROMPT_SUBMITTED, hideKeyboard);
-        uiStore.emitter.addListener(uiStore.globalEvents.MODEL_DOWNLOAD_STARTED, disablePromptInput);
-        uiStore.emitter.addListener(uiStore.globalEvents.MODEL_DOWNLOAD_COMPLETE, enablePromptInput);
-        return () => {
-            uiStore.emitter.removeAllListeners(CHAT_HANDLER_EVENTS.DISABLE_PROMPT_INPUT);
-            uiStore.emitter.removeAllListeners(CHAT_HANDLER_EVENTS.ENABLE_PROMPT_INPUT);
-            uiStore.emitter.removeAllListeners(CHAT_HANDLER_EVENTS.RESET_CHAT);
-            uiStore.emitter.removeAllListeners(uiStore.globalEvents.MODEL_DOWNLOAD_STARTED);
-            uiStore.emitter.removeAllListeners(uiStore.globalEvents.MODEL_DOWNLOAD_COMPLETE);
-        }
-    }, [reset, disablePromptInput, enablePromptInput]);
+        // Remove only this handler's subscriptions on cleanup: the Quick Actions card runs its own chat
+        // handler in the same runtime, and removeAllListeners would have torn down the other one's too.
+        const subscriptions = [
+            uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.DISABLE_PROMPT_INPUT, disablePromptInput),
+            uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.ENABLE_PROMPT_INPUT, enablePromptInput),
+            uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.RESET_CHAT, reset),
+            uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.PROMPT_SUBMITTED, hideKeyboard),
+            uiStore.emitter.addListener(uiStore.globalEvents.MODEL_DOWNLOAD_STARTED, disablePromptInput),
+            uiStore.emitter.addListener(uiStore.globalEvents.MODEL_DOWNLOAD_COMPLETE, enablePromptInput),
+            // The on-device provider is a singleton; after the Quick Actions card used it with its own
+            // workspace, point it back at ours.
+            uiStore.emitter.addListener(uiStore.globalEvents.WORKSPACE_REATTACH_REQUESTED, () => {
+                if (workspace && llmProvider) llmProvider.attachWorkspaceToProvider(workspace);
+            }),
+        ];
+        return () => subscriptions.forEach((subscription) => subscription.remove());
+    }, [reset, disablePromptInput, enablePromptInput, hideKeyboard, workspace, llmProvider]);
 
     const handler = useMemo<ChatHandlerInterface>(() => ({
         isWorking,
@@ -462,8 +497,8 @@ function useChatHandler({ workspace, thread, llmProvider }: IChatHandlerInterfac
 const ChatHandlerContext = createContext<ChatHandlerInterface | null>(null);
 const ChatHistoryContext = createContext<ChatHistoryInterface | null>(null);
 
-export function ChatHandlerWrapper({ children, workspace, thread, llmProvider }: { children: React.ReactNode, workspace: WorkspaceType, thread: WorkspaceThreadType, llmProvider: LLMProvider }) {
-    const { handler, history } = useChatHandler({ workspace, thread, llmProvider });
+export function ChatHandlerWrapper({ children, workspace, thread, llmProvider, ephemeral }: { children: React.ReactNode, workspace: WorkspaceType, thread: WorkspaceThreadType, llmProvider: LLMProvider, ephemeral?: boolean }) {
+    const { handler, history } = useChatHandler({ workspace, thread, llmProvider, ephemeral });
     return (
         <ChatHandlerContext.Provider value={handler}>
             <ChatHistoryContext.Provider value={history}>

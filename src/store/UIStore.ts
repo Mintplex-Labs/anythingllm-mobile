@@ -14,7 +14,10 @@ export type StorageKeys =
   'current_anythingllm_external_connection' |
   'anythingllm_external_connections' |
   'hf_imported_models' |
-  'provider_config_cache';
+  'provider_config_cache' |
+  'memories' |
+  'fs_cleanup_last_run' |
+  'highlights_last_seen_version';
 
 export const GLOBAL_EVENTS = {
   REDIRECT: 'REDIRECT',
@@ -28,6 +31,11 @@ export const GLOBAL_EVENTS = {
   MODEL_DOWNLOAD_COMPLETE: 'MODEL_DOWNLOAD_COMPLETE',
   ONBOARDING_COMPLETED: 'ONBOARDING_COMPLETED',
   ONBOARDING_RESET: 'ONBOARDING_RESET',
+  /**
+   * Another React root (the Quick Actions card) used the shared LLM provider with its own workspace and
+   * has gone away - mounted chat screens re-attach their workspace so RAG and the system prompt are right.
+   */
+  WORKSPACE_REATTACH_REQUESTED: 'WORKSPACE_REATTACH_REQUESTED',
 } as const;
 
 export class UIStore {
@@ -49,6 +57,9 @@ export class UIStore {
     'anythingllm_external_connections',
     'hf_imported_models',
     'provider_config_cache',
+    'memories',
+    'fs_cleanup_last_run',
+    'highlights_last_seen_version',
   ] as const;
 
   pageStates = {

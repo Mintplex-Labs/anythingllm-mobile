@@ -32,11 +32,13 @@
 
 ### Product Overview
 
-Most "AI apps" on your phone are a thin wrapper around someone else's server. AnythingLLM Mobile is different: it runs full language models directly on your Android device, so your chats, photos, and documents never have to leave your hand.
+AnythingLLM Mobile brings the **local-first** ethos of [AnythingLLM](https://github.com/Mintplex-Labs/anything-llm) to your phone. We believe intelligence should be private, instant, and available on every device you own, with all the context you want it to have.
 
-Want more horsepower? Pair it with your self-hosted AnythingLLM instance, or point it at Ollama, LM Studio, OpenRouter, or any OpenAI-compatible API. Either way, you decide where your data goes.
+Mobile devices, even the most cutting edge, are quite limited in models they can run before they overheat or run out of memory, so AnythingLLM Mobile takes a hybrid approach: **your phone is the agent harness**, and the model can live wherever makes sense for you. Run a small language model (SLM) right on the device, pair over your network with LM Studio, AnythingLLM Desktop, or llama.cpp, or connect to the cloud provider you already use. Wherever the tokens come from, your tools, documents, and chats stay on your device and run with the same care and token efficiency you get across every AnythingLLM product.
 
-AnythingLLM is **Local AI First**, and the mobile app is no exception. Everything you can do in the app works offline first - the cloud is _optional_.
+Just want private, offline chat? Download an SLM and you're done. Want more, like long-horizon research, document generation, or recurring background jobs? Point the app at on-premise compute or the cloud and keep going. Either way, your data is what makes your AI useful, and it never leaves your phone unless you decide it should.
+
+Basically imagine Openclaw or Heremes agent, but fully on-device first, with all the tools for true utility right out of the box, but no infrastructure to set-up or depend on.
 
 ### See it in action
 
@@ -45,7 +47,7 @@ AnythingLLM is **Local AI First**, and the mobile app is no exception. Everythin
     <td width="25%" align="center" valign="top">
       <video src="https://github.com/user-attachments/assets/a8cdb6fa-bcc5-4b5b-8223-d28c2f5d865b" width="100%" muted loop playsinline></video>
       <br /><b>Chat with your documents</b><br />
-      <sub>On-device RAG over PDFs, Word, Excel and more. Nothing leaves your phone.</sub>
+      <sub>On-device RAG over PDFs, Word, Excel and more. Embedding, vector db, and reranking all fully on device.</sub>
     </td>
     <td width="25%" align="center" valign="top">
       <video src="https://github.com/user-attachments/assets/d8fb22c9-3fe8-40e8-ba3c-43bcd06e98af" width="100%" muted loop playsinline></video>
@@ -103,18 +105,18 @@ AnythingLLM is **Local AI First**, and the mobile app is no exception. Everythin
 - 📝 **Ask with AnythingLLM** - Select text in any app and it appears in the selection toolbar. Polish, shorten, fix grammar or make it formal, or summarize, pull key points, explain and research what you're reading - with the model you chose, not the OEM assistant. Edits are ephemeral; summaries are saved as threads. Switch it off under Settings › Special tools.
 - 📤 **Share to AnythingLLM** - Send photos, documents and links from any app straight into a chat. Links are scraped, documents are parsed, and the empty thread suggests what to do with them.
 - ⏰ **Scheduled jobs** - Ask for a recurring task (a morning news digest, a weekly check-in) and the assistant runs it on schedule, even in the background.
-- 🔔 **Lock-screen notifications** - Get told when a reply finishes while your phone is locked.
+- 🔔 **Lock-screen notifications** - Get notified when a reply finishes while your phone is locked.
 
 **Chat**
 
 - 🎙️ **Voice input** - Tap the mic and talk. Speech-to-text uses your phone's native recognition and keeps up with natural pauses.
-- 🧠 **Memory** - The assistant remembers what you tell it, globally or per workspace, and recalls it when relevant. Long threads stay coherent with a rolling summary that keeps you inside the context window.
+- 🧠 **Memory** - A basic manually managed memory system, globally or per workspace, and recalls it when relevant.
 - 🛠️ **Built-in tools** - Web search, web page reading, summarization, location, time, calendar reading and creation, drafting emails or texts, creating files and scheduling jobs. Smart tool selection picks the right one so small models keep a workable context window.
-- 📎 **Documents** - Attach PDFs, Word, Excel, PowerPoint, text and more. On-device models retrieve the relevant passages; external providers get the full document. Files linked in chat are downloaded and read automatically.
+- 📎 **Documents** - Attach PDFs, Word, Excel, PowerPoint, text and more. On-device models retrieve the relevant passages with on device embedding and reranking for a local vector database.
 - 📄 **Create documents** - Generate Word, PDF, PowerPoint and text files from a conversation.
 - 💾 **Chat export** - PDF (images included), Markdown, JSON, or plain text.
-- ✨ **Thoughtful chat UX** - Chain-of-thought display, citations, fork and retry, auto-named threads, and more.
-- 🔒 **Privacy-first** - Your data stays on your device or your own server. No third-party telemetry.
+- ✨ **Familiar UX** - Chain-of-thought display, citations, fork and retry, auto-named threads, and more.
+- 🔒 **Privacy-first** - Your data, documents, and chat stays on your device.
 
 ### Supported Providers
 
@@ -157,9 +159,9 @@ Setup, on-device runtime notes, release builds and the project layout live in [D
 
 ## 🔗 Related Projects
 
-- **[AnythingLLM](https://github.com/Mintplex-Labs/anything-llm):** The all-in-one AI app for desktop and self-hosting.
-- **[AnythingLLM Embed](https://github.com/Mintplex-Labs/anythingllm-embed):** Embeddable chat widget for websites.
-- **[llama.rn](https://github.com/mybigday/llama.rn):** The runtime for running LLMs on-device.
+- **[AnythingLLM Server](https://github.com/Mintplex-Labs/anything-llm):** The all-in-one self-hostable image to bring AI to your organization.
+- **[AnythingLLM](https://github.com/Mintplex-Labs/anything-llm):** A powerful on-device desktop app for making AI private and productive.
+- **[llama.rn](https://github.com/mybigday/llama.rn):** For running models on mobile platforms - we use this & it is great!
 
 <div align="right">
 
@@ -171,7 +173,7 @@ Setup, on-device runtime notes, release builds and the project layout live in [D
 
 Copyright © 2025 [Mintplex Labs][profile-link]. <br />
 This project is licensed under the [GNU General Public License v3.0 or later](./LICENSE). <br />
-Releases prior to 1.2.0 were published under the MIT License and remain available under those terms. <br />
+_Releases prior to 1.2.0 were published under the MIT License and remain available under those terms._ <br />
 Contributors must sign our [Contributor License Agreement](./CLA.md) - a bot will prompt you on your first pull request.
 
 <!-- LINK GROUP -->

@@ -120,13 +120,6 @@ export function tourCards(): HighlightCard[] {
   return HIGHLIGHTS.filter((card) => card.tour);
 }
 
-/** Cards that shipped in exactly this version - the Settings "what's new" entry */
-export function cardsForVersion(current: string = DeviceInfo.getVersion()): HighlightCard[] {
-  const target = normalize(current);
-  if (!target) return [];
-  return HIGHLIGHTS.filter((card) => normalize(card.since) === target);
-}
-
 /** Upgrade deck: everything since `lastSeen`, or null when there is nothing to show */
 export function whatsNewDeck(lastSeen: string | null, current: string = DeviceInfo.getVersion()): HighlightsDeck | null {
   const cards = cardsSince(lastSeen, current);
@@ -134,16 +127,9 @@ export function whatsNewDeck(lastSeen: string | null, current: string = DeviceIn
   return { title: "What's new", cards };
 }
 
-/** Evergreen deck for fresh installs and the Settings "tour" row */
+/** Evergreen deck for fresh installs */
 export function tourDeck(): HighlightsDeck | null {
   const cards = tourCards();
   if (!cards.length) return null;
   return { title: 'What AnythingLLM can do', cards };
-}
-
-/** Exactly this release's cards for the Settings "what's new" row */
-export function versionDeck(current: string = DeviceInfo.getVersion()): HighlightsDeck | null {
-  const cards = cardsForVersion(current);
-  if (!cards.length) return null;
-  return { title: `What's new in v${current}`, cards };
 }

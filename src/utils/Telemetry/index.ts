@@ -53,6 +53,8 @@ class Telemetry {
             /** A scheduled job was created (payload: tools count, notify) */
             SCHEDULED_JOB_CREATED: 'scheduled_job_created',
             SCHEDULED_JOB_RAN: 'scheduled_job_ran',
+            /** The feature highlights carousel was dismissed (payload: audience new_user|upgrade, cards) */
+            HIGHLIGHTS_VIEWED: 'highlights_viewed',
 
             /** The user use the QR code to connect to an AnythingLLM intance */
             EXTERNAL_CONNECTION_ESTABLISHED: 'external_connection_established',

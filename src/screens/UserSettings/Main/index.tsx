@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   ArrowLeft,
   CaretRight,
+  Compass,
   File,
   DiscordLogo,
   FileText,
@@ -11,6 +12,7 @@ import {
   GithubLogo,
   MoneyWavy,
   Scroll,
+  Sparkle,
   TextAa,
 } from 'phosphor-react-native';
 import { isQuickContextAvailable } from '@/quickContext';
@@ -38,6 +40,9 @@ import ApkVersion from './ApkVersion';
 import DeviceInfo from 'react-native-device-info';
 import { getChangelogForVersion } from '@/utils/changelog';
 import ChangelogModal from '@/components/ChangelogModal';
+import HighlightsCarousel from '@/components/Highlights';
+import { tourDeck, versionDeck, type HighlightsDeck } from '@/utils/highlights';
+import { navigateWhenReady } from '@/utils/navigationRef';
 
 interface MainViewProps {
   goToPage: (page: IWorkspacePageKey) => void;
@@ -106,6 +111,8 @@ const LEGAL_LINKS: SupportLink[] = [
 ]
 
 const changelogEntry = getChangelogForVersion(DeviceInfo.getVersion());
+const whatsNew = versionDeck(DeviceInfo.getVersion());
+const tour = tourDeck();
 
 export function MainView({ goToPage }: MainViewProps) {
   const navigation = useNavigation();
@@ -113,6 +120,7 @@ export function MainView({ goToPage }: MainViewProps) {
   const { llmPreferences, providerToName } = useLLMPreference();
   const scrollViewRef = useRef<ScrollView>(null);
   const [changelogVisible, setChangelogVisible] = useState(false);
+  const [highlightsDeck, setHighlightsDeck] = useState<HighlightsDeck | null>(null);
   function goBack() {
     navigation.reset({
       index: 0,
@@ -259,9 +267,25 @@ export function MainView({ goToPage }: MainViewProps) {
                 gap: 12,
                 borderRadius: 8,
               }}>
+              {whatsNew && (
+                <SupportItem
+                  title="See what's new"
+                  icon={<Sparkle size={18} color="#FFF" />}
+                  onPress={() => setHighlightsDeck(whatsNew)}
+                  borderBottom={!!tour || !!changelogEntry || ABOUT_LINKS.length > 0}
+                />
+              )}
+              {tour && (
+                <SupportItem
+                  title="Take the tour"
+                  icon={<Compass size={18} color="#FFF" />}
+                  onPress={() => setHighlightsDeck(tour)}
+                  borderBottom={!!changelogEntry || ABOUT_LINKS.length > 0}
+                />
+              )}
               {changelogEntry && (
                 <SupportItem
-                  title={`What's new in v${changelogEntry.version}`}
+                  title={`Release notes for v${changelogEntry.version}`}
                   icon={<Scroll size={18} color="#FFF" />}
                   onPress={() => setChangelogVisible(true)}
                   borderBottom={ABOUT_LINKS.length > 0}
@@ -359,6 +383,12 @@ export function MainView({ goToPage }: MainViewProps) {
           onClose={() => setChangelogVisible(false)}
         />
       )}
+      <HighlightsCarousel
+        visible={!!highlightsDeck}
+        deck={highlightsDeck}
+        onClose={() => setHighlightsDeck(null)}
+        onCta={(cta) => navigateWhenReady(cta.route, cta.params)}
+      />
     </SafeView>
   );
 }

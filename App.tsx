@@ -29,6 +29,7 @@ import { useOnboardingCompleted } from '@/hooks/useOnboardingHook';
 import { purgeOrphanedFiles } from '@/utils/fs/cleanup';
 import { useScheduledJobsTicker } from '@/utils/ScheduledJobs/scheduler';
 import { useSharedContentNavigation } from '@/utils/SharedContent';
+import HighlightsHost from '@/components/Highlights/HighlightsHost';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
@@ -202,6 +203,8 @@ const App = observer(() => {
                         />
                       </WorkspaceDrawer>
                     </NavigationContainer>
+                    {/* Shows what's new once after onboarding and once per update that ships highlights */}
+                    <HighlightsHost />
                   </BottomSheetModalProvider>
                 </LLMPreferenceProvider>
               </PaperProvider>

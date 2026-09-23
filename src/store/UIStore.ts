@@ -16,7 +16,8 @@ export type StorageKeys =
   'hf_imported_models' |
   'provider_config_cache' |
   'memories' |
-  'fs_cleanup_last_run';
+  'fs_cleanup_last_run' |
+  'highlights_last_seen_version';
 
 export const GLOBAL_EVENTS = {
   REDIRECT: 'REDIRECT',
@@ -58,6 +59,7 @@ export class UIStore {
     'provider_config_cache',
     'memories',
     'fs_cleanup_last_run',
+    'highlights_last_seen_version',
   ] as const;
 
   pageStates = {

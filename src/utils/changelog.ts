@@ -19,6 +19,7 @@ const CHANGELOG: ChangelogEntry[] = [
       '- **Faster on-device replies** — prompt layout preserves the KV cache between turns; Anthropic prompt caching on by default',
       '- **Redesigned new-workspace flow**',
       '- **Linked files are read automatically** when the link points to a parseable document',
+      '- **New provider: llmman** — connect to a self-hosted llmman server',
       '- Bug fixes: sidebar refresh after onboarding, rotated images in PDF export, stale files cleaned from disk',
       '- **License** — now GPLv3 to keep the project free and open',
     ].join('\n'),

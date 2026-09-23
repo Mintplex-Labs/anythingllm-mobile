@@ -122,13 +122,14 @@ Basically imagine Openclaw or Heremes agent, but fully on-device first, with all
 
 | Provider | Type |
 |----------|------|
-| On-device (GGUF via llama.rn) | Local inference, works offline |
-| AnythingLLM Instance | Your own desktop or server (LAN/remote) |
-| Ollama | Local/remote |
-| LM Studio | Local/remote |
-| LocalAI | Local/remote |
-| Lemonade | Local/remote |
-| LiteLLM | Local/remote |
+| On-device (GGUF via [llama.rn](https://github.com/mybigday/llama.rn)) | Local inference, works offline |
+| [AnythingLLM Instance](https://github.com/Mintplex-Labs/anything-llm) | Your own desktop or server (LAN/remote) |
+| [Ollama](https://github.com/ollama/ollama) | Local/remote |
+| [LM Studio](https://lmstudio.ai) | Local/remote |
+| [LocalAI](https://github.com/mudler/LocalAI) | Local/remote |
+| [Lemonade](https://github.com/lemonade-sdk/lemonade) | Local/remote |
+| [llmman](https://github.com/llmmanorg/llmman) | Local/remote |
+| [LiteLLM](https://github.com/BerriAI/litellm) | Local/remote |
 | Anthropic | Cloud |
 | AWS Bedrock | Cloud |
 | DeepSeek | Cloud |

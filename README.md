@@ -38,30 +38,34 @@ Want more horsepower? Pair it with your self-hosted AnythingLLM instance, or poi
 
 AnythingLLM is **Local AI First**, and the mobile app is no exception. Everything you can do in the app works offline first — the cloud is optional, never required.
 
-### What's new in 1.1.0
-
-This release turns AnythingLLM Mobile from a chat app into a proper assistant.
-
-- 👁️ **Vision Support** Attach a photo and ask about it. Vision runs on-device.
-- 🎙️ **Speech to text** Tap the mic and just talk. Speech-to-text uses your phone's native recognition.
-- 🧠 **Agentic memory** Long threads stay coherent with a rolling summary that keeps you inside the context window instead of hitting a wall.
-- 🛠️ **Smart tool selection** Smarter tool selection means the model picks web search, scraping, or summarizing when it actually helps keeping context windows workable for small models.
-- 🤗 **Download direct from HuggingFace** Search Hugging Face right in the app, pick a model, and download it.
-- 📄 **Export Chats** Export any thread to PDF (images included), Markdown, JSON, or plain text.
-- 📈 **Tuned to your device.** Context windows and capabilities scale to your phone's RAM, so you get the most out of whatever you're holding.
-
 ### Features
+
+**Models**
 
 - **On-device LLM inference** — Run GGUF models locally with [llama.rn](https://github.com/mybigday/llama.rn) (llama.cpp for React Native). Works with no signal at all.
 - **On-device vision** — Attach images and chat about them using multimodal models, fully offline.
-- **Voice input** — Speak your prompts with native OS speech recognition.
-- **Built-in tools** — Web search, web page reading, summarization, location, time, calendar, and drafting emails or texts.
-- **Hugging Face model browser** — Discover, download, and manage models without leaving the app.
+- **Hugging Face model browser** — Discover, download, and manage models without leaving the app, with a fit badge that tells you whether a model will run well on your phone.
+- **Tuned to your device** — Context windows and capabilities scale to your phone's RAM; prompts are laid out to preserve the KV cache between turns so on-device replies start fast.
 - **Connect to AnythingLLM** — Pair with your desktop or server instance for full workspace and document chat.
-- **Bring your own provider** — Ollama, LM Studio, OpenRouter, or any OpenAI-compatible API, with automatic model discovery.
-- **Chat export** — PDF, Markdown, JSON, or text.
-- **Thoughtful chat UX** — Chain-of-thought display, citations, fork and retry, auto-named threads, and more.
-- **Privacy-first** — Your data stays on your device or your own server. No third-party telemetry.
+- **Bring your own provider** — Ollama, LM Studio, OpenRouter, Anthropic, OpenAI, or any OpenAI-compatible API, with automatic model discovery and prompt caching where the provider supports it.
+
+**Everywhere on your phone**
+
+- 📝 **Ask with AnythingLLM** — Select text in any app and it appears in the selection toolbar. Polish, shorten, fix grammar or make it formal, or summarize, pull key points, explain and research what you're reading — with the model you chose, not the OEM assistant. Edits are ephemeral; summaries are saved as threads. Switch it off under Settings › Special tools.
+- 📤 **Share to AnythingLLM** — Send photos, documents and links from any app straight into a chat. Links are scraped, documents are parsed, and the empty thread suggests what to do with them.
+- ⏰ **Scheduled jobs** — Ask for a recurring task (a morning news digest, a weekly check-in) and the assistant runs it on schedule, even in the background.
+- 🔔 **Lock-screen notifications** — Get told when a reply finishes while your phone is locked.
+
+**Chat**
+
+- 🎙️ **Voice input** — Tap the mic and talk. Speech-to-text uses your phone's native recognition and keeps up with natural pauses.
+- 🧠 **Memory** — The assistant remembers what you tell it, globally or per workspace, and recalls it when relevant. Long threads stay coherent with a rolling summary that keeps you inside the context window.
+- 🛠️ **Built-in tools** — Web search, web page reading, summarization, location, time, calendar reading and creation, drafting emails or texts, creating files and scheduling jobs. Smart tool selection picks the right one so small models keep a workable context window.
+- 📎 **Documents** — Attach PDFs, Word, Excel, PowerPoint, text and more. On-device models retrieve the relevant passages; external providers get the full document. Files linked in chat are downloaded and read automatically.
+- 📄 **Create documents** — Generate Word, PDF, PowerPoint and text files from a conversation.
+- 💾 **Chat export** — PDF (images included), Markdown, JSON, or plain text.
+- ✨ **Thoughtful chat UX** — Chain-of-thought display, citations, fork and retry, auto-named threads, and more.
+- 🔒 **Privacy-first** — Your data stays on your device or your own server. No third-party telemetry.
 
 ### Supported Providers
 
@@ -93,78 +97,9 @@ This release turns AnythingLLM Mobile from a chat app into a proper assistant.
 - [x] Android
 - [ ] iOS
 
-## How to setup for development
+## 🛠️ Development
 
-### Prerequisites
-
-- Node.js >= 18
-- Yarn
-- React Native development environment ([setup guide](https://reactnative.dev/docs/environment-setup))
-- Android SDK (for Android builds)
-- Xcode (for iOS builds, macOS only)
-
-### Getting Started
-
-```bash
-# Install dependencies
-yarn install
-
-# Start Metro bundler
-yarn start
-
-# Run on Android
-yarn android
-
-# Run on iOS (macOS only)
-cd ios && pod install && cd ..
-npx react-native run-ios
-```
-
-### On-device runtime (llama.rn)
-
-On-device inference uses [llama.rn](https://github.com/mybigday/llama.rn), which requires the React Native
-**New Architecture** (`newArchEnabled=true` in `android/gradle.properties`). During `yarn install` its
-postinstall script downloads the prebuilt `librnllama*.so` libraries from the matching GitHub release into
-`node_modules/llama.rn/android/src/main/jniLibs`.
-
-If that download fails (no network, or on Windows when `yarn` runs inside Git Bash where GNU `tar` mis-reads
-the `C:` drive letter as a remote host) re-run it from PowerShell / cmd:
-
-```bash
-node ./node_modules/llama.rn/install/download-native-artifacts.js --force
-```
-
-### Building for Release
-
-1. Place your `anythingllm-upload-key.keystore` in `android/app/`
-2. Set `APP_RELEASE_STORE_PASSWORD` and `APP_RELEASE_KEY_PASSWORD` environment variables
-3. Run `yarn build:android:release`
-4. Output will be in the `release/` folder
-
-## Technical Overview
-
-This is a React Native application targeting Android (with iOS support planned). Key technologies:
-
-- **React Native 0.76** — Core framework
-- **NativeWind / Tailwind CSS** — Styling
-- **MobX** — State management
-- **WatermelonDB** — Local database
-- **llama.rn** — On-device LLM inference (llama.cpp bindings, requires the React Native New Architecture)
-- **React Navigation** — Routing and navigation
-
-### Project Structure
-
-```
-src/
-├── components/     # Reusable UI components
-├── contexts/       # React contexts
-├── database/       # WatermelonDB models & schema
-├── hooks/          # Custom React hooks
-├── screens/        # App screens
-├── services/       # Business logic & API services
-├── store/          # MobX stores
-└── utils/          # Utilities & AI provider implementations
-```
+Setup, on-device runtime notes, release builds and the project layout live in [DEVELOPMENT.md](./DEVELOPMENT.md).
 
 ## 👋 Contributing
 

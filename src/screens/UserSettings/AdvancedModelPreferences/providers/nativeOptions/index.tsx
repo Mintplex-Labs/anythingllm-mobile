@@ -11,6 +11,7 @@ import HuggingFaceImport from '@/components/HuggingFaceImport';
 import AddFromHuggingFaceCard from '@/components/HuggingFaceImport/AddCard';
 import ImportedModels, { ImportedModel } from '@/utils/models/imported';
 import useModelFit from '@/hooks/useModelFit';
+import { consumePendingHfPull, PendingHfPull } from '@/utils/DeepLinks';
 
 interface NativeOptionsProps {
   llmPreferences: any;
@@ -26,12 +27,15 @@ export default function NativeOptions({
   const [availableModels, setAvailableModels] = useState<any[]>([]);
   const [showAllModels, setShowAllModels] = useState(false);
   const [showImport, setShowImport] = useState(false);
+  // Set when the picker was opened by an anythingllm://pull-hf link: the repo to show and the file to highlight.
+  const [importPull, setImportPull] = useState<PendingHfPull | null>(null);
   const {
     modelDownloadUrl,
     downloadProgress,
     selectedModel,
     downloadModel,
     uninstallModel,
+    runPreDownloadConfirmations,
   } = useModelManager({ llmPreferences, fetchLLMPreference, LLMProvider });
 
   const fetchModels = useCallback(async () => {
@@ -51,15 +55,28 @@ export default function NativeOptions({
     fetchModels();
   }, [fetchModels]);
 
+  // Hugging Face "Use this model" deep link: open the picker on the requested repo with the file
+  // highlighted. Downloading still goes through the regular confirmation in `downloadModel`.
+  useEffect(() => {
+    const pull = consumePendingHfPull();
+    if (!pull) return;
+    setImportPull(pull);
+    setShowImport(true);
+  }, []);
+
+  const closeImport = () => {
+    setShowImport(false);
+    setImportPull(null);
+  };
+
   /**
-   * The user picked a quant in the import modal: persist it, refresh the list so the
-   * new card is visible with its progress bar, then run the regular download flow.
+   * The user picked a quant in the import modal. Run the usual network / size confirmations
+   * while the modal is still up so a "Cancel" leaves them on the quant list. Once approved:
+   * persist it, refresh the list so the new card is visible with its progress bar, close the
+   * modal and download.
    */
   const importAndDownload = async (imported: ImportedModel) => {
-    await ImportedModels.add(imported);
-    await fetchModels();
-    setShowImport(false);
-    const started = await downloadModel({
+    const model = {
       id: imported.modelId,
       modelId: imported.modelId,
       name: imported.name,
@@ -69,7 +86,13 @@ export default function NativeOptions({
       isPreset: false,
       isImported: true,
       provider: imported.author,
-    });
+    };
+    const onDisk = await RNFS.exists(resolveDestinationPathFromGGUFUrl(model.downloadUrl));
+    if (!onDisk && !(await runPreDownloadConfirmations(model))) return false;
+    await ImportedModels.add(imported);
+    await fetchModels();
+    closeImport();
+    const started = await downloadModel(model, false);
     await fetchModels(); // pick up isDownloaded once the download settles
     return started;
   };
@@ -129,15 +152,17 @@ export default function NativeOptions({
         visible={showImport}
         animationType="slide"
         presentationStyle="fullScreen"
-        onRequestClose={() => setShowImport(false)}>
+        onRequestClose={closeImport}>
         <SafeAreaView style={{ flex: 1, backgroundColor: '#1B1B1E' }}>
           <View className="flex-1 pt-3">
             <HuggingFaceImport
+              initialQuery={importPull?.repo ?? ''}
+              highlightFilename={importPull?.file ?? undefined}
               onDownload={importAndDownload}
               installedModelIds={availableModels.filter(m => m.isImported && m.isDownloaded).map(m => m.modelId)}
               activeDownloadUrl={modelDownloadUrl}
               downloadProgress={downloadProgress}
-              onBack={() => setShowImport(false)}
+              onBack={closeImport}
               useStandardFlatList
             />
           </View>

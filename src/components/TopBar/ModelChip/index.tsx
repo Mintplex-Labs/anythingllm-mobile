@@ -25,6 +25,8 @@ import { ArrowsClockwise, Check, MagnifyingGlass, Tag, WarningCircle, X } from '
 import { findIconByModelName, findIconByProvider } from '@/components/MonoProviderIcon';
 import useLlmPreference from '@/hooks/useLLMPreference';
 import useModelManager from '@/hooks/useModelManager';
+import * as RNFS from '@dr.pogodin/react-native-fs';
+import { resolveDestinationPathFromGGUFUrl } from '@/utils/models/defaults';
 import {
   useBottomSheet,
   BOTTOM_SHEET_NAMES,
@@ -205,6 +207,7 @@ function AvailableModels({
     downloadModel,
     uninstallModel,
     selectModel,
+    runPreDownloadConfirmations,
   } = useModelManager({ llmPreferences, fetchLLMPreference, LLMProvider });
 
   const fetchModels = useCallback(async () => {
@@ -226,15 +229,11 @@ function AvailableModels({
   };
 
   /**
-   * The user picked a quant in the import view: remember it so it shows up in the
-   * list (and survives restarts), then hand it to the regular download flow so the
-   * usual network / size confirmations and progress reporting apply.
+   * The user picked a quant in the import view. Run the usual network / size confirmations
+   * first so a "Cancel" leaves them on the quant list; only once approved do we remember the
+   * model so it shows up in the list (and survives restarts), go back to the list and download.
    */
   const importAndDownload = async (imported: ImportedModel) => {
-    await ImportedModels.add(imported);
-    await fetchModels();
-    setView('list');
-    setSearchQuery('');
     const model: AvailableModel = {
       id: imported.modelId,
       modelId: imported.modelId,
@@ -246,7 +245,13 @@ function AvailableModels({
       isImported: true,
       provider: imported.author,
     };
-    return downloadModel(model);
+    const onDisk = await RNFS.exists(resolveDestinationPathFromGGUFUrl(model.downloadUrl));
+    if (!onDisk && !(await runPreDownloadConfirmations(model))) return false;
+    await ImportedModels.add(imported);
+    await fetchModels();
+    setView('list');
+    setSearchQuery('');
+    return downloadModel(model, false);
   };
 
   const filteredModels = useMemo(() => {

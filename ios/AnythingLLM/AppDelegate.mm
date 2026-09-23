@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
+#import <React/RCTLinkingManager.h>
 #import <RNFSBackgroundDownloads.h>
 #import "SharedContentModule.h"
 
@@ -32,11 +33,13 @@
 
 /**
  * Files shared to the app (share sheet / "Open in", via the document types in Info.plist) arrive here
- * as file URLs. SharedContentModule copies them and hands them to JS.
+ * as file URLs. SharedContentModule copies them and hands them to JS. Anything else (anythingllm://
+ * deep links, see CFBundleURLTypes) goes to React Native's Linking module.
  */
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
 {
-  return [SharedContentModule handleOpenURL:url options:options];
+  if ([SharedContentModule handleOpenURL:url options:options]) return YES;
+  return [RCTLinkingManager application:application openURL:url options:options];
 }
 
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler

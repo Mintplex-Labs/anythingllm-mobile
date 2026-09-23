@@ -29,6 +29,7 @@ import { useOnboardingCompleted } from '@/hooks/useOnboardingHook';
 import { purgeOrphanedFiles } from '@/utils/fs/cleanup';
 import { useScheduledJobsTicker } from '@/utils/ScheduledJobs/scheduler';
 import { useSharedContentNavigation } from '@/utils/SharedContent';
+import { useDeepLinkNavigation } from '@/utils/DeepLinks';
 import HighlightsHost from '@/components/Highlights/HighlightsHost';
 
 const Drawer = createDrawerNavigator();
@@ -37,6 +38,8 @@ const App = observer(() => {
   useNotificationTapNavigation();
   // Files and images other apps share to AnythingLLM open in a new thread with the content attached.
   useSharedContentNavigation();
+  // anythingllm:// links, eg. Hugging Face "Use this model" opening the on-device model picker.
+  useDeepLinkNavigation();
   // Runs due scheduled jobs while the app is open and keeps the background wake-up armed.
   useScheduledJobsTicker();
   const theme = useTheme();

@@ -58,6 +58,17 @@
         </intent-filter>
 
         <!--
+          anythingllm:// deep links (eg. Hugging Face "Use this model" -> anythingllm://pull-hf?repo=...&file=...).
+          Same scheme as AnythingLLM Desktop. Handled in JS by src/utils/DeepLinks.
+        -->
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="anythingllm" />
+        </intent-filter>
+
+        <!--
           Share sheet destination: images and the document types our parser understands
           (see utils/DocumentParser/registry.ts - keep these in sync). Handled by SharedContentModule.
         -->

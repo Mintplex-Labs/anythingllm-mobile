@@ -11,6 +11,7 @@ import ProviderSelection from '@/components/LLMSelection/ProviderSelection';
 import Telemetry from '@/utils/Telemetry';
 import { findProviderDefinition, type ProviderConfig } from '@/utils/llmproviders';
 import useProviderConfigCache from '@/hooks/useProviderConfigCache';
+import { peekPendingHfPull } from '@/utils/DeepLinks';
 
 import NativeOptions from './providers/nativeOptions';
 import LMStudioOptions from './providers/LMStudioOptions';
@@ -64,6 +65,15 @@ export default function AdvancedModelPreferences({
     const cached = await configCache.restore(provider);
     await updateLLMPreference(provider, cached ?? { ...(definition?.defaultConfig ?? {}) });
   }
+
+  // An anythingllm://pull-hf link (Hugging Face "Use this model") brought us here: the model has to run
+  // on-device, so move to that provider first. NativeOptions then consumes the pending pull and opens
+  // the picker on the requested repo once it mounts.
+  useEffect(() => {
+    if (!peekPendingHfPull()) return;
+    if (llmPreferences.provider !== 'native') handleProviderSelection('native');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const renderProviderOptions = () => {
     switch (llmPreferences.provider) {

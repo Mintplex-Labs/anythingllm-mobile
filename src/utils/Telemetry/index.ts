@@ -42,6 +42,8 @@ class Telemetry {
             IMAGE_ATTACHED: 'image_attached',
             /** Another app shared files/images to AnythingLLM through the share sheet (payload: files, images) */
             CONTENT_SHARED: 'content_shared',
+            /** An anythingllm://pull-hf link (Hugging Face "Use this model") opened the on-device picker (payload: repo, hasFile) */
+            HF_PULL_LINK_OPENED: 'hf_pull_link_opened',
             /** Text highlighted in another app was sent to the Quick Actions card (payload: mode, action) */
             QUICK_CONTEXT_USED: 'quick_context_used',
             /** The selection-toolbar entry was switched on or off in Settings > Special tools (payload: enabled) */

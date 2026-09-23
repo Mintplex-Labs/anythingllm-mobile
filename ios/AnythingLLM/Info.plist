@@ -74,6 +74,21 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<!--
+	  anythingllm:// deep links (eg. Hugging Face "Use this model" -> anythingllm://pull-hf?repo=...&file=...).
+	  Same scheme as AnythingLLM Desktop. AppDelegate forwards them to RCTLinkingManager; handled in JS by src/utils/DeepLinks.
+	-->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.anythingllm</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>anythingllm</string>
+			</array>
+		</dict>
+	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>

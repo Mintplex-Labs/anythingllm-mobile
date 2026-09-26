@@ -1,6 +1,6 @@
 import { getApp } from '@react-native-firebase/app'
 import { getAnalytics, logEvent, setAnalyticsCollectionEnabled } from '@react-native-firebase/analytics'
-import { getCrashlytics, setCrashlyticsCollectionEnabled } from '@react-native-firebase/crashlytics'
+import { getCrashlytics, log as logCrashlytics, recordError, setCrashlyticsCollectionEnabled } from '@react-native-firebase/crashlytics'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isDebugMode } from '@/utils/constants';
 
@@ -110,6 +110,17 @@ class Telemetry {
         if (!this.enabled) return;
         if (isDebugMode) this.log(`Tracking event: ${name}`, params);
         logEvent(this.analytics!, name, params);
+    }
+
+    /**
+     * Report an error the app recovered from (eg. caught by an error boundary) to Crashlytics as a
+     * non-fatal issue. Uncaught errors are reported automatically by Crashlytics' global handler.
+     * @param context - extra detail logged alongside the report, eg. the React component stack
+     */
+    recordError(error: Error, context?: string) {
+        if (!this.enabled || !this.crashlytics) return;
+        if (context) logCrashlytics(this.crashlytics, context.slice(0, 2000));
+        recordError(this.crashlytics, error);
     }
 
     /** Whether anonymous telemetry is currently on. Resolves once the stored setting has been read. */

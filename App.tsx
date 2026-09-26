@@ -31,6 +31,7 @@ import { useScheduledJobsTicker } from '@/utils/ScheduledJobs/scheduler';
 import { useSharedContentNavigation } from '@/utils/SharedContent';
 import { useDeepLinkNavigation } from '@/utils/DeepLinks';
 import HighlightsHost from '@/components/Highlights/HighlightsHost';
+import ErrorBoundary, { RootErrorFallback } from '@/components/ErrorBoundary';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
@@ -51,8 +52,12 @@ const App = observer(() => {
   // Once onboarding completes its screens are removed from the drawer, but initialRoute was
   // resolved at launch and may still name one of them. React Navigation 7 throws on an unknown
   // initialRouteName (v6 ignored it), so fall back to Home in that case.
+  // Set when the user leaves the root error screen with "Go Home" - the remounted navigator
+  // must not reopen the launch route, which may be the screen that crashed.
+  const [recoveredFromError, setRecoveredFromError] = React.useState(false);
   const drawerInitialRoute =
-    onboardingCompleted && Object.values(PATHS.onboarding).includes(initialRoute.path)
+    onboardingCompleted &&
+    (recoveredFromError || Object.values(PATHS.onboarding).includes(initialRoute.path))
       ? PATHS.home
       : initialRoute.path;
 
@@ -87,6 +92,11 @@ const App = observer(() => {
               prompt after a message has been sent. Nothing in the app consumed
               its values; keyboard height comes from RN's Keyboard events instead.
             */}
+            {/* Any render error below shows an error screen instead of closing the app */}
+            <ErrorBoundary
+              name="root"
+              fallback={(props) => <RootErrorFallback {...props} />}
+              onReset={() => setRecoveredFromError(true)}>
               <PaperProvider theme={theme}>
                 <LLMPreferenceProvider>
                   <BottomSheetModalProvider>
@@ -211,6 +221,7 @@ const App = observer(() => {
                   </BottomSheetModalProvider>
                 </LLMPreferenceProvider>
               </PaperProvider>
+            </ErrorBoundary>
           </SafeAreaProvider>
         </GestureHandlerRootView>
       </Suspense>

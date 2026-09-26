@@ -26,7 +26,7 @@ interface NumericInputViewProps {
     hint?: string;
     placeholder: string;
     reattachProviderOnSave?: boolean;
-    suggestions?: string[];
+    suggestions?: (string | number)[];
 }
 
 const DEFAULT_SAVE_STATUS = {
@@ -149,7 +149,7 @@ export function NumericInputView({ workspace, goToPage, field, title, placeholde
                             {suggestions
                                 .filter((suggestion) => suggestion.toString() !== text)
                                 .map((suggestion) => (
-                                    <TouchableOpacity key={suggestion} style={{ paddingHorizontal: 10, paddingVertical: 5 }} onPress={() => handleValueChange(suggestion)} className="flex flex-row items-center justify-center bg-white/10 rounded-full">
+                                    <TouchableOpacity key={suggestion} style={{ paddingHorizontal: 10, paddingVertical: 5 }} onPress={() => handleValueChange(suggestion.toString())} className="flex flex-row items-center justify-center bg-white/10 rounded-full">
                                         <Text className="text-white">{suggestion}</Text>
                                     </TouchableOpacity>
                                 ))}

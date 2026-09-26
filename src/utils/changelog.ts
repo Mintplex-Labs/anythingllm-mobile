@@ -5,6 +5,12 @@ type ChangelogEntry = {
 
 const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.2.2',
+    content: [
+      '- **Fixed a crash** when tapping a suggested context length in workspace settings',
+    ].join('\n'),
+  },
+  {
     version: '1.2.1',
     content: [
       '- **Fewer crashes** — a screen or message that fails to load now shows an error instead of closing the app',

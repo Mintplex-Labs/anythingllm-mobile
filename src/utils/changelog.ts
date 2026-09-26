@@ -5,6 +5,14 @@ type ChangelogEntry = {
 
 const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.2.1',
+    content: [
+      '- **Fewer crashes** — a screen or message that fails to load now shows an error instead of closing the app',
+      '- **Crash reports** — crashes are reported automatically so we can fix them faster. Follows your Anonymous telemetry setting',
+      '- **Report on GitHub** — with telemetry off, error screens let you copy the error or open a pre-filled GitHub issue',
+    ].join('\n'),
+  },
+  {
     version: '1.2.0',
     content: [
       '- **Ask with AnythingLLM** — select text in any app and tap it to polish, shorten, summarize or explain with your model. Turn off under Settings > Special tools',

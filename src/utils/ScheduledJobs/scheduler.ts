@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { AppState, NativeModules, Platform } from 'react-native';
 import ScheduledJob from '@/database/models/ScheduledJob';
 import ScheduledJobRunner from './runner';
+import { hydrateLanguage } from '@/i18n';
 
 /**
  * Wakes the runner at the right times.
@@ -76,6 +77,8 @@ export async function tick(trigger: 'foreground' | 'background'): Promise<void> 
 export async function runHeadlessScheduledJobs(): Promise<void> {
     log('Headless task started');
     try {
+        // Notifications fired by this pass use the language picked in Settings
+        await hydrateLanguage();
         await tick('background');
     } finally {
         log('Headless task finished');

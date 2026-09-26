@@ -8,6 +8,7 @@ import { PATHS } from "@/utils/paths";
 import useRedirect from "@/hooks/useRedirect";
 import { useEffect, useState } from "react";
 import { resolveDefaultChatRoute } from "@/utils/defaultChatRoute";
+import { useTranslation } from "react-i18next";
 
 const eventEmitter = new NativeEventEmitter();
 
@@ -18,6 +19,7 @@ const eventEmitter = new NativeEventEmitter();
  */
 export default function Home() {
   useRedirect();
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const [checkingWorkspaces, setCheckingWorkspaces] = useState(true);
 
@@ -36,7 +38,7 @@ export default function Home() {
   }, []);
 
   async function createWorkspace() {
-    await Workspace.create({ name: 'My Workspace' })
+    await Workspace.create({ name: t('home.default_workspace_name') })
       .then((workspace) => {
         eventEmitter.emit('workspaceUpdate', {
           type: 'add-workspace',
@@ -66,13 +68,13 @@ export default function Home() {
         ) : (
           <>
             <View className="flex flex-col items-center justify-center gap-y-1">
-              <Text className="text-2xl font-bold text-white">Welcome to AnythingLLM</Text>
+              <Text className="text-2xl font-bold text-white">{t('home.welcome_title')}</Text>
               <Text className="text-white text-center">
-                Get started by creating a new workspace.
+                {t('home.get_started')}
               </Text>
             </View>
             <TouchableOpacity activeOpacity={0.8} style={{ minWidth: 200 }} className="rounded-lg bg-white/10  py-2 px-4" onPress={createWorkspace}>
-              <Text className="text-white text-center text-xl">Create Workspace</Text>
+              <Text className="text-white text-center text-xl">{t('home.create_workspace')}</Text>
             </TouchableOpacity>
           </>
         )}

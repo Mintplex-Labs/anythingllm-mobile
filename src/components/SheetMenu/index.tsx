@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { CaretLeft, CaretRight } from 'phosphor-react-native';
+import { useTranslation } from 'react-i18next';
 
 /** Shared palette for the dark option sheets (thread menu, message actions, ...) */
 export const SHEET_BACKGROUND = '#1B1B1E';
@@ -11,6 +12,7 @@ export const DANGER = '#F97066';
 
 /** Centered title with optional back caret and a single-line muted subtitle */
 export function SheetHeader({ title, subtitle, onBack }: { title: string; subtitle?: string; onBack?: () => void }) {
+  const { t } = useTranslation();
   return (
     <View style={{ marginBottom: 18 }} className="flex flex-col items-center">
       <View className="flex w-full flex-row items-center justify-center" style={{ minHeight: 28 }}>
@@ -19,7 +21,7 @@ export function SheetHeader({ title, subtitle, onBack }: { title: string; subtit
             onPress={onBack}
             style={{ position: 'absolute', left: 0 }}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            accessibilityLabel="Back">
+            accessibilityLabel={t('common.back')}>
             <CaretLeft size={24} color="#FFF" />
           </TouchableOpacity>
         )}

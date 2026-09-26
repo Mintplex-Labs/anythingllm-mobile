@@ -1,4 +1,5 @@
 import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
+import i18n from "@/i18n";
 
 export type ILocation = {
     country: string;
@@ -16,8 +17,8 @@ export type ILocation = {
 
 export default {
     id: 'getLocation',
-    name: 'Get Location',
-    description: 'Get your approximate location. This will return the city, state, and country. ',
+    get name() { return i18n.t('tools.get_location.name'); },
+    get description() { return i18n.t('tools.get_location.description'); },
     defaultEnabled: true,
     category: 'default',
     definition: {
@@ -35,7 +36,7 @@ export default {
     config: {},
     execute: async function (_args: unknown, streamEmitter?: (event: IStreamEvent, data: any) => void) {
         try {
-            streamEmitter?.('report_status', 'Looking up your approximate location');
+            streamEmitter?.('report_status', i18n.t('tools.get_location.status_looking_up'));
             const location = await this._getLocation();
             if (!location) return 'Approximated location not able to be determined';
             return JSON.stringify({ city: location?.city, state: location?.regionName, country: location?.country });

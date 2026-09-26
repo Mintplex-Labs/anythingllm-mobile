@@ -1,5 +1,6 @@
 import { Feather, Scales, Barbell } from "phosphor-react-native";
 import * as RNFS from '@dr.pogodin/react-native-fs';
+import { tKey } from '@/i18n';
 
 export type DefaultModel = {
     id: string;
@@ -17,12 +18,13 @@ export type DefaultModel = {
  * the full catalog (`defaultModels`) - they share the same modelId + download url
  * so a preset and its catalog entry resolve to the same file on disk. Both are
  * listed in the model picker; only the preset row uses the phosphor icon below.
+ * `name` and `description` are translation keys - resolved with i18n.t() in OnDeviceProvider.availableModels().
  */
 export const MODEL_CARDS = [
     {
         id: 'lightweight',
-        name: 'Lightweight',
-        description: 'For quick responses and simple tasks.',
+        name: tKey('models.presets.lightweight.name'),
+        description: tKey('models.presets.lightweight.description'),
         Icon: Feather,
         size: '812MB',
         modelId: 'unsloth/Qwen3.5-0.8B-GGUF',
@@ -30,8 +32,8 @@ export const MODEL_CARDS = [
     },
     {
         id: 'balanced',
-        name: 'Balanced',
-        description: 'For a balance of speed and accuracy.',
+        name: tKey('models.presets.balanced.name'),
+        description: tKey('models.presets.balanced.description'),
         Icon: Scales,
         size: '2.01GB',
         modelId: 'unsloth/Qwen3.5-2B-GGUF',
@@ -39,8 +41,8 @@ export const MODEL_CARDS = [
     },
     {
         id: 'powerful',
-        name: 'Powerful',
-        description: 'Heavier models for the best accuracy.',
+        name: tKey('models.presets.powerful.name'),
+        description: tKey('models.presets.powerful.description'),
         Icon: Barbell,
         size: '3.53GB',
         modelId: 'unsloth/Qwen3.5-4B-GGUF',

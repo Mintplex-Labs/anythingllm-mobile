@@ -4,6 +4,7 @@ import { Q, Model } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
 import { deleteGeneratedDocumentsByStorageFilenames } from '@/utils/fs/generatedDocuments';
 import WorkspaceChat, { type WorkspaceChatResponseType } from './WorkspaceChat';
+import i18n from '@/i18n';
 
 export type ScheduledJobRunStatus = 'queued' | 'running' | 'completed' | 'failed' | 'timed_out' | 'cancelled';
 export type ScheduledJobRunTrigger = 'schedule' | 'manual';
@@ -195,7 +196,7 @@ export default class ScheduledJobRun extends Model {
   static async fail(uuid: string, error: string, partialResult: WorkspaceChatResponseType | null = null): Promise<ScheduledJobRunType | null> {
     return this.patch(uuid, (run) => {
       run.status = RUN_STATUSES.failed;
-      run.error = error || 'Job failed';
+      run.error = error || i18n.t('misc.job_run.failed');
       if (partialResult) run.result = JSON.stringify(partialResult);
       run.completedAt = Date.now();
     });
@@ -204,7 +205,7 @@ export default class ScheduledJobRun extends Model {
   static async timeout(uuid: string, partialResult: WorkspaceChatResponseType | null = null): Promise<ScheduledJobRunType | null> {
     return this.patch(uuid, (run) => {
       run.status = RUN_STATUSES.timed_out;
-      run.error = 'The job took too long and was stopped';
+      run.error = i18n.t('misc.job_run.timed_out');
       if (partialResult) run.result = JSON.stringify(partialResult);
       run.completedAt = Date.now();
     });
@@ -215,7 +216,7 @@ export default class ScheduledJobRun extends Model {
     return this.patch(uuid, (run) => {
       if (!NON_TERMINAL_RUN_STATUSES.includes(run.status)) return; // already settled - do not overwrite the real outcome
       run.status = RUN_STATUSES.cancelled;
-      run.error = 'You stopped this run';
+      run.error = i18n.t('misc.job_run.cancelled');
       if (partialResult) run.result = JSON.stringify(partialResult);
       run.completedAt = Date.now();
     });
@@ -249,7 +250,7 @@ export default class ScheduledJobRun extends Model {
     await database.write(async () => {
       await database.batch(rows.map((row) => row.prepareUpdate((run: any) => {
         run.status = RUN_STATUSES.failed;
-        run.error = 'The app was closed before the job finished';
+        run.error = i18n.t('misc.job_run.app_closed');
         run.completedAt = Date.now();
       })));
     });

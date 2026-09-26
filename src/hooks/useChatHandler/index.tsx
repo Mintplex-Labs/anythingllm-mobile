@@ -16,6 +16,7 @@ import { isAbortError } from "@/utils/chat/abort";
 import PushNotifications from "@/utils/PushNotifications";
 import { claimLowMemoryWarning, type LowMemoryStatus } from "@/utils/models/lowMemory";
 import LowMemoryModal from "@/components/LowMemoryModal";
+import i18n from "@/i18n";
 
 type LowMemoryWarning = { status: LowMemoryStatus; resolve: (proceed: boolean) => void };
 
@@ -354,12 +355,13 @@ function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: I
                 if (validConfig) caller = () => (new DelegatedProvider()).streamChat(config)
                 else {
                     const continueLocally = await AwaitableAlert(
-                        "Remote server is not reachable",
-                        "We cannot reach your instance currently. Do you want to continue this conversation locally?",
-                        { text: 'No, cancel', style: 'cancel' },
-                        { text: 'Yes, continue locally', style: 'default' },
+                        i18n.t('chat.remote_unreachable.title'),
+                        i18n.t('chat.remote_unreachable.message'),
+                        { text: i18n.t('chat.remote_unreachable.cancel'), style: 'cancel' },
+                        { text: i18n.t('chat.remote_unreachable.continue'), style: 'default' },
                     );
-                    if (!continueLocally) throw new Error('Remote server is not reachable - chat not sent.');
+                    // The message becomes the error reply shown in the chat.
+                    if (!continueLocally) throw new Error(i18n.t('chat.remote_unreachable.not_sent'));
                 }
             }
 
@@ -373,14 +375,14 @@ function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: I
 
             if (callerError) {
                 debug('Error processing chat', callerError);
-                turn.fail((callerError as Error)?.message || 'Error processing chat');
+                turn.fail((callerError as Error)?.message || i18n.t('chat.errors.processing'));
             }
             await concludeChat(turn);
         } catch (err) {
             clearFlushTimer();
             if (signal.aborted || isAbortError(err)) return discardAbortedChat();
             debug('Error processing chat', err);
-            turn.fail((err as Error).message || 'Error processing chat');
+            turn.fail((err as Error).message || i18n.t('chat.errors.processing'));
             const failedChat = turn.snapshot();
             upsertChat(failedChat);
             if (!ephemeral) notifyIfLocked(failedChat);

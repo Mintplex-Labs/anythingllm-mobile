@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { Q } from '@nozbe/watermelondb';
 import { CaretDown, CaretRight, Stop, Trash, Warning } from 'phosphor-react-native';
 import SafeView from '@/components/SafeView';
@@ -25,6 +26,7 @@ import { Card, JOB_COLORS, RunStatusLabel, ScreenHeader, SectionLabel, formatDat
  * own components. Opening the run marks it read (clears the unseen dots).
  */
 export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: string; runUuid: string; onBack: () => void }) {
+    const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const [job, setJob] = useState<ScheduledJobType | null>(null);
     const [run, setRun] = useState<ScheduledJobRunType | null>(null);
@@ -47,7 +49,7 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
                 next: (rows) => {
                     if (!rows.length) {
                         if (deletedHere.current) return; // onBack already fired from remove()
-                        showToast('That run no longer exists');
+                        showToast(t('scheduled_jobs.run_detail.run_missing'));
                         return onBack();
                     }
                     setRun(ScheduledJobRun.toRunObject(rows[0]));
@@ -81,15 +83,15 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
     const remove = async () => {
         if (!run) return;
         const confirmed = await AwaitableAlert(
-            'Delete this run?',
-            'The result and any files it created will be removed.',
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Delete', style: 'destructive' },
+            t('scheduled_jobs.run_detail.delete_title'),
+            t('scheduled_jobs.run_detail.delete_message'),
+            { text: t('common.cancel'), style: 'cancel' },
+            { text: t('common.delete'), style: 'destructive' },
         );
         if (!confirmed) return;
         deletedHere.current = true;
         await ScheduledJobRun.deleteByUuid(run.uuid);
-        showToast('Run deleted');
+        showToast(t('scheduled_jobs.run_detail.run_deleted'));
         onBack();
     };
 
@@ -98,9 +100,9 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
         setStopping(true);
         try {
             const stopped = await ScheduledJobRunner.cancelRun(run.uuid);
-            if (!stopped) showToast('That run had already finished');
+            if (!stopped) showToast(t('scheduled_jobs.run_already_finished'));
         } catch (error: any) {
-            showToast(error?.message || 'Could not stop the run');
+            showToast(error?.message || t('scheduled_jobs.stop_failed'));
         } finally {
             setStopping(false);
         }
@@ -112,15 +114,15 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
     return (
         <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" safeAreaStyle={{ backgroundColor: JOB_COLORS.page }}>
             <ScreenHeader
-                title={job?.name ?? 'Run'}
+                title={job?.name ?? t('scheduled_jobs.run_detail.fallback_title')}
                 subtitle={run ? formatDateTime(run.startedAt) : undefined}
                 onBack={onBack}
                 right={!run ? undefined : ScheduledJobRun.isTerminal(run.status) ? (
-                    <TouchableOpacity onPress={remove} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} accessibilityLabel="Delete run">
+                    <TouchableOpacity onPress={remove} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} accessibilityLabel={t('scheduled_jobs.run_detail.delete_run')}>
                         <Trash size={22} color={JOB_COLORS.danger} />
                     </TouchableOpacity>
                 ) : (
-                    <TouchableOpacity onPress={stop} disabled={stopping} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} accessibilityLabel="Stop run">
+                    <TouchableOpacity onPress={stop} disabled={stopping} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} accessibilityLabel={t('scheduled_jobs.stop_run')}>
                         {stopping ? <ActivityIndicator size="small" color={JOB_COLORS.danger} /> : <Stop size={22} color={JOB_COLORS.danger} weight="fill" />}
                     </TouchableOpacity>
                 )}
@@ -134,7 +136,7 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
                         <View className="flex flex-row items-center justify-between">
                             <RunStatusLabel status={run.status} size="md" />
                             <Text style={{ color: JOB_COLORS.muted }} className="text-sm">
-                                {run.trigger === 'manual' ? 'Run manually' : 'Scheduled'}{duration ? ` · ${duration}` : ''}
+                                {run.trigger === 'manual' ? t('scheduled_jobs.run_detail.run_manually') : t('scheduled_jobs.run_detail.scheduled')}{duration ? ` · ${duration}` : ''}
                             </Text>
                         </View>
                         {!!run.error && (
@@ -145,7 +147,7 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
                         )}
                         {!!run.result?.metrics?.total_tokens && (
                             <Text style={{ color: JOB_COLORS.muted }} className="text-xs">
-                                {run.result.metrics.prompt_tokens.toLocaleString()} prompt · {run.result.metrics.completion_tokens.toLocaleString()} completion tokens
+                                {t('scheduled_jobs.run_detail.tokens', { prompt: run.result.metrics.prompt_tokens.toLocaleString(), completion: run.result.metrics.completion_tokens.toLocaleString() })}
                             </Text>
                         )}
                     </Card>
@@ -155,7 +157,7 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
                         <TouchableOpacity onPress={() => setPromptOpen((open) => !open)} activeOpacity={0.7}>
                             <Card style={{ gap: 8 }}>
                                 <View className="flex flex-row items-center justify-between">
-                                    <Text style={{ color: JOB_COLORS.muted }} className="text-sm uppercase">Prompt</Text>
+                                    <Text style={{ color: JOB_COLORS.muted }} className="text-sm uppercase">{t('scheduled_jobs.prompt')}</Text>
                                     {promptOpen ? <CaretDown size={16} color={JOB_COLORS.muted} /> : <CaretRight size={16} color={JOB_COLORS.muted} />}
                                 </View>
                                 <Text className="text-white text-base" numberOfLines={promptOpen ? undefined : 2}>{job.prompt}</Text>
@@ -165,11 +167,11 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
 
                     {/* Result - rendered with the chat history's assistant components */}
                     <View className="flex flex-col" style={{ gap: 12 }}>
-                        <SectionLabel>Result</SectionLabel>
+                        <SectionLabel>{t('scheduled_jobs.run_detail.result')}</SectionLabel>
                         {!hasResult && ScheduledJobRun.isTerminal(run.status) ? (
                             <Card style={{ alignItems: 'center', paddingVertical: 24 }}>
                                 <Text style={{ color: JOB_COLORS.muted, textAlign: 'center' }} className="text-sm">
-                                    {run.status === 'completed' ? 'The model finished without writing anything.' : 'Nothing was produced before the run stopped.'}
+                                    {run.status === 'completed' ? t('scheduled_jobs.run_detail.empty_completed') : t('scheduled_jobs.run_detail.empty_stopped')}
                                 </Text>
                             </Card>
                         ) : (
@@ -178,7 +180,7 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
                                 {!ScheduledJobRun.isTerminal(run.status) && !chat.response?.textResponse && (
                                     <View className="flex flex-row items-center" style={{ gap: 8 }}>
                                         <ActivityIndicator size="small" color={JOB_COLORS.accent} />
-                                        <Text style={{ color: JOB_COLORS.muted }} className="text-sm">{stopping ? 'Stopping…' : 'Working on it…'}</Text>
+                                        <Text style={{ color: JOB_COLORS.muted }} className="text-sm">{stopping ? t('scheduled_jobs.run_detail.stopping') : t('scheduled_jobs.run_detail.working')}</Text>
                                     </View>
                                 )}
                                 <TextResponseContainer uuid={run.uuid} textResponse={chat.response?.textResponse} metrics={chat.response?.metrics} />

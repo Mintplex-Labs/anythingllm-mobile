@@ -7,6 +7,7 @@ import Workspace from "@/database/models/Workspace";
 import WorkspaceThread from "@/database/models/WorkspaceThread";
 import { PATHS } from "@/utils/paths";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 interface IWorkspaceItem {
   workspace: any;
@@ -16,6 +17,7 @@ interface IWorkspaceItem {
 
 const eventEmitter = new NativeEventEmitter();
 function WorkspaceItem({ workspace, isActive = false, currentThreadSlug }: IWorkspaceItem) {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const _activeThreadIdx = workspace.threads?.findIndex((t: any) => t.slug === currentThreadSlug);
   const [isRenameModalVisible, setIsRenameModalVisible] = useState(false);
@@ -36,10 +38,10 @@ function WorkspaceItem({ workspace, isActive = false, currentThreadSlug }: IWork
   }, [_activeThreadIdx]);
 
   async function handleThreadDelete(threadSlug: string) {
-    Alert.alert('Delete thread', 'Are you sure you want to delete this thread? All chat history will be lost.', [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('drawer.delete_thread_title'), t('drawer.delete_thread_message'), [
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Delete', onPress: async () => {
+        text: t('common.delete'), onPress: async () => {
           await WorkspaceThread.delete([{ field: 'workspace_slug', value: workspace.slug }, { field: 'slug', value: threadSlug }]).then(() => {
             eventEmitter.emit('workspaceUpdate', {
               type: 'remove-thread',
@@ -79,10 +81,10 @@ function WorkspaceItem({ workspace, isActive = false, currentThreadSlug }: IWork
   }
 
   async function handleWorkspaceDelete() {
-    Alert.alert('Delete workspace', `Are you sure you want to delete this workspace? All threads will be lost.${workspace.isRemote ? '\n\nThis will not delete the workspace in your remote instance.' : ''}`, [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('drawer.delete_workspace_title'), workspace.isRemote ? t('drawer.delete_workspace_message_remote') : t('drawer.delete_workspace_message'), [
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Delete',
+        text: t('common.delete'),
         style: 'destructive',
         onPress: async () => {
           await Workspace.delete([{ field: 'slug', value: workspace.slug }]).then(() => {
@@ -160,25 +162,25 @@ function WorkspaceItem({ workspace, isActive = false, currentThreadSlug }: IWork
         >
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-[--primary-bg] rounded-lg p-6 w-4/5 max-h-[80%]">
-              <Text className="text-xl font-bold mb-4 text-[--primary-text]">Rename Thread</Text>
+              <Text className="text-xl font-bold mb-4 text-[--primary-text]">{t('drawer.rename_thread')}</Text>
               <TextInput
                 className="border border-white/20 rounded-lg p-2 mb-4 text-[--secondary-bg] !text-white placeholder:text-white/50"
                 value={newThreadName}
                 onChangeText={setNewThreadName}
-                placeholder="Enter new thread name"
+                placeholder={t('drawer.rename_thread_placeholder')}
               />
               <View className="flex-row justify-between gap-x-2">
                 <TouchableOpacity
                   className="px-4 py-2 rounded-lg bg-transparent"
                   onPress={() => setIsRenameModalVisible(false)}
                 >
-                  <Text className="text-white/50">Cancel</Text>
+                  <Text className="text-white/50">{t('common.cancel')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   className="px-4 py-2 rounded-lg bg-transparent border border-white"
                   onPress={() => handleThreadRename(threadSlug, newThreadName)}
                 >
-                  <Text className="text-white">Rename</Text>
+                  <Text className="text-white">{t('common.rename')}</Text>
                 </TouchableOpacity>
               </View>
             </View>

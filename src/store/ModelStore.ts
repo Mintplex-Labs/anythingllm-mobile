@@ -6,6 +6,7 @@ import {
   Alert,
 } from 'react-native';
 import uiStore from './UIStore';
+import i18n from '@/i18n';
 import { v4 as uuidv4 } from 'uuid';
 import 'react-native-get-random-values';
 import { makePersistable } from 'mobx-persist-store';
@@ -708,8 +709,8 @@ class ModelStore {
       // Only handle errors related to the initial setup before the download starts
       console.error('Failed to set up HF model download:', error);
       Alert.alert(
-        'Download setup failed',
-        `Failed to set up HF model download: ${error}`,
+        i18n.t('downloads.setup_failed_title'),
+        i18n.t('downloads.setup_failed_message', { error: String(error) }),
       );
     }
   };

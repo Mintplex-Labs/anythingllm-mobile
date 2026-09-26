@@ -13,9 +13,10 @@ import { type WorkspaceType } from '@/database/models/Workspace';
 import { type WorkspaceThreadType } from '@/database/models/WorkspaceThread';
 import { showToast } from '@/utils/Notification';
 import Telemetry from '@/utils/Telemetry';
+import { useTranslation } from 'react-i18next';
 import {
   EXPORT_FORMATS,
-  OPEN_LOCATION_LABEL,
+  openLocationLabel,
   buildThreadExportContext,
   openThreadExportLocation,
   resolveThreadModelName,
@@ -36,12 +37,13 @@ const EXPORT_ICONS: Record<ExportFormat, React.ReactNode> = {
 
 /** The 3-dot trigger shown to the right of the "new thread" button */
 export function ThreadMenuIcon() {
+  const { t } = useTranslation();
   const { presentSheet } = useBottomSheet();
   return (
     <TouchableOpacity
       onPress={() => presentSheet(BOTTOM_SHEET_NAMES.THREAD_MENU)}
       hitSlop={{ top: 8, bottom: 8, left: 4, right: 8 }}
-      accessibilityLabel="Thread options">
+      accessibilityLabel={t('top_bar.thread_menu.options')}>
       <DotsThreeVertical size={30} color="white" weight="bold" />
     </TouchableOpacity>
   );
@@ -54,6 +56,7 @@ export function ThreadMenuIcon() {
  * back from any sub-page or pull the sheet down at any time.
  */
 export default function ThreadMenuSheet({ workspace, thread }: { workspace: WorkspaceType; thread: WorkspaceThreadType }) {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   // Dynamic-sized sheets do not grow for the keyboard on their own: pad the content by its height so
   // the sheet extends and the memory input stays above it (see PromptInput for the same trick).
@@ -99,7 +102,7 @@ export default function ThreadMenuSheet({ workspace, thread }: { workspace: Work
       setPage('saved');
     } catch (error: any) {
       console.error('[ThreadMenu] export failed', error);
-      showToast(`Could not export thread: ${error?.message ?? 'unknown error'}`, 'long');
+      showToast(t('top_bar.thread_menu.export_failed', { error: error?.message ?? t('top_bar.thread_menu.unknown_error') }), 'long');
     } finally {
       setExporting(null);
     }
@@ -113,7 +116,7 @@ export default function ThreadMenuSheet({ workspace, thread }: { workspace: Work
       dismissAllSheets();
     } catch (error: any) {
       console.error('[ThreadMenu] share failed', error);
-      showToast(`Could not open share sheet: ${error?.message ?? 'unknown error'}`, 'long');
+      showToast(t('top_bar.thread_menu.share_failed', { error: error?.message ?? t('top_bar.thread_menu.unknown_error') }), 'long');
     } finally {
       setSharing(false);
     }
@@ -126,7 +129,7 @@ export default function ThreadMenuSheet({ workspace, thread }: { workspace: Work
       dismissAllSheets();
     } catch (error: any) {
       console.error('[ThreadMenu] open location failed', error);
-      showToast(`Saved to ${saved.locationLabel}, but the folder could not be opened`, 'long');
+      showToast(t('top_bar.thread_menu.open_location_failed', { location: saved.locationLabel }), 'long');
     }
   };
 
@@ -161,15 +164,16 @@ export default function ThreadMenuSheet({ workspace, thread }: { workspace: Work
 }
 
 function MenuPageContent({ onMemories, onExport }: { onMemories: () => void; onExport: () => void }) {
+  const { t } = useTranslation();
   return (
     <View style={{ paddingTop: 8 }}>
       <MenuRow
         icon={<Brain size={22} color="#FFF" />}
-        title="Memories"
-        description="See memories about you or your preferences"
+        title={t('top_bar.thread_menu.memories')}
+        description={t('top_bar.thread_menu.memories_description')}
         onPress={onMemories}
       />
-      <MenuRow icon={<Export size={22} color="#FFF" />} title="Export Chat Thread" onPress={onExport} />
+      <MenuRow icon={<Export size={22} color="#FFF" />} title={t('top_bar.thread_menu.export_thread')} onPress={onExport} />
     </View>
   );
 }
@@ -183,9 +187,10 @@ function ExportPageContent({
   onBack: () => void;
   onSelect: (format: ExportFormat) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <View>
-      <SheetHeader title="Export Chat Thread" onBack={onBack} />
+      <SheetHeader title={t('top_bar.thread_menu.export_thread')} onBack={onBack} />
       {Object.values(EXPORT_FORMATS).map(definition => (
         <MenuRow
           key={definition.format}
@@ -214,11 +219,12 @@ function SavedPageContent({
   onOpenLocation: () => void;
   onDone: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <View>
       <View style={{ gap: 10, marginBottom: 22 }} className="flex flex-col items-center">
         <CheckCircle size={48} color={SUCCESS} weight="fill" />
-        <Text className="text-white text-lg font-medium">Saved to your device</Text>
+        <Text className="text-white text-lg font-medium">{t('top_bar.thread_menu.saved_to_device')}</Text>
         <Text numberOfLines={1} ellipsizeMode="middle" className="text-white text-base" style={{ maxWidth: '90%' }}>
           {saved.filename}
         </Text>
@@ -234,17 +240,17 @@ function SavedPageContent({
           style={{ gap: 8, paddingVertical: 14, backgroundColor: '#FFF', opacity: sharing ? 0.6 : 1 }}
           className="flex flex-row items-center justify-center rounded-xl">
           {sharing ? <ActivityIndicator color="#000" /> : <ShareNetwork size={20} color="#000" />}
-          <Text className="text-black text-base font-semibold">Share</Text>
+          <Text className="text-black text-base font-semibold">{t('common.share')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={onOpenLocation}
           style={{ gap: 8, paddingVertical: 14, backgroundColor: ROW_ICON_BACKGROUND }}
           className="flex flex-row items-center justify-center rounded-xl">
           <FolderOpen size={20} color="#FFF" />
-          <Text className="text-white text-base font-semibold">{OPEN_LOCATION_LABEL}</Text>
+          <Text className="text-white text-base font-semibold">{openLocationLabel()}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={onDone} style={{ paddingVertical: 8 }} className="flex flex-row items-center justify-center">
-          <Text style={{ color: MUTED_TEXT }} className="text-base">Done</Text>
+          <Text style={{ color: MUTED_TEXT }} className="text-base">{t('common.done')}</Text>
         </TouchableOpacity>
       </View>
     </View>

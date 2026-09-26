@@ -1,0 +1,1201 @@
+{
+  "common": {
+    "add": "Add",
+    "allow": "Allow",
+    "apply": "Apply",
+    "back": "Back",
+    "cancel": "Cancel",
+    "clear": "Clear",
+    "close": "Close",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "copied": "Copied",
+    "copy": "Copy",
+    "create": "Create",
+    "default": "Default",
+    "delete": "Delete",
+    "disable": "Disable",
+    "disabled": "Disabled",
+    "dismiss": "Dismiss",
+    "done": "Done",
+    "download": "Download",
+    "downloading": "Downloading",
+    "edit": "Edit",
+    "enable": "Enable",
+    "enabled": "Enabled",
+    "error": "Error",
+    "export": "Export",
+    "import": "Import",
+    "install": "Install",
+    "installed": "Installed",
+    "learn_more": "Learn more",
+    "loading": "Loading...",
+    "next": "Next",
+    "no": "No",
+    "none": "None",
+    "off": "Off",
+    "ok": "OK",
+    "on": "On",
+    "open": "Open",
+    "optional": "Optional",
+    "refresh": "Refresh",
+    "remove": "Remove",
+    "rename": "Rename",
+    "required": "Required",
+    "reset": "Reset",
+    "retry": "Retry",
+    "save": "Save",
+    "search": "Search",
+    "select": "Select",
+    "selected": "Selected",
+    "send": "Send",
+    "settings": "Settings",
+    "share": "Share",
+    "skip": "Skip",
+    "stop": "Stop",
+    "success": "Success",
+    "uninstall": "Uninstall",
+    "unknown": "Unknown",
+    "unknown_error": "Unknown error",
+    "update": "Update",
+    "upload": "Upload",
+    "yes": "Yes"
+  },
+  "language": {
+    "title": "Language",
+    "search_placeholder": "Search languages",
+    "no_results": "No languages match \"{{query}}\"",
+    "changed": "Language changed to {{language}}"
+  },
+  "settings": {
+    "llm_preference": {
+      "title": "LLM Preference",
+      "description": "This is the LLM preference that will be used for all workspaces. You can change it to use a different LLM provider or on-device model."
+    },
+    "language": {
+      "app_language": "App language"
+    },
+    "special_tools": {
+      "title": "Special Tools",
+      "ask_with_anythingllm": "\"Ask with AnythingLLM\"",
+      "page_title": "Special tools",
+      "added_toast": "Ask with AnythingLLM added to text selection menus",
+      "removed_toast": "Ask with AnythingLLM removed from text selection menus",
+      "context_awareness": "Context awareness",
+      "ask_with_anythingllm_toggle": "Ask with AnythingLLM",
+      "android_only": "Android only",
+      "description_available": "Adds \"Ask with AnythingLLM\" to the menu that appears when you select text in any app. Use it to polish, shorten or fix what you are writing, or to summarize, explain and research what you are reading - with whichever model you have selected here.",
+      "description_unavailable": "On Android, AnythingLLM can appear in the menu that shows when you select text in any app, to edit or summarize it with your chosen model. iOS does not offer apps this hook."
+    },
+    "about": {
+      "release_notes": "Release notes for v{{version}}",
+      "star_github": "Star on GitHub",
+      "join_discord": "Join the Discord"
+    },
+    "utility": {
+      "title": "Utility",
+      "anonymous_telemetry": "Anonymous telemetry",
+      "clear_temp_files": "Clear temporary files",
+      "temp_files_cleared": "Temporary files cleared"
+    },
+    "legal": {
+      "title": "Legal & Privacy",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy"
+    },
+    "reset": {
+      "title": "Reset AnythingLLM",
+      "confirm_message": "Are you sure you want to reset AnythingLLM? This will delete all your workspaces, chats, installed models, and preferences.",
+      "confirm_button": "Yes, Reset Everything"
+    },
+    "update_failed": "Could not update the setting",
+    "version": {
+      "about": "About AnythingLLM",
+      "update_available_title": "Update Available",
+      "update_available_message": "Version {{version}} is available. Please update to the latest version.",
+      "go_to_app_store": "Go to app store"
+    },
+    "telemetry": {
+      "enabled_toast": "Anonymous telemetry enabled",
+      "disabled_toast": "Anonymous telemetry disabled",
+      "usage_data": "Usage data",
+      "share_toggle": "Share anonymous telemetry",
+      "description_events": "AnythingLLM sends a small number of anonymous events, such as \"a chat was completed\" or \"a tool was used\", so we can see which features matter and where things break.",
+      "description_privacy": "This never includes your chats, documents, prompts, or anything specific about how you use the app. There is no account and nothing that identifies you.",
+      "description_opt_out": "Leaving this on helps us build a better application. You can turn it off at any time and nothing further will be sent."
+    },
+    "advanced_model_preferences": {
+      "title": "Model Selection",
+      "choose_provider": "Choose an LLM Provider",
+      "llm_model": "LLM Model",
+      "provider_settings": "Provider Settings",
+      "show_less": "Show Less",
+      "view_more": "View More"
+    },
+    "provider_options": {
+      "base_url": "Base URL",
+      "base_url_placeholder": "Enter your base URL (e.g. {{example}})",
+      "api_key": "API Key",
+      "api_key_optional": "API Key (optional)",
+      "api_key_placeholder": "Enter your API key",
+      "aws_region": "AWS Region",
+      "select_region": "Select a region",
+      "choose_region": "Choose your AWS region",
+      "search_region": "Search or type a region code",
+      "use_region": "Use \"{{region}}\"",
+      "model_selection": "Model Selection",
+      "select_model": "Select a model",
+      "choose_model": "Choose your model",
+      "search_models": "Search models",
+      "fetching_models": "Fetching models...",
+      "model_placeholder": "Enter your model (e.g. {{example}})",
+      "models_load_failed": "Could not load models from this provider. Check your credentials or enter the model name manually.",
+      "no_tool_calls": "This model was detected to have <bold>no tool calling support</bold>. Only simple chat + RAG will be supported"
+    }
+  },
+  "chat": {
+    "error_loading_provider": "Error loading LLM provider",
+    "error_loading_thread": "Error loading workspace thread",
+    "unknown_error": "Unknown error",
+    "loading_history": "Loading chat history...",
+    "suggestions": {
+      "hello": "Hello, what can you help me with?",
+      "research": "Look online for some fun things to do in {{city}}, {{region}}",
+      "calendar_monday": "What is on my calendar for Monday?",
+      "calendar_tomorrow": "What is on my calendar for tomorrow?",
+      "calendar_today": "What is on my calendar for today?",
+      "email": "Draft a sales email to John Doe about the benefits of local AI agents",
+      "summarize_example": "Summarize paulgraham.com/foundermode.html",
+      "summarize_file": "Summarize {{name}}",
+      "summarize_websites_one": "Summarize this website",
+      "summarize_websites_other": "Summarize these websites",
+      "summarize_documents_one": "Summarize this document",
+      "summarize_documents_other": "Summarize these documents",
+      "explain_images_one": "Explain this image",
+      "explain_images_other": "Explain these images"
+    },
+    "citations": {
+      "title": "Citations",
+      "score": "Score: {{score}}",
+      "sources": "Sources"
+    },
+    "message_actions": {
+      "copied": "Copied to clipboard",
+      "retry_failed": "Could not retry this message",
+      "delete_failed": "Could not delete this reply",
+      "fork_failed": "Could not fork thread: {{error}}",
+      "fork_name": "Copy of {{name}}",
+      "copy_title": "Copy Message",
+      "copy_description": "Copy the text to your clipboard",
+      "retry_wait": "Wait for the current reply to finish",
+      "retry_description": "Remove this exchange and send the prompt again",
+      "fork_title": "Fork Thread",
+      "fork_remote_unavailable": "Not available for remote threads",
+      "fork_description": "Start a new thread with a copy of this conversation",
+      "delete_title": "Delete Reply",
+      "delete_description": "Remove this message and its reply from the thread"
+    },
+    "activity": {
+      "running": "Running",
+      "waiting_approval_to_run": "Waiting for approval to run {{tool}}",
+      "approved_tool": "Approved {{tool}}",
+      "rejected_tool": "Rejected {{tool}}",
+      "waiting_for_you": "Waiting for you",
+      "tool_approved": "Tool call was approved",
+      "tool_rejected": "Tool call was rejected",
+      "thinking": "Thinking...",
+      "waiting_your_approval": "Waiting for your approval",
+      "calling_tool": "Calling {{tool}}",
+      "working": "Working...",
+      "worked_for": "Worked for {{duration}}",
+      "thought_for": "Thought for {{duration}}",
+      "thoughts": "Thoughts"
+    },
+    "file_download": {
+      "saved_to": "Saved {{filename}} to {{location}}",
+      "save_failed": "Could not save file: {{error}}",
+      "share_failed": "Could not open share sheet: {{error}}",
+      "missing": "No longer on this device",
+      "missing_label": "{{title}}, file no longer available",
+      "download_label": "Download {{title}}",
+      "share_label": "Share {{title}}",
+      "unknown_file": "Unknown file",
+      "saving": "Saving...",
+      "saved": "Saved"
+    },
+    "scheduled_job_card": {
+      "open_label": "Open scheduled job {{name}}",
+      "subtitle": "Scheduled job · {{schedule}}",
+      "view": "View"
+    },
+    "metrics": {
+      "tokens_one": "{{count}} token",
+      "tokens_other": "{{count}} tokens"
+    },
+    "tool_approval": {
+      "wants_to_call": "Model wants to call <skill>{{skill}}</skill>",
+      "show_details": "Show details",
+      "hide_details": "Hide details",
+      "approve": "Approve",
+      "reject": "Reject"
+    },
+    "attachments": {
+      "attach_files": "Attach files",
+      "gallery": "Gallery",
+      "take_photo": "Take photo",
+      "add_attachment": "Add attachment",
+      "hint_embed": "Files are split up and embedded so your on-device model can search them.",
+      "hint_full": "Files are sent to your model in full with every message in this workspace.",
+      "max_reached": "You have reached the maximum number of attachments for one prompt.",
+      "downloading_image_support": "Downloading image support... {{progress}}%",
+      "cancel_download": "Cancel download",
+      "download_image_support": "Download image support",
+      "needs_download_tap": "This model can see images, but needs an additional download. Tap to download ({{size}}).",
+      "download_failed": "The download failed. Tap to try again.",
+      "download_cancelled": "Download cancelled."
+    },
+    "prompt_input": {
+      "placeholder": "Enter your prompt",
+      "select_model_first": "Please select a model first",
+      "stop_generating": "Stop generating",
+      "stop_recording": "Stop recording",
+      "voice_input": "Voice input",
+      "send_prompt": "Send prompt"
+    },
+    "files": {
+      "title": "Files",
+      "empty": "No files in this workspace",
+      "error_loading": "Error loading files",
+      "deleted_one": "{{count}} file deleted successfully!",
+      "deleted_other": "{{count}} files deleted successfully!",
+      "select_all": "Select All",
+      "deselect_all": "Deselect All",
+      "delete_selected": "Delete Selected Files",
+      "embedded": "Embedded · searched in every thread",
+      "full_every_thread": "Sent in full · every thread",
+      "full_this_thread": "Sent in full · this thread",
+      "full_another_thread": "Sent in full · another thread"
+    },
+    "history_cleared": "Chat history cleared",
+    "tools": {
+      "title": "Tools",
+      "group_status": "{{enabled}} of {{total}} on",
+      "app_connections": "App Connections",
+      "group_files_note": "{{description}} Files are kept on this device until you clear temporary files in settings.",
+      "needs_cloud_model": "{{description}} Needs a cloud model.",
+      "unavailable_on_device": "Greyed out tools are not available with the on-device model. Switch to a cloud provider to use them."
+    },
+    "remote_unreachable": {
+      "title": "Remote server is not reachable",
+      "message": "We cannot reach your instance currently. Do you want to continue this conversation locally?",
+      "cancel": "No, cancel",
+      "continue": "Yes, continue locally",
+      "not_sent": "Remote server is not reachable - chat not sent."
+    },
+    "errors": {
+      "processing": "Error processing chat",
+      "timed_out": "The request timed out before a response was received. Connection may be lost."
+    },
+    "status": {
+      "recalling_notes": "Recalling workspace notes"
+    }
+  },
+  "quick_context": {
+    "modes": {
+      "summarize": "Summarize"
+    },
+    "actions": {
+      "polish": "Polish",
+      "shorten": "Shorten",
+      "fix_grammar": "Fix grammar",
+      "more_formal": "More formal",
+      "summarize": "Summarize",
+      "key_points": "Key points",
+      "explain": "Explain",
+      "research": "Research"
+    },
+    "could_not_start": "Could not start Quick Actions",
+    "dismiss": "Dismiss",
+    "setup_needed": "Finish setting up AnythingLLM to use it from the selection menu.",
+    "open_anythingllm": "Open AnythingLLM",
+    "select_model": "Select a model above to get started.",
+    "copied_paste": "Copied - paste it over your selection",
+    "copy_and_close": "Copy & close",
+    "open_in_app": "Open in app",
+    "placeholders": {
+      "edit_new": "How should this text change?",
+      "edit_started": "Adjust text further…",
+      "summarize_new": "Ask anything about this text…",
+      "summarize_started": "Ask more questions…"
+    }
+  },
+  "attachments": {
+    "processing": "Processing…",
+    "image": "Image",
+    "file_type_generic": "FILE",
+    "name_processing": "{{name}}, processing",
+    "remove_named": "Remove {{name}}",
+    "more_images_one": "{{count}} more image",
+    "more_images_other": "{{count}} more images",
+    "attached_image": "Attached image",
+    "image_position": "{{current}} of {{total}}",
+    "close_image_preview": "Close image preview",
+    "remove_image": "Remove image"
+  },
+  "errors": {
+    "boundary": {
+      "details": "Error details",
+      "details_copied": "Error details copied",
+      "report_github": "Report on GitHub",
+      "something_went_wrong": "Something went wrong",
+      "reported_automatically": "This error was reported to Mintplex Labs automatically.",
+      "telemetry_disabled": "You have telemetry disabled, so we did not auto-report this error to Mintplex Labs, you should open a GitHub issue instead.",
+      "go_home": "Go Home",
+      "message_failed": "This message could not be displayed due to an error.",
+      "hide_details": "Hide error details",
+      "show_details": "Show error details"
+    }
+  },
+  "highlights": {
+    "play_video": "Play video",
+    "pause_video": "Pause video",
+    "whats_new": "What's new",
+    "tour_title": "What AnythingLLM can do",
+    "quick_actions": {
+      "title": "Ask with AnythingLLM anywhere",
+      "body": "Select text in any app and tap \"Ask with AnythingLLM\" to polish, shorten, summarize or explain it with your model. Turn it off any time under Settings > Special tools."
+    },
+    "share_sheet": {
+      "title": "Share anything into a chat",
+      "body": "Send photos, documents and links from any app straight to AnythingLLM. They land in a new thread, attached and ready to ask about."
+    },
+    "scheduled_jobs": {
+      "title": "Scheduled jobs",
+      "body": "Ask for a recurring task - a morning news digest, a weekly check-in - and it runs on schedule, even when the app is closed. Results wait for you with a notification."
+    }
+  },
+  "new_workspace": {
+    "default_name": "New Workspace",
+    "title": "New Workspace",
+    "description": "Give your workspace a name. You can change it later.",
+    "placeholder": "e.g. Research, Work, Personal"
+  },
+  "files": {
+    "types": {
+      "text_file": "Text File",
+      "spreadsheet": "Spreadsheet",
+      "pdf_document": "PDF Document",
+      "word_document": "Word Document",
+      "file": "File"
+    },
+    "location": {
+      "downloads": "Downloads",
+      "ios_exports": "Files > On My iPhone > AnythingLLM > Exports",
+      "open_downloads": "Open in Downloads",
+      "open_files": "Open in Files"
+    },
+    "storage_permission": {
+      "title": "Save to Downloads",
+      "message": "AnythingLLM needs storage access to save the file to your Downloads folder."
+    },
+    "export": {
+      "text_label": "Text",
+      "txt_description": "Plain text transcript",
+      "md_description": "Formatted transcript for notes apps",
+      "json_description": "Messages with model and metrics",
+      "pdf_description": "Formatted document"
+    }
+  },
+  "misc": {
+    "new_thread": "New Thread",
+    "remote_thread_create_failed": "We could not create a thread in your remote workspace. Please check your connection and try again.",
+    "job_run": {
+      "failed": "Job failed",
+      "timed_out": "The job took too long and was stopped",
+      "cancelled": "You stopped this run",
+      "app_closed": "The app was closed before the job finished"
+    },
+    "validation": {
+      "memory_not_text": "Memory must be text",
+      "memory_too_short": "Memory is too short",
+      "memory_too_long_one": "Memory must be {{count}} character or fewer",
+      "memory_too_long_other": "Memory must be {{count}} characters or fewer",
+      "job_name_required": "Give the job a name",
+      "job_name_too_long_one": "Name must be {{count}} character or fewer",
+      "job_name_too_long_other": "Name must be {{count}} characters or fewer",
+      "job_prompt_required": "Write the prompt the job should run",
+      "job_prompt_too_long_one": "Prompt must be {{count}} character or fewer",
+      "job_prompt_too_long_other": "Prompt must be {{count}} characters or fewer",
+      "job_schedule_invalid": "The schedule is not a valid cron expression",
+      "job_tools_not_list": "Tools must be a list",
+      "name_not_string": "Name must be a string",
+      "name_required": "Name is required",
+      "name_too_short_one": "Name must be at least {{count}} character long",
+      "name_too_short_other": "Name must be at least {{count}} characters long",
+      "name_too_long_one": "Name must be less than {{count}} character long",
+      "name_too_long_other": "Name must be less than {{count}} characters long",
+      "system_prompt_not_string": "System prompt must be a string",
+      "system_prompt_required": "System prompt is required",
+      "system_prompt_too_short_one": "System prompt must be at least {{count}} character long",
+      "system_prompt_too_short_other": "System prompt must be at least {{count}} characters long",
+      "system_prompt_too_long_one": "System prompt must be less than {{count}} character long",
+      "system_prompt_too_long_other": "System prompt must be less than {{count}} characters long",
+      "temperature_not_number": "Temperature must be a number",
+      "temperature_range": "Temperature must be between {{min}} and {{max}}",
+      "context_length_not_number": "Context length must be a number",
+      "context_length_min": "Context length must be greater than {{min}}"
+    }
+  },
+  "tools": {
+    "groups": {
+      "create_files": {
+        "name": "Create Files",
+        "description": "Let the assistant write documents you can download and share."
+      }
+    },
+    "reranker": {
+      "download_required_title": "Download Required",
+      "download_required_message": "Intelligent tool selection requires a small model download ({{size}}). You are on cellular data. Continue?",
+      "status_downloading": "Downloading tool selection model",
+      "status_selecting": "Selecting best tools"
+    },
+    "calendar_event_creation": {
+      "name": "Calendar Event Creation",
+      "description": "Use the assistant to create a calendar event for you.",
+      "status_preparing": "Preparing calendar event \"{{title}}\""
+    },
+    "calendar_event_reading": {
+      "name": "Read Calendar",
+      "description": "Use the assistant to read your calendar events.",
+      "status_date": "Reading your calendar for {{date}}",
+      "status_today": "Reading your calendar for today",
+      "status_tomorrow": "Reading your calendar for tomorrow",
+      "status_this_week": "Reading your calendar for this week",
+      "status_next_week": "Reading your calendar for next week",
+      "status_this_month": "Reading your calendar for this month",
+      "status_next_month": "Reading your calendar for next month"
+    },
+    "create_files": {
+      "status_creating": "Creating {{name}}",
+      "status_created": "Created {{name}}"
+    },
+    "create_docx_file": {
+      "name": "Word Document",
+      "description": "Write a styled .docx from markdown with themes and an optional title page.",
+      "status_creating": "Creating Word document \"{{name}}\""
+    },
+    "create_pdf_file": {
+      "name": "PDF Document",
+      "description": "Turn markdown or plain text into a formatted PDF.",
+      "status_creating": "Creating PDF \"{{name}}\""
+    },
+    "create_text_file": {
+      "name": "Text, Markdown & CSV",
+      "description": "Write .txt, .md, .csv and .json files from the conversation."
+    },
+    "create_pptx": {
+      "name": "PowerPoint Presentation",
+      "description": "Plan and build a themed .pptx deck, one section at a time.",
+      "status_planning_one": "Planning presentation \"{{title}}\" - {{count}} section, {{theme}} theme",
+      "status_planning_other": "Planning presentation \"{{title}}\" - {{count}} sections, {{theme}} theme",
+      "approval_description_one": "Create the PowerPoint presentation \"{{title}}\" with {{count}} section? Each section takes a model call to build.",
+      "approval_description_other": "Create the PowerPoint presentation \"{{title}}\" with {{count}} sections? Each section takes a model call to build.",
+      "status_not_approved": "Presentation was not approved",
+      "status_building_section": "[{{current}}/{{total}}] Building section \"{{title}}\"",
+      "status_section_complete_one": "[{{current}}/{{total}}] Section \"{{title}}\" complete - {{count}} slide",
+      "status_section_complete_other": "[{{current}}/{{total}}] Section \"{{title}}\" complete - {{count}} slides",
+      "status_section_complete_from_outline_one": "[{{current}}/{{total}}] Section \"{{title}}\" complete - {{count}} slide (from outline)",
+      "status_section_complete_from_outline_other": "[{{current}}/{{total}}] Section \"{{title}}\" complete - {{count}} slides (from outline)",
+      "status_assembling_one": "Assembling deck - {{count}} slide",
+      "status_assembling_other": "Assembling deck - {{count}} slides"
+    },
+    "create_scheduled_job": {
+      "name": "Create Scheduled Job",
+      "description": "Let the assistant set up a recurring job from the conversation, after you approve it.",
+      "status_asking": "Asking to schedule \"{{name}}\" ({{when}})",
+      "approval_tools_one": "Create the scheduled job \"{{name}}\"? It will run {{when}} using {{count}} tool.",
+      "approval_tools_other": "Create the scheduled job \"{{name}}\"? It will run {{when}} using {{count}} tools.",
+      "approval_tools_notify_one": "Create the scheduled job \"{{name}}\"? It will run {{when}} using {{count}} tool and notify you when it finishes.",
+      "approval_tools_notify_other": "Create the scheduled job \"{{name}}\"? It will run {{when}} using {{count}} tools and notify you when it finishes.",
+      "approval_no_tools": "Create the scheduled job \"{{name}}\"? It will run {{when}} with no tools.",
+      "approval_no_tools_notify": "Create the scheduled job \"{{name}}\"? It will run {{when}} with no tools and notify you when it finishes.",
+      "status_not_approved": "Scheduled job was not approved",
+      "status_scheduled": "Scheduled \"{{name}}\""
+    },
+    "draft_email": {
+      "name": "Draft Email",
+      "description": "Use the assistant to draft an email for you.",
+      "status_drafting": "Drafting email \"{{subject}}\"",
+      "open_action": "Open Draft Email"
+    },
+    "draft_text": {
+      "name": "Draft Text",
+      "description": "Use the assistant to draft a text for you.",
+      "status_drafting_to": "Drafting a text to {{recipient}}",
+      "status_drafting": "Drafting a text message",
+      "open_action": "Open Draft Text"
+    },
+    "get_time": {
+      "name": "Get Time",
+      "description": "Get the current date and time based on your device timezone."
+    },
+    "get_location": {
+      "name": "Get Location",
+      "description": "Get your approximate location. This will return the city, state, and country.",
+      "status_looking_up": "Looking up your approximate location"
+    },
+    "summarize": {
+      "name": "Summarization",
+      "description": "Summarize content from a given URL or filename.",
+      "status_reading": "Reading {{source}}",
+      "status_looking_for_file": "Looking for \"{{name}}\" in your files",
+      "status_analyzing": "Analyzing document structure",
+      "status_document_long_one": "Document is long - summarizing the first {{count}} section",
+      "status_document_long_other": "Document is long - summarizing the first {{count}} sections",
+      "approval_description_one": "This content has {{count}} section to summarize. This may take a while - continue?",
+      "approval_description_other": "This content has {{count}} sections to summarize. This may take a while - continue?",
+      "status_not_approved": "Summarization was not approved",
+      "status_complete": "Summary complete",
+      "status_summarizing_sections": "Summarizing document sections",
+      "status_summarizing_section": "Summarizing section {{current}} of {{total}}",
+      "status_combining": "Combining section summaries"
+    },
+    "web_scraping": {
+      "name": "Web Scraping",
+      "description": "Scrape a single specific website for information.",
+      "status_reading": "Reading {{host}}",
+      "status_reading_document": "Reading document {{name}}",
+      "cellular_title": "Download on cellular?",
+      "cellular_message": "Reading \"{{name}}\" requires downloading a document of {{size}}. You are on cellular data. Continue?",
+      "cellular_message_unknown_size": "Reading \"{{name}}\" requires downloading a document of an unknown size. You are on cellular data. Continue?"
+    },
+    "web_search": {
+      "name": "Web Search",
+      "description": "Search the web for search results based on a query.",
+      "status_searching": "Searching the web for \"{{query}}\"",
+      "status_reviewing_one": "Reviewing {{count}} search result",
+      "status_reviewing_other": "Reviewing {{count}} search results"
+    },
+    "approval": {
+      "auto_approved_status": "Approved {{tool}} automatically"
+    }
+  },
+  "top_bar": {
+    "model_chip": {
+      "remote_managed": "This workspace is managed remotely. You cannot change the model here.",
+      "no_model_loaded": "No model loaded",
+      "no_models_found": "No models found for \"{{query}}\"",
+      "hf_lookup_hint": "Look up \"{{query}}\" on Hugging Face and download a GGUF version.",
+      "list_failed_toast": "Could not list models for {{provider}}.",
+      "switch_failed": "Could not switch model. Please try again.",
+      "loading_models": "Loading models from {{provider}}...",
+      "list_failed_title": "Could not list models for {{provider}}",
+      "list_failed_description": "This provider did not return any models. Check that the endpoint is reachable and supports model listing, or set the model manually in Settings.",
+      "try_again": "Try again",
+      "search_provider_models": "Search {{provider}} models"
+    },
+    "dev_shortcut_hint_one": "Press {{count}} more time to open developer tools",
+    "dev_shortcut_hint_other": "Press {{count}} more times to open developer tools",
+    "thread_menu": {
+      "options": "Thread options",
+      "export_failed": "Could not export thread: {{error}}",
+      "share_failed": "Could not open share sheet: {{error}}",
+      "unknown_error": "unknown error",
+      "open_location_failed": "Saved to {{location}}, but the folder could not be opened",
+      "memories": "Memories",
+      "memories_description": "See memories about you or your preferences",
+      "export_thread": "Export Chat Thread",
+      "saved_to_device": "Saved to your device"
+    },
+    "memories": {
+      "global": {
+        "tab": "Everywhere",
+        "hint": "Facts about you the model should always know - your name, what you do, how you like answers. Sent with every chat in every workspace. Keep them short so they all fit on small models.",
+        "placeholder": "e.g. My name is Sam. I write Python and prefer short answers.",
+        "empty": "No memories yet. Add a fact about yourself above."
+      },
+      "workspace": {
+        "tab": "This workspace",
+        "hint": "Notes that only matter here - the project, its jargon, decisions already made. Managed and injected dynamically.",
+        "placeholder": "e.g. This project is a React Native app called Orbit. Use yarn, not npm.",
+        "empty": "No workspace memories yet. Add a note about this workspace above."
+      },
+      "no_longer_exists": "That memory no longer exists",
+      "save_failed": "Could not save memory",
+      "delete_title": "Delete memory?",
+      "enable": "Enable memories",
+      "enable_description": "Allow injection of facts about you or this workspace.",
+      "remote_notice": "This workspace is answered by your AnythingLLM server, so memories are not used in its chats. Global memories still apply to your on-device and cloud workspaces.",
+      "edit_memory": "Edit memory",
+      "new_memory": "New memory",
+      "delete_memory": "Delete memory"
+    }
+  },
+  "drawer": {
+    "workspaces": "Workspaces",
+    "scheduled_jobs": "Scheduled jobs",
+    "scheduled_jobs_unseen_one": "Scheduled jobs, {{count}} unseen result",
+    "scheduled_jobs_unseen_other": "Scheduled jobs, {{count}} unseen results",
+    "new_workspace": "New Workspace",
+    "delete_thread_title": "Delete thread",
+    "delete_thread_message": "Are you sure you want to delete this thread? All chat history will be lost.",
+    "delete_workspace_title": "Delete workspace",
+    "delete_workspace_message": "Are you sure you want to delete this workspace? All threads will be lost.",
+    "delete_workspace_message_remote": "Are you sure you want to delete this workspace? All threads will be lost.\n\nThis will not delete the workspace in your remote instance.",
+    "rename_thread": "Rename Thread",
+    "rename_thread_placeholder": "Enter new thread name"
+  },
+  "hf_import": {
+    "title": "Add a model from Hugging Face",
+    "add_card_hint": "Paste a repo id or url and pick any GGUF quant to run on this device.",
+    "generic_error": "Something went wrong talking to Hugging Face.",
+    "description": "Paste a model id or url, or search. Any public GGUF quant can be downloaded and run on this device.",
+    "show_files": "Show GGUF files",
+    "search_hf": "Search Hugging Face",
+    "files_available_one": "{{count}} GGUF file available to download",
+    "files_available_other": "{{count}} GGUF files available to download",
+    "highlighted_file": "The file you picked on Hugging Face is highlighted below. Tap it to download.",
+    "highlight_missing": "\"{{filename}}\" is not one of this repo's GGUF files. Pick another quant below.",
+    "search_results": "GGUF repos matching \"{{query}}\", most downloaded first. Tap one to see its files.",
+    "no_search_results": "No GGUF repos found for \"{{query}}\".",
+    "tip": "Tip: most models have a GGUF version under a name ending in \"-GGUF\" from unsloth, bartowski or lmstudio-community. Smaller quants (Q4_K_M and below) run best on phones. Gated or private models are not supported.",
+    "params": "{{value}} params",
+    "context": "{{value}}k context",
+    "downloads": "{{value}} downloads",
+    "gated": "This repo is gated. Downloads need a Hugging Face login, which is not supported yet.",
+    "requested": "Requested"
+  },
+  "models": {
+    "recommended": "Recommended",
+    "memory_fit": {
+      "tight": "May not fit in memory",
+      "tight_compact": "May not fit",
+      "impossible": "Too large for this device",
+      "impossible_compact": "Too large"
+    },
+    "sections": {
+      "found_on_device": "Found on this device",
+      "added_from_hf": "Added from Hugging Face",
+      "other": "Other"
+    },
+    "vector_storage": {
+      "reset_title": "Reset Vector Storage",
+      "reset_message": "Are you sure you want to reset the vector storage for this workspace?",
+      "cleared": "Vector storage cleared!"
+    },
+    "vision": {
+      "remote": "Images are not yet supported when chatting with a remote workspace.",
+      "no_model": "Select a model to attach images.",
+      "on_device": "The selected on-device model cannot read images.",
+      "needs_download": "This model can see images, but needs an additional download."
+    },
+    "speech_to_text": {
+      "permission_title": "Microphone access",
+      "permission_message": "AnythingLLM needs microphone access to transcribe your speech into a prompt.",
+      "permission_required_title": "Microphone access required",
+      "permission_required_message": "Enable microphone access in your device settings to use speech-to-text."
+    },
+    "attachments": {
+      "vectors_cleared": "Workspace vectors cleared",
+      "clear_vectors_title": "Clear Workspace Vectors",
+      "clear_vectors_message": "Are you sure you want to clear the vectors for this workspace? This will remove all vectors for this workspace and cannot be undone.",
+      "not_found": "Attachment could not be found",
+      "empty_content": "Attachment content was empty or could not be read",
+      "large_document_title": "Large document",
+      "large_document_message": "\"{{name}}\" is roughly {{tokens}} tokens. With {{provider}} the whole document is sent with every message in this workspace, which can be slow and costly. Attach it anyway?",
+      "large_document_message_generic": "\"{{name}}\" is roughly {{tokens}} tokens. With your model provider the whole document is sent with every message in this workspace, which can be slow and costly. Attach it anyway?",
+      "attach": "Attach",
+      "create_failed": "Failed to create document for attachment",
+      "camera_permission_title": "Camera access",
+      "camera_permission_message": "AnythingLLM needs the camera to take a photo for your prompt.",
+      "max_reached_one": "You can attach up to {{count}} item per prompt",
+      "max_reached_other": "You can attach up to {{count}} items per prompt",
+      "camera_permission_required": "Camera permission is required to take a photo",
+      "camera_open_failed": "Could not open the camera",
+      "gallery_open_failed": "Could not open the gallery",
+      "image_unreadable": "The selected image could not be read",
+      "images_skipped_unreadable_one": "{{count}} image could not be read and was skipped",
+      "images_skipped_unreadable_other": "{{count}} images could not be read and were skipped",
+      "image_attach_failed": "Could not attach image",
+      "max_reached_skipped_one": "You can attach up to {{max}} items per prompt - {{count}} skipped",
+      "max_reached_skipped_other": "You can attach up to {{max}} items per prompt - {{count}} skipped",
+      "images_skipped_no_vision_one": "Your current model cannot read images - {{count}} image was skipped",
+      "images_skipped_no_vision_other": "Your current model cannot read images - {{count}} images were skipped",
+      "read_failed": "Could not read {{name}}",
+      "remove_title": "Remove Attachment",
+      "remove_message": "Are you sure you want to remove this attachment from chat?",
+      "shared_content_failed": "Could not attach the shared content"
+    },
+    "memory_warning": {
+      "short": "Memory Warning",
+      "full": "Warning: Model size may exceed available memory. This could affect performance and stability of your device."
+    },
+    "catalog": {
+      "gemma_3_1b": "(Q8_0) Gemma3 1B is a smaller lightweight version of the Gemma3 4B model for more complex tasks.",
+      "qwen3_0_6b": "(Q8_0) Qwen3 0.6B is a tiny, very fast model for quick answers and simple tasks. Superseded by Qwen3.5 0.8B.",
+      "qwen3_1_7b": "(Q8_0) Qwen3 1.7B is a much more capable version of the Qwen3-0.6B model for more complex tasks.",
+      "llama_3_2_1b": "(Q8_0) Llama 3.2 1B is the smallest version of the Llama 3.2 model.",
+      "qwen3_5_0_8b": "(Q8_0) Qwen3.5 0.8B is the smallest model in the Qwen3.5 family. Very fast on any phone with solid instruction following.",
+      "qwen3_5_2b": "(Q8_0) Qwen3.5 2B is a strong general purpose small model with tool calling and good reasoning for its size.",
+      "qwen3_5_4b": "(Q6_K) Qwen3.5 4B is the most capable Qwen3.5 model that still fits on a phone. Best accuracy, reasoning and tool calling; needs a device with 8GB+ of RAM.",
+      "qwen3_vl_2b_instruct": "(Q4_K_XL) Qwen3-VL 2B is a vision-language model that can describe and answer questions about photos.",
+      "granite_3_3_2b_instruct": "(Q4_K_XL) Granite 3.3 2B from IBM is tuned for RAG, summarization and tool calling. Apache 2.0 licensed.",
+      "granite_4_2_3b": "(Q4_K_M) Granite 4.2 3B is the newest small Granite model with stronger reasoning and tool calling. Larger download.",
+      "lfm2_5_1_2b_instruct": "(Q8_0) LFM2.5 1.2B is a very fast small model tuned for on-device chat, tool calling and 16 languages. Full quality quant.",
+      "lfm2_5_2_6b": "(Q5_K_M) LFM2.5 2.6B is the most capable Liquid model for phones with strong instruction following, tool calling and reasoning.",
+      "gemma_4_e2b": "(QAT Q2_K_XL) Gemma 4 E2B is Google's mobile-first model with an effective 2B parameters. Quantization-aware trained for this size.",
+      "gemma_4_e4b": "(QAT Q2_K_XL) Gemma 4 E4B is the most capable Gemma that fits on a phone. Large download, needs a recent high-memory device."
+    },
+    "presets": {
+      "lightweight": {
+        "name": "Lightweight",
+        "description": "For quick responses and simple tasks."
+      },
+      "balanced": {
+        "name": "Balanced",
+        "description": "For a balance of speed and accuracy."
+      },
+      "powerful": {
+        "name": "Powerful",
+        "description": "Heavier models for the best accuracy."
+      }
+    },
+    "imported_description": "Added from Hugging Face ({{repo}}).",
+    "imported_description_specs": "Added from Hugging Face ({{repo}}). {{specs}}.",
+    "no_model_loaded_error": "No model loaded. Please select a model first.",
+    "unknown_model_description": "Found on this device in {{modelId}} but it is not in our model list. You can still use it or uninstall it.",
+    "status": {
+      "summarizing": "Summarizing earlier conversation",
+      "using_summary_one": "Using a summary of {{count}} earlier message",
+      "using_summary_other": "Using a summary of {{count}} earlier messages",
+      "loading_model": "Loading model into memory",
+      "reply_truncated": "Reply was cut short - the context window is full",
+      "searching_documents": "Searching your documents",
+      "reranking": "Reranking results",
+      "reading_documents_one": "Reading {{count}} attached document",
+      "reading_documents_other": "Reading {{count}} attached documents"
+    }
+  },
+  "providers": {
+    "descriptions": {
+      "native": "Install and run models on your phone.",
+      "ollama": "Run LLMs locally on your own machine with Ollama.",
+      "lmstudio": "Discover, download, and run thousands of cutting edge LLMs in a few clicks.",
+      "openai": "Leverage OpenAI's powerful models.",
+      "anthropic": "A friendly AI Assistant hosted by Anthropic.",
+      "gemini": "Google's largest and most capable AI model",
+      "openrouter": "A unified API of AI services from leading providers",
+      "bedrock": "Run powerful foundation models privately with AWS Bedrock.",
+      "deepseek": "Run DeepSeek's powerful LLMs.",
+      "fireworksai": "The fastest and most efficient inference engine to build production-ready, compound AI systems.",
+      "minimax": "Run MiniMax's powerful LLMs.",
+      "moonshotai": "Run Moonshot AI's Kimi models.",
+      "novita": "Reliable, Scalable, and Cost-Effective for LLMs from Novita AI",
+      "togetherai": "Run open source models from Together AI.",
+      "xai": "Run xAI's powerful LLMs like Grok and more.",
+      "litellm": "Run LiteLLM's OpenAI compatible proxy for various LLMs.",
+      "localai": "Run LLMs locally on your own machine.",
+      "lemonade": "Run LLMs on AMD hardware with Lemonade Server.",
+      "llmman": "Run LLMs locally using llmman.",
+      "generic_openai": "Connect to any OpenAi-compatible service via a custom configuration"
+    },
+    "sections": {
+      "local": "Local Providers",
+      "cloud": "Cloud Providers"
+    },
+    "validation": {
+      "unknown_provider": "Unknown provider.",
+      "api_key_required": "Please enter an API key for this provider.",
+      "base_url_required": "Please enter the base URL of your provider.",
+      "region_required": "Please select the AWS region of your Bedrock deployment.",
+      "model_required": "Please select a model to use."
+    }
+  },
+  "llm_selection": {
+    "choose_provider": "Choose your provider",
+    "no_providers_found": "No providers found for \"{{query}}\"",
+    "download_model_title": "Download model?",
+    "download_model_message": "This will download the model to your device. It is {{size}} bytes.",
+    "preferred_model": "Preferred Model"
+  },
+  "downloads": {
+    "no_internet_title": "No internet connection.",
+    "no_internet_image_support": "You will need to be connected to the internet to download image support.",
+    "no_internet_model": "You will need to be connected to the internet to download any model.",
+    "data_usage_title": "Data usage warning",
+    "data_usage_image_support": "We recommend using a Wi-Fi connection to download image support since it's {{size}} in size.",
+    "data_usage_model": "We recommend using a Wi-Fi connection to download the model since it's {{size}} in size.",
+    "continue_anyway": "Continue Anyway",
+    "continue_with_download": "Continue with download",
+    "image_support_title": "Download image support?",
+    "image_support_message": "{{model}} can understand photos once its image support file is downloaded. It is {{size}} in size.",
+    "download_model_title": "Download model?",
+    "download_model_message": "This will download the model to your device. It is {{size}} in size.",
+    "notification_downloading_title": "Downloading model",
+    "notification_downloading_body": "Downloading {{model}}",
+    "notification_complete_title": "Download complete",
+    "notification_complete_body": "Downloaded {{model}}",
+    "download_failed_title": "Download failed",
+    "download_failed_message": "There was an error downloading the model.",
+    "uninstall_model_title": "Uninstall model?",
+    "uninstall_model_message": "This will remove the model from your device.",
+    "storage_low": "Storage low! Model {{modelSize}} > {{freeSpace}} free",
+    "storage_check_failed": "Failed to check storage",
+    "setup_failed_title": "Download setup failed",
+    "setup_failed_message": "Failed to set up HF model download: {{error}}"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Welcome",
+      "description": "An AI agent that lives on your phone. Chat with documents, search the web, and integrate into your apps.",
+      "get_started": "Get Started",
+      "back_blocked": "Please proceed through the onboarding flow to continue."
+    },
+    "model_selection": {
+      "title": "What model would you like to use?",
+      "description": "You can change this later, but pick the one that best suits your needs.",
+      "use_external": "Don't want to download a model? Use an external provider"
+    },
+    "external": {
+      "title": "Connect an external provider",
+      "description": "Use a model hosted somewhere else instead of downloading one to your phone. You can change this later.",
+      "choose_provider": "Choose an LLM Provider",
+      "provider_settings": "Provider Settings",
+      "incomplete_setup": "Incomplete provider setup"
+    },
+    "download": {
+      "error_title": "An error occurred",
+      "error_message": "Error downloading model {{error}}",
+      "success_title": "Model downloaded",
+      "success_message": "The model has been downloaded successfully",
+      "url_must_be_gguf": "The url must end with .gguf"
+    },
+    "survey": {
+      "title": "What can AnythingLLM help you with?",
+      "description": "Select the one that most applies to you.",
+      "options": {
+        "productivity": "Increase Productivity",
+        "privacy": "Privacy Focused chats",
+        "custom_ai": "Custom AI Agents",
+        "automation": "AI Automation",
+        "other": "Other"
+      }
+    },
+    "data_handling": {
+      "title": "Data Handling & Privacy",
+      "description": "With AnythingLLM, all chats, documents, and other data is processed and stored on your device.",
+      "local_chats_title": "Fully Local Chats",
+      "local_chats_description": "All chats are stored on your device.",
+      "embedding_title": "Document Embedding",
+      "embedding_description": "All documents and processing are done on your device.",
+      "agents_title": "AI Agents",
+      "agents_description": "All agents are run on your device and only use the internet when required (eg: Web search)",
+      "experience": "Experience AnythingLLM",
+      "setting_up": "Setting up your first workspace",
+      "default_workspace_name": "My Workspace"
+    }
+  },
+  "workspace_settings": {
+    "load_error": "Error loading workspace",
+    "autosaving": "Autosaving...",
+    "autosaved": "Autosaved!",
+    "name": {
+      "section": "Workspace Name",
+      "title": "Name",
+      "current": "Current Name",
+      "placeholder": "Enter your name here...",
+      "save_error": "Error saving name"
+    },
+    "system_prompt": {
+      "title": "System Prompt",
+      "label": "Prompt",
+      "current": "Current System Prompt",
+      "placeholder": "Enter your system prompt here...",
+      "save_error": "Error saving system prompt",
+      "description": "The system prompt is the guiding prompt and instructions for the AI. It should be used to guide the AI's behavior and type of responses."
+    },
+    "temperature": {
+      "title": "Temperature",
+      "current": "Current Temperature",
+      "suggested": "Suggested Temperature",
+      "placeholder": "Default (provider decides)",
+      "save_error": "Error saving temperature",
+      "hint": "Leave empty to use the default temperature of your LLM provider and model. Set a value between 0 and 1 to override it.",
+      "description": "The temperature is the level of randomness of the AI's responses. The higher the temperature, the more random the responses will be."
+    },
+    "context_length": {
+      "title": "Context Length",
+      "current": "Current Context Length",
+      "suggested": "Suggested Context Length",
+      "placeholder": "Enter your context length here...",
+      "save_error": "Error saving context length",
+      "hint": "Keep in mind that the context length is also dependent on the model you are using and has memory implications for your device.",
+      "description": "The context length is the maximum number of tokens that the AI can use while generating a response."
+    },
+    "vectors": {
+      "section": "Vector Storage",
+      "count": "Vector Count",
+      "description": "This is the number of vectors that are currently stored in the workspace. This is used to store the context of the workspace."
+    },
+    "delete": {
+      "button": "Delete Workspace",
+      "confirm_title": "Delete Workspace?",
+      "confirm_message": "Are you sure you want to delete this workspace? All threads will be lost.",
+      "confirm_message_remote": "Are you sure you want to delete this workspace? All threads will be lost.\n\nThis will not delete the workspace in your remote instance."
+    }
+  },
+  "connect": {
+    "title": "Connect to AnythingLLM",
+    "scan_description": "Scan the QR code for your AnythingLLM instance or client to sync its data to this mobile device for AI on the go!",
+    "previous_connections": "Previous Connections",
+    "verify": {
+      "title": "Verify Connection",
+      "go_back": "Go Back",
+      "registering": "Registering your device...",
+      "few_seconds": "This may take a few seconds...",
+      "awaiting_approval": "Awaiting approval...",
+      "approve_in_app": "Please approve the device in the AnythingLLM application...",
+      "collecting_data": "Collecting instance data...",
+      "register_failed": "Failed to register device. Please try again.",
+      "register_failed_reason": "Failed to register device: {{reason}}",
+      "approval_failed": "Failed to register or approve device. Please try again."
+    },
+    "import": {
+      "connection_expired": "Your existing connection to AnythingLLM Desktop expired.",
+      "refresh_failed": "Failed to refresh workspaces",
+      "go_home": "Go back to home",
+      "thread_count_one": "{{formatted}} Thread",
+      "thread_count_other": "{{formatted}} Threads",
+      "chat_count_one": "{{formatted}} Chat",
+      "chat_count_other": "{{formatted}} Chats",
+      "sync": "Sync",
+      "synced": "Synced",
+      "sync_failed": "Failed",
+      "sync_workspace_failed": "Failed to sync workspace {{name}}"
+    }
+  },
+  "scheduled_jobs": {
+    "title": "Scheduled Jobs",
+    "job_missing": "That job no longer exists",
+    "update_failed": "Could not update the job",
+    "prompt": "Prompt",
+    "tools": "Tools",
+    "paused": "Paused",
+    "running_now": "Running now",
+    "stop_run": "Stop run",
+    "run_already_finished": "That run had already finished",
+    "stop_failed": "Could not stop the run",
+    "blocked": {
+      "no_provider_title": "Choose an LLM provider first",
+      "no_provider_body": "Scheduled jobs run without you, so they need a cloud or self-hosted LLM to talk to. Pick one in Settings.",
+      "on_device_title": "Scheduled jobs need a cloud LLM",
+      "on_device_body": "The on-device model cannot run in the background, so jobs are paused while it is selected. Switch to a cloud or self-hosted provider in Settings to run them."
+    },
+    "list": {
+      "open_llm_settings": "Open LLM settings",
+      "enabled_count": "{{enabled}} of {{total}} on",
+      "your_jobs": "Your jobs",
+      "explainer_background": "A job is a prompt the assistant runs for you on a schedule, using the tools you pick for it. Results collect here and run even while the app is closed - Android may delay a run by a few minutes to save battery.",
+      "explainer_foreground": "A job is a prompt the assistant runs for you on a schedule, using the tools you pick for it. Results collect here the next time you open the app.",
+      "new_job": "New job",
+      "waiting_for_cloud": "Waiting for a cloud LLM",
+      "next_run": "Next run {{time}}",
+      "not_scheduled": "Not scheduled",
+      "empty_title": "No scheduled jobs yet",
+      "empty_body": "Have the assistant check a website every morning, draft a weekly summary, or build a report on the first of the month - all without opening a chat.",
+      "create_first": "Create your first job"
+    },
+    "runs": {
+      "already_running": "This job is already running",
+      "start_failed": "Could not start the job",
+      "fallback_title": "Job",
+      "edit_job": "Edit job",
+      "next_run_with_date": "Next run {{relative}} · {{date}}",
+      "not_scheduled_to_run": "Not scheduled to run",
+      "notify": "Notify",
+      "last_run": "Last run",
+      "never": "Never",
+      "run_now": "Run now",
+      "run_count_one": "{{count}} run",
+      "run_count_other": "{{count}} runs",
+      "history": "History",
+      "empty_with_next": "This job has not run yet. Its first run is {{time}}. You can also run it now to try it out.",
+      "empty": "This job has not run yet. You can also run it now to try it out.",
+      "manual": "· manual"
+    },
+    "form": {
+      "save_failed": "The job could not be saved",
+      "job_updated": "Job updated",
+      "job_scheduled": "Job scheduled",
+      "could_not_save": "Could not save the job",
+      "delete_title": "Delete this job?",
+      "delete_message": "\"{{name}}\" and every result it produced will be removed. This cannot be undone.",
+      "job_deleted": "Job deleted",
+      "delete_failed": "Could not delete the job",
+      "edit_title": "Edit Job",
+      "new_title": "New Job",
+      "what_section": "What should it do?",
+      "name": "Name",
+      "name_placeholder": "Morning news digest",
+      "prompt_hint": "Written as if you were sending it in a chat. Be specific - nobody is around to answer follow-up questions.",
+      "prompt_placeholder": "Read https://news.ycombinator.com and write a short digest of the five most interesting stories, with a one-line take on each.",
+      "when_section": "When should it run?",
+      "options": "Options",
+      "notify_title": "Notify me when it finishes",
+      "notify_description": "Sends a notification when a run completes with a result. Failed or empty runs only show a dot in the app.",
+      "enabled_description": "Turn off to keep the job and its results without running it.",
+      "save_changes": "Save changes",
+      "schedule_job": "Schedule job",
+      "delete_job": "Delete job"
+    },
+    "tool_picker": {
+      "selected_count_one": "{{count}} selected",
+      "selected_count_other": "{{count}} selected",
+      "none_reply_only": "None - reply only",
+      "app_connections": "App Connections",
+      "explainer": "Every tool you turn on is offered to the model on each run. Tools that would normally ask for your approval are approved automatically, since nobody is there to tap."
+    },
+    "builder": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "hourly": "Hourly",
+      "every_few_minutes": "Every few minutes",
+      "mode_schedule": "Schedule",
+      "mode_cron": "Cron expression",
+      "run": "Run",
+      "every": "Every",
+      "minutes_chip": "{{minutes}} min",
+      "at_minute": "At minute",
+      "on": "On",
+      "on_day": "On day",
+      "days_skipped": "Months without a day {{day}} are skipped.",
+      "at_time": "At {{time}}",
+      "custom_minute": "Minute :{{minute}} was set with a cron expression - pick a step above to change it.",
+      "cron_help": "Five fields: minute, hour, day of month, month, day of week (0 = Sunday). Times are in your phone's time zone.",
+      "invalid_cron": "This is not a valid cron expression"
+    },
+    "run_detail": {
+      "run_missing": "That run no longer exists",
+      "delete_title": "Delete this run?",
+      "delete_message": "The result and any files it created will be removed.",
+      "run_deleted": "Run deleted",
+      "fallback_title": "Run",
+      "delete_run": "Delete run",
+      "run_manually": "Run manually",
+      "scheduled": "Scheduled",
+      "tokens": "{{prompt}} prompt · {{completion}} completion tokens",
+      "result": "Result",
+      "empty_completed": "The model finished without writing anything.",
+      "empty_stopped": "Nothing was produced before the run stopped.",
+      "stopping": "Stopping…",
+      "working": "Working on it…"
+    },
+    "status": {
+      "queued": "Queued",
+      "running": "Running",
+      "completed": "Completed",
+      "failed": "Failed",
+      "timed_out": "Timed out",
+      "stopped": "Stopped"
+    },
+    "unseen": "Unseen",
+    "relative_time": {
+      "in_under_a_minute": "in under a minute",
+      "just_now": "just now",
+      "in_minutes": "in {{minutes}} min",
+      "minutes_ago": "{{minutes}} min ago",
+      "in_hours": "in {{hours}}h",
+      "hours_ago": "{{hours}}h ago",
+      "in_hours_minutes": "in {{hours}}h {{minutes}}m",
+      "hours_minutes_ago": "{{hours}}h {{minutes}}m ago",
+      "in_days": "in {{days}}d",
+      "days_ago": "{{days}}d ago"
+    },
+    "runner": {
+      "job_failed": "Job failed",
+      "created_files": "Your job finished and created files for you."
+    },
+    "schedule": {
+      "custom": "Custom schedule ({{expression}})",
+      "invalid": "Invalid schedule",
+      "every_minute": "Every minute",
+      "every_minutes_one": "Every {{count}} minute",
+      "every_minutes_other": "Every {{count}} minutes",
+      "every_hour": "Every hour",
+      "every_hour_at": "Every hour at {{minute}} past",
+      "every_day_at": "Every day at {{time}}",
+      "weekdays_at": "Weekdays at {{time}}",
+      "weekends_at": "Weekends at {{time}}",
+      "weekly_single": "Every {{day}} at {{time}}",
+      "weekly_multiple": "Every {{days}} and {{last}} at {{time}}",
+      "list_separator": ", ",
+      "monthly": "On the {{day}} of every month at {{time}}",
+      "ordinal_st": "{{n}}st",
+      "ordinal_nd": "{{n}}nd",
+      "ordinal_rd": "{{n}}rd",
+      "ordinal_th": "{{n}}th",
+      "time_am": "{{hour}}:{{minute}} AM",
+      "time_pm": "{{hour}}:{{minute}} PM",
+      "hour_am": "{{hour}} AM",
+      "hour_pm": "{{hour}} PM"
+    },
+    "weekdays_short": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
+    "weekdays_long": {
+      "sunday": "Sunday",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday"
+    }
+  },
+  "notifications": {
+    "channels": {
+      "download_progress": "Download Progress",
+      "chat_replies": "Chat Replies",
+      "chat_replies_description": "Alerts when a reply finishes while AnythingLLM is in the background",
+      "scheduled_jobs": "Scheduled Jobs",
+      "scheduled_jobs_description": "Alerts when a scheduled job finishes running"
+    },
+    "blocked_nudge": {
+      "title": "Get notified when replies finish",
+      "message": "Notifications are turned off for AnythingLLM. Turn them on to get a buzz when a reply finishes while your phone is locked.",
+      "not_now": "Not now",
+      "open_settings": "Open settings"
+    },
+    "chat": {
+      "ready_title": "Reply ready",
+      "failed_title": "Reply failed",
+      "ready_body": "Your reply is ready.",
+      "failed_body": "Your reply could not be completed. Tap to see what happened."
+    },
+    "scheduled_job": {
+      "finished_title": "{{name}} finished",
+      "fallback_body": "Your scheduled job has a result for you."
+    }
+  },
+  "home": {
+    "welcome_title": "Welcome to AnythingLLM",
+    "get_started": "Get started by creating a new workspace.",
+    "create_workspace": "Create Workspace",
+    "default_workspace_name": "My Workspace"
+  },
+  "share": {
+    "unsupported_content": "Only files, images and links can be shared to AnythingLLM",
+    "finish_onboarding": "Finish setting up AnythingLLM before sharing to it",
+    "open_failed": "Could not open the shared content"
+  },
+  "deep_links": {
+    "finish_onboarding": "Finish setting up AnythingLLM before opening links to it"
+  }
+}

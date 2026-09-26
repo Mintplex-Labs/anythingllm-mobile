@@ -12,7 +12,10 @@ import {
   GithubLogo,
   Scroll,
   TextAa,
+  Translate,
 } from 'phosphor-react-native';
+import { useTranslation } from 'react-i18next';
+import i18n, { LANGUAGES, currentLanguage, tKey } from '@/i18n';
 import { isQuickContextAvailable } from '@/quickContext';
 import { IWorkspacePageKey } from '../index';
 import uiStore from '@/store/UIStore';
@@ -44,6 +47,7 @@ interface MainViewProps {
 }
 
 type SupportLink = {
+  /** Translation key - resolved with t() when rendered */
   title: string;
   link?: string;
   icon: React.ReactNode;
@@ -63,12 +67,12 @@ function parsedModelName(modelName: string) {
 
 const ABOUT_LINKS: SupportLink[] = [
   {
-    title: 'Star on GitHub',
+    title: tKey('settings.about.star_github'),
     link: "https://github.com/Mintplex-Labs/Anything-LLM",
     icon: <GithubLogo size={18} color="#FFF" />,
   },
   {
-    title: 'Join the Discord',
+    title: tKey('settings.about.join_discord'),
     link: 'https://discord.gg/6UyHPeGZAC',
     icon: <DiscordLogo size={18} color="#FFF" />,
   },
@@ -76,25 +80,25 @@ const ABOUT_LINKS: SupportLink[] = [
 
 const UTILITY_LINKS: SupportLink[] = [
   {
-    title: 'Clear temporary files',
+    title: tKey('settings.utility.clear_temp_files'),
     icon: <File size={18} color="#FFF" />,
     onPress: async () => {
       // Processed upload text, every file the assistant generated (download cards go to their "missing" state),
       // and any picker/upload scratch files
       await deleteAllAppFiles();
-      showToast('Temporary files cleared');
+      showToast(i18n.t('settings.utility.temp_files_cleared'));
     },
   },
 ]
 
 const LEGAL_LINKS: SupportLink[] = [
   {
-    title: 'Terms of Service',
+    title: tKey('settings.legal.terms'),
     link: 'https://docs.anythingllm.com/mobile/terms',
     icon: <FileText size={18} color="#FFF" />,
   },
   {
-    title: 'Privacy Policy',
+    title: tKey('settings.legal.privacy'),
     link: 'https://docs.anythingllm.com/mobile/privacy',
     icon: <FileLock size={18} color="#FFF" />,
   },
@@ -103,8 +107,10 @@ const LEGAL_LINKS: SupportLink[] = [
 const changelogEntry = getChangelogForVersion(DeviceInfo.getVersion());
 
 export function MainView({ goToPage }: MainViewProps) {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const activeLanguage = LANGUAGES.find(lang => lang.code === currentLanguage());
   const { llmPreferences, providerToName } = useLLMPreference();
   const scrollViewRef = useRef<ScrollView>(null);
   const [changelogVisible, setChangelogVisible] = useState(false);
@@ -118,10 +124,10 @@ export function MainView({ goToPage }: MainViewProps) {
   }
   async function resetAnythingLLM() {
     const confirm = await AwaitableAlert(
-      'Reset AnythingLLM',
-      `Are you sure you want to reset AnythingLLM? This will delete all your workspaces, chats, installed models, and preferences.`,
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Yes, Reset Everything', style: 'destructive' },
+      t('settings.reset.title'),
+      t('settings.reset.confirm_message'),
+      { text: t('common.cancel'), style: 'cancel' },
+      { text: t('settings.reset.confirm_button'), style: 'destructive' },
     );
     if (!confirm) return;
     await Promise.all([
@@ -174,7 +180,7 @@ export function MainView({ goToPage }: MainViewProps) {
           numberOfLines={1}
           ellipsizeMode="middle"
           className="text-white text-lg font-medium">
-          Settings
+          {t('common.settings')}
         </Text>
       </View>
 
@@ -192,7 +198,7 @@ export function MainView({ goToPage }: MainViewProps) {
           {/* Selected Provider and Model */}
           <View className="w-full flex flex-col" style={{ gap: 12 }}>
             <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">
-              LLM Preference
+              {t('settings.llm_preference.title')}
             </Text>
             <TouchableOpacity
               style={{ backgroundColor: '#27282A', padding: 14, gap: 20 }}
@@ -220,24 +226,40 @@ export function MainView({ goToPage }: MainViewProps) {
               </View>
             </TouchableOpacity>
             <Text style={{ color: '#9F9FA0' }} className="text-sm">
-              This is the LLM preference that will be used for all workspaces.
-              You can change it to use a different LLM provider or on-device
-              model.
+              {t('settings.llm_preference.description')}
             </Text>
+          </View>
+
+          {/* UI language - detected from the device on first launch */}
+          <View className="w-full flex flex-col" style={{ gap: 12 }}>
+            <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">
+              {t('language.title')}
+            </Text>
+            <TouchableOpacity
+              style={{ backgroundColor: '#1B1B1E', padding: 14, gap: 12 }}
+              className="w-full flex flex-row items-center rounded-lg"
+              onPress={() => goToPage('language')}>
+              <Translate size={18} color="#FFF" />
+              <Text className="text-white text-lg flex-1">{t('settings.language.app_language')}</Text>
+              <Text numberOfLines={1} style={{ color: '#9F9FA0' }} className="text-lg">
+                {activeLanguage?.nativeName}
+              </Text>
+              <CaretRight size={18} color="#FFF" />
+            </TouchableOpacity>
           </View>
 
           {/* System-level integrations (Android only for now) - each can be switched off on its own page */}
           {isQuickContextAvailable() && (
             <View className="w-full flex flex-col" style={{ gap: 12 }}>
               <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">
-                Special Tools
+                {t('settings.special_tools.title')}
               </Text>
               <TouchableOpacity
                 style={{ backgroundColor: '#1B1B1E', padding: 14, gap: 12 }}
                 className="w-full flex flex-row items-center rounded-lg"
                 onPress={() => goToPage('special_tools')}>
                 <TextAa size={18} color="#FFF" />
-                <Text className="text-white text-lg flex-1">"Ask with AnythingLLM"</Text>
+                <Text className="text-white text-lg flex-1">{t('settings.special_tools.ask_with_anythingllm')}</Text>
                 <CaretRight size={18} color="#FFF" />
               </TouchableOpacity>
             </View>
@@ -256,7 +278,7 @@ export function MainView({ goToPage }: MainViewProps) {
               }}>
               {changelogEntry && (
                 <SupportItem
-                  title={`Release notes for v${changelogEntry.version}`}
+                  title={t('settings.about.release_notes', { version: changelogEntry.version })}
                   icon={<Scroll size={18} color="#FFF" />}
                   onPress={() => setChangelogVisible(true)}
                   borderBottom={ABOUT_LINKS.length > 0}
@@ -266,7 +288,7 @@ export function MainView({ goToPage }: MainViewProps) {
                 return (
                   <SupportItem
                     key={index}
-                    title={link.title}
+                    title={t(link.title)}
                     link={link.link}
                     icon={link.icon}
                     onPress={link.onPress}
@@ -280,7 +302,7 @@ export function MainView({ goToPage }: MainViewProps) {
           <View className="w-full flex flex-col" style={{ gap: 12 }}>
             <View className="flex flex-row items-end justify-between">
               <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">
-                Utility
+                {t('settings.utility.title')}
               </Text>
             </View>
             <View
@@ -292,7 +314,7 @@ export function MainView({ goToPage }: MainViewProps) {
                 borderRadius: 8,
               }}>
               <SupportItem
-                title="Anonymous telemetry"
+                title={t('settings.utility.anonymous_telemetry')}
                 icon={<ChartBar size={18} color="#FFF" />}
                 onPress={() => goToPage('anonymous_telemetry')}
                 borderBottom={UTILITY_LINKS.length > 0}
@@ -301,7 +323,7 @@ export function MainView({ goToPage }: MainViewProps) {
                 return (
                   <SupportItem
                     key={index}
-                    title={link.title}
+                    title={t(link.title)}
                     link={link.link}
                     icon={link.icon}
                     onPress={link.onPress}
@@ -315,7 +337,7 @@ export function MainView({ goToPage }: MainViewProps) {
           <View className="w-full flex flex-col" style={{ gap: 12 }}>
             <View className="flex flex-row items-end justify-between">
               <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">
-                Legal & Privacy
+                {t('settings.legal.title')}
               </Text>
             </View>
             <View
@@ -330,7 +352,7 @@ export function MainView({ goToPage }: MainViewProps) {
                 return (
                   <SupportItem
                     key={index}
-                    title={link.title}
+                    title={t(link.title)}
                     link={link.link}
                     icon={link.icon}
                     onPress={link.onPress}
@@ -348,7 +370,7 @@ export function MainView({ goToPage }: MainViewProps) {
             style={{ backgroundColor: 'rgba(122,39,26,0.2)' }}
             className="flex flex-row items-center justify-center rounded-lg p-4 mb-4">
             <Text style={{ color: '#F97066' }} className="text-lg font-medium">
-              Reset AnythingLLM
+              {t('settings.reset.title')}
             </Text>
           </TouchableOpacity>
         </View>

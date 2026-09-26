@@ -7,6 +7,7 @@ import { generatedDocumentExists, generatedDocumentPath } from "@/utils/fs/gener
 import { copyToDeviceDownloads, shareDeviceFile } from "@/utils/fs/deviceDownloads";
 import { formatBytes } from "@/utils/formatters";
 import { showToast } from "@/utils/Notification";
+import { useTranslation } from "react-i18next";
 
 /**
  * Native port of the desktop `FileDownloadCard`
@@ -52,6 +53,7 @@ type CardStatus = 'checking' | 'ready' | 'saving' | 'saved' | 'missing';
 const SAVED_FEEDBACK_MS = 2500;
 
 function FileDownloadCard({ action }: { action: IFileDownloadAction }) {
+    const { t } = useTranslation();
     const { title, storageFilename, fileSize, mimeType } = action.action;
     const fileType = fileTypeForFilename(title);
     const [status, setStatus] = useState<CardStatus>('checking');
@@ -87,7 +89,7 @@ function FileDownloadCard({ action }: { action: IFileDownloadAction }) {
         try {
             if (Platform.OS === 'android') {
                 const saved = await copyToDeviceDownloads({ filename: title, sourcePath: path });
-                showToast(`Saved ${saved.filename} to ${saved.locationLabel}`);
+                showToast(t('chat.file_download.saved_to', { filename: saved.filename, location: saved.locationLabel }));
                 setStatus('saved');
                 savedTimer.current = setTimeout(() => setStatus('ready'), SAVED_FEEDBACK_MS);
             } else {
@@ -96,7 +98,7 @@ function FileDownloadCard({ action }: { action: IFileDownloadAction }) {
             }
         } catch (error: any) {
             console.error('[FileDownloadCard] download failed', error);
-            showToast(`Could not save file: ${error?.message ?? 'unknown error'}`, 'long');
+            showToast(t('chat.file_download.save_failed', { error: error?.message ?? t('chat.unknown_error') }), 'long');
             setStatus('ready');
         }
     }
@@ -110,7 +112,7 @@ function FileDownloadCard({ action }: { action: IFileDownloadAction }) {
             await shareDeviceFile({ path, filename: title, mimeType });
         } catch (error: any) {
             console.error('[FileDownloadCard] share failed', error);
-            showToast(`Could not open share sheet: ${error?.message ?? 'unknown error'}`, 'long');
+            showToast(t('chat.file_download.share_failed', { error: error?.message ?? t('chat.unknown_error') }), 'long');
         } finally {
             setSharing(false);
         }
@@ -118,12 +120,12 @@ function FileDownloadCard({ action }: { action: IFileDownloadAction }) {
 
     const missing = status === 'missing';
     const subtitle = missing
-        ? 'No longer on this device'
+        ? t('chat.file_download.missing')
         : [fileSize > 0 ? formatBytes(fileSize, 1) : null, fileType.label].filter(Boolean).join(' · ');
 
     return (
         <View
-            accessibilityLabel={missing ? `${title}, file no longer available` : `Download ${title}`}
+            accessibilityLabel={missing ? t('chat.file_download.missing_label', { title }) : t('chat.file_download.download_label', { title })}
             style={{ width: '100%', backgroundColor: COLORS.card, borderRadius: 12, paddingHorizontal: 10, paddingVertical: 8, gap: 12, opacity: missing ? 0.65 : 1 }}
             className="flex flex-row items-center">
             <View
@@ -136,7 +138,7 @@ function FileDownloadCard({ action }: { action: IFileDownloadAction }) {
 
             <View style={{ flex: 1, minWidth: 0 }} className="flex flex-col">
                 <Text numberOfLines={1} ellipsizeMode="middle" style={{ color: COLORS.text, fontSize: 14, fontWeight: '500', lineHeight: 18 }}>
-                    {title || 'Unknown file'}
+                    {title || t('chat.file_download.unknown_file')}
                 </Text>
                 <Text numberOfLines={1} style={{ color: COLORS.muted, fontSize: 12, lineHeight: 16 }}>{subtitle}</Text>
             </View>
@@ -148,7 +150,7 @@ function FileDownloadCard({ action }: { action: IFileDownloadAction }) {
                             onPress={handleShare}
                             disabled={sharing || status === 'checking' || status === 'saving'}
                             hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-                            accessibilityLabel={`Share ${title}`}
+                            accessibilityLabel={t('chat.file_download.share_label', { title })}
                             style={{ width: 36, height: 36, borderRadius: 8, borderWidth: 1, borderColor: COLORS.buttonBorder, opacity: sharing ? 0.6 : 1 }}
                             className="flex items-center justify-center">
                             {sharing ? <ActivityIndicator size="small" color={COLORS.text} /> : <ShareNetwork size={16} color={COLORS.text} weight="bold" />}
@@ -162,9 +164,10 @@ function FileDownloadCard({ action }: { action: IFileDownloadAction }) {
 }
 
 function DownloadButton({ status, onPress }: { status: CardStatus; onPress: () => void }) {
+    const { t } = useTranslation();
     const busy = status === 'checking' || status === 'saving';
     const saved = status === 'saved';
-    const label = status === 'saving' ? 'Saving...' : saved ? 'Saved' : 'Download';
+    const label = status === 'saving' ? t('chat.file_download.saving') : saved ? t('chat.file_download.saved') : t('common.download');
     return (
         <TouchableOpacity
             onPress={onPress}

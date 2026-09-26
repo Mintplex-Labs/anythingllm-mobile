@@ -4,6 +4,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { FileText } from "phosphor-react-native";
 import Favicon from "@/screens/WorkspaceChat/ChatHistory/CitationsActionSheet/Favicon";
 import uiStore from "@/store/UIStore";
+import { useTranslation } from "react-i18next";
 
 const CIRCLE_SIZE = 22;
 const ICON_SIZE = CIRCLE_SIZE - 2;
@@ -42,6 +43,7 @@ function SourceCircle({ citation }: { citation: IChatCitation }) {
 }
 
 export default memo(function CitationsContainer({ citations, isLoading }: { citations?: IChatCitation[]; isLoading?: boolean }) {
+    const { t } = useTranslation();
     if (!citations?.length || isLoading) return null;
 
     const combined = combineLikeCitations(citations);
@@ -55,7 +57,7 @@ export default memo(function CitationsContainer({ citations, isLoading }: { cita
             className="flex flex-row items-center justify-start rounded-full"
             style={{ borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 12, paddingVertical: 5, gap: 6 }}
         >
-            <Text style={{ color: '#FFF' }} className="text-xs">Sources</Text>
+            <Text style={{ color: '#FFF' }} className="text-xs">{t('chat.citations.sources')}</Text>
             <View style={{ position: 'relative', height: CIRCLE_SIZE, width: (visible.length - 1) * OVERLAP_OFFSET + CIRCLE_SIZE }}>
                 {visible.map((citation, idx) => (
                     <View

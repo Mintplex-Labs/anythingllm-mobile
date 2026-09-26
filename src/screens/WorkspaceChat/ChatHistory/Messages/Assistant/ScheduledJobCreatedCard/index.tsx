@@ -5,6 +5,7 @@ import { type IAgentAction, type IScheduledJobCreatedAction } from "@/database/m
 import { describeCron } from "@/utils/ScheduledJobs/cron";
 import { navigateWhenReady } from "@/utils/navigationRef";
 import { PATHS } from "@/utils/paths";
+import { useTranslation } from "react-i18next";
 
 /**
  * Native port of the desktop `ScheduledJobCreatedCard`: one card per job the assistant created
@@ -33,6 +34,7 @@ const COLORS = {
 } as const;
 
 function ScheduledJobCreatedCard({ action }: { action: IScheduledJobCreatedAction }) {
+    const { t } = useTranslation();
     const { jobUuid, jobName, schedule } = action.action;
     const open = () => navigateWhenReady(PATHS.scheduled_jobs, { jobUuid });
     return (
@@ -40,7 +42,7 @@ function ScheduledJobCreatedCard({ action }: { action: IScheduledJobCreatedActio
             onPress={open}
             activeOpacity={0.8}
             accessibilityRole="button"
-            accessibilityLabel={`Open scheduled job ${jobName}`}
+            accessibilityLabel={t('chat.scheduled_job_card.open_label', { name: jobName })}
             style={{ backgroundColor: COLORS.card, borderRadius: 12, padding: 12, gap: 12, width: '100%' }}
             className="flex flex-row items-center">
             <View style={{ backgroundColor: COLORS.iconChip, width: 40, height: 40 }} className="flex items-center justify-center rounded-lg">
@@ -48,10 +50,10 @@ function ScheduledJobCreatedCard({ action }: { action: IScheduledJobCreatedActio
             </View>
             <View className="flex-1 flex flex-col" style={{ gap: 2 }}>
                 <Text numberOfLines={1} style={{ color: COLORS.text }} className="text-base font-medium">{jobName}</Text>
-                <Text numberOfLines={1} style={{ color: COLORS.muted }} className="text-sm">Scheduled job · {describeCron(schedule)}</Text>
+                <Text numberOfLines={1} style={{ color: COLORS.muted }} className="text-sm">{t('chat.scheduled_job_card.subtitle', { schedule: describeCron(schedule) })}</Text>
             </View>
             <View className="flex flex-row items-center" style={{ gap: 2 }}>
-                <Text style={{ color: COLORS.accent }} className="text-sm font-medium">View</Text>
+                <Text style={{ color: COLORS.accent }} className="text-sm font-medium">{t('chat.scheduled_job_card.view')}</Text>
                 <CaretRight size={14} color={COLORS.accent} />
             </View>
         </TouchableOpacity>

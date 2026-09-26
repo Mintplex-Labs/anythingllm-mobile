@@ -9,19 +9,21 @@ import Memory, { type MemoryScope, type MemoryType } from '@/database/models/Mem
 import { type WorkspaceType } from '@/database/models/Workspace';
 import useMemories from '@/hooks/useMemories';
 import { showToast } from '@/utils/Notification';
+import { useTranslation } from 'react-i18next';
+import { tKey } from '@/i18n';
 
 const SCOPE_COPY: Record<MemoryScope, { tab: string; hint: string; placeholder: string; empty: string }> = {
   global: {
-    tab: 'Everywhere',
-    hint: 'Facts about you the model should always know - your name, what you do, how you like answers. Sent with every chat in every workspace. Keep them short so they all fit on small models.',
-    placeholder: 'e.g. My name is Sam. I write Python and prefer short answers.',
-    empty: 'No memories yet. Add a fact about yourself above.',
+    tab: tKey('top_bar.memories.global.tab'),
+    hint: tKey('top_bar.memories.global.hint'),
+    placeholder: tKey('top_bar.memories.global.placeholder'),
+    empty: tKey('top_bar.memories.global.empty'),
   },
   workspace: {
-    tab: 'This workspace',
-    hint: 'Notes that only matter here - the project, its jargon, decisions already made. Managed and injected dynamically.',
-    placeholder: 'e.g. This project is a React Native app called Orbit. Use yarn, not npm.',
-    empty: 'No workspace memories yet. Add a note about this workspace above.',
+    tab: tKey('top_bar.memories.workspace.tab'),
+    hint: tKey('top_bar.memories.workspace.hint'),
+    placeholder: tKey('top_bar.memories.workspace.placeholder'),
+    empty: tKey('top_bar.memories.workspace.empty'),
   },
 };
 
@@ -31,6 +33,7 @@ const SCOPE_COPY: Record<MemoryScope, { tab: string; hint: string; placeholder: 
  * memory is typed by the user - nothing is inferred from the chat.
  */
 export default function MemoriesPage({ workspace, onBack }: { workspace: WorkspaceType; onBack: () => void }) {
+  const { t } = useTranslation();
   const isRemote = !!workspace.isRemote;
   const { enabled, loading, global, workspaceMemories, setEnabled, add, update, remove } = useMemoriesForPage(workspace.slug);
   const [scope, setScope] = useState<MemoryScope>('global');
@@ -66,13 +69,13 @@ export default function MemoriesPage({ workspace, onBack }: { workspace: Workspa
     try {
       if (editing) {
         const updated = await update(editing.uuid, trimmed);
-        if (!updated) showToast('That memory no longer exists', 'long');
+        if (!updated) showToast(t('top_bar.memories.no_longer_exists'), 'long');
       } else {
         await add(trimmed, scope);
       }
       resetInput();
     } catch (error: any) {
-      showToast(error?.message ?? 'Could not save memory', 'long');
+      showToast(error?.message ?? t('top_bar.memories.save_failed'), 'long');
     } finally {
       setSaving(false);
     }
@@ -85,10 +88,10 @@ export default function MemoriesPage({ workspace, onBack }: { workspace: Workspa
 
   const handleDelete = async (memory: MemoryType) => {
     const confirmed = await AwaitableAlert(
-      'Delete memory?',
+      t('top_bar.memories.delete_title'),
       `"${memory.content}"`,
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Delete', style: 'destructive' },
+      { text: t('common.cancel'), style: 'cancel' },
+      { text: t('common.delete'), style: 'destructive' },
     );
     if (!confirmed) return;
     if (editing?.uuid === memory.uuid) resetInput();
@@ -97,13 +100,13 @@ export default function MemoriesPage({ workspace, onBack }: { workspace: Workspa
 
   return (
     <View>
-      <SheetHeader title="Memories" onBack={onBack} />
+      <SheetHeader title={t('top_bar.thread_menu.memories')} onBack={onBack} />
 
       <View className="flex flex-row items-center justify-between" style={{ marginBottom: 6 }}>
         <View style={{ flex: 1, paddingRight: 12 }}>
-          <Text className="text-white text-[15px] font-semibold">Enable memories</Text>
+          <Text className="text-white text-[15px] font-semibold">{t('top_bar.memories.enable')}</Text>
           <Text style={{ color: MUTED_TEXT }} className="text-sm">
-            Allow injection of facts about you or this workspace.
+            {t('top_bar.memories.enable_description')}
           </Text>
         </View>
         {loading ? <ActivityIndicator color="#FFF" /> : <ToggleSwitch isOn={enabled} onToggle={() => setEnabled(!enabled)} />}
@@ -112,10 +115,10 @@ export default function MemoriesPage({ workspace, onBack }: { workspace: Workspa
       {enabled && (
         <View style={{ marginTop: 18, gap: 14 }}>
           <ScopeTabs scope={scope} onChange={handleScopeChange} hideWorkspace={isRemote} />
-          <Text style={{ color: MUTED_TEXT }} className="text-sm">{copy.hint}</Text>
+          <Text style={{ color: MUTED_TEXT }} className="text-sm">{t(copy.hint)}</Text>
           {isRemote && (
             <Text style={{ color: MUTED_TEXT }} className="text-xs">
-              This workspace is answered by your AnythingLLM server, so memories are not used in its chats. Global memories still apply to your on-device and cloud workspaces.
+              {t('top_bar.memories.remote_notice')}
             </Text>
           )}
 
@@ -124,11 +127,11 @@ export default function MemoriesPage({ workspace, onBack }: { workspace: Workspa
               multiline
               value={draft}
               onChangeText={setDraft}
-              placeholder={copy.placeholder}
+              placeholder={t(copy.placeholder)}
               placeholderTextColor={MUTED_TEXT}
               maxLength={Memory.maxContentLength + 50}
               style={{ color: '#FFF', fontSize: 15, minHeight: 44, maxHeight: 120, paddingTop: 0, paddingBottom: 0 }}
-              accessibilityLabel={editing ? 'Edit memory' : 'New memory'}
+              accessibilityLabel={editing ? t('top_bar.memories.edit_memory') : t('top_bar.memories.new_memory')}
             />
             <View className="flex flex-row items-center justify-between">
               <Text style={{ color: trimmed.length > Memory.maxContentLength ? DANGER : MUTED_TEXT }} className="text-xs">
@@ -137,7 +140,7 @@ export default function MemoriesPage({ workspace, onBack }: { workspace: Workspa
               <View className="flex flex-row items-center" style={{ gap: 14 }}>
                 {editing && (
                   <TouchableOpacity onPress={resetInput} hitSlop={8}>
-                    <Text style={{ color: MUTED_TEXT }} className="text-sm">Cancel</Text>
+                    <Text style={{ color: MUTED_TEXT }} className="text-sm">{t('common.cancel')}</Text>
                   </TouchableOpacity>
                 )}
                 <TouchableOpacity
@@ -146,7 +149,7 @@ export default function MemoriesPage({ workspace, onBack }: { workspace: Workspa
                   style={{ backgroundColor: '#FFF', opacity: canSave ? 1 : 0.4, paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8 }}
                   accessibilityRole="button">
                   {saving ? <ActivityIndicator color="#000" size="small" /> : (
-                    <Text className="text-black text-sm font-semibold">{editing ? 'Update' : 'Save'}</Text>
+                    <Text className="text-black text-sm font-semibold">{editing ? t('common.update') : t('common.save')}</Text>
                   )}
                 </TouchableOpacity>
               </View>
@@ -155,7 +158,7 @@ export default function MemoriesPage({ workspace, onBack }: { workspace: Workspa
 
           <View style={{ gap: 4 }}>
             {memories.length === 0 ? (
-              <Text style={{ color: MUTED_TEXT, paddingVertical: 8 }} className="text-sm">{copy.empty}</Text>
+              <Text style={{ color: MUTED_TEXT, paddingVertical: 8 }} className="text-sm">{t(copy.empty)}</Text>
             ) : (
               memories.map((memory) => (
                 <MemoryRow
@@ -181,6 +184,7 @@ function useMemoriesForPage(workspaceSlug: string) {
 }
 
 function ScopeTabs({ scope, onChange, hideWorkspace }: { scope: MemoryScope; onChange: (scope: MemoryScope) => void; hideWorkspace: boolean }) {
+  const { t } = useTranslation();
   const scopes: MemoryScope[] = hideWorkspace ? ['global'] : ['global', 'workspace'];
   return (
     <View className="flex flex-row" style={{ backgroundColor: ROW_ICON_BACKGROUND, borderRadius: 10, padding: 3 }}>
@@ -194,7 +198,7 @@ function ScopeTabs({ scope, onChange, hideWorkspace }: { scope: MemoryScope; onC
             className="flex items-center justify-center"
             accessibilityRole="tab"
             accessibilityState={{ selected }}>
-            <Text style={{ color: selected ? '#000' : '#FFF' }} className="text-sm font-semibold">{SCOPE_COPY[value].tab}</Text>
+            <Text style={{ color: selected ? '#000' : '#FFF' }} className="text-sm font-semibold">{t(SCOPE_COPY[value].tab)}</Text>
           </TouchableOpacity>
         );
       })}
@@ -203,15 +207,16 @@ function ScopeTabs({ scope, onChange, hideWorkspace }: { scope: MemoryScope; onC
 }
 
 function MemoryRow({ memory, active, onEdit, onDelete }: { memory: MemoryType; active: boolean; onEdit: () => void; onDelete: () => void }) {
+  const { t } = useTranslation();
   return (
     <View
       className="flex flex-row items-center"
       style={{ gap: 10, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: '#2A2A2E', opacity: active ? 0.6 : 1 }}>
       <Text className="text-white text-[15px]" style={{ flex: 1 }}>{memory.content}</Text>
-      <TouchableOpacity onPress={onEdit} hitSlop={8} accessibilityLabel="Edit memory">
+      <TouchableOpacity onPress={onEdit} hitSlop={8} accessibilityLabel={t('top_bar.memories.edit_memory')}>
         <PencilSimple size={20} color={MUTED_TEXT} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={onDelete} hitSlop={8} accessibilityLabel="Delete memory">
+      <TouchableOpacity onPress={onDelete} hitSlop={8} accessibilityLabel={t('top_bar.memories.delete_memory')}>
         <Trash size={20} color={DANGER} />
       </TouchableOpacity>
     </View>

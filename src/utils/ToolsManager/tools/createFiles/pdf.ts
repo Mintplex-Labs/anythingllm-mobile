@@ -3,6 +3,7 @@ import { markdownToPdfBase64 } from "@/utils/documents/pdf";
 import { firstHeading, lexMarkdown } from "@/utils/documents/markdown";
 import { saveGeneratedDocument } from "@/utils/fs/generatedDocuments";
 import { generatedFileResult, parseToolArgs, reportGeneratedFile, type StreamEmitter } from "./shared";
+import i18n from "@/i18n";
 
 type Args = { filename: string; content: string; title?: string };
 
@@ -12,8 +13,8 @@ type Args = { filename: string; content: string; title?: string };
  */
 export default {
     id: 'createPdfFile',
-    name: 'PDF Document',
-    description: 'Turn markdown or plain text into a formatted PDF.',
+    get name() { return i18n.t('tools.create_pdf_file.name'); },
+    get description() { return i18n.t('tools.create_pdf_file.description'); },
     defaultEnabled: false,
     category: 'default',
     group: 'createFiles',
@@ -55,11 +56,11 @@ export default {
             const displayFilename = sanitizeFilename(filename, 'pdf', 'document');
             const resolvedTitle = title?.trim() || firstHeading(lexMarkdown(content)) || displayFilename.replace(/\.pdf$/i, '');
 
-            streamEmitter('report_status', `Creating PDF "${displayFilename}"`);
+            streamEmitter('report_status', i18n.t('tools.create_pdf_file.status_creating', { name: displayFilename }));
             const base64 = await markdownToPdfBase64({ content, title: resolvedTitle });
             const saved = await saveGeneratedDocument({ fileType: 'pdf', extension: 'pdf', displayFilename, content: base64, encoding: 'base64' });
             reportGeneratedFile(streamEmitter, saved, GENERATED_FILE_TYPES.pdf.mimeType);
-            streamEmitter('report_status', `Created ${displayFilename}`);
+            streamEmitter('report_status', i18n.t('tools.create_files.status_created', { name: displayFilename }));
             return generatedFileResult('PDF document', saved);
         } catch (e) {
             console.error(`Create PDF Error: ${e instanceof Error ? e.message : 'Unknown error'}`);

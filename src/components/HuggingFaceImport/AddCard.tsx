@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Plus } from 'phosphor-react-native';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Entry point to the Hugging Face import flow. Shown at the bottom of the
  * on-device model lists (model picker sheet and settings screen).
  */
 export default function AddFromHuggingFaceCard({ onPress, hint }: { onPress: () => void; hint?: string }) {
+  const { t } = useTranslation();
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -16,9 +18,9 @@ export default function AddFromHuggingFaceCard({ onPress, hint }: { onPress: () 
         <Plus size={22} color="#ffffff" weight="bold" />
       </View>
       <View className="flex-1 ml-2">
-        <Text className="text-white text-base font-medium">Add a model from Hugging Face</Text>
+        <Text className="text-white text-base font-medium">{t('hf_import.title')}</Text>
         <Text className="text-sm text-[#9F9FA0]">
-          {hint || 'Paste a repo id or url and pick any GGUF quant to run on this device.'}
+          {hint || t('hf_import.add_card_hint')}
         </Text>
       </View>
     </TouchableOpacity>

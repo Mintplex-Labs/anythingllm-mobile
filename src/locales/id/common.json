@@ -1,0 +1,1164 @@
+{
+  "common": {
+    "add": "Tambah",
+    "allow": "Izinkan",
+    "apply": "Terapkan",
+    "back": "Kembali",
+    "cancel": "Batal",
+    "clear": "Bersihkan",
+    "close": "Tutup",
+    "confirm": "Konfirmasi",
+    "continue": "Lanjutkan",
+    "copied": "Tersalin",
+    "copy": "Salin",
+    "create": "Buat",
+    "default": "Default",
+    "delete": "Hapus",
+    "disable": "Nonaktifkan",
+    "disabled": "Dinonaktifkan",
+    "dismiss": "Tutup",
+    "done": "Selesai",
+    "download": "Unduh",
+    "downloading": "Mengunduh",
+    "edit": "Edit",
+    "enable": "Aktifkan",
+    "enabled": "Diaktifkan",
+    "error": "Error",
+    "export": "Ekspor",
+    "import": "Impor",
+    "install": "Pasang",
+    "installed": "Terpasang",
+    "learn_more": "Pelajari lebih lanjut",
+    "loading": "Memuat...",
+    "next": "Lanjut",
+    "no": "Tidak",
+    "none": "Tidak ada",
+    "off": "Mati",
+    "ok": "OK",
+    "on": "Hidup",
+    "open": "Buka",
+    "optional": "Opsional",
+    "refresh": "Segarkan",
+    "remove": "Hapus",
+    "rename": "Ubah nama",
+    "required": "Diperlukan",
+    "reset": "Atur ulang",
+    "retry": "Coba lagi",
+    "save": "Simpan",
+    "search": "Cari",
+    "select": "Pilih",
+    "selected": "Dipilih",
+    "send": "Kirim",
+    "settings": "Pengaturan",
+    "share": "Bagikan",
+    "skip": "Lewati",
+    "stop": "Hentikan",
+    "success": "Berhasil",
+    "uninstall": "Copot pasang",
+    "unknown": "Tidak diketahui",
+    "unknown_error": "Error tidak diketahui",
+    "update": "Perbarui",
+    "upload": "Unggah",
+    "yes": "Ya"
+  },
+  "language": {
+    "title": "Bahasa",
+    "search_placeholder": "Cari bahasa",
+    "no_results": "Tidak ada bahasa yang cocok \"{{query}}\"",
+    "changed": "Bahasa diubah ke {{language}}"
+  },
+  "settings": {
+    "llm_preference": {
+      "title": "Preferensi LLM",
+      "description": "Ini adalah preferensi LLM yang akan digunakan untuk semua ruang kerja. Anda dapat mengubahnya untuk menggunakan penyedia LLM atau model on-device yang berbeda."
+    },
+    "language": {
+      "app_language": "Bahasa aplikasi"
+    },
+    "special_tools": {
+      "title": "Alat Khusus",
+      "ask_with_anythingllm": "\"Tanya dengan AnythingLLM\"",
+      "page_title": "Alat khusus",
+      "added_toast": "Tanya dengan AnythingLLM ditambahkan ke menu pemilihan teks",
+      "removed_toast": "Tanya dengan AnythingLLM dihapus dari menu pemilihan teks",
+      "context_awareness": "Kesadaran konteks",
+      "ask_with_anythingllm_toggle": "Tanya dengan AnythingLLM",
+      "android_only": "Hanya Android",
+      "description_available": "Menambahkan \"Tanya dengan AnythingLLM\" ke menu yang muncul saat Anda memilih teks di aplikasi apa pun. Gunakan untuk menyempurnakan, memendekkan, atau memperbaiki apa yang Anda tulis, atau untuk merangkum, menjelaskan, dan meneliti apa yang Anda baca - dengan model apa pun yang Anda pilih di sini.",
+      "description_unavailable": "Di Android, AnythingLLM dapat muncul di menu yang ditampilkan saat Anda memilih teks di aplikasi apa pun, untuk mengedit atau merangkumnya dengan model pilihan Anda. iOS tidak menawarkan aplikasi hook ini."
+    },
+    "about": {
+      "release_notes": "Catatan rilis untuk v{{version}}",
+      "star_github": "Bintang di GitHub",
+      "join_discord": "Bergabung dengan Discord"
+    },
+    "utility": {
+      "title": "Utilitas",
+      "anonymous_telemetry": "Telemetri anonim",
+      "clear_temp_files": "Bersihkan file sementara",
+      "temp_files_cleared": "File sementara dihapus"
+    },
+    "legal": {
+      "title": "Hukum & Privasi",
+      "terms": "Syarat Layanan",
+      "privacy": "Kebijakan Privasi"
+    },
+    "reset": {
+      "title": "Atur Ulang AnythingLLM",
+      "confirm_message": "Apakah Anda yakin ingin mengatur ulang AnythingLLM? Ini akan menghapus semua ruang kerja, obrolan, model terpasang, dan preferensi Anda.",
+      "confirm_button": "Ya, Atur Ulang Semuanya"
+    },
+    "update_failed": "Tidak dapat memperbarui pengaturan",
+    "version": {
+      "about": "Tentang AnythingLLM",
+      "update_available_title": "Pembaruan Tersedia",
+      "update_available_message": "Versi {{version}} tersedia. Silakan perbarui ke versi terbaru.",
+      "go_to_app_store": "Buka toko aplikasi"
+    },
+    "telemetry": {
+      "enabled_toast": "Telemetri anonim diaktifkan",
+      "disabled_toast": "Telemetri anonim dinonaktifkan",
+      "usage_data": "Data penggunaan",
+      "share_toggle": "Bagikan telemetri anonim",
+      "description_events": "AnythingLLM mengirim sejumlah kecil acara anonim, seperti \"obrolan selesai\" atau \"alat digunakan\", sehingga kami dapat melihat fitur mana yang penting dan di mana hal-hal rusak.",
+      "description_privacy": "Ini tidak pernah mencakup obrolan, dokumen, prompt, atau apa pun yang spesifik tentang cara Anda menggunakan aplikasi. Tidak ada akun dan tidak ada yang mengidentifikasi Anda.",
+      "description_opt_out": "Membiarkan ini tetap aktif membantu kami membangun aplikasi yang lebih baik. Anda dapat mematikannya kapan saja dan tidak ada yang akan dikirim lagi."
+    },
+    "advanced_model_preferences": {
+      "title": "Pemilihan Model",
+      "choose_provider": "Pilih Penyedia LLM",
+      "llm_model": "Model LLM",
+      "provider_settings": "Pengaturan Penyedia",
+      "show_less": "Tampilkan Lebih Sedikit",
+      "view_more": "Tampilkan Lebih Banyak"
+    },
+    "provider_options": {
+      "base_url": "URL Dasar",
+      "base_url_placeholder": "Masukkan URL dasar Anda (misalnya {{example}})",
+      "api_key": "Kunci API",
+      "api_key_optional": "Kunci API (opsional)",
+      "api_key_placeholder": "Masukkan kunci API Anda",
+      "aws_region": "Wilayah AWS",
+      "select_region": "Pilih wilayah",
+      "choose_region": "Pilih wilayah AWS Anda",
+      "search_region": "Cari atau ketik kode wilayah",
+      "use_region": "Gunakan \"{{region}}\"",
+      "model_selection": "Pemilihan Model",
+      "select_model": "Pilih model",
+      "choose_model": "Pilih model Anda",
+      "search_models": "Cari model",
+      "fetching_models": "Mengambil model...",
+      "model_placeholder": "Masukkan model Anda (misalnya {{example}})",
+      "models_load_failed": "Tidak dapat memuat model dari penyedia ini. Periksa kredensial Anda atau masukkan nama model secara manual.",
+      "no_tool_calls": "Model ini terdeteksi memiliki <bold>tidak ada dukungan pemanggilan alat</bold>. Hanya obrolan sederhana + RAG yang akan didukung"
+    }
+  },
+  "chat": {
+    "error_loading_provider": "Error memuat penyedia LLM",
+    "error_loading_thread": "Error memuat thread ruang kerja",
+    "unknown_error": "Error tidak diketahui",
+    "loading_history": "Memuat riwayat obrolan...",
+    "suggestions": {
+      "hello": "Halo, apa yang dapat Anda bantu?",
+      "research": "Cari online beberapa hal menyenangkan untuk dilakukan di {{city}}, {{region}}",
+      "calendar_monday": "Apa yang ada di kalender saya untuk Senin?",
+      "calendar_tomorrow": "Apa yang ada di kalender saya untuk besok?",
+      "calendar_today": "Apa yang ada di kalender saya untuk hari ini?",
+      "email": "Buat konsep email penjualan ke John Doe tentang manfaat agen AI lokal",
+      "summarize_example": "Ringkas paulgraham.com/foundermode.html",
+      "summarize_file": "Ringkas {{name}}",
+      "summarize_websites_other": "Ringkas situs web ini",
+      "summarize_documents_other": "Ringkas dokumen ini",
+      "explain_images_other": "Jelaskan gambar-gambar ini"
+    },
+    "citations": {
+      "title": "Kutipan",
+      "score": "Skor: {{score}}",
+      "sources": "Sumber"
+    },
+    "message_actions": {
+      "copied": "Disalin ke papan klip",
+      "retry_failed": "Tidak dapat mencoba lagi pesan ini",
+      "delete_failed": "Tidak dapat menghapus balasan ini",
+      "fork_failed": "Tidak dapat melakukan fork thread: {{error}}",
+      "fork_name": "Salinan {{name}}",
+      "copy_title": "Salin Pesan",
+      "copy_description": "Salin teks ke papan klip Anda",
+      "retry_wait": "Tunggu balasan saat ini selesai",
+      "retry_description": "Hapus pertukaran ini dan kirim prompt lagi",
+      "fork_title": "Fork Thread",
+      "fork_remote_unavailable": "Tidak tersedia untuk thread jarak jauh",
+      "fork_description": "Mulai thread baru dengan salinan percakapan ini",
+      "delete_title": "Hapus Balasan",
+      "delete_description": "Hapus pesan ini dan balasnnya dari thread"
+    },
+    "activity": {
+      "running": "Berjalan",
+      "waiting_approval_to_run": "Menunggu persetujuan untuk menjalankan {{tool}}",
+      "approved_tool": "Disetujui {{tool}}",
+      "rejected_tool": "Ditolak {{tool}}",
+      "waiting_for_you": "Menunggu Anda",
+      "tool_approved": "Pemanggilan alat disetujui",
+      "tool_rejected": "Pemanggilan alat ditolak",
+      "thinking": "Berpikir...",
+      "waiting_your_approval": "Menunggu persetujuan Anda",
+      "calling_tool": "Memanggil {{tool}}",
+      "working": "Bekerja...",
+      "worked_for": "Bekerja selama {{duration}}",
+      "thought_for": "Berpikir selama {{duration}}",
+      "thoughts": "Pikiran"
+    },
+    "file_download": {
+      "saved_to": "Disimpan {{filename}} ke {{location}}",
+      "save_failed": "Tidak dapat menyimpan file: {{error}}",
+      "share_failed": "Tidak dapat membuka lembar bagikan: {{error}}",
+      "missing": "Tidak lagi di perangkat ini",
+      "missing_label": "{{title}}, file tidak lagi tersedia",
+      "download_label": "Unduh {{title}}",
+      "share_label": "Bagikan {{title}}",
+      "unknown_file": "File tidak diketahui",
+      "saving": "Menyimpan...",
+      "saved": "Disimpan"
+    },
+    "scheduled_job_card": {
+      "open_label": "Buka pekerjaan terjadwal {{name}}",
+      "subtitle": "Pekerjaan terjadwal · {{schedule}}",
+      "view": "Lihat"
+    },
+    "metrics": {
+      "tokens_other": "{{count}} token"
+    },
+    "tool_approval": {
+      "wants_to_call": "Model ingin memanggil <skill>{{skill}}</skill>",
+      "show_details": "Tampilkan detail",
+      "hide_details": "Sembunyikan detail",
+      "approve": "Setujui",
+      "reject": "Tolak"
+    },
+    "attachments": {
+      "attach_files": "Lampirkan file",
+      "gallery": "Galeri",
+      "take_photo": "Ambil foto",
+      "add_attachment": "Tambah lampiran",
+      "hint_embed": "File dibagi dan disematkan sehingga model on-device Anda dapat mencarinya.",
+      "hint_full": "File dikirim ke model Anda sepenuhnya dengan setiap pesan di ruang kerja ini.",
+      "max_reached": "Anda telah mencapai jumlah maksimum lampiran untuk satu prompt.",
+      "downloading_image_support": "Mengunduh dukungan gambar... {{progress}}%",
+      "cancel_download": "Batalkan unduhan",
+      "download_image_support": "Unduh dukungan gambar",
+      "needs_download_tap": "Model ini dapat melihat gambar, tetapi memerlukan unduhan tambahan. Ketuk untuk mengunduh ({{size}}).",
+      "download_failed": "Unduhan gagal. Ketuk untuk mencoba lagi.",
+      "download_cancelled": "Unduhan dibatalkan."
+    },
+    "prompt_input": {
+      "placeholder": "Masukkan prompt Anda",
+      "select_model_first": "Silakan pilih model terlebih dahulu",
+      "stop_generating": "Hentikan pembuatan",
+      "stop_recording": "Hentikan perekaman",
+      "voice_input": "Input suara",
+      "send_prompt": "Kirim prompt"
+    },
+    "files": {
+      "title": "File",
+      "empty": "Tidak ada file di ruang kerja ini",
+      "error_loading": "Error memuat file",
+      "deleted_other": "{{count}} file dihapus dengan berhasil!",
+      "select_all": "Pilih Semua",
+      "deselect_all": "Batalkan Pilihan Semua",
+      "delete_selected": "Hapus File Terpilih",
+      "embedded": "Disematkan · dicari di setiap thread",
+      "full_every_thread": "Dikirim lengkap · setiap thread",
+      "full_this_thread": "Dikirim lengkap · thread ini",
+      "full_another_thread": "Dikirim lengkap · thread lain"
+    },
+    "history_cleared": "Riwayat obrolan dihapus",
+    "tools": {
+      "title": "Alat",
+      "group_status": "{{enabled}} dari {{total}} aktif",
+      "app_connections": "Koneksi Aplikasi",
+      "group_files_note": "{{description}} File disimpan di perangkat ini sampai Anda menghapus file sementara di pengaturan.",
+      "needs_cloud_model": "{{description}} Membutuhkan model cloud.",
+      "unavailable_on_device": "Alat yang diarsir tidak tersedia dengan model on-device. Beralih ke penyedia cloud untuk menggunakannya."
+    },
+    "remote_unreachable": {
+      "title": "Server jarak jauh tidak dapat dijangkau",
+      "message": "Kami tidak dapat menjangkau instans Anda saat ini. Apakah Anda ingin melanjutkan percakapan ini secara lokal?",
+      "cancel": "Tidak, batalkan",
+      "continue": "Ya, lanjutkan secara lokal",
+      "not_sent": "Server jarak jauh tidak dapat dijangkau - obrolan tidak dikirim."
+    },
+    "errors": {
+      "processing": "Error memproses obrolan",
+      "timed_out": "Permintaan habis waktu sebelum respons diterima. Koneksi mungkin terputus."
+    },
+    "status": {
+      "recalling_notes": "Mengingat catatan ruang kerja"
+    }
+  },
+  "quick_context": {
+    "modes": {
+      "summarize": "Ringkas"
+    },
+    "actions": {
+      "polish": "Sempurnakan",
+      "shorten": "Pendekkan",
+      "fix_grammar": "Perbaiki tata bahasa",
+      "more_formal": "Lebih formal",
+      "summarize": "Ringkas",
+      "key_points": "Poin utama",
+      "explain": "Jelaskan",
+      "research": "Penelitian"
+    },
+    "could_not_start": "Tidak dapat memulai Tindakan Cepat",
+    "dismiss": "Tutup",
+    "setup_needed": "Selesaikan pengaturan AnythingLLM untuk menggunakannya dari menu pemilihan.",
+    "open_anythingllm": "Buka AnythingLLM",
+    "select_model": "Pilih model di atas untuk memulai.",
+    "copied_paste": "Tersalin - tempel di atas pilihan Anda",
+    "copy_and_close": "Salin & tutup",
+    "open_in_app": "Buka di aplikasi",
+    "placeholders": {
+      "edit_new": "Bagaimana teks ini harus berubah?",
+      "edit_started": "Sesuaikan teks lebih lanjut…",
+      "summarize_new": "Tanyakan apa pun tentang teks ini…",
+      "summarize_started": "Tanyakan lebih banyak pertanyaan…"
+    }
+  },
+  "attachments": {
+    "processing": "Memproses…",
+    "image": "Gambar",
+    "file_type_generic": "FILE",
+    "name_processing": "{{name}}, memproses",
+    "remove_named": "Hapus {{name}}",
+    "more_images_other": "{{count}} gambar lagi",
+    "attached_image": "Gambar terlampir",
+    "image_position": "{{current}} dari {{total}}",
+    "close_image_preview": "Tutup pratinjau gambar",
+    "remove_image": "Hapus gambar"
+  },
+  "errors": {
+    "boundary": {
+      "details": "Detail error",
+      "details_copied": "Detail error disalin",
+      "report_github": "Laporkan di GitHub",
+      "something_went_wrong": "Ada yang salah",
+      "reported_automatically": "Error ini dilaporkan ke Mintplex Labs secara otomatis.",
+      "telemetry_disabled": "Anda telah menonaktifkan telemetri, jadi kami tidak melaporkan error ini secara otomatis ke Mintplex Labs, Anda sebaiknya membuka masalah GitHub.",
+      "go_home": "Pergi ke Beranda",
+      "message_failed": "Pesan ini tidak dapat ditampilkan karena error.",
+      "hide_details": "Sembunyikan detail error",
+      "show_details": "Tampilkan detail error"
+    }
+  },
+  "highlights": {
+    "play_video": "Putar video",
+    "pause_video": "Jeda video",
+    "whats_new": "Apa yang baru",
+    "tour_title": "Apa yang dapat dilakukan AnythingLLM",
+    "quick_actions": {
+      "title": "Tanya dengan AnythingLLM di mana saja",
+      "body": "Pilih teks di aplikasi apa pun dan ketuk \"Tanya dengan AnythingLLM\" untuk menyempurnakan, memendekkan, merangkum, atau menjelaskannya dengan model Anda. Matikan kapan saja di Pengaturan > Alat Khusus."
+    },
+    "share_sheet": {
+      "title": "Bagikan apa pun ke obrolan",
+      "body": "Kirim foto, dokumen, dan tautan dari aplikasi apa pun langsung ke AnythingLLM. Mereka mendarat di thread baru, terlampir dan siap untuk ditanyakan."
+    },
+    "scheduled_jobs": {
+      "title": "Pekerjaan terjadwal",
+      "body": "Minta tugas berulang - ringkasan berita pagi, check-in mingguan - dan berjalan sesuai jadwal, bahkan saat aplikasi ditutup. Hasil menunggu Anda dengan notifikasi."
+    }
+  },
+  "new_workspace": {
+    "default_name": "Ruang Kerja Baru",
+    "title": "Ruang Kerja Baru",
+    "description": "Berikan nama untuk ruang kerja Anda. Anda dapat mengubahnya nanti.",
+    "placeholder": "misalnya Penelitian, Kerja, Pribadi"
+  },
+  "files": {
+    "types": {
+      "text_file": "File Teks",
+      "spreadsheet": "Spreadsheet",
+      "pdf_document": "Dokumen PDF",
+      "word_document": "Dokumen Word",
+      "file": "File"
+    },
+    "location": {
+      "downloads": "Unduhan",
+      "ios_exports": "File > Di iPhone Saya > AnythingLLM > Ekspor",
+      "open_downloads": "Buka di Unduhan",
+      "open_files": "Buka di File"
+    },
+    "storage_permission": {
+      "title": "Simpan ke Unduhan",
+      "message": "AnythingLLM memerlukan akses penyimpanan untuk menyimpan file ke folder Unduhan Anda."
+    },
+    "export": {
+      "text_label": "Teks",
+      "txt_description": "Transkrip teks biasa",
+      "md_description": "Transkrip terformat untuk aplikasi catatan",
+      "json_description": "Pesan dengan model dan metrik",
+      "pdf_description": "Dokumen terformat"
+    }
+  },
+  "misc": {
+    "new_thread": "Thread Baru",
+    "remote_thread_create_failed": "Kami tidak dapat membuat thread di ruang kerja jarak jauh Anda. Silakan periksa koneksi Anda dan coba lagi.",
+    "job_run": {
+      "failed": "Pekerjaan gagal",
+      "timed_out": "Pekerjaan memakan waktu terlalu lama dan dihentikan",
+      "cancelled": "Anda menghentikan run ini",
+      "app_closed": "Aplikasi ditutup sebelum pekerjaan selesai"
+    },
+    "validation": {
+      "memory_not_text": "Memori harus berupa teks",
+      "memory_too_short": "Memori terlalu pendek",
+      "memory_too_long_other": "Memori harus {{count}} karakter atau lebih sedikit",
+      "job_name_required": "Berikan pekerjaan nama",
+      "job_name_too_long_other": "Nama harus {{count}} karakter atau lebih sedikit",
+      "job_prompt_required": "Tulis prompt yang harus dijalankan pekerjaan",
+      "job_prompt_too_long_other": "Prompt harus {{count}} karakter atau lebih sedikit",
+      "job_schedule_invalid": "Jadwal bukan ekspresi cron yang valid",
+      "job_tools_not_list": "Alat harus berupa daftar",
+      "name_not_string": "Nama harus berupa string",
+      "name_required": "Nama diperlukan",
+      "name_too_short_other": "Nama harus setidaknya {{count}} karakter panjang",
+      "name_too_long_other": "Nama harus kurang dari {{count}} karakter panjang",
+      "system_prompt_not_string": "Prompt sistem harus berupa string",
+      "system_prompt_required": "Prompt sistem diperlukan",
+      "system_prompt_too_short_other": "Prompt sistem harus setidaknya {{count}} karakter panjang",
+      "system_prompt_too_long_other": "Prompt sistem harus kurang dari {{count}} karakter panjang",
+      "temperature_not_number": "Suhu harus berupa angka",
+      "temperature_range": "Suhu harus antara {{min}} dan {{max}}",
+      "context_length_not_number": "Panjang konteks harus berupa angka",
+      "context_length_min": "Panjang konteks harus lebih besar dari {{min}}"
+    }
+  },
+  "tools": {
+    "groups": {
+      "create_files": {
+        "name": "Buat File",
+        "description": "Biarkan asisten menulis dokumen yang dapat Anda unduh dan bagikan."
+      }
+    },
+    "reranker": {
+      "download_required_title": "Unduhan Diperlukan",
+      "download_required_message": "Pemilihan alat cerdas memerlukan unduhan model kecil ({{size}}). Anda berada di data seluler. Lanjutkan?",
+      "status_downloading": "Mengunduh model pemilihan alat",
+      "status_selecting": "Memilih alat terbaik"
+    },
+    "calendar_event_creation": {
+      "name": "Pembuatan Acara Kalender",
+      "description": "Gunakan asisten untuk membuat acara kalender untuk Anda.",
+      "status_preparing": "Menyiapkan acara kalender \"{{title}}\""
+    },
+    "calendar_event_reading": {
+      "name": "Baca Kalender",
+      "description": "Gunakan asisten untuk membaca acara kalender Anda.",
+      "status_date": "Membaca kalender Anda untuk {{date}}",
+      "status_today": "Membaca kalender Anda untuk hari ini",
+      "status_tomorrow": "Membaca kalender Anda untuk besok",
+      "status_this_week": "Membaca kalender Anda untuk minggu ini",
+      "status_next_week": "Membaca kalender Anda untuk minggu depan",
+      "status_this_month": "Membaca kalender Anda untuk bulan ini",
+      "status_next_month": "Membaca kalender Anda untuk bulan depan"
+    },
+    "create_files": {
+      "status_creating": "Membuat {{name}}",
+      "status_created": "Dibuat {{name}}"
+    },
+    "create_docx_file": {
+      "name": "Dokumen Word",
+      "description": "Tulis .docx bergaya dari markdown dengan tema dan halaman judul opsional.",
+      "status_creating": "Membuat dokumen Word \"{{name}}\""
+    },
+    "create_pdf_file": {
+      "name": "Dokumen PDF",
+      "description": "Ubah markdown atau teks biasa menjadi PDF terformat.",
+      "status_creating": "Membuat PDF \"{{name}}\""
+    },
+    "create_text_file": {
+      "name": "Teks, Markdown & CSV",
+      "description": "Tulis file .txt, .md, .csv, dan .json dari percakapan."
+    },
+    "create_pptx": {
+      "name": "Presentasi PowerPoint",
+      "description": "Rencanakan dan bangun dek .pptx bertema, satu bagian sekaligus.",
+      "status_planning_other": "Merencanakan presentasi \"{{title}}\" - {{count}} bagian, tema {{theme}}",
+      "approval_description_other": "Buat presentasi PowerPoint \"{{title}}\" dengan {{count}} bagian? Setiap bagian memerlukan panggilan model untuk dibangun.",
+      "status_not_approved": "Presentasi tidak disetujui",
+      "status_building_section": "[{{current}}/{{total}}] Membangun bagian \"{{title}}\"",
+      "status_section_complete_other": "[{{current}}/{{total}}] Bagian \"{{title}}\" selesai - {{count}} slide",
+      "status_section_complete_from_outline_other": "[{{current}}/{{total}}] Bagian \"{{title}}\" selesai - {{count}} slide (dari outline)",
+      "status_assembling_other": "Merakit dek - {{count}} slide"
+    },
+    "create_scheduled_job": {
+      "name": "Buat Pekerjaan Terjadwal",
+      "description": "Biarkan asisten mengatur pekerjaan berulang dari percakapan, setelah Anda menyetujuinya.",
+      "status_asking": "Meminta penjadwalan \"{{name}}\" ({{when}})",
+      "approval_tools_other": "Buat pekerjaan terjadwal \"{{name}}\"? Ini akan berjalan {{when}} menggunakan {{count}} alat.",
+      "approval_tools_notify_other": "Buat pekerjaan terjadwal \"{{name}}\"? Ini akan berjalan {{when}} menggunakan {{count}} alat dan memberi tahu Anda saat selesai.",
+      "approval_no_tools": "Buat pekerjaan terjadwal \"{{name}}\"? Ini akan berjalan {{when}} tanpa alat.",
+      "approval_no_tools_notify": "Buat pekerjaan terjadwal \"{{name}}\"? Ini akan berjalan {{when}} tanpa alat dan memberi tahu Anda saat selesai.",
+      "status_not_approved": "Pekerjaan terjadwal tidak disetujui",
+      "status_scheduled": "Dijadwalkan \"{{name}}\""
+    },
+    "draft_email": {
+      "name": "Konsep Email",
+      "description": "Gunakan asisten untuk membuat konsep email untuk Anda.",
+      "status_drafting": "Membuat konsep email \"{{subject}}\"",
+      "open_action": "Buka Konsep Email"
+    },
+    "draft_text": {
+      "name": "Konsep Teks",
+      "description": "Gunakan asisten untuk membuat konsep teks untuk Anda.",
+      "status_drafting_to": "Membuat konsep teks untuk {{recipient}}",
+      "status_drafting": "Membuat konsep pesan teks",
+      "open_action": "Buka Konsep Teks"
+    },
+    "get_time": {
+      "name": "Dapatkan Waktu",
+      "description": "Dapatkan tanggal dan waktu saat ini berdasarkan zona waktu perangkat Anda."
+    },
+    "get_location": {
+      "name": "Dapatkan Lokasi",
+      "description": "Dapatkan lokasi perkiraan Anda. Ini akan mengembalikan kota, negara bagian, dan negara.",
+      "status_looking_up": "Mencari lokasi perkiraan Anda"
+    },
+    "summarize": {
+      "name": "Ringkasan",
+      "description": "Ringkas konten dari URL atau nama file yang diberikan.",
+      "status_reading": "Membaca {{source}}",
+      "status_looking_for_file": "Mencari \"{{name}}\" di file Anda",
+      "status_analyzing": "Menganalisis struktur dokumen",
+      "status_document_long_other": "Dokumen panjang - meringkas {{count}} bagian pertama",
+      "approval_description_other": "Konten ini memiliki {{count}} bagian untuk diringkas. Ini mungkin memakan waktu - lanjutkan?",
+      "status_not_approved": "Ringkasan tidak disetujui",
+      "status_complete": "Ringkasan selesai",
+      "status_summarizing_sections": "Meringkas bagian dokumen",
+      "status_summarizing_section": "Meringkas bagian {{current}} dari {{total}}",
+      "status_combining": "Menggabungkan ringkasan bagian"
+    },
+    "web_scraping": {
+      "name": "Web Scraping",
+      "description": "Scarpe situs web tertentu untuk informasi.",
+      "status_reading": "Membaca {{host}}",
+      "status_reading_document": "Membaca dokumen {{name}}",
+      "cellular_title": "Unduh pada seluler?",
+      "cellular_message": "Membaca \"{{name}}\" memerlukan pengunduhan dokumen sebesar {{size}}. Anda berada di data seluler. Lanjutkan?",
+      "cellular_message_unknown_size": "Membaca \"{{name}}\" memerlukan pengunduhan dokumen berukuran tidak diketahui. Anda berada di data seluler. Lanjutkan?"
+    },
+    "web_search": {
+      "name": "Pencarian Web",
+      "description": "Cari web untuk hasil pencarian berdasarkan kueri.",
+      "status_searching": "Mencari web untuk \"{{query}}\"",
+      "status_reviewing_other": "Meninjau {{count}} hasil pencarian"
+    },
+    "approval": {
+      "auto_approved_status": "Disetujui {{tool}} secara otomatis"
+    }
+  },
+  "top_bar": {
+    "model_chip": {
+      "remote_managed": "Ruang kerja ini dikelola dari jarak jauh. Anda tidak dapat mengubah model di sini.",
+      "no_model_loaded": "Tidak ada model yang dimuat",
+      "no_models_found": "Tidak ada model yang ditemukan untuk \"{{query}}\"",
+      "hf_lookup_hint": "Cari \"{{query}}\" di Hugging Face dan unduh versi GGUF.",
+      "list_failed_toast": "Tidak dapat membuat daftar model untuk {{provider}}.",
+      "switch_failed": "Tidak dapat beralih model. Silakan coba lagi.",
+      "loading_models": "Memuat model dari {{provider}}...",
+      "list_failed_title": "Tidak dapat membuat daftar model untuk {{provider}}",
+      "list_failed_description": "Penyedia ini tidak mengembalikan model apa pun. Periksa bahwa titik akhir dapat dijangkau dan mendukung daftar model, atau atur model secara manual di Pengaturan.",
+      "try_again": "Coba lagi",
+      "search_provider_models": "Cari model {{provider}}"
+    },
+    "dev_shortcut_hint_other": "Tekan {{count}} kali lagi untuk membuka alat pengembang",
+    "thread_menu": {
+      "options": "Opsi thread",
+      "export_failed": "Tidak dapat mengekspor thread: {{error}}",
+      "share_failed": "Tidak dapat membuka lembar bagikan: {{error}}",
+      "unknown_error": "error tidak diketahui",
+      "open_location_failed": "Disimpan ke {{location}}, tetapi folder tidak dapat dibuka",
+      "memories": "Memori",
+      "memories_description": "Lihat memori tentang Anda atau preferensi Anda",
+      "export_thread": "Ekspor Thread Obrolan",
+      "saved_to_device": "Disimpan ke perangkat Anda"
+    },
+    "memories": {
+      "global": {
+        "tab": "Di Mana Saja",
+        "hint": "Fakta tentang Anda yang harus selalu diketahui model - nama Anda, apa yang Anda lakukan, bagaimana Anda menyukai jawaban. Dikirim dengan setiap obrolan di setiap ruang kerja. Buat ringkas agar semuanya sesuai di model kecil.",
+        "placeholder": "misalnya Nama saya Sam. Saya menulis Python dan lebih suka jawaban singkat.",
+        "empty": "Tidak ada memori belum. Tambahkan fakta tentang diri Anda di atas."
+      },
+      "workspace": {
+        "tab": "Ruang kerja ini",
+        "hint": "Catatan yang hanya penting di sini - proyek, jargon, keputusan yang sudah dibuat. Dikelola dan disuntikkan secara dinamis.",
+        "placeholder": "misalnya Proyek ini adalah aplikasi React Native bernama Orbit. Gunakan yarn, bukan npm.",
+        "empty": "Tidak ada memori ruang kerja belum. Tambahkan catatan tentang ruang kerja ini di atas."
+      },
+      "no_longer_exists": "Memori itu tidak lagi ada",
+      "save_failed": "Tidak dapat menyimpan memori",
+      "delete_title": "Hapus memori?",
+      "enable": "Aktifkan memori",
+      "enable_description": "Izinkan injeksi fakta tentang Anda atau ruang kerja ini.",
+      "remote_notice": "Ruang kerja ini dijawab oleh server AnythingLLM Anda, jadi memori tidak digunakan dalam obralannya. Memori global tetap berlaku untuk ruang kerja on-device dan cloud Anda.",
+      "edit_memory": "Edit memori",
+      "new_memory": "Memori baru",
+      "delete_memory": "Hapus memori"
+    }
+  },
+  "drawer": {
+    "workspaces": "Ruang Kerja",
+    "scheduled_jobs": "Pekerjaan terjadwal",
+    "scheduled_jobs_unseen_other": "Pekerjaan terjadwal, {{count}} hasil yang tidak terlihat",
+    "new_workspace": "Ruang Kerja Baru",
+    "delete_thread_title": "Hapus thread",
+    "delete_thread_message": "Apakah Anda yakin ingin menghapus thread ini? Semua riwayat obrolan akan hilang.",
+    "delete_workspace_title": "Hapus ruang kerja",
+    "delete_workspace_message": "Apakah Anda yakin ingin menghapus ruang kerja ini? Semua thread akan hilang.",
+    "delete_workspace_message_remote": "Apakah Anda yakin ingin menghapus ruang kerja ini? Semua thread akan hilang.\n\nIni tidak akan menghapus ruang kerja di instans jarak jauh Anda.",
+    "rename_thread": "Ubah nama Thread",
+    "rename_thread_placeholder": "Masukkan nama thread baru"
+  },
+  "hf_import": {
+    "title": "Tambahkan model dari Hugging Face",
+    "add_card_hint": "Tempel id atau url repo dan pilih GGUF quant apa pun untuk dijalankan di perangkat ini.",
+    "generic_error": "Ada yang salah saat berbicara dengan Hugging Face.",
+    "description": "Tempel id atau url model, atau cari. GGUF quant publik apa pun dapat diunduh dan dijalankan di perangkat ini.",
+    "show_files": "Tampilkan file GGUF",
+    "search_hf": "Cari Hugging Face",
+    "files_available_other": "{{count}} file GGUF tersedia untuk diunduh",
+    "highlighted_file": "File yang Anda pilih di Hugging Face disorot di bawah. Ketuk untuk mengunduh.",
+    "highlight_missing": "\"{{filename}}\" bukan salah satu file GGUF repo ini. Pilih quant lain di bawah.",
+    "search_results": "Repo GGUF yang cocok \"{{query}}\", paling banyak diunduh terlebih dahulu. Ketuk satu untuk melihat filenya.",
+    "no_search_results": "Tidak ada repo GGUF yang ditemukan untuk \"{{query}}\".",
+    "tip": "Tip: sebagian besar model memiliki versi GGUF dengan nama yang diakhiri dengan \"-GGUF\" dari unsloth, bartowski, atau lmstudio-community. Quant yang lebih kecil (Q4_K_M dan di bawahnya) berjalan terbaik di ponsel. Model gated atau pribadi tidak didukung.",
+    "params": "{{value}} param",
+    "context": "{{value}}k konteks",
+    "downloads": "{{value}} unduhan",
+    "gated": "Repo ini di-gated. Unduhan memerlukan login Hugging Face, yang belum didukung.",
+    "requested": "Diminta"
+  },
+  "models": {
+    "recommended": "Direkomendasikan",
+    "memory_fit": {
+      "tight": "Mungkin tidak sesuai di memori",
+      "tight_compact": "Mungkin tidak sesuai",
+      "impossible": "Terlalu besar untuk perangkat ini",
+      "impossible_compact": "Terlalu besar"
+    },
+    "sections": {
+      "found_on_device": "Ditemukan di perangkat ini",
+      "added_from_hf": "Ditambahkan dari Hugging Face",
+      "other": "Lainnya"
+    },
+    "vector_storage": {
+      "reset_title": "Atur Ulang Penyimpanan Vektor",
+      "reset_message": "Apakah Anda yakin ingin mengatur ulang penyimpanan vektor untuk ruang kerja ini?",
+      "cleared": "Penyimpanan vektor dihapus!"
+    },
+    "vision": {
+      "remote": "Gambar belum didukung saat obrolan dengan ruang kerja jarak jauh.",
+      "no_model": "Pilih model untuk melampirkan gambar.",
+      "on_device": "Model on-device yang dipilih tidak dapat membaca gambar.",
+      "needs_download": "Model ini dapat melihat gambar, tetapi memerlukan unduhan tambahan."
+    },
+    "speech_to_text": {
+      "permission_title": "Akses mikrofon",
+      "permission_message": "AnythingLLM memerlukan akses mikrofon untuk mentranskripsikan ucapan Anda menjadi prompt.",
+      "permission_required_title": "Akses mikrofon diperlukan",
+      "permission_required_message": "Aktifkan akses mikrofon di pengaturan perangkat Anda untuk menggunakan speech-to-text."
+    },
+    "attachments": {
+      "vectors_cleared": "Vektor ruang kerja dihapus",
+      "clear_vectors_title": "Bersihkan Vektor Ruang Kerja",
+      "clear_vectors_message": "Apakah Anda yakin ingin menghapus vektor untuk ruang kerja ini? Ini akan menghapus semua vektor untuk ruang kerja ini dan tidak dapat dibatalkan.",
+      "not_found": "Lampiran tidak dapat ditemukan",
+      "empty_content": "Konten lampiran kosong atau tidak dapat dibaca",
+      "large_document_title": "Dokumen besar",
+      "large_document_message": "\"{{name}}\" kira-kira {{tokens}} token. Dengan {{provider}} seluruh dokumen dikirim dengan setiap pesan di ruang kerja ini, yang dapat lambat dan mahal. Lampirkan juga?",
+      "large_document_message_generic": "\"{{name}}\" kira-kira {{tokens}} token. Dengan penyedia model Anda seluruh dokumen dikirim dengan setiap pesan di ruang kerja ini, yang dapat lambat dan mahal. Lampirkan juga?",
+      "attach": "Lampirkan",
+      "create_failed": "Gagal membuat dokumen untuk lampiran",
+      "camera_permission_title": "Akses kamera",
+      "camera_permission_message": "AnythingLLM memerlukan kamera untuk mengambil foto untuk prompt Anda.",
+      "max_reached_other": "Anda dapat melampirkan hingga {{count}} item per prompt",
+      "camera_permission_required": "Izin kamera diperlukan untuk mengambil foto",
+      "camera_open_failed": "Tidak dapat membuka kamera",
+      "gallery_open_failed": "Tidak dapat membuka galeri",
+      "image_unreadable": "Gambar yang dipilih tidak dapat dibaca",
+      "images_skipped_unreadable_other": "{{count}} gambar tidak dapat dibaca dan dilewati",
+      "image_attach_failed": "Tidak dapat melampirkan gambar",
+      "max_reached_skipped_other": "Anda dapat melampirkan hingga {{max}} item per prompt - {{count}} dilewati",
+      "images_skipped_no_vision_other": "Model Anda saat ini tidak dapat membaca gambar - {{count}} gambar dilewati",
+      "read_failed": "Tidak dapat membaca {{name}}",
+      "remove_title": "Hapus Lampiran",
+      "remove_message": "Apakah Anda yakin ingin menghapus lampiran ini dari obrolan?",
+      "shared_content_failed": "Tidak dapat melampirkan konten yang dibagikan"
+    },
+    "memory_warning": {
+      "short": "Peringatan Memori",
+      "full": "Peringatan: Ukuran model dapat melebihi memori yang tersedia. Ini dapat mempengaruhi kinerja dan stabilitas perangkat Anda."
+    },
+    "catalog": {
+      "gemma_3_1b": "(Q8_0) Gemma3 1B adalah versi ringan yang lebih kecil dari model Gemma3 4B untuk tugas yang lebih kompleks.",
+      "qwen3_0_6b": "(Q8_0) Qwen3 0.6B adalah model yang sangat kecil dan cepat untuk jawaban cepat dan tugas sederhana. Digantikan oleh Qwen3.5 0.8B.",
+      "qwen3_1_7b": "(Q8_0) Qwen3 1.7B adalah versi yang jauh lebih capable dari model Qwen3-0.6B untuk tugas yang lebih kompleks.",
+      "llama_3_2_1b": "(Q8_0) Llama 3.2 1B adalah versi terkecil dari model Llama 3.2.",
+      "qwen3_5_0_8b": "(Q8_0) Qwen3.5 0.8B adalah model terkecil dalam keluarga Qwen3.5. Sangat cepat di ponsel mana pun dengan mengikuti instruksi yang solid.",
+      "qwen3_5_2b": "(Q8_0) Qwen3.5 2B adalah model kecil tujuan umum yang kuat dengan pemanggilan alat dan penalaran yang baik untuk ukurannya.",
+      "qwen3_5_4b": "(Q6_K) Qwen3.5 4B adalah model Qwen3.5 yang paling capable yang masih muat di ponsel. Akurasi terbaik, penalaran dan pemanggilan alat; memerlukan perangkat dengan RAM 8GB+.",
+      "qwen3_vl_2b_instruct": "(Q4_K_XL) Qwen3-VL 2B adalah model vision-language yang dapat mendeskripsikan dan menjawab pertanyaan tentang foto.",
+      "granite_3_3_2b_instruct": "(Q4_K_XL) Granite 3.3 2B dari IBM disesuaikan untuk RAG, ringkasan, dan pemanggilan alat. Lisensi Apache 2.0.",
+      "granite_4_2_3b": "(Q4_K_M) Granite 4.2 3B adalah model Granite kecil terbaru dengan penalaran yang lebih kuat dan pemanggilan alat. Unduhan yang lebih besar.",
+      "lfm2_5_1_2b_instruct": "(Q8_0) LFM2.5 1.2B adalah model kecil yang sangat cepat disesuaikan untuk obrolan on-device, pemanggilan alat, dan 16 bahasa. Quant kualitas penuh.",
+      "lfm2_5_2_6b": "(Q5_K_M) LFM2.5 2.6B adalah model Liquid yang paling capable untuk ponsel dengan mengikuti instruksi yang kuat, pemanggilan alat, dan penalaran.",
+      "gemma_4_e2b": "(QAT Q2_K_XL) Gemma 4 E2B adalah model mobile-first Google dengan parameter 2B yang efektif. Dilatih dengan kesadaran kuantisasi untuk ukuran ini.",
+      "gemma_4_e4b": "(QAT Q2_K_XL) Gemma 4 E4B adalah Gemma yang paling capable yang muat di ponsel. Unduhan besar, memerlukan perangkat high-memory terbaru."
+    },
+    "presets": {
+      "lightweight": {
+        "name": "Ringan",
+        "description": "Untuk respons cepat dan tugas sederhana."
+      },
+      "balanced": {
+        "name": "Seimbang",
+        "description": "Untuk keseimbangan kecepatan dan akurasi."
+      },
+      "powerful": {
+        "name": "Kuat",
+        "description": "Model yang lebih berat untuk akurasi terbaik."
+      }
+    },
+    "imported_description": "Ditambahkan dari Hugging Face ({{repo}}).",
+    "imported_description_specs": "Ditambahkan dari Hugging Face ({{repo}}). {{specs}}.",
+    "no_model_loaded_error": "Tidak ada model yang dimuat. Silakan pilih model terlebih dahulu.",
+    "unknown_model_description": "Ditemukan di perangkat ini di {{modelId}} tetapi tidak ada di daftar model kami. Anda masih dapat menggunakannya atau menghapusnya.",
+    "status": {
+      "summarizing": "Meringkas percakapan sebelumnya",
+      "using_summary_other": "Menggunakan ringkasan {{count}} pesan sebelumnya",
+      "loading_model": "Memuat model ke dalam memori",
+      "reply_truncated": "Balasan dipotong pendek - jendela konteks penuh",
+      "searching_documents": "Mencari dokumen Anda",
+      "reranking": "Mengubah urutan hasil",
+      "reading_documents_other": "Membaca {{count}} dokumen terlampir"
+    }
+  },
+  "providers": {
+    "descriptions": {
+      "native": "Instal dan jalankan model di ponsel Anda.",
+      "ollama": "Jalankan LLM secara lokal di mesin Anda sendiri dengan Ollama.",
+      "lmstudio": "Temukan, unduh, dan jalankan ribuan LLM terdepan dalam beberapa klik.",
+      "openai": "Manfaatkan model OpenAI yang kuat.",
+      "anthropic": "Asisten AI yang ramah yang dihosting oleh Anthropic.",
+      "gemini": "Model AI terbesar dan paling capable Google",
+      "openrouter": "API terpadu layanan AI dari penyedia terkemuka",
+      "bedrock": "Jalankan model fondasi yang kuat secara pribadi dengan AWS Bedrock.",
+      "deepseek": "Jalankan LLM DeepSeek yang kuat.",
+      "fireworksai": "Mesin inferensi tercepat dan paling efisien untuk membangun sistem AI gabungan yang siap produksi.",
+      "minimax": "Jalankan LLM MiniMax yang kuat.",
+      "moonshotai": "Jalankan model Kimi Moonshot AI.",
+      "novita": "Dapat Diandalkan, Scalable, dan Hemat Biaya untuk LLM dari Novita AI",
+      "togetherai": "Jalankan model open source dari Together AI.",
+      "xai": "Jalankan LLM xAI yang kuat seperti Grok dan lainnya.",
+      "litellm": "Jalankan proxy kompatibel OpenAI LiteLLM untuk berbagai LLM.",
+      "localai": "Jalankan LLM secara lokal di mesin Anda sendiri.",
+      "lemonade": "Jalankan LLM pada perangkat keras AMD dengan Lemonade Server.",
+      "llmman": "Jalankan LLM secara lokal menggunakan llmman.",
+      "generic_openai": "Terhubung ke layanan kompatibel OpenAI apa pun melalui konfigurasi kustom"
+    },
+    "sections": {
+      "local": "Penyedia Lokal",
+      "cloud": "Penyedia Cloud"
+    },
+    "validation": {
+      "unknown_provider": "Penyedia tidak diketahui.",
+      "api_key_required": "Silakan masukkan kunci API untuk penyedia ini.",
+      "base_url_required": "Silakan masukkan URL dasar penyedia Anda.",
+      "region_required": "Silakan pilih wilayah AWS dari penyebaran Bedrock Anda.",
+      "model_required": "Silakan pilih model untuk digunakan."
+    }
+  },
+  "llm_selection": {
+    "choose_provider": "Pilih penyedia Anda",
+    "no_providers_found": "Tidak ada penyedia yang ditemukan untuk \"{{query}}\"",
+    "download_model_title": "Unduh model?",
+    "download_model_message": "Ini akan mengunduh model ke perangkat Anda. Ukurannya {{size}} byte.",
+    "preferred_model": "Model Pilihan"
+  },
+  "downloads": {
+    "no_internet_title": "Tidak ada koneksi internet.",
+    "no_internet_image_support": "Anda perlu terhubung ke internet untuk mengunduh dukungan gambar.",
+    "no_internet_model": "Anda perlu terhubung ke internet untuk mengunduh model apa pun.",
+    "data_usage_title": "Peringatan penggunaan data",
+    "data_usage_image_support": "Kami merekomendasikan menggunakan koneksi Wi-Fi untuk mengunduh dukungan gambar karena berukuran {{size}}.",
+    "data_usage_model": "Kami merekomendasikan menggunakan koneksi Wi-Fi untuk mengunduh model karena berukuran {{size}}.",
+    "continue_anyway": "Lanjutkan Saja",
+    "continue_with_download": "Lanjutkan dengan unduhan",
+    "image_support_title": "Unduh dukungan gambar?",
+    "image_support_message": "{{model}} dapat memahami foto setelah file dukungan gambarnya diunduh. Berukuran {{size}}.",
+    "download_model_title": "Unduh model?",
+    "download_model_message": "Ini akan mengunduh model ke perangkat Anda. Berukuran {{size}}.",
+    "notification_downloading_title": "Mengunduh model",
+    "notification_downloading_body": "Mengunduh {{model}}",
+    "notification_complete_title": "Unduhan selesai",
+    "notification_complete_body": "Mengunduh {{model}}",
+    "download_failed_title": "Unduhan gagal",
+    "download_failed_message": "Ada kesalahan saat mengunduh model.",
+    "uninstall_model_title": "Hapus model?",
+    "uninstall_model_message": "Ini akan menghapus model dari perangkat Anda.",
+    "storage_low": "Penyimpanan rendah! Model {{modelSize}} > {{freeSpace}} gratis",
+    "storage_check_failed": "Gagal memeriksa penyimpanan",
+    "setup_failed_title": "Pengaturan unduhan gagal",
+    "setup_failed_message": "Gagal mengatur unduhan model HF: {{error}}"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Selamat Datang",
+      "description": "Agen AI yang tinggal di ponsel Anda. Obrolan dengan dokumen, cari web, dan integrasikan ke dalam aplikasi Anda.",
+      "get_started": "Memulai",
+      "back_blocked": "Silakan lanjutkan melalui alur onboarding untuk melanjutkan."
+    },
+    "model_selection": {
+      "title": "Model apa yang ingin Anda gunakan?",
+      "description": "Anda dapat mengubah ini nanti, tetapi pilih yang paling sesuai dengan kebutuhan Anda.",
+      "use_external": "Tidak ingin mengunduh model? Gunakan penyedia eksternal"
+    },
+    "external": {
+      "title": "Hubungkan penyedia eksternal",
+      "description": "Gunakan model yang dihosting di tempat lain alih-alih mengunduh satu ke ponsel Anda. Anda dapat mengubah ini nanti.",
+      "choose_provider": "Pilih Penyedia LLM",
+      "provider_settings": "Pengaturan Penyedia",
+      "incomplete_setup": "Pengaturan penyedia tidak lengkap"
+    },
+    "download": {
+      "error_title": "Terjadi kesalahan",
+      "error_message": "Error mengunduh model {{error}}",
+      "success_title": "Model diunduh",
+      "success_message": "Model telah berhasil diunduh",
+      "url_must_be_gguf": "URL harus diakhiri dengan .gguf"
+    },
+    "survey": {
+      "title": "Apa yang dapat dibantu AnythingLLM?",
+      "description": "Pilih yang paling berlaku untuk Anda.",
+      "options": {
+        "productivity": "Tingkatkan Produktivitas",
+        "privacy": "Obrolan Berfokus Privasi",
+        "custom_ai": "Agen AI Kustom",
+        "automation": "Otomasi AI",
+        "other": "Lainnya"
+      }
+    },
+    "data_handling": {
+      "title": "Penanganan Data & Privasi",
+      "description": "Dengan AnythingLLM, semua obrolan, dokumen, dan data lainnya diproses dan disimpan di perangkat Anda.",
+      "local_chats_title": "Obrolan Sepenuhnya Lokal",
+      "local_chats_description": "Semua obrolan disimpan di perangkat Anda.",
+      "embedding_title": "Penyematan Dokumen",
+      "embedding_description": "Semua dokumen dan pemrosesan dilakukan di perangkat Anda.",
+      "agents_title": "Agen AI",
+      "agents_description": "Semua agen berjalan di perangkat Anda dan hanya menggunakan internet jika diperlukan (misalnya: Pencarian web)",
+      "experience": "Alami AnythingLLM",
+      "setting_up": "Menyiapkan ruang kerja pertama Anda",
+      "default_workspace_name": "Ruang Kerja Saya"
+    }
+  },
+  "workspace_settings": {
+    "load_error": "Error memuat ruang kerja",
+    "autosaving": "Menyimpan otomatis...",
+    "autosaved": "Disimpan otomatis!",
+    "name": {
+      "section": "Nama Ruang Kerja",
+      "title": "Nama",
+      "current": "Nama Saat Ini",
+      "placeholder": "Masukkan nama Anda di sini...",
+      "save_error": "Error menyimpan nama"
+    },
+    "system_prompt": {
+      "title": "Prompt Sistem",
+      "label": "Prompt",
+      "current": "Prompt Sistem Saat Ini",
+      "placeholder": "Masukkan prompt sistem Anda di sini...",
+      "save_error": "Error menyimpan prompt sistem",
+      "description": "Prompt sistem adalah prompt panduan dan instruksi untuk AI. Ini harus digunakan untuk memandu perilaku AI dan jenis respons."
+    },
+    "temperature": {
+      "title": "Suhu",
+      "current": "Suhu Saat Ini",
+      "suggested": "Suhu yang Disarankan",
+      "placeholder": "Default (penyedia memutuskan)",
+      "save_error": "Error menyimpan suhu",
+      "hint": "Biarkan kosong untuk menggunakan suhu default penyedia LLM dan model Anda. Atur nilai antara 0 dan 1 untuk menimpanya.",
+      "description": "Suhu adalah tingkat keacakan respons AI. Semakin tinggi suhu, semakin acak responsnya."
+    },
+    "context_length": {
+      "title": "Panjang Konteks",
+      "current": "Panjang Konteks Saat Ini",
+      "suggested": "Panjang Konteks yang Disarankan",
+      "placeholder": "Masukkan panjang konteks Anda di sini...",
+      "save_error": "Error menyimpan panjang konteks",
+      "hint": "Ingat bahwa panjang konteks juga tergantung pada model yang Anda gunakan dan memiliki implikasi memori untuk perangkat Anda.",
+      "description": "Panjang konteks adalah jumlah maksimum token yang dapat digunakan AI saat membuat respons."
+    },
+    "vectors": {
+      "section": "Penyimpanan Vektor",
+      "count": "Jumlah Vektor",
+      "description": "Ini adalah jumlah vektor yang saat ini disimpan di ruang kerja. Ini digunakan untuk menyimpan konteks ruang kerja."
+    },
+    "delete": {
+      "button": "Hapus Ruang Kerja",
+      "confirm_title": "Hapus Ruang Kerja?",
+      "confirm_message": "Apakah Anda yakin ingin menghapus ruang kerja ini? Semua thread akan hilang.",
+      "confirm_message_remote": "Apakah Anda yakin ingin menghapus ruang kerja ini? Semua thread akan hilang.\n\nIni tidak akan menghapus ruang kerja di instans jarak jauh Anda."
+    }
+  },
+  "connect": {
+    "title": "Terhubung ke AnythingLLM",
+    "scan_description": "Pindai kode QR untuk instans atau klien AnythingLLM Anda untuk menyinkronkan datanya ke perangkat mobile ini untuk AI saat bepergian!",
+    "previous_connections": "Koneksi Sebelumnya",
+    "verify": {
+      "title": "Verifikasi Koneksi",
+      "go_back": "Kembali",
+      "registering": "Mendaftarkan perangkat Anda...",
+      "few_seconds": "Ini mungkin memakan waktu beberapa detik...",
+      "awaiting_approval": "Menunggu persetujuan...",
+      "approve_in_app": "Silakan setujui perangkat di aplikasi AnythingLLM...",
+      "collecting_data": "Mengumpulkan data instans...",
+      "register_failed": "Gagal mendaftarkan perangkat. Silakan coba lagi.",
+      "register_failed_reason": "Gagal mendaftarkan perangkat: {{reason}}",
+      "approval_failed": "Gagal mendaftarkan atau menyetujui perangkat. Silakan coba lagi."
+    },
+    "import": {
+      "connection_expired": "Koneksi Anda yang ada ke AnythingLLM Desktop telah kadaluarsa.",
+      "refresh_failed": "Gagal menyegarkan ruang kerja",
+      "go_home": "Kembali ke beranda",
+      "thread_count_other": "{{formatted}} Thread",
+      "chat_count_other": "{{formatted}} Obrolan",
+      "sync": "Sinkronkan",
+      "synced": "Tersinkronkan",
+      "sync_failed": "Gagal",
+      "sync_workspace_failed": "Gagal menyinkronkan ruang kerja {{name}}"
+    }
+  },
+  "scheduled_jobs": {
+    "title": "Pekerjaan Terjadwal",
+    "job_missing": "Pekerjaan itu tidak lagi ada",
+    "update_failed": "Tidak dapat memperbarui pekerjaan",
+    "prompt": "Prompt",
+    "tools": "Alat",
+    "paused": "Dijeda",
+    "running_now": "Berjalan sekarang",
+    "stop_run": "Hentikan run",
+    "run_already_finished": "Run itu sudah selesai",
+    "stop_failed": "Tidak dapat menghentikan run",
+    "blocked": {
+      "no_provider_title": "Pilih penyedia LLM terlebih dahulu",
+      "no_provider_body": "Pekerjaan terjadwal berjalan tanpa Anda, jadi mereka memerlukan cloud atau LLM self-hosted untuk diajak bicara. Pilih satu di Pengaturan.",
+      "on_device_title": "Pekerjaan terjadwal memerlukan LLM cloud",
+      "on_device_body": "Model on-device tidak dapat berjalan di latar belakang, jadi pekerjaan dijeda saat dipilih. Beralih ke penyedia cloud atau self-hosted di Pengaturan untuk menjalankannya."
+    },
+    "list": {
+      "open_llm_settings": "Buka pengaturan LLM",
+      "enabled_count": "{{enabled}} dari {{total}} aktif",
+      "your_jobs": "Pekerjaan Anda",
+      "explainer_background": "Pekerjaan adalah prompt yang dijalankan asisten untuk Anda sesuai jadwal, menggunakan alat yang Anda pilih. Hasil dikumpulkan di sini dan berjalan bahkan saat aplikasi ditutup - Android dapat menunda run beberapa menit untuk menghemat baterai.",
+      "explainer_foreground": "Pekerjaan adalah prompt yang dijalankan asisten untuk Anda sesuai jadwal, menggunakan alat yang Anda pilih. Hasil dikumpulkan di sini saat Anda membuka aplikasi berikutnya.",
+      "new_job": "Pekerjaan baru",
+      "waiting_for_cloud": "Menunggu LLM cloud",
+      "next_run": "Run berikutnya {{time}}",
+      "not_scheduled": "Tidak terjadwal",
+      "empty_title": "Tidak ada pekerjaan terjadwal belum",
+      "empty_body": "Biarkan asisten memeriksa situs web setiap pagi, buat konsep ringkasan mingguan, atau buat laporan di awal bulan - semuanya tanpa membuka obrolan.",
+      "create_first": "Buat pekerjaan pertama Anda"
+    },
+    "runs": {
+      "already_running": "Pekerjaan ini sudah berjalan",
+      "start_failed": "Tidak dapat memulai pekerjaan",
+      "fallback_title": "Pekerjaan",
+      "edit_job": "Edit pekerjaan",
+      "next_run_with_date": "Run berikutnya {{relative}} · {{date}}",
+      "not_scheduled_to_run": "Tidak dijadwalkan untuk berjalan",
+      "notify": "Beri tahu",
+      "last_run": "Run terakhir",
+      "never": "Tidak pernah",
+      "run_now": "Jalankan sekarang",
+      "run_count_other": "{{count}} run",
+      "history": "Riwayat",
+      "empty_with_next": "Pekerjaan ini belum berjalan. Run pertamanya adalah {{time}}. Anda juga dapat menjalankannya sekarang untuk mencobanya.",
+      "empty": "Pekerjaan ini belum berjalan. Anda juga dapat menjalankannya sekarang untuk mencobanya.",
+      "manual": "· manual"
+    },
+    "form": {
+      "save_failed": "Pekerjaan tidak dapat disimpan",
+      "job_updated": "Pekerjaan diperbarui",
+      "job_scheduled": "Pekerjaan dijadwalkan",
+      "could_not_save": "Tidak dapat menyimpan pekerjaan",
+      "delete_title": "Hapus pekerjaan ini?",
+      "delete_message": "\"{{name}}\" dan setiap hasil yang dihasilkannya akan dihapus. Ini tidak dapat dibatalkan.",
+      "job_deleted": "Pekerjaan dihapus",
+      "delete_failed": "Tidak dapat menghapus pekerjaan",
+      "edit_title": "Edit Pekerjaan",
+      "new_title": "Pekerjaan Baru",
+      "what_section": "Apa yang harus dilakukannya?",
+      "name": "Nama",
+      "name_placeholder": "Ringkasan berita pagi",
+      "prompt_hint": "Ditulis seolah-olah Anda mengirimnya dalam obrolan. Jadilah spesifik - tidak ada orang untuk menjawab pertanyaan lanjutan.",
+      "prompt_placeholder": "Baca https://news.ycombinator.com dan tulis ringkasan singkat dari lima cerita paling menarik, dengan satu baris pandangan untuk masing-masing.",
+      "when_section": "Kapan harus dijalankan?",
+      "options": "Opsi",
+      "notify_title": "Beri tahu saya saat selesai",
+      "notify_description": "Mengirim notifikasi saat run selesai dengan hasil. Run yang gagal atau kosong hanya menampilkan titik di aplikasi.",
+      "enabled_description": "Matikan untuk menyimpan pekerjaan dan hasilnya tanpa menjalankannya.",
+      "save_changes": "Simpan perubahan",
+      "schedule_job": "Jadwalkan pekerjaan",
+      "delete_job": "Hapus pekerjaan"
+    },
+    "tool_picker": {
+      "selected_count_other": "{{count}} dipilih",
+      "none_reply_only": "Tidak ada - hanya balasan",
+      "app_connections": "Koneksi Aplikasi",
+      "explainer": "Setiap alat yang Anda aktifkan ditawarkan ke model pada setiap run. Alat yang biasanya meminta persetujuan Anda disetujui secara otomatis, karena tidak ada orang untuk mengetuk."
+    },
+    "builder": {
+      "daily": "Harian",
+      "weekly": "Mingguan",
+      "monthly": "Bulanan",
+      "hourly": "Setiap jam",
+      "every_few_minutes": "Setiap beberapa menit",
+      "mode_schedule": "Jadwal",
+      "mode_cron": "Ekspresi cron",
+      "run": "Jalankan",
+      "every": "Setiap",
+      "minutes_chip": "{{minutes}} min",
+      "at_minute": "Pada menit",
+      "on": "Pada",
+      "on_day": "Pada hari",
+      "days_skipped": "Bulan tanpa hari {{day}} dilewati.",
+      "at_time": "Pada {{time}}",
+      "custom_minute": "Menit :{{minute}} diatur dengan ekspresi cron - pilih langkah di atas untuk mengubahnya.",
+      "cron_help": "Lima bidang: menit, jam, hari dalam bulan, bulan, hari dalam seminggu (0 = Minggu). Waktu berada di zona waktu ponsel Anda.",
+      "invalid_cron": "Ini bukan ekspresi cron yang valid"
+    },
+    "run_detail": {
+      "run_missing": "Run itu tidak lagi ada",
+      "delete_title": "Hapus run ini?",
+      "delete_message": "Hasil dan file apa pun yang dibuatnya akan dihapus.",
+      "run_deleted": "Run dihapus",
+      "fallback_title": "Run",
+      "delete_run": "Hapus run",
+      "run_manually": "Jalankan secara manual",
+      "scheduled": "Dijadwalkan",
+      "tokens": "{{prompt}} prompt · {{completion}} token penyelesaian",
+      "result": "Hasil",
+      "empty_completed": "Model selesai tanpa menulis apa pun.",
+      "empty_stopped": "Tidak ada yang dihasilkan sebelum run berhenti.",
+      "stopping": "Menghentikan…",
+      "working": "Sedang mengerjakannya…"
+    },
+    "status": {
+      "queued": "Antri",
+      "running": "Berjalan",
+      "completed": "Selesai",
+      "failed": "Gagal",
+      "timed_out": "Habis waktu",
+      "stopped": "Berhenti"
+    },
+    "unseen": "Tidak terlihat",
+    "relative_time": {
+      "in_under_a_minute": "dalam kurang dari satu menit",
+      "just_now": "baru saja",
+      "in_minutes": "dalam {{minutes}} min",
+      "minutes_ago": "{{minutes}} min yang lalu",
+      "in_hours": "dalam {{hours}}j",
+      "hours_ago": "{{hours}}j yang lalu",
+      "in_hours_minutes": "dalam {{hours}}j {{minutes}}m",
+      "hours_minutes_ago": "{{hours}}j {{minutes}}m yang lalu",
+      "in_days": "dalam {{days}}h",
+      "days_ago": "{{days}}h yang lalu"
+    },
+    "runner": {
+      "job_failed": "Pekerjaan gagal",
+      "created_files": "Pekerjaan Anda selesai dan membuat file untuk Anda."
+    },
+    "schedule": {
+      "custom": "Jadwal kustom ({{expression}})",
+      "invalid": "Jadwal tidak valid",
+      "every_minute": "Setiap menit",
+      "every_minutes_other": "Setiap {{count}} menit",
+      "every_hour": "Setiap jam",
+      "every_hour_at": "Setiap jam pada {{minute}} berlalu",
+      "every_day_at": "Setiap hari pada {{time}}",
+      "weekdays_at": "Hari kerja pada {{time}}",
+      "weekends_at": "Akhir pekan pada {{time}}",
+      "weekly_single": "Setiap {{day}} pada {{time}}",
+      "weekly_multiple": "Setiap {{days}} dan {{last}} pada {{time}}",
+      "list_separator": ", ",
+      "monthly": "Pada {{day}} setiap bulan pada {{time}}",
+      "ordinal_st": "{{n}}st",
+      "ordinal_nd": "{{n}}nd",
+      "ordinal_rd": "{{n}}rd",
+      "ordinal_th": "{{n}}ke",
+      "time_am": "{{hour}}:{{minute}} AM",
+      "time_pm": "{{hour}}:{{minute}} PM",
+      "hour_am": "{{hour}} AM",
+      "hour_pm": "{{hour}} PM"
+    },
+    "weekdays_short": {
+      "sun": "Min",
+      "mon": "Sen",
+      "tue": "Sel",
+      "wed": "Rab",
+      "thu": "Kam",
+      "fri": "Jum",
+      "sat": "Sab"
+    },
+    "weekdays_long": {
+      "sunday": "Minggu",
+      "monday": "Senin",
+      "tuesday": "Selasa",
+      "wednesday": "Rabu",
+      "thursday": "Kamis",
+      "friday": "Jumat",
+      "saturday": "Sabtu"
+    }
+  },
+  "notifications": {
+    "channels": {
+      "download_progress": "Kemajuan Unduhan",
+      "chat_replies": "Balasan Obrolan",
+      "chat_replies_description": "Pemberitahuan saat balasan selesai saat AnythingLLM di latar belakang",
+      "scheduled_jobs": "Pekerjaan Terjadwal",
+      "scheduled_jobs_description": "Pemberitahuan saat pekerjaan terjadwal selesai berjalan"
+    },
+    "blocked_nudge": {
+      "title": "Dapatkan notifikasi saat balasan selesai",
+      "message": "Notifikasi dimatikan untuk AnythingLLM. Nyalakan untuk mendapatkan buzz saat balasan selesai saat ponsel Anda terkunci.",
+      "not_now": "Tidak sekarang",
+      "open_settings": "Buka pengaturan"
+    },
+    "chat": {
+      "ready_title": "Balasan siap",
+      "failed_title": "Balasan gagal",
+      "ready_body": "Balasan Anda siap.",
+      "failed_body": "Balasan Anda tidak dapat diselesaikan. Ketuk untuk melihat apa yang terjadi."
+    },
+    "scheduled_job": {
+      "finished_title": "{{name}} selesai",
+      "fallback_body": "Pekerjaan terjadwal Anda memiliki hasil untuk Anda."
+    }
+  },
+  "home": {
+    "welcome_title": "Selamat Datang di AnythingLLM",
+    "get_started": "Mulai dengan membuat ruang kerja baru.",
+    "create_workspace": "Buat Ruang Kerja",
+    "default_workspace_name": "Ruang Kerja Saya"
+  },
+  "share": {
+    "unsupported_content": "Hanya file, gambar, dan tautan yang dapat dibagikan ke AnythingLLM",
+    "finish_onboarding": "Selesaikan pengaturan AnythingLLM sebelum berbagi ke dalamnya",
+    "open_failed": "Tidak dapat membuka konten yang dibagikan"
+  },
+  "deep_links": {
+    "finish_onboarding": "Selesaikan pengaturan AnythingLLM sebelum membuka tautan ke dalamnya"
+  }
+}

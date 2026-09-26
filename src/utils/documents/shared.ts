@@ -1,6 +1,7 @@
 /**
  * Helpers shared by the document generators (text, PDF, DOCX, PPTX).
  */
+import i18n from '@/i18n';
 
 export type GeneratedFileType = 'txt' | 'md' | 'csv' | 'json' | 'pdf' | 'docx' | 'pptx';
 
@@ -17,19 +18,20 @@ export type GeneratedFileTypeDefinition = {
 };
 
 export const GENERATED_FILE_TYPES: Record<GeneratedFileType, GeneratedFileTypeDefinition> = {
-    txt: { extension: 'txt', mimeType: 'text/plain', label: 'Text File', badge: 'TXT', badgeBackground: '#E4E4E7', badgeText: '#3F3F46' },
+    // `label` getters translate when the card renders, not at module load
+    txt: { extension: 'txt', mimeType: 'text/plain', get label() { return i18n.t('files.types.text_file'); }, badge: 'TXT', badgeBackground: '#E4E4E7', badgeText: '#3F3F46' },
     md: { extension: 'md', mimeType: 'text/markdown', label: 'Markdown', badge: 'MD', badgeBackground: '#E4E4E7', badgeText: '#3F3F46' },
-    csv: { extension: 'csv', mimeType: 'text/csv', label: 'Spreadsheet', badge: 'CSV', badgeBackground: '#DCFCE7', badgeText: '#15803D' },
+    csv: { extension: 'csv', mimeType: 'text/csv', get label() { return i18n.t('files.types.spreadsheet'); }, badge: 'CSV', badgeBackground: '#DCFCE7', badgeText: '#15803D' },
     json: { extension: 'json', mimeType: 'application/json', label: 'JSON', badge: 'JSON', badgeBackground: '#E4E4E7', badgeText: '#3F3F46' },
-    pdf: { extension: 'pdf', mimeType: 'application/pdf', label: 'PDF Document', badge: 'PDF', badgeBackground: '#FEE2E2', badgeText: '#B91C1C' },
-    docx: { extension: 'docx', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', label: 'Word Document', badge: 'DOC', badgeBackground: '#DBEAFE', badgeText: '#1D4ED8' },
+    pdf: { extension: 'pdf', mimeType: 'application/pdf', get label() { return i18n.t('files.types.pdf_document'); }, badge: 'PDF', badgeBackground: '#FEE2E2', badgeText: '#B91C1C' },
+    docx: { extension: 'docx', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', get label() { return i18n.t('files.types.word_document'); }, badge: 'DOC', badgeBackground: '#DBEAFE', badgeText: '#1D4ED8' },
     pptx: { extension: 'pptx', mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation', label: 'PowerPoint', badge: 'PPT', badgeBackground: '#FFEDD5', badgeText: '#C2410C' },
 };
 
 const FALLBACK_FILE_TYPE: GeneratedFileTypeDefinition = {
     extension: 'txt',
     mimeType: 'application/octet-stream',
-    label: 'File',
+    get label() { return i18n.t('files.types.file'); },
     badge: 'FILE',
     badgeBackground: '#E4E4E7',
     badgeText: '#3F3F46',

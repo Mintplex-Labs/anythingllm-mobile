@@ -19,9 +19,9 @@ import { showToast } from '@/utils/Notification';
 import { PATHS } from '@/utils/paths';
 import Telemetry from '@/utils/Telemetry';
 import { type MessageActionsFocusEvent } from '../Messages/focusMessageActions';
+import { useTranslation } from 'react-i18next';
 
-/** Prefix + max length of the forked thread's name - the thread name validator caps names at 100 chars */
-const FORK_NAME_PREFIX = 'Copy of ';
+/** Max length of the forked thread's name ("Copy of <name>") - the thread name validator caps names at 100 chars */
 const MAX_THREAD_NAME_LENGTH = 100;
 
 /**
@@ -33,6 +33,7 @@ const MAX_THREAD_NAME_LENGTH = 100;
  * Assistant bubble: Copy Message, Fork Thread, Delete Reply.
  */
 export default function MessageActionsSheet({ workspace, thread }: { workspace: WorkspaceType; thread: WorkspaceThreadType }) {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<DrawerNavigationProp<any>>();
   const sheetRef = useRef<BottomSheetModal>(null);
@@ -73,7 +74,7 @@ export default function MessageActionsSheet({ workspace, thread }: { workspace: 
     if (text?.trim()) {
       Clipboard.setString(text.trim());
       ReactNativeHapticFeedback.trigger('impactLight', hapticOptions);
-      showToast('Copied to clipboard');
+      showToast(t('chat.message_actions.copied'));
     }
     dismiss();
   };
@@ -85,7 +86,7 @@ export default function MessageActionsSheet({ workspace, thread }: { workspace: 
     // Fire after dismiss so the sheet animation is not blocked by the model spinning up.
     retryChat(uuid).catch(error => {
       console.error('[MessageActions] retry failed', error);
-      showToast('Could not retry this message', 'long');
+      showToast(t('chat.message_actions.retry_failed'), 'long');
     });
   };
 
@@ -97,7 +98,7 @@ export default function MessageActionsSheet({ workspace, thread }: { workspace: 
       .then(() => Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.CHAT_DELETED, { isRemote }))
       .catch(error => {
         console.error('[MessageActions] delete failed', error);
-        showToast('Could not delete this reply', 'long');
+        showToast(t('chat.message_actions.delete_failed'), 'long');
       });
   };
 
@@ -106,7 +107,7 @@ export default function MessageActionsSheet({ workspace, thread }: { workspace: 
     setForking(true);
     try {
       const newThread = await WorkspaceThread.create({ workspaceSlug: workspace.slug });
-      const name = `${FORK_NAME_PREFIX}${thread.name}`.slice(0, MAX_THREAD_NAME_LENGTH);
+      const name = t('chat.message_actions.fork_name', { name: thread.name }).slice(0, MAX_THREAD_NAME_LENGTH);
       const renamed = await WorkspaceThread.update(
         [{ field: 'workspace_slug', value: workspace.slug }, { field: 'slug', value: newThread.slug }],
         { name },
@@ -130,7 +131,7 @@ export default function MessageActionsSheet({ workspace, thread }: { workspace: 
       });
     } catch (error: any) {
       console.error('[MessageActions] fork failed', error);
-      showToast(`Could not fork thread: ${error?.message ?? 'unknown error'}`, 'long');
+      showToast(t('chat.message_actions.fork_failed', { error: error?.message ?? t('chat.unknown_error') }), 'long');
     } finally {
       setForking(false);
     }
@@ -147,13 +148,13 @@ export default function MessageActionsSheet({ workspace, thread }: { workspace: 
       handleIndicatorStyle={{ backgroundColor: MUTED_TEXT, width: 45, margin: 10 }}
       onDismiss={handleDismiss}>
       <BottomSheetView style={{ paddingHorizontal: 20, paddingTop: 4, paddingBottom: Math.max(insets.bottom, 16) + 8 }}>
-        <MenuRow icon={<Copy size={22} color="#FFF" />} title="Copy Message" description="Copy the text to your clipboard" onPress={handleCopy} trailing={null} />
+        <MenuRow icon={<Copy size={22} color="#FFF" />} title={t('chat.message_actions.copy_title')} description={t('chat.message_actions.copy_description')} onPress={handleCopy} trailing={null} />
 
         {focused?.role === 'user' && (
           <MenuRow
             icon={<ArrowClockwise size={22} color="#FFF" />}
-            title="Retry"
-            description={isWorking ? 'Wait for the current reply to finish' : 'Remove this exchange and send the prompt again'}
+            title={t('common.retry')}
+            description={isWorking ? t('chat.message_actions.retry_wait') : t('chat.message_actions.retry_description')}
             disabled={isWorking}
             onPress={handleRetry}
             trailing={null}
@@ -164,17 +165,17 @@ export default function MessageActionsSheet({ workspace, thread }: { workspace: 
           <>
             <MenuRow
               icon={<GitBranch size={22} color="#FFF" />}
-              title="Fork Thread"
-              description={isRemote ? 'Not available for remote threads' : 'Start a new thread with a copy of this conversation'}
+              title={t('chat.message_actions.fork_title')}
+              description={isRemote ? t('chat.message_actions.fork_remote_unavailable') : t('chat.message_actions.fork_description')}
               disabled={isRemote || forking}
               onPress={handleFork}
               trailing={forking ? <ActivityIndicator color="#FFF" /> : null}
             />
             <MenuRow
               icon={<Trash size={22} color={DANGER} />}
-              title="Delete Reply"
+              title={t('chat.message_actions.delete_title')}
               titleColor={DANGER}
-              description="Remove this message and its reply from the thread"
+              description={t('chat.message_actions.delete_description')}
               onPress={handleDelete}
               trailing={null}
             />

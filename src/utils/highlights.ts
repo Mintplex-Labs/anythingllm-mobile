@@ -1,5 +1,6 @@
 import semver from 'semver';
 import DeviceInfo from 'react-native-device-info';
+import { tKey } from '@/i18n';
 
 /**
  * Feature highlights: short media-led cards that show off what the app can do. Two audiences see
@@ -36,16 +37,18 @@ export type HighlightCard = {
   since: string;
   /** Part of the evergreen tour shown to fresh installs */
   tour?: boolean;
+  /** Translation key - resolved with t() when rendered */
   title: string;
+  /** Translation key - resolved with t() when rendered */
   body: string;
   media?: HighlightMedia;
-  /** Optional deep link into the app, eg. open a settings page or a tool */
+  /** Optional deep link into the app, eg. open a settings page or a tool. `label` is a translation key. */
   cta?: { label: string; route: string; params?: Record<string, unknown> };
 };
 
 /** A set of cards ready for the carousel */
 export type HighlightsDeck = {
-  /** Heading shown above the pager */
+  /** Heading shown above the pager - translation key */
   title: string;
   cards: HighlightCard[];
 };
@@ -61,24 +64,24 @@ const HIGHLIGHTS: HighlightCard[] = [
     id: 'quick-actions',
     since: '1.2.0',
     tour: true,
-    title: 'Ask with AnythingLLM anywhere',
-    body: 'Select text in any app and tap "Ask with AnythingLLM" to polish, shorten, summarize or explain it with your model. Turn it off any time under Settings > Special tools.',
+    title: tKey('highlights.quick_actions.title'),
+    body: tKey('highlights.quick_actions.body'),
     media: { type: 'video', src: asset('1.2.0', 'quick-actions.mp4'), poster: asset('1.2.0', 'quick-actions.jpg'), aspectRatio: PHONE_PORTRAIT },
   },
   {
     id: 'share-sheet',
     since: '1.2.0',
     tour: true,
-    title: 'Share anything into a chat',
-    body: 'Send photos, documents and links from any app straight to AnythingLLM. They land in a new thread, attached and ready to ask about.',
+    title: tKey('highlights.share_sheet.title'),
+    body: tKey('highlights.share_sheet.body'),
     media: { type: 'video', src: asset('1.2.0', 'share-sheet.mp4'), poster: asset('1.2.0', 'share-sheet.jpg'), aspectRatio: PHONE_PORTRAIT },
   },
   {
     id: 'scheduled-jobs',
     since: '1.2.0',
     tour: true,
-    title: 'Scheduled jobs',
-    body: 'Ask for a recurring task - a morning news digest, a weekly check-in - and it runs on schedule, even when the app is closed. Results wait for you with a notification.',
+    title: tKey('highlights.scheduled_jobs.title'),
+    body: tKey('highlights.scheduled_jobs.body'),
     media: { type: 'video', src: asset('1.2.0', 'scheduled_job.mp4'), poster: asset('1.2.0', 'scheduled_job.jpg'), aspectRatio: PHONE_PORTRAIT },
   },
 ];
@@ -124,12 +127,12 @@ export function tourCards(): HighlightCard[] {
 export function whatsNewDeck(lastSeen: string | null, current: string = DeviceInfo.getVersion()): HighlightsDeck | null {
   const cards = cardsSince(lastSeen, current);
   if (!cards.length) return null;
-  return { title: "What's new", cards };
+  return { title: tKey('highlights.whats_new'), cards };
 }
 
 /** Evergreen deck for fresh installs */
 export function tourDeck(): HighlightsDeck | null {
   const cards = tourCards();
   if (!cards.length) return null;
-  return { title: 'What AnythingLLM can do', cards };
+  return { title: tKey('highlights.tour_title'), cards };
 }

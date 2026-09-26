@@ -1,11 +1,12 @@
 import { ITextAction } from "@/database/models/WorkspaceChat";
 import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { safeJsonParse } from "@/utils/formatters";
+import i18n from "@/i18n";
 
 export default {
     id: 'draftText',
-    name: 'Draft Text',
-    description: 'Use the assistant to draft and text for you.',
+    get name() { return i18n.t('tools.draft_text.name'); },
+    get description() { return i18n.t('tools.draft_text.description'); },
     defaultEnabled: false,
     category: 'appConnections',
     definition: {
@@ -34,11 +35,11 @@ export default {
         try {
             const { recipient, body } = typeof args === 'string' ? safeJsonParse(args) : args;
             if (!body) return `No body provided. No text was drafted.`;
-            streamEmitter('report_status', recipient ? `Drafting a text to ${recipient}` : 'Drafting a text message');
+            streamEmitter('report_status', recipient ? i18n.t('tools.draft_text.status_drafting_to', { recipient }) : i18n.t('tools.draft_text.status_drafting'));
             streamEmitter('report_action', {
                 type: 'sms',
                 action: {
-                    title: 'Open Draft Text',
+                    title: i18n.t('tools.draft_text.open_action'),
                     link: `sms:${recipient ?? ''}?body=${encodeURIComponent(body)}`,
                 },
             } as ITextAction);

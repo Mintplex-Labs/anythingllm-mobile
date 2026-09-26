@@ -7,8 +7,10 @@ import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
 import { PATHS } from "@/utils/paths";
 import React from "react";
 import { showToast } from "@/utils/Notification";
+import { useTranslation } from "react-i18next";
 
 export default function OnboardingWelcome() {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const { width: screenWidth } = useWindowDimensions();
@@ -17,7 +19,7 @@ export default function OnboardingWelcome() {
     uiStore.setToStorage('onboarding_welcome_completed', true);
     navigation.navigate(PATHS.onboarding.model_selection as never);
   };
-  useHighjackBackButtonPress(() => { showToast('Please proceed through the onboarding flow to continue.', 'short'); return true; });
+  useHighjackBackButtonPress(() => { showToast(t('onboarding.welcome.back_blocked'), 'short'); return true; });
 
   return (
     <React.Fragment>
@@ -28,7 +30,7 @@ export default function OnboardingWelcome() {
       <SafeView scrollable={false} safeAreaClassNames="bg-transparent" containerClassNames="my-auto" containerStyle={{ paddingBottom: insets.bottom, paddingTop: insets.top + 20 }}>
         <View className="flex flex-col h-full justify-between py-4">
           <View className="flex flex-col justify-center items-center gap-y-2">
-            <Text className="text-[#B2DDFF] text-xl">Welcome</Text>
+            <Text className="text-[#B2DDFF] text-xl">{t('onboarding.welcome.title')}</Text>
             <Image source={require("@/assets/logo/anything-llm.png")} resizeMode="contain" style={{ width: 220, height: 32 }} />
           </View>
           <Image
@@ -38,7 +40,7 @@ export default function OnboardingWelcome() {
           />
           <View className="flex max-w-[75%] mx-auto">
             <Text className="text-white text-regular text-center">
-              An AI agent that lives on your phone. Chat with documents, search the web, and integrate into your apps.
+              {t('onboarding.welcome.description')}
             </Text>
           </View>
 
@@ -46,7 +48,7 @@ export default function OnboardingWelcome() {
             onPress={handleGetStarted}
             className="flex w-full bg-[--cta-light-blue] rounded-md p-4 text-center max-w-[85%] mx-auto"
           >
-            <Text className="text-[--dark] font-bold text-center">Get Started</Text>
+            <Text className="text-[--dark] font-bold text-center">{t('onboarding.welcome.get_started')}</Text>
           </TouchableOpacity>
         </View>
       </SafeView>

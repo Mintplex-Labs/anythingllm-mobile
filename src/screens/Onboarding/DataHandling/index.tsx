@@ -13,8 +13,10 @@ import * as RNFS from '@dr.pogodin/react-native-fs';
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Telemetry from "@/utils/Telemetry";
 import ToolReranker from "@/utils/ToolsManager/toolReranker";
+import { useTranslation } from "react-i18next";
 
 export default function DataHandling() {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const { isLoading } = useLlmPreference();
   const [isOnboarding, setIsOnboarding] = useState(false);
@@ -23,7 +25,7 @@ export default function DataHandling() {
   const onContinue = async () => {
     setIsOnboarding(true);
     async function onboardingTasks() {
-      const workspace = await Workspace.create({ name: 'My Workspace' });
+      const workspace = await Workspace.create({ name: t('onboarding.data_handling.default_workspace_name') });
       return workspace;
     }
     async function waitAtLeast(ms: number) {
@@ -68,7 +70,7 @@ export default function DataHandling() {
             <Image source={require('@/assets/logo/anything-llm.png')} resizeMode="contain" className="w-[70vw]" />
             <View className="flex flex-row gap-x-2 items-center -mt-8">
               <ActivityIndicator size="small" animating={true} color="#fff" />
-              <Text className="text-white text-xl text-center animate-pulse">Setting up your first workspace</Text>
+              <Text className="text-white text-xl text-center animate-pulse">{t('onboarding.data_handling.setting_up')}</Text>
             </View>
           </View>
         </SafeView >
@@ -89,33 +91,33 @@ export default function DataHandling() {
 
           <React.Fragment>
             <View className="flex flex-col gap-y-4 justify-center items-center">
-              <Text className="text-white text-4xl font-bold text-center">Data Handling & Privacy</Text>
+              <Text className="text-white text-4xl font-bold text-center">{t('onboarding.data_handling.title')}</Text>
               <Text className="text-white/60 text-xl text-center">
-                With AnythingLLM, all chats, documents, and other data is processed and stored on your device.
+                {t('onboarding.data_handling.description')}
               </Text>
             </View>
 
             <View className="flex flex-col gap-y-4 items-center">
               <PrivacyItem
-                name="Fully Local Chats"
-                description="All chats are stored on your device."
+                name={t('onboarding.data_handling.local_chats_title')}
+                description={t('onboarding.data_handling.local_chats_description')}
                 image={<Image source={require('@/assets/logo/anything-llm-infinity.png')} className="w-[34px] h-[34px]" resizeMode="contain" />}
               />
               <PrivacyItem
-                name="Document Embedding"
-                description="All documents and processing are done on your device."
+                name={t('onboarding.data_handling.embedding_title')}
+                description={t('onboarding.data_handling.embedding_description')}
                 Icon={<FileDashed size={34} color="#FFF" />}
               />
               <PrivacyItem
-                name="AI Agents"
-                description="All agents are run on your device and only use the internet when required (eg: Web search) "
+                name={t('onboarding.data_handling.agents_title')}
+                description={t('onboarding.data_handling.agents_description')}
                 Icon={<Sparkle size={34} color="#FFF" />}
               />
             </View>
 
             <View className="flex flex-row gap-x-4 items-center justify-between">
               <TouchableOpacity onPress={onContinue} className="w-full bg-[--cta-light-blue] rounded-lg px-4 py-2 flex flex-row items-center justify-center">
-                <Text className="text-black text-xl">Experience AnythingLLM</Text>
+                <Text className="text-black text-xl">{t('onboarding.data_handling.experience')}</Text>
               </TouchableOpacity>
             </View>
           </React.Fragment>

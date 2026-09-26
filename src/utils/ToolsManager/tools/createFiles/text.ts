@@ -1,11 +1,20 @@
 import { GENERATED_FILE_TYPES, extensionOf, sanitizeFilename } from "@/utils/documents/shared";
 import { saveGeneratedDocument } from "@/utils/fs/generatedDocuments";
 import { generatedFileResult, parseToolArgs, reportGeneratedFile, type StreamEmitter } from "./shared";
+import i18n from "@/i18n";
 
 const EXTENSIONS = ['txt', 'md', 'csv', 'json'] as const;
 type TextExtension = (typeof EXTENSIONS)[number];
 
 type Args = { filename: string; extension: string; content: string };
+
+/** How the result message names each file type - model-facing, so it stays English (the card labels are translated) */
+const RESULT_KIND: Record<TextExtension, string> = {
+    txt: 'text file',
+    md: 'markdown file',
+    csv: 'spreadsheet file',
+    json: 'json file',
+};
 
 /**
  * Plain-text style files: .txt, .md, .csv and .json. Mirrors the desktop `create-text-file`
@@ -13,8 +22,8 @@ type Args = { filename: string; extension: string; content: string };
  */
 export default {
     id: 'createTextFile',
-    name: 'Text, Markdown & CSV',
-    description: 'Write .txt, .md, .csv and .json files from the conversation.',
+    get name() { return i18n.t('tools.create_text_file.name'); },
+    get description() { return i18n.t('tools.create_text_file.description'); },
     defaultEnabled: false,
     category: 'default',
     group: 'createFiles',
@@ -60,11 +69,11 @@ export default {
             const displayFilename = sanitizeFilename(filename, resolved, 'document');
             const fileType = GENERATED_FILE_TYPES[resolved];
 
-            streamEmitter('report_status', `Creating ${displayFilename}`);
+            streamEmitter('report_status', i18n.t('tools.create_files.status_creating', { name: displayFilename }));
             const saved = await saveGeneratedDocument({ fileType: 'text', extension: resolved, displayFilename, content: String(content), encoding: 'utf8' });
             reportGeneratedFile(streamEmitter, saved, fileType.mimeType);
-            streamEmitter('report_status', `Created ${displayFilename}`);
-            return generatedFileResult(`${fileType.label.toLowerCase()} file`, saved);
+            streamEmitter('report_status', i18n.t('tools.create_files.status_created', { name: displayFilename }));
+            return generatedFileResult(RESULT_KIND[resolved], saved);
         } catch (e) {
             console.error(`Create Text File Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
             return `There was an error creating the text file: ${e instanceof Error ? e.message : 'Unknown error'}`;

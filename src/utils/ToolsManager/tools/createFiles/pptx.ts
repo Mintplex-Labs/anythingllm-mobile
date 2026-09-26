@@ -7,6 +7,7 @@ import { type ToolExecutionContext } from "@/utils/ToolsManager";
 import { isAbortError, throwIfAborted } from "@/utils/chat/abort";
 import { generatedFileResult, getConfiguredLLMProvider, parseToolArgs, reportGeneratedFile, type StreamEmitter } from "./shared";
 import { buildSectionSlides, type PresentationSection } from "./sectionBuilder";
+import i18n from "@/i18n";
 
 type Args = {
     filename: string;
@@ -30,8 +31,8 @@ const MAX_SECTIONS = 12;
  */
 export default {
     id: 'createPptxPresentation',
-    name: 'PowerPoint Presentation',
-    description: 'Plan and build a themed .pptx deck, one section at a time.',
+    get name() { return i18n.t('tools.create_pptx.name'); },
+    get description() { return i18n.t('tools.create_pptx.description'); },
     defaultEnabled: false,
     category: 'default',
     group: 'createFiles',
@@ -113,19 +114,19 @@ export default {
 
             const displayFilename = sanitizeFilename(parsed.filename, 'pptx', 'presentation');
             const total = sections.length;
-            streamEmitter('report_status', `Planning presentation "${title}" - ${total} section${total !== 1 ? 's' : ''}, ${theme.name} theme`);
+            streamEmitter('report_status', i18n.t('tools.create_pptx.status_planning', { title, count: total, theme: theme.name }));
 
             // Ask before kicking off one LLM round-trip per section
             const approval = await ToolApproval.request({
                 skillName: this.definition.function.name,
-                description: `Create the PowerPoint presentation "${title}" with ${total} section${total !== 1 ? 's' : ''}? Each section takes a model call to build.`,
+                description: i18n.t('tools.create_pptx.approval_description', { title, count: total }),
                 payload: { filename: displayFilename, title, theme: theme.name, sections: sections.map(section => section.title) },
                 streamEmitter,
                 signal: context.signal,
                 autoApprove: context.autoApproveTools,
             });
             if (!approval.approved) {
-                streamEmitter('report_status', 'Presentation was not approved');
+                streamEmitter('report_status', i18n.t('tools.create_pptx.status_not_approved'));
                 return `${approval.message} The presentation was not created.`;
             }
 
@@ -133,18 +134,21 @@ export default {
             const allSlides: PptxSlide[] = [];
             for (const [index, section] of sections.entries()) {
                 throwIfAborted(context.signal);
-                streamEmitter('report_status', `[${index + 1}/${total}] Building section "${section.title}"`);
+                streamEmitter('report_status', i18n.t('tools.create_pptx.status_building_section', { current: index + 1, total, title: section.title }));
                 const { slides, usedFallback } = await buildSectionSlides({ llmProvider, section, presentationTitle: title });
                 allSlides.push(...slides);
-                streamEmitter('report_status', `[${index + 1}/${total}] Section "${section.title}" complete - ${slides.length} slide${slides.length !== 1 ? 's' : ''}${usedFallback ? ' (from outline)' : ''}`);
+                const sectionStatus = { current: index + 1, total, title: section.title, count: slides.length };
+                streamEmitter('report_status', usedFallback
+                    ? i18n.t('tools.create_pptx.status_section_complete_from_outline', sectionStatus)
+                    : i18n.t('tools.create_pptx.status_section_complete', sectionStatus));
             }
             throwIfAborted(context.signal);
 
-            streamEmitter('report_status', `Assembling deck - ${allSlides.length} slides`);
+            streamEmitter('report_status', i18n.t('tools.create_pptx.status_assembling', { count: allSlides.length }));
             const base64 = await buildPptxBase64({ title, author, theme: parsed.theme, slides: allSlides });
             const saved = await saveGeneratedDocument({ fileType: 'pptx', extension: 'pptx', displayFilename, content: base64, encoding: 'base64' });
             reportGeneratedFile(streamEmitter, saved, GENERATED_FILE_TYPES.pptx.mimeType);
-            streamEmitter('report_status', `Created ${displayFilename}`);
+            streamEmitter('report_status', i18n.t('tools.create_files.status_created', { name: displayFilename }));
             return generatedFileResult('presentation', saved, ` with ${allSlides.length} slides across ${total} sections using the ${theme.name} theme`);
         } catch (e) {
             if (isAbortError(e)) throw e; // the user stopped the reply - let the chat handler treat it as a stop

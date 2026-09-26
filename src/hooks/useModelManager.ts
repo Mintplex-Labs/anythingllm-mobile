@@ -8,6 +8,7 @@ import uiStore from '@/store/UIStore';
 import PushNotifications from '@/utils/PushNotifications';
 import { activateKeepAwake, deactivateKeepAwake } from '@/utils/keepAwake';
 import ImportedModels from '@/utils/models/imported';
+import i18n from '@/i18n';
 
 const UI_PROGRESS_INTERVAL_MS = 250;
 const NOTIFICATION_PROGRESS_INTERVAL_MS = 5000;
@@ -58,29 +59,29 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     const modelSize = typeof model.size === 'number' ? formatBytes(model.size) : model.size;
     if (!netInfo.isConnected) {
       await AwaitableAlert(
-        'No internet connection.',
-        'You will need to be connected to the internet to download any model.',
-        { text: 'Dismiss', style: 'default' },
-        { text: 'OK', style: 'default' },
+        i18n.t('downloads.no_internet_title'),
+        i18n.t('downloads.no_internet_model'),
+        { text: i18n.t('common.dismiss'), style: 'default' },
+        { text: i18n.t('common.ok'), style: 'default' },
       );
       return false;
     }
 
     if (netInfo.type !== 'wifi') {
       const ignoreWarning = await AwaitableAlert(
-        'Data usage warning',
-        `We recommend using a Wi-Fi connection to download the model since it's ${modelSize} in size.`,
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Continue Anyway', style: 'default' },
+        i18n.t('downloads.data_usage_title'),
+        i18n.t('downloads.data_usage_model', { size: modelSize }),
+        { text: i18n.t('common.cancel'), style: 'cancel' },
+        { text: i18n.t('downloads.continue_anyway'), style: 'default' },
       );
       if (!ignoreWarning) return false;
     }
 
     const shouldDownload = await AwaitableAlert(
-      'Download model?',
-      `This will download the model to your device. It is ${modelSize} in size.`,
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Continue with download', style: 'default' },
+      i18n.t('downloads.download_model_title'),
+      i18n.t('downloads.download_model_message', { size: modelSize }),
+      { text: i18n.t('common.cancel'), style: 'cancel' },
+      { text: i18n.t('downloads.continue_with_download'), style: 'default' },
     );
     if (!shouldDownload) return false;
     return true;
@@ -175,26 +176,26 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
       await downloadToStorage({
         fromUrl: model.downloadUrl,
         toFile: storageLocation,
-        title: 'Downloading model',
-        body: `Downloading ${model.modelId}`,
+        title: i18n.t('downloads.notification_downloading_title'),
+        body: i18n.t('downloads.notification_downloading_body', { model: model.modelId }),
       });
       setDownloadedModels(prev => ({ ...prev, [model.modelId]: true }));
       PushNotifications.send('primary', {
-        title: 'Download complete',
-        body: `Downloaded ${model.modelId}`,
+        title: i18n.t('downloads.notification_complete_title'),
+        body: i18n.t('downloads.notification_complete_body', { model: model.modelId }),
       });
       return await selectModel(model);
     } catch (error) {
       console.error('Download failed:', error);
       PushNotifications.send('primary', {
-        title: 'Download failed',
-        body: `There was an error downloading the model.`,
+        title: i18n.t('downloads.download_failed_title'),
+        body: i18n.t('downloads.download_failed_message'),
       });
       await AwaitableAlert(
-        'Download failed',
-        'There was an error downloading the model.',
-        { text: 'Dismiss', style: 'default' },
-        { text: 'OK', style: 'default' }
+        i18n.t('downloads.download_failed_title'),
+        i18n.t('downloads.download_failed_message'),
+        { text: i18n.t('common.dismiss'), style: 'default' },
+        { text: i18n.t('common.ok'), style: 'default' }
       );
       return false;
     } finally {
@@ -210,10 +211,10 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
 
   const uninstallModel = async (model: any) => {
     const shouldUninstall = await AwaitableAlert(
-      'Uninstall model?',
-      'This will remove the model from your device.',
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'Uninstall', style: 'destructive' },
+      i18n.t('downloads.uninstall_model_title'),
+      i18n.t('downloads.uninstall_model_message'),
+      { text: i18n.t('common.cancel'), style: 'cancel' },
+      { text: i18n.t('common.uninstall'), style: 'destructive' },
     );
 
     if (!shouldUninstall) return false;

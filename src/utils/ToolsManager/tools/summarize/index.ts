@@ -8,6 +8,7 @@ import { searchProcessedFilesFor } from "@/utils/fs";
 import { generateUUID } from "@/utils/constants";
 import ToolApproval from "@/utils/ToolsManager/toolApproval";
 import { type ToolExecutionContext } from "@/utils/ToolsManager";
+import i18n from "@/i18n";
 
 /*
  TODO: Implement file reading
@@ -20,8 +21,8 @@ import { type ToolExecutionContext } from "@/utils/ToolsManager";
 
 export default {
     id: 'summarization',
-    name: 'Summarization',
-    description: 'Summarize content from a given URL or filename.',
+    get name() { return i18n.t('tools.summarize.name'); },
+    get description() { return i18n.t('tools.summarize.description'); },
     defaultEnabled: true,
     category: 'default',
     definition: {
@@ -67,7 +68,7 @@ export default {
             let citation: IAgentWebSearchCitation | IDocumentCitation | null = null;
 
             if (type === 'url') {
-                streamEmitter('report_status', `Reading ${getOrigin(input) || input}`);
+                streamEmitter('report_status', i18n.t('tools.summarize.status_reading', { source: getOrigin(input) || input }));
                 const scrapeResult = await webscraper.scrape(input);
                 contentToSummarize = scrapeResult.content;
                 citation = {
@@ -81,7 +82,7 @@ export default {
             }
 
             if (type === 'filename') {
-                streamEmitter('report_status', `Looking for "${input}" in your files`);
+                streamEmitter('report_status', i18n.t('tools.summarize.status_looking_for_file', { name: input }));
                 contentToSummarize = await searchProcessedFilesFor(input, 'fuzzy') ?? '';
                 citation = {
                     type: 'document',
@@ -99,7 +100,7 @@ export default {
             if (!llmProvider) return `Error: Could not initialize LLM provider for summarization.`;
 
             // Split content into manageable chunks
-            streamEmitter('report_status', 'Analyzing document structure');
+            streamEmitter('report_status', i18n.t('tools.summarize.status_analyzing'));
             const textSplitter = new TextSplitter({
                 chunkSize: this.config.chunkSize,
                 chunkOverlap: this.config.chunkOverlap,
@@ -108,26 +109,26 @@ export default {
 
             const textChunks = await textSplitter.splitText(contentToSummarize);
             const limitedChunks = textChunks.slice(0, this.config.maxChunks);
-            if (limitedChunks.length !== textChunks.length) streamEmitter('report_status', `Document is long - summarizing the first ${limitedChunks.length} sections`);
+            if (limitedChunks.length !== textChunks.length) streamEmitter('report_status', i18n.t('tools.summarize.status_document_long', { count: limitedChunks.length }));
 
             // Long documents are one LLM call per section - check with the user before committing to all of them.
             if (limitedChunks.length > this.config.sectionsBeforeApproval) {
                 const approval = await ToolApproval.request({
                     skillName: this.definition.function.name,
-                    description: `This content has ${limitedChunks.length} sections to summarize. This may take a while - continue?`,
+                    description: i18n.t('tools.summarize.approval_description', { count: limitedChunks.length }),
                     payload: { type, input, sections: limitedChunks.length },
                     streamEmitter,
                     signal: context.signal,
                     autoApprove: context.autoApproveTools,
                 });
                 if (!approval.approved) {
-                    streamEmitter('report_status', 'Summarization was not approved');
+                    streamEmitter('report_status', i18n.t('tools.summarize.status_not_approved'));
                     return `${approval.message} The content was not summarized.`;
                 }
             }
 
             const finalSummary = await this._createHierarchicalSummary(limitedChunks, llmProvider, streamEmitter);
-            streamEmitter('report_status', 'Summary complete');
+            streamEmitter('report_status', i18n.t('tools.summarize.status_complete'));
             if (citation) streamEmitter('report_citations', [citation]);
 
             return finalSummary;
@@ -163,17 +164,17 @@ export default {
         }
     },
     _createHierarchicalSummary: async function (chunks: string[], llmProvider: any, streamEmitter: (event: IStreamEvent, data: any) => void): Promise<string> {
-        streamEmitter('report_status', 'Summarizing document sections');
+        streamEmitter('report_status', i18n.t('tools.summarize.status_summarizing_sections'));
 
         const chunkSummaries: string[] = [];
         for (let i = 0; i < chunks.length; i++) {
-            streamEmitter('report_status', `Summarizing section ${i + 1} of ${chunks.length}`);
+            streamEmitter('report_status', i18n.t('tools.summarize.status_summarizing_section', { current: i + 1, total: chunks.length }));
             const summary = await this._summarizeChunk(chunks[i], llmProvider);
             chunkSummaries.push(summary);
         }
 
         if (chunkSummaries.length === 1) return chunkSummaries[0];
-        streamEmitter('report_status', 'Combining section summaries');
+        streamEmitter('report_status', i18n.t('tools.summarize.status_combining'));
 
         const combinedSummaries = chunkSummaries.join('\n\n');
         const finalSystemPrompt = `You are a helpful assistant that creates comprehensive document summaries. 

@@ -13,6 +13,7 @@ import PushNotifications from '@/utils/PushNotifications';
 import Telemetry from '@/utils/Telemetry';
 import uiStore from '@/store/UIStore';
 import { getDefaultContextLength } from '@/utils/contextLength';
+import i18n from '@/i18n';
 
 /** A single run is stopped after this long (mirrors SCHEDULED_JOB_TIMEOUT_MS on the desktop server). */
 export const SCHEDULED_JOB_TIMEOUT_MS = 5 * 60 * 1000;
@@ -275,7 +276,7 @@ class ScheduledJobRunner {
             if (job.notifyOnComplete && runHasContent(response)) {
                 await PushNotifications.notifyScheduledJobComplete({
                     jobName: job.name,
-                    preview: response.textResponse || (response.actions?.length ? 'Your job finished and created files for you.' : ''),
+                    preview: response.textResponse || (response.actions?.length ? i18n.t('scheduled_jobs.runner.created_files') : ''),
                     jobUuid: job.uuid,
                     runUuid: run.uuid,
                 });
@@ -291,7 +292,7 @@ class ScheduledJobRunner {
                 finalRun = await ScheduledJobRun.timeout(run.uuid, partial);
                 Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.SCHEDULED_JOB_RAN, { status: 'timed_out', trigger, tools: job.tools.length });
             } else {
-                const message = error?.message || 'Job failed';
+                const message = error?.message || i18n.t('scheduled_jobs.runner.job_failed');
                 this.log(`Job "${job.name}" failed: ${message}`);
                 finalRun = await ScheduledJobRun.fail(run.uuid, message, partial);
                 Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.SCHEDULED_JOB_RAN, { status: 'failed', trigger, tools: job.tools.length });

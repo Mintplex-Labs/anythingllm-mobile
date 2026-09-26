@@ -1,3 +1,5 @@
+import i18n, { tKey } from '@/i18n';
+
 export type ProviderConfig = { apiKey?: string; baseUrl?: string; model?: string; region?: string };
 
 export type LLMProviderDefinition = {
@@ -6,6 +8,7 @@ export type LLMProviderDefinition = {
   /** Section the provider is listed under in the provider picker. */
   category: 'local' | 'cloud';
   logo: any;
+  /** Translation key - resolve with t() when rendering. */
   description: string;
   /**
    * Which connection fields the provider needs. Drives the settings/onboarding forms and
@@ -33,7 +36,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "native",
     category: "local",
     logo: require('@/assets/llmprovider/ondevice.png'),
-    description: "Install and run models on your phone.",
+    description: tKey('providers.descriptions.native'),
     fields: { apiKey: false, baseUrl: false },
     defaultConfig: {},
   },
@@ -42,7 +45,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "ollama",
     category: "local",
     logo: require('@/assets/llmprovider/ollama.png'),
-    description: "Run LLMs locally on your own machine with Ollama.",
+    description: tKey('providers.descriptions.ollama'),
     fields: { apiKey: false, baseUrl: true },
     defaultConfig: { baseUrl: '', model: '' },
     baseUrlPlaceholder: "http://192.168.1.10:11434",
@@ -52,7 +55,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "lmstudio",
     category: "local",
     logo: require('@/assets/llmprovider/lmstudio.png'),
-    description: "Discover, download, and run thousands of cutting edge LLMs in a few clicks.",
+    description: tKey('providers.descriptions.lmstudio'),
     fields: { apiKey: false, baseUrl: true },
     defaultConfig: { baseUrl: '', model: '' },
     baseUrlPlaceholder: "http://192.168.1.10:1234/v1",
@@ -62,7 +65,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "openai",
     category: "cloud",
     logo: require('@/assets/llmprovider/openai.png'),
-    description: "Leverage OpenAI's powerful models.",
+    description: tKey('providers.descriptions.openai'),
     fields: { apiKey: 'required', baseUrl: false },
     defaultConfig: { apiKey: '', baseUrl: 'https://api.openai.com/v1', model: '' },
     modelPlaceholder: "gpt-4o",
@@ -72,7 +75,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "anthropic",
     category: "cloud",
     logo: require('@/assets/llmprovider/anthropic.png'),
-    description: "A friendly AI Assistant hosted by Anthropic.",
+    description: tKey('providers.descriptions.anthropic'),
     fields: { apiKey: 'required', baseUrl: false },
     defaultConfig: { apiKey: '', model: '' },
     modelPlaceholder: "claude-sonnet-4-6",
@@ -82,7 +85,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "gemini",
     category: "cloud",
     logo: require('@/assets/llmprovider/gemini.png'),
-    description: "Google's largest and most capable AI model",
+    description: tKey('providers.descriptions.gemini'),
     fields: { apiKey: 'required', baseUrl: false },
     defaultConfig: { apiKey: '', model: '' },
     modelPlaceholder: "gemini-2.5-flash",
@@ -92,7 +95,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "openrouter",
     category: "cloud",
     logo: require('@/assets/llmprovider/openrouter.jpeg'),
-    description: "A unified API of AI services from leading providers",
+    description: tKey('providers.descriptions.openrouter'),
     fields: { apiKey: 'required', baseUrl: false },
     defaultConfig: { apiKey: '', model: '' },
     modelPlaceholder: "qwen/qwen3-4b:free",
@@ -102,7 +105,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "bedrock",
     category: "cloud",
     logo: require('@/assets/llmprovider/bedrock.png'),
-    description: "Run powerful foundation models privately with AWS Bedrock.",
+    description: tKey('providers.descriptions.bedrock'),
     fields: { apiKey: 'required', baseUrl: false, region: true },
     defaultConfig: { apiKey: '', region: 'us-west-2', model: '' },
     modelPlaceholder: "minimax.minimax-m2.1",
@@ -112,7 +115,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "deepseek",
     category: "cloud",
     logo: require('@/assets/llmprovider/deepseek.png'),
-    description: "Run DeepSeek's powerful LLMs.",
+    description: tKey('providers.descriptions.deepseek'),
     fields: { apiKey: 'required', baseUrl: false },
     defaultConfig: { apiKey: '', model: '' },
     modelPlaceholder: "deepseek-chat",
@@ -122,7 +125,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "fireworksai",
     category: "cloud",
     logo: require('@/assets/llmprovider/fireworksai.jpeg'),
-    description: "The fastest and most efficient inference engine to build production-ready, compound AI systems.",
+    description: tKey('providers.descriptions.fireworksai'),
     fields: { apiKey: 'required', baseUrl: false },
     defaultConfig: { apiKey: '', model: '' },
     modelPlaceholder: "accounts/fireworks/models/llama-v3p1-8b-instruct",
@@ -132,7 +135,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "minimax",
     category: "cloud",
     logo: require('@/assets/llmprovider/minimax.png'),
-    description: "Run MiniMax's powerful LLMs.",
+    description: tKey('providers.descriptions.minimax'),
     fields: { apiKey: 'required', baseUrl: false },
     defaultConfig: { apiKey: '', model: '' },
     modelPlaceholder: "MiniMax-M2",
@@ -142,7 +145,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "moonshotai",
     category: "cloud",
     logo: require('@/assets/llmprovider/moonshotai.png'),
-    description: "Run Moonshot AI's Kimi models.",
+    description: tKey('providers.descriptions.moonshotai'),
     fields: { apiKey: 'required', baseUrl: false },
     defaultConfig: { apiKey: '', model: '' },
     modelPlaceholder: "kimi-k2-0905-preview",
@@ -152,7 +155,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "novita",
     category: "cloud",
     logo: require('@/assets/llmprovider/novita.png'),
-    description: "Reliable, Scalable, and Cost-Effective for LLMs from Novita AI",
+    description: tKey('providers.descriptions.novita'),
     fields: { apiKey: 'required', baseUrl: false },
     defaultConfig: { apiKey: '', model: '' },
     modelPlaceholder: "deepseek/deepseek-r1",
@@ -162,7 +165,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "togetherai",
     category: "cloud",
     logo: require('@/assets/llmprovider/togetherai.png'),
-    description: "Run open source models from Together AI.",
+    description: tKey('providers.descriptions.togetherai'),
     fields: { apiKey: 'required', baseUrl: false },
     defaultConfig: { apiKey: '', model: '' },
     modelPlaceholder: "meta-llama/Llama-3.3-70B-Instruct-Turbo",
@@ -172,7 +175,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "xai",
     category: "cloud",
     logo: require('@/assets/llmprovider/xai.png'),
-    description: "Run xAI's powerful LLMs like Grok and more.",
+    description: tKey('providers.descriptions.xai'),
     fields: { apiKey: 'required', baseUrl: false },
     defaultConfig: { apiKey: '', model: '' },
     modelPlaceholder: "grok-4",
@@ -182,7 +185,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "litellm",
     category: "local",
     logo: require('@/assets/llmprovider/litellm.png'),
-    description: "Run LiteLLM's OpenAI compatible proxy for various LLMs.",
+    description: tKey('providers.descriptions.litellm'),
     fields: { apiKey: 'optional', baseUrl: true },
     defaultConfig: { apiKey: '', baseUrl: '', model: '' },
     baseUrlPlaceholder: "http://192.168.1.10:4000",
@@ -192,7 +195,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "localai",
     category: "local",
     logo: require('@/assets/llmprovider/localai.png'),
-    description: "Run LLMs locally on your own machine.",
+    description: tKey('providers.descriptions.localai'),
     fields: { apiKey: 'optional', baseUrl: true },
     defaultConfig: { apiKey: '', baseUrl: '', model: '' },
     baseUrlPlaceholder: "http://192.168.1.10:8080/v1",
@@ -202,7 +205,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "lemonade",
     category: "local",
     logo: require('@/assets/llmprovider/lemonade.png'),
-    description: "Run LLMs on AMD hardware with Lemonade Server.",
+    description: tKey('providers.descriptions.lemonade'),
     fields: { apiKey: false, baseUrl: true },
     defaultConfig: { baseUrl: '', model: '' },
     baseUrlPlaceholder: "http://192.168.1.10:8000",
@@ -212,7 +215,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "llmman",
     category: "local",
     logo: require('@/assets/llmprovider/llmman.png'),
-    description: "Run LLMs locally using llmman.",
+    description: tKey('providers.descriptions.llmman'),
     fields: { apiKey: 'optional', baseUrl: true },
     defaultConfig: { apiKey: '', baseUrl: '', model: '' },
     baseUrlPlaceholder: "http://192.168.1.10:17434",
@@ -222,8 +225,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     value: "generic-openai",
     category: "cloud",
     logo: require('@/assets/llmprovider/generic-openai.png'),
-    description:
-      "Connect to any OpenAi-compatible service via a custom configuration",
+    description: tKey('providers.descriptions.generic_openai'),
     fields: { apiKey: 'optional', baseUrl: true },
     defaultConfig: { apiKey: '', baseUrl: '', model: '' },
     baseUrlPlaceholder: "https://api.openai.com/v1",
@@ -233,6 +235,7 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
 /** Display order of the local section - on-device first, Ollama last. */
 const LOCAL_PROVIDER_ORDER = ['native', 'lmstudio', 'localai', 'lemonade', 'llmman', 'litellm', 'ollama'];
 
+/** `title` is a translation key - resolve with t() when rendering. */
 export type LLMProviderSection = { title: string; providers: LLMProviderDefinition[] };
 
 /**
@@ -259,8 +262,8 @@ export function groupProvidersForPicker(providers: LLMProviderDefinition[] = AVA
     });
 
   return [
-    { title: 'Local Providers', providers: local },
-    { title: 'Cloud Providers', providers: cloud },
+    { title: tKey('providers.sections.local'), providers: local },
+    { title: tKey('providers.sections.cloud'), providers: cloud },
   ].filter((section) => section.providers.length > 0);
 }
 
@@ -270,7 +273,7 @@ export function findProviderDefinition(value: string): LLMProviderDefinition | u
 
 export function providerDisplayName(value: string): string {
   if (value === 'generic-openai') return 'OpenAI (Generic)';
-  return findProviderDefinition(value)?.name ?? 'Unknown';
+  return findProviderDefinition(value)?.name ?? i18n.t('common.unknown');
 }
 
 /**
@@ -279,10 +282,10 @@ export function providerDisplayName(value: string): string {
  */
 export function validateProviderConfig(provider: string, config: ProviderConfig): string | null {
   const definition = findProviderDefinition(provider);
-  if (!definition) return 'Unknown provider.';
-  if (definition.fields.apiKey === 'required' && !config.apiKey?.trim()) return 'Please enter an API key for this provider.';
-  if (definition.fields.baseUrl && !config.baseUrl?.trim()) return 'Please enter the base URL of your provider.';
-  if (definition.fields.region && !config.region?.trim()) return 'Please select the AWS region of your Bedrock deployment.';
-  if (!config.model?.trim()) return 'Please select a model to use.';
+  if (!definition) return i18n.t('providers.validation.unknown_provider');
+  if (definition.fields.apiKey === 'required' && !config.apiKey?.trim()) return i18n.t('providers.validation.api_key_required');
+  if (definition.fields.baseUrl && !config.baseUrl?.trim()) return i18n.t('providers.validation.base_url_required');
+  if (definition.fields.region && !config.region?.trim()) return i18n.t('providers.validation.region_required');
+  if (!config.model?.trim()) return i18n.t('providers.validation.model_required');
   return null;
 }

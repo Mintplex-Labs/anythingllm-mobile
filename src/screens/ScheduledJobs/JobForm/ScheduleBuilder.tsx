@@ -8,19 +8,23 @@ import {
     builderStateToCron,
     cronToBuilderState,
     describeCron,
+    formatHourOfDay,
     formatTimeOfDay,
     isValidCron,
 } from '@/utils/ScheduledJobs/cron';
+import { useTranslation } from 'react-i18next';
+import { tKey } from '@/i18n';
 import { Chip, JOB_COLORS } from '../components';
 
 export type ScheduleMode = 'builder' | 'cron';
 
+/** `label` is a translation key - resolved with t() when rendered */
 const FREQUENCIES: { value: BuilderFrequency; label: string }[] = [
-    { value: 'day', label: 'Daily' },
-    { value: 'week', label: 'Weekly' },
-    { value: 'month', label: 'Monthly' },
-    { value: 'hour', label: 'Hourly' },
-    { value: 'minute', label: 'Every few minutes' },
+    { value: 'day', label: tKey('scheduled_jobs.builder.daily') },
+    { value: 'week', label: tKey('scheduled_jobs.builder.weekly') },
+    { value: 'month', label: tKey('scheduled_jobs.builder.monthly') },
+    { value: 'hour', label: tKey('scheduled_jobs.builder.hourly') },
+    { value: 'minute', label: tKey('scheduled_jobs.builder.every_few_minutes') },
 ];
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 const MINUTE_STEPS = Array.from({ length: 12 }, (_, i) => i * 5);
@@ -38,6 +42,7 @@ export default function ScheduleBuilder({ value, mode, onChange, onModeChange }:
     onChange: (cron: string) => void;
     onModeChange: (mode: ScheduleMode) => void;
 }) {
+    const { t } = useTranslation();
     const [state, setState] = useState<BuilderState>(() => cronToBuilderState(value).state);
 
     // Switching to the builder from a cron the builder can show keeps its settings; otherwise start from the defaults.
@@ -61,26 +66,26 @@ export default function ScheduleBuilder({ value, mode, onChange, onModeChange }:
         <View className="flex flex-col" style={{ gap: 16 }}>
             {/* Mode switch */}
             <View className="flex flex-row" style={{ backgroundColor: JOB_COLORS.row, borderRadius: 8, padding: 4, gap: 4 }}>
-                {([['builder', 'Schedule'], ['cron', 'Cron expression']] as [ScheduleMode, string][]).map(([key, label]) => (
+                {([['builder', t('scheduled_jobs.builder.mode_schedule')], ['cron', t('scheduled_jobs.builder.mode_cron')]] as [ScheduleMode, string][]).map(([key, label]) => (
                     <Chip key={key} label={label} selected={mode === key} onPress={() => onModeChange(key)} style={{ flex: 1, alignItems: 'center', borderRadius: 6 }} />
                 ))}
             </View>
 
             {mode === 'builder' ? (
                 <View className="flex flex-col" style={{ gap: 18 }}>
-                    <FieldLabel>Run</FieldLabel>
+                    <FieldLabel>{t('scheduled_jobs.builder.run')}</FieldLabel>
                     <ChipRow>
                         {FREQUENCIES.map((option) => (
-                            <Chip key={option.value} label={option.label} selected={state.frequency === option.value} onPress={() => update({ frequency: option.value })} />
+                            <Chip key={option.value} label={t(option.label)} selected={state.frequency === option.value} onPress={() => update({ frequency: option.value })} />
                         ))}
                     </ChipRow>
 
                     {state.frequency === 'minute' && (
                         <>
-                            <FieldLabel>Every</FieldLabel>
+                            <FieldLabel>{t('scheduled_jobs.builder.every')}</FieldLabel>
                             <ChipRow>
                                 {MINUTE_INTERVALS.map((n) => (
-                                    <Chip key={n} label={`${n} min`} selected={state.minuteInterval === n} onPress={() => update({ minuteInterval: n })} />
+                                    <Chip key={n} label={t('scheduled_jobs.builder.minutes_chip', { minutes: n })} selected={state.minuteInterval === n} onPress={() => update({ minuteInterval: n })} />
                                 ))}
                             </ChipRow>
                         </>
@@ -88,7 +93,7 @@ export default function ScheduleBuilder({ value, mode, onChange, onModeChange }:
 
                     {state.frequency === 'hour' && (
                         <>
-                            <FieldLabel>At minute</FieldLabel>
+                            <FieldLabel>{t('scheduled_jobs.builder.at_minute')}</FieldLabel>
                             <ScrollChipRow
                                 items={MINUTE_STEPS.map((m) => ({ key: m, label: `:${String(m).padStart(2, '0')}` }))}
                                 selectedKey={state.hourMinuteOffset}
@@ -99,14 +104,14 @@ export default function ScheduleBuilder({ value, mode, onChange, onModeChange }:
 
                     {state.frequency === 'week' && (
                         <>
-                            <FieldLabel>On</FieldLabel>
+                            <FieldLabel>{t('scheduled_jobs.builder.on')}</FieldLabel>
                             <ChipRow>
                                 {WEEKDAY_SHORT.map((label, day) => {
                                     const selected = state.weekdays.includes(day);
                                     return (
                                         <Chip
                                             key={label}
-                                            label={label}
+                                            label={t(label)}
                                             selected={selected}
                                             onPress={() => {
                                                 const next = selected ? state.weekdays.filter((d) => d !== day) : [...state.weekdays, day];
@@ -121,23 +126,23 @@ export default function ScheduleBuilder({ value, mode, onChange, onModeChange }:
 
                     {state.frequency === 'month' && (
                         <>
-                            <FieldLabel>On day</FieldLabel>
+                            <FieldLabel>{t('scheduled_jobs.builder.on_day')}</FieldLabel>
                             <ScrollChipRow
                                 items={DAYS_OF_MONTH.map((d) => ({ key: d, label: String(d) }))}
                                 selectedKey={state.dayOfMonth}
                                 onSelect={(d) => update({ dayOfMonth: d })}
                             />
                             {state.dayOfMonth > 28 && (
-                                <Text style={{ color: JOB_COLORS.muted }} className="text-xs">Months without a day {state.dayOfMonth} are skipped.</Text>
+                                <Text style={{ color: JOB_COLORS.muted }} className="text-xs">{t('scheduled_jobs.builder.days_skipped', { day: state.dayOfMonth })}</Text>
                             )}
                         </>
                     )}
 
                     {showsTime && (
                         <>
-                            <FieldLabel>At {formatTimeOfDay(state.hour, state.minute)}</FieldLabel>
+                            <FieldLabel>{t('scheduled_jobs.builder.at_time', { time: formatTimeOfDay(state.hour, state.minute) })}</FieldLabel>
                             <ScrollChipRow
-                                items={HOURS.map((h) => ({ key: h, label: formatTimeOfDay(h, 0).replace(':00', '') }))}
+                                items={HOURS.map((h) => ({ key: h, label: formatHourOfDay(h) }))}
                                 selectedKey={state.hour}
                                 onSelect={(h) => update({ hour: h })}
                             />
@@ -147,7 +152,7 @@ export default function ScheduleBuilder({ value, mode, onChange, onModeChange }:
                                 onSelect={(m) => update({ minute: m })}
                             />
                             {!MINUTE_STEPS.includes(state.minute) && (
-                                <Text style={{ color: JOB_COLORS.muted }} className="text-xs">Minute :{String(state.minute).padStart(2, '0')} was set with a cron expression - pick a step above to change it.</Text>
+                                <Text style={{ color: JOB_COLORS.muted }} className="text-xs">{t('scheduled_jobs.builder.custom_minute', { minute: String(state.minute).padStart(2, '0') })}</Text>
                             )}
                         </>
                     )}
@@ -165,14 +170,14 @@ export default function ScheduleBuilder({ value, mode, onChange, onModeChange }:
                         className="rounded-lg text-white text-base"
                     />
                     <Text style={{ color: JOB_COLORS.muted }} className="text-xs">
-                        Five fields: minute, hour, day of month, month, day of week (0 = Sunday). Times are in your phone's time zone.
+                        {t('scheduled_jobs.builder.cron_help')}
                     </Text>
                 </View>
             )}
 
             <View style={{ backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 8, padding: 12, gap: 2 }}>
                 <Text style={{ color: valid ? JOB_COLORS.text : JOB_COLORS.danger }} className="text-sm font-medium">
-                    {valid ? describeCron(value) : 'This is not a valid cron expression'}
+                    {valid ? describeCron(value) : t('scheduled_jobs.builder.invalid_cron')}
                 </Text>
                 <Text style={{ color: JOB_COLORS.muted, fontFamily: 'monospace' }} className="text-xs">{value}</Text>
             </View>

@@ -11,11 +11,13 @@ import getLLM from '@/utils/AiProviders';
 import PushNotifications from "@/utils/PushNotifications";
 import useModelFit from "@/hooks/useModelFit";
 import type { SelectionModeProps } from "../index";
+import { useTranslation } from "react-i18next";
 
 // During onboarding, this config will not yet be set in the UIStore, so we need set the default here
 const DEFAULT_LLM_PREFERENCE = { provider: 'native', config: { runtime: 'cpu', model: null } } as const;
 
 export default function SimpleModelSelection({ setMode }: SelectionModeProps) {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<any>>();
   const LLMProvider = getLLM(DEFAULT_LLM_PREFERENCE.provider, DEFAULT_LLM_PREFERENCE.config);
   const llmPreferences = DEFAULT_LLM_PREFERENCE;
@@ -54,9 +56,9 @@ export default function SimpleModelSelection({ setMode }: SelectionModeProps) {
   return (
     <React.Fragment>
       <View className="flex flex-col gap-y-4 justify-center items-center pb-[24px]">
-        <Text className="text-white text-4xl font-bold text-center">What model would you like to use?</Text>
+        <Text className="text-white text-4xl font-bold text-center">{t('onboarding.model_selection.title')}</Text>
         <Text className="text-white/60 text-xl text-center">
-          You can change this later, but pick the one that best suits your needs.
+          {t('onboarding.model_selection.description')}
         </Text>
       </View>
       <View className="flex flex-col items-center" style={{ gap: 16 }}>
@@ -97,7 +99,7 @@ export default function SimpleModelSelection({ setMode }: SelectionModeProps) {
           className="disabled:opacity-50 mt-2 px-4 py-2"
         >
           <Text className="text-white/60 text-lg text-center underline">
-            Don't want to download a model? Use an external provider
+            {t('onboarding.model_selection.use_external')}
           </Text>
         </TouchableOpacity>
       </View>

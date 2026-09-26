@@ -6,6 +6,7 @@ import { MainView } from './Main';
 import AdvancedModelPreferences from './AdvancedModelPreferences';
 import SpecialTools from './SpecialTools';
 import AnonymousTelemetry from './AnonymousTelemetry';
+import LanguageSettings from './Language';
 
 const PAGES = {
   main: (props: any) => <MainView {...props} />,
@@ -14,6 +15,7 @@ const PAGES = {
   ),
   special_tools: (props: any) => <SpecialTools {...props} />,
   anonymous_telemetry: (props: any) => <AnonymousTelemetry {...props} />,
+  language: (props: any) => <LanguageSettings {...props} />,
 };
 export type IWorkspacePageKey = keyof typeof PAGES;
 

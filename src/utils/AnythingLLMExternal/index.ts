@@ -1,5 +1,6 @@
 import { Platform } from "react-native";
 import { getDeviceName } from "react-native-device-info";
+import i18n from "@/i18n";
 
 export type Commands = 'workspaces' | 'workspace-content' | 'model-tag' | 'reset-chat' | 'new-thread' | 'unregister-device';
 export type CommandResponses = {
@@ -70,12 +71,13 @@ class AnythingLLMExternal {
             }),
         });
 
-        let data: { token: string, platform: 'server' | 'desktop', error?: string } = { token: '', platform: 'server', error: 'Unknown error' };
+        let data: { token: string, platform: 'server' | 'desktop', error?: string } = { token: '', platform: 'server', error: i18n.t('common.unknown_error') };
         try { data = await response.json(); } catch { }
 
         if (!response.ok || !!data?.error) {
             console.error(`[${response.status}] Failed to register device: ${response.statusText}`, data);
-            throw new Error(`Failed to register device: ${data?.error ?? response.statusText}`);
+            // Shown to the user on the Verify Connection screen
+            throw new Error(i18n.t('connect.verify.register_failed_reason', { reason: data?.error ?? response.statusText }));
         }
 
         return data;

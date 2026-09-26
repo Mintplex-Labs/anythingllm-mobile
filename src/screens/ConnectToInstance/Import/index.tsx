@@ -12,6 +12,7 @@ import { CommandResponses } from "@/utils/AnythingLLMExternal";
 import uiStore from "@/store/UIStore";
 import { showToast } from "@/utils/Notification";
 import { unregisterConnection } from "../index";
+import { useTranslation } from "react-i18next";
 
 interface ImportViewProps {
     params: { connectionUrl: string, deviceToken: string };
@@ -19,6 +20,7 @@ interface ImportViewProps {
 
 
 export function ImportView({ params }: ImportViewProps) {
+    const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const navigation = useNavigation();
 
@@ -44,7 +46,7 @@ export function ImportView({ params }: ImportViewProps) {
 
         const validateConnection = await module.tokenIsApproved();
         if (!validateConnection) {
-            showToast('Your existing connection to AnythingLLM Desktop expired.', 'short');
+            showToast(t('connect.import.connection_expired'), 'short');
             await uiStore.removeFromStorage('current_anythingllm_external_connection');
             await unregisterConnection({ connectionUrl: params.connectionUrl, token: params.deviceToken, platform: 'desktop' });
             navigation.reset({
@@ -63,7 +65,7 @@ export function ImportView({ params }: ImportViewProps) {
         try {
             await getWorkspaces();
         } catch (error) {
-            showToast('Failed to refresh workspaces', 'short');
+            showToast(t('connect.import.refresh_failed'), 'short');
         } finally {
             setRefreshing(false);
         }
@@ -85,7 +87,7 @@ export function ImportView({ params }: ImportViewProps) {
                 <TouchableOpacity onPress={goBack} className="absolute top-8 left-0 flex flex-row items-center gap-2">
                     <ArrowLeft size={24} color="#FFF" weight="bold" />
                 </TouchableOpacity>
-                <Text style={{ maxWidth: '80%' }} numberOfLines={1} ellipsizeMode="middle" className="text-white text-lg font-medium">Connect to AnythingLLM</Text>
+                <Text style={{ maxWidth: '80%' }} numberOfLines={1} ellipsizeMode="middle" className="text-white text-lg font-medium">{t('connect.title')}</Text>
             </View>
             <ScrollView
                 style={{ flex: 1 }}
@@ -115,7 +117,7 @@ export function ImportView({ params }: ImportViewProps) {
                     }}
                     style={{ height: 40, backgroundColor: 'rgba(255, 255, 255, 0.1)', paddingHorizontal: 16, paddingVertical: 8 }}
                     className="flex flex-row w-full items-center justify-center gap-2 rounded-lg">
-                    <Text className="text-white font-medium">Go back to home</Text>
+                    <Text className="text-white font-medium">{t('connect.import.go_home')}</Text>
                 </TouchableOpacity>
             </View>
         </SafeView >

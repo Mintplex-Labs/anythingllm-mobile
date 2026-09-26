@@ -39,6 +39,8 @@ import { hapticOptions } from '@/utils/clipboard';
 import { showToast } from '@/utils/Notification';
 import uiStore from '@/store/UIStore';
 import Telemetry from '@/utils/Telemetry';
+import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n';
 import { QUICK_MODES, buildQuickContextPrompt, guessQuickMode, quickActionsFor, type QuickAction, type QuickMode } from './actions';
 import {
     closeQuickContext,
@@ -108,6 +110,7 @@ const QuickContextApp = observer(({ selectedText = '' }: QuickContextProps) => {
 export default QuickContextApp;
 
 function QuickContextCard({ selectedText }: Required<QuickContextProps>) {
+    const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const { height } = useWindowDimensions();
     // The window is translucent, which makes Android ignore adjustResize (the manifest asks for
@@ -133,7 +136,7 @@ function QuickContextCard({ selectedText }: Required<QuickContextProps>) {
             if (!cancelled) setEphemeralSession(createEphemeralSession());
         })().catch((e) => {
             console.error('[QuickContext] could not start session', e);
-            if (!cancelled) setError((e as Error).message || 'Could not start Quick Actions');
+            if (!cancelled) setError((e as Error).message || i18n.t('quick_context.could_not_start'));
         });
         return () => { cancelled = true; };
     }, []);
@@ -147,7 +150,7 @@ function QuickContextCard({ selectedText }: Required<QuickContextProps>) {
             .then((created) => { if (!cancelled) setPersistentSession(created); })
             .catch((e) => {
                 console.error('[QuickContext] could not start persistent session', e);
-                if (!cancelled) setError((e as Error).message || 'Could not start Quick Actions');
+                if (!cancelled) setError((e as Error).message || i18n.t('quick_context.could_not_start'));
             });
         return () => { cancelled = true; };
     }, [wantsPersistent, persistentSession, ephemeralSession]);
@@ -178,7 +181,7 @@ function QuickContextCard({ selectedText }: Required<QuickContextProps>) {
         // show undimmed through the card's rounded top corners.
         <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.55)' }}>
             {/* Tapping the dimmed app behind the card dismisses it, like the sheets in the chat screen */}
-            <Pressable style={{ flex: 1 }} accessibilityLabel="Dismiss" onPress={() => dismissRef.current()} />
+            <Pressable style={{ flex: 1 }} accessibilityLabel={t('quick_context.dismiss')} onPress={() => dismissRef.current()} />
             <View
                 style={{
                     backgroundColor: CARD_BACKGROUND,
@@ -225,13 +228,14 @@ function QuickContextCard({ selectedText }: Required<QuickContextProps>) {
 
 /** Logo, the model chip (with its selection sheet) and close - the card's take on the TopBar. */
 function CardHeader({ workspace, onClose }: { workspace: WorkspaceType | null; onClose: () => void }) {
+    const { t } = useTranslation();
     return (
         <View className="flex flex-row items-center justify-between" style={{ paddingHorizontal: 16, paddingTop: 14, paddingBottom: 4 }}>
             <Image source={require('@/assets/logo/anything-llm.png')} style={{ width: 110, height: 36 }} resizeMode="contain" />
             <View style={{ flex: 1, alignItems: 'center', paddingTop: 5 }}>
                 {workspace && <ModelChip workspace={workspace} />}
             </View>
-            <TouchableOpacity onPress={onClose} hitSlop={12} accessibilityLabel="Close">
+            <TouchableOpacity onPress={onClose} hitSlop={12} accessibilityLabel={t('common.close')}>
                 <X size={22} color="#FFF" />
             </TouchableOpacity>
         </View>
@@ -246,18 +250,19 @@ function CardPlaceholder({ session, error, setupNeeded, needsModel, selectedText
     needsModel: boolean;
     selectedText: string;
 }) {
+    const { t } = useTranslation();
     let content: React.ReactNode;
     if (setupNeeded) {
         content = (
             <>
-                <Text className="text-white text-base text-center">Finish setting up AnythingLLM to use it from the selection menu.</Text>
-                <Pill label="Open AnythingLLM" icon={<ArrowSquareOut size={16} color="#000" />} primary onPress={openMainApp} />
+                <Text className="text-white text-base text-center">{t('quick_context.setup_needed')}</Text>
+                <Pill label={t('quick_context.open_anythingllm')} icon={<ArrowSquareOut size={16} color="#000" />} primary onPress={openMainApp} />
             </>
         );
     } else if (error) {
         content = <Text className="text-red-500 text-base text-center">{error}</Text>;
     } else if (needsModel) {
-        content = <Text className="text-base text-center" style={{ color: MUTED_TEXT }}>Select a model above to get started.</Text>;
+        content = <Text className="text-base text-center" style={{ color: MUTED_TEXT }}>{t('quick_context.select_model')}</Text>;
     } else {
         content = <ActivityIndicator size="large" color="#FFF" />;
     }
@@ -285,6 +290,7 @@ function CardBody({ session, mode, onModeChange, switching, selectedText, dismis
     /** Leave the card; told how many exchanges this session saved so an empty thread can be dropped. */
     onClose: (savedInSession: number) => void;
 }) {
+    const { t } = useTranslation();
     const chatHandler = useChatHandlerContext();
     const { chats, isWorking } = useChatHistoryContext();
     const [expanded, setExpanded] = useState(false);
@@ -325,13 +331,14 @@ function CardBody({ session, mode, onModeChange, switching, selectedText, dismis
         setDraft('');
         if (isFirst) {
             // Saved threads are named after the action, so the sidebar reads "Summarize · <selection>".
-            const label = action?.label ?? (text.length > CUSTOM_PROMPT_LABEL_CHARS ? `${text.slice(0, CUSTOM_PROMPT_LABEL_CHARS).trimEnd()}…` : text);
+            const label = action ? t(action.label) : (text.length > CUSTOM_PROMPT_LABEL_CHARS ? `${text.slice(0, CUSTOM_PROMPT_LABEL_CHARS).trimEnd()}…` : text);
             await nameQuickContextThread(session, label, selectedText).catch(() => null);
-            Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.QUICK_CONTEXT_USED, { mode, action: action?.label ?? 'custom' });
+            // Always the English label so analytics do not split by UI language.
+            Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.QUICK_CONTEXT_USED, { mode, action: action ? i18n.t(action.label, { lng: 'en' }) : 'custom' });
         }
         // The selection rides along with the first prompt only - later turns are plain follow-ups.
         chatHandler.submitPrompt(isFirst ? buildQuickContextPrompt(text, selectedText) : text);
-    }, [chats.length, session, selectedText, chatHandler, mode]);
+    }, [chats.length, session, selectedText, chatHandler, mode, t]);
 
     /**
      * Copy the result and close straight away. The card finishes without a PROCESS_TEXT result, so
@@ -342,9 +349,9 @@ function CardBody({ session, mode, onModeChange, switching, selectedText, dismis
         if (!lastReply) return;
         Clipboard.setString(lastReply);
         ReactNativeHapticFeedback.trigger('impactLight', hapticOptions);
-        showToast(mode === 'edit' ? 'Copied - paste it over your selection' : 'Copied');
+        showToast(mode === 'edit' ? t('quick_context.copied_paste') : t('common.copied'));
         closeQuickContext();
-    }, [lastReply, mode]);
+    }, [lastReply, mode, t]);
 
     return (
         <>
@@ -355,7 +362,7 @@ function CardBody({ session, mode, onModeChange, switching, selectedText, dismis
                         <ModeToggle mode={mode} onChange={onModeChange} />
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }} style={{ flex: 1 }}>
                             {actions.map((action) => (
-                                <Pill key={action.label} label={action.label} disabled={actionsDisabled} onPress={() => send(action.prompt(), action)} />
+                                <Pill key={action.label} label={t(action.label)} disabled={actionsDisabled} onPress={() => send(action.prompt(), action)} />
                             ))}
                         </ScrollView>
                     </View>
@@ -382,12 +389,12 @@ function CardBody({ session, mode, onModeChange, switching, selectedText, dismis
 
             {!!lastReply && !isWorking && (
                 <View className="flex flex-row items-center" style={{ gap: 8, paddingHorizontal: 20, marginTop: 8 }}>
-                    <Pill label="Copy & close" icon={<Copy size={16} color="#000" />} primary onPress={copyAndClose} />
+                    <Pill label={t('quick_context.copy_and_close')} icon={<Copy size={16} color="#000" />} primary onPress={copyAndClose} />
                     <View style={{ flex: 1 }} />
                     {!session.ephemeral && (
-                        <TouchableOpacity onPress={() => openQuickContextInApp(session)} hitSlop={8} accessibilityLabel="Open in app" className="flex flex-row items-center" style={{ gap: 4 }}>
+                        <TouchableOpacity onPress={() => openQuickContextInApp(session)} hitSlop={8} accessibilityLabel={t('quick_context.open_in_app')} className="flex flex-row items-center" style={{ gap: 4 }}>
                             <ArrowSquareOut size={16} color={MUTED_TEXT} />
-                            <Text className="text-sm" style={{ color: MUTED_TEXT }}>Open in app</Text>
+                            <Text className="text-sm" style={{ color: MUTED_TEXT }}>{t('quick_context.open_in_app')}</Text>
                         </TouchableOpacity>
                     )}
                 </View>
@@ -409,8 +416,8 @@ function CardBody({ session, mode, onModeChange, switching, selectedText, dismis
 
 /** What the input invites, by mode and whether the conversation has started. */
 function inputPlaceholder(mode: QuickMode, started: boolean): string {
-    if (mode === 'edit') return started ? 'Adjust text further…' : 'How should this text change?';
-    return started ? 'Ask more questions…' : 'Ask anything about this text…';
+    if (mode === 'edit') return started ? i18n.t('quick_context.placeholders.edit_started') : i18n.t('quick_context.placeholders.edit_new');
+    return started ? i18n.t('quick_context.placeholders.summarize_started') : i18n.t('quick_context.placeholders.summarize_new');
 }
 
 function SelectionPreview({ text, expanded, onToggle, lines = 3 }: { text: string; expanded: boolean; onToggle: () => void; lines?: number }) {
@@ -441,31 +448,32 @@ function InputRow({ value, onChange, disabled, working, placeholder, onSend, onS
     onStop: () => void;
     speechToText: SpeechToTextInterface;
 }) {
+    const { t } = useTranslation();
     const hasDraft = !!value.trim();
     const canSend = !disabled && !working && hasDraft;
 
     let control: React.ReactNode;
     if (working) {
         control = (
-            <TouchableOpacity onPress={onStop} accessibilityLabel="Stop generating">
+            <TouchableOpacity onPress={onStop} accessibilityLabel={t('chat.prompt_input.stop_generating')}>
                 <Stop size={25} color="#FFF" weight="fill" />
             </TouchableOpacity>
         );
     } else if (speechToText.isListening) {
         control = (
-            <TouchableOpacity onPress={speechToText.stopListening} accessibilityLabel="Stop recording">
+            <TouchableOpacity onPress={speechToText.stopListening} accessibilityLabel={t('chat.prompt_input.stop_recording')}>
                 <VoiceRecordingIndicator volume={speechToText.volume} />
             </TouchableOpacity>
         );
     } else if (!hasDraft) {
         control = (
-            <TouchableOpacity onPress={speechToText.startListening} disabled={disabled} accessibilityLabel="Voice input" style={{ opacity: disabled ? 0.4 : 1 }}>
+            <TouchableOpacity onPress={speechToText.startListening} disabled={disabled} accessibilityLabel={t('chat.prompt_input.voice_input')} style={{ opacity: disabled ? 0.4 : 1 }}>
                 <Microphone size={25} color="#FFF" weight="fill" />
             </TouchableOpacity>
         );
     } else {
         control = (
-            <TouchableOpacity onPress={onSend} disabled={!canSend} accessibilityLabel="Send prompt" style={{ opacity: canSend ? 1 : 0.4 }}>
+            <TouchableOpacity onPress={onSend} disabled={!canSend} accessibilityLabel={t('chat.prompt_input.send_prompt')} style={{ opacity: canSend ? 1 : 0.4 }}>
                 <PaperPlaneRight size={25} color="#FFF" weight="fill" />
             </TouchableOpacity>
         );
@@ -491,6 +499,7 @@ function InputRow({ value, onChange, disabled, working, placeholder, onSend, onS
 
 /** Edit | Summarize - one joined pill with two segments, the selected one filled like the model chip. */
 function ModeToggle({ mode, onChange }: { mode: QuickMode; onChange: (mode: QuickMode) => void }) {
+    const { t } = useTranslation();
     return (
         <View className="flex flex-row rounded-full bg-white/10" style={{ padding: 3 }} accessibilityRole="tablist">
             {QUICK_MODES.map(({ key, label }) => {
@@ -504,7 +513,7 @@ function ModeToggle({ mode, onChange }: { mode: QuickMode; onChange: (mode: Quic
                         accessibilityState={{ selected }}
                         className={`rounded-full ${selected ? 'bg-white' : ''}`}
                         style={{ paddingHorizontal: 12, paddingVertical: 5 }}>
-                        <Text className={`text-sm font-medium ${selected ? 'text-black' : 'text-white'}`}>{label}</Text>
+                        <Text className={`text-sm font-medium ${selected ? 'text-black' : 'text-white'}`}>{t(label)}</Text>
                     </TouchableOpacity>
                 );
             })}

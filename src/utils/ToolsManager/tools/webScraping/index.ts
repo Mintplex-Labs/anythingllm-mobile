@@ -3,6 +3,7 @@ import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { getOrigin, safeJsonParse } from "@/utils/formatters";
 import webscraper from "./webscraper";
 import { DownloadDeclinedError, getContentTypeFromURL, processLinkAsFile, resolveLinkAsFile } from "./linkAsFile";
+import i18n from "@/i18n";
 
 export type UrlDocument = {
     /** Page title, or the document's file name when the link points at a file */
@@ -30,7 +31,7 @@ export async function readUrlAsDocument(url: string, onStatus?: (status: string)
     else if (normalised.match(/^http:\/\//i)) normalised = normalised.replace(/^http:\/\//i, 'https://');
 
     const validUrl = new URL(normalised);
-    onStatus?.(`Reading ${validUrl.hostname}`);
+    onStatus?.(i18n.t('tools.web_scraping.status_reading', { host: validUrl.hostname }));
 
     // If the link is really a document we can parse (by Content-Type only), download it,
     // extract the text and throw the file away. Everything else is a regular web page.
@@ -38,7 +39,7 @@ export async function readUrlAsDocument(url: string, onStatus?: (status: string)
     const asFile = resolveLinkAsFile(validUrl.toString(), contentType);
 
     if (asFile && contentType) {
-        onStatus?.(`Reading document ${asFile.fileName}`);
+        onStatus?.(i18n.t('tools.web_scraping.status_reading_document', { name: asFile.fileName }));
         const fileResult = await processLinkAsFile({ url: validUrl.toString(), contentType, contentLength });
         return { title: fileResult.fileName, content: fileResult.content, url: validUrl.toString() };
     }
@@ -49,8 +50,8 @@ export async function readUrlAsDocument(url: string, onStatus?: (status: string)
 
 export default {
     id: 'webScraping',
-    name: 'Web Scraping',
-    description: 'Scrape a single specific website for information.',
+    get name() { return i18n.t('tools.web_scraping.name'); },
+    get description() { return i18n.t('tools.web_scraping.description'); },
     defaultEnabled: true,
     category: 'default',
     definition: {

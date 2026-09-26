@@ -1,0 +1,1201 @@
+{
+  "common": {
+    "add": "जोड़ें",
+    "allow": "अनुमति दें",
+    "apply": "लागू करें",
+    "back": "वापस",
+    "cancel": "रद्द करें",
+    "clear": "साफ करें",
+    "close": "बंद करें",
+    "confirm": "पुष्टि करें",
+    "continue": "जारी रखें",
+    "copied": "कॉपी किया गया",
+    "copy": "कॉपी करें",
+    "create": "बनाएँ",
+    "default": "डिफ़ॉल्ट",
+    "delete": "हटाएँ",
+    "disable": "अक्षम करें",
+    "disabled": "अक्षम",
+    "dismiss": "खारिज करें",
+    "done": "पूर्ण",
+    "download": "डाउनलोड करें",
+    "downloading": "डाउनलोड जा रहा है",
+    "edit": "संपादित करें",
+    "enable": "सक्षम करें",
+    "enabled": "सक्षम",
+    "error": "त्रुटि",
+    "export": "निर्यात करें",
+    "import": "आयात करें",
+    "install": "स्थापित करें",
+    "installed": "स्थापित",
+    "learn_more": "अधिक जानें",
+    "loading": "लोड हो रहा है...",
+    "next": "अगला",
+    "no": "नहीं",
+    "none": "कोई नहीं",
+    "off": "बंद",
+    "ok": "ठीक है",
+    "on": "चालू",
+    "open": "खोलें",
+    "optional": "वैकल्पिक",
+    "refresh": "ताज़ा करें",
+    "remove": "हटाएँ",
+    "rename": "नाम बदलें",
+    "required": "आवश्यक",
+    "reset": "रीसेट करें",
+    "retry": "फिर से कोशिश करें",
+    "save": "सहेजें",
+    "search": "खोजें",
+    "select": "चुनें",
+    "selected": "चयनित",
+    "send": "भेजें",
+    "settings": "सेटिंग्स",
+    "share": "साझा करें",
+    "skip": "छोड़ें",
+    "stop": "रोकें",
+    "success": "सफलता",
+    "uninstall": "अनइंस्टॉल करें",
+    "unknown": "अज्ञात",
+    "unknown_error": "अज्ञात त्रुटि",
+    "update": "अपडेट करें",
+    "upload": "अपलोड करें",
+    "yes": "हाँ"
+  },
+  "language": {
+    "title": "भाषा",
+    "search_placeholder": "भाषा खोजें",
+    "no_results": "\"{{query}}\" के लिए कोई भाषा नहीं मिली",
+    "changed": "भाषा बदल गई {{language}} में"
+  },
+  "settings": {
+    "llm_preference": {
+      "title": "LLM प्राथमिकता",
+      "description": "यह LLM प्राथमिकता सभी कार्यक्षेत्रों के लिए उपयोग की जाएगी। आप इसे किसी भिन्न LLM प्रदाता या ऑन-डिवाइस मॉडल का उपयोग करने के लिए बदल सकते हैं।"
+    },
+    "language": {
+      "app_language": "ऐप भाषा"
+    },
+    "special_tools": {
+      "title": "विशेष उपकरण",
+      "ask_with_anythingllm": "\"AnythingLLM के साथ पूछें\"",
+      "page_title": "विशेष उपकरण",
+      "added_toast": "AnythingLLM को टेक्स्ट चयन मेनू में जोड़ा गया",
+      "removed_toast": "AnythingLLM को टेक्स्ट चयन मेनू से हटाया गया",
+      "context_awareness": "संदर्भ जागरूकता",
+      "ask_with_anythingllm_toggle": "AnythingLLM के साथ पूछें",
+      "android_only": "केवल Android के लिए",
+      "description_available": "आपके द्वारा किसी भी ऐप में टेक्स्ट का चयन करते समय दिखाई देने वाले मेनू में AnythingLLM के साथ पूछें जोड़ता है। इसे आपके द्वारा यहां चुने गए किसी भी मॉडल के साथ जो आप लिख रहे हैं उसे पॉलिश करने, छोटा करने या ठीक करने के लिए, या जो आप पढ़ रहे हैं उसे सारांशित करने, समझाने और शोध करने के लिए उपयोग करें।",
+      "description_unavailable": "Android पर, AnythingLLM किसी भी ऐप में टेक्स्ट का चयन करते समय दिखाई देने वाले मेनू में दिखाई दे सकता है, इसे आपके चुने हुए मॉडल के साथ संपादित या सारांशित करने के लिए। iOS एप्लिकेशन को यह सुविधा नहीं प्रदान करता है।"
+    },
+    "about": {
+      "release_notes": "v{{version}} के लिए रिलीज़ नोट्स",
+      "star_github": "GitHub पर स्टार दें",
+      "join_discord": "Discord में शामिल हों"
+    },
+    "utility": {
+      "title": "उपयोगिता",
+      "anonymous_telemetry": "अनामित टेलीमेट्री",
+      "clear_temp_files": "अस्थायी फ़ाइलें साफ करें",
+      "temp_files_cleared": "अस्थायी फ़ाइलें साफ कर दी गईं"
+    },
+    "legal": {
+      "title": "कानूनी और गोपनीयता",
+      "terms": "सेवा की शर्तें",
+      "privacy": "गोपनीयता नीति"
+    },
+    "reset": {
+      "title": "AnythingLLM रीसेट करें",
+      "confirm_message": "क्या आप सुनिश्चित हैं कि आप AnythingLLM को रीसेट करना चाहते हैं? यह आपके सभी कार्यक्षेत्रों, चैट्स, स्थापित मॉडल और प्राथमिकताओं को हटा देगा।",
+      "confirm_button": "हाँ, सब कुछ रीसेट करें"
+    },
+    "update_failed": "सेटिंग को अपडेट नहीं कर सके",
+    "version": {
+      "about": "AnythingLLM के बारे में",
+      "update_available_title": "अपडेट उपलब्ध",
+      "update_available_message": "संस्करण {{version}} उपलब्ध है। कृपया नवीनतम संस्करण में अपडेट करें।",
+      "go_to_app_store": "ऐप स्टोर पर जाएँ"
+    },
+    "telemetry": {
+      "enabled_toast": "अनामित टेलीमेट्री सक्षम की गई",
+      "disabled_toast": "अनामित टेलीमेट्री अक्षम की गई",
+      "usage_data": "उपयोग डेटा",
+      "share_toggle": "अनामित टेलीमेट्री साझा करें",
+      "description_events": "AnythingLLM अनामित ईवेंट्स की एक छोटी संख्या भेजता है, जैसे \"एक चैट पूरी हुई\" या \"एक उपकरण का उपयोग किया गया\", इसलिए हम देख सकते हैं कि कौन सी सुविधाएँ महत्वपूर्ण हैं और चीजें कहाँ टूटती हैं।",
+      "description_privacy": "इसमें कभी भी आपकी चैट्स, दस्तावेज़, प्रॉम्प्ट्स या ऐप का उपयोग करने के बारे में कुछ भी विशिष्ट नहीं शामिल है। कोई खाता नहीं है और कुछ भी आपकी पहचान नहीं करता है।",
+      "description_opt_out": "इसे चालू रखना हमें एक बेहतर एप्लिकेशन बनाने में मदद करता है। आप इसे किसी भी समय बंद कर सकते हैं और आगे कुछ भी नहीं भेजा जाएगा।"
+    },
+    "advanced_model_preferences": {
+      "title": "मॉडल चयन",
+      "choose_provider": "LLM प्रदाता चुनें",
+      "llm_model": "LLM मॉडल",
+      "provider_settings": "प्रदाता सेटिंग्स",
+      "show_less": "कम दिखाएँ",
+      "view_more": "अधिक देखें"
+    },
+    "provider_options": {
+      "base_url": "आधार URL",
+      "base_url_placeholder": "अपना आधार URL दर्ज करें (जैसे {{example}})",
+      "api_key": "API कुंजी",
+      "api_key_optional": "API कुंजी (वैकल्पिक)",
+      "api_key_placeholder": "अपनी API कुंजी दर्ज करें",
+      "aws_region": "AWS क्षेत्र",
+      "select_region": "क्षेत्र चुनें",
+      "choose_region": "अपना AWS क्षेत्र चुनें",
+      "search_region": "क्षेत्र कोड खोजें या टाइप करें",
+      "use_region": "\"{{region}}\" का उपयोग करें",
+      "model_selection": "मॉडल चयन",
+      "select_model": "मॉडल चुनें",
+      "choose_model": "अपना मॉडल चुनें",
+      "search_models": "मॉडल खोजें",
+      "fetching_models": "मॉडल प्राप्त किए जा रहे हैं...",
+      "model_placeholder": "अपना मॉडल दर्ज करें (जैसे {{example}})",
+      "models_load_failed": "इस प्रदाता से मॉडल लोड नहीं कर सके। अपने क्रेडेंशियल्स जाँचें या मॉडल का नाम मैन्युअल रूप से दर्ज करें।",
+      "no_tool_calls": "यह मॉडल <bold>कोई उपकरण कॉलिंग समर्थन नहीं</bold> के रूप में पहचाना गया। केवल सरल चैट + RAG समर्थित होगा"
+    }
+  },
+  "chat": {
+    "error_loading_provider": "LLM प्रदाता लोड करने में त्रुटि",
+    "error_loading_thread": "कार्यक्षेत्र धागा लोड करने में त्रुटि",
+    "unknown_error": "अज्ञात त्रुटि",
+    "loading_history": "चैट इतिहास लोड हो रहा है...",
+    "suggestions": {
+      "hello": "नमस्ते, आप मेरी क्या मदद कर सकते हैं?",
+      "research": "{{city}}, {{region}} में करने के लिए कुछ मजेदार चीजों को ऑनलाइन खोजें",
+      "calendar_monday": "सोमवार को मेरे कैलेंडर पर क्या है?",
+      "calendar_tomorrow": "कल मेरे कैलेंडर पर क्या है?",
+      "calendar_today": "आज मेरे कैलेंडर पर क्या है?",
+      "email": "John Doe को स्थानीय AI एजेंटों के लाभों के बारे में बिक्री ईमेल का मसौदा तैयार करें",
+      "summarize_example": "paulgraham.com/foundermode.html को सारांशित करें",
+      "summarize_file": "{{name}} को सारांशित करें",
+      "summarize_websites_one": "इस वेबसाइट को सारांशित करें",
+      "summarize_websites_other": "इन वेबसाइटों को सारांशित करें",
+      "summarize_documents_one": "इस दस्तावेज़ को सारांशित करें",
+      "summarize_documents_other": "इन दस्तावेज़ों को सारांशित करें",
+      "explain_images_one": "इस छवि को समझाएँ",
+      "explain_images_other": "इन छवियों को समझाएँ"
+    },
+    "citations": {
+      "title": "उद्धरण",
+      "score": "स्कोर: {{score}}",
+      "sources": "स्रोत"
+    },
+    "message_actions": {
+      "copied": "क्लिपबोर्ड में कॉपी किया गया",
+      "retry_failed": "इस संदेश को फिर से कोशिश नहीं कर सके",
+      "delete_failed": "इस उत्तर को हटा नहीं सके",
+      "fork_failed": "धागा कांटा नहीं सका: {{error}}",
+      "fork_name": "{{name}} की प्रतिलिपि",
+      "copy_title": "संदेश कॉपी करें",
+      "copy_description": "टेक्स्ट को अपने क्लिपबोर्ड में कॉपी करें",
+      "retry_wait": "वर्तमान उत्तर के समाप्त होने की प्रतीक्षा करें",
+      "retry_description": "इस एक्सचेंज को हटाएँ और प्रॉम्प्ट को फिर से भेजें",
+      "fork_title": "धागा कांटा",
+      "fork_remote_unavailable": "रिमोट धागों के लिए उपलब्ध नहीं",
+      "fork_description": "इस बातचीत की एक प्रतिलिपि के साथ एक नया धागा शुरू करें",
+      "delete_title": "उत्तर हटाएँ",
+      "delete_description": "इस संदेश और इसके उत्तर को धागे से हटाएँ"
+    },
+    "activity": {
+      "running": "चल रहा है",
+      "waiting_approval_to_run": "{{tool}} को चलाने के लिए अनुमति की प्रतीक्षा कर रहे हैं",
+      "approved_tool": "{{tool}} को मंजूरी दी गई",
+      "rejected_tool": "{{tool}} को अस्वीकार कर दिया गया",
+      "waiting_for_you": "आपकी प्रतीक्षा कर रहे हैं",
+      "tool_approved": "उपकरण कॉल को मंजूरी दी गई",
+      "tool_rejected": "उपकरण कॉल को अस्वीकार कर दिया गया",
+      "thinking": "सोच रहे हैं...",
+      "waiting_your_approval": "आपकी मंजूरी की प्रतीक्षा कर रहे हैं",
+      "calling_tool": "{{tool}} कॉल कर रहे हैं",
+      "working": "काम कर रहे हैं...",
+      "worked_for": "{{duration}} के लिए काम किया",
+      "thought_for": "{{duration}} के लिए सोचा",
+      "thoughts": "विचार"
+    },
+    "file_download": {
+      "saved_to": "{{filename}} को {{location}} में सहेजा गया",
+      "save_failed": "फ़ाइल सहेज नहीं सके: {{error}}",
+      "share_failed": "साझा शीट नहीं खोल सके: {{error}}",
+      "missing": "इस डिवाइस पर अब नहीं है",
+      "missing_label": "{{title}}, फ़ाइल अब उपलब्ध नहीं है",
+      "download_label": "{{title}} डाउनलोड करें",
+      "share_label": "{{title}} साझा करें",
+      "unknown_file": "अज्ञात फ़ाइल",
+      "saving": "सहेजा जा रहा है...",
+      "saved": "सहेजा गया"
+    },
+    "scheduled_job_card": {
+      "open_label": "निर्धारित नौकरी {{name}} खोलें",
+      "subtitle": "निर्धारित नौकरी · {{schedule}}",
+      "view": "देखें"
+    },
+    "metrics": {
+      "tokens_one": "{{count}} टोकन",
+      "tokens_other": "{{count}} टोकन"
+    },
+    "tool_approval": {
+      "wants_to_call": "मॉडल <skill>{{skill}}</skill> को कॉल करना चाहता है",
+      "show_details": "विवरण दिखाएँ",
+      "hide_details": "विवरण छुपाएँ",
+      "approve": "मंजूरी दें",
+      "reject": "अस्वीकार करें"
+    },
+    "attachments": {
+      "attach_files": "फ़ाइलें संलग्न करें",
+      "gallery": "गैलरी",
+      "take_photo": "फ़ोटो लें",
+      "add_attachment": "संलग्नता जोड़ें",
+      "hint_embed": "फ़ाइलों को विभाजित और एम्बेड किया जाता है इसलिए आपका ऑन-डिवाइस मॉडल उन्हें खोज सकता है।",
+      "hint_full": "फ़ाइलें इस कार्यक्षेत्र में हर संदेश के साथ अपने मॉडल को पूरी तरह से भेजी जाती हैं।",
+      "max_reached": "आप एक प्रॉम्प्ट के लिए संलग्नताओं की अधिकतम संख्या तक पहुँच गए हैं।",
+      "downloading_image_support": "छवि समर्थन डाउनलोड किया जा रहा है... {{progress}}%",
+      "cancel_download": "डाउनलोड रद्द करें",
+      "download_image_support": "छवि समर्थन डाउनलोड करें",
+      "needs_download_tap": "यह मॉडल छवियों को देख सकता है, लेकिन अतिरिक्त डाउनलोड की आवश्यकता है। डाउनलोड करने के लिए टैप करें ({{size}})।",
+      "download_failed": "डाउनलोड विफल हुआ। फिर से कोशिश करने के लिए टैप करें।",
+      "download_cancelled": "डाउनलोड रद्द किया गया।"
+    },
+    "prompt_input": {
+      "placeholder": "अपना प्रॉम्प्ट दर्ज करें",
+      "select_model_first": "कृपया पहले एक मॉडल चुनें",
+      "stop_generating": "उत्पादन रोकें",
+      "stop_recording": "रिकॉर्डिंग रोकें",
+      "voice_input": "आवाज़ इनपुट",
+      "send_prompt": "प्रॉम्प्ट भेजें"
+    },
+    "files": {
+      "title": "फ़ाइलें",
+      "empty": "इस कार्यक्षेत्र में कोई फ़ाइलें नहीं",
+      "error_loading": "फ़ाइलें लोड करने में त्रुटि",
+      "deleted_one": "{{count}} फ़ाइल सफलतापूर्वक हटा दी गई!",
+      "deleted_other": "{{count}} फ़ाइलें सफलतापूर्वक हटा दी गईं!",
+      "select_all": "सभी चुनें",
+      "deselect_all": "सभी को अचयनित करें",
+      "delete_selected": "चयनित फ़ाइलें हटाएँ",
+      "embedded": "एम्बेडेड · हर धागे में खोजी गई",
+      "full_every_thread": "पूरी तरह भेजी गई · हर धागा",
+      "full_this_thread": "पूरी तरह भेजी गई · यह धागा",
+      "full_another_thread": "पूरी तरह भेजी गई · दूसरा धागा"
+    },
+    "history_cleared": "चैट इतिहास साफ कर दिया गया",
+    "tools": {
+      "title": "उपकरण",
+      "group_status": "{{enabled}} का {{total}} चालू है",
+      "app_connections": "ऐप कनेक्शन",
+      "group_files_note": "{{description}} फ़ाइलें इस डिवाइस पर रहती हैं जब तक आप सेटिंग्स में अस्थायी फ़ाइलें साफ न करें।",
+      "needs_cloud_model": "{{description}} क्लाउड मॉडल की आवश्यकता है।",
+      "unavailable_on_device": "धूसर उपकरण ऑन-डिवाइस मॉडल के साथ उपलब्ध नहीं हैं। उन्हें उपयोग करने के लिए क्लाउड प्रदाता पर स्विच करें।"
+    },
+    "remote_unreachable": {
+      "title": "दूरस्थ सर्वर तक पहुँचा नहीं जा सकता है",
+      "message": "हम वर्तमान में आपके उदाहरण तक नहीं पहुँच सकते हैं। क्या आप इस बातचीत को स्थानीय रूप से जारी रखना चाहते हैं?",
+      "cancel": "नहीं, रद्द करें",
+      "continue": "हाँ, स्थानीय रूप से जारी रखें",
+      "not_sent": "दूरस्थ सर्वर तक पहुँचा नहीं जा सकता है - चैट नहीं भेजा गया।"
+    },
+    "errors": {
+      "processing": "चैट प्रसंस्करण में त्रुटि",
+      "timed_out": "प्रतिक्रिया प्राप्त होने से पहले अनुरोध का समय समाप्त हो गया। कनेक्शन खो सकता है।"
+    },
+    "status": {
+      "recalling_notes": "कार्यक्षेत्र नोट्स को याद कर रहे हैं"
+    }
+  },
+  "quick_context": {
+    "modes": {
+      "summarize": "सारांशित करें"
+    },
+    "actions": {
+      "polish": "पॉलिश करें",
+      "shorten": "छोटा करें",
+      "fix_grammar": "व्याकरण ठीक करें",
+      "more_formal": "अधिक औपचारिक",
+      "summarize": "सारांशित करें",
+      "key_points": "मुख्य बिंदु",
+      "explain": "समझाएँ",
+      "research": "शोध करें"
+    },
+    "could_not_start": "त्वरित कार्य शुरू नहीं कर सके",
+    "dismiss": "खारिज करें",
+    "setup_needed": "AnythingLLM को चयन मेनू से उपयोग करने के लिए सेटअप पूरा करें।",
+    "open_anythingllm": "AnythingLLM खोलें",
+    "select_model": "शुरुआत करने के लिए ऊपर एक मॉडल चुनें।",
+    "copied_paste": "कॉपी किया गया - इसे अपनी चयन पर पेस्ट करें",
+    "copy_and_close": "कॉपी करें और बंद करें",
+    "open_in_app": "ऐप में खोलें",
+    "placeholders": {
+      "edit_new": "यह टेक्स्ट कैसे बदले?",
+      "edit_started": "टेक्स्ट को और समायोजित करें…",
+      "summarize_new": "इस टेक्स्ट के बारे में कुछ भी पूछें…",
+      "summarize_started": "अधिक प्रश्न पूछें…"
+    }
+  },
+  "attachments": {
+    "processing": "प्रसंस्करण…",
+    "image": "छवि",
+    "file_type_generic": "फ़ाइल",
+    "name_processing": "{{name}}, प्रसंस्करण",
+    "remove_named": "{{name}} को हटाएँ",
+    "more_images_one": "{{count}} और छवि",
+    "more_images_other": "{{count}} और छवियाँ",
+    "attached_image": "संलग्न छवि",
+    "image_position": "{{current}} में से {{total}}",
+    "close_image_preview": "छवि पूर्वावलोकन बंद करें",
+    "remove_image": "छवि हटाएँ"
+  },
+  "errors": {
+    "boundary": {
+      "details": "त्रुटि विवरण",
+      "details_copied": "त्रुटि विवरण कॉपी किए गए",
+      "report_github": "GitHub पर रिपोर्ट करें",
+      "something_went_wrong": "कुछ गलत हो गया",
+      "reported_automatically": "यह त्रुटि स्वचालित रूप से Mintplex Labs को रिपोर्ट की गई थी।",
+      "telemetry_disabled": "आपने टेलीमेट्री अक्षम किया है, इसलिए हमने इस त्रुटि को Mintplex Labs को स्वचालित रूप से रिपोर्ट नहीं किया, आपको इसके बजाय एक GitHub समस्या खोलनी चाहिए।",
+      "go_home": "होम पर जाएँ",
+      "message_failed": "यह संदेश एक त्रुटि के कारण प्रदर्शित नहीं हो सका।",
+      "hide_details": "त्रुटि विवरण छुपाएँ",
+      "show_details": "त्रुटि विवरण दिखाएँ"
+    }
+  },
+  "highlights": {
+    "play_video": "वीडियो चलाएँ",
+    "pause_video": "वीडियो रोकें",
+    "whats_new": "नया क्या है",
+    "tour_title": "AnythingLLM क्या कर सकता है",
+    "quick_actions": {
+      "title": "कहीं भी AnythingLLM के साथ पूछें",
+      "body": "किसी भी ऐप में टेक्स्ट चुनें और \"AnythingLLM के साथ पूछें\" टैप करें ताकि इसे अपने मॉडल के साथ पॉलिश, छोटा, सारांशित या समझाया जा सके। इसे किसी भी समय सेटिंग्स > विशेष उपकरण के तहत बंद करें।"
+    },
+    "share_sheet": {
+      "title": "किसी भी चीज़ को चैट में साझा करें",
+      "body": "किसी भी ऐप से फ़ोटो, दस्तावेज़ और लिंक सीधे AnythingLLM में भेजें। वे एक नए धागे में आते हैं, संलग्न और पूछने के लिए तैयार।"
+    },
+    "scheduled_jobs": {
+      "title": "निर्धारित नौकरियाँ",
+      "body": "एक आवर्ती कार्य के लिए पूछें - सुबह की समाचार सारांश, साप्ताहिक चेक-इन - और यह अनुसूची पर चलता है, भले ही ऐप बंद हो। परिणाम आपके लिए एक सूचना के साथ प्रतीक्षा करते हैं।"
+    }
+  },
+  "new_workspace": {
+    "default_name": "नया कार्यक्षेत्र",
+    "title": "नया कार्यक्षेत्र",
+    "description": "अपने कार्यक्षेत्र को एक नाम दें। आप इसे बाद में बदल सकते हैं।",
+    "placeholder": "जैसे शोध, कार्य, व्यक्तिगत"
+  },
+  "files": {
+    "types": {
+      "text_file": "पाठ फ़ाइल",
+      "spreadsheet": "स्प्रेडशीट",
+      "pdf_document": "PDF दस्तावेज़",
+      "word_document": "Word दस्तावेज़",
+      "file": "फ़ाइल"
+    },
+    "location": {
+      "downloads": "डाउनलोड",
+      "ios_exports": "फ़ाइलें > मेरे iPhone पर > AnythingLLM > निर्यात",
+      "open_downloads": "डाउनलोड में खोलें",
+      "open_files": "फ़ाइलों में खोलें"
+    },
+    "storage_permission": {
+      "title": "डाउनलोड में सहेजें",
+      "message": "AnythingLLM को फ़ाइल को आपके डाउनलोड फ़ोल्डर में सहेजने के लिए संग्रहण पहुंच की आवश्यकता है।"
+    },
+    "export": {
+      "text_label": "पाठ",
+      "txt_description": "सादा पाठ प्रतिलेख",
+      "md_description": "नोट्स ऐप्स के लिए स्वरूपित प्रतिलेख",
+      "json_description": "मॉडल और मेट्रिक्स के साथ संदेश",
+      "pdf_description": "स्वरूपित दस्तावेज़"
+    }
+  },
+  "misc": {
+    "new_thread": "नया धागा",
+    "remote_thread_create_failed": "हम आपके रिमोट कार्यक्षेत्र में एक धागा नहीं बना सके। कृपया अपना कनेक्शन जाँचें और फिर से कोशिश करें।",
+    "job_run": {
+      "failed": "नौकरी विफल",
+      "timed_out": "नौकरी बहुत लंबी हो गई और रोक दी गई",
+      "cancelled": "आपने इस रन को रोका",
+      "app_closed": "नौकरी समाप्त होने से पहले ऐप बंद हो गया"
+    },
+    "validation": {
+      "memory_not_text": "स्मृति पाठ होनी चाहिए",
+      "memory_too_short": "स्मृति बहुत छोटी है",
+      "memory_too_long_one": "स्मृति {{count}} वर्ण या उससे कम होनी चाहिए",
+      "memory_too_long_other": "स्मृति {{count}} वर्णों या उससे कम होनी चाहिए",
+      "job_name_required": "नौकरी को एक नाम दें",
+      "job_name_too_long_one": "नाम {{count}} वर्ण या उससे कम होना चाहिए",
+      "job_name_too_long_other": "नाम {{count}} वर्णों या उससे कम होना चाहिए",
+      "job_prompt_required": "वह प्रॉम्प्ट लिखें जो नौकरी को चलाना चाहिए",
+      "job_prompt_too_long_one": "प्रॉम्प्ट {{count}} वर्ण या उससे कम होना चाहिए",
+      "job_prompt_too_long_other": "प्रॉम्प्ट {{count}} वर्णों या उससे कम होना चाहिए",
+      "job_schedule_invalid": "अनुसूची वैध cron अभिव्यक्ति नहीं है",
+      "job_tools_not_list": "उपकरण एक सूची होने चाहिए",
+      "name_not_string": "नाम एक स्ट्रिंग होना चाहिए",
+      "name_required": "नाम आवश्यक है",
+      "name_too_short_one": "नाम कम से कम {{count}} वर्ण लंबा होना चाहिए",
+      "name_too_short_other": "नाम कम से कम {{count}} वर्ण लंबा होना चाहिए",
+      "name_too_long_one": "नाम {{count}} वर्ण से कम लंबा होना चाहिए",
+      "name_too_long_other": "नाम {{count}} वर्णों से कम लंबा होना चाहिए",
+      "system_prompt_not_string": "सिस्टम प्रॉम्प्ट एक स्ट्रिंग होना चाहिए",
+      "system_prompt_required": "सिस्टम प्रॉम्प्ट आवश्यक है",
+      "system_prompt_too_short_one": "सिस्टम प्रॉम्प्ट कम से कम {{count}} वर्ण लंबा होना चाहिए",
+      "system_prompt_too_short_other": "सिस्टम प्रॉम्प्ट कम से कम {{count}} वर्ण लंबा होना चाहिए",
+      "system_prompt_too_long_one": "सिस्टम प्रॉम्प्ट {{count}} वर्ण से कम लंबा होना चाहिए",
+      "system_prompt_too_long_other": "सिस्टम प्रॉम्प्ट {{count}} वर्णों से कम लंबा होना चाहिए",
+      "temperature_not_number": "तापमान एक संख्या होना चाहिए",
+      "temperature_range": "तापमान {{min}} और {{max}} के बीच होना चाहिए",
+      "context_length_not_number": "संदर्भ लंबाई एक संख्या होनी चाहिए",
+      "context_length_min": "संदर्भ लंबाई {{min}} से अधिक होनी चाहिए"
+    }
+  },
+  "tools": {
+    "groups": {
+      "create_files": {
+        "name": "फ़ाइलें बनाएँ",
+        "description": "सहायक को दस्तावेज़ लिखने दें जिसे आप डाउनलोड और साझा कर सकते हैं।"
+      }
+    },
+    "reranker": {
+      "download_required_title": "डाउनलोड आवश्यक",
+      "download_required_message": "बुद्धिमान उपकरण चयन के लिए एक छोटे मॉडल डाउनलोड ({{size}}) की आवश्यकता है। आप सेलुलर डेटा पर हैं। जारी रखें?",
+      "status_downloading": "उपकरण चयन मॉडल डाउनलोड किया जा रहा है",
+      "status_selecting": "सर्वश्रेष्ठ उपकरण चुन रहे हैं"
+    },
+    "calendar_event_creation": {
+      "name": "कैलेंडर इवेंट निर्माण",
+      "description": "सहायक को आपके लिए कैलेंडर इवेंट बनाने के लिए उपयोग करें।",
+      "status_preparing": "कैलेंडर इवेंट \"{{title}}\" तैयार कर रहे हैं"
+    },
+    "calendar_event_reading": {
+      "name": "कैलेंडर पढ़ें",
+      "description": "सहायक को अपने कैलेंडर इवेंट्स पढ़ने के लिए उपयोग करें।",
+      "status_date": "{{date}} के लिए अपना कैलेंडर पढ़ रहे हैं",
+      "status_today": "आज के लिए अपना कैलेंडर पढ़ रहे हैं",
+      "status_tomorrow": "कल के लिए अपना कैलेंडर पढ़ रहे हैं",
+      "status_this_week": "इस सप्ताह के लिए अपना कैलेंडर पढ़ रहे हैं",
+      "status_next_week": "अगले सप्ताह के लिए अपना कैलेंडर पढ़ रहे हैं",
+      "status_this_month": "इस महीने के लिए अपना कैलेंडर पढ़ रहे हैं",
+      "status_next_month": "अगले महीने के लिए अपना कैलेंडर पढ़ रहे हैं"
+    },
+    "create_files": {
+      "status_creating": "{{name}} बना रहे हैं",
+      "status_created": "{{name}} बनाया गया"
+    },
+    "create_docx_file": {
+      "name": "Word दस्तावेज़",
+      "description": "थीम और एक वैकल्पिक शीर्षक पृष्ठ के साथ markdown से एक स्टाइल किया हुआ .docx लिखें।",
+      "status_creating": "Word दस्तावेज़ \"{{name}}\" बना रहे हैं"
+    },
+    "create_pdf_file": {
+      "name": "PDF दस्तावेज़",
+      "description": "markdown या सादे पाठ को एक स्वरूपित PDF में बदलें।",
+      "status_creating": "PDF \"{{name}}\" बना रहे हैं"
+    },
+    "create_text_file": {
+      "name": "पाठ, Markdown और CSV",
+      "description": "बातचीत से .txt, .md, .csv और .json फ़ाइलें लिखें।"
+    },
+    "create_pptx": {
+      "name": "PowerPoint प्रस्तुति",
+      "description": "एक थीम किया हुआ .pptx डेक की योजना बनाएँ और बनाएँ, एक बार में एक अनुभाग।",
+      "status_planning_one": "प्रस्तुति \"{{title}}\" की योजना बना रहे हैं - {{count}} अनुभाग, {{theme}} थीम",
+      "status_planning_other": "प्रस्तुति \"{{title}}\" की योजना बना रहे हैं - {{count}} अनुभाग, {{theme}} थीम",
+      "approval_description_one": "PowerPoint प्रस्तुति \"{{title}}\" को {{count}} अनुभाग के साथ बनाएँ? प्रत्येक अनुभाग को बनाने के लिए एक मॉडल कॉल लगता है।",
+      "approval_description_other": "PowerPoint प्रस्तुति \"{{title}}\" को {{count}} अनुभागों के साथ बनाएँ? प्रत्येक अनुभाग को बनाने के लिए एक मॉडल कॉल लगता है।",
+      "status_not_approved": "प्रस्तुति को मंजूरी नहीं दी गई",
+      "status_building_section": "[{{current}}/{{total}}] अनुभाग \"{{title}}\" बना रहे हैं",
+      "status_section_complete_one": "[{{current}}/{{total}}] अनुभाग \"{{title}}\" पूर्ण - {{count}} स्लाइड",
+      "status_section_complete_other": "[{{current}}/{{total}}] अनुभाग \"{{title}}\" पूर्ण - {{count}} स्लाइड",
+      "status_section_complete_from_outline_one": "[{{current}}/{{total}}] अनुभाग \"{{title}}\" पूर्ण - {{count}} स्लाइड (रूपरेखा से)",
+      "status_section_complete_from_outline_other": "[{{current}}/{{total}}] अनुभाग \"{{title}}\" पूर्ण - {{count}} स्लाइड (रूपरेखा से)",
+      "status_assembling_one": "डेक को एकत्र कर रहे हैं - {{count}} स्लाइड",
+      "status_assembling_other": "डेक को एकत्र कर रहे हैं - {{count}} स्लाइड"
+    },
+    "create_scheduled_job": {
+      "name": "निर्धारित नौकरी बनाएँ",
+      "description": "सहायक को बातचीत से एक आवर्ती नौकरी सेट करने दें, आपके अनुमोदन के बाद।",
+      "status_asking": "\"{{name}}\" को अनुसूचित करने के लिए पूछ रहे हैं ({{when}})",
+      "approval_tools_one": "निर्धारित नौकरी \"{{name}}\" बनाएँ? यह {{when}} चलेगी {{count}} उपकरण का उपयोग करते हुए।",
+      "approval_tools_other": "निर्धारित नौकरी \"{{name}}\" बनाएँ? यह {{when}} चलेगी {{count}} उपकरणों का उपयोग करते हुए।",
+      "approval_tools_notify_one": "निर्धारित नौकरी \"{{name}}\" बनाएँ? यह {{when}} चलेगी {{count}} उपकरण का उपयोग करते हुए और यह समाप्त होने पर आपको सूचित करेगी।",
+      "approval_tools_notify_other": "निर्धारित नौकरी \"{{name}}\" बनाएँ? यह {{when}} चलेगी {{count}} उपकरणों का उपयोग करते हुए और यह समाप्त होने पर आपको सूचित करेगी।",
+      "approval_no_tools": "निर्धारित नौकरी \"{{name}}\" बनाएँ? यह {{when}} कोई उपकरण के बिना चलेगी।",
+      "approval_no_tools_notify": "निर्धारित नौकरी \"{{name}}\" बनाएँ? यह {{when}} कोई उपकरण के बिना चलेगी और यह समाप्त होने पर आपको सूचित करेगी।",
+      "status_not_approved": "निर्धारित नौकरी को मंजूरी नहीं दी गई",
+      "status_scheduled": "\"{{name}}\" को अनुसूचित किया गया"
+    },
+    "draft_email": {
+      "name": "ईमेल का मसौदा",
+      "description": "सहायक को आपके लिए एक ईमेल का मसौदा तैयार करने के लिए उपयोग करें।",
+      "status_drafting": "ईमेल \"{{subject}}\" का मसौदा तैयार कर रहे हैं",
+      "open_action": "ड्राफ़्ट ईमेल खोलें"
+    },
+    "draft_text": {
+      "name": "पाठ का मसौदा",
+      "description": "सहायक को आपके लिए एक पाठ का मसौदा तैयार करने के लिए उपयोग करें।",
+      "status_drafting_to": "{{recipient}} को एक पाठ का मसौदा तैयार कर रहे हैं",
+      "status_drafting": "एक पाठ संदेश का मसौदा तैयार कर रहे हैं",
+      "open_action": "ड्राफ़्ट पाठ खोलें"
+    },
+    "get_time": {
+      "name": "समय प्राप्त करें",
+      "description": "अपने डिवाइस समय क्षेत्र के आधार पर वर्तमान तारीख और समय प्राप्त करें।"
+    },
+    "get_location": {
+      "name": "स्थान प्राप्त करें",
+      "description": "अपना अनुमानित स्थान प्राप्त करें। यह शहर, राज्य और देश लौटाएगा।",
+      "status_looking_up": "अपना अनुमानित स्थान खोज रहे हैं"
+    },
+    "summarize": {
+      "name": "सारांश",
+      "description": "किसी दिए गए URL या फ़ाइल नाम से सामग्री को सारांशित करें।",
+      "status_reading": "{{source}} पढ़ रहे हैं",
+      "status_looking_for_file": "अपनी फ़ाइलों में \"{{name}}\" खोज रहे हैं",
+      "status_analyzing": "दस्तावेज़ संरचना का विश्लेषण कर रहे हैं",
+      "status_document_long_one": "दस्तावेज़ लंबा है - पहले {{count}} अनुभाग को सारांशित कर रहे हैं",
+      "status_document_long_other": "दस्तावेज़ लंबा है - पहले {{count}} अनुभागों को सारांशित कर रहे हैं",
+      "approval_description_one": "इस सामग्री में {{count}} अनुभाग है जिसे सारांशित करना है। यह कुछ समय ले सकता है - जारी रखें?",
+      "approval_description_other": "इस सामग्री में {{count}} अनुभाग हैं जिन्हें सारांशित करना है। यह कुछ समय ले सकता है - जारी रखें?",
+      "status_not_approved": "सारांश को मंजूरी नहीं दी गई",
+      "status_complete": "सारांश पूर्ण",
+      "status_summarizing_sections": "दस्तावेज़ अनुभागों को सारांशित कर रहे हैं",
+      "status_summarizing_section": "अनुभाग {{current}} को {{total}} में से सारांशित कर रहे हैं",
+      "status_combining": "अनुभाग सारांशों को जोड़ रहे हैं"
+    },
+    "web_scraping": {
+      "name": "वेब स्क्रैपिंग",
+      "description": "जानकारी के लिए एक एकल विशिष्ट वेबसाइट को स्क्रैप करें।",
+      "status_reading": "{{host}} पढ़ रहे हैं",
+      "status_reading_document": "दस्तावेज़ {{name}} पढ़ रहे हैं",
+      "cellular_title": "सेलुलर पर डाउनलोड करें?",
+      "cellular_message": "\"{{name}}\" पढ़ने के लिए {{size}} का एक दस्तावेज़ डाउनलोड करने की आवश्यकता है। आप सेलुलर डेटा पर हैं। जारी रखें?",
+      "cellular_message_unknown_size": "\"{{name}}\" पढ़ने के लिए अज्ञात आकार के एक दस्तावेज़ को डाउनलोड करने की आवश्यकता है। आप सेलुलर डेटा पर हैं। जारी रखें?"
+    },
+    "web_search": {
+      "name": "वेब खोज",
+      "description": "एक क्वेरी के आधार पर खोज परिणामों के लिए वेब खोजें।",
+      "status_searching": "\"{{query}}\" के लिए वेब खोज रहे हैं",
+      "status_reviewing_one": "{{count}} खोज परिणाम की समीक्षा कर रहे हैं",
+      "status_reviewing_other": "{{count}} खोज परिणामों की समीक्षा कर रहे हैं"
+    },
+    "approval": {
+      "auto_approved_status": "{{tool}} को स्वचालित रूप से मंजूरी दी गई"
+    }
+  },
+  "top_bar": {
+    "model_chip": {
+      "remote_managed": "यह कार्यक्षेत्र दूरस्थ रूप से प्रबंधित है। आप यहाँ मॉडल नहीं बदल सकते।",
+      "no_model_loaded": "कोई मॉडल लोड नहीं",
+      "no_models_found": "\"{{query}}\" के लिए कोई मॉडल नहीं मिला",
+      "hf_lookup_hint": "Hugging Face पर \"{{query}}\" देखें और GGUF संस्करण डाउनलोड करें।",
+      "list_failed_toast": "{{provider}} के लिए मॉडल की सूची नहीं बना सकते।",
+      "switch_failed": "मॉडल स्विच नहीं कर सके। कृपया फिर से कोशिश करें।",
+      "loading_models": "{{provider}} से मॉडल लोड हो रहे हैं...",
+      "list_failed_title": "{{provider}} के लिए मॉडल की सूची नहीं बना सके",
+      "list_failed_description": "इस प्रदाता ने कोई मॉडल नहीं लौटाया। जाँचें कि एंडपॉइंट तक पहुँचा जा सकता है और मॉडल सूची का समर्थन करता है, या सेटिंग्स में मॉडल को मैन्युअल रूप से सेट करें।",
+      "try_again": "फिर से कोशिश करें",
+      "search_provider_models": "{{provider}} मॉडल खोजें"
+    },
+    "dev_shortcut_hint_one": "डेवलपर उपकरण खोलने के लिए {{count}} अधिक बार दबाएँ",
+    "dev_shortcut_hint_other": "डेवलपर उपकरण खोलने के लिए {{count}} अधिक बार दबाएँ",
+    "thread_menu": {
+      "options": "धागा विकल्प",
+      "export_failed": "धागा निर्यात नहीं कर सके: {{error}}",
+      "share_failed": "साझा शीट नहीं खोल सके: {{error}}",
+      "unknown_error": "अज्ञात त्रुटि",
+      "open_location_failed": "{{location}} में सहेजा गया, लेकिन फ़ोल्डर नहीं खोल सकते",
+      "memories": "स्मृति",
+      "memories_description": "आपके बारे में या आपकी प्राथमिकताओं के बारे में स्मृति देखें",
+      "export_thread": "चैट धागा निर्यात करें",
+      "saved_to_device": "आपके डिवाइस में सहेजा गया"
+    },
+    "memories": {
+      "global": {
+        "tab": "हर जगह",
+        "hint": "आपके बारे में तथ्य जो मॉडल को हमेशा पता होने चाहिए - आपका नाम, आप क्या करते हैं, आप उत्तर कैसे पसंद करते हैं। हर चैट के साथ हर कार्यक्षेत्र में भेजा जाता है। उन्हें छोटा रखें ताकि वे सभी छोटे मॉडल में फिट हों।",
+        "placeholder": "जैसे मेरा नाम Sam है। मैं Python लिखता हूँ और छोटे उत्तर पसंद करता हूँ।",
+        "empty": "अभी तक कोई स्मृति नहीं। ऊपर अपने बारे में एक तथ्य जोड़ें।"
+      },
+      "workspace": {
+        "tab": "यह कार्यक्षेत्र",
+        "hint": "नोट्स जो केवल यहाँ मायने रखते हैं - परियोजना, इसकी शब्दावली, पहले से लिए गए निर्णय। गतिशील रूप से प्रबंधित और इंजेक्ट किया जाता है।",
+        "placeholder": "जैसे यह परियोजना Orbit नामक React Native ऐप है। yarn का उपयोग करें, npm नहीं।",
+        "empty": "अभी तक कोई कार्यक्षेत्र स्मृति नहीं। ऊपर इस कार्यक्षेत्र के बारे में एक नोट जोड़ें।"
+      },
+      "no_longer_exists": "वह स्मृति अब मौजूद नहीं है",
+      "save_failed": "स्मृति को सहेज नहीं सके",
+      "delete_title": "स्मृति हटाएँ?",
+      "enable": "स्मृति सक्षम करें",
+      "enable_description": "आपके बारे में या इस कार्यक्षेत्र के बारे में तथ्यों के इंजेक्शन की अनुमति दें।",
+      "remote_notice": "यह कार्यक्षेत्र आपके AnythingLLM सर्वर द्वारा उत्तर दिया जाता है, इसलिए स्मृति इसकी चैट्स में उपयोग नहीं की जाती है। वैश्विक स्मृति अभी भी आपके ऑन-डिवाइस और क्लाउड कार्यक्षेत्रों पर लागू होती है।",
+      "edit_memory": "स्मृति संपादित करें",
+      "new_memory": "नई स्मृति",
+      "delete_memory": "स्मृति हटाएँ"
+    }
+  },
+  "drawer": {
+    "workspaces": "कार्यक्षेत्र",
+    "scheduled_jobs": "निर्धारित नौकरियाँ",
+    "scheduled_jobs_unseen_one": "निर्धारित नौकरियाँ, {{count}} अनदेखा परिणाम",
+    "scheduled_jobs_unseen_other": "निर्धारित नौकरियाँ, {{count}} अनदेखे परिणाम",
+    "new_workspace": "नया कार्यक्षेत्र",
+    "delete_thread_title": "धागा हटाएँ",
+    "delete_thread_message": "क्या आप सुनिश्चित हैं कि आप इस धागे को हटाना चाहते हैं? सभी चैट इतिहास खो जाएगा।",
+    "delete_workspace_title": "कार्यक्षेत्र हटाएँ",
+    "delete_workspace_message": "क्या आप सुनिश्चित हैं कि आप इस कार्यक्षेत्र को हटाना चाहते हैं? सभी धागे खो जाएंगे।",
+    "delete_workspace_message_remote": "क्या आप सुनिश्चित हैं कि आप इस कार्यक्षेत्र को हटाना चाहते हैं? सभी धागे खो जाएंगे।\n\nयह आपके रिमोट उदाहरण में कार्यक्षेत्र को नहीं हटाएगा।",
+    "rename_thread": "धागा नाम बदलें",
+    "rename_thread_placeholder": "नया धागा नाम दर्ज करें"
+  },
+  "hf_import": {
+    "title": "Hugging Face से एक मॉडल जोड़ें",
+    "add_card_hint": "एक repo id या url पेस्ट करें और इस डिवाइस पर चलाने के लिए कोई भी GGUF quant चुनें।",
+    "generic_error": "Hugging Face से बात करने में कुछ गलत हो गया।",
+    "description": "एक मॉडल id या url पेस्ट करें, या खोजें। कोई भी सार्वजनिक GGUF quant इस डिवाइस पर डाउनलोड और चलाया जा सकता है।",
+    "show_files": "GGUF फ़ाइलें दिखाएँ",
+    "search_hf": "Hugging Face खोजें",
+    "files_available_one": "{{count}} GGUF फ़ाइल डाउनलोड के लिए उपलब्ध",
+    "files_available_other": "{{count}} GGUF फ़ाइलें डाउनलोड के लिए उपलब्ध",
+    "highlighted_file": "आपके द्वारा Hugging Face पर चुनी गई फ़ाइल नीचे हाइलाइट की गई है। डाउनलोड करने के लिए इसे टैप करें।",
+    "highlight_missing": "\"{{filename}}\" इस repo की GGUF फ़ाइलों में से एक नहीं है। नीचे दूसरा quant चुनें।",
+    "search_results": "\"{{query}}\" से मेल खाने वाले GGUF repos, सबसे अधिक डाउनलोड किए गए पहले। इसकी फ़ाइलें देखने के लिए एक को टैप करें।",
+    "no_search_results": "\"{{query}}\" के लिए कोई GGUF repos नहीं मिले।",
+    "tip": "टिप्पणी: अधिकांश मॉडलों में unsloth, bartowski या lmstudio-community से \"-GGUF\" में समाप्त नाम के तहत GGUF संस्करण हैं। छोटे quants (Q4_K_M और नीचे) फ़ोन पर सबसे अच्छे काम करते हैं। गेटेड या निजी मॉडल समर्थित नहीं हैं।",
+    "params": "{{value}} params",
+    "context": "{{value}}k संदर्भ",
+    "downloads": "{{value}} डाउनलोड",
+    "gated": "यह repo गेटेड है। डाउनलोड के लिए Hugging Face लॉगिन की आवश्यकता है, जो अभी तक समर्थित नहीं है।",
+    "requested": "अनुरोधित"
+  },
+  "models": {
+    "recommended": "अनुशंसित",
+    "memory_fit": {
+      "tight": "स्मृति में फिट नहीं हो सकता है",
+      "tight_compact": "फिट नहीं हो सकता है",
+      "impossible": "इस डिवाइस के लिए बहुत बड़ा",
+      "impossible_compact": "बहुत बड़ा"
+    },
+    "sections": {
+      "found_on_device": "इस डिवाइस पर पाया गया",
+      "added_from_hf": "Hugging Face से जोड़ा गया",
+      "other": "अन्य"
+    },
+    "vector_storage": {
+      "reset_title": "वेक्टर स्टोरेज रीसेट करें",
+      "reset_message": "क्या आप सुनिश्चित हैं कि आप इस कार्यक्षेत्र के लिए वेक्टर स्टोरेज को रीसेट करना चाहते हैं?",
+      "cleared": "वेक्टर स्टोरेज साफ कर दिया गया!"
+    },
+    "vision": {
+      "remote": "किसी रिमोट कार्यक्षेत्र के साथ चैट करते समय छवियाँ अभी तक समर्थित नहीं हैं।",
+      "no_model": "छवियों को संलग्न करने के लिए एक मॉडल चुनें।",
+      "on_device": "चयनित ऑन-डिवाइस मॉडल छवियों को नहीं पढ़ सकता है।",
+      "needs_download": "यह मॉडल छवियों को देख सकता है, लेकिन अतिरिक्त डाउनलोड की आवश्यकता है।"
+    },
+    "speech_to_text": {
+      "permission_title": "माइक्रोफ़ोन पहुंच",
+      "permission_message": "AnythingLLM को आपके भाषण को एक प्रॉम्प्ट में ट्रांसक्राइब करने के लिए माइक्रोफ़ोन पहुंच की आवश्यकता है।",
+      "permission_required_title": "माइक्रोफ़ोन पहुंच आवश्यक",
+      "permission_required_message": "भाषण-से-पाठ का उपयोग करने के लिए अपनी डिवाइस सेटिंग्स में माइक्रोफ़ोन पहुंच सक्षम करें।"
+    },
+    "attachments": {
+      "vectors_cleared": "कार्यक्षेत्र वेक्टर साफ कर दिए गए",
+      "clear_vectors_title": "कार्यक्षेत्र वेक्टर साफ करें",
+      "clear_vectors_message": "क्या आप सुनिश्चित हैं कि आप इस कार्यक्षेत्र के लिए वेक्टर साफ करना चाहते हैं? यह इस कार्यक्षेत्र के सभी वेक्टर को हटा देगा और पूर्ववत् नहीं किया जा सकता है।",
+      "not_found": "संलग्नता नहीं मिल सकी",
+      "empty_content": "संलग्नता सामग्री खाली थी या नहीं पढ़ी जा सकी",
+      "large_document_title": "बड़ा दस्तावेज़",
+      "large_document_message": "\"{{name}}\" लगभग {{tokens}} टोकन है। {{provider}} के साथ पूरा दस्तावेज़ इस कार्यक्षेत्र में हर संदेश के साथ भेजा जाता है, जो धीमा और महंगा हो सकता है। फिर भी संलग्न करें?",
+      "large_document_message_generic": "\"{{name}}\" लगभग {{tokens}} टोकन है। अपने मॉडल प्रदाता के साथ पूरा दस्तावेज़ इस कार्यक्षेत्र में हर संदेश के साथ भेजा जाता है, जो धीमा और महंगा हो सकता है। फिर भी संलग्न करें?",
+      "attach": "संलग्न करें",
+      "create_failed": "संलग्नता के लिए दस्तावेज़ बनाने में विफल",
+      "camera_permission_title": "कैमरा पहुंच",
+      "camera_permission_message": "AnythingLLM को आपके प्रॉम्प्ट के लिए फ़ोटो लेने के लिए कैमरे की आवश्यकता है।",
+      "max_reached_one": "आप प्रति प्रॉम्प्ट {{count}} आइटम तक संलग्न कर सकते हैं",
+      "max_reached_other": "आप प्रति प्रॉम्प्ट {{count}} आइटम तक संलग्न कर सकते हैं",
+      "camera_permission_required": "फ़ोटो लेने के लिए कैमरा अनुमति आवश्यक है",
+      "camera_open_failed": "कैमरा नहीं खोल सके",
+      "gallery_open_failed": "गैलरी नहीं खोल सके",
+      "image_unreadable": "चयनित छवि को पढ़ा नहीं जा सका",
+      "images_skipped_unreadable_one": "{{count}} छवि को पढ़ा नहीं जा सका और छोड़ दी गई",
+      "images_skipped_unreadable_other": "{{count}} छवियों को पढ़ा नहीं जा सका और छोड़ दी गईं",
+      "image_attach_failed": "छवि संलग्न नहीं कर सके",
+      "max_reached_skipped_one": "आप प्रति प्रॉम्प्ट {{max}} आइटम तक संलग्न कर सकते हैं - {{count}} छोड़ दिया गया",
+      "max_reached_skipped_other": "आप प्रति प्रॉम्प्ट {{max}} आइटम तक संलग्न कर सकते हैं - {{count}} छोड़ दिए गए",
+      "images_skipped_no_vision_one": "आपका वर्तमान मॉडल छवियों को नहीं पढ़ सकता - {{count}} छवि छोड़ दी गई",
+      "images_skipped_no_vision_other": "आपका वर्तमान मॉडल छवियों को नहीं पढ़ सकता - {{count}} छवियाँ छोड़ दी गईं",
+      "read_failed": "{{name}} को नहीं पढ़ सके",
+      "remove_title": "संलग्नता हटाएँ",
+      "remove_message": "क्या आप सुनिश्चित हैं कि आप इस संलग्नता को चैट से हटाना चाहते हैं?",
+      "shared_content_failed": "साझा सामग्री संलग्न नहीं कर सके"
+    },
+    "memory_warning": {
+      "short": "स्मृति चेतावनी",
+      "full": "चेतावनी: मॉडल का आकार उपलब्ध स्मृति से अधिक हो सकता है। यह आपके डिवाइस के प्रदर्शन और स्थिरता को प्रभावित कर सकता है।"
+    },
+    "catalog": {
+      "gemma_3_1b": "(Q8_0) Gemma3 1B अधिक जटिल कार्यों के लिए Gemma3 4B मॉडल का एक छोटा हल्का संस्करण है।",
+      "qwen3_0_6b": "(Q8_0) Qwen3 0.6B तेज़ उत्तर और सरल कार्यों के लिए एक छोटा, बहुत तेज़ मॉडल है। Qwen3.5 0.8B द्वारा प्रतिस्थापित।",
+      "qwen3_1_7b": "(Q8_0) Qwen3 1.7B अधिक जटिल कार्यों के लिए Qwen3-0.6B मॉडल का अधिक सक्षम संस्करण है।",
+      "llama_3_2_1b": "(Q8_0) Llama 3.2 1B Llama 3.2 मॉडल का सबसे छोटा संस्करण है।",
+      "qwen3_5_0_8b": "(Q8_0) Qwen3.5 0.8B Qwen3.5 परिवार में सबसे छोटा मॉडल है। किसी भी फ़ोन पर बहुत तेज़ और ठोस निर्देश अनुसरण।",
+      "qwen3_5_2b": "(Q8_0) Qwen3.5 2B उपकरण कॉलिंग और इसके आकार के लिए अच्छे तर्क के साथ एक मजबूत सामान्य प्रयोजन छोटा मॉडल है।",
+      "qwen3_5_4b": "(Q6_K) Qwen3.5 4B सबसे सक्षम Qwen3.5 मॉडल है जो अभी भी फ़ोन पर फिट बैठता है। सर्वश्रेष्ठ सटीकता, तर्क और उपकरण कॉलिंग; 8GB+ RAM वाले डिवाइस की आवश्यकता है।",
+      "qwen3_vl_2b_instruct": "(Q4_K_XL) Qwen3-VL 2B एक दृष्टि-भाषा मॉडल है जो फ़ोटो का वर्णन कर सकता है और उनके बारे में प्रश्नों का उत्तर दे सकता है।",
+      "granite_3_3_2b_instruct": "(Q4_K_XL) IBM से Granite 3.3 2B RAG, सारांश और उपकरण कॉलिंग के लिए ट्यून किया गया है। Apache 2.0 लाइसेंस।",
+      "granite_4_2_3b": "(Q4_K_M) Granite 4.2 3B नवीनतम छोटा Granite मॉडल है जिसमें मजबूत तर्क और उपकरण कॉलिंग है। बड़ा डाउनलोड।",
+      "lfm2_5_1_2b_instruct": "(Q8_0) LFM2.5 1.2B ऑन-डिवाइस चैट, उपकरण कॉलिंग और 16 भाषाओं के लिए ट्यून किया गया बहुत तेज़ छोटा मॉडल है। पूर्ण गुणवत्ता quant।",
+      "lfm2_5_2_6b": "(Q5_K_M) LFM2.5 2.6B फ़ोन के लिए सबसे सक्षम Liquid मॉडल है जिसमें मजबूत निर्देश अनुसरण, उपकरण कॉलिंग और तर्क है।",
+      "gemma_4_e2b": "(QAT Q2_K_XL) Gemma 4 E2B Google का मोबाइल-प्रथम मॉडल है जिसमें प्रभावी 2B parameters हैं। इस आकार के लिए परिमाणीकरण-जागरूक प्रशिक्षित।",
+      "gemma_4_e4b": "(QAT Q2_K_XL) Gemma 4 E4B सबसे सक्षम Gemma है जो फ़ोन पर फिट बैठता है। बड़ा डाउनलोड, हाल के उच्च-स्मृति डिवाइस की आवश्यकता है।"
+    },
+    "presets": {
+      "lightweight": {
+        "name": "हल्का",
+        "description": "तेज़ प्रतिक्रिया और सरल कार्यों के लिए।"
+      },
+      "balanced": {
+        "name": "संतुलित",
+        "description": "गति और सटीकता का संतुलन।"
+      },
+      "powerful": {
+        "name": "शक्तिशाली",
+        "description": "सर्वश्रेष्ठ सटीकता के लिए भारी मॉडल।"
+      }
+    },
+    "imported_description": "Hugging Face ({{repo}}) से जोड़ा गया।",
+    "imported_description_specs": "Hugging Face ({{repo}}) से जोड़ा गया। {{specs}}।",
+    "no_model_loaded_error": "कोई मॉडल लोड नहीं। कृपया पहले एक मॉडल चुनें।",
+    "unknown_model_description": "{{modelId}} में इस डिवाइस पर पाया गया लेकिन यह हमारी मॉडल सूची में नहीं है। आप अभी भी इसे उपयोग कर सकते हैं या इसे अनइंस्टॉल कर सकते हैं।",
+    "status": {
+      "summarizing": "पहली बातचीत को सारांशित कर रहे हैं",
+      "using_summary_one": "{{count}} पहली संदेश का सारांश उपयोग कर रहे हैं",
+      "using_summary_other": "{{count}} पहली संदेशों का सारांश उपयोग कर रहे हैं",
+      "loading_model": "मॉडल को स्मृति में लोड कर रहे हैं",
+      "reply_truncated": "उत्तर को काटा गया - संदर्भ विंडो भरी हुई है",
+      "searching_documents": "अपने दस्तावेज़ों को खोज रहे हैं",
+      "reranking": "परिणामों को फिर से क्रमित कर रहे हैं",
+      "reading_documents_one": "{{count}} संलग्न दस्तावेज़ को पढ़ रहे हैं",
+      "reading_documents_other": "{{count}} संलग्न दस्तावेज़ों को पढ़ रहे हैं"
+    }
+  },
+  "providers": {
+    "descriptions": {
+      "native": "अपने फ़ोन पर मॉडल स्थापित और चलाएँ।",
+      "ollama": "Ollama के साथ अपनी मशीन पर स्थानीय रूप से LLMs चलाएँ।",
+      "lmstudio": "कुछ क्लिक में हजारों अत्याधुनिक LLMs की खोज, डाउनलोड और चलाएँ।",
+      "openai": "OpenAI के शक्तिशाली मॉडलों का लाभ उठाएँ।",
+      "anthropic": "Anthropic द्वारा होस्ट किया गया एक मित्रवत AI सहायक।",
+      "gemini": "Google का सबसे बड़ा और सबसे सक्षम AI मॉडल",
+      "openrouter": "अग्रणी प्रदाताओं से AI सेवाओं का एक एकीकृत API",
+      "bedrock": "AWS Bedrock के साथ निजी रूप से शक्तिशाली फाउंडेशन मॉडल चलाएँ।",
+      "deepseek": "DeepSeek के शक्तिशाली LLMs चलाएँ।",
+      "fireworksai": "उत्पादन-तैयार, यौगिक AI सिस्टम बनाने के लिए सबसे तेज़ और सबसे कुशल अनुमान इंजन।",
+      "minimax": "MiniMax के शक्तिशाली LLMs चलाएँ।",
+      "moonshotai": "Moonshot AI के Kimi मॉडल चलाएँ।",
+      "novita": "Novita AI से LLMs के लिए विश्वसनीय, स्केलेबल और लागत प्रभावी",
+      "togetherai": "Together AI से ओपन सोर्स मॉडल चलाएँ।",
+      "xai": "xAI के शक्तिशाली LLMs जैसे Grok और अधिक चलाएँ।",
+      "litellm": "विभिन्न LLMs के लिए LiteLLM के OpenAI संगत प्रॉक्सी चलाएँ।",
+      "localai": "अपनी मशीन पर स्थानीय रूप से LLMs चलाएँ।",
+      "lemonade": "Lemonade Server के साथ AMD हार्डवेयर पर LLMs चलाएँ।",
+      "llmman": "llmman का उपयोग करके स्थानीय रूप से LLMs चलाएँ।",
+      "generic_openai": "कस्टम कॉन्फ़िगरेशन के माध्यम से किसी भी OpenAi-संगत सेवा से कनेक्ट करें"
+    },
+    "sections": {
+      "local": "स्थानीय प्रदाता",
+      "cloud": "क्लाउड प्रदाता"
+    },
+    "validation": {
+      "unknown_provider": "अज्ञात प्रदाता।",
+      "api_key_required": "कृपया इस प्रदाता के लिए एक API कुंजी दर्ज करें।",
+      "base_url_required": "कृपया अपने प्रदाता का आधार URL दर्ज करें।",
+      "region_required": "कृपया अपने Bedrock तैनाती का AWS क्षेत्र चुनें।",
+      "model_required": "कृपया उपयोग करने के लिए एक मॉडल चुनें।"
+    }
+  },
+  "llm_selection": {
+    "choose_provider": "अपना प्रदाता चुनें",
+    "no_providers_found": "\"{{query}}\" के लिए कोई प्रदाता नहीं मिले",
+    "download_model_title": "मॉडल डाउनलोड करें?",
+    "download_model_message": "यह मॉडल को आपके डिवाइस पर डाउनलोड करेगा। यह {{size}} बाइट है।",
+    "preferred_model": "पसंदीदा मॉडल"
+  },
+  "downloads": {
+    "no_internet_title": "कोई इंटरनेट कनेक्शन नहीं।",
+    "no_internet_image_support": "छवि समर्थन डाउनलोड करने के लिए आपको इंटरनेट से जुड़े होने की आवश्यकता होगी।",
+    "no_internet_model": "किसी भी मॉडल को डाउनलोड करने के लिए आपको इंटरनेट से जुड़े होने की आवश्यकता होगी।",
+    "data_usage_title": "डेटा उपयोग चेतावनी",
+    "data_usage_image_support": "हम Wi-Fi कनेक्शन का उपयोग करके छवि समर्थन डाउनलोड करने की अनुशंसा करते हैं क्योंकि यह {{size}} आकार का है।",
+    "data_usage_model": "हम Wi-Fi कनेक्शन का उपयोग करके मॉडल डाउनलोड करने की अनुशंसा करते हैं क्योंकि यह {{size}} आकार का है।",
+    "continue_anyway": "फिर भी जारी रखें",
+    "continue_with_download": "डाउनलोड के साथ जारी रखें",
+    "image_support_title": "छवि समर्थन डाउनलोड करें?",
+    "image_support_message": "{{model}} फ़ोटो को समझ सकता है जब इसकी छवि समर्थन फ़ाइल डाउनलोड की जाती है। यह {{size}} आकार का है।",
+    "download_model_title": "मॉडल डाउनलोड करें?",
+    "download_model_message": "यह मॉडल को आपके डिवाइस पर डाउनलोड करेगा। यह {{size}} आकार का है।",
+    "notification_downloading_title": "मॉडल डाउनलोड हो रहा है",
+    "notification_downloading_body": "{{model}} डाउनलोड किया जा रहा है",
+    "notification_complete_title": "डाउनलोड पूर्ण",
+    "notification_complete_body": "{{model}} डाउनलोड किया गया",
+    "download_failed_title": "डाउनलोड विफल",
+    "download_failed_message": "मॉडल डाउनलोड करने में एक त्रुटि थी।",
+    "uninstall_model_title": "मॉडल अनइंस्टॉल करें?",
+    "uninstall_model_message": "यह आपके डिवाइस से मॉडल को हटा देगा।",
+    "storage_low": "स्टोरेज कम! मॉडल {{modelSize}} > {{freeSpace}} मुक्त",
+    "storage_check_failed": "स्टोरेज जाँच करने में विफल",
+    "setup_failed_title": "डाउनलोड सेटअप विफल",
+    "setup_failed_message": "HF मॉडल डाउनलोड सेटअप करने में विफल: {{error}}"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "स्वागत है",
+      "description": "एक AI एजेंट जो आपके फ़ोन पर रहता है। दस्तावेज़ों के साथ चैट करें, वेब खोजें, और अपने ऐप्स में एकीकृत करें।",
+      "get_started": "शुरुआत करें",
+      "back_blocked": "आगे बढ़ने के लिए कृपया ऑनबोर्डिंग प्रवाह के माध्यम से आगे बढ़ें।"
+    },
+    "model_selection": {
+      "title": "आप किस मॉडल का उपयोग करना चाहते हैं?",
+      "description": "आप इसे बाद में बदल सकते हैं, लेकिन वह चुनें जो आपकी आवश्यकताओं को सबसे अच्छी तरह से पूरा करे।",
+      "use_external": "क्या आप मॉडल डाउनलोड नहीं करना चाहते? बाहरी प्रदाता का उपयोग करें"
+    },
+    "external": {
+      "title": "बाहरी प्रदाता कनेक्ट करें",
+      "description": "अपने फ़ोन पर डाउनलोड करने के बजाय कहीं और होस्ट किए गए मॉडल का उपयोग करें। आप इसे बाद में बदल सकते हैं।",
+      "choose_provider": "LLM प्रदाता चुनें",
+      "provider_settings": "प्रदाता सेटिंग्स",
+      "incomplete_setup": "अधूरा प्रदाता सेटअप"
+    },
+    "download": {
+      "error_title": "एक त्रुटि हुई",
+      "error_message": "मॉडल डाउनलोड करने में त्रुटि {{error}}",
+      "success_title": "मॉडल डाउनलोड किया गया",
+      "success_message": "मॉडल सफलतापूर्वक डाउनलोड किया गया है",
+      "url_must_be_gguf": "URL को .gguf के साथ समाप्त होना चाहिए"
+    },
+    "survey": {
+      "title": "AnythingLLM आपकी किस चीज़ में मदद कर सकता है?",
+      "description": "वह एक चुनें जो आपको सबसे अधिक लागू होता है।",
+      "options": {
+        "productivity": "उत्पादकता बढ़ाएँ",
+        "privacy": "गोपनीयता केंद्रित चैट्स",
+        "custom_ai": "कस्टम AI एजेंट",
+        "automation": "AI स्वचालन",
+        "other": "अन्य"
+      }
+    },
+    "data_handling": {
+      "title": "डेटा हैंडलिंग और गोपनीयता",
+      "description": "AnythingLLM के साथ, सभी चैट्स, दस्तावेज़, और अन्य डेटा आपके डिवाइस पर प्रसंस्कृत और संग्रहीत किया जाता है।",
+      "local_chats_title": "पूरी तरह से स्थानीय चैट्स",
+      "local_chats_description": "सभी चैट्स आपके डिवाइस पर संग्रहीत हैं।",
+      "embedding_title": "दस्तावेज़ एम्बेडिंग",
+      "embedding_description": "सभी दस्तावेज़ और प्रसंस्करण आपके डिवाइस पर किया जाता है।",
+      "agents_title": "AI एजेंट",
+      "agents_description": "सभी एजेंट आपके डिवाइस पर चलाए जाते हैं और केवल तब इंटरनेट का उपयोग करते हैं जब आवश्यक हो (जैसे: वेब खोज)",
+      "experience": "AnythingLLM का अनुभव करें",
+      "setting_up": "अपना पहला कार्यक्षेत्र सेट अप कर रहे हैं",
+      "default_workspace_name": "मेरा कार्यक्षेत्र"
+    }
+  },
+  "workspace_settings": {
+    "load_error": "कार्यक्षेत्र लोड करने में त्रुटि",
+    "autosaving": "स्वचालित सहेजा जा रहा है...",
+    "autosaved": "स्वचालित रूप से सहेजा गया!",
+    "name": {
+      "section": "कार्यक्षेत्र नाम",
+      "title": "नाम",
+      "current": "वर्तमान नाम",
+      "placeholder": "यहाँ अपना नाम दर्ज करें...",
+      "save_error": "नाम सहेजने में त्रुटि"
+    },
+    "system_prompt": {
+      "title": "सिस्टम प्रॉम्प्ट",
+      "label": "प्रॉम्प्ट",
+      "current": "वर्तमान सिस्टम प्रॉम्प्ट",
+      "placeholder": "यहाँ अपना सिस्टम प्रॉम्प्ट दर्ज करें...",
+      "save_error": "सिस्टम प्रॉम्प्ट सहेजने में त्रुटि",
+      "description": "सिस्टम प्रॉम्प्ट AI के लिए मार्गदर्शक प्रॉम्प्ट और निर्देश है। इसका उपयोग AI के व्यवहार और प्रतिक्रिया के प्रकार को निर्देशित करने के लिए किया जाना चाहिए।"
+    },
+    "temperature": {
+      "title": "तापमान",
+      "current": "वर्तमान तापमान",
+      "suggested": "सुझाया गया तापमान",
+      "placeholder": "डिफ़ॉल्ट (प्रदाता निर्णय करता है)",
+      "save_error": "तापमान सहेजने में त्रुटि",
+      "hint": "अपने LLM प्रदाता और मॉडल के डिफ़ॉल्ट तापमान का उपयोग करने के लिए खाली छोड़ें। इसे ओवरराइड करने के लिए 0 और 1 के बीच एक मान सेट करें।",
+      "description": "तापमान AI की प्रतिक्रिया की यादृच्छिकता का स्तर है। तापमान जितना अधिक होगा, प्रतिक्रियाएँ उतनी ही अधिक यादृच्छिक होंगी।"
+    },
+    "context_length": {
+      "title": "संदर्भ लंबाई",
+      "current": "वर्तमान संदर्भ लंबाई",
+      "suggested": "सुझाई गई संदर्भ लंबाई",
+      "placeholder": "यहाँ अपनी संदर्भ लंबाई दर्ज करें...",
+      "save_error": "संदर्भ लंबाई सहेजने में त्रुटि",
+      "hint": "ध्यान रखें कि संदर्भ लंबाई आपके द्वारा उपयोग किए जा रहे मॉडल पर भी निर्भर है और आपके डिवाइस के लिए स्मृति निहितार्थ है।",
+      "description": "संदर्भ लंबाई अधिकतम संख्या है जो AI प्रतिक्रिया उत्पन्न करते समय उपयोग कर सकता है।"
+    },
+    "vectors": {
+      "section": "वेक्टर स्टोरेज",
+      "count": "वेक्टर गणना",
+      "description": "यह वर्तमान में कार्यक्षेत्र में संग्रहीत वेक्टर की संख्या है। इसका उपयोग कार्यक्षेत्र के संदर्भ को संग्रहीत करने के लिए किया जाता है।"
+    },
+    "delete": {
+      "button": "कार्यक्षेत्र हटाएँ",
+      "confirm_title": "कार्यक्षेत्र हटाएँ?",
+      "confirm_message": "क्या आप सुनिश्चित हैं कि आप इस कार्यक्षेत्र को हटाना चाहते हैं? सभी धागे खो जाएंगे।",
+      "confirm_message_remote": "क्या आप सुनिश्चित हैं कि आप इस कार्यक्षेत्र को हटाना चाहते हैं? सभी धागे खो जाएंगे।\n\nयह आपके रिमोट उदाहरण में कार्यक्षेत्र को नहीं हटाएगा।"
+    }
+  },
+  "connect": {
+    "title": "AnythingLLM से कनेक्ट करें",
+    "scan_description": "अपने AnythingLLM उदाहरण या क्लाइंट के लिए QR कोड स्कैन करें या इसके डेटा को इस मोबाइल डिवाइस पर सिंक करें यात्रा पर AI के लिए!",
+    "previous_connections": "पिछले कनेक्शन",
+    "verify": {
+      "title": "कनेक्शन सत्यापित करें",
+      "go_back": "वापस जाएँ",
+      "registering": "अपना डिवाइस रजिस्टर कर रहे हैं...",
+      "few_seconds": "यह कुछ सेकंड ले सकता है...",
+      "awaiting_approval": "मंजूरी की प्रतीक्षा कर रहे हैं...",
+      "approve_in_app": "कृपया AnythingLLM एप्लिकेशन में डिवाइस को मंजूरी दें...",
+      "collecting_data": "उदाहरण डेटा एकत्र कर रहे हैं...",
+      "register_failed": "डिवाइस को रजिस्टर करने में विफल। कृपया फिर से कोशिश करें।",
+      "register_failed_reason": "डिवाइस रजिस्टर करने में विफल: {{reason}}",
+      "approval_failed": "डिवाइस को रजिस्टर या मंजूरी देने में विफल। कृपया फिर से कोशिश करें।"
+    },
+    "import": {
+      "connection_expired": "AnythingLLM Desktop से आपका मौजूदा कनेक्शन समाप्त हो गया।",
+      "refresh_failed": "कार्यक्षेत्र को ताज़ा करने में विफल",
+      "go_home": "होम पर वापस जाएँ",
+      "thread_count_one": "{{formatted}} धागा",
+      "thread_count_other": "{{formatted}} धागे",
+      "chat_count_one": "{{formatted}} चैट",
+      "chat_count_other": "{{formatted}} चैट्स",
+      "sync": "सिंक करें",
+      "synced": "सिंक किया गया",
+      "sync_failed": "विफल",
+      "sync_workspace_failed": "कार्यक्षेत्र {{name}} को सिंक करने में विफल"
+    }
+  },
+  "scheduled_jobs": {
+    "title": "निर्धारित नौकरियाँ",
+    "job_missing": "वह नौकरी अब मौजूद नहीं है",
+    "update_failed": "नौकरी को अपडेट नहीं कर सके",
+    "prompt": "प्रॉम्प्ट",
+    "tools": "उपकरण",
+    "paused": "विराम",
+    "running_now": "अभी चल रहा है",
+    "stop_run": "रन रोकें",
+    "run_already_finished": "वह रन पहले से ही समाप्त हो गया था",
+    "stop_failed": "रन को रोक नहीं सके",
+    "blocked": {
+      "no_provider_title": "पहले LLM प्रदाता चुनें",
+      "no_provider_body": "निर्धारित नौकरियाँ आपके बिना चलती हैं, इसलिए उन्हें बात करने के लिए क्लाउड या स्व-होस्ट किया गया LLM चाहिए। सेटिंग्स में एक चुनें।",
+      "on_device_title": "निर्धारित नौकरियों को क्लाउड LLM चाहिए",
+      "on_device_body": "ऑन-डिवाइस मॉडल पृष्ठभूमि में नहीं चल सकता, इसलिए नौकरियाँ तब विराम हैं जब यह चयनित होता है। उन्हें चलाने के लिए सेटिंग्स में क्लाउड या स्व-होस्ट किया गया प्रदाता पर स्विच करें।"
+    },
+    "list": {
+      "open_llm_settings": "LLM सेटिंग्स खोलें",
+      "enabled_count": "{{enabled}} का {{total}} चालू है",
+      "your_jobs": "आपकी नौकरियाँ",
+      "explainer_background": "एक नौकरी एक प्रॉम्प्ट है जो सहायक आपके लिए अनुसूची पर चलाता है, आपके द्वारा चुने गए उपकरणों का उपयोग करके। परिणाम यहाँ एकत्र होते हैं और ऐप बंद होने के दौरान भी चलते हैं - Android बैटरी बचाने के लिए रन को कुछ मिनटों तक देरी कर सकता है।",
+      "explainer_foreground": "एक नौकरी एक प्रॉम्प्ट है जो सहायक आपके लिए अनुसूची पर चलाता है, आपके द्वारा चुने गए उपकरणों का उपयोग करके। परिणाम यहाँ अगली बार आप ऐप खोलते हैं।",
+      "new_job": "नई नौकरी",
+      "waiting_for_cloud": "क्लाउड LLM की प्रतीक्षा कर रहे हैं",
+      "next_run": "अगला रन {{time}}",
+      "not_scheduled": "अनुसूचित नहीं",
+      "empty_title": "अभी तक कोई निर्धारित नौकरी नहीं",
+      "empty_body": "सहायक से हर सुबह एक वेबसाइट जाँचने, साप्ताहिक सारांश का मसौदा तैयार करने, या महीने की पहली तारीख को एक रिपोर्ट बनाने के लिए कहें - सब कुछ चैट खोले बिना।",
+      "create_first": "अपनी पहली नौकरी बनाएँ"
+    },
+    "runs": {
+      "already_running": "यह नौकरी पहले से ही चल रही है",
+      "start_failed": "नौकरी शुरू नहीं कर सके",
+      "fallback_title": "नौकरी",
+      "edit_job": "नौकरी संपादित करें",
+      "next_run_with_date": "अगला रन {{relative}} · {{date}}",
+      "not_scheduled_to_run": "चलाने के लिए अनुसूचित नहीं",
+      "notify": "सूचित करें",
+      "last_run": "अंतिम रन",
+      "never": "कभी नहीं",
+      "run_now": "अभी चलाएँ",
+      "run_count_one": "{{count}} रन",
+      "run_count_other": "{{count}} रन",
+      "history": "इतिहास",
+      "empty_with_next": "यह नौकरी अभी तक नहीं चली है। इसका पहला रन {{time}} है। आप इसे आजमाने के लिए अभी भी इसे चला सकते हैं।",
+      "empty": "यह नौकरी अभी तक नहीं चली है। आप इसे आजमाने के लिए अभी भी इसे चला सकते हैं।",
+      "manual": "· मैनुअल"
+    },
+    "form": {
+      "save_failed": "नौकरी को सहेजा नहीं जा सका",
+      "job_updated": "नौकरी अपडेट की गई",
+      "job_scheduled": "नौकरी अनुसूचित",
+      "could_not_save": "नौकरी को सहेज नहीं सके",
+      "delete_title": "यह नौकरी हटाएँ?",
+      "delete_message": "\"{{name}}\" और इसके द्वारा निर्मित प्रत्येक परिणाम को हटा दिया जाएगा। यह पूर्ववत् नहीं किया जा सकता है।",
+      "job_deleted": "नौकरी हटाई गई",
+      "delete_failed": "नौकरी को हटा नहीं सके",
+      "edit_title": "नौकरी संपादित करें",
+      "new_title": "नई नौकरी",
+      "what_section": "इसे क्या करना चाहिए?",
+      "name": "नाम",
+      "name_placeholder": "सुबह की समाचार सारांश",
+      "prompt_hint": "लिखा हुआ जैसे आप इसे चैट में भेज रहे हों। विशिष्ट बनें - अनुवर्ती प्रश्नों का उत्तर देने के लिए कोई आसपास नहीं है।",
+      "prompt_placeholder": "https://news.ycombinator.com पढ़ें और पाँच सबसे दिलचस्प कहानियों की एक छोटी सारांश लिखें, प्रत्येक पर एक पंक्ति का विचार।",
+      "when_section": "इसे कब चलना चाहिए?",
+      "options": "विकल्प",
+      "notify_title": "यह समाप्त होने पर मुझे सूचित करें",
+      "notify_description": "जब एक परिणाम के साथ रन पूरा हो जाता है तो सूचना भेजता है। विफल या खाली रन केवल ऐप में एक डॉट दिखाते हैं।",
+      "enabled_description": "इसे चलाए बिना नौकरी और इसके परिणामों को रखने के लिए बंद करें।",
+      "save_changes": "परिवर्तन सहेजें",
+      "schedule_job": "नौकरी अनुसूचित करें",
+      "delete_job": "नौकरी हटाएँ"
+    },
+    "tool_picker": {
+      "selected_count_one": "{{count}} चयनित",
+      "selected_count_other": "{{count}} चयनित",
+      "none_reply_only": "कोई नहीं - केवल उत्तर",
+      "app_connections": "ऐप कनेक्शन",
+      "explainer": "आप जो प्रत्येक उपकरण चलाते हैं, वह हर रन पर मॉडल को दिया जाता है। उपकरण जो सामान्यतः आपकी मंजूरी माँगते हैं, स्वचालित रूप से मंजूर हैं, क्योंकि टैप करने के लिए कोई आसपास नहीं है।"
+    },
+    "builder": {
+      "daily": "दैनिक",
+      "weekly": "साप्ताहिक",
+      "monthly": "मासिक",
+      "hourly": "प्रति घंटा",
+      "every_few_minutes": "हर कुछ मिनटों में",
+      "mode_schedule": "अनुसूची",
+      "mode_cron": "Cron अभिव्यक्ति",
+      "run": "चलाएँ",
+      "every": "हर",
+      "minutes_chip": "{{minutes}} मिनट",
+      "at_minute": "मिनट पर",
+      "on": "पर",
+      "on_day": "दिन पर",
+      "days_skipped": "बिना दिन {{day}} के महीनों को छोड़ दिया जाता है।",
+      "at_time": "{{time}} पर",
+      "custom_minute": "मिनट :{{minute}} को cron अभिव्यक्ति के साथ सेट किया गया था - इसे बदलने के लिए ऊपर एक स्टेप चुनें।",
+      "cron_help": "पाँच फ़ील्ड: मिनट, घंटा, महीने का दिन, महीना, सप्ताह का दिन (0 = रविवार)। समय आपके फ़ोन के समय क्षेत्र में हैं।",
+      "invalid_cron": "यह वैध cron अभिव्यक्ति नहीं है"
+    },
+    "run_detail": {
+      "run_missing": "वह रन अब मौजूद नहीं है",
+      "delete_title": "यह रन हटाएँ?",
+      "delete_message": "परिणाम और इसके द्वारा बनाई गई कोई भी फ़ाइल को हटा दिया जाएगा।",
+      "run_deleted": "रन हटाया गया",
+      "fallback_title": "रन",
+      "delete_run": "रन हटाएँ",
+      "run_manually": "मैनुअल रूप से चलाएँ",
+      "scheduled": "अनुसूचित",
+      "tokens": "{{prompt}} प्रॉम्प्ट · {{completion}} पूर्णता टोकन",
+      "result": "परिणाम",
+      "empty_completed": "मॉडल बिना कुछ लिखे समाप्त हो गया।",
+      "empty_stopped": "रन बंद होने से पहले कुछ भी नहीं बनाया गया।",
+      "stopping": "रोक रहे हैं…",
+      "working": "इस पर काम कर रहे हैं…"
+    },
+    "status": {
+      "queued": "कतार में",
+      "running": "चल रहा है",
+      "completed": "पूर्ण",
+      "failed": "विफल",
+      "timed_out": "समय समाप्त",
+      "stopped": "रोका गया"
+    },
+    "unseen": "अनदेखा",
+    "relative_time": {
+      "in_under_a_minute": "एक मिनट में",
+      "just_now": "अभी-अभी",
+      "in_minutes": "{{minutes}} मिनट में",
+      "minutes_ago": "{{minutes}} मिनट पहले",
+      "in_hours": "{{hours}} घंटे में",
+      "hours_ago": "{{hours}} घंटे पहले",
+      "in_hours_minutes": "{{hours}} घंटे {{minutes}} मिनट में",
+      "hours_minutes_ago": "{{hours}} घंटे {{minutes}} मिनट पहले",
+      "in_days": "{{days}} दिनों में",
+      "days_ago": "{{days}} दिनों पहले"
+    },
+    "runner": {
+      "job_failed": "नौकरी विफल",
+      "created_files": "आपकी नौकरी समाप्त हुई और आपके लिए फ़ाइलें बनाईं।"
+    },
+    "schedule": {
+      "custom": "कस्टम अनुसूची ({{expression}})",
+      "invalid": "अमान्य अनुसूची",
+      "every_minute": "हर मिनट",
+      "every_minutes_one": "हर {{count}} मिनट",
+      "every_minutes_other": "हर {{count}} मिनट",
+      "every_hour": "हर घंटा",
+      "every_hour_at": "हर घंटा {{minute}} पास पर",
+      "every_day_at": "हर दिन {{time}} पर",
+      "weekdays_at": "कार्यदिवस {{time}} पर",
+      "weekends_at": "सप्ताहांत {{time}} पर",
+      "weekly_single": "हर {{day}} को {{time}} पर",
+      "weekly_multiple": "हर {{days}} और {{last}} को {{time}} पर",
+      "list_separator": ", ",
+      "monthly": "हर महीने {{day}} पर {{time}} पर",
+      "ordinal_st": "{{n}}st",
+      "ordinal_nd": "{{n}}nd",
+      "ordinal_rd": "{{n}}rd",
+      "ordinal_th": "{{n}}th",
+      "time_am": "{{hour}}:{{minute}} AM",
+      "time_pm": "{{hour}}:{{minute}} PM",
+      "hour_am": "{{hour}} AM",
+      "hour_pm": "{{hour}} PM"
+    },
+    "weekdays_short": {
+      "sun": "रविवार",
+      "mon": "सोमवार",
+      "tue": "मंगलवार",
+      "wed": "बुधवार",
+      "thu": "गुरुवार",
+      "fri": "शुक्रवार",
+      "sat": "शनिवार"
+    },
+    "weekdays_long": {
+      "sunday": "रविवार",
+      "monday": "सोमवार",
+      "tuesday": "मंगलवार",
+      "wednesday": "बुधवार",
+      "thursday": "गुरुवार",
+      "friday": "शुक्रवार",
+      "saturday": "शनिवार"
+    }
+  },
+  "notifications": {
+    "channels": {
+      "download_progress": "डाउनलोड प्रगति",
+      "chat_replies": "चैट उत्तर",
+      "chat_replies_description": "जब AnythingLLM पृष्ठभूमि में हो तो उत्तर समाप्त होने पर सतर्क करता है",
+      "scheduled_jobs": "निर्धारित नौकरियाँ",
+      "scheduled_jobs_description": "जब एक निर्धारित नौकरी चलना समाप्त करती है तो सतर्क करता है"
+    },
+    "blocked_nudge": {
+      "title": "उत्तर समाप्त होने पर सूचनाएँ प्राप्त करें",
+      "message": "AnythingLLM के लिए सूचनाएँ बंद हैं। जब आपका फ़ोन बंद हो तो उत्तर समाप्त होने पर गुँजन पाने के लिए उन्हें चलू करें।",
+      "not_now": "अभी नहीं",
+      "open_settings": "सेटिंग्स खोलें"
+    },
+    "chat": {
+      "ready_title": "उत्तर तैयार",
+      "failed_title": "उत्तर विफल",
+      "ready_body": "आपका उत्तर तैयार है।",
+      "failed_body": "आपका उत्तर पूर्ण नहीं किया जा सका। क्या हुआ यह देखने के लिए टैप करें।"
+    },
+    "scheduled_job": {
+      "finished_title": "{{name}} समाप्त",
+      "fallback_body": "आपकी निर्धारित नौकरी के लिए एक परिणाम है।"
+    }
+  },
+  "home": {
+    "welcome_title": "AnythingLLM में स्वागत है",
+    "get_started": "एक नया कार्यक्षेत्र बनाकर शुरुआत करें।",
+    "create_workspace": "कार्यक्षेत्र बनाएँ",
+    "default_workspace_name": "मेरा कार्यक्षेत्र"
+  },
+  "share": {
+    "unsupported_content": "केवल फ़ाइलें, छवियाँ और लिंक AnythingLLM में साझा की जा सकती हैं",
+    "finish_onboarding": "इसे साझा करने से पहले AnythingLLM सेटअप पूरा करें",
+    "open_failed": "साझा सामग्री नहीं खोल सके"
+  },
+  "deep_links": {
+    "finish_onboarding": "इसके लिंक खोलने से पहले AnythingLLM सेटअप पूरा करें"
+  }
+}

@@ -1,0 +1,1164 @@
+{
+  "common": {
+    "add": "添加",
+    "allow": "允许",
+    "apply": "应用",
+    "back": "返回",
+    "cancel": "取消",
+    "clear": "清除",
+    "close": "关闭",
+    "confirm": "确认",
+    "continue": "继续",
+    "copied": "已复制",
+    "copy": "复制",
+    "create": "创建",
+    "default": "默认",
+    "delete": "删除",
+    "disable": "禁用",
+    "disabled": "已禁用",
+    "dismiss": "关闭",
+    "done": "完成",
+    "download": "下载",
+    "downloading": "正在下载",
+    "edit": "编辑",
+    "enable": "启用",
+    "enabled": "已启用",
+    "error": "错误",
+    "export": "导出",
+    "import": "导入",
+    "install": "安装",
+    "installed": "已安装",
+    "learn_more": "了解更多",
+    "loading": "加载中...",
+    "next": "下一步",
+    "no": "否",
+    "none": "无",
+    "off": "关闭",
+    "ok": "确定",
+    "on": "开启",
+    "open": "打开",
+    "optional": "可选",
+    "refresh": "刷新",
+    "remove": "移除",
+    "rename": "重命名",
+    "required": "必需",
+    "reset": "重置",
+    "retry": "重试",
+    "save": "保存",
+    "search": "搜索",
+    "select": "选择",
+    "selected": "已选择",
+    "send": "发送",
+    "settings": "设置",
+    "share": "分享",
+    "skip": "跳过",
+    "stop": "停止",
+    "success": "成功",
+    "uninstall": "卸载",
+    "unknown": "未知",
+    "unknown_error": "未知错误",
+    "update": "更新",
+    "upload": "上传",
+    "yes": "是"
+  },
+  "language": {
+    "title": "语言",
+    "search_placeholder": "搜索语言",
+    "no_results": "没有语言匹配\"{{query}}\"",
+    "changed": "语言已更改为{{language}}"
+  },
+  "settings": {
+    "llm_preference": {
+      "title": "LLM 偏好",
+      "description": "这是将用于所有工作区的 LLM 偏好。您可以更改它以使用不同的 LLM 提供商或设备上的模型。"
+    },
+    "language": {
+      "app_language": "应用语言"
+    },
+    "special_tools": {
+      "title": "特殊工具",
+      "ask_with_anythingllm": "\"使用 AnythingLLM 询问\"",
+      "page_title": "特殊工具",
+      "added_toast": "已将\"使用 AnythingLLM 询问\"添加到文本选择菜单",
+      "removed_toast": "已从文本选择菜单中移除\"使用 AnythingLLM 询问\"",
+      "context_awareness": "上下文感知",
+      "ask_with_anythingllm_toggle": "使用 AnythingLLM 询问",
+      "android_only": "仅 Android",
+      "description_available": "在任何应用程序中选择文本时，将\"使用 AnythingLLM 询问\"添加到显示的菜单中。使用它来完善、缩短或修复您正在写的内容，或者用您选择的模型来总结、解释和研究您正在读的内容。",
+      "description_unavailable": "在 Android 上，当您在任何应用程序中选择文本时，AnythingLLM 可以出现在显示的菜单中，以使用您选择的模型编辑或总结它。iOS 不为应用程序提供此钩子。"
+    },
+    "about": {
+      "release_notes": "v{{version}} 的发布说明",
+      "star_github": "在 GitHub 上加星标",
+      "join_discord": "加入 Discord"
+    },
+    "utility": {
+      "title": "实用工具",
+      "anonymous_telemetry": "匿名遥测",
+      "clear_temp_files": "清除临时文件",
+      "temp_files_cleared": "临时文件已清除"
+    },
+    "legal": {
+      "title": "法律和隐私",
+      "terms": "服务条款",
+      "privacy": "隐私政策"
+    },
+    "reset": {
+      "title": "重置 AnythingLLM",
+      "confirm_message": "您确定要重置 AnythingLLM 吗？这将删除您的所有工作区、聊天记录、已安装的模型和偏好。",
+      "confirm_button": "是的，重置所有内容"
+    },
+    "update_failed": "无法更新设置",
+    "version": {
+      "about": "关于 AnythingLLM",
+      "update_available_title": "有可用的更新",
+      "update_available_message": "版本 {{version}} 可用。请更新到最新版本。",
+      "go_to_app_store": "转到应用商店"
+    },
+    "telemetry": {
+      "enabled_toast": "匿名遥测已启用",
+      "disabled_toast": "匿名遥测已禁用",
+      "usage_data": "使用数据",
+      "share_toggle": "分享匿名遥测",
+      "description_events": "AnythingLLM 发送少量匿名事件，例如\"完成了一次聊天\"或\"使用了一个工具\"，以便我们可以看到哪些功能重要，以及在哪些地方出现了问题。",
+      "description_privacy": "这永远不包括您的聊天、文档、提示或有关您如何使用应用程序的任何特定信息。没有帐户，也没有任何可以识别您的信息。",
+      "description_opt_out": "保持这个启用可以帮助我们构建更好的应用程序。您可以随时关闭它，不会有任何进一步的信息被发送。"
+    },
+    "advanced_model_preferences": {
+      "title": "模型选择",
+      "choose_provider": "选择 LLM 提供商",
+      "llm_model": "LLM 模型",
+      "provider_settings": "提供商设置",
+      "show_less": "显示较少",
+      "view_more": "查看更多"
+    },
+    "provider_options": {
+      "base_url": "基础 URL",
+      "base_url_placeholder": "输入您的基础 URL（例如 {{example}}）",
+      "api_key": "API 密钥",
+      "api_key_optional": "API 密钥（可选）",
+      "api_key_placeholder": "输入您的 API 密钥",
+      "aws_region": "AWS 区域",
+      "select_region": "选择一个区域",
+      "choose_region": "选择您的 AWS 区域",
+      "search_region": "搜索或输入区域代码",
+      "use_region": "使用\"{{region}}\"",
+      "model_selection": "模型选择",
+      "select_model": "选择一个模型",
+      "choose_model": "选择您的模型",
+      "search_models": "搜索模型",
+      "fetching_models": "正在获取模型...",
+      "model_placeholder": "输入您的模型（例如 {{example}}）",
+      "models_load_failed": "无法从该提供商加载模型。检查您的凭证或手动输入模型名称。",
+      "no_tool_calls": "检测到该模型不支持<bold>工具调用</bold>。只支持简单的聊天 + RAG"
+    }
+  },
+  "chat": {
+    "error_loading_provider": "加载 LLM 提供商时出错",
+    "error_loading_thread": "加载工作区线程时出错",
+    "unknown_error": "未知错误",
+    "loading_history": "正在加载聊天历史...",
+    "suggestions": {
+      "hello": "你好，有什么我可以帮助你的吗？",
+      "research": "在网上寻找 {{city}}、{{region}} 的一些有趣的事情",
+      "calendar_monday": "我的日历周一有什么？",
+      "calendar_tomorrow": "我的日历明天有什么？",
+      "calendar_today": "我的日历今天有什么？",
+      "email": "起草一封销售电子邮件给 John Doe，说明本地 AI 代理的好处",
+      "summarize_example": "总结 paulgraham.com/foundermode.html",
+      "summarize_file": "总结 {{name}}",
+      "summarize_websites_other": "总结这些网站",
+      "summarize_documents_other": "总结这些文档",
+      "explain_images_other": "解释这些图像"
+    },
+    "citations": {
+      "title": "引用",
+      "score": "分数：{{score}}",
+      "sources": "来源"
+    },
+    "message_actions": {
+      "copied": "已复制到剪贴板",
+      "retry_failed": "无法重试此消息",
+      "delete_failed": "无法删除此回复",
+      "fork_failed": "无法分支线程：{{error}}",
+      "fork_name": "{{name}} 的副本",
+      "copy_title": "复制消息",
+      "copy_description": "将文本复制到您的剪贴板",
+      "retry_wait": "等待当前回复完成",
+      "retry_description": "删除此交换并再次发送提示",
+      "fork_title": "分支线程",
+      "fork_remote_unavailable": "对远程线程不可用",
+      "fork_description": "使用此对话的副本启动新线程",
+      "delete_title": "删除回复",
+      "delete_description": "从线程中删除此消息及其回复"
+    },
+    "activity": {
+      "running": "正在运行",
+      "waiting_approval_to_run": "等待批准运行 {{tool}}",
+      "approved_tool": "批准 {{tool}}",
+      "rejected_tool": "拒绝 {{tool}}",
+      "waiting_for_you": "等待您",
+      "tool_approved": "工具调用已批准",
+      "tool_rejected": "工具调用已拒绝",
+      "thinking": "思考中...",
+      "waiting_your_approval": "等待您的批准",
+      "calling_tool": "调用 {{tool}}",
+      "working": "正在处理...",
+      "worked_for": "工作了 {{duration}}",
+      "thought_for": "思考了 {{duration}}",
+      "thoughts": "想法"
+    },
+    "file_download": {
+      "saved_to": "已保存 {{filename}} 到 {{location}}",
+      "save_failed": "无法保存文件：{{error}}",
+      "share_failed": "无法打开共享表：{{error}}",
+      "missing": "设备上不再有",
+      "missing_label": "{{title}}，文件不再可用",
+      "download_label": "下载 {{title}}",
+      "share_label": "分享 {{title}}",
+      "unknown_file": "未知文件",
+      "saving": "正在保存...",
+      "saved": "已保存"
+    },
+    "scheduled_job_card": {
+      "open_label": "打开计划任务 {{name}}",
+      "subtitle": "计划任务 · {{schedule}}",
+      "view": "查看"
+    },
+    "metrics": {
+      "tokens_other": "{{count}} 个令牌"
+    },
+    "tool_approval": {
+      "wants_to_call": "模型想要调用 <skill>{{skill}}</skill>",
+      "show_details": "显示详情",
+      "hide_details": "隐藏详情",
+      "approve": "批准",
+      "reject": "拒绝"
+    },
+    "attachments": {
+      "attach_files": "附加文件",
+      "gallery": "图库",
+      "take_photo": "拍照",
+      "add_attachment": "添加附件",
+      "hint_embed": "文件被分割并嵌入，以便您的设备上模型可以搜索它们。",
+      "hint_full": "文件在此工作区中的每条消息都会完整地发送到您的模型。",
+      "max_reached": "您已达到一个提示的最大附件数。",
+      "downloading_image_support": "正在下载图像支持... {{progress}}%",
+      "cancel_download": "取消下载",
+      "download_image_support": "下载图像支持",
+      "needs_download_tap": "此模型可以看到图像，但需要额外的下载。点击以下载（{{size}}）。",
+      "download_failed": "下载失败。点击重试。",
+      "download_cancelled": "下载已取消。"
+    },
+    "prompt_input": {
+      "placeholder": "输入您的提示",
+      "select_model_first": "请先选择一个模型",
+      "stop_generating": "停止生成",
+      "stop_recording": "停止录制",
+      "voice_input": "语音输入",
+      "send_prompt": "发送提示"
+    },
+    "files": {
+      "title": "文件",
+      "empty": "此工作区中没有文件",
+      "error_loading": "加载文件时出错",
+      "deleted_other": "{{count}} 个文件已成功删除！",
+      "select_all": "全选",
+      "deselect_all": "取消全选",
+      "delete_selected": "删除选定的文件",
+      "embedded": "嵌入 · 在每个线程中搜索",
+      "full_every_thread": "完整发送 · 每个线程",
+      "full_this_thread": "完整发送 · 此线程",
+      "full_another_thread": "完整发送 · 另一个线程"
+    },
+    "history_cleared": "聊天历史已清除",
+    "tools": {
+      "title": "工具",
+      "group_status": "{{enabled}} 的 {{total}} 打开",
+      "app_connections": "应用连接",
+      "group_files_note": "{{description}} 文件保存在此设备上，直到您在设置中清除临时文件。",
+      "needs_cloud_model": "{{description}} 需要云模型。",
+      "unavailable_on_device": "灰显的工具在设备上模型中不可用。切换到云提供商以使用它们。"
+    },
+    "remote_unreachable": {
+      "title": "远程服务器无法访问",
+      "message": "我们目前无法访问您的实例。您想继续本地进行此对话吗？",
+      "cancel": "否，取消",
+      "continue": "是的，继续本地进行",
+      "not_sent": "远程服务器无法访问 - 聊天未发送。"
+    },
+    "errors": {
+      "processing": "处理聊天时出错",
+      "timed_out": "在收到响应之前请求超时。连接可能丢失。"
+    },
+    "status": {
+      "recalling_notes": "回忆工作区笔记"
+    }
+  },
+  "quick_context": {
+    "modes": {
+      "summarize": "总结"
+    },
+    "actions": {
+      "polish": "修饰",
+      "shorten": "缩短",
+      "fix_grammar": "修正语法",
+      "more_formal": "更正式",
+      "summarize": "总结",
+      "key_points": "关键点",
+      "explain": "解释",
+      "research": "研究"
+    },
+    "could_not_start": "无法启动快速操作",
+    "dismiss": "关闭",
+    "setup_needed": "完成设置 AnythingLLM 以从选择菜单中使用它。",
+    "open_anythingllm": "打开 AnythingLLM",
+    "select_model": "选择上面的模型以开始。",
+    "copied_paste": "已复制 - 粘贴到您的选择上",
+    "copy_and_close": "复制并关闭",
+    "open_in_app": "在应用中打开",
+    "placeholders": {
+      "edit_new": "这段文本应该如何更改？",
+      "edit_started": "进一步调整文本…",
+      "summarize_new": "提出任何有关此文本的问题…",
+      "summarize_started": "提出更多问题…"
+    }
+  },
+  "attachments": {
+    "processing": "处理中…",
+    "image": "图像",
+    "file_type_generic": "文件",
+    "name_processing": "{{name}}，处理中",
+    "remove_named": "移除 {{name}}",
+    "more_images_other": "更多 {{count}} 张图像",
+    "attached_image": "已附加的图像",
+    "image_position": "{{current}} 的 {{total}}",
+    "close_image_preview": "关闭图像预览",
+    "remove_image": "移除图像"
+  },
+  "errors": {
+    "boundary": {
+      "details": "错误详情",
+      "details_copied": "错误详情已复制",
+      "report_github": "在 GitHub 上报告",
+      "something_went_wrong": "出现了问题",
+      "reported_automatically": "此错误已自动报告给 Mintplex Labs。",
+      "telemetry_disabled": "您禁用了遥测，因此我们没有自动将此错误报告给 Mintplex Labs，您应该改为打开 GitHub 问题。",
+      "go_home": "返回首页",
+      "message_failed": "由于错误，无法显示此消息。",
+      "hide_details": "隐藏错误详情",
+      "show_details": "显示错误详情"
+    }
+  },
+  "highlights": {
+    "play_video": "播放视频",
+    "pause_video": "暂停视频",
+    "whats_new": "新增功能",
+    "tour_title": "AnythingLLM 可以做什么",
+    "quick_actions": {
+      "title": "在任何地方使用 AnythingLLM 询问",
+      "body": "在任何应用中选择文本并点击\"使用 AnythingLLM 询问\"来使用您的模型修饰、缩短、总结或解释它。您可以随时在设置 > 特殊工具下关闭它。"
+    },
+    "share_sheet": {
+      "title": "将任何内容分享到聊天",
+      "body": "将照片、文档和链接从任何应用直接发送到 AnythingLLM。它们会进入新线程，已附加并准备好提问。"
+    },
+    "scheduled_jobs": {
+      "title": "计划任务",
+      "body": "要求执行一个定期任务 - 一份早晨新闻摘要、一周一次的检查 - 它按计划运行，即使应用已关闭。结果会等您收到通知。"
+    }
+  },
+  "new_workspace": {
+    "default_name": "新工作区",
+    "title": "新工作区",
+    "description": "给您的工作区起一个名字。您以后可以更改它。",
+    "placeholder": "例如 研究、工作、个人"
+  },
+  "files": {
+    "types": {
+      "text_file": "文本文件",
+      "spreadsheet": "电子表格",
+      "pdf_document": "PDF 文档",
+      "word_document": "Word 文档",
+      "file": "文件"
+    },
+    "location": {
+      "downloads": "下载",
+      "ios_exports": "文件 > 我的 iPhone > AnythingLLM > 导出",
+      "open_downloads": "在下载中打开",
+      "open_files": "在文件中打开"
+    },
+    "storage_permission": {
+      "title": "保存到下载",
+      "message": "AnythingLLM 需要存储访问权限才能将文件保存到您的下载文件夹。"
+    },
+    "export": {
+      "text_label": "文本",
+      "txt_description": "纯文本记录",
+      "md_description": "用于笔记应用的格式化记录",
+      "json_description": "包含模型和指标的消息",
+      "pdf_description": "格式化文档"
+    }
+  },
+  "misc": {
+    "new_thread": "新线程",
+    "remote_thread_create_failed": "我们无法在您的远程工作区中创建线程。请检查您的连接并重试。",
+    "job_run": {
+      "failed": "任务失败",
+      "timed_out": "任务耗时过长已停止",
+      "cancelled": "您停止了此次运行",
+      "app_closed": "应用在任务完成前已关闭"
+    },
+    "validation": {
+      "memory_not_text": "内存必须是文本",
+      "memory_too_short": "内存太短",
+      "memory_too_long_other": "内存必须为 {{count}} 个字符或更少",
+      "job_name_required": "给任务起一个名字",
+      "job_name_too_long_other": "名字必须为 {{count}} 个字符或更少",
+      "job_prompt_required": "写出任务应该运行的提示",
+      "job_prompt_too_long_other": "提示必须为 {{count}} 个字符或更少",
+      "job_schedule_invalid": "计划不是有效的 cron 表达式",
+      "job_tools_not_list": "工具必须是一个列表",
+      "name_not_string": "名字必须是字符串",
+      "name_required": "名字是必需的",
+      "name_too_short_other": "名字必须至少为 {{count}} 个字符长",
+      "name_too_long_other": "名字必须少于 {{count}} 个字符长",
+      "system_prompt_not_string": "系统提示必须是字符串",
+      "system_prompt_required": "系统提示是必需的",
+      "system_prompt_too_short_other": "系统提示必须至少为 {{count}} 个字符长",
+      "system_prompt_too_long_other": "系统提示必须少于 {{count}} 个字符长",
+      "temperature_not_number": "温度必须是数字",
+      "temperature_range": "温度必须在 {{min}} 和 {{max}} 之间",
+      "context_length_not_number": "上下文长度必须是数字",
+      "context_length_min": "上下文长度必须大于 {{min}}"
+    }
+  },
+  "tools": {
+    "groups": {
+      "create_files": {
+        "name": "创建文件",
+        "description": "让助手编写您可以下载和分享的文档。"
+      }
+    },
+    "reranker": {
+      "download_required_title": "需要下载",
+      "download_required_message": "智能工具选择需要一个小模型下载 ({{size}})。您正在使用蜂窝数据。继续？",
+      "status_downloading": "正在下载工具选择模型",
+      "status_selecting": "选择最佳工具"
+    },
+    "calendar_event_creation": {
+      "name": "日历事件创建",
+      "description": "使用助手为您创建日历事件。",
+      "status_preparing": "准备日历事件\"{{title}}\""
+    },
+    "calendar_event_reading": {
+      "name": "阅读日历",
+      "description": "使用助手阅读您的日历事件。",
+      "status_date": "读取您的日历上的 {{date}}",
+      "status_today": "读取您的日历上的今天",
+      "status_tomorrow": "读取您的日历上的明天",
+      "status_this_week": "读取您的日历上的本周",
+      "status_next_week": "读取您的日历上的下周",
+      "status_this_month": "读取您的日历上的本月",
+      "status_next_month": "读取您的日历上的下月"
+    },
+    "create_files": {
+      "status_creating": "正在创建 {{name}}",
+      "status_created": "已创建 {{name}}"
+    },
+    "create_docx_file": {
+      "name": "Word 文档",
+      "description": "从 markdown 用主题和可选的标题页编写样式化的 .docx。",
+      "status_creating": "正在创建 Word 文档\"{{name}}\""
+    },
+    "create_pdf_file": {
+      "name": "PDF 文档",
+      "description": "将 markdown 或纯文本转换为格式化的 PDF。",
+      "status_creating": "正在创建 PDF\"{{name}}\""
+    },
+    "create_text_file": {
+      "name": "文本、Markdown 和 CSV",
+      "description": "从对话中编写 .txt、.md、.csv 和 .json 文件。"
+    },
+    "create_pptx": {
+      "name": "PowerPoint 演示",
+      "description": "规划和构建一个主题化的 .pptx 演示文稿，一次一个部分。",
+      "status_planning_other": "规划演示\"{{title}}\" - {{count}} 个部分，{{theme}} 主题",
+      "approval_description_other": "创建 PowerPoint 演示\"{{title}}\"，共 {{count}} 个部分？每个部分都需要进行一次模型调用来构建。",
+      "status_not_approved": "演示未获批准",
+      "status_building_section": "[{{current}}/{{total}}] 正在构建部分\"{{title}}\"",
+      "status_section_complete_other": "[{{current}}/{{total}}] 部分\"{{title}}\"完成 - {{count}} 张幻灯片",
+      "status_section_complete_from_outline_other": "[{{current}}/{{total}}] 部分\"{{title}}\"完成 - {{count}} 张幻灯片（来自大纲）",
+      "status_assembling_other": "组装演示文稿 - {{count}} 张幻灯片"
+    },
+    "create_scheduled_job": {
+      "name": "创建计划任务",
+      "description": "在您批准后，让助手从对话中设置一个定期任务。",
+      "status_asking": "要求计划\"{{name}}\" ({{when}})",
+      "approval_tools_other": "创建计划任务\"{{name}}\"？它将在 {{when}} 使用 {{count}} 个工具运行。",
+      "approval_tools_notify_other": "创建计划任务\"{{name}}\"？它将在 {{when}} 使用 {{count}} 个工具运行并在完成时通知您。",
+      "approval_no_tools": "创建计划任务\"{{name}}\"？它将在 {{when}} 不使用任何工具运行。",
+      "approval_no_tools_notify": "创建计划任务\"{{name}}\"？它将在 {{when}} 不使用任何工具运行并在完成时通知您。",
+      "status_not_approved": "计划任务未获批准",
+      "status_scheduled": "已计划\"{{name}}\""
+    },
+    "draft_email": {
+      "name": "起草电子邮件",
+      "description": "使用助手为您起草电子邮件。",
+      "status_drafting": "正在起草电子邮件\"{{subject}}\"",
+      "open_action": "打开草稿电子邮件"
+    },
+    "draft_text": {
+      "name": "起草文本",
+      "description": "使用助手为您起草文本。",
+      "status_drafting_to": "正在为 {{recipient}} 起草文本",
+      "status_drafting": "正在起草文本消息",
+      "open_action": "打开草稿文本"
+    },
+    "get_time": {
+      "name": "获取时间",
+      "description": "根据您的设备时区获取当前日期和时间。"
+    },
+    "get_location": {
+      "name": "获取位置",
+      "description": "获取您的大致位置。这将返回城市、州和国家。",
+      "status_looking_up": "正在查找您的大致位置"
+    },
+    "summarize": {
+      "name": "总结",
+      "description": "总结来自给定 URL 或文件名的内容。",
+      "status_reading": "正在读取 {{source}}",
+      "status_looking_for_file": "在您的文件中查找\"{{name}}\"",
+      "status_analyzing": "正在分析文档结构",
+      "status_document_long_other": "文档很长 - 总结前 {{count}} 个部分",
+      "approval_description_other": "此内容有 {{count}} 个部分要总结。这可能需要一段时间 - 继续？",
+      "status_not_approved": "总结未获批准",
+      "status_complete": "总结完成",
+      "status_summarizing_sections": "正在总结文档部分",
+      "status_summarizing_section": "正在总结第 {{current}} 部分，共 {{total}} 个",
+      "status_combining": "合并部分摘要"
+    },
+    "web_scraping": {
+      "name": "网页抓取",
+      "description": "抓取单个特定网站以获取信息。",
+      "status_reading": "正在读取 {{host}}",
+      "status_reading_document": "正在读取文档 {{name}}",
+      "cellular_title": "在蜂窝数据上下载？",
+      "cellular_message": "读取\"{{name}}\"需要下载 {{size}} 大小的文档。您正在使用蜂窝数据。继续？",
+      "cellular_message_unknown_size": "读取\"{{name}}\"需要下载大小未知的文档。您正在使用蜂窝数据。继续？"
+    },
+    "web_search": {
+      "name": "网页搜索",
+      "description": "根据查询搜索网络以获取搜索结果。",
+      "status_searching": "正在网络上搜索\"{{query}}\"",
+      "status_reviewing_other": "正在查看 {{count}} 个搜索结果"
+    },
+    "approval": {
+      "auto_approved_status": "自动批准了 {{tool}}"
+    }
+  },
+  "top_bar": {
+    "model_chip": {
+      "remote_managed": "此工作区由远程管理。您无法在此处更改模型。",
+      "no_model_loaded": "未加载模型",
+      "no_models_found": "未找到\"{{query}}\"的模型",
+      "hf_lookup_hint": "在 Hugging Face 上查找\"{{query}}\"并下载 GGUF 版本。",
+      "list_failed_toast": "无法列出 {{provider}} 的模型。",
+      "switch_failed": "无法切换模型。请重试。",
+      "loading_models": "正在从 {{provider}} 加载模型...",
+      "list_failed_title": "无法列出 {{provider}} 的模型",
+      "list_failed_description": "该提供商未返回任何模型。检查端点是否可达并支持模型列表，或在设置中手动设置模型。",
+      "try_again": "重试",
+      "search_provider_models": "搜索 {{provider}} 模型"
+    },
+    "dev_shortcut_hint_other": "再按 {{count}} 次打开开发者工具",
+    "thread_menu": {
+      "options": "线程选项",
+      "export_failed": "无法导出线程：{{error}}",
+      "share_failed": "无法打开共享表：{{error}}",
+      "unknown_error": "未知错误",
+      "open_location_failed": "已保存到 {{location}}，但无法打开该文件夹",
+      "memories": "记忆",
+      "memories_description": "查看关于您或您的偏好的记忆",
+      "export_thread": "导出聊天线程",
+      "saved_to_device": "已保存到您的设备"
+    },
+    "memories": {
+      "global": {
+        "tab": "任何地方",
+        "hint": "关于您的事实，模型应该总是知道的 - 您的名字、您做什么、您喜欢如何回答。通过每个工作区中的每次聊天发送。将它们保持简短，以便它们都适合小型模型。",
+        "placeholder": "例如 我叫 Sam。我写 Python 并喜欢简短的答案。",
+        "empty": "还没有记忆。在上面添加关于您自己的事实。"
+      },
+      "workspace": {
+        "tab": "此工作区",
+        "hint": "仅在此处重要的笔记 - 项目、其术语、已做出的决定。动态管理和注入。",
+        "placeholder": "例如 此项目是一个名为 Orbit 的 React Native 应用。使用 yarn，不是 npm。",
+        "empty": "还没有工作区记忆。在上面添加关于此工作区的笔记。"
+      },
+      "no_longer_exists": "该记忆不再存在",
+      "save_failed": "无法保存记忆",
+      "delete_title": "删除记忆？",
+      "enable": "启用记忆",
+      "enable_description": "允许注入关于您或此工作区的事实。",
+      "remote_notice": "此工作区由您的 AnythingLLM 服务器回答，因此在其聊天中不使用记忆。全局记忆仍适用于您的设备上和云工作区。",
+      "edit_memory": "编辑记忆",
+      "new_memory": "新记忆",
+      "delete_memory": "删除记忆"
+    }
+  },
+  "drawer": {
+    "workspaces": "工作区",
+    "scheduled_jobs": "计划任务",
+    "scheduled_jobs_unseen_other": "计划任务，{{count}} 个未读结果",
+    "new_workspace": "新工作区",
+    "delete_thread_title": "删除线程",
+    "delete_thread_message": "您确定要删除此线程吗？所有聊天历史将丢失。",
+    "delete_workspace_title": "删除工作区",
+    "delete_workspace_message": "您确定要删除此工作区吗？所有线程将丢失。",
+    "delete_workspace_message_remote": "您确定要删除此工作区吗？所有线程将丢失。\n\n这不会删除您的远程实例中的工作区。",
+    "rename_thread": "重命名线程",
+    "rename_thread_placeholder": "输入新的线程名称"
+  },
+  "hf_import": {
+    "title": "从 Hugging Face 添加模型",
+    "add_card_hint": "粘贴一个 repo id 或 url，并选择任何 GGUF 量化以在此设备上运行。",
+    "generic_error": "与 Hugging Face 通信时出现问题。",
+    "description": "粘贴一个模型 id 或 url，或搜索。任何公共 GGUF 量化都可以下载并在此设备上运行。",
+    "show_files": "显示 GGUF 文件",
+    "search_hf": "搜索 Hugging Face",
+    "files_available_other": "{{count}} 个 GGUF 文件可供下载",
+    "highlighted_file": "您在 Hugging Face 上选择的文件如下所示。点击它进行下载。",
+    "highlight_missing": "\"{{filename}}\" 不是此 repo 的 GGUF 文件之一。在下面选择另一个量化。",
+    "search_results": "匹配\"{{query}}\"的 GGUF repos，最常下载的排在前面。点击其中一个查看其文件。",
+    "no_search_results": "未找到\"{{query}}\"的 GGUF repos。",
+    "tip": "提示：大多数模型都有 GGUF 版本，在名称末尾以\"-GGUF\"结尾，来自 unsloth、bartowski 或 lmstudio-community。较小的量化 (Q4_K_M 及以下) 在手机上运行最好。门控或私有模型不受支持。",
+    "params": "{{value}} 参数",
+    "context": "{{value}}k 上下文",
+    "downloads": "{{value}} 下载",
+    "gated": "此 repo 受限。下载需要 Hugging Face 登录，但目前不支持。",
+    "requested": "已请求"
+  },
+  "models": {
+    "recommended": "推荐",
+    "memory_fit": {
+      "tight": "可能无法装入内存",
+      "tight_compact": "可能无法装入",
+      "impossible": "对此设备来说太大",
+      "impossible_compact": "太大"
+    },
+    "sections": {
+      "found_on_device": "在此设备上找到",
+      "added_from_hf": "从 Hugging Face 添加",
+      "other": "其他"
+    },
+    "vector_storage": {
+      "reset_title": "重置向量存储",
+      "reset_message": "您确定要重置此工作区的向量存储吗？",
+      "cleared": "向量存储已清除！"
+    },
+    "vision": {
+      "remote": "与远程工作区聊天时目前不支持图像。",
+      "no_model": "选择一个模型以附加图像。",
+      "on_device": "所选的设备上模型无法读取图像。",
+      "needs_download": "此模型可以看到图像，但需要额外的下载。"
+    },
+    "speech_to_text": {
+      "permission_title": "麦克风访问",
+      "permission_message": "AnythingLLM 需要麦克风访问权限才能将您的语音转录为提示。",
+      "permission_required_title": "需要麦克风访问权限",
+      "permission_required_message": "在您的设备设置中启用麦克风访问权限以使用语音转文字。"
+    },
+    "attachments": {
+      "vectors_cleared": "工作区向量已清除",
+      "clear_vectors_title": "清除工作区向量",
+      "clear_vectors_message": "您确定要清除此工作区的向量吗？这将删除此工作区的所有向量，无法撤消。",
+      "not_found": "找不到附件",
+      "empty_content": "附件内容为空或无法读取",
+      "large_document_title": "大型文档",
+      "large_document_message": "\"{{name}}\" 大约 {{tokens}} 个令牌。通过 {{provider}} 整个文档将在此工作区中的每条消息中发送，这可能很慢且成本高。仍然附加？",
+      "large_document_message_generic": "\"{{name}}\" 大约 {{tokens}} 个令牌。通过您的模型提供商，整个文档将在此工作区中的每条消息中发送，这可能很慢且成本高。仍然附加？",
+      "attach": "附加",
+      "create_failed": "无法为附件创建文档",
+      "camera_permission_title": "相机访问权限",
+      "camera_permission_message": "AnythingLLM 需要相机来为您的提示拍照。",
+      "max_reached_other": "每个提示最多可以附加 {{count}} 个项目",
+      "camera_permission_required": "需要相机权限才能拍照",
+      "camera_open_failed": "无法打开相机",
+      "gallery_open_failed": "无法打开图库",
+      "image_unreadable": "无法读取所选图像",
+      "images_skipped_unreadable_other": "{{count}} 张图像无法读取并被跳过",
+      "image_attach_failed": "无法附加图像",
+      "max_reached_skipped_other": "每个提示最多可以附加 {{max}} 个项目 - {{count}} 个被跳过",
+      "images_skipped_no_vision_other": "您当前的模型无法读取图像 - {{count}} 张图像被跳过",
+      "read_failed": "无法读取 {{name}}",
+      "remove_title": "移除附件",
+      "remove_message": "您确定要从聊天中移除此附件吗？",
+      "shared_content_failed": "无法附加共享内容"
+    },
+    "memory_warning": {
+      "short": "内存警告",
+      "full": "警告：模型大小可能超过可用内存。这可能会影响您设备的性能和稳定性。"
+    },
+    "catalog": {
+      "gemma_3_1b": "(Q8_0) Gemma3 1B 是 Gemma3 4B 模型的较小轻量级版本，适用于更复杂的任务。",
+      "qwen3_0_6b": "(Q8_0) Qwen3 0.6B 是一个很小、非常快速的模型，用于快速回答和简单任务。被 Qwen3.5 0.8B 取代。",
+      "qwen3_1_7b": "(Q8_0) Qwen3 1.7B 是 Qwen3-0.6B 模型的一个更强大的版本，用于更复杂的任务。",
+      "llama_3_2_1b": "(Q8_0) Llama 3.2 1B 是 Llama 3.2 模型的最小版本。",
+      "qwen3_5_0_8b": "(Q8_0) Qwen3.5 0.8B 是 Qwen3.5 系列中最小的模型。在任何手机上都非常快速，具有可靠的指令遵循能力。",
+      "qwen3_5_2b": "(Q8_0) Qwen3.5 2B 是一个强大的通用小型模型，具有工具调用能力和良好的推理能力。",
+      "qwen3_5_4b": "(Q6_K) Qwen3.5 4B 是 Qwen3.5 模型中最强大的，仍然可以装入手机。最佳准确性、推理和工具调用；需要有 8GB+ RAM 的设备。",
+      "qwen3_vl_2b_instruct": "(Q4_K_XL) Qwen3-VL 2B 是一个视觉语言模型，可以描述和回答关于照片的问题。",
+      "granite_3_3_2b_instruct": "(Q4_K_XL) IBM 的 Granite 3.3 2B 经过调整以支持 RAG、总结和工具调用。Apache 2.0 许可证。",
+      "granite_4_2_3b": "(Q4_K_M) Granite 4.2 3B 是最新的小型 Granite 模型，具有更强的推理和工具调用能力。更大的下载。",
+      "lfm2_5_1_2b_instruct": "(Q8_0) LFM2.5 1.2B 是一个非常快速的小型模型，经过调整以支持设备上聊天、工具调用和 16 种语言。完整质量量化。",
+      "lfm2_5_2_6b": "(Q5_K_M) LFM2.5 2.6B 是用于手机的最强大的 Liquid 模型，具有强大的指令遵循、工具调用和推理能力。",
+      "gemma_4_e2b": "(QAT Q2_K_XL) Gemma 4 E2B 是 Google 的移动优先模型，具有有效的 2B 参数。为这个大小进行了量化感知训练。",
+      "gemma_4_e4b": "(QAT Q2_K_XL) Gemma 4 E4B 是适合手机使用的最强大的 Gemma。大型下载，需要最近的高内存设备。"
+    },
+    "presets": {
+      "lightweight": {
+        "name": "轻量级",
+        "description": "用于快速响应和简单任务。"
+      },
+      "balanced": {
+        "name": "平衡",
+        "description": "平衡速度和准确性。"
+      },
+      "powerful": {
+        "name": "强大",
+        "description": "用于最佳准确性的更重模型。"
+      }
+    },
+    "imported_description": "从 Hugging Face 添加 ({{repo}})。",
+    "imported_description_specs": "从 Hugging Face 添加 ({{repo}})。{{specs}}。",
+    "no_model_loaded_error": "未加载模型。请先选择一个模型。",
+    "unknown_model_description": "在 {{modelId}} 中在此设备上找到，但它不在我们的模型列表中。您仍然可以使用它或卸载它。",
+    "status": {
+      "summarizing": "总结较早的对话",
+      "using_summary_other": "使用 {{count}} 条较早消息的摘要",
+      "loading_model": "将模型加载到内存中",
+      "reply_truncated": "回复被截断 - 上下文窗口已满",
+      "searching_documents": "搜索您的文档",
+      "reranking": "重新排列结果",
+      "reading_documents_other": "正在读取 {{count}} 个附加文档"
+    }
+  },
+  "providers": {
+    "descriptions": {
+      "native": "在您的手机上安装和运行模型。",
+      "ollama": "使用 Ollama 在您自己的机器上本地运行 LLM。",
+      "lmstudio": "在几次点击中发现、下载并运行数千个最先进的 LLM。",
+      "openai": "利用 OpenAI 的强大模型。",
+      "anthropic": "由 Anthropic 托管的友好 AI 助手。",
+      "gemini": "Google 最大、最强大的 AI 模型",
+      "openrouter": "来自领先提供商的 AI 服务的统一 API",
+      "bedrock": "使用 AWS Bedrock 私密运行强大的基础模型。",
+      "deepseek": "运行 DeepSeek 的强大 LLM。",
+      "fireworksai": "最快和最有效的推理引擎，用于构建生产就绪的复合 AI 系统。",
+      "minimax": "运行 MiniMax 的强大 LLM。",
+      "moonshotai": "运行 Moonshot AI 的 Kimi 模型。",
+      "novita": "来自 Novita AI 的可靠、可扩展和经济高效的 LLM",
+      "togetherai": "从 Together AI 运行开源模型。",
+      "xai": "运行 xAI 的强大 LLM，如 Grok 等。",
+      "litellm": "运行 LiteLLM 的 OpenAI 兼容代理以用于各种 LLM。",
+      "localai": "在您自己的机器上本地运行 LLM。",
+      "lemonade": "使用 Lemonade Server 在 AMD 硬件上运行 LLM。",
+      "llmman": "使用 llmman 本地运行 LLM。",
+      "generic_openai": "通过自定义配置连接到任何 OpenAI 兼容服务"
+    },
+    "sections": {
+      "local": "本地提供商",
+      "cloud": "云提供商"
+    },
+    "validation": {
+      "unknown_provider": "未知提供商。",
+      "api_key_required": "请为此提供商输入 API 密钥。",
+      "base_url_required": "请输入您的提供商的基础 URL。",
+      "region_required": "请选择您的 Bedrock 部署的 AWS 区域。",
+      "model_required": "请选择要使用的模型。"
+    }
+  },
+  "llm_selection": {
+    "choose_provider": "选择您的提供商",
+    "no_providers_found": "未找到\"{{query}}\"的提供商",
+    "download_model_title": "下载模型？",
+    "download_model_message": "这将把模型下载到您的设备。它是 {{size}} 字节。",
+    "preferred_model": "首选模型"
+  },
+  "downloads": {
+    "no_internet_title": "没有互联网连接。",
+    "no_internet_image_support": "您需要连接到互联网才能下载图像支持。",
+    "no_internet_model": "您需要连接到互联网才能下载任何模型。",
+    "data_usage_title": "数据使用警告",
+    "data_usage_image_support": "我们建议使用 Wi-Fi 连接下载图像支持，因为它的大小是 {{size}}。",
+    "data_usage_model": "我们建议使用 Wi-Fi 连接下载模型，因为它的大小是 {{size}}。",
+    "continue_anyway": "仍然继续",
+    "continue_with_download": "继续下载",
+    "image_support_title": "下载图像支持？",
+    "image_support_message": "{{model}} 一旦下载其图像支持文件，就可以理解照片。其大小为 {{size}}。",
+    "download_model_title": "下载模型？",
+    "download_model_message": "这将把模型下载到您的设备。其大小为 {{size}}。",
+    "notification_downloading_title": "正在下载模型",
+    "notification_downloading_body": "正在下载 {{model}}",
+    "notification_complete_title": "下载完成",
+    "notification_complete_body": "已下载 {{model}}",
+    "download_failed_title": "下载失败",
+    "download_failed_message": "下载模型时出错。",
+    "uninstall_model_title": "卸载模型？",
+    "uninstall_model_message": "这将从您的设备中删除模型。",
+    "storage_low": "存储空间不足！模型 {{modelSize}} > {{freeSpace}} 可用",
+    "storage_check_failed": "检查存储失败",
+    "setup_failed_title": "下载设置失败",
+    "setup_failed_message": "无法设置 HF 模型下载：{{error}}"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "欢迎",
+      "description": "一个生活在您手机上的 AI 代理。与文档聊天、搜索网络并集成到您的应用中。",
+      "get_started": "开始使用",
+      "back_blocked": "请继续进行入门流程以继续。"
+    },
+    "model_selection": {
+      "title": "您想使用哪个模型？",
+      "description": "您以后可以更改此设置，但请选择最适合您需求的。",
+      "use_external": "不想下载模型？使用外部提供商"
+    },
+    "external": {
+      "title": "连接外部提供商",
+      "description": "使用托管在其他地方的模型，而不是将其下载到您的手机。您以后可以更改此设置。",
+      "choose_provider": "选择 LLM 提供商",
+      "provider_settings": "提供商设置",
+      "incomplete_setup": "不完整的提供商设置"
+    },
+    "download": {
+      "error_title": "发生错误",
+      "error_message": "下载模型时出错 {{error}}",
+      "success_title": "模型已下载",
+      "success_message": "模型已成功下载",
+      "url_must_be_gguf": "URL 必须以 .gguf 结尾"
+    },
+    "survey": {
+      "title": "AnythingLLM 可以如何帮助您？",
+      "description": "选择最适用于您的。",
+      "options": {
+        "productivity": "提高生产力",
+        "privacy": "注重隐私的聊天",
+        "custom_ai": "自定义 AI 代理",
+        "automation": "AI 自动化",
+        "other": "其他"
+      }
+    },
+    "data_handling": {
+      "title": "数据处理和隐私",
+      "description": "使用 AnythingLLM，所有聊天、文档和其他数据都在您的设备上处理和存储。",
+      "local_chats_title": "完全本地聊天",
+      "local_chats_description": "所有聊天都存储在您的设备上。",
+      "embedding_title": "文档嵌入",
+      "embedding_description": "所有文档和处理都在您的设备上完成。",
+      "agents_title": "AI 代理",
+      "agents_description": "所有代理都在您的设备上运行，仅在需要时使用互联网（例如：网络搜索）",
+      "experience": "体验 AnythingLLM",
+      "setting_up": "设置您的第一个工作区",
+      "default_workspace_name": "我的工作区"
+    }
+  },
+  "workspace_settings": {
+    "load_error": "加载工作区时出错",
+    "autosaving": "自动保存中...",
+    "autosaved": "自动保存！",
+    "name": {
+      "section": "工作区名称",
+      "title": "名称",
+      "current": "当前名称",
+      "placeholder": "在此输入您的名称...",
+      "save_error": "保存名称时出错"
+    },
+    "system_prompt": {
+      "title": "系统提示",
+      "label": "提示",
+      "current": "当前系统提示",
+      "placeholder": "在此输入您的系统提示...",
+      "save_error": "保存系统提示时出错",
+      "description": "系统提示是 AI 的指导性提示和说明。它应该用于指导 AI 的行为和响应类型。"
+    },
+    "temperature": {
+      "title": "温度",
+      "current": "当前温度",
+      "suggested": "建议温度",
+      "placeholder": "默认（提供商决定）",
+      "save_error": "保存温度时出错",
+      "hint": "留空以使用您的 LLM 提供商和模型的默认温度。设置 0 到 1 之间的值以覆盖它。",
+      "description": "温度是 AI 响应的随机性级别。温度越高，响应的随机性就越高。"
+    },
+    "context_length": {
+      "title": "上下文长度",
+      "current": "当前上下文长度",
+      "suggested": "建议上下文长度",
+      "placeholder": "在此输入您的上下文长度...",
+      "save_error": "保存上下文长度时出错",
+      "hint": "请记住，上下文长度也取决于您使用的模型，对您的设备有内存影响。",
+      "description": "上下文长度是 AI 在生成响应时可以使用的最大令牌数。"
+    },
+    "vectors": {
+      "section": "向量存储",
+      "count": "向量计数",
+      "description": "这是当前存储在工作区中的向量数。这用于存储工作区的上下文。"
+    },
+    "delete": {
+      "button": "删除工作区",
+      "confirm_title": "删除工作区？",
+      "confirm_message": "您确定要删除此工作区吗？所有线程将丢失。",
+      "confirm_message_remote": "您确定要删除此工作区吗？所有线程将丢失。\n\n这不会删除您的远程实例中的工作区。"
+    }
+  },
+  "connect": {
+    "title": "连接到 AnythingLLM",
+    "scan_description": "扫描您的 AnythingLLM 实例或客户端的 QR 码，以将其数据同步到此移动设备，以便随处进行 AI 操作！",
+    "previous_connections": "以前的连接",
+    "verify": {
+      "title": "验证连接",
+      "go_back": "返回",
+      "registering": "正在注册您的设备...",
+      "few_seconds": "这可能需要几秒钟...",
+      "awaiting_approval": "等待批准...",
+      "approve_in_app": "请在 AnythingLLM 应用中批准该设备...",
+      "collecting_data": "正在收集实例数据...",
+      "register_failed": "无法注册设备。请重试。",
+      "register_failed_reason": "无法注册设备：{{reason}}",
+      "approval_failed": "无法注册或批准设备。请重试。"
+    },
+    "import": {
+      "connection_expired": "您与 AnythingLLM Desktop 的现有连接已过期。",
+      "refresh_failed": "无法刷新工作区",
+      "go_home": "返回首页",
+      "thread_count_other": "{{formatted}} 个线程",
+      "chat_count_other": "{{formatted}} 次聊天",
+      "sync": "同步",
+      "synced": "已同步",
+      "sync_failed": "失败",
+      "sync_workspace_failed": "无法同步工作区 {{name}}"
+    }
+  },
+  "scheduled_jobs": {
+    "title": "计划任务",
+    "job_missing": "该任务不再存在",
+    "update_failed": "无法更新任务",
+    "prompt": "提示",
+    "tools": "工具",
+    "paused": "暂停",
+    "running_now": "现在正在运行",
+    "stop_run": "停止运行",
+    "run_already_finished": "该运行已经完成",
+    "stop_failed": "无法停止运行",
+    "blocked": {
+      "no_provider_title": "首先选择一个 LLM 提供商",
+      "no_provider_body": "计划任务在没有您的情况下运行，因此它们需要一个云或自托管 LLM 来交谈。在设置中选择一个。",
+      "on_device_title": "计划任务需要云 LLM",
+      "on_device_body": "设备上的模型无法在后台运行，因此当选择它时，任务会暂停。在设置中切换到云或自托管提供商来运行它们。"
+    },
+    "list": {
+      "open_llm_settings": "打开 LLM 设置",
+      "enabled_count": "{{enabled}} 的 {{total}} 打开",
+      "your_jobs": "您的任务",
+      "explainer_background": "任务是助手在计划上为您运行的提示，使用您为其选择的工具。结果在此处收集，即使应用已关闭也会运行 - Android 可能会延迟几分钟运行以节省电池电量。",
+      "explainer_foreground": "任务是助手在计划上为您运行的提示，使用您为其选择的工具。结果在此处收集，下次打开应用时。",
+      "new_job": "新任务",
+      "waiting_for_cloud": "等待云 LLM",
+      "next_run": "下次运行 {{time}}",
+      "not_scheduled": "未计划",
+      "empty_title": "还没有计划的任务",
+      "empty_body": "让助手每天早上检查一个网站、起草一份周总结，或在每月的第一天构建一份报告 - 无需打开聊天。",
+      "create_first": "创建您的第一个任务"
+    },
+    "runs": {
+      "already_running": "此任务已在运行",
+      "start_failed": "无法启动任务",
+      "fallback_title": "任务",
+      "edit_job": "编辑任务",
+      "next_run_with_date": "下次运行 {{relative}} · {{date}}",
+      "not_scheduled_to_run": "未计划运行",
+      "notify": "通知",
+      "last_run": "最后运行",
+      "never": "从未",
+      "run_now": "立即运行",
+      "run_count_other": "{{count}} 次运行",
+      "history": "历史",
+      "empty_with_next": "此任务尚未运行。其第一次运行是 {{time}}。您也可以现在运行它来尝试。",
+      "empty": "此任务尚未运行。您也可以现在运行它来尝试。",
+      "manual": "· 手动"
+    },
+    "form": {
+      "save_failed": "无法保存任务",
+      "job_updated": "任务已更新",
+      "job_scheduled": "任务已计划",
+      "could_not_save": "无法保存任务",
+      "delete_title": "删除此任务？",
+      "delete_message": "\"{{name}}\" 及其产生的每个结果都将被删除。这无法撤消。",
+      "job_deleted": "任务已删除",
+      "delete_failed": "无法删除任务",
+      "edit_title": "编辑任务",
+      "new_title": "新任务",
+      "what_section": "它应该做什么？",
+      "name": "名称",
+      "name_placeholder": "早晨新闻摘要",
+      "prompt_hint": "写成好像您在聊天中发送它一样。要具体 - 没有人在身边回答后续问题。",
+      "prompt_placeholder": "阅读 https://news.ycombinator.com 并编写五个最有趣的故事的简短摘要，对每个故事进行一行评论。",
+      "when_section": "它应该何时运行？",
+      "options": "选项",
+      "notify_title": "在完成时通知我",
+      "notify_description": "当运行完成并有结果时发送通知。失败或空的运行只在应用中显示一个点。",
+      "enabled_description": "关闭以保留任务及其结果而不运行它。",
+      "save_changes": "保存更改",
+      "schedule_job": "计划任务",
+      "delete_job": "删除任务"
+    },
+    "tool_picker": {
+      "selected_count_other": "{{count}} 个已选择",
+      "none_reply_only": "无 - 仅回复",
+      "app_connections": "应用连接",
+      "explainer": "您打开的每个工具都会在每次运行时提供给模型。通常会要求您批准的工具会自动批准，因为没有人在身边点击。"
+    },
+    "builder": {
+      "daily": "每日",
+      "weekly": "每周",
+      "monthly": "每月",
+      "hourly": "每小时",
+      "every_few_minutes": "每几分钟",
+      "mode_schedule": "计划",
+      "mode_cron": "Cron 表达式",
+      "run": "运行",
+      "every": "每",
+      "minutes_chip": "{{minutes}} 分钟",
+      "at_minute": "在分钟",
+      "on": "在",
+      "on_day": "在第几天",
+      "days_skipped": "没有第 {{day}} 天的月份将被跳过。",
+      "at_time": "在 {{time}}",
+      "custom_minute": "分钟：{{minute}} 是用 cron 表达式设置的 - 选择上面的步骤来更改它。",
+      "cron_help": "五个字段：分钟、小时、月份日期、月份、星期几（0 = 星期日）。时间以您的手机时区为准。",
+      "invalid_cron": "这不是一个有效的 cron 表达式"
+    },
+    "run_detail": {
+      "run_missing": "该运行不再存在",
+      "delete_title": "删除此运行？",
+      "delete_message": "结果及其创建的任何文件都将被删除。",
+      "run_deleted": "运行已删除",
+      "fallback_title": "运行",
+      "delete_run": "删除运行",
+      "run_manually": "手动运行",
+      "scheduled": "已计划",
+      "tokens": "{{prompt}} 提示 · {{completion}} 完成令牌",
+      "result": "结果",
+      "empty_completed": "模型完成而未写入任何内容。",
+      "empty_stopped": "运行停止前未产生任何内容。",
+      "stopping": "停止中…",
+      "working": "正在处理…"
+    },
+    "status": {
+      "queued": "排队",
+      "running": "运行中",
+      "completed": "已完成",
+      "failed": "已失败",
+      "timed_out": "已超时",
+      "stopped": "已停止"
+    },
+    "unseen": "未读",
+    "relative_time": {
+      "in_under_a_minute": "在一分钟内",
+      "just_now": "刚刚",
+      "in_minutes": "在 {{minutes}} 分钟内",
+      "minutes_ago": "{{minutes}} 分钟前",
+      "in_hours": "在 {{hours}} 小时内",
+      "hours_ago": "{{hours}} 小时前",
+      "in_hours_minutes": "在 {{hours}} 小时 {{minutes}} 分钟内",
+      "hours_minutes_ago": "{{hours}} 小时 {{minutes}} 分钟前",
+      "in_days": "在 {{days}} 天内",
+      "days_ago": "{{days}} 天前"
+    },
+    "runner": {
+      "job_failed": "任务失败",
+      "created_files": "您的任务已完成并为您创建了文件。"
+    },
+    "schedule": {
+      "custom": "自定义计划 ({{expression}})",
+      "invalid": "无效的计划",
+      "every_minute": "每分钟",
+      "every_minutes_other": "每 {{count}} 分钟",
+      "every_hour": "每小时",
+      "every_hour_at": "每小时在 {{minute}} 分",
+      "every_day_at": "每天在 {{time}}",
+      "weekdays_at": "工作日在 {{time}}",
+      "weekends_at": "周末在 {{time}}",
+      "weekly_single": "每 {{day}} 在 {{time}}",
+      "weekly_multiple": "每 {{days}} 和 {{last}} 在 {{time}}",
+      "list_separator": "、",
+      "monthly": "每月的第 {{day}} 天在 {{time}}",
+      "ordinal_st": "{{n}} 号",
+      "ordinal_nd": "{{n}} 号",
+      "ordinal_rd": "{{n}} 号",
+      "ordinal_th": "{{n}} 号",
+      "time_am": "{{hour}}:{{minute}} 上午",
+      "time_pm": "{{hour}}:{{minute}} 下午",
+      "hour_am": "{{hour}} 上午",
+      "hour_pm": "{{hour}} 下午"
+    },
+    "weekdays_short": {
+      "sun": "周日",
+      "mon": "周一",
+      "tue": "周二",
+      "wed": "周三",
+      "thu": "周四",
+      "fri": "周五",
+      "sat": "周六"
+    },
+    "weekdays_long": {
+      "sunday": "星期日",
+      "monday": "星期一",
+      "tuesday": "星期二",
+      "wednesday": "星期三",
+      "thursday": "星期四",
+      "friday": "星期五",
+      "saturday": "星期六"
+    }
+  },
+  "notifications": {
+    "channels": {
+      "download_progress": "下载进度",
+      "chat_replies": "聊天回复",
+      "chat_replies_description": "当回复完成且 AnythingLLM 在后台时发出警报",
+      "scheduled_jobs": "计划任务",
+      "scheduled_jobs_description": "当计划任务完成运行时发出警报"
+    },
+    "blocked_nudge": {
+      "title": "在回复完成时收到通知",
+      "message": "AnythingLLM 的通知已关闭。打开它们以在您的手机被锁定时回复完成时获得通知。",
+      "not_now": "现在不",
+      "open_settings": "打开设置"
+    },
+    "chat": {
+      "ready_title": "回复已准备好",
+      "failed_title": "回复失败",
+      "ready_body": "您的回复已准备好。",
+      "failed_body": "您的回复无法完成。点击查看发生了什么。"
+    },
+    "scheduled_job": {
+      "finished_title": "{{name}} 已完成",
+      "fallback_body": "您的计划任务有一个结果供您查看。"
+    }
+  },
+  "home": {
+    "welcome_title": "欢迎来到 AnythingLLM",
+    "get_started": "通过创建新工作区来开始。",
+    "create_workspace": "创建工作区",
+    "default_workspace_name": "我的工作区"
+  },
+  "share": {
+    "unsupported_content": "只有文件、图像和链接可以分享到 AnythingLLM",
+    "finish_onboarding": "在分享之前完成 AnythingLLM 的设置",
+    "open_failed": "无法打开共享内容"
+  },
+  "deep_links": {
+    "finish_onboarding": "在打开链接到它之前完成 AnythingLLM 的设置"
+  }
+}

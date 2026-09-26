@@ -12,6 +12,7 @@ import AddFromHuggingFaceCard from '@/components/HuggingFaceImport/AddCard';
 import ImportedModels, { ImportedModel } from '@/utils/models/imported';
 import useModelFit from '@/hooks/useModelFit';
 import { consumePendingHfPull, PendingHfPull } from '@/utils/DeepLinks';
+import { useTranslation } from 'react-i18next';
 
 interface NativeOptionsProps {
   llmPreferences: any;
@@ -24,6 +25,7 @@ export default function NativeOptions({
   fetchLLMPreference,
   LLMProvider,
 }: NativeOptionsProps) {
+  const { t } = useTranslation();
   const [availableModels, setAvailableModels] = useState<any[]>([]);
   const [showAllModels, setShowAllModels] = useState(false);
   const [showImport, setShowImport] = useState(false);
@@ -142,7 +144,7 @@ export default function NativeOptions({
           onPress={() => setShowAllModels(!showAllModels)}
           className="flex flex-row items-center justify-center py-2">
           <Text className="text-[#9F9FA0] text-sm">
-            {showAllModels ? 'Show Less' : 'View More'}
+            {showAllModels ? t('settings.advanced_model_preferences.show_less') : t('settings.advanced_model_preferences.view_more')}
           </Text>
         </TouchableOpacity>
       )}

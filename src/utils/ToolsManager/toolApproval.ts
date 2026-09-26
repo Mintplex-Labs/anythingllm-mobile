@@ -1,6 +1,7 @@
 import { generateUUID } from "@/utils/constants";
 import { type IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { type IToolApprovalRequest } from "@/database/models/WorkspaceChat";
+import i18n from "@/i18n";
 
 /**
  * User consent gate for tool work that is slow or costly - the mobile counterpart of
@@ -86,7 +87,7 @@ class ToolApprovalManager {
         if (signal?.aborted) return Promise.resolve({ approved: false, message: TOOL_APPROVAL_MESSAGES.aborted });
         if (autoApprove) {
             this.log(`Auto-approving ${skillName} (unattended run)`);
-            streamEmitter('report_status', `Approved ${skillName} automatically`);
+            streamEmitter('report_status', i18n.t('tools.approval.auto_approved_status', { tool: skillName }));
             return Promise.resolve({ approved: true, message: TOOL_APPROVAL_MESSAGES.autoApproved });
         }
 

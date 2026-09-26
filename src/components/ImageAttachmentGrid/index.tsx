@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Image, Text, TouchableOpacity, View, type StyleProp, type ViewStyle } from 'react-native';
 import ImageView from 'react-native-image-viewing';
 import { X } from 'phosphor-react-native';
+import { useTranslation } from 'react-i18next';
 import { type IAttachment } from '@/utils/AiProviders/baseOpenAILikeProvider';
 
 /** Edge of the square container every layout fills - the same footprint whether 1 or 4+ images. */
@@ -27,6 +28,7 @@ export default function ImageAttachmentGrid({ images, size = IMAGE_GRID_SIZE, al
     /** When provided the lightbox shows a remove button for the open image */
     onRemove?: (image: IAttachment, index: number) => void;
 }) {
+    const { t } = useTranslation();
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     if (!images.length) return null;
 
@@ -42,7 +44,7 @@ export default function ImageAttachmentGrid({ images, size = IMAGE_GRID_SIZE, al
                 key={`${index}-${image.name}`}
                 onPress={() => setLightboxIndex(index)}
                 activeOpacity={0.8}
-                accessibilityLabel={isOverflowTile ? `${overflow} more images` : (image.name || 'Attached image')}
+                accessibilityLabel={isOverflowTile ? t('attachments.more_images', { count: overflow }) : (image.name || t('attachments.attached_image'))}
                 style={{ width, height, borderRadius: RADIUS, overflow: 'hidden', backgroundColor: '#2a2a2d' }}
             >
                 <Image source={{ uri: image.contentString }} style={{ width, height }} resizeMode="cover" />
@@ -117,15 +119,16 @@ export function ImageLightbox({ images, index, onClose, onRemove }: {
     onClose: () => void;
     onRemove?: (image: IAttachment, index: number) => void;
 }) {
+    const { t } = useTranslation();
     const sources = useMemo(() => images.map((image) => ({ uri: image.contentString })), [images]);
     if (index === null || !images.length) return null;
 
     const Header = ({ imageIndex }: { imageIndex: number }) => (
         <View className="flex flex-row items-center justify-between" style={{ paddingHorizontal: 20, paddingTop: 50 }}>
             <Text className="text-white text-sm" numberOfLines={1} style={{ maxWidth: '70%' }}>
-                {images.length > 1 ? `${imageIndex + 1} of ${images.length}` : images[imageIndex]?.name}
+                {images.length > 1 ? t('attachments.image_position', { current: imageIndex + 1, total: images.length }) : images[imageIndex]?.name}
             </Text>
-            <TouchableOpacity onPress={onClose} accessibilityLabel="Close image preview" style={{ padding: 6 }}>
+            <TouchableOpacity onPress={onClose} accessibilityLabel={t('attachments.close_image_preview')} style={{ padding: 6 }}>
                 <X size={22} color="#FFF" />
             </TouchableOpacity>
         </View>
@@ -136,10 +139,10 @@ export function ImageLightbox({ images, index, onClose, onRemove }: {
             <View className="flex flex-row justify-center" style={{ paddingBottom: 50 }}>
                 <TouchableOpacity
                     onPress={() => { onClose(); onRemove(images[imageIndex], imageIndex); }}
-                    accessibilityLabel="Remove image"
+                    accessibilityLabel={t('attachments.remove_image')}
                     style={{ paddingHorizontal: 18, paddingVertical: 10, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.15)' }}
                 >
-                    <Text className="text-white font-medium">Remove image</Text>
+                    <Text className="text-white font-medium">{t('attachments.remove_image')}</Text>
                 </TouchableOpacity>
             </View>
         )

@@ -5,6 +5,7 @@ import mmprojDownloader, { MMPROJ_DOWNLOAD_EVENT, type MmprojDownloadState } fro
 import uiStore from '@/store/UIStore';
 import { formatBytes } from '@/utils/formatters';
 import { type Model } from '@/utils/types';
+import i18n from '@/i18n';
 
 export type MmprojDownload = {
     isDownloading: boolean;
@@ -43,29 +44,29 @@ export default function useMmprojDownload(model: Model | undefined): MmprojDownl
 
         if (!netInfo.isConnected) {
             await AwaitableAlert(
-                'No internet connection.',
-                'You will need to be connected to the internet to download image support.',
-                { text: 'Dismiss', style: 'default' },
-                { text: 'OK', style: 'default' },
+                i18n.t('downloads.no_internet_title'),
+                i18n.t('downloads.no_internet_image_support'),
+                { text: i18n.t('common.dismiss'), style: 'default' },
+                { text: i18n.t('common.ok'), style: 'default' },
             );
             return false;
         }
 
         if (netInfo.type !== 'wifi') {
             const ignoreWarning = await AwaitableAlert(
-                'Data usage warning',
-                `We recommend using a Wi-Fi connection to download image support since it's ${size} in size.`,
-                { text: 'Cancel', style: 'cancel' },
-                { text: 'Continue Anyway', style: 'default' },
+                i18n.t('downloads.data_usage_title'),
+                i18n.t('downloads.data_usage_image_support', { size }),
+                { text: i18n.t('common.cancel'), style: 'cancel' },
+                { text: i18n.t('downloads.continue_anyway'), style: 'default' },
             );
             if (!ignoreWarning) return false;
         }
 
         const shouldDownload = await AwaitableAlert(
-            'Download image support?',
-            `${model.name} can understand photos once its image support file is downloaded. It is ${size} in size.`,
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Continue with download', style: 'default' },
+            i18n.t('downloads.image_support_title'),
+            i18n.t('downloads.image_support_message', { model: model.name, size }),
+            { text: i18n.t('common.cancel'), style: 'cancel' },
+            { text: i18n.t('downloads.continue_with_download'), style: 'default' },
         );
         if (!shouldDownload) return false;
 

@@ -3,6 +3,7 @@ import { Alert } from "react-native";
 import { showToast } from "@/utils/Notification";
 import { PATHS } from "@/utils/paths";
 import uiStore from "@/store/UIStore";
+import i18n from "@/i18n";
 
 export default function useDevShortcut({ workspace, thread }: { workspace?: any, thread?: any }) {
     const THRESHOLD = 5;
@@ -16,7 +17,7 @@ export default function useDevShortcut({ workspace, thread }: { workspace?: any,
     }
 
     useEffect(() => {
-        if (presses === 3) showToast(`Press ${THRESHOLD - presses} more times to open developer tools`, 'short');
+        if (presses === 3) showToast(i18n.t('top_bar.dev_shortcut_hint', { count: THRESHOLD - presses }), 'short');
         if (presses >= THRESHOLD) {
             clearTimeout(timer);
             setPresses(0);

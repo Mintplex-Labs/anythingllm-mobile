@@ -9,6 +9,7 @@ import Telemetry from "../Telemetry";
 import { throwIfAborted } from "../chat/abort";
 import { truncateMiddle } from "../chat/contextCompaction";
 import { isOnDeviceProvider, toolSupportsProvider } from "./providerGuards";
+import i18n from "@/i18n";
 
 export { isOnDeviceProvider, isOnDeviceProviderName, toolSupportsProvider } from "./providerGuards";
 
@@ -21,15 +22,18 @@ export type ToolGroupId = 'createFiles';
 export const TOOL_GROUPS: Record<ToolGroupId, { id: ToolGroupId; name: string; description: string }> = {
     createFiles: {
         id: 'createFiles',
-        name: 'Create Files',
-        description: 'Let the assistant write documents you can download and share.',
+        // Getters so the text is translated when it is shown, not at module load
+        get name() { return i18n.t('tools.groups.create_files.name'); },
+        get description() { return i18n.t('tools.groups.create_files.description'); },
     },
 };
 
 export type ToolManagerTool = {
     /** Definition of the tool - this can be used to generate a tool call */
     id: string;
+    /** Shown in the tools sheet - translated (define as a getter calling i18n.t) */
     name: string;
+    /** Shown in the tools sheet - translated (define as a getter calling i18n.t). Not sent to the model - that is `definition.function.description`. */
     description: string;
     defaultEnabled: boolean;
     category: 'default' | 'appConnections';

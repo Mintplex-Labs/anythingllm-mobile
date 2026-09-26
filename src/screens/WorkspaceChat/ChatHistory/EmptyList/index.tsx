@@ -8,11 +8,13 @@ import uiStore from "@/store/UIStore";
 import Document from "@/database/models/Document";
 import { useRoute } from "@react-navigation/native";
 import { useAttachmentsContext, type Attachment } from "@/hooks/useAttachments";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 
 const noop = () => { };
 const smartMessages = {
     hello: {
-        text: 'Hello, what can you help me with?',
+        text: () => i18n.t('chat.suggestions.hello'),
         onClick: {
             before: noop,
             after: noop
@@ -22,7 +24,7 @@ const smartMessages = {
         text: async function () {
             const location = await LocationAgentTool._getLocation();
             if (!location) return null;
-            return `Look online for some fun things to do in ${location?.city}, ${location?.regionName}`;
+            return i18n.t('chat.suggestions.research', { city: location?.city, region: location?.regionName });
         },
         onClick: {
             before: async function () {
@@ -41,9 +43,9 @@ const smartMessages = {
             const isWeekend = [0, 6].includes(date.getDay());
             const isPast5PM = date.getHours() >= 17;
             const tomorrowIdx = date.getDay() + 1;
-            if (isWeekend || (isPast5PM && tomorrowIdx > 6)) return 'What is on my calendar for Monday?';
-            if (isPast5PM) return `What is on my calendar for tomorrow?`;
-            return 'What is on my calendar for today?';
+            if (isWeekend || (isPast5PM && tomorrowIdx > 6)) return i18n.t('chat.suggestions.calendar_monday');
+            if (isPast5PM) return i18n.t('chat.suggestions.calendar_tomorrow');
+            return i18n.t('chat.suggestions.calendar_today');
         },
         onClick: {
             before: async function () {
@@ -57,7 +59,7 @@ const smartMessages = {
         },
     },
     email: {
-        text: 'Draft a sales email to John Doe about the benefits of local AI agents',
+        text: () => i18n.t('chat.suggestions.email'),
         onClick: {
             before: async function () {
                 const enabledTools = await uiStore.getFromStorage('tools', {});
@@ -73,14 +75,14 @@ const smartMessages = {
         text: async function (workspaceSlug?: string) {
             const mode = ['filename', 'url'];
             const randomMode = mode[Math.floor(Math.random() * mode.length)];
-            let text = 'Summarize paulgraham.com/foundermode.html';
+            let text = i18n.t('chat.suggestions.summarize_example');
             if (randomMode === 'url' || !workspaceSlug) return text;
 
             // Only suggest files that were uploaded to _this_ workspace - never whatever is on disk.
             const documents: { name: string }[] = await Document.find([{ field: 'workspace_slug', value: workspaceSlug }]);
             if (documents.length) {
                 const randomDoc = documents[Math.floor(Math.random() * documents.length)];
-                text = `Summarize ${randomDoc.name}`;
+                text = i18n.t('chat.suggestions.summarize_file', { name: randomDoc.name });
             }
             return text;
         },
@@ -106,9 +108,9 @@ function suggestionsForAttachments(attachments: Attachment[]): string[] {
     const documents = attachments.filter((a) => a.kind === 'document' && a.origin !== 'url').length;
     const images = attachments.filter((a) => a.kind === 'image').length;
     const suggestions: string[] = [];
-    if (websites) suggestions.push(websites === 1 ? 'Summarize this website' : 'Summarize these websites');
-    if (documents) suggestions.push(documents === 1 ? 'Summarize this document' : 'Summarize these documents');
-    if (images) suggestions.push(images === 1 ? 'Explain this image' : 'Explain these images');
+    if (websites) suggestions.push(i18n.t('chat.suggestions.summarize_websites', { count: websites }));
+    if (documents) suggestions.push(i18n.t('chat.suggestions.summarize_documents', { count: documents }));
+    if (images) suggestions.push(i18n.t('chat.suggestions.explain_images', { count: images }));
     return suggestions;
 }
 
@@ -178,10 +180,11 @@ function RandomSuggestions({ height }: { height: number }) {
 }
 
 export function EmptyListLoading({ height }: { height: number }) {
+    const { t } = useTranslation();
     return (
         <View style={{ height, gap: 14 }} className='flex flex-col items-center justify-center'>
             <ActivityIndicator size="large" color="#888" />
-            <Text style={{ color: '#888' }} className='text-center'>Loading chat history...</Text>
+            <Text style={{ color: '#888' }} className='text-center'>{t('chat.loading_history')}</Text>
         </View>
     )
 }

@@ -10,6 +10,7 @@ import useWorkspaceFiles from "./useWorkspaceFiles";
 import FilesListContainer from "./Container";
 import Document from "@/database/models/Document";
 import { showToast } from "@/utils/Notification";
+import { useTranslation } from "react-i18next";
 
 /**
  * Every document in the workspace: embedded ones (searched from any thread) and full-context ones
@@ -17,6 +18,7 @@ import { showToast } from "@/utils/Notification";
  * full-context documents apply to the open conversation. Both kinds can be deleted from here.
  */
 export default function WorkspaceFilesActionSheet({ workspace, thread }: { workspace: WorkspaceType, thread?: WorkspaceThreadType | null }) {
+    const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const { registerSheet, presentSheet, activeSheet, isSheetActive } = useBottomSheet();
@@ -33,7 +35,7 @@ export default function WorkspaceFilesActionSheet({ workspace, thread }: { works
         try {
             setIsDeleting(true);
             await Document.deleteByUuids(selectedFileUuids, true);
-            showToast(`${selectedFileUuids.length} files deleted successfully!`, 'short');
+            showToast(t('chat.files.deleted', { count: selectedFileUuids.length }), 'short');
             setSelectedFileUuids([]);
             await fetchFiles();
         } catch (error) {
@@ -73,11 +75,11 @@ export default function WorkspaceFilesActionSheet({ workspace, thread }: { works
                     <View className='flex-1'>
                         {optionsActive ? (
                             <TouchableOpacity onPress={handleSelectAllFiles}>
-                                <Text style={{ color: '#7cd4fd' }} className='text-lg'>{selectedFileUuids.length === files.length ? 'Deselect All' : 'Select All'}</Text>
+                                <Text style={{ color: '#7cd4fd' }} className='text-lg'>{selectedFileUuids.length === files.length ? t('chat.files.deselect_all') : t('chat.files.select_all')}</Text>
                             </TouchableOpacity>
                         ) : null}
                     </View>
-                    <Text className='text-white text-xl font-medium'>Files</Text>
+                    <Text className='text-white text-xl font-medium'>{t('chat.files.title')}</Text>
                     <View className='flex-1 items-end'>
                         <TouchableOpacity disabled={isDeleting} onPress={() => setOptionsActive(!optionsActive)} className="disabled:opacity-50">
                             {optionsActive ? <X size={24} color="#FFF" /> : <DotsThreeCircleVertical size={24} color="#FFF" />}
@@ -89,7 +91,7 @@ export default function WorkspaceFilesActionSheet({ workspace, thread }: { works
                         disabled={isDeleting}
                         onPress={deleteSelectedFiles}
                         style={{ backgroundColor: 'rgba(122,39,26,0.2)', }} className='flex flex-row items-center justify-center rounded-lg p-4 mb-4'>
-                        <Text style={{ color: '#F97066' }} className='text-lg font-medium'>Delete Selected Files</Text>
+                        <Text style={{ color: '#F97066' }} className='text-lg font-medium'>{t('chat.files.delete_selected')}</Text>
                     </TouchableOpacity>
                 )}
                 <FilesListContainer
@@ -109,6 +111,7 @@ export default function WorkspaceFilesActionSheet({ workspace, thread }: { works
 
 
 export function WorkspaceFilesActionButton({ disabled = false }: { disabled: boolean }) {
+    const { t } = useTranslation();
     const { presentSheet } = useBottomSheet();
     return (
         <TouchableOpacity
@@ -120,7 +123,7 @@ export function WorkspaceFilesActionButton({ disabled = false }: { disabled: boo
             <View style={{ backgroundColor: '#3f3f42', width: 52, height: 52 }} className='flex flex-col items-center justify-center rounded-full'>
                 <Paperclip size={32} color="#FFF" />
             </View>
-            <Text className='text-white text-lg font-medium'>Files</Text>
+            <Text className='text-white text-lg font-medium'>{t('chat.files.title')}</Text>
         </TouchableOpacity>
 
     );

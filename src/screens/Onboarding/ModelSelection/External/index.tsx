@@ -7,6 +7,7 @@ import ProviderSelection from "@/components/LLMSelection/ProviderSelection";
 import Telemetry from "@/utils/Telemetry";
 import type { SelectionModeProps } from "../index";
 import { findProviderDefinition, validateProviderConfig, type ProviderConfig } from "@/utils/llmproviders";
+import { useTranslation } from "react-i18next";
 
 import LMStudioOptions from "@/screens/UserSettings/AdvancedModelPreferences/providers/LMStudioOptions";
 import GenericOpenAiOptions from "@/screens/UserSettings/AdvancedModelPreferences/providers/genericOpenAiOptions";
@@ -28,6 +29,7 @@ function defaultConfigFor(provider: string): ProviderConfig {
  * so the on-device flow remains untouched if they go back.
  */
 export default function ExternalProviderSelection({ setMode }: SelectionModeProps) {
+  const { t } = useTranslation();
   const navigation = useNavigation<NavigationProp<any>>();
   const [provider, setProvider] = useState<string>(DEFAULT_PROVIDER);
   const [config, setConfig] = useState<ProviderConfig>(defaultConfigFor(DEFAULT_PROVIDER));
@@ -46,7 +48,7 @@ export default function ExternalProviderSelection({ setMode }: SelectionModeProp
   const validationError = validateProviderConfig(provider, config);
 
   const saveAndNavigate = async () => {
-    if (validationError) return Alert.alert('Incomplete provider setup', validationError);
+    if (validationError) return Alert.alert(t('onboarding.external.incomplete_setup'), validationError);
     setSaving(true);
     try {
       await uiStore.setToStorage('llmPreference', { provider, config });
@@ -96,9 +98,9 @@ export default function ExternalProviderSelection({ setMode }: SelectionModeProp
   return (
     <View className="flex flex-col flex-1" style={{ gap: 24 }}>
       <View className="flex flex-col gap-y-4 justify-center items-center">
-        <Text className="text-white text-4xl font-bold text-center">Connect an external provider</Text>
+        <Text className="text-white text-4xl font-bold text-center">{t('onboarding.external.title')}</Text>
         <Text className="text-white/60 text-xl text-center">
-          Use a model hosted somewhere else instead of downloading one to your phone. You can change this later.
+          {t('onboarding.external.description')}
         </Text>
       </View>
 
@@ -109,7 +111,7 @@ export default function ExternalProviderSelection({ setMode }: SelectionModeProp
         showsVerticalScrollIndicator={true}
       >
         <View style={{ gap: 16 }} className="flex flex-col">
-          <Text className="text-white font-semibold text-lg">Choose an LLM Provider</Text>
+          <Text className="text-white font-semibold text-lg">{t('onboarding.external.choose_provider')}</Text>
           <ProviderSelection
             selection={{ provider, config }}
             onChange={handleProviderSelection}
@@ -118,7 +120,7 @@ export default function ExternalProviderSelection({ setMode }: SelectionModeProp
         </View>
 
         <View style={{ gap: 16, paddingHorizontal: 8 }} className="flex flex-col">
-          <Text className="text-white font-semibold text-lg">Provider Settings</Text>
+          <Text className="text-white font-semibold text-lg">{t('onboarding.external.provider_settings')}</Text>
           {/* Remount options when the provider changes so their internal state resets */}
           <React.Fragment key={provider}>
             {renderProviderOptions()}
@@ -128,14 +130,14 @@ export default function ExternalProviderSelection({ setMode }: SelectionModeProp
 
       <View className="flex flex-row gap-x-4 items-center justify-between">
         <TouchableOpacity onPress={() => setMode('simple')}>
-          <Text className="text-[--primary-text] text-xl border border-[--primary-text] rounded-lg px-4 py-2">Back</Text>
+          <Text className="text-[--primary-text] text-xl border border-[--primary-text] rounded-lg px-4 py-2">{t('common.back')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           disabled={!!validationError || saving}
           onPress={saveAndNavigate}
           className="disabled:opacity-50 bg-[--cta-light-blue] rounded-lg px-4 py-2 flex flex-row items-center justify-center"
         >
-          <Text className="text-black text-xl">Continue</Text>
+          <Text className="text-black text-xl">{t('common.continue')}</Text>
         </TouchableOpacity>
       </View>
     </View>

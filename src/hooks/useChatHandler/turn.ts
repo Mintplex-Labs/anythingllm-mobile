@@ -14,6 +14,7 @@ import {
     type WorkspaceChatResponseType,
 } from "@/database/models/WorkspaceChat";
 import { contentIsNotEmpty, parseJSONResponseType, parseThoughtContent } from "./parser";
+import i18n from "@/i18n";
 
 export type ApplyEventResult = {
     /** Something visible changed and the UI should re-render */
@@ -191,7 +192,7 @@ export default class AssistantTurn {
                 return { changed: true, immediate: true };
             }
             case 'timed_out': {
-                this.fail('The request timed out before a response was received. Connection may be lost.');
+                this.fail(i18n.t('chat.errors.timed_out'));
                 return { changed: true, immediate: true };
             }
             case 'abort':
@@ -210,7 +211,7 @@ export default class AssistantTurn {
         this.closeOpenNodes();
         this.chat.type = 'error';
         this.chat.isLoading = false;
-        this.response.textResponse = message || 'Error processing chat';
+        this.response.textResponse = message || i18n.t('chat.errors.processing');
         this.response.error = true;
     }
 

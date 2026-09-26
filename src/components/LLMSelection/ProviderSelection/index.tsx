@@ -14,6 +14,7 @@ import {
   BottomSheetBackdrop,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
+import { useTranslation } from 'react-i18next';
 
 export default function ProviderSelection({
   selection,
@@ -28,6 +29,7 @@ export default function ProviderSelection({
   /** Provider values that have a saved config in the cache */
   cachedProviders?: string[];
 }) {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState('');
   const searchInputRef = useRef(null);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -40,12 +42,12 @@ export default function ProviderSelection({
           provider =>
             !excludeProviders.includes(provider.value) &&
             (provider.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              provider.description
+              t(provider.description)
                 .toLowerCase()
                 .includes(searchQuery.toLowerCase())),
         ),
       ),
-    [searchQuery, excludeProviders],
+    [searchQuery, excludeProviders, t],
   );
   const hasResults = providerSections.length > 0;
   const selectedProviderObject =
@@ -108,7 +110,7 @@ export default function ProviderSelection({
             contentContainerStyle={{ paddingBottom: 100 }}
             keyboardShouldPersistTaps="handled">
             <Text className="text-white text-lg font-semibold py-4 text-center">
-              Choose your provider
+              {t('llm_selection.choose_provider')}
             </Text>
             <View className="flex flex-row items-center mx-4 bg-[#27282A] rounded-lg px-4">
               <MagnifyingGlass size={20} weight="bold" color="white" />
@@ -116,7 +118,7 @@ export default function ProviderSelection({
                 ref={searchInputRef}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
-                placeholder="Search"
+                placeholder={t('common.search')}
                 placeholderTextColor="#9F9FA0"
                 className="flex-1 h-[38px] ml-2 text-white"
                 scrollEnabled={false}
@@ -130,13 +132,13 @@ export default function ProviderSelection({
             <View className="px-4 py-2" style={{ gap: 10 }}>
               {!hasResults && (
                 <Text className="text-white text-center pt-4">
-                  No providers found for "{searchQuery}"
+                  {t('llm_selection.no_providers_found', { query: searchQuery })}
                 </Text>
               )}
               {providerSections.map(section => (
                 <View key={section.title} style={{ gap: 10 }}>
                   <Text className="text-[#9F9FA0] text-xs uppercase font-semibold px-2 pt-2">
-                    {section.title}
+                    {t(section.title)}
                   </Text>
                   {section.providers.map(provider => (
                     <TouchableOpacity
@@ -161,7 +163,7 @@ export default function ProviderSelection({
                           </View>
                           {provider.description && (
                             <Text className="text-[#9F9FA0] text-sm">
-                              {provider.description}
+                              {t(provider.description)}
                             </Text>
                           )}
                         </View>

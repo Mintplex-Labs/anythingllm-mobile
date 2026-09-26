@@ -2,6 +2,7 @@ import { field, text } from '@nozbe/watermelondb/decorators';
 import { database } from '@/database';
 import { Q, Model } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
+import i18n from '@/i18n';
 
 export type MemoryScope = 'global' | 'workspace';
 
@@ -55,9 +56,9 @@ export default class Memory extends Model {
   static validateContent(value: unknown): { valid: boolean; error: string; content: string } {
     const content = typeof value === 'string' ? value.replace(/\s+/g, ' ').trim() : '';
     let error = '';
-    if (typeof value !== 'string') error = 'Memory must be text';
-    else if (content.length < Memory.minContentLength) error = 'Memory is too short';
-    else if (content.length > Memory.maxContentLength) error = `Memory must be ${Memory.maxContentLength} characters or fewer`;
+    if (typeof value !== 'string') error = i18n.t('misc.validation.memory_not_text');
+    else if (content.length < Memory.minContentLength) error = i18n.t('misc.validation.memory_too_short');
+    else if (content.length > Memory.maxContentLength) error = i18n.t('misc.validation.memory_too_long', { count: Memory.maxContentLength });
     return { valid: !error, error, content };
   }
 

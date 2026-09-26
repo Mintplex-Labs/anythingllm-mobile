@@ -7,6 +7,7 @@ import uiStore from '@/store/UIStore';
 import { PATHS } from '@/utils/paths';
 import { resetToWhenReady } from '@/utils/navigationRef';
 import { showToast } from '@/utils/Notification';
+import i18n from '@/i18n';
 import Telemetry from '@/utils/Telemetry';
 import type { ChatRouteParams } from '@/utils/defaultChatRoute';
 
@@ -171,14 +172,14 @@ export async function handleSharedItems(items: SharedItem[]): Promise<void> {
         .map((url) => ({ kind: 'url', url }));
     const attachable: SharedAttachable[] = [...files, ...urls];
     if (!attachable.length) {
-        showToast('Only files, images and links can be shared to AnythingLLM', 'long');
+        showToast(i18n.t('share.unsupported_content'), 'long');
         return;
     }
 
     const onboarded = await uiStore.getFromStorage('onboarding_data_handling_completed', false);
     if (!onboarded) {
         await Promise.all(files.map(removeSharedFile));
-        showToast('Finish setting up AnythingLLM before sharing to it', 'long');
+        showToast(i18n.t('share.finish_onboarding'), 'long');
         return;
     }
 
@@ -208,7 +209,7 @@ export function useSharedContentNavigation() {
                 .then(() => handleSharedItems(items))
                 .catch((e) => {
                     log('failed to handle shared content', e);
-                    showToast('Could not open the shared content');
+                    showToast(i18n.t('share.open_failed'));
                 });
         };
 

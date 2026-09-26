@@ -36,6 +36,8 @@ import { formatBytes, formatNumber } from '@/utils/formatters';
 import { findIconByModelName } from '@/components/MonoProviderIcon';
 import { MemoryFitBadge } from '@/components/ModelCard/FitBadges';
 import { getDeviceMemory, MemoryFit, memoryFitForSize } from '@/utils/models/memoryFit';
+import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n';
 
 /**
  * Lets the user paste a Hugging Face repo id / url (or search the hub) and pick
@@ -84,6 +86,7 @@ export default function HuggingFaceImport({
   onInputFocus,
   useStandardFlatList = false,
 }: Props) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState(initialQuery);
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
   const requestId = useRef(0);
@@ -111,7 +114,7 @@ export default function HuggingFaceImport({
       }
     } catch (error: any) {
       if (requestId.current !== id) return;
-      const message = error instanceof HfGGUFError ? error.message : 'Something went wrong talking to Hugging Face.';
+      const message = error instanceof HfGGUFError ? error.message : i18n.t('hf_import.generic_error');
       setStatus({ kind: 'error', message });
     }
   }, []);
@@ -168,9 +171,9 @@ export default function HuggingFaceImport({
           <ArrowLeft size={22} color="white" weight="bold" />
         </TouchableOpacity>
         <View className="flex-1">
-          <Text className="text-white text-base font-semibold">Add a model from Hugging Face</Text>
+          <Text className="text-white text-base font-semibold">{t('hf_import.title')}</Text>
           <Text className="text-[#9F9FA0] text-xs">
-            Paste a model id or url, or search. Any public GGUF quant can be downloaded and run on this device.
+            {t('hf_import.description')}
           </Text>
         </View>
       </View>
@@ -205,7 +208,7 @@ export default function HuggingFaceImport({
         disabled={!query.trim() || status.kind === 'loading'}
         className={`rounded-lg py-2.5 items-center ${!query.trim() ? 'bg-white/10' : 'bg-white'}`}>
         <Text className={`text-sm font-medium ${!query.trim() ? 'text-[#9F9FA0]' : 'text-black'}`}>
-          {looksLikeHfRepoId(query) ? 'Show GGUF files' : 'Search Hugging Face'}
+          {looksLikeHfRepoId(query) ? t('hf_import.show_files') : t('hf_import.search_hf')}
         </Text>
       </TouchableOpacity>
 
@@ -223,19 +226,19 @@ export default function HuggingFaceImport({
           <RepoHeader repo={status.data.repo} />
           {status.data.quants.length > 0 && (
             <Text className="text-[#9F9FA0] text-xs font-medium mt-1">
-              {status.data.quants.length} GGUF {status.data.quants.length === 1 ? 'file' : 'files'} available to download
+              {t('hf_import.files_available', { count: status.data.quants.length })}
             </Text>
           )}
           {highlightedPath && (
             <Text className="text-[#6ce9a6] text-xs">
-              The file you picked on Hugging Face is highlighted below. Tap it to download.
+              {t('hf_import.highlighted_file')}
             </Text>
           )}
           {highlightMissing && (
             <View className="flex flex-row items-start bg-yellow-500/15 rounded-lg p-3" style={{ gap: 8 }}>
               <Warning size={18} color="#fcd34d" weight="bold" />
               <Text className="text-yellow-200 text-xs flex-1">
-                "{highlightFilename}" is not one of this repo's GGUF files. Pick another quant below.
+                {t('hf_import.highlight_missing', { filename: highlightFilename })}
               </Text>
             </View>
           )}
@@ -245,15 +248,14 @@ export default function HuggingFaceImport({
       {status.kind === 'search' && (
         <Text className="text-[#9F9FA0] text-xs">
           {status.results.length
-            ? `GGUF repos matching "${status.query}", most downloaded first. Tap one to see its files.`
-            : `No GGUF repos found for "${status.query}".`}
+            ? t('hf_import.search_results', { query: status.query })
+            : t('hf_import.no_search_results', { query: status.query })}
         </Text>
       )}
 
       {status.kind === 'idle' && (
         <Text className="text-[#9F9FA0] text-xs leading-5">
-          Tip: most models have a GGUF version under a name ending in "-GGUF" from unsloth, bartowski or lmstudio-community.
-          Smaller quants (Q4_K_M and below) run best on phones. Gated or private models are not supported.
+          {t('hf_import.tip')}
         </Text>
       )}
     </View>
@@ -304,12 +306,13 @@ export default function HuggingFaceImport({
 }
 
 function RepoHeader({ repo }: { repo: HfGGUFRepo['repo'] }) {
+  const { t } = useTranslation();
   const MonoIcon = findIconByModelName(repo.id);
   const facts = [
     repo.architecture,
-    repo.params ? `${formatNumber(repo.params, 1, true, false)} params` : null,
-    repo.contextLength ? `${Math.round(repo.contextLength / 1024)}k context` : null,
-    `${formatNumber(repo.downloads, 1, true, false)} downloads`,
+    repo.params ? t('hf_import.params', { value: formatNumber(repo.params, 1, true, false) }) : null,
+    repo.contextLength ? t('hf_import.context', { value: Math.round(repo.contextLength / 1024) }) : null,
+    t('hf_import.downloads', { value: formatNumber(repo.downloads, 1, true, false) }),
   ].filter(Boolean);
 
   return (
@@ -335,7 +338,7 @@ function RepoHeader({ repo }: { repo: HfGGUFRepo['repo'] }) {
         <View className="flex flex-row items-center" style={{ gap: 6 }}>
           <Lock size={14} color="#fcd34d" weight="bold" />
           <Text className="text-yellow-200 text-xs flex-1">
-            This repo is gated. Downloads need a Hugging Face login, which is not supported yet.
+            {t('hf_import.gated')}
           </Text>
         </View>
       )}
@@ -344,6 +347,7 @@ function RepoHeader({ repo }: { repo: HfGGUFRepo['repo'] }) {
 }
 
 function SearchResultRow({ result, onPress }: { result: HfGGUFSearchResult; onPress: () => void }) {
+  const { t } = useTranslation();
   const MonoIcon = findIconByModelName(result.id);
   return (
     <TouchableOpacity onPress={onPress} className="w-full p-4 rounded-xl bg-[#2A2A2E] flex-row items-center" style={{ gap: 10 }}>
@@ -355,7 +359,7 @@ function SearchResultRow({ result, onPress }: { result: HfGGUFSearchResult; onPr
       <View className="flex-1">
         <Text className="text-white text-base font-medium" numberOfLines={1}>{result.title}</Text>
         <Text className="text-[#9F9FA0] text-xs" numberOfLines={1}>
-          {result.id} · {formatNumber(result.downloads, 1, true, false)} downloads
+          {result.id} · {t('hf_import.downloads', { value: formatNumber(result.downloads, 1, true, false) })}
         </Text>
       </View>
       {result.gated && <Lock size={16} color="#fcd34d" weight="bold" />}
@@ -385,6 +389,7 @@ function QuantRow({
   gated: boolean;
   onPress: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -401,12 +406,12 @@ function QuantRow({
           <Text className="text-white text-base font-medium">{quant.quant ?? 'GGUF'}</Text>
           {isHighlighted && !isInstalled && (
             <View className="rounded-full px-2 py-0.5 bg-[#6ce9a6]/20">
-              <Text className="text-[#6ce9a6] text-[10px] font-medium">Requested</Text>
+              <Text className="text-[#6ce9a6] text-[10px] font-medium">{t('hf_import.requested')}</Text>
             </View>
           )}
           {isInstalled && (
             <View className="rounded-full px-2 py-0.5 bg-[#6ce9a6]/20">
-              <Text className="text-[#6ce9a6] text-[10px] font-medium">Installed</Text>
+              <Text className="text-[#6ce9a6] text-[10px] font-medium">{t('common.installed')}</Text>
             </View>
           )}
           {!isInstalled && <MemoryFitBadge fit={memoryFit} />}

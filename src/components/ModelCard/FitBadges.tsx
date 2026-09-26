@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Sparkle } from 'phosphor-react-native';
 import { MEMORY_FIT_LABELS, MemoryFit } from '@/utils/models/memoryFit';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Pills that describe how a model relates to the phone it is being viewed on.
@@ -33,9 +34,10 @@ export function MemoryFitBadge({
   size?: BadgeSize;
   compact?: boolean;
 }) {
+  const { t } = useTranslation();
   // Only warn. A model that fits (or an unknown verdict) shows nothing, matching the HF picker.
   if (!fit || fit === 'ok') return null;
-  const label = MEMORY_FIT_LABELS[fit][compact ? 'compact' : 'full'];
+  const label = t(MEMORY_FIT_LABELS[fit][compact ? 'compact' : 'full']);
   const tone = fit === 'tight'
     ? { bg: 'bg-yellow-500/30', text: 'text-yellow-200' }
     : { bg: 'bg-red-500/30', text: 'text-red-300' };
@@ -48,18 +50,19 @@ export function MemoryFitBadge({
 
 export function RecommendedBadge({
   size = 'sm',
-  label = 'Recommended',
+  label,
 }: {
   size?: BadgeSize;
   label?: string;
 }) {
+  const { t } = useTranslation();
   const iconSize = size === 'sm' ? 10 : 12;
   return (
     <View
       className={`rounded-full flex-row items-center ${PAD[size]}`}
       style={{ backgroundColor: RECOMMENDED_BG, gap: 4 }}>
       <Sparkle size={iconSize} color={RECOMMENDED_COLOR} weight="fill" />
-      <Text className={`${TEXT_SIZE[size]} font-medium`} style={{ color: RECOMMENDED_COLOR }}>{label}</Text>
+      <Text className={`${TEXT_SIZE[size]} font-medium`} style={{ color: RECOMMENDED_COLOR }}>{label ?? t('models.recommended')}</Text>
     </View>
   );
 }

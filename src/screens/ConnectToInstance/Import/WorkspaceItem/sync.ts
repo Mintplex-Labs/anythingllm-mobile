@@ -7,6 +7,7 @@ import { showToast } from "@/utils/Notification";
 import AnythingLLMExternal, { CommandResponses } from "@/utils/AnythingLLMExternal";
 import WorkspaceChat, { WorkspaceChatType } from "@/database/models/WorkspaceChat";
 import Telemetry from "@/utils/Telemetry";
+import i18n from "@/i18n";
 
 async function getPreviouslyImportedWorkspace(workspaceSlug: string): Promise<WorkspaceType | null> {
     const importedWorkspaces = await Workspace.find([{ field: 'is_remote', value: true }]);
@@ -117,7 +118,7 @@ export async function syncFromRemote({
         setStatus('synced');
     } catch (error) {
         console.error(error);
-        showToast(`Failed to sync workspace ${workspace.name}`);
+        showToast(i18n.t('connect.import.sync_workspace_failed', { name: workspace.name }));
         setStatus('error');
     }
 };

@@ -1,0 +1,1238 @@
+{
+  "common": {
+    "add": "Ajouter",
+    "allow": "Autoriser",
+    "apply": "Appliquer",
+    "back": "Retour",
+    "cancel": "Annuler",
+    "clear": "Effacer",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "continue": "Continuer",
+    "copied": "Copié",
+    "copy": "Copier",
+    "create": "Créer",
+    "default": "Par défaut",
+    "delete": "Supprimer",
+    "disable": "Désactiver",
+    "disabled": "Désactivé",
+    "dismiss": "Rejeter",
+    "done": "Terminé",
+    "download": "Télécharger",
+    "downloading": "Téléchargement en cours",
+    "edit": "Modifier",
+    "enable": "Activer",
+    "enabled": "Activé",
+    "error": "Erreur",
+    "export": "Exporter",
+    "import": "Importer",
+    "install": "Installer",
+    "installed": "Installé",
+    "learn_more": "En savoir plus",
+    "loading": "Chargement...",
+    "next": "Suivant",
+    "no": "Non",
+    "none": "Aucun",
+    "off": "Désactivé",
+    "ok": "OK",
+    "on": "Activé",
+    "open": "Ouvrir",
+    "optional": "Optionnel",
+    "refresh": "Actualiser",
+    "remove": "Supprimer",
+    "rename": "Renommer",
+    "required": "Obligatoire",
+    "reset": "Réinitialiser",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "search": "Rechercher",
+    "select": "Sélectionner",
+    "selected": "Sélectionné",
+    "send": "Envoyer",
+    "settings": "Paramètres",
+    "share": "Partager",
+    "skip": "Ignorer",
+    "stop": "Arrêter",
+    "success": "Succès",
+    "uninstall": "Désinstaller",
+    "unknown": "Inconnu",
+    "unknown_error": "Erreur inconnue",
+    "update": "Mettre à jour",
+    "upload": "Téléverser",
+    "yes": "Oui"
+  },
+  "language": {
+    "title": "Langue",
+    "search_placeholder": "Rechercher des langues",
+    "no_results": "Aucune langue ne correspond à \"{{query}}\"",
+    "changed": "Langue changée en {{language}}"
+  },
+  "settings": {
+    "llm_preference": {
+      "title": "Préférence de LLM",
+      "description": "Ceci est la préférence de LLM qui sera utilisée pour tous les espaces de travail. Vous pouvez la modifier pour utiliser un autre fournisseur de LLM ou un modèle sur appareil."
+    },
+    "language": {
+      "app_language": "Langue de l'application"
+    },
+    "special_tools": {
+      "title": "Outils spéciaux",
+      "ask_with_anythingllm": "\"Demander à AnythingLLM\"",
+      "page_title": "Outils spéciaux",
+      "added_toast": "Demander à AnythingLLM ajouté aux menus de sélection de texte",
+      "removed_toast": "Demander à AnythingLLM supprimé des menus de sélection de texte",
+      "context_awareness": "Conscience du contexte",
+      "ask_with_anythingllm_toggle": "Demander à AnythingLLM",
+      "android_only": "Android uniquement",
+      "description_available": "Ajoute \"Demander à AnythingLLM\" au menu qui s'affiche lorsque vous sélectionnez du texte dans une application. Utilisez-le pour affiner, raccourcir ou corriger ce que vous écrivez, ou pour résumer, expliquer et rechercher ce que vous lisez - avec le modèle que vous avez sélectionné ici.",
+      "description_unavailable": "Sur Android, AnythingLLM peut apparaître dans le menu qui s'affiche lorsque vous sélectionnez du texte dans une application, pour l'éditer ou le résumer avec votre modèle choisi. iOS n'offre pas aux applications ce hook."
+    },
+    "about": {
+      "release_notes": "Notes de version pour v{{version}}",
+      "star_github": "Marquer avec une étoile sur GitHub",
+      "join_discord": "Rejoindre Discord"
+    },
+    "utility": {
+      "title": "Utilitaire",
+      "anonymous_telemetry": "Télémétrie anonyme",
+      "clear_temp_files": "Effacer les fichiers temporaires",
+      "temp_files_cleared": "Fichiers temporaires effacés"
+    },
+    "legal": {
+      "title": "Légal et confidentialité",
+      "terms": "Conditions d'utilisation",
+      "privacy": "Politique de confidentialité"
+    },
+    "reset": {
+      "title": "Réinitialiser AnythingLLM",
+      "confirm_message": "Êtes-vous sûr de vouloir réinitialiser AnythingLLM ? Cela supprimera tous vos espaces de travail, chats, modèles installés et préférences.",
+      "confirm_button": "Oui, tout réinitialiser"
+    },
+    "update_failed": "Impossible de mettre à jour le paramètre",
+    "version": {
+      "about": "À propos d'AnythingLLM",
+      "update_available_title": "Mise à jour disponible",
+      "update_available_message": "La version {{version}} est disponible. Veuillez mettre à jour vers la dernière version.",
+      "go_to_app_store": "Aller sur l'app store"
+    },
+    "telemetry": {
+      "enabled_toast": "Télémétrie anonyme activée",
+      "disabled_toast": "Télémétrie anonyme désactivée",
+      "usage_data": "Données d'utilisation",
+      "share_toggle": "Partager la télémétrie anonyme",
+      "description_events": "AnythingLLM envoie un petit nombre d'événements anonymes, tels que \"une conversation a été complétée\" ou \"un outil a été utilisé\", afin que nous puissions voir quelles fonctionnalités sont importantes et où les choses se cassent.",
+      "description_privacy": "Cela ne comprend jamais vos conversations, documents, invites de commande, ou toute information spécifique sur la façon dont vous utilisez l'application. Il n'y a pas de compte et rien qui vous identifie.",
+      "description_opt_out": "Laisser ceci activé nous aide à construire une meilleure application. Vous pouvez l'éteindre à tout moment et rien d'autre ne sera envoyé."
+    },
+    "advanced_model_preferences": {
+      "title": "Sélection du modèle",
+      "choose_provider": "Choisir un fournisseur de LLM",
+      "llm_model": "Modèle LLM",
+      "provider_settings": "Paramètres du fournisseur",
+      "show_less": "Afficher moins",
+      "view_more": "Afficher plus"
+    },
+    "provider_options": {
+      "base_url": "URL de base",
+      "base_url_placeholder": "Entrez votre URL de base (par exemple {{example}})",
+      "api_key": "Clé API",
+      "api_key_optional": "Clé API (optionnelle)",
+      "api_key_placeholder": "Entrez votre clé API",
+      "aws_region": "Région AWS",
+      "select_region": "Sélectionner une région",
+      "choose_region": "Choisir votre région AWS",
+      "search_region": "Rechercher ou taper un code de région",
+      "use_region": "Utiliser \"{{region}}\"",
+      "model_selection": "Sélection du modèle",
+      "select_model": "Sélectionner un modèle",
+      "choose_model": "Choisir votre modèle",
+      "search_models": "Rechercher des modèles",
+      "fetching_models": "Récupération des modèles...",
+      "model_placeholder": "Entrez votre modèle (par exemple {{example}})",
+      "models_load_failed": "Impossible de charger les modèles de ce fournisseur. Vérifiez vos identifiants ou entrez le nom du modèle manuellement.",
+      "no_tool_calls": "Ce modèle a été détecté pour ne pas avoir <bold>de support d'appel d'outils</bold>. Seul le chat simple + RAG sera pris en charge"
+    }
+  },
+  "chat": {
+    "error_loading_provider": "Erreur lors du chargement du fournisseur de LLM",
+    "error_loading_thread": "Erreur lors du chargement du fil d'espace de travail",
+    "unknown_error": "Erreur inconnue",
+    "loading_history": "Chargement de l'historique de chat...",
+    "suggestions": {
+      "hello": "Bonjour, comment pouvez-vous m'aider ?",
+      "research": "Rechercher en ligne des choses amusantes à faire à {{city}}, {{region}}",
+      "calendar_monday": "Qu'y a-t-il sur mon calendrier pour lundi ?",
+      "calendar_tomorrow": "Qu'y a-t-il sur mon calendrier pour demain ?",
+      "calendar_today": "Qu'y a-t-il sur mon calendrier pour aujourd'hui ?",
+      "email": "Rédiger un e-mail de vente à John Doe sur les avantages des agents d'IA locaux",
+      "summarize_example": "Résumer paulgraham.com/foundermode.html",
+      "summarize_file": "Résumer {{name}}",
+      "summarize_websites_many": "Résumer ces sites web",
+      "summarize_websites_one": "Résumer ce site web",
+      "summarize_websites_other": "Résumer ces sites web",
+      "summarize_documents_many": "Résumer ces documents",
+      "summarize_documents_one": "Résumer ce document",
+      "summarize_documents_other": "Résumer ces documents",
+      "explain_images_many": "Expliquer ces images",
+      "explain_images_one": "Expliquer cette image",
+      "explain_images_other": "Expliquer ces images"
+    },
+    "citations": {
+      "title": "Citations",
+      "score": "Score : {{score}}",
+      "sources": "Sources"
+    },
+    "message_actions": {
+      "copied": "Copié dans le presse-papiers",
+      "retry_failed": "Impossible de réessayer ce message",
+      "delete_failed": "Impossible de supprimer cette réponse",
+      "fork_failed": "Impossible de diviser le fil : {{error}}",
+      "fork_name": "Copie de {{name}}",
+      "copy_title": "Copier le message",
+      "copy_description": "Copier le texte dans votre presse-papiers",
+      "retry_wait": "Attendre la fin de la réponse actuelle",
+      "retry_description": "Supprimer cet échange et envoyer l'invite à nouveau",
+      "fork_title": "Diviser le fil",
+      "fork_remote_unavailable": "Non disponible pour les fils distants",
+      "fork_description": "Commencer un nouveau fil avec une copie de cette conversation",
+      "delete_title": "Supprimer la réponse",
+      "delete_description": "Supprimer ce message et sa réponse du fil"
+    },
+    "activity": {
+      "running": "En cours d'exécution",
+      "waiting_approval_to_run": "En attente d'approbation pour exécuter {{tool}}",
+      "approved_tool": "Approuvé {{tool}}",
+      "rejected_tool": "Rejeté {{tool}}",
+      "waiting_for_you": "En attente de vous",
+      "tool_approved": "L'appel d'outil a été approuvé",
+      "tool_rejected": "L'appel d'outil a été rejeté",
+      "thinking": "Réflexion...",
+      "waiting_your_approval": "En attente de votre approbation",
+      "calling_tool": "Appel {{tool}}",
+      "working": "En cours...",
+      "worked_for": "Travaillé pendant {{duration}}",
+      "thought_for": "Réfléchi pendant {{duration}}",
+      "thoughts": "Pensées"
+    },
+    "file_download": {
+      "saved_to": "Enregistré {{filename}} à {{location}}",
+      "save_failed": "Impossible d'enregistrer le fichier : {{error}}",
+      "share_failed": "Impossible d'ouvrir la feuille de partage : {{error}}",
+      "missing": "Plus sur cet appareil",
+      "missing_label": "{{title}}, fichier non plus disponible",
+      "download_label": "Télécharger {{title}}",
+      "share_label": "Partager {{title}}",
+      "unknown_file": "Fichier inconnu",
+      "saving": "Enregistrement...",
+      "saved": "Enregistré"
+    },
+    "scheduled_job_card": {
+      "open_label": "Ouvrir le travail programmé {{name}}",
+      "subtitle": "Travail programmé · {{schedule}}",
+      "view": "Afficher"
+    },
+    "metrics": {
+      "tokens_many": "{{count}} jetons",
+      "tokens_one": "{{count}} jeton",
+      "tokens_other": "{{count}} jetons"
+    },
+    "tool_approval": {
+      "wants_to_call": "Le modèle veut appeler <skill>{{skill}}</skill>",
+      "show_details": "Afficher les détails",
+      "hide_details": "Masquer les détails",
+      "approve": "Approuver",
+      "reject": "Rejeter"
+    },
+    "attachments": {
+      "attach_files": "Joindre des fichiers",
+      "gallery": "Galerie",
+      "take_photo": "Prendre une photo",
+      "add_attachment": "Ajouter une pièce jointe",
+      "hint_embed": "Les fichiers sont divisés et incorporés afin que votre modèle sur appareil puisse les rechercher.",
+      "hint_full": "Les fichiers sont envoyés à votre modèle dans leur intégralité à chaque message dans cet espace de travail.",
+      "max_reached": "Vous avez atteint le nombre maximum de pièces jointes pour une invite.",
+      "downloading_image_support": "Téléchargement du support d'image... {{progress}}%",
+      "cancel_download": "Annuler le téléchargement",
+      "download_image_support": "Télécharger le support d'image",
+      "needs_download_tap": "Ce modèle peut voir les images, mais a besoin d'un téléchargement supplémentaire. Appuyez pour télécharger ({{size}}).",
+      "download_failed": "Le téléchargement a échoué. Appuyez pour réessayer.",
+      "download_cancelled": "Téléchargement annulé."
+    },
+    "prompt_input": {
+      "placeholder": "Entrez votre invite",
+      "select_model_first": "Veuillez d'abord sélectionner un modèle",
+      "stop_generating": "Arrêter la génération",
+      "stop_recording": "Arrêter l'enregistrement",
+      "voice_input": "Entrée vocale",
+      "send_prompt": "Envoyer l'invite"
+    },
+    "files": {
+      "title": "Fichiers",
+      "empty": "Pas de fichiers dans cet espace de travail",
+      "error_loading": "Erreur lors du chargement des fichiers",
+      "deleted_many": "{{count}} fichiers supprimés avec succès !",
+      "deleted_one": "{{count}} fichier supprimé avec succès !",
+      "deleted_other": "{{count}} fichiers supprimés avec succès !",
+      "select_all": "Tout sélectionner",
+      "deselect_all": "Tout désélectionner",
+      "delete_selected": "Supprimer les fichiers sélectionnés",
+      "embedded": "Incorporé · recherché dans chaque fil",
+      "full_every_thread": "Envoyé en entier · chaque fil",
+      "full_this_thread": "Envoyé en entier · ce fil",
+      "full_another_thread": "Envoyé en entier · un autre fil"
+    },
+    "history_cleared": "Historique de chat effacé",
+    "tools": {
+      "title": "Outils",
+      "group_status": "{{enabled}} sur {{total}} activés",
+      "app_connections": "Connexions d'application",
+      "group_files_note": "{{description}} Les fichiers sont conservés sur cet appareil jusqu'à ce que vous effaciez les fichiers temporaires dans les paramètres.",
+      "needs_cloud_model": "{{description}} Nécessite un modèle cloud.",
+      "unavailable_on_device": "Les outils grisés ne sont pas disponibles avec le modèle sur appareil. Passez à un fournisseur cloud pour les utiliser."
+    },
+    "remote_unreachable": {
+      "title": "Le serveur distant n'est pas accessible",
+      "message": "Nous ne pouvons pas atteindre votre instance actuellement. Voulez-vous continuer cette conversation localement ?",
+      "cancel": "Non, annuler",
+      "continue": "Oui, continuer localement",
+      "not_sent": "Le serveur distant n'est pas accessible - chat non envoyé."
+    },
+    "errors": {
+      "processing": "Erreur lors du traitement du chat",
+      "timed_out": "La demande a expiré avant la réception d'une réponse. La connexion peut être perdue."
+    },
+    "status": {
+      "recalling_notes": "Rappel des notes d'espace de travail"
+    }
+  },
+  "quick_context": {
+    "modes": {
+      "summarize": "Résumer"
+    },
+    "actions": {
+      "polish": "Affiner",
+      "shorten": "Raccourcir",
+      "fix_grammar": "Corriger la grammaire",
+      "more_formal": "Plus formel",
+      "summarize": "Résumer",
+      "key_points": "Points clés",
+      "explain": "Expliquer",
+      "research": "Rechercher"
+    },
+    "could_not_start": "Impossible de démarrer les actions rapides",
+    "dismiss": "Rejeter",
+    "setup_needed": "Terminez la configuration d'AnythingLLM pour l'utiliser dans le menu de sélection.",
+    "open_anythingllm": "Ouvrir AnythingLLM",
+    "select_model": "Sélectionnez un modèle ci-dessus pour commencer.",
+    "copied_paste": "Copié - collez-le sur votre sélection",
+    "copy_and_close": "Copier et fermer",
+    "open_in_app": "Ouvrir dans l'application",
+    "placeholders": {
+      "edit_new": "Comment ce texte devrait-il changer ?",
+      "edit_started": "Ajustez le texte davantage…",
+      "summarize_new": "Demandez n'importe quoi sur ce texte…",
+      "summarize_started": "Posez d'autres questions…"
+    }
+  },
+  "attachments": {
+    "processing": "Traitement…",
+    "image": "Image",
+    "file_type_generic": "FICHIER",
+    "name_processing": "{{name}}, traitement",
+    "remove_named": "Supprimer {{name}}",
+    "more_images_many": "{{count}} autres images",
+    "more_images_one": "{{count}} autre image",
+    "more_images_other": "{{count}} autres images",
+    "attached_image": "Image jointe",
+    "image_position": "{{current}} sur {{total}}",
+    "close_image_preview": "Fermer l'aperçu de l'image",
+    "remove_image": "Supprimer l'image"
+  },
+  "errors": {
+    "boundary": {
+      "details": "Détails de l'erreur",
+      "details_copied": "Détails de l'erreur copiés",
+      "report_github": "Signaler sur GitHub",
+      "something_went_wrong": "Une erreur s'est produite",
+      "reported_automatically": "Cette erreur a été signalée à Mintplex Labs automatiquement.",
+      "telemetry_disabled": "Vous avez désactivé la télémétrie, donc nous n'avons pas signalé automatiquement cette erreur à Mintplex Labs, vous devriez ouvrir un problème GitHub à la place.",
+      "go_home": "Aller à l'accueil",
+      "message_failed": "Ce message n'a pas pu être affiché en raison d'une erreur.",
+      "hide_details": "Masquer les détails de l'erreur",
+      "show_details": "Afficher les détails de l'erreur"
+    }
+  },
+  "highlights": {
+    "play_video": "Lire la vidéo",
+    "pause_video": "Mettre en pause la vidéo",
+    "whats_new": "Quoi de neuf",
+    "tour_title": "Ce qu'AnythingLLM peut faire",
+    "quick_actions": {
+      "title": "Demander à AnythingLLM n'importe où",
+      "body": "Sélectionnez du texte dans n'importe quelle application et appuyez sur \"Demander à AnythingLLM\" pour l'affiner, le raccourcir, le résumer ou l'expliquer avec votre modèle. Désactivez-le à tout moment dans Paramètres > Outils spéciaux."
+    },
+    "share_sheet": {
+      "title": "Partagez n'importe quoi dans une conversation",
+      "body": "Envoyez des photos, des documents et des liens de n'importe quelle application directement à AnythingLLM. Ils arrivent dans un nouveau fil, joints et prêts à poser des questions."
+    },
+    "scheduled_jobs": {
+      "title": "Tâches programmées",
+      "body": "Demandez une tâche récurrente - un résumé des nouvelles du matin, une vérification hebdomadaire - et elle s'exécute selon le calendrier, même lorsque l'application est fermée. Les résultats vous attendent avec une notification."
+    }
+  },
+  "new_workspace": {
+    "default_name": "Nouvel espace de travail",
+    "title": "Nouvel espace de travail",
+    "description": "Donnez un nom à votre espace de travail. Vous pouvez le modifier plus tard.",
+    "placeholder": "p. ex. Recherche, Travail, Personnel"
+  },
+  "files": {
+    "types": {
+      "text_file": "Fichier texte",
+      "spreadsheet": "Feuille de calcul",
+      "pdf_document": "Document PDF",
+      "word_document": "Document Word",
+      "file": "Fichier"
+    },
+    "location": {
+      "downloads": "Téléchargements",
+      "ios_exports": "Fichiers > Sur mon iPhone > AnythingLLM > Exports",
+      "open_downloads": "Ouvrir dans Téléchargements",
+      "open_files": "Ouvrir dans Fichiers"
+    },
+    "storage_permission": {
+      "title": "Enregistrer dans Téléchargements",
+      "message": "AnythingLLM a besoin d'accès au stockage pour enregistrer le fichier dans votre dossier Téléchargements."
+    },
+    "export": {
+      "text_label": "Texte",
+      "txt_description": "Transcription en texte brut",
+      "md_description": "Transcription formatée pour les applications de notes",
+      "json_description": "Messages avec modèle et métriques",
+      "pdf_description": "Document formaté"
+    }
+  },
+  "misc": {
+    "new_thread": "Nouveau fil",
+    "remote_thread_create_failed": "Nous n'avons pas pu créer un fil dans votre espace de travail distant. Veuillez vérifier votre connexion et réessayer.",
+    "job_run": {
+      "failed": "Tâche échouée",
+      "timed_out": "La tâche a pris trop de temps et s'est arrêtée",
+      "cancelled": "Vous avez arrêté cette exécution",
+      "app_closed": "L'application a été fermée avant la fin de la tâche"
+    },
+    "validation": {
+      "memory_not_text": "La mémoire doit être du texte",
+      "memory_too_short": "La mémoire est trop courte",
+      "memory_too_long_many": "La mémoire doit contenir {{count}} caractères ou moins",
+      "memory_too_long_one": "La mémoire doit contenir {{count}} caractère ou moins",
+      "memory_too_long_other": "La mémoire doit contenir {{count}} caractères ou moins",
+      "job_name_required": "Donnez un nom à la tâche",
+      "job_name_too_long_many": "Le nom doit contenir {{count}} caractères ou moins",
+      "job_name_too_long_one": "Le nom doit contenir {{count}} caractère ou moins",
+      "job_name_too_long_other": "Le nom doit contenir {{count}} caractères ou moins",
+      "job_prompt_required": "Écrivez l'invite que la tâche doit exécuter",
+      "job_prompt_too_long_many": "L'invite doit contenir {{count}} caractères ou moins",
+      "job_prompt_too_long_one": "L'invite doit contenir {{count}} caractère ou moins",
+      "job_prompt_too_long_other": "L'invite doit contenir {{count}} caractères ou moins",
+      "job_schedule_invalid": "Le calendrier n'est pas une expression cron valide",
+      "job_tools_not_list": "Les outils doivent être une liste",
+      "name_not_string": "Le nom doit être une chaîne",
+      "name_required": "Le nom est obligatoire",
+      "name_too_short_many": "Le nom doit contenir au moins {{count}} caractères",
+      "name_too_short_one": "Le nom doit contenir au moins {{count}} caractère",
+      "name_too_short_other": "Le nom doit contenir au moins {{count}} caractères",
+      "name_too_long_many": "Le nom doit contenir moins de {{count}} caractères",
+      "name_too_long_one": "Le nom doit contenir moins de {{count}} caractère",
+      "name_too_long_other": "Le nom doit contenir moins de {{count}} caractères",
+      "system_prompt_not_string": "L'invite système doit être une chaîne",
+      "system_prompt_required": "L'invite système est obligatoire",
+      "system_prompt_too_short_many": "L'invite système doit contenir au moins {{count}} caractères",
+      "system_prompt_too_short_one": "L'invite système doit contenir au moins {{count}} caractère",
+      "system_prompt_too_short_other": "L'invite système doit contenir au moins {{count}} caractères",
+      "system_prompt_too_long_many": "L'invite système doit contenir moins de {{count}} caractères",
+      "system_prompt_too_long_one": "L'invite système doit contenir moins de {{count}} caractère",
+      "system_prompt_too_long_other": "L'invite système doit contenir moins de {{count}} caractères",
+      "temperature_not_number": "La température doit être un nombre",
+      "temperature_range": "La température doit être comprise entre {{min}} et {{max}}",
+      "context_length_not_number": "La longueur du contexte doit être un nombre",
+      "context_length_min": "La longueur du contexte doit être supérieure à {{min}}"
+    }
+  },
+  "tools": {
+    "groups": {
+      "create_files": {
+        "name": "Créer des fichiers",
+        "description": "Permettez à l'assistant d'écrire des documents que vous pouvez télécharger et partager."
+      }
+    },
+    "reranker": {
+      "download_required_title": "Téléchargement requis",
+      "download_required_message": "La sélection intelligente d'outils nécessite un petit téléchargement de modèle ({{size}}). Vous êtes sur données cellulaires. Continuer ?",
+      "status_downloading": "Téléchargement du modèle de sélection d'outils",
+      "status_selecting": "Sélection des meilleurs outils"
+    },
+    "calendar_event_creation": {
+      "name": "Création d'événement de calendrier",
+      "description": "Utilisez l'assistant pour créer un événement de calendrier pour vous.",
+      "status_preparing": "Préparation de l'événement de calendrier \"{{title}}\""
+    },
+    "calendar_event_reading": {
+      "name": "Lire le calendrier",
+      "description": "Utilisez l'assistant pour lire vos événements de calendrier.",
+      "status_date": "Lecture de votre calendrier pour {{date}}",
+      "status_today": "Lecture de votre calendrier pour aujourd'hui",
+      "status_tomorrow": "Lecture de votre calendrier pour demain",
+      "status_this_week": "Lecture de votre calendrier pour cette semaine",
+      "status_next_week": "Lecture de votre calendrier pour la semaine prochaine",
+      "status_this_month": "Lecture de votre calendrier pour ce mois",
+      "status_next_month": "Lecture de votre calendrier pour le mois prochain"
+    },
+    "create_files": {
+      "status_creating": "Création de {{name}}",
+      "status_created": "Créé {{name}}"
+    },
+    "create_docx_file": {
+      "name": "Document Word",
+      "description": "Écrire un .docx stylisé à partir de markdown avec des thèmes et une page de titre optionnelle.",
+      "status_creating": "Création du document Word \"{{name}}\""
+    },
+    "create_pdf_file": {
+      "name": "Document PDF",
+      "description": "Convertir markdown ou texte brut en PDF formaté.",
+      "status_creating": "Création du PDF \"{{name}}\""
+    },
+    "create_text_file": {
+      "name": "Texte, Markdown et CSV",
+      "description": "Écrire des fichiers .txt, .md, .csv et .json à partir de la conversation."
+    },
+    "create_pptx": {
+      "name": "Présentation PowerPoint",
+      "description": "Planifiez et construisez un deck .pptx thématique, une section à la fois.",
+      "status_planning_many": "Planification de la présentation \"{{title}}\" - {{count}} sections, thème {{theme}}",
+      "status_planning_one": "Planification de la présentation \"{{title}}\" - {{count}} section, thème {{theme}}",
+      "status_planning_other": "Planification de la présentation \"{{title}}\" - {{count}} sections, thème {{theme}}",
+      "approval_description_many": "Créer la présentation PowerPoint \"{{title}}\" avec {{count}} sections ? Chaque section nécessite un appel de modèle pour être construite.",
+      "approval_description_one": "Créer la présentation PowerPoint \"{{title}}\" avec {{count}} section ? Chaque section nécessite un appel de modèle pour être construite.",
+      "approval_description_other": "Créer la présentation PowerPoint \"{{title}}\" avec {{count}} sections ? Chaque section nécessite un appel de modèle pour être construite.",
+      "status_not_approved": "La présentation n'a pas été approuvée",
+      "status_building_section": "[{{current}}/{{total}}] Construction de la section \"{{title}}\"",
+      "status_section_complete_many": "[{{current}}/{{total}}] Section \"{{title}}\" complète - {{count}} diapositives",
+      "status_section_complete_one": "[{{current}}/{{total}}] Section \"{{title}}\" complète - {{count}} diapositive",
+      "status_section_complete_other": "[{{current}}/{{total}}] Section \"{{title}}\" complète - {{count}} diapositives",
+      "status_section_complete_from_outline_many": "[{{current}}/{{total}}] Section \"{{title}}\" complète - {{count}} diapositives (d'après le plan)",
+      "status_section_complete_from_outline_one": "[{{current}}/{{total}}] Section \"{{title}}\" complète - {{count}} diapositive (d'après le plan)",
+      "status_section_complete_from_outline_other": "[{{current}}/{{total}}] Section \"{{title}}\" complète - {{count}} diapositives (d'après le plan)",
+      "status_assembling_many": "Assemblage du deck - {{count}} diapositives",
+      "status_assembling_one": "Assemblage du deck - {{count}} diapositive",
+      "status_assembling_other": "Assemblage du deck - {{count}} diapositives"
+    },
+    "create_scheduled_job": {
+      "name": "Créer une tâche programmée",
+      "description": "Laissez l'assistant configurer une tâche récurrente à partir de la conversation, après que vous l'ayez approuvée.",
+      "status_asking": "Demande de programmation de \"{{name}}\" ({{when}})",
+      "approval_tools_many": "Créer la tâche programmée \"{{name}}\" ? Elle s'exécutera {{when}} en utilisant {{count}} outils.",
+      "approval_tools_one": "Créer la tâche programmée \"{{name}}\" ? Elle s'exécutera {{when}} en utilisant {{count}} outil.",
+      "approval_tools_other": "Créer la tâche programmée \"{{name}}\" ? Elle s'exécutera {{when}} en utilisant {{count}} outils.",
+      "approval_tools_notify_many": "Créer la tâche programmée \"{{name}}\" ? Elle s'exécutera {{when}} en utilisant {{count}} outils et vous avertira lorsqu'elle sera terminée.",
+      "approval_tools_notify_one": "Créer la tâche programmée \"{{name}}\" ? Elle s'exécutera {{when}} en utilisant {{count}} outil et vous avertira lorsqu'elle sera terminée.",
+      "approval_tools_notify_other": "Créer la tâche programmée \"{{name}}\" ? Elle s'exécutera {{when}} en utilisant {{count}} outils et vous avertira lorsqu'elle sera terminée.",
+      "approval_no_tools": "Créer la tâche programmée \"{{name}}\" ? Elle s'exécutera {{when}} sans outils.",
+      "approval_no_tools_notify": "Créer la tâche programmée \"{{name}}\" ? Elle s'exécutera {{when}} sans outils et vous avertira lorsqu'elle sera terminée.",
+      "status_not_approved": "La tâche programmée n'a pas été approuvée",
+      "status_scheduled": "Programmé \"{{name}}\""
+    },
+    "draft_email": {
+      "name": "Rédiger un e-mail",
+      "description": "Utilisez l'assistant pour rédiger un e-mail pour vous.",
+      "status_drafting": "Rédaction de l'e-mail \"{{subject}}\"",
+      "open_action": "Ouvrir l'e-mail brouillon"
+    },
+    "draft_text": {
+      "name": "Rédiger un message",
+      "description": "Utilisez l'assistant pour rédiger un message pour vous.",
+      "status_drafting_to": "Rédaction d'un message à {{recipient}}",
+      "status_drafting": "Rédaction d'un message texte",
+      "open_action": "Ouvrir le message brouillon"
+    },
+    "get_time": {
+      "name": "Obtenir l'heure",
+      "description": "Obtenir la date et l'heure actuelles en fonction du fuseau horaire de votre appareil."
+    },
+    "get_location": {
+      "name": "Obtenir l'emplacement",
+      "description": "Obtenir votre emplacement approximatif. Cela retournera la ville, l'état et le pays.",
+      "status_looking_up": "Recherche de votre emplacement approximatif"
+    },
+    "summarize": {
+      "name": "Résumé",
+      "description": "Résumer le contenu d'une URL ou d'un nom de fichier donné.",
+      "status_reading": "Lecture de {{source}}",
+      "status_looking_for_file": "Recherche de \"{{name}}\" dans vos fichiers",
+      "status_analyzing": "Analyse de la structure du document",
+      "status_document_long_many": "Le document est long - résumé des {{count}} premières sections",
+      "status_document_long_one": "Le document est long - résumé de la {{count}} première section",
+      "status_document_long_other": "Le document est long - résumé des {{count}} premières sections",
+      "approval_description_many": "Ce contenu a {{count}} sections à résumer. Cela peut prendre du temps - continuer ?",
+      "approval_description_one": "Ce contenu a {{count}} section à résumer. Cela peut prendre du temps - continuer ?",
+      "approval_description_other": "Ce contenu a {{count}} sections à résumer. Cela peut prendre du temps - continuer ?",
+      "status_not_approved": "La résumé n'a pas été approuvée",
+      "status_complete": "Résumé terminé",
+      "status_summarizing_sections": "Résumé des sections du document",
+      "status_summarizing_section": "Résumé de la section {{current}} sur {{total}}",
+      "status_combining": "Combinaison des résumés des sections"
+    },
+    "web_scraping": {
+      "name": "Extraction de contenu web",
+      "description": "Extraire des informations d'un site web spécifique.",
+      "status_reading": "Lecture de {{host}}",
+      "status_reading_document": "Lecture du document {{name}}",
+      "cellular_title": "Télécharger sur cellulaire ?",
+      "cellular_message": "La lecture de \"{{name}}\" nécessite le téléchargement d'un document de {{size}}. Vous êtes sur données cellulaires. Continuer ?",
+      "cellular_message_unknown_size": "La lecture de \"{{name}}\" nécessite le téléchargement d'un document de taille inconnue. Vous êtes sur données cellulaires. Continuer ?"
+    },
+    "web_search": {
+      "name": "Recherche Web",
+      "description": "Rechercher sur le web des résultats de recherche en fonction d'une requête.",
+      "status_searching": "Recherche sur le web pour \"{{query}}\"",
+      "status_reviewing_many": "Examen de {{count}} résultats de recherche",
+      "status_reviewing_one": "Examen de {{count}} résultat de recherche",
+      "status_reviewing_other": "Examen de {{count}} résultats de recherche"
+    },
+    "approval": {
+      "auto_approved_status": "Approuvé {{tool}} automatiquement"
+    }
+  },
+  "top_bar": {
+    "model_chip": {
+      "remote_managed": "Cet espace de travail est géré à distance. Vous ne pouvez pas modifier le modèle ici.",
+      "no_model_loaded": "Aucun modèle chargé",
+      "no_models_found": "Aucun modèle trouvé pour \"{{query}}\"",
+      "hf_lookup_hint": "Recherchez \"{{query}}\" sur Hugging Face et téléchargez une version GGUF.",
+      "list_failed_toast": "Impossible de lister les modèles pour {{provider}}.",
+      "switch_failed": "Impossible de basculer le modèle. Veuillez réessayer.",
+      "loading_models": "Chargement des modèles depuis {{provider}}...",
+      "list_failed_title": "Impossible de lister les modèles pour {{provider}}",
+      "list_failed_description": "Ce fournisseur n'a retourné aucun modèle. Vérifiez que le point de terminaison est accessible et prend en charge le listage des modèles, ou définissez le modèle manuellement dans Paramètres.",
+      "try_again": "Réessayer",
+      "search_provider_models": "Rechercher les modèles {{provider}}"
+    },
+    "dev_shortcut_hint_many": "Appuyez {{count}} fois de plus pour ouvrir les outils de développeur",
+    "dev_shortcut_hint_one": "Appuyez {{count}} fois de plus pour ouvrir les outils de développeur",
+    "dev_shortcut_hint_other": "Appuyez {{count}} fois de plus pour ouvrir les outils de développeur",
+    "thread_menu": {
+      "options": "Options de fil",
+      "export_failed": "Impossible d'exporter le fil : {{error}}",
+      "share_failed": "Impossible d'ouvrir la feuille de partage : {{error}}",
+      "unknown_error": "erreur inconnue",
+      "open_location_failed": "Enregistré à {{location}}, mais le dossier n'a pas pu être ouvert",
+      "memories": "Souvenirs",
+      "memories_description": "Voir les souvenirs vous concernant ou vos préférences",
+      "export_thread": "Exporter le fil de conversation",
+      "saved_to_device": "Enregistré sur votre appareil"
+    },
+    "memories": {
+      "global": {
+        "tab": "Partout",
+        "hint": "Des faits à votre sujet que le modèle devrait toujours connaître - votre nom, ce que vous faites, comment vous aimez les réponses. Envoyés avec chaque conversation dans chaque espace de travail. Gardez-les courts afin qu'ils tiennent tous sur les petits modèles.",
+        "placeholder": "p. ex. Je m'appelle Sam. J'écris Python et je préfère les réponses courtes.",
+        "empty": "Pas encore de souvenirs. Ajoutez un fait à votre sujet ci-dessus."
+      },
+      "workspace": {
+        "tab": "Cet espace de travail",
+        "hint": "Des notes qui ne concernent que cet endroit - le projet, son jargon, les décisions déjà prises. Gérées et injectées dynamiquement.",
+        "placeholder": "p. ex. Ce projet est une application React Native appelée Orbit. Utilisez yarn, pas npm.",
+        "empty": "Pas encore de souvenirs d'espace de travail. Ajoutez une note sur cet espace de travail ci-dessus."
+      },
+      "no_longer_exists": "Ce souvenir n'existe plus",
+      "save_failed": "Impossible d'enregistrer le souvenir",
+      "delete_title": "Supprimer le souvenir ?",
+      "enable": "Activer les souvenirs",
+      "enable_description": "Autoriser l'injection de faits vous concernant ou cet espace de travail.",
+      "remote_notice": "Cet espace de travail est traité par votre serveur AnythingLLM, donc les souvenirs ne sont pas utilisés dans ses conversations. Les souvenirs globaux s'appliquent toujours à vos espaces de travail sur appareil et cloud.",
+      "edit_memory": "Modifier le souvenir",
+      "new_memory": "Nouveau souvenir",
+      "delete_memory": "Supprimer le souvenir"
+    }
+  },
+  "drawer": {
+    "workspaces": "Espaces de travail",
+    "scheduled_jobs": "Tâches programmées",
+    "scheduled_jobs_unseen_many": "Tâches programmées, {{count}} résultats non vus",
+    "scheduled_jobs_unseen_one": "Tâches programmées, {{count}} résultat non vu",
+    "scheduled_jobs_unseen_other": "Tâches programmées, {{count}} résultats non vus",
+    "new_workspace": "Nouvel espace de travail",
+    "delete_thread_title": "Supprimer le fil",
+    "delete_thread_message": "Êtes-vous sûr de vouloir supprimer ce fil ? Tout l'historique de conversation sera perdu.",
+    "delete_workspace_title": "Supprimer l'espace de travail",
+    "delete_workspace_message": "Êtes-vous sûr de vouloir supprimer cet espace de travail ? Tous les fils seront perdus.",
+    "delete_workspace_message_remote": "Êtes-vous sûr de vouloir supprimer cet espace de travail ? Tous les fils seront perdus.\n\nCela ne supprimera pas l'espace de travail dans votre instance distante.",
+    "rename_thread": "Renommer le fil",
+    "rename_thread_placeholder": "Entrez le nouveau nom du fil"
+  },
+  "hf_import": {
+    "title": "Ajouter un modèle à partir de Hugging Face",
+    "add_card_hint": "Collez un ID de référentiel ou une URL et choisissez n'importe quel quantage GGUF à exécuter sur cet appareil.",
+    "generic_error": "Une erreur s'est produite en communiquant avec Hugging Face.",
+    "description": "Collez un ID de modèle ou une URL, ou recherchez. N'importe quel quantage GGUF public peut être téléchargé et exécuté sur cet appareil.",
+    "show_files": "Afficher les fichiers GGUF",
+    "search_hf": "Rechercher sur Hugging Face",
+    "files_available_many": "{{count}} fichiers GGUF disponibles au téléchargement",
+    "files_available_one": "{{count}} fichier GGUF disponible au téléchargement",
+    "files_available_other": "{{count}} fichiers GGUF disponibles au téléchargement",
+    "highlighted_file": "Le fichier que vous avez choisi sur Hugging Face est mis en évidence ci-dessous. Appuyez dessus pour télécharger.",
+    "highlight_missing": "\"{{filename}}\" n'est pas l'un des fichiers GGUF de ce référentiel. Choisissez un autre quantage ci-dessous.",
+    "search_results": "Référentiels GGUF correspondant à \"{{query}}\", les plus téléchargés en premier. Appuyez sur un pour voir ses fichiers.",
+    "no_search_results": "Aucun référentiel GGUF trouvé pour \"{{query}}\".",
+    "tip": "Conseil : la plupart des modèles ont une version GGUF sous un nom se terminant par \"-GGUF\" de unsloth, bartowski ou lmstudio-community. Les quantages plus petits (Q4_K_M et moins) fonctionnent mieux sur les téléphones. Les modèles avec accès limité ou privés ne sont pas pris en charge.",
+    "params": "{{value}} paramètres",
+    "context": "contexte {{value}}k",
+    "downloads": "{{value}} téléchargements",
+    "gated": "Ce référentiel est avec accès limité. Les téléchargements nécessitent une connexion à Hugging Face, qui n'est pas encore prise en charge.",
+    "requested": "Demandé"
+  },
+  "models": {
+    "recommended": "Recommandé",
+    "memory_fit": {
+      "tight": "Peut ne pas tenir en mémoire",
+      "tight_compact": "Peut ne pas tenir",
+      "impossible": "Trop volumineux pour cet appareil",
+      "impossible_compact": "Trop volumineux"
+    },
+    "sections": {
+      "found_on_device": "Trouvé sur cet appareil",
+      "added_from_hf": "Ajouté à partir de Hugging Face",
+      "other": "Autre"
+    },
+    "vector_storage": {
+      "reset_title": "Réinitialiser le stockage vectoriel",
+      "reset_message": "Êtes-vous sûr de vouloir réinitialiser le stockage vectoriel pour cet espace de travail ?",
+      "cleared": "Stockage vectoriel effacé !"
+    },
+    "vision": {
+      "remote": "Les images ne sont pas encore prises en charge lors d'une conversation avec un espace de travail distant.",
+      "no_model": "Sélectionnez un modèle pour joindre des images.",
+      "on_device": "Le modèle sur appareil sélectionné ne peut pas lire les images.",
+      "needs_download": "Ce modèle peut voir les images, mais nécessite un téléchargement supplémentaire."
+    },
+    "speech_to_text": {
+      "permission_title": "Accès au microphone",
+      "permission_message": "AnythingLLM a besoin d'accès au microphone pour transcrire votre parole en invite.",
+      "permission_required_title": "Accès au microphone requis",
+      "permission_required_message": "Activez l'accès au microphone dans les paramètres de votre appareil pour utiliser la reconnaissance vocale."
+    },
+    "attachments": {
+      "vectors_cleared": "Vecteurs d'espace de travail effacés",
+      "clear_vectors_title": "Effacer les vecteurs d'espace de travail",
+      "clear_vectors_message": "Êtes-vous sûr de vouloir effacer les vecteurs pour cet espace de travail ? Cela supprimera tous les vecteurs de cet espace de travail et ne peut pas être annulé.",
+      "not_found": "La pièce jointe n'a pas pu être trouvée",
+      "empty_content": "Le contenu de la pièce jointe était vide ou n'a pas pu être lu",
+      "large_document_title": "Document volumineux",
+      "large_document_message": "\"{{name}}\" contient environ {{tokens}} jetons. Avec {{provider}}, le document entier est envoyé à chaque message dans cet espace de travail, ce qui peut être lent et coûteux. L'attacher quand même ?",
+      "large_document_message_generic": "\"{{name}}\" contient environ {{tokens}} jetons. Avec votre fournisseur de modèle, le document entier est envoyé à chaque message dans cet espace de travail, ce qui peut être lent et coûteux. L'attacher quand même ?",
+      "attach": "Joindre",
+      "create_failed": "Échec de la création du document pour la pièce jointe",
+      "camera_permission_title": "Accès à la caméra",
+      "camera_permission_message": "AnythingLLM a besoin de la caméra pour prendre une photo pour votre invite.",
+      "max_reached_many": "Vous pouvez joindre jusqu'à {{count}} éléments par invite",
+      "max_reached_one": "Vous pouvez joindre jusqu'à {{count}} élément par invite",
+      "max_reached_other": "Vous pouvez joindre jusqu'à {{count}} éléments par invite",
+      "camera_permission_required": "La permission de la caméra est requise pour prendre une photo",
+      "camera_open_failed": "Impossible d'ouvrir la caméra",
+      "gallery_open_failed": "Impossible d'ouvrir la galerie",
+      "image_unreadable": "L'image sélectionnée n'a pas pu être lue",
+      "images_skipped_unreadable_many": "{{count}} images n'ont pas pu être lues et ont été ignorées",
+      "images_skipped_unreadable_one": "{{count}} image n'a pas pu être lue et a été ignorée",
+      "images_skipped_unreadable_other": "{{count}} images n'ont pas pu être lues et ont été ignorées",
+      "image_attach_failed": "Impossible de joindre l'image",
+      "max_reached_skipped_many": "Vous pouvez joindre jusqu'à {{max}} éléments par invite - {{count}} ignorés",
+      "max_reached_skipped_one": "Vous pouvez joindre jusqu'à {{max}} éléments par invite - {{count}} ignoré",
+      "max_reached_skipped_other": "Vous pouvez joindre jusqu'à {{max}} éléments par invite - {{count}} ignorés",
+      "images_skipped_no_vision_many": "Votre modèle actuel ne peut pas lire les images - {{count}} images ont été ignorées",
+      "images_skipped_no_vision_one": "Votre modèle actuel ne peut pas lire les images - {{count}} image a été ignorée",
+      "images_skipped_no_vision_other": "Votre modèle actuel ne peut pas lire les images - {{count}} images ont été ignorées",
+      "read_failed": "Impossible de lire {{name}}",
+      "remove_title": "Supprimer la pièce jointe",
+      "remove_message": "Êtes-vous sûr de vouloir supprimer cette pièce jointe de la conversation ?",
+      "shared_content_failed": "Impossible de joindre le contenu partagé"
+    },
+    "memory_warning": {
+      "short": "Avertissement de mémoire",
+      "full": "Avertissement : La taille du modèle peut dépasser la mémoire disponible. Cela pourrait affecter les performances et la stabilité de votre appareil."
+    },
+    "catalog": {
+      "gemma_3_1b": "(Q8_0) Gemma3 1B est une version plus petite et légère du modèle Gemma3 4B pour les tâches plus complexes.",
+      "qwen3_0_6b": "(Q8_0) Qwen3 0.6B est un petit modèle très rapide pour les réponses rapides et les tâches simples. Remplacé par Qwen3.5 0.8B.",
+      "qwen3_1_7b": "(Q8_0) Qwen3 1.7B est une version beaucoup plus capable du modèle Qwen3-0.6B pour les tâches plus complexes.",
+      "llama_3_2_1b": "(Q8_0) Llama 3.2 1B est la version la plus petite du modèle Llama 3.2.",
+      "qwen3_5_0_8b": "(Q8_0) Qwen3.5 0.8B est le plus petit modèle de la famille Qwen3.5. Très rapide sur n'importe quel téléphone avec un suivi d'instructions solide.",
+      "qwen3_5_2b": "(Q8_0) Qwen3.5 2B est un modèle petit d'usage général fort avec appel d'outils et bon raisonnement pour sa taille.",
+      "qwen3_5_4b": "(Q6_K) Qwen3.5 4B est le modèle Qwen3.5 le plus capable qui tient toujours sur un téléphone. Meilleure précision, raisonnement et appel d'outils ; nécessite un appareil avec 8 Go+ de RAM.",
+      "qwen3_vl_2b_instruct": "(Q4_K_XL) Qwen3-VL 2B est un modèle vision-langage qui peut décrire et répondre à des questions sur les photos.",
+      "granite_3_3_2b_instruct": "(Q4_K_XL) Granite 3.3 2B d'IBM est accordé pour RAG, résumé et appel d'outils. Sous licence Apache 2.0.",
+      "granite_4_2_3b": "(Q4_K_M) Granite 4.2 3B est le dernier petit modèle Granite avec raisonnement plus fort et appel d'outils. Téléchargement plus volumineux.",
+      "lfm2_5_1_2b_instruct": "(Q8_0) LFM2.5 1.2B est un petit modèle très rapide accordé pour le chat sur appareil, l'appel d'outils et 16 langues. Quantage en qualité complète.",
+      "lfm2_5_2_6b": "(Q5_K_M) LFM2.5 2.6B est le modèle Liquid le plus capable pour les téléphones avec suivi d'instructions fort, appel d'outils et raisonnement.",
+      "gemma_4_e2b": "(QAT Q2_K_XL) Gemma 4 E2B est le modèle mobile-first de Google avec 2B paramètres effectifs. Quantage formé avec conscientisation pour cette taille.",
+      "gemma_4_e4b": "(QAT Q2_K_XL) Gemma 4 E4B est le Gemma le plus capable qui tient sur un téléphone. Téléchargement volumineux, nécessite un appareil récent haute mémoire."
+    },
+    "presets": {
+      "lightweight": {
+        "name": "Léger",
+        "description": "Pour les réponses rapides et les tâches simples."
+      },
+      "balanced": {
+        "name": "Équilibré",
+        "description": "Pour un équilibre entre la vitesse et la précision."
+      },
+      "powerful": {
+        "name": "Puissant",
+        "description": "Modèles plus lourds pour la meilleure précision."
+      }
+    },
+    "imported_description": "Ajouté à partir de Hugging Face ({{repo}}).",
+    "imported_description_specs": "Ajouté à partir de Hugging Face ({{repo}}). {{specs}}.",
+    "no_model_loaded_error": "Aucun modèle chargé. Veuillez d'abord sélectionner un modèle.",
+    "unknown_model_description": "Trouvé sur cet appareil dans {{modelId}} mais il n'est pas dans notre liste de modèles. Vous pouvez toujours l'utiliser ou le désinstaller.",
+    "status": {
+      "summarizing": "Résumé de la conversation antérieure",
+      "using_summary_many": "Utilisation d'un résumé de {{count}} messages antérieurs",
+      "using_summary_one": "Utilisation d'un résumé de {{count}} message antérieur",
+      "using_summary_other": "Utilisation d'un résumé de {{count}} messages antérieurs",
+      "loading_model": "Chargement du modèle en mémoire",
+      "reply_truncated": "La réponse a été coupée courte - la fenêtre de contexte est pleine",
+      "searching_documents": "Recherche dans vos documents",
+      "reranking": "Réorganisation des résultats",
+      "reading_documents_many": "Lecture de {{count}} documents joints",
+      "reading_documents_one": "Lecture de {{count}} document joint",
+      "reading_documents_other": "Lecture de {{count}} documents joints"
+    }
+  },
+  "providers": {
+    "descriptions": {
+      "native": "Installez et exécutez des modèles sur votre téléphone.",
+      "ollama": "Exécutez des LLM localement sur votre propre machine avec Ollama.",
+      "lmstudio": "Découvrez, téléchargez et exécutez des milliers de LLM d'avant-garde en quelques clics.",
+      "openai": "Exploitez les puissants modèles d'OpenAI.",
+      "anthropic": "Un assistant IA amical hébergé par Anthropic.",
+      "gemini": "Le plus grand et le plus capable modèle d'IA de Google",
+      "openrouter": "Une API unifiée des services d'IA des principaux fournisseurs",
+      "bedrock": "Exécutez des modèles de base puissants en privé avec AWS Bedrock.",
+      "deepseek": "Exécutez les puissants LLM de DeepSeek.",
+      "fireworksai": "Le moteur d'inférence le plus rapide et le plus efficace pour construire des systèmes d'IA composés prêts pour la production.",
+      "minimax": "Exécutez les puissants LLM de MiniMax.",
+      "moonshotai": "Exécutez les modèles Kimi de Moonshot AI.",
+      "novita": "Fiable, évolutif et rentable pour les LLM de Novita AI",
+      "togetherai": "Exécutez les modèles open source de Together AI.",
+      "xai": "Exécutez les puissants LLM de xAI comme Grok et plus.",
+      "litellm": "Exécutez le proxy compatible OpenAI de LiteLLM pour divers LLM.",
+      "localai": "Exécutez les LLM localement sur votre propre machine.",
+      "lemonade": "Exécutez les LLM sur le matériel AMD avec Lemonade Server.",
+      "llmman": "Exécutez les LLM localement en utilisant llmman.",
+      "generic_openai": "Connectez-vous à n'importe quel service compatible OpenAI via une configuration personnalisée"
+    },
+    "sections": {
+      "local": "Fournisseurs locaux",
+      "cloud": "Fournisseurs cloud"
+    },
+    "validation": {
+      "unknown_provider": "Fournisseur inconnu.",
+      "api_key_required": "Veuillez entrer une clé API pour ce fournisseur.",
+      "base_url_required": "Veuillez entrer l'URL de base de votre fournisseur.",
+      "region_required": "Veuillez sélectionner la région AWS de votre déploiement Bedrock.",
+      "model_required": "Veuillez sélectionner un modèle à utiliser."
+    }
+  },
+  "llm_selection": {
+    "choose_provider": "Choisissez votre fournisseur",
+    "no_providers_found": "Aucun fournisseur trouvé pour \"{{query}}\"",
+    "download_model_title": "Télécharger le modèle ?",
+    "download_model_message": "Cela téléchargera le modèle sur votre appareil. C'est {{size}} octets.",
+    "preferred_model": "Modèle préféré"
+  },
+  "downloads": {
+    "no_internet_title": "Pas de connexion Internet.",
+    "no_internet_image_support": "Vous devrez être connecté à Internet pour télécharger le support d'image.",
+    "no_internet_model": "Vous devrez être connecté à Internet pour télécharger n'importe quel modèle.",
+    "data_usage_title": "Avertissement d'utilisation des données",
+    "data_usage_image_support": "Nous recommandons d'utiliser une connexion Wi-Fi pour télécharger le support d'image car sa taille est {{size}}.",
+    "data_usage_model": "Nous recommandons d'utiliser une connexion Wi-Fi pour télécharger le modèle car sa taille est {{size}}.",
+    "continue_anyway": "Continuer quand même",
+    "continue_with_download": "Continuer le téléchargement",
+    "image_support_title": "Télécharger le support d'image ?",
+    "image_support_message": "{{model}} peut comprendre les photos une fois que son fichier de support d'image est téléchargé. Sa taille est {{size}}.",
+    "download_model_title": "Télécharger le modèle ?",
+    "download_model_message": "Cela téléchargera le modèle sur votre appareil. Sa taille est {{size}}.",
+    "notification_downloading_title": "Téléchargement du modèle",
+    "notification_downloading_body": "Téléchargement de {{model}}",
+    "notification_complete_title": "Téléchargement terminé",
+    "notification_complete_body": "Téléchargé {{model}}",
+    "download_failed_title": "Téléchargement échoué",
+    "download_failed_message": "Une erreur s'est produite lors du téléchargement du modèle.",
+    "uninstall_model_title": "Désinstaller le modèle ?",
+    "uninstall_model_message": "Cela supprimera le modèle de votre appareil.",
+    "storage_low": "Stockage faible ! Modèle {{modelSize}} > {{freeSpace}} libre",
+    "storage_check_failed": "Impossible de vérifier le stockage",
+    "setup_failed_title": "Échec de la configuration du téléchargement",
+    "setup_failed_message": "Impossible de configurer le téléchargement du modèle HF : {{error}}"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Bienvenue",
+      "description": "Un agent d'IA qui vit sur votre téléphone. Discutez avec des documents, recherchez sur le web et intégrez-vous dans vos applications.",
+      "get_started": "Commencer",
+      "back_blocked": "Veuillez procéder par le flux d'intégration pour continuer."
+    },
+    "model_selection": {
+      "title": "Quel modèle souhaitez-vous utiliser ?",
+      "description": "Vous pouvez le modifier plus tard, mais choisissez celui qui convient le mieux à vos besoins.",
+      "use_external": "Vous ne voulez pas télécharger un modèle ? Utilisez un fournisseur externe"
+    },
+    "external": {
+      "title": "Connecter un fournisseur externe",
+      "description": "Utilisez un modèle hébergé ailleurs au lieu d'en télécharger un sur votre téléphone. Vous pouvez le modifier plus tard.",
+      "choose_provider": "Choisir un fournisseur de LLM",
+      "provider_settings": "Paramètres du fournisseur",
+      "incomplete_setup": "Configuration incomplète du fournisseur"
+    },
+    "download": {
+      "error_title": "Une erreur s'est produite",
+      "error_message": "Erreur lors du téléchargement du modèle {{error}}",
+      "success_title": "Modèle téléchargé",
+      "success_message": "Le modèle a été téléchargé avec succès",
+      "url_must_be_gguf": "L'URL doit se terminer par .gguf"
+    },
+    "survey": {
+      "title": "Comment AnythingLLM peut-il vous aider ?",
+      "description": "Sélectionnez celui qui vous s'applique le plus.",
+      "options": {
+        "productivity": "Augmenter la productivité",
+        "privacy": "Conversations axées sur la confidentialité",
+        "custom_ai": "Agents d'IA personnalisés",
+        "automation": "Automatisation de l'IA",
+        "other": "Autre"
+      }
+    },
+    "data_handling": {
+      "title": "Traitement et confidentialité des données",
+      "description": "Avec AnythingLLM, toutes les conversations, documents et autres données sont traités et stockés sur votre appareil.",
+      "local_chats_title": "Conversations entièrement locales",
+      "local_chats_description": "Toutes les conversations sont stockées sur votre appareil.",
+      "embedding_title": "Incorporation de documents",
+      "embedding_description": "Tous les documents et le traitement sont effectués sur votre appareil.",
+      "agents_title": "Agents d'IA",
+      "agents_description": "Tous les agents s'exécutent sur votre appareil et n'utilisent Internet que lorsque cela est nécessaire (par exemple : Recherche Web)",
+      "experience": "Expérimenter AnythingLLM",
+      "setting_up": "Configuration de votre premier espace de travail",
+      "default_workspace_name": "Mon espace de travail"
+    }
+  },
+  "workspace_settings": {
+    "load_error": "Erreur lors du chargement de l'espace de travail",
+    "autosaving": "Enregistrement automatique...",
+    "autosaved": "Enregistré automatiquement !",
+    "name": {
+      "section": "Nom de l'espace de travail",
+      "title": "Nom",
+      "current": "Nom actuel",
+      "placeholder": "Entrez votre nom ici...",
+      "save_error": "Erreur lors de l'enregistrement du nom"
+    },
+    "system_prompt": {
+      "title": "Invite système",
+      "label": "Invite",
+      "current": "Invite système actuelle",
+      "placeholder": "Entrez votre invite système ici...",
+      "save_error": "Erreur lors de l'enregistrement de l'invite système",
+      "description": "L'invite système est l'invite directrice et les instructions pour l'IA. Elle doit être utilisée pour guider le comportement de l'IA et le type de réponses."
+    },
+    "temperature": {
+      "title": "Température",
+      "current": "Température actuelle",
+      "suggested": "Température suggérée",
+      "placeholder": "Par défaut (le fournisseur décide)",
+      "save_error": "Erreur lors de l'enregistrement de la température",
+      "hint": "Laissez vide pour utiliser la température par défaut de votre fournisseur de LLM et modèle. Définissez une valeur entre 0 et 1 pour l'annuler.",
+      "description": "La température est le niveau de caractère aléatoire des réponses de l'IA. Plus la température est élevée, plus les réponses seront aléatoires."
+    },
+    "context_length": {
+      "title": "Longueur du contexte",
+      "current": "Longueur du contexte actuelle",
+      "suggested": "Longueur du contexte suggérée",
+      "placeholder": "Entrez votre longueur de contexte ici...",
+      "save_error": "Erreur lors de l'enregistrement de la longueur du contexte",
+      "hint": "Gardez à l'esprit que la longueur du contexte dépend également du modèle que vous utilisez et a des implications en mémoire pour votre appareil.",
+      "description": "La longueur du contexte est le nombre maximum de jetons que l'IA peut utiliser lors de la génération d'une réponse."
+    },
+    "vectors": {
+      "section": "Stockage vectoriel",
+      "count": "Nombre de vecteurs",
+      "description": "C'est le nombre de vecteurs actuellement stockés dans l'espace de travail. Ceci est utilisé pour stocker le contexte de l'espace de travail."
+    },
+    "delete": {
+      "button": "Supprimer l'espace de travail",
+      "confirm_title": "Supprimer l'espace de travail ?",
+      "confirm_message": "Êtes-vous sûr de vouloir supprimer cet espace de travail ? Tous les fils seront perdus.",
+      "confirm_message_remote": "Êtes-vous sûr de vouloir supprimer cet espace de travail ? Tous les fils seront perdus.\n\nCela ne supprimera pas l'espace de travail dans votre instance distante."
+    }
+  },
+  "connect": {
+    "title": "Connecter à AnythingLLM",
+    "scan_description": "Scannez le code QR pour votre instance ou client AnythingLLM pour synchroniser ses données sur cet appareil mobile pour l'IA en déplacement !",
+    "previous_connections": "Connexions précédentes",
+    "verify": {
+      "title": "Vérifier la connexion",
+      "go_back": "Retour",
+      "registering": "Enregistrement de votre appareil...",
+      "few_seconds": "Cela peut prendre quelques secondes...",
+      "awaiting_approval": "En attente d'approbation...",
+      "approve_in_app": "Veuillez approuver l'appareil dans l'application AnythingLLM...",
+      "collecting_data": "Collecte des données de l'instance...",
+      "register_failed": "Impossible d'enregistrer l'appareil. Veuillez réessayer.",
+      "register_failed_reason": "Impossible d'enregistrer l'appareil : {{reason}}",
+      "approval_failed": "Impossible d'enregistrer ou d'approuver l'appareil. Veuillez réessayer."
+    },
+    "import": {
+      "connection_expired": "Votre connexion existante à AnythingLLM Desktop a expiré.",
+      "refresh_failed": "Impossible d'actualiser les espaces de travail",
+      "go_home": "Retour à l'accueil",
+      "thread_count_many": "{{formatted}} fils",
+      "thread_count_one": "{{formatted}} fil",
+      "thread_count_other": "{{formatted}} fils",
+      "chat_count_many": "{{formatted}} conversations",
+      "chat_count_one": "{{formatted}} conversation",
+      "chat_count_other": "{{formatted}} conversations",
+      "sync": "Synchroniser",
+      "synced": "Synchronisé",
+      "sync_failed": "Échoué",
+      "sync_workspace_failed": "Impossible de synchroniser l'espace de travail {{name}}"
+    }
+  },
+  "scheduled_jobs": {
+    "title": "Tâches programmées",
+    "job_missing": "Cette tâche n'existe plus",
+    "update_failed": "Impossible de mettre à jour la tâche",
+    "prompt": "Invite",
+    "tools": "Outils",
+    "paused": "Mise en pause",
+    "running_now": "En cours d'exécution",
+    "stop_run": "Arrêter l'exécution",
+    "run_already_finished": "Cette exécution était déjà terminée",
+    "stop_failed": "Impossible d'arrêter l'exécution",
+    "blocked": {
+      "no_provider_title": "Choisissez d'abord un fournisseur de LLM",
+      "no_provider_body": "Les tâches programmées s'exécutent sans vous, donc elles ont besoin d'un LLM cloud ou auto-hébergé pour communiquer. Choisissez-en un dans Paramètres.",
+      "on_device_title": "Les tâches programmées nécessitent un LLM cloud",
+      "on_device_body": "Le modèle sur appareil ne peut pas s'exécuter en arrière-plan, donc les tâches sont mises en pause alors qu'il est sélectionné. Passez à un fournisseur cloud ou auto-hébergé dans Paramètres pour les exécuter."
+    },
+    "list": {
+      "open_llm_settings": "Ouvrir les paramètres LLM",
+      "enabled_count": "{{enabled}} sur {{total}} activés",
+      "your_jobs": "Vos tâches",
+      "explainer_background": "Une tâche est une invite que l'assistant exécute pour vous selon un calendrier, en utilisant les outils que vous choisissez. Les résultats sont collectés ici et s'exécutent même lorsque l'application est fermée - Android peut retarder une exécution de quelques minutes pour économiser la batterie.",
+      "explainer_foreground": "Une tâche est une invite que l'assistant exécute pour vous selon un calendrier, en utilisant les outils que vous choisissez. Les résultats sont collectés ici la prochaine fois que vous ouvrez l'application.",
+      "new_job": "Nouvelle tâche",
+      "waiting_for_cloud": "En attente d'un LLM cloud",
+      "next_run": "Prochaine exécution {{time}}",
+      "not_scheduled": "Non programmée",
+      "empty_title": "Aucune tâche programmée pour le moment",
+      "empty_body": "Demandez à l'assistant de vérifier un site web chaque matin, de rédiger un résumé hebdomadaire ou de créer un rapport le premier du mois - tout sans ouvrir une conversation.",
+      "create_first": "Créer votre première tâche"
+    },
+    "runs": {
+      "already_running": "Cette tâche est déjà en cours d'exécution",
+      "start_failed": "Impossible de démarrer la tâche",
+      "fallback_title": "Tâche",
+      "edit_job": "Modifier la tâche",
+      "next_run_with_date": "Prochaine exécution {{relative}} · {{date}}",
+      "not_scheduled_to_run": "Non programmée pour s'exécuter",
+      "notify": "Notifier",
+      "last_run": "Dernière exécution",
+      "never": "Jamais",
+      "run_now": "Exécuter maintenant",
+      "run_count_many": "{{count}} exécutions",
+      "run_count_one": "{{count}} exécution",
+      "run_count_other": "{{count}} exécutions",
+      "history": "Historique",
+      "empty_with_next": "Cette tâche n'a pas encore été exécutée. Sa première exécution est {{time}}. Vous pouvez également l'exécuter maintenant pour l'essayer.",
+      "empty": "Cette tâche n'a pas encore été exécutée. Vous pouvez également l'exécuter maintenant pour l'essayer.",
+      "manual": "· manuel"
+    },
+    "form": {
+      "save_failed": "La tâche n'a pas pu être enregistrée",
+      "job_updated": "Tâche mise à jour",
+      "job_scheduled": "Tâche programmée",
+      "could_not_save": "Impossible d'enregistrer la tâche",
+      "delete_title": "Supprimer cette tâche ?",
+      "delete_message": "\"{{name}}\" et chaque résultat qu'elle a produit seront supprimés. Cela ne peut pas être annulé.",
+      "job_deleted": "Tâche supprimée",
+      "delete_failed": "Impossible de supprimer la tâche",
+      "edit_title": "Modifier la tâche",
+      "new_title": "Nouvelle tâche",
+      "what_section": "Que devrait-elle faire ?",
+      "name": "Nom",
+      "name_placeholder": "Résumé des nouvelles du matin",
+      "prompt_hint": "Écrit comme si vous l'envoyiez dans une conversation. Soyez spécifique - personne n'est là pour répondre aux questions de suivi.",
+      "prompt_placeholder": "Lire https://news.ycombinator.com et écrire un court résumé des cinq histoires les plus intéressantes, avec une ligne sur chacune.",
+      "when_section": "Quand devrait-elle s'exécuter ?",
+      "options": "Options",
+      "notify_title": "Me notifier lorsqu'elle se termine",
+      "notify_description": "Envoie une notification lorsqu'une exécution se termine avec un résultat. Les exécutions échouées ou vides affichent uniquement un point dans l'application.",
+      "enabled_description": "Désactivez pour conserver la tâche et ses résultats sans l'exécuter.",
+      "save_changes": "Enregistrer les modifications",
+      "schedule_job": "Programmer la tâche",
+      "delete_job": "Supprimer la tâche"
+    },
+    "tool_picker": {
+      "selected_count_many": "{{count}} sélectionnés",
+      "selected_count_one": "{{count}} sélectionné",
+      "selected_count_other": "{{count}} sélectionnés",
+      "none_reply_only": "Aucun - réponse uniquement",
+      "app_connections": "Connexions d'application",
+      "explainer": "Chaque outil que vous activez est proposé au modèle à chaque exécution. Les outils qui vous demanderaient normalement une approbation sont approuvés automatiquement, puisque personne n'est là pour appuyer."
+    },
+    "builder": {
+      "daily": "Tous les jours",
+      "weekly": "Hebdomadaire",
+      "monthly": "Mensuel",
+      "hourly": "Toutes les heures",
+      "every_few_minutes": "Toutes les quelques minutes",
+      "mode_schedule": "Calendrier",
+      "mode_cron": "Expression cron",
+      "run": "Exécution",
+      "every": "Tous les",
+      "minutes_chip": "{{minutes}} min",
+      "at_minute": "À la minute",
+      "on": "Sur",
+      "on_day": "Le",
+      "days_skipped": "Les mois sans le {{day}} sont ignorés.",
+      "at_time": "À {{time}}",
+      "custom_minute": "Minute :{{minute}} a été définie avec une expression cron - choisissez une étape ci-dessus pour la modifier.",
+      "cron_help": "Cinq champs : minute, heure, jour du mois, mois, jour de la semaine (0 = dimanche). Les heures sont dans le fuseau horaire de votre téléphone.",
+      "invalid_cron": "Ce n'est pas une expression cron valide"
+    },
+    "run_detail": {
+      "run_missing": "Cette exécution n'existe plus",
+      "delete_title": "Supprimer cette exécution ?",
+      "delete_message": "Le résultat et tous les fichiers qu'il a créés seront supprimés.",
+      "run_deleted": "Exécution supprimée",
+      "fallback_title": "Exécution",
+      "delete_run": "Supprimer l'exécution",
+      "run_manually": "Exécuter manuellement",
+      "scheduled": "Programmée",
+      "tokens": "jetons {{prompt}} invite · {{completion}} complète",
+      "result": "Résultat",
+      "empty_completed": "Le modèle s'est terminé sans rien écrire.",
+      "empty_stopped": "Rien n'a été produit avant l'arrêt de l'exécution.",
+      "stopping": "Arrêt…",
+      "working": "En cours..."
+    },
+    "status": {
+      "queued": "En attente",
+      "running": "En cours d'exécution",
+      "completed": "Terminée",
+      "failed": "Échouée",
+      "timed_out": "Délai d'attente dépassé",
+      "stopped": "Arrêtée"
+    },
+    "unseen": "Non vus",
+    "relative_time": {
+      "in_under_a_minute": "dans moins d'une minute",
+      "just_now": "à l'instant",
+      "in_minutes": "dans {{minutes}} min",
+      "minutes_ago": "il y a {{minutes}} min",
+      "in_hours": "dans {{hours}}h",
+      "hours_ago": "il y a {{hours}}h",
+      "in_hours_minutes": "dans {{hours}}h {{minutes}}m",
+      "hours_minutes_ago": "il y a {{hours}}h {{minutes}}m",
+      "in_days": "dans {{days}}d",
+      "days_ago": "il y a {{days}}d"
+    },
+    "runner": {
+      "job_failed": "Tâche échouée",
+      "created_files": "Votre tâche est terminée et a créé des fichiers pour vous."
+    },
+    "schedule": {
+      "custom": "Calendrier personnalisé ({{expression}})",
+      "invalid": "Calendrier invalide",
+      "every_minute": "Chaque minute",
+      "every_minutes_many": "Tous les {{count}} minutes",
+      "every_minutes_one": "Chaque {{count}} minute",
+      "every_minutes_other": "Tous les {{count}} minutes",
+      "every_hour": "Chaque heure",
+      "every_hour_at": "Chaque heure à {{minute}} passées",
+      "every_day_at": "Chaque jour à {{time}}",
+      "weekdays_at": "Jours de semaine à {{time}}",
+      "weekends_at": "Fins de semaine à {{time}}",
+      "weekly_single": "Chaque {{day}} à {{time}}",
+      "weekly_multiple": "Chaque {{days}} et {{last}} à {{time}}",
+      "list_separator": ", ",
+      "monthly": "Le {{day}} de chaque mois à {{time}}",
+      "ordinal_st": "{{n}}er",
+      "ordinal_nd": "{{n}}",
+      "ordinal_rd": "{{n}}",
+      "ordinal_th": "{{n}}",
+      "time_am": "{{hour}}:{{minute}}",
+      "time_pm": "{{hour}}:{{minute}}",
+      "hour_am": "{{hour}}",
+      "hour_pm": "{{hour}}"
+    },
+    "weekdays_short": {
+      "sun": "dim",
+      "mon": "lun",
+      "tue": "mar",
+      "wed": "mer",
+      "thu": "jeu",
+      "fri": "ven",
+      "sat": "sam"
+    },
+    "weekdays_long": {
+      "sunday": "Dimanche",
+      "monday": "Lundi",
+      "tuesday": "Mardi",
+      "wednesday": "Mercredi",
+      "thursday": "Jeudi",
+      "friday": "Vendredi",
+      "saturday": "Samedi"
+    }
+  },
+  "notifications": {
+    "channels": {
+      "download_progress": "Progression du téléchargement",
+      "chat_replies": "Réponses de conversation",
+      "chat_replies_description": "Alertes lorsqu'une réponse se termine alors qu'AnythingLLM est en arrière-plan",
+      "scheduled_jobs": "Tâches programmées",
+      "scheduled_jobs_description": "Alertes lorsqu'une tâche programmée a terminé son exécution"
+    },
+    "blocked_nudge": {
+      "title": "Recevez une notification lorsque les réponses sont terminées",
+      "message": "Les notifications sont désactivées pour AnythingLLM. Activez-les pour recevoir une notification lorsqu'une réponse se termine pendant que votre téléphone est verrouillé.",
+      "not_now": "Pas maintenant",
+      "open_settings": "Ouvrir les paramètres"
+    },
+    "chat": {
+      "ready_title": "Réponse prête",
+      "failed_title": "Réponse échouée",
+      "ready_body": "Votre réponse est prête.",
+      "failed_body": "Votre réponse n'a pas pu être complétée. Appuyez pour voir ce qui s'est passé."
+    },
+    "scheduled_job": {
+      "finished_title": "{{name}} terminée",
+      "fallback_body": "Votre tâche programmée a un résultat pour vous."
+    }
+  },
+  "home": {
+    "welcome_title": "Bienvenue sur AnythingLLM",
+    "get_started": "Commencez par créer un nouvel espace de travail.",
+    "create_workspace": "Créer un espace de travail",
+    "default_workspace_name": "Mon espace de travail"
+  },
+  "share": {
+    "unsupported_content": "Seuls les fichiers, les images et les liens peuvent être partagés avec AnythingLLM",
+    "finish_onboarding": "Terminez la configuration d'AnythingLLM avant de partager",
+    "open_failed": "Impossible d'ouvrir le contenu partagé"
+  },
+  "deep_links": {
+    "finish_onboarding": "Terminez la configuration d'AnythingLLM avant d'ouvrir des liens vers celui-ci"
+  }
+}

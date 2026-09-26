@@ -12,6 +12,7 @@
  * The visual builder in the scheduled job form only ever produces a subset of this
  * (see `builderStateToCron` / `cronToBuilderState`), the custom mode accepts anything here.
  */
+import i18n, { tKey } from '@/i18n';
 
 export type CronFields = {
     minute: Set<number>;
@@ -250,57 +251,83 @@ export function cronToBuilderState(expression: string): { state: BuilderState; m
 // Plain language
 // ---------------------------------------------------------------------------------------------
 
-export const WEEKDAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
-export const WEEKDAY_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as const;
+/** Translation keys - resolve with t() when rendering */
+export const WEEKDAY_SHORT = [
+    tKey('scheduled_jobs.weekdays_short.sun'),
+    tKey('scheduled_jobs.weekdays_short.mon'),
+    tKey('scheduled_jobs.weekdays_short.tue'),
+    tKey('scheduled_jobs.weekdays_short.wed'),
+    tKey('scheduled_jobs.weekdays_short.thu'),
+    tKey('scheduled_jobs.weekdays_short.fri'),
+    tKey('scheduled_jobs.weekdays_short.sat'),
+] as const;
+/** Translation keys - resolve with t() when rendering */
+export const WEEKDAY_LONG = [
+    tKey('scheduled_jobs.weekdays_long.sunday'),
+    tKey('scheduled_jobs.weekdays_long.monday'),
+    tKey('scheduled_jobs.weekdays_long.tuesday'),
+    tKey('scheduled_jobs.weekdays_long.wednesday'),
+    tKey('scheduled_jobs.weekdays_long.thursday'),
+    tKey('scheduled_jobs.weekdays_long.friday'),
+    tKey('scheduled_jobs.weekdays_long.saturday'),
+] as const;
 
-/** `9:05 AM` style local time label */
-export function formatTimeOfDay(hour: number, minute: number): string {
-    const suffix = hour >= 12 ? 'PM' : 'AM';
+/**
+ * `9:05 AM` style local time label.
+ * @param lng - language to describe in (defaults to the UI language), eg. 'en' for text sent to a model
+ */
+export function formatTimeOfDay(hour: number, minute: number, lng?: string): string {
     const twelveHour = hour % 12 === 0 ? 12 : hour % 12;
-    return `${twelveHour}:${String(minute).padStart(2, '0')} ${suffix}`;
+    const options = { hour: twelveHour, minute: String(minute).padStart(2, '0'), lng };
+    return hour >= 12 ? i18n.t('scheduled_jobs.schedule.time_pm', options) : i18n.t('scheduled_jobs.schedule.time_am', options);
 }
 
-function ordinal(n: number): string {
+/** `9 AM` style hour label for the time picker */
+export function formatHourOfDay(hour: number): string {
+    const twelveHour = hour % 12 === 0 ? 12 : hour % 12;
+    return hour >= 12 ? i18n.t('scheduled_jobs.schedule.hour_pm', { hour: twelveHour }) : i18n.t('scheduled_jobs.schedule.hour_am', { hour: twelveHour });
+}
+
+function ordinal(n: number, lng?: string): string {
     const rem10 = n % 10;
     const rem100 = n % 100;
-    if (rem10 === 1 && rem100 !== 11) return `${n}st`;
-    if (rem10 === 2 && rem100 !== 12) return `${n}nd`;
-    if (rem10 === 3 && rem100 !== 13) return `${n}rd`;
-    return `${n}th`;
+    if (rem10 === 1 && rem100 !== 11) return i18n.t('scheduled_jobs.schedule.ordinal_st', { n, lng });
+    if (rem10 === 2 && rem100 !== 12) return i18n.t('scheduled_jobs.schedule.ordinal_nd', { n, lng });
+    if (rem10 === 3 && rem100 !== 13) return i18n.t('scheduled_jobs.schedule.ordinal_rd', { n, lng });
+    return i18n.t('scheduled_jobs.schedule.ordinal_th', { n, lng });
 }
 
-function listWeekdays(days: number[]): string {
+function describeWeekly(days: number[], time: string, lng?: string): string {
     const sorted = [...new Set(days)].sort((a, b) => a - b);
-    if (sorted.length === 7) return 'every day';
-    if (sorted.join(',') === '1,2,3,4,5') return 'weekdays';
-    if (sorted.join(',') === '0,6') return 'weekends';
-    const names = sorted.map((d) => WEEKDAY_LONG[d]);
-    if (names.length === 1) return `every ${names[0]}`;
-    return `every ${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
+    if (sorted.length === 7) return i18n.t('scheduled_jobs.schedule.every_day_at', { time, lng });
+    if (sorted.join(',') === '1,2,3,4,5') return i18n.t('scheduled_jobs.schedule.weekdays_at', { time, lng });
+    if (sorted.join(',') === '0,6') return i18n.t('scheduled_jobs.schedule.weekends_at', { time, lng });
+    const names = sorted.map((d) => i18n.t(WEEKDAY_LONG[d], { lng }));
+    if (names.length === 1) return i18n.t('scheduled_jobs.schedule.weekly_single', { day: names[0], time, lng });
+    const separator = i18n.t('scheduled_jobs.schedule.list_separator', { lng });
+    return i18n.t('scheduled_jobs.schedule.weekly_multiple', { days: names.slice(0, -1).join(separator), last: names[names.length - 1], time, lng });
 }
 
 /**
  * Human readable schedule, eg: "Every day at 9:00 AM", "Weekdays at 6:30 PM",
  * "Every 15 minutes". Expressions the builder cannot express fall back to a
  * generic label with the raw cron so the user still sees what is stored.
+ * @param lng - language to describe in (defaults to the UI language), eg. 'en' for text sent to a model
  */
-export function describeCron(expression: string): string {
+export function describeCron(expression: string, lng?: string): string {
     const { state, matched } = cronToBuilderState(expression);
-    if (!matched) return isValidCron(expression) ? `Custom schedule (${expression.trim()})` : 'Invalid schedule';
+    if (!matched) return isValidCron(expression) ? i18n.t('scheduled_jobs.schedule.custom', { expression: expression.trim(), lng }) : i18n.t('scheduled_jobs.schedule.invalid', { lng });
     switch (state.frequency) {
         case 'minute':
-            return state.minuteInterval === 1 ? 'Every minute' : `Every ${state.minuteInterval} minutes`;
+            return state.minuteInterval === 1 ? i18n.t('scheduled_jobs.schedule.every_minute', { lng }) : i18n.t('scheduled_jobs.schedule.every_minutes', { count: state.minuteInterval, lng });
         case 'hour':
-            return state.hourMinuteOffset === 0 ? 'Every hour' : `Every hour at ${String(state.hourMinuteOffset).padStart(2, '0')} past`;
+            return state.hourMinuteOffset === 0 ? i18n.t('scheduled_jobs.schedule.every_hour', { lng }) : i18n.t('scheduled_jobs.schedule.every_hour_at', { minute: String(state.hourMinuteOffset).padStart(2, '0'), lng });
         case 'day':
-            return `Every day at ${formatTimeOfDay(state.hour, state.minute)}`;
-        case 'week': {
-            const days = listWeekdays(state.weekdays);
-            const label = days.charAt(0).toUpperCase() + days.slice(1);
-            return `${label} at ${formatTimeOfDay(state.hour, state.minute)}`;
-        }
+            return i18n.t('scheduled_jobs.schedule.every_day_at', { time: formatTimeOfDay(state.hour, state.minute, lng), lng });
+        case 'week':
+            return describeWeekly(state.weekdays, formatTimeOfDay(state.hour, state.minute, lng), lng);
         case 'month':
-            return `On the ${ordinal(state.dayOfMonth)} of every month at ${formatTimeOfDay(state.hour, state.minute)}`;
+            return i18n.t('scheduled_jobs.schedule.monthly', { day: ordinal(state.dayOfMonth, lng), time: formatTimeOfDay(state.hour, state.minute, lng), lng });
         default:
             return expression;
     }

@@ -12,13 +12,18 @@ import Workspace from '@/database/models/Workspace';
 import { showToast } from "@/utils/Notification";
 import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
 import useLLMProvider from "@/hooks/useLLMPreference";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 
 interface TextInputViewProps {
     workspace: WorkspaceType;
     goToPage: (page: IWorkspacePageKey) => void;
     field: keyof WorkspaceType;
     resetValue: number;
+    /** Translation keys - resolved with t() when rendered */
     title: string;
+    currentLabel: string;
+    saveErrorMessage: string;
     hint?: string;
     placeholder: string;
     reattachProviderOnSave?: boolean;
@@ -30,7 +35,8 @@ const DEFAULT_SAVE_STATUS = {
     state: 'waiting' as 'waiting' | 'saving' | 'saved',
 };
 
-export function TextInputView({ workspace, goToPage, field, title, placeholder, resetValue, hint, reattachProviderOnSave = false, multiLine = false }: TextInputViewProps) {
+export function TextInputView({ workspace, goToPage, field, title, currentLabel, saveErrorMessage, placeholder, resetValue, hint, reattachProviderOnSave = false, multiLine = false }: TextInputViewProps) {
+    const { t } = useTranslation();
     useHighjackBackButtonPress(() => { goToPage('main'); return true; });
     const insets = useSafeAreaInsets();
     const keyboardHeight = useKeyboardHeight();
@@ -51,7 +57,7 @@ export function TextInputView({ workspace, goToPage, field, title, placeholder, 
                 return;
             }
 
-            setSaveStatus({ text: 'Autosaving...', state: 'saving' });
+            setSaveStatus({ text: i18n.t('workspace_settings.autosaving'), state: 'saving' });
             try {
                 const updatedWorkspace = await Workspace.update([{ field: 'slug', value: workspace.slug }], { [field]: newValue });
 
@@ -62,10 +68,10 @@ export function TextInputView({ workspace, goToPage, field, title, placeholder, 
                         LLMProvider.attachWorkspaceToProvider(updatedWorkspace as WorkspaceType);
                     }
                 }
-                setSaveStatus({ text: 'Autosaved!', state: 'saved' });
+                setSaveStatus({ text: i18n.t('workspace_settings.autosaved'), state: 'saved' });
             } catch (err) {
                 console.error('Error saving system prompt:', err);
-                showToast('Error saving system prompt');
+                showToast(i18n.t(saveErrorMessage));
             } finally {
                 setTimeout(() => setSaveStatus(DEFAULT_SAVE_STATUS), 2000);
             }
@@ -91,13 +97,13 @@ export function TextInputView({ workspace, goToPage, field, title, placeholder, 
                 <TouchableOpacity onPress={() => goToPage('main')} className="absolute left-0 flex flex-row items-center gap-2">
                     <ArrowLeft size={24} color="#FFF" weight="bold" />
                 </TouchableOpacity>
-                <Text style={{ maxWidth: '80%', color: '#9F9FA0' }} numberOfLines={1} ellipsizeMode="middle" className="text-lg font-medium">{title}</Text>
+                <Text style={{ maxWidth: '80%', color: '#9F9FA0' }} numberOfLines={1} ellipsizeMode="middle" className="text-lg font-medium">{t(title)}</Text>
             </View>
 
             <KeyboardAvoidingView style={{ paddingHorizontal: 18, gap: 8 }} behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 flex flex-col">
                 <View className="w-full flex flex-col" style={{ gap: 12 }}>
                     <View className="flex flex-row items-center justify-between">
-                        <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">Current {title}</Text>
+                        <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">{t(currentLabel)}</Text>
 
                         <View className="flex flex-row items-center">
                             <ActivityIndicator size="small" color="#FFF" animating={saveStatus.state === 'saving'} style={{ transform: [{ scale: 0.5 }] }} />
@@ -118,15 +124,15 @@ export function TextInputView({ workspace, goToPage, field, title, placeholder, 
                         className="rounded-lg text-white placeholder:text-white/50 text-left"
                         value={value.toString()}
                         onChangeText={handleValueChange}
-                        placeholder={placeholder}
+                        placeholder={t(placeholder)}
                     />
                     {value !== resetValue.toString() && (
                         <TouchableOpacity onPress={() => handleValueChange(resetValue.toString())} className="flex flex-row items-center justify-center">
-                            <Text className="text-white">Reset</Text>
+                            <Text className="text-white">{t('common.reset')}</Text>
                         </TouchableOpacity>
                     )}
                 </View>
-                {hint && <Text style={{ color: '#9F9FA0' }} className="text-sm">{hint.replace(/\\n/g, '\n')}</Text>}
+                {hint && <Text style={{ color: '#9F9FA0' }} className="text-sm">{t(hint).replace(/\\n/g, '\n')}</Text>}
             </KeyboardAvoidingView>
 
         </SafeView >

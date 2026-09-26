@@ -1,0 +1,25 @@
+name: Verify translations
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "App.tsx"
+      - "scripts/translations/**"
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "App.tsx"
+      - "scripts/translations/**"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      # The scripts only use Node built-ins, so no dependency install is needed.
+      - run: node scripts/translations/verify.mjs

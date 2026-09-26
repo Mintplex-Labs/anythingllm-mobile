@@ -1,11 +1,12 @@
 import { IEmailAction } from "@/database/models/WorkspaceChat";
 import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { safeJsonParse } from "@/utils/formatters";
+import i18n from "@/i18n";
 
 export default {
     id: 'draftEmail',
-    name: 'Draft Email',
-    description: 'Use the assistant to draft and email for you.',
+    get name() { return i18n.t('tools.draft_email.name'); },
+    get description() { return i18n.t('tools.draft_email.description'); },
     defaultEnabled: false,
     category: 'appConnections',
     definition: {
@@ -38,11 +39,11 @@ export default {
         try {
             const { subject, body, to } = typeof args === 'string' ? safeJsonParse(args) : args;
             if (!subject || !body) return `No subject or body provided. No email was drafted.`;
-            streamEmitter('report_status', `Drafting email "${subject}"`);
+            streamEmitter('report_status', i18n.t('tools.draft_email.status_drafting', { subject }));
             streamEmitter('report_action', {
                 type: 'email',
                 action: {
-                    title: 'Open Draft Email',
+                    title: i18n.t('tools.draft_email.open_action'),
                     link: `mailto:${to ?? ''}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
                 },
             } as IEmailAction);

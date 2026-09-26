@@ -3,6 +3,7 @@ import VectorDB from "@/utils/VectorDB";
 import Document from "@/database/models/Document";
 import AwaitableAlert from "@/components/AwaitableAlert";
 import { showToast } from "@/utils/Notification";
+import i18n from "@/i18n";
 
 export default function useVectorCount(workspaceSlug: string) {
     const [vectorCount, setVectorCount] = useState<number>(0);
@@ -21,15 +22,15 @@ export default function useVectorCount(workspaceSlug: string) {
 
     const askToResetVectorsForWorkspace = useCallback(async () => {
         const shouldReset = await AwaitableAlert(
-            'Reset Vector Storage',
-            'Are you sure you want to reset the vector storage for this workspace?',
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Reset', style: 'destructive' }
+            i18n.t('models.vector_storage.reset_title'),
+            i18n.t('models.vector_storage.reset_message'),
+            { text: i18n.t('common.cancel'), style: 'cancel' },
+            { text: i18n.t('common.reset'), style: 'destructive' }
         );
         if (!shouldReset) return;
         await resetVectorsForWorkspace();
         setVectorCount(0);
-        showToast('Vector storage cleared!');
+        showToast(i18n.t('models.vector_storage.cleared'));
     }, [workspaceSlug, resetVectorsForWorkspace]);
 
     useEffect(() => {

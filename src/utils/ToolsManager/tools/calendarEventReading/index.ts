@@ -2,11 +2,22 @@ import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { safeJsonParse } from "@/utils/formatters";
 import RNCalendarEvents, { CalendarEventReadable } from "react-native-calendar-events";
 import moment from 'moment';
+import i18n, { tKey } from "@/i18n";
+
+/** Status line shown while reading, per `search` value */
+const READING_STATUS: Record<string, string> = {
+    'today': tKey('tools.calendar_event_reading.status_today'),
+    'tomorrow': tKey('tools.calendar_event_reading.status_tomorrow'),
+    'this week': tKey('tools.calendar_event_reading.status_this_week'),
+    'next week': tKey('tools.calendar_event_reading.status_next_week'),
+    'this month': tKey('tools.calendar_event_reading.status_this_month'),
+    'next month': tKey('tools.calendar_event_reading.status_next_month'),
+};
 
 export default {
     id: 'calendarEventReading',
-    name: 'Read Calendar',
-    description: 'Use the assistant to read your calendar events.',
+    get name() { return i18n.t('tools.calendar_event_reading.name'); },
+    get description() { return i18n.t('tools.calendar_event_reading.description'); },
     defaultEnabled: false,
     category: 'appConnections',
     definition: {
@@ -37,7 +48,9 @@ export default {
             const parsedArgs = typeof args === 'string' ? safeJsonParse(args) : args;
             const { search = 'today', specificDate = moment().format('YYYY-MM-DD') } = parsedArgs;
             const { startDate, endDate } = this._searchTypeToDate(search, specificDate);
-            streamEmitter('report_status', `Reading your calendar for ${search === 'specific date' ? specificDate : search}`);
+            streamEmitter('report_status', search === 'specific date' || !READING_STATUS[search]
+                ? i18n.t('tools.calendar_event_reading.status_date', { date: search === 'specific date' ? specificDate : search })
+                : i18n.t(READING_STATUS[search]));
 
             const canRead = await RNCalendarEvents.checkPermissions();
             if (['denied', 'restricted', 'undetermined'].includes(canRead)) {

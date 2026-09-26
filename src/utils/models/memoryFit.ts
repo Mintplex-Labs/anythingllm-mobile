@@ -1,4 +1,5 @@
 import DeviceInfo from 'react-native-device-info';
+import { tKey } from '@/i18n';
 
 /**
  * Shared "will this GGUF fit on this phone" heuristic.
@@ -99,8 +100,11 @@ export function pickRecommendedModel<T extends FitCandidate>(candidates: T[], me
   return memoryFitForSize(smallest.bytes, memory) === 'impossible' ? null : smallest.model;
 }
 
-/** Copy for the warning pills - a model that fits gets no badge. `compact` is for tight rows (eg. next to a large title). */
+/**
+ * Copy for the warning pills - a model that fits gets no badge. `compact` is for tight rows (eg. next to a large title).
+ * Values are translation keys - resolve them with t() when rendering.
+ */
 export const MEMORY_FIT_LABELS: Record<Exclude<MemoryFit, 'ok'>, { full: string; compact: string }> = {
-  tight: { full: 'May not fit in memory', compact: 'May not fit' },
-  impossible: { full: 'Too large for this device', compact: 'Too large' },
+  tight: { full: tKey('models.memory_fit.tight'), compact: tKey('models.memory_fit.tight_compact') },
+  impossible: { full: tKey('models.memory_fit.impossible'), compact: tKey('models.memory_fit.impossible_compact') },
 };

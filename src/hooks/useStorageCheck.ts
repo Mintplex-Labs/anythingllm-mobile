@@ -3,6 +3,7 @@ import DeviceInfo from 'react-native-device-info';
 import { formatBytes } from '@/utils/formatters';
 import { hasEnoughSpace } from '@/utils/device';
 import { Model, ModelOrigin } from '@/utils/types';
+import i18n from '@/i18n';
 
 interface StorageCheckOptions {
   /**
@@ -55,9 +56,10 @@ export const useStorageCheck = (
           }
 
           // Use localized template string with variables
-          const message = 'Storage low! Model {{modelSize}} > {{freeSpace}} free'
-            .replace('{{modelSize}}', formatBytes(model.size))
-            .replace('{{freeSpace}}', formatBytes(freeDisk));
+          const message = i18n.t('downloads.storage_low', {
+            modelSize: formatBytes(model.size),
+            freeSpace: formatBytes(freeDisk),
+          });
 
           setStorageStatus({
             isOk: false,
@@ -72,7 +74,7 @@ export const useStorageCheck = (
       } catch (error) {
         if (!abortController.signal.aborted) {
           console.error('Storage check failed:', error);
-          setStorageStatus({ isOk: false, message: 'Failed to check storage' });
+          setStorageStatus({ isOk: false, message: i18n.t('downloads.storage_check_failed') });
         }
       }
     };

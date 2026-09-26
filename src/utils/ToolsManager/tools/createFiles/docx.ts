@@ -2,6 +2,7 @@ import { GENERATED_FILE_TYPES, sanitizeFilename } from "@/utils/documents/shared
 import { DOCX_MARGIN_NAMES, DOCX_THEME_NAMES, buildDocxBase64, resolveDocxTitle } from "@/utils/documents/docx";
 import { saveGeneratedDocument } from "@/utils/fs/generatedDocuments";
 import { generatedFileResult, parseToolArgs, reportGeneratedFile, type StreamEmitter } from "./shared";
+import i18n from "@/i18n";
 
 type Args = {
     filename: string;
@@ -20,8 +21,8 @@ type Args = {
  */
 export default {
     id: 'createDocxFile',
-    name: 'Word Document',
-    description: 'Write a styled .docx from markdown with themes and an optional title page.',
+    get name() { return i18n.t('tools.create_docx_file.name'); },
+    get description() { return i18n.t('tools.create_docx_file.description'); },
     defaultEnabled: false,
     category: 'default',
     group: 'createFiles',
@@ -85,11 +86,11 @@ export default {
             const displayFilename = sanitizeFilename(filename, 'docx', 'document');
             const resolvedTitle = resolveDocxTitle({ title, content, fallbackTitle: displayFilename.replace(/\.docx$/i, '') });
 
-            streamEmitter('report_status', `Creating Word document "${displayFilename}"`);
+            streamEmitter('report_status', i18n.t('tools.create_docx_file.status_creating', { name: displayFilename }));
             const base64 = await buildDocxBase64({ content, title: resolvedTitle, subtitle, author, theme, margins, includeTitlePage: !!includeTitlePage });
             const saved = await saveGeneratedDocument({ fileType: 'docx', extension: 'docx', displayFilename, content: base64, encoding: 'base64' });
             reportGeneratedFile(streamEmitter, saved, GENERATED_FILE_TYPES.docx.mimeType);
-            streamEmitter('report_status', `Created ${displayFilename}`);
+            streamEmitter('report_status', i18n.t('tools.create_files.status_created', { name: displayFilename }));
 
             const styleInfo = [
                 theme && theme !== 'neutral' ? `${theme} theme` : null,

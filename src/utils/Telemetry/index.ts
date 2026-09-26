@@ -1,5 +1,6 @@
 import { getApp } from '@react-native-firebase/app'
 import { getAnalytics, logEvent, setAnalyticsCollectionEnabled } from '@react-native-firebase/analytics'
+import { getCrashlytics, log as logCrashlytics, recordError, setCrashlyticsCollectionEnabled } from '@react-native-firebase/crashlytics'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { isDebugMode } from '@/utils/constants';
 
@@ -15,6 +16,7 @@ const TELEMETRY_ENABLED_KEY = 'anythingllm_telemetry_enabled';
 class Telemetry {
     private static instance: Telemetry;
     private analytics: ReturnType<typeof getAnalytics> | null = null;
+    private crashlytics: ReturnType<typeof getCrashlytics> | null = null;
     /**
      * Cached opt-out state so `logEvent` can bail synchronously. Defaults to enabled and is
      * hydrated from storage on construction; only an explicit "false" turns it off.
@@ -81,10 +83,17 @@ class Telemetry {
         if (Telemetry.instance) return Telemetry.instance;
         Telemetry.instance = this;
         this.analytics = getAnalytics(getApp());
+        // Creating the Crashlytics instance installs its global JS error handler, so fatal JS
+        // errors and native crashes are reported with their message and stack. Follows the same opt-out.
+        this.crashlytics = getCrashlytics();
         this.ready = AsyncStorage.getItem(TELEMETRY_ENABLED_KEY)
-            .then((value) => {
+            .then(async (value) => {
                 this.enabled = value !== 'false';
-                if (!this.enabled) return setAnalyticsCollectionEnabled(this.analytics!, false);
+                if (!this.enabled)
+                    await Promise.all([
+                        setAnalyticsCollectionEnabled(this.analytics!, false),
+                        setCrashlyticsCollectionEnabled(this.crashlytics!, false),
+                    ]);
             })
             .catch((e) => console.error('[Telemetry] could not read opt-out setting', e));
     }
@@ -103,6 +112,17 @@ class Telemetry {
         logEvent(this.analytics!, name, params);
     }
 
+    /**
+     * Report an error the app recovered from (eg. caught by an error boundary) to Crashlytics as a
+     * non-fatal issue. Uncaught errors are reported automatically by Crashlytics' global handler.
+     * @param context - extra detail logged alongside the report, eg. the React component stack
+     */
+    recordError(error: Error, context?: string) {
+        if (!this.enabled || !this.crashlytics) return;
+        if (context) logCrashlytics(this.crashlytics, context.slice(0, 2000));
+        recordError(this.crashlytics, error);
+    }
+
     /** Whether anonymous telemetry is currently on. Resolves once the stored setting has been read. */
     async isEnabled(): Promise<boolean> {
         await this.ready;
@@ -112,7 +132,7 @@ class Telemetry {
     /**
      * Turn anonymous telemetry on or off and persist the choice.
      * Disabling sends one last `DISABLED_TELEMETRY` event so we can count opt-outs, then stops
-     * Firebase collection; every later `logEvent` call returns early.
+     * Firebase analytics and crash report collection; every later `logEvent` call returns early.
      */
     async setEnabled(enabled: boolean): Promise<void> {
         await this.ready;
@@ -122,6 +142,8 @@ class Telemetry {
         await Promise.all([
             AsyncStorage.setItem(TELEMETRY_ENABLED_KEY, String(enabled)),
             setAnalyticsCollectionEnabled(this.analytics!, enabled),
+            // Crash reports stay off in dev builds (firebase.json crashlytics_debug_enabled)
+            setCrashlyticsCollectionEnabled(this.crashlytics!, enabled && !__DEV__),
         ]);
         if (isDebugMode) this.log(`Anonymous telemetry ${enabled ? 'enabled' : 'disabled'}`);
     }

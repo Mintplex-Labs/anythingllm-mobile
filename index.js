@@ -3,6 +3,8 @@
  */
 
 import {AppRegistry} from 'react-native';
+// Loaded first so Crashlytics' global error handler is in place before any app code runs.
+import './src/utils/Telemetry';
 import notifee from '@notifee/react-native';
 import App from './App';
 import QuickContextApp from './src/quickContext/QuickContextApp';

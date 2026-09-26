@@ -4,6 +4,7 @@ apply plugin: "com.facebook.react"
 apply plugin: "kotlin-kapt"
 apply plugin: "io.objectbox"
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 apply from: "../../node_modules/react-native-config/android/dotenv.gradle"
 
@@ -73,6 +74,8 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            // Ship native debug symbols in the AAB so Play Console can symbolicate native (llama.rn) crashes
+            ndk { debugSymbolLevel 'FULL' }
         }
     }
 

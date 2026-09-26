@@ -38,6 +38,7 @@
     "@react-native-documents/picker": "^12.0.2",
     "@react-native-firebase/analytics": "^23.3.1",
     "@react-native-firebase/app": "^23.3.1",
+    "@react-native-firebase/crashlytics": "23.3.1",
     "@react-native-masked-view/masked-view": "^0.3.1",
     "@react-native-voice/voice": "^3.2.4",
     "@react-navigation/drawer": "^7.13.10",

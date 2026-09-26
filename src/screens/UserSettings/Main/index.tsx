@@ -230,24 +230,6 @@ export function MainView({ goToPage }: MainViewProps) {
             </Text>
           </View>
 
-          {/* UI language - detected from the device on first launch */}
-          <View className="w-full flex flex-col" style={{ gap: 12 }}>
-            <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">
-              {t('language.title')}
-            </Text>
-            <TouchableOpacity
-              style={{ backgroundColor: '#1B1B1E', padding: 14, gap: 12 }}
-              className="w-full flex flex-row items-center rounded-lg"
-              onPress={() => goToPage('language')}>
-              <Translate size={18} color="#FFF" />
-              <Text className="text-white text-lg flex-1">{t('settings.language.app_language')}</Text>
-              <Text numberOfLines={1} style={{ color: '#9F9FA0' }} className="text-lg">
-                {activeLanguage?.nativeName}
-              </Text>
-              <CaretRight size={18} color="#FFF" />
-            </TouchableOpacity>
-          </View>
-
           {/* System-level integrations (Android only for now) - each can be switched off on its own page */}
           {isQuickContextAvailable() && (
             <View className="w-full flex flex-col" style={{ gap: 12 }}>
@@ -313,6 +295,13 @@ export function MainView({ goToPage }: MainViewProps) {
                 gap: 12,
                 borderRadius: 8,
               }}>
+              {/* UI language - detected from the device on first launch */}
+              <SupportItem
+                title={t('settings.language.app_language')}
+                icon={<Translate size={18} color="#FFF" />}
+                value={activeLanguage?.nativeName}
+                onPress={() => goToPage('language')}
+              />
               <SupportItem
                 title={t('settings.utility.anonymous_telemetry')}
                 icon={<ChartBar size={18} color="#FFF" />}
@@ -392,12 +381,15 @@ function SupportItem({
   icon,
   borderBottom = true,
   onPress = null,
+  value,
 }: {
   title: string;
   link?: string;
   icon: React.ReactNode;
   borderBottom?: boolean;
   onPress?: (() => void) | null;
+  /** Current setting shown right-aligned, e.g. the active language */
+  value?: string;
 }) {
   return (
     <TouchableOpacity
@@ -409,7 +401,12 @@ function SupportItem({
       }}
       onPress={onPress ? onPress : () => Linking.openURL(link ?? '')}>
       {icon}
-      <Text className="text-white text-lg">{title}</Text>
+      <Text className="text-white text-lg flex-1">{title}</Text>
+      {value && (
+        <Text numberOfLines={1} style={{ color: '#9F9FA0' }} className="text-lg">
+          {value}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 }

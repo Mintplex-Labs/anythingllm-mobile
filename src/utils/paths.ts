@@ -18,4 +18,5 @@ export const PATHS = {
 
   remote_version_url: 'https://cdn.anythingllm.com/mobile/latest/version.txt',
   google_play_store: 'https://play.google.com/store/apps/details?id=com.anythingllm',
+  github_new_issue: 'https://github.com/Mintplex-Labs/anythingllm-mobile/issues/new',
 };

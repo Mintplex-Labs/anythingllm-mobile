@@ -20,6 +20,8 @@ buildscript {
         // Add the Google Services plugin dependency
         // This is used exclusively for Firebase functionality
         classpath 'com.google.gms:google-services:4.4.3'
+        // Crashlytics: uploads the mapping/native symbol info crash reports are decoded with
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.8'
     }
 }
 

@@ -24,9 +24,19 @@ function executeCommand(command) {
 const isWindows = os.platform() === 'win32';
 const gradleCommand = isWindows ? 'gradlew.bat' : './gradlew';
 
+// Dev installs reuse the release version number, so their sourcemap is kept apart from the
+// release one - it decodes `index.android.bundle:<line>:<col>` frames from this build only.
+const fs = require('fs');
+const version = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
+const versionCode = fs.readFileSync(path.join('android', 'app', 'build.gradle'), 'utf8').match(/versionCode\s+(\d+)/)[1];
+const sourcemapFolder = path.join('sourcemaps', 'android', `v${version}-${versionCode}-dev`);
+fs.mkdirSync(sourcemapFolder, { recursive: true });
+const sourcemapPath = path.join(sourcemapFolder, 'index.android.bundle.map');
+
 // Bundle the React Native app
 console.log('Bundling React Native app...');
-executeCommand('npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res');
+executeCommand(`npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res --sourcemap-output "${sourcemapPath}"`);
+console.log(`Sourcemap saved to: ${sourcemapPath}`);
 
 // Build the Android app
 console.log('Building Android app...');

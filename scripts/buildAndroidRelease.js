@@ -80,6 +80,18 @@ try {
     console.log('Building the AAB bundle...');
     runCommand(isWindows ? 'cd android && gradlew bundleRelease && cd ..' : 'cd android && ./gradlew bundleRelease && cd ..');
 
+    // Keep the JS sourcemap for this exact build - it is the only way to decode the
+    // `index.android.bundle:1:<col>` frames in Crashlytics JS crash reports. Stored outside
+    // release/ and android/build/ since both are wiped at the start of every build.
+    const versionCode = fs.readFileSync('android/app/build.gradle', 'utf8').match(/versionCode\s+(\d+)/)[1];
+    const sourcemapFolder = `sourcemaps/android/v${version}-${versionCode}`;
+    fs.mkdirSync(sourcemapFolder, { recursive: true });
+    fs.copyFileSync(
+        'android/app/build/generated/sourcemaps/react/release/index.android.bundle.map',
+        path.join(sourcemapFolder, 'index.android.bundle.map')
+    );
+    console.log(`🗺️  Sourcemap saved to: ${sourcemapFolder}`);
+
     // Create universal APK with version in filename
     console.log('Creating universal APK with version...');
     const aabPath = 'android/app/build/outputs/bundle/release/app-release.aab';

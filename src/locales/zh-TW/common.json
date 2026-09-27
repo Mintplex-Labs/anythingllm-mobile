@@ -289,7 +289,9 @@
     },
     "errors": {
       "processing": "處理聊天時出錯",
-      "timed_out": "要求在收到回應前逾時。連線可能已中斷。"
+      "timed_out": "要求在收到回應前逾時。連線可能已中斷。",
+      "show_more": "顯示更多",
+      "show_less": "顯示更少"
     },
     "status": {
       "recalling_notes": "正在回想工作區附註"
@@ -700,6 +702,17 @@
       "short": "記憶體警告",
       "full": "警告：模型大小可能超過可用記憶體。這可能影響您裝置的效能和穩定性。"
     },
+    "low_memory": {
+      "title": "記憶體不足",
+      "advice": "當記憶空間不足時，手機可能會在回復的過程中關閉 AnythingLLM，以釋放空間，這看起來就像是系統崩潰。請關閉其他應用程式，或切換到遠端模型連接，以獲得更可靠的回應。",
+      "free": "可用",
+      "total": "總計",
+      "model_loaded": "模型 (已載入)",
+      "model_needs": "模型所需",
+      "send_anyway": "仍要傳送",
+      "got_it": "已理解",
+      "indicator_label": "低記憶體警告"
+    },
     "catalog": {
       "gemma_3_1b": "(Q8_0) Gemma3 1B 是 Gemma3 4B 模型的較小輕量版本，適用於更複雜的任務。",
       "qwen3_0_6b": "(Q8_0) Qwen3 0.6B 是一個微小、非常快速的模型，用於快速回答和簡單任務。由 Qwen3.5 0.8B 取代。",
@@ -1093,11 +1106,11 @@
       "weekly_single": "每 {{day}} 在 {{time}}",
       "weekly_multiple": "每 {{days}} 和 {{last}} 在 {{time}}",
       "list_separator": "、",
-      "monthly": "每月的第 {{day}} 個在 {{time}}",
-      "ordinal_st": "{{n}} 日",
-      "ordinal_nd": "{{n}} 日",
-      "ordinal_rd": "{{n}} 日",
-      "ordinal_th": "{{n}} 日",
+      "monthly": "每月 {{day}} 日 {{time}}",
+      "ordinal_st": "{{n}}",
+      "ordinal_nd": "{{n}}",
+      "ordinal_rd": "{{n}}",
+      "ordinal_th": "{{n}}",
       "time_am": "{{hour}}:{{minute}} AM",
       "time_pm": "{{hour}}:{{minute}} PM",
       "hour_am": "{{hour}} AM",

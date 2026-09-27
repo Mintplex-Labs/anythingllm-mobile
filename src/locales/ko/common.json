@@ -289,7 +289,9 @@
     },
     "errors": {
       "processing": "채팅 처리 중 오류",
-      "timed_out": "응답을 받기 전에 요청 시간이 초과됨. 연결이 끊어졌을 수 있습니다."
+      "timed_out": "응답을 받기 전에 요청 시간이 초과됨. 연결이 끊어졌을 수 있습니다.",
+      "show_more": "더 보기",
+      "show_less": "더 보기"
     },
     "status": {
       "recalling_notes": "워크스페이스 노트 회상 중"
@@ -622,21 +624,21 @@
   },
   "hf_import": {
     "title": "Hugging Face에서 모델 추가",
-    "add_card_hint": "repo id 또는 url을 붙여넣고 이 기기에서 실행할 GGUF quant를 선택하세요.",
+    "add_card_hint": "저장소 ID 또는 URL을 붙여넣고 이 기기에서 실행할 GGUF 양자화 버전을 선택하세요.",
     "generic_error": "Hugging Face와 대화하는 중에 문제가 발생했습니다.",
-    "description": "모델 id 또는 url을 붙여넣거나 검색하세요. 모든 공개 GGUF quant를 이 기기에 다운로드하고 실행할 수 있습니다.",
+    "description": "모델 ID 또는 URL을 붙여넣거나 검색하세요. 모든 공개 GGUF 양자화 버전을 이 기기에 다운로드하여 실행할 수 있습니다.",
     "show_files": "GGUF 파일 표시",
     "search_hf": "Hugging Face 검색",
     "files_available_other": "다운로드 가능한 {{count}}개 GGUF 파일",
     "highlighted_file": "Hugging Face에서 선택한 파일이 아래에 강조됩니다. 탭하여 다운로드하세요.",
-    "highlight_missing": "\"{{filename}}\"은(는) 이 repo의 GGUF 파일 중 하나가 아닙니다. 아래에서 다른 quant를 선택하세요.",
-    "search_results": "\"{{query}}\"와(과) 일치하는 GGUF repos, 가장 많이 다운로드된 것부터. 하나를 탭하여 해당 파일을 확인하세요.",
-    "no_search_results": "\"{{query}}\"에 대한 GGUF repos를 찾을 수 없습니다.",
-    "tip": "팁: 대부분의 모델에는 unsloth, bartowski 또는 lmstudio-community의 \"-GGUF\"로 끝나는 이름 아래에 GGUF 버전이 있습니다. 더 작은 quants (Q4_K_M 이하)는 휴대폰에서 가장 잘 실행됩니다. Gated 또는 비공개 모델은 지원되지 않습니다.",
-    "params": "{{value}} params",
-    "context": "{{value}}k context",
-    "downloads": "{{value}} downloads",
-    "gated": "이 repo는 gated입니다. 다운로드하려면 Hugging Face 로그인이 필요하며, 아직 지원되지 않습니다.",
+    "highlight_missing": "\"{{filename}}\"은(는) 이 저장소의 GGUF 파일이 아닙니다. 아래에서 다른 양자화 버전을 선택하세요.",
+    "search_results": "\"{{query}}\"와(과) 일치하는 GGUF 저장소입니다. 다운로드가 많은 순으로 표시됩니다. 하나를 탭하면 파일을 볼 수 있습니다.",
+    "no_search_results": "\"{{query}}\"에 대한 GGUF 저장소를 찾을 수 없습니다.",
+    "tip": "팁: 대부분의 모델은 unsloth, bartowski 또는 lmstudio-community에서 \"-GGUF\"로 끝나는 이름의 GGUF 버전을 제공합니다. 작은 양자화 버전(Q4_K_M 이하)이 휴대폰에서 가장 잘 실행됩니다. 접근 제한 모델이나 비공개 모델은 지원되지 않습니다.",
+    "params": "매개변수 {{value}}",
+    "context": "컨텍스트 {{value}}k",
+    "downloads": "다운로드 {{value}}회",
+    "gated": "이 저장소는 접근이 제한되어 있습니다. 다운로드하려면 Hugging Face 로그인이 필요하며, 아직 지원되지 않습니다.",
     "requested": "요청됨"
   },
   "models": {
@@ -699,6 +701,17 @@
     "memory_warning": {
       "short": "메모리 경고",
       "full": "경고: 모델 크기가 사용 가능한 메모리를 초과할 수 있습니다. 이는 기기의 성능과 안정성에 영향을 미칠 수 있습니다."
+    },
+    "low_memory": {
+      "title": "메모리 부족",
+      "advice": "메모리가 부족하면 휴대폰이 AnythingLLM을 응답 중에 종료할 수 있으며 이는 충돌처럼 보입니다. 다른 앱을 닫거나 더 안정적인 응답을 위해 원격 모델 연결로 전환하세요.",
+      "free": "여유",
+      "total": "총",
+      "model_loaded": "모델 (로드됨)",
+      "model_needs": "모델 필요량",
+      "send_anyway": "그래도 보내기",
+      "got_it": "알겠습니다",
+      "indicator_label": "메모리 부족 경고"
     },
     "catalog": {
       "gemma_3_1b": "(Q8_0) Gemma3 1B는 더 복잡한 작업을 위한 Gemma3 4B 모델의 더 작은 경량 버전입니다.",
@@ -1094,10 +1107,10 @@
       "weekly_multiple": "매 {{days}}과(와) {{last}} {{time}}에",
       "list_separator": ", ",
       "monthly": "매달 {{day}}일 {{time}}에",
-      "ordinal_st": "{{n}}번째",
-      "ordinal_nd": "{{n}}번째",
-      "ordinal_rd": "{{n}}번째",
-      "ordinal_th": "{{n}}번째",
+      "ordinal_st": "{{n}}",
+      "ordinal_nd": "{{n}}",
+      "ordinal_rd": "{{n}}",
+      "ordinal_th": "{{n}}",
       "time_am": "{{hour}}:{{minute}} AM",
       "time_pm": "{{hour}}:{{minute}} PM",
       "hour_am": "{{hour}} AM",

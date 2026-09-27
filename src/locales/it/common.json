@@ -201,9 +201,9 @@
     "activity": {
       "running": "In esecuzione",
       "waiting_approval_to_run": "In attesa di approvazione per eseguire {{tool}}",
-      "approved_tool": "Ho approvato {{tool}}",
-      "rejected_tool": "Ho rifiutato {{tool}}",
-      "waiting_for_you": "Ti stai aspettando",
+      "approved_tool": "Approvato {{tool}}",
+      "rejected_tool": "Rifiutato {{tool}}",
+      "waiting_for_you": "In attesa di te",
       "tool_approved": "La chiamata dello strumento è stata approvata",
       "tool_rejected": "La chiamata dello strumento è stata rifiutata",
       "thinking": "Pensiero in corso...",
@@ -211,7 +211,7 @@
       "calling_tool": "Chiama {{tool}}",
       "working": "Funzionando...",
       "worked_for": "Ha lavorato per {{duration}}",
-      "thought_for": "Pensiero per {{duration}}",
+      "thought_for": "Ha pensato per {{duration}}",
       "thoughts": "Pensieri"
     },
     "file_download": {
@@ -299,7 +299,9 @@
     },
     "errors": {
       "processing": "Errore nell'elaborazione della chat",
-      "timed_out": "La richiesta è scaduta prima di ricevere una risposta. La connessione potrebbe essere persa."
+      "timed_out": "La richiesta è scaduta prima di ricevere una risposta. La connessione potrebbe essere persa.",
+      "show_more": "Mostra altro",
+      "show_less": "Mostra meno"
     },
     "status": {
       "recalling_notes": "Richiamo delle note del workspace"
@@ -760,6 +762,17 @@
       "short": "Avviso di memoria",
       "full": "Avviso: la dimensione del modello potrebbe superare la memoria disponibile. Ciò potrebbe influire sulle prestazioni e la stabilità del dispositivo."
     },
+    "low_memory": {
+      "title": "Memoria limitata",
+      "advice": "Quando la memoria è piena, il tuo telefono potrebbe chiudersi AnythingLLM durante la risposta per liberare spazio, dando l'impressione di un crash. Chiudi altre app, oppure passa a una connessione remota per ottenere risposte più affidabili.",
+      "free": "Libera",
+      "total": "Totale",
+      "model_loaded": "Modello (caricato)",
+      "model_needs": "Modello richiesto",
+      "send_anyway": "Invia comunque",
+      "got_it": "Capito",
+      "indicator_label": "Avviso: bassa memoria"
+    },
     "catalog": {
       "gemma_3_1b": "(Q8_0) Gemma3 1B è una versione più piccola e leggera del modello Gemma3 4B per attività più complesse.",
       "qwen3_0_6b": "(Q8_0) Qwen3 0.6B è un modello minuscolo e molto veloce per risposte rapide e compiti semplici. Sostituito da Qwen3.5 0.8B.",
@@ -1167,11 +1180,11 @@
       "weekly_single": "Ogni {{day}} alle {{time}}",
       "weekly_multiple": "Ogni {{days}} e {{last}} alle {{time}}",
       "list_separator": ", ",
-      "monthly": "Il {{day}} di ogni mese alle {{time}}",
-      "ordinal_st": "{{n}}º",
-      "ordinal_nd": "{{n}}º",
-      "ordinal_rd": "{{n}}º",
-      "ordinal_th": "{{n}}º",
+      "monthly": "Il giorno {{day}} di ogni mese alle {{time}}",
+      "ordinal_st": "{{n}}",
+      "ordinal_nd": "{{n}}",
+      "ordinal_rd": "{{n}}",
+      "ordinal_th": "{{n}}",
       "time_am": "{{hour}}:{{minute}} AM",
       "time_pm": "{{hour}}:{{minute}} PM",
       "hour_am": "{{hour}} AM",

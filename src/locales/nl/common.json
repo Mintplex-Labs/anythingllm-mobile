@@ -294,7 +294,9 @@
     },
     "errors": {
       "processing": "Fout bij chatverwerking",
-      "timed_out": "Het verzoek is verlopen voordat een respons werd ontvangen. De verbinding kan verloren zijn."
+      "timed_out": "Het verzoek is verlopen voordat een respons werd ontvangen. De verbinding kan verloren zijn.",
+      "show_more": "Meer zien",
+      "show_less": "Minder weergeven"
     },
     "status": {
       "recalling_notes": "Werkruimteopmerkingen oproepen"
@@ -659,7 +661,7 @@
     "search_results": "GGUF-repo's die overeenkomen met \"{{query}}\", meest gedownload eerst. Tik er een op om de bestanden ervan te zien.",
     "no_search_results": "Geen GGUF-repo's gevonden voor \"{{query}}\".",
     "tip": "Tip: de meeste modellen hebben een GGUF-versie onder een naam die eindigt op \"-GGUF\" van unsloth, bartowski of lmstudio-community. Kleinere kwantigeringen (Q4_K_M en lager) werken het beste op telefoons. Gesloten of privémodellen worden niet ondersteund.",
-    "params": "{{value}} params",
+    "params": "{{value}} parameters",
     "context": "{{value}}k context",
     "downloads": "{{value}} downloads",
     "gated": "Deze repo is gesloten. Downloads vereisen een Hugging Face-aanmelding, die nog niet wordt ondersteund.",
@@ -729,6 +731,17 @@
     "memory_warning": {
       "short": "Geheugen waarschuwing",
       "full": "Waarschuwing: Modelgrootte kan het beschikbare geheugen overschrijden. Dit kan de prestaties en stabiliteit van je apparaat beïnvloeden."
+    },
+    "low_memory": {
+      "title": "Weinig geheugen",
+      "advice": "Als het geheugen vol raakt, kan je telefoon AnythingLLM halverwege een antwoord sluiten om geheugen vrij te maken, wat op een crash lijkt. Sluit andere apps of schakel over op een externe modelverbinding voor betrouwbaardere antwoorden.",
+      "free": "Vrij",
+      "total": "Totaal",
+      "model_loaded": "Model (geladen)",
+      "model_needs": "Model vereist",
+      "send_anyway": "Toch verzenden",
+      "got_it": "Begrepen",
+      "indicator_label": "Waarschuwing: weinig geheugen"
     },
     "catalog": {
       "gemma_3_1b": "(Q8_0) Gemma3 1B is een kleinere lichte versie van het Gemma3 4B-model voor meer complexe taken.",

@@ -294,7 +294,9 @@
     },
     "errors": {
       "processing": "Sohbet işlemede hata",
-      "timed_out": "Bir yanıt alınmadan istek zaman aşımına uğradı. Bağlantı kaybolmuş olabilir."
+      "timed_out": "Bir yanıt alınmadan istek zaman aşımına uğradı. Bağlantı kaybolmuş olabilir.",
+      "show_more": "Daha fazla",
+      "show_less": "Daha az göster"
     },
     "status": {
       "recalling_notes": "Çalışma alanı notlarını çağırma"
@@ -656,8 +658,8 @@
     "files_available_other": "İndirilecek {{count}} GGUF dosyası mevcut",
     "highlighted_file": "Hugging Face'da seçtiğiniz dosya aşağıda vurgulanmıştır. İndirmek için üzerine dokunun.",
     "highlight_missing": "\"{{filename}}\" bu depodaki GGUF dosyalarından biri değildir. Aşağıdaki başka bir \"quant\" seçin.",
-    "search_results": "{{query}} ile eslesen GGUF depolari, en �ok indirilenler �nce. Dosyalarini g�rmek i�in birine dokunun.",
-    "no_search_results": "{{query}} i�in GGUF depo bulunamadi.",
+    "search_results": "\"{{query}}\" ile eşleşen GGUF depoları, en çok indirilenler önce. Dosyalarını görmek için birine dokunun.",
+    "no_search_results": "\"{{query}}\" için GGUF depo bulunamadı.",
     "tip": "İpuçları: Çoğu model, \"unsloth\", \"bartowski\" veya \"lmstudio-community\" gibi \"-GGUF\" ile biten bir isim altında GGUF sürümünü içerir. Daha küçük boyutlardaki modeller (Q4_K_M ve daha küçük) telefonlarda en iyi performansı gösterir. Kısıtlı veya özel modeller desteklenmez.",
     "params": "{{value}} parametreler",
     "context": "{{value}} bağlam",
@@ -702,7 +704,7 @@
       "not_found": "Ek yükleme bulunamadı",
       "empty_content": "Eklenen dosyanın içeriği boş veya okunamazdı.",
       "large_document_title": "Uzun belge",
-      "large_document_message": "{{name}} kabaca {{tokens}} token. {{provider}} ile t�m belge bu �alisma alanindaki her mesajla g�nderilir, bu da yavas ve pahali olabilir. Yine de ekle?",
+      "large_document_message": "\"{{name}}\" kabaca {{tokens}} token'dir. {{provider}} ile tüm belge bu çalışma alanındaki her mesajla gönderilir, bu da yavaş ve pahalı olabilir. Yine de ekle?",
       "large_document_message_generic": "\"{{name}}\" yaklaşık olarak {{tokens}} token'dir. Model sağlayıcınızla birlikte, bu alanda gönderilen her mesajla tüm belge gönderilir, bu da yavaş ve maliyetli olabilir. Yine de eklemeyi mi istersiniz?",
       "attach": "Ekleyin",
       "create_failed": "Belge oluşturma başarısız oldu",
@@ -730,11 +732,22 @@
       "short": "Bellek Dolu Uyarı",
       "full": "Uyarı: Modelin boyutu, mevcut belleği aşabilir. Bu, cihazınızın performansını ve kararlılığını etkileyebilir."
     },
+    "low_memory": {
+      "title": "Düşük bellek",
+      "advice": "Bellek dolduğunda telefonunuz, yanıtı tamamlamak için AnythingLLM kapatabilir ve bu, bir çöküş gibi görünebilir. Diğer uygulamaları kapatın veya daha güvenilir yanıtlar için uzak bir bağlantı kullanın.",
+      "free": "Boş",
+      "total": "Toplam",
+      "model_loaded": "Model (Yüklenmiş)",
+      "model_needs": "Model gereksinimleri",
+      "send_anyway": "Yine de gönder",
+      "got_it": "Anlaşıldı",
+      "indicator_label": "Bellek yetersiz"
+    },
     "catalog": {
       "gemma_3_1b": "(Q8_0) Gemma3 1B, daha karmaşık görevler için Gemma3 4B modelinin daha hafif ve daha küçük bir versiyonudur.",
       "qwen3_0_6b": "(Q8_0) Qwen3 0.6B, hızlı yanıtlar ve basit görevler için tasarlanmış, küçük ve çok hızlı bir modeldir. Qwen3.5 0.8B ile yerini değiştirmiştir.",
       "qwen3_1_7b": "(Q8_0) Qwen3 1.7B, Qwen3-0.6B modelinin daha karmaşık görevler için daha gelişmiş bir versiyonudur.",
-      "llama_3_2_1b": "(S8_0) Llama 3.2, Llama 3.2 modelin en küçük versiyonudur.",
+      "llama_3_2_1b": "(Q8_0) Llama 3.2 1B, Llama 3.2 modelinin en küçük versiyonudur.",
       "qwen3_5_0_8b": "(Q8_0) Qwen3.5 0.8B, Qwen3.5 ailesindeki en küçük modeldir. Sağlam talimatlara göre çok hızlı çalışır.",
       "qwen3_5_2b": "(Q8_0) Qwen3.5 2B, küçük boyutta olmasına rağmen, araç çağırma ve iyi muhakeme yeteneği ile güçlü bir genel amaçlı modeldir.",
       "qwen3_5_4b": "(Q6_K) Qwen3.5 4B, telefonlarda çalışabilen en güçlü Qwen3.5 modelidir. En iyi doğruluk, akıl yürütme ve araç kullanımı; 8GB+ RAM'e sahip bir cihaz gerektirir.",
@@ -766,8 +779,8 @@
     "unknown_model_description": "Bu cihazda {{modelId}} tarihinde bulundu, ancak model listemizde yer almamaktadır. Hala kullanmaya devam edebilir veya kaldırabilirsiniz.",
     "status": {
       "summarizing": "Önceki konuşmayı özetleme",
-      "using_summary_one": "{{count}} �nceki mesajin bir �zeti kullaniliyor",
-      "using_summary_other": "{{count}} �nceki mesajin bir �zeti kullaniliyor",
+      "using_summary_one": "{{count}} önceki mesajın bir özeti kullanılıyor",
+      "using_summary_other": "{{count}} önceki mesajın bir özeti kullanılıyor",
       "loading_model": "Model belleğe yükleniyor",
       "reply_truncated": "Yanıt kısaldı – bağlam penceresi dolu",
       "searching_documents": "Belge arama",
@@ -812,7 +825,7 @@
     }
   },
   "llm_selection": {
-    "choose_provider": "Kullanıcıyı seçin",
+    "choose_provider": "Sağlayıcınızı seçin",
     "no_providers_found": "\"{{query}}\" için sağlayıcı bulunamadı.",
     "download_model_title": "Modeli indirin?",
     "download_model_message": "Bu, modeli cihazınıza indirecektir. Boyutu {{size}} bayttır.",
@@ -1016,8 +1029,8 @@
       "last_run": "Son çalıştırma",
       "never": "Asla",
       "run_now": "Başlat",
-      "run_count_one": "{{count}} �alistirma",
-      "run_count_other": "{{count}} �alistirma",
+      "run_count_one": "{{count}} çalıştırma",
+      "run_count_other": "{{count}} çalıştırma",
       "history": "Tarih",
       "empty_with_next": "Bu iş henüz çalışmadı. İlk çalışması {{time}}. Ayrıca, denemek için şimdi de çalıştırabilirsiniz.",
       "empty": "Bu işlem henüz çalışmadı. Denemek için şimdi de çalıştırabilirsiniz.",
@@ -1130,11 +1143,11 @@
       "weekly_single": "Her {{day}} saat {{time}}",
       "weekly_multiple": "Her {{days}} ve {{last}} saatinde {{time}}",
       "list_separator": ", ",
-      "monthly": "Her ayın {{day}}'ında, {{time}}'de",
-      "ordinal_st": "{{n}}",
-      "ordinal_nd": "{{n}}n",
+      "monthly": "Her ayın {{day}} günü, saat {{time}}",
+      "ordinal_st": "{{n}}.",
+      "ordinal_nd": "{{n}}.",
       "ordinal_rd": "{{n}}.",
-      "ordinal_th": "{{n}} hakkında",
+      "ordinal_th": "{{n}}.",
       "time_am": "{{hour}}:{{minute}} Sabah",
       "time_pm": "{{hour}}: {{minute}}",
       "hour_am": "{{hour}} Sabah",

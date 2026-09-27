@@ -299,7 +299,9 @@
     },
     "errors": {
       "processing": "Erro ao processar chat",
-      "timed_out": "A solicitação expirou antes que uma resposta fosse recebida. A conexão pode estar perdida."
+      "timed_out": "A solicitação expirou antes que uma resposta fosse recebida. A conexão pode estar perdida.",
+      "show_more": "Ver mais",
+      "show_less": "Mostrar menos"
     },
     "status": {
       "recalling_notes": "Recuperando notas do espaço de trabalho"
@@ -310,7 +312,7 @@
       "summarize": "Resumo"
     },
     "actions": {
-      "polish": "Polonês",
+      "polish": "Polir",
       "shorten": "Resumir",
       "fix_grammar": "Corrigir gramática",
       "more_formal": "Mais formal",
@@ -639,13 +641,13 @@
         "empty": "Ainda não tenho informações. Adicione um fato sobre você acima."
       },
       "workspace": {
-        "tab": "Espaço de trabalho",
+        "tab": "Este espaço de trabalho",
         "hint": "Informações relevantes: projeto, terminologia, decisões já tomadas. Gerenciamento e atualização dinâmicas.",
         "placeholder": "Ex: Este projeto é um aplicativo React Native chamado Orbit. Use o yarn, não o npm.",
         "empty": "Sem lembranças deste espaço de trabalho. Adicione uma nota sobre este espaço de trabalho aqui."
       },
       "no_longer_exists": "Essa memória não existe mais",
-      "save_failed": "Não foi possível salvar",
+      "save_failed": "Não foi possível salvar a memória",
       "delete_title": "Limpar memória?",
       "enable": "Ativar lembranças",
       "enable_description": "Permite adicionar informações sobre você ou sobre este espaço de trabalho.",
@@ -685,7 +687,7 @@
     "search_results": "Repos GGUF correspondendo a \"{{query}}\", mais baixados primeiro. Toque em um para ver seus arquivos.",
     "no_search_results": "Nenhum repo GGUF encontrado para \"{{query}}\".",
     "tip": "Dica: a maioria dos modelos tem uma versão GGUF sob um nome terminado em \"-GGUF\" de unsloth, bartowski ou lmstudio-community. Os quants menores (Q4_K_M e abaixo) funcionam melhor em telefones. Modelos portados ou privados não são suportados.",
-    "params": "{{value}} params",
+    "params": "{{value}} parâmetros",
     "context": "{{value}}k contexto",
     "downloads": "{{value}} downloads",
     "gated": "Este repo é portado. Os downloads precisam de um login Hugging Face, o que ainda não é suportado.",
@@ -759,6 +761,17 @@
     "memory_warning": {
       "short": "Aviso de Memória",
       "full": "Aviso: O tamanho do modelo pode exceder a memória disponível. Isso pode afetar o desempenho e a estabilidade do seu dispositivo."
+    },
+    "low_memory": {
+      "title": "Pouca memória",
+      "advice": "Quando a memória acaba, o seu telefone pode fechar AnythingLLM no meio da resposta para liberar espaço, o que pode parecer um erro. Feche outros aplicativos ou use uma conexão remota para obter respostas mais confiáveis.",
+      "free": "Livre",
+      "total": "Total",
+      "model_loaded": "Modelo (carregado)",
+      "model_needs": "Modelo requer",
+      "send_anyway": "Enviar de qualquer forma",
+      "got_it": "Entendi",
+      "indicator_label": "Pouca memória disponível"
     },
     "catalog": {
       "gemma_3_1b": "(Q8_0) Gemma3 1B é uma versão menor e mais leve do modelo Gemma3 4B para tarefas mais complexas.",
@@ -891,7 +904,7 @@
     "external": {
       "title": "Conectar provedor externo",
       "description": "Use um modelo hospedado em outro lugar, em vez de baixá-lo para o seu telefone. Você pode alterar isso mais tarde.",
-      "choose_provider": "Selecione um LLM",
+      "choose_provider": "Escolha um Provedor de LLM",
       "provider_settings": "Configurações do provedor",
       "incomplete_setup": "Configuração do provedor incompleta"
     },
@@ -1167,11 +1180,11 @@
       "weekly_single": "Cada {{day}} em {{time}}",
       "weekly_multiple": "Cada {{days}} e {{last}} em {{time}}",
       "list_separator": ", ",
-      "monthly": "No dia {{day}} de cada mês em {{time}}",
-      "ordinal_st": "{{n}}º",
-      "ordinal_nd": "{{n}}º",
-      "ordinal_rd": "{{n}}º",
-      "ordinal_th": "{{n}}º",
+      "monthly": "Todo dia {{day}} do mês às {{time}}",
+      "ordinal_st": "{{n}}",
+      "ordinal_nd": "{{n}}",
+      "ordinal_rd": "{{n}}",
+      "ordinal_th": "{{n}}",
       "time_am": "{{hour}}:{{minute}} AM",
       "time_pm": "{{hour}}:{{minute}} PM",
       "hour_am": "{{hour}} AM",

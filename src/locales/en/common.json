@@ -294,7 +294,9 @@
     },
     "errors": {
       "processing": "Error processing chat",
-      "timed_out": "The request timed out before a response was received. Connection may be lost."
+      "timed_out": "The request timed out before a response was received. Connection may be lost.",
+      "show_more": "Show more",
+      "show_less": "Show less"
     },
     "status": {
       "recalling_notes": "Recalling workspace notes"
@@ -729,6 +731,17 @@
     "memory_warning": {
       "short": "Memory Warning",
       "full": "Warning: Model size may exceed available memory. This could affect performance and stability of your device."
+    },
+    "low_memory": {
+      "title": "Low memory",
+      "advice": "When memory runs out your phone may close AnythingLLM mid-reply to reclaim it, which looks like a crash. Close other apps, or switch to a remote model connection for more reliable responses.",
+      "free": "Free",
+      "total": "Total",
+      "model_loaded": "Model (loaded)",
+      "model_needs": "Model needs",
+      "send_anyway": "Send anyway",
+      "got_it": "Got it",
+      "indicator_label": "Low memory warning"
     },
     "catalog": {
       "gemma_3_1b": "(Q8_0) Gemma3 1B is a smaller lightweight version of the Gemma3 4B model for more complex tasks.",

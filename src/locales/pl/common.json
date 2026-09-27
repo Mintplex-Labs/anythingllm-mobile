@@ -304,7 +304,9 @@
     },
     "errors": {
       "processing": "Błąd podczas przetwarzania czatu",
-      "timed_out": "Żądanie upłynęło przed otrzymaniem odpowiedzi. Połączenie mogło zostać utracone."
+      "timed_out": "Żądanie upłynęło przed otrzymaniem odpowiedzi. Połączenie mogło zostać utracone.",
+      "show_more": "Pokaż więcej",
+      "show_less": "Pokaż mniej"
     },
     "status": {
       "recalling_notes": "Przywołanie notatek obszaru roboczego"
@@ -606,7 +608,7 @@
     },
     "web_scraping": {
       "name": "Skrobanie stron internetowych",
-      "description": "Porzygaj jedną konkretną stronę internetową dla informacji.",
+      "description": "Analizuj jedną konkretną stronę internetową dla informacji.",
       "status_reading": "Czytanie {{host}}",
       "status_reading_document": "Czytanie dokumentu {{name}}",
       "cellular_title": "Pobrać na danych komórkowych?",
@@ -711,7 +713,7 @@
     "search_results": "Repozytoria GGUF pasujące do \"{{query}}\", najpierw pobierane. Dotknij jeden, aby zobaczyć jego pliki.",
     "no_search_results": "Brak repozytoriów GGUF znalezionych dla \"{{query}}\".",
     "tip": "Wskazówka: większość modeli ma wersję GGUF pod nazwą kończącą się na \"-GGUF\" z unsloth, bartowski lub lmstudio-community. Mniejsze kwantyzacje (Q4_K_M i poniżej) działają najlepiej na telefonach. Modele bramy lub prywatne nie są obsługiwane.",
-    "params": "{{value}}Params",
+    "params": "{{value}} parametrów",
     "context": "{{value}}k kontekst",
     "downloads": "{{value}} pobrań",
     "gated": "To repozytorium jest brygadą. Pobieranie wymaga logowania do Hugging Face, które nie jest jeszcze obsługiwane.",
@@ -789,6 +791,17 @@
     "memory_warning": {
       "short": "Ostrzeżenie pamięci",
       "full": "Ostrzeżenie: rozmiar modelu może przekroczyć dostępną pamięć. Może to wpłynąć na wydajność i stabilność Twojego urządzenia."
+    },
+    "low_memory": {
+      "title": "Mało pamięci",
+      "advice": "Jeśli pamięć się wyczerpie, telefon może się zamknąć AnythingLLM w trakcie odpowiedzi, aby odzyskać zasoby, co może wyglądać jak awaria. Zamknij inne aplikacje lub przełącz się na połączenie z zdalnym modelem, aby uzyskać bardziej niezawodne odpowiedzi.",
+      "free": "Wolne",
+      "total": "Całość",
+      "model_loaded": "Model (załadowany)",
+      "model_needs": "Wymagania dotyczące modelu",
+      "send_anyway": "Wyślij mimo to",
+      "got_it": "Rozumiem",
+      "indicator_label": "Ostrzeżenie: Niska ilość pamięci"
     },
     "catalog": {
       "gemma_3_1b": "(Q8_0) Gemma3 1B to mniejsza, lekka wersja modelu Gemma3 4B do bardziej złożonych zadań.",
@@ -912,7 +925,7 @@
     "welcome": {
       "title": "Powitanie",
       "description": "Agent AI, który mieszka na Twoim telefonie. Czat z dokumentami, wyszukiwanie w sieci i integracja z aplikacjami.",
-      "get_started": "Začąć",
+      "get_started": "Zacząć",
       "back_blocked": "Proszę przejść przez przepływ wdrażania, aby kontynuować."
     },
     "model_selection": {
@@ -961,8 +974,8 @@
   },
   "workspace_settings": {
     "load_error": "Błąd podczas ładowania obszaru roboczego",
-    "autosaving": "Autosave...",
-    "autosaved": "Autosave!",
+    "autosaving": "Automatyczne zapisywanie…",
+    "autosaved": "Automatycznie zapisane!",
     "name": {
       "section": "Nazwa obszaru roboczego",
       "title": "Nazwa",
@@ -1204,11 +1217,11 @@
       "weekly_single": "Każdy {{day}} o {{time}}",
       "weekly_multiple": "Każdy {{days}} i {{last}} o {{time}}",
       "list_separator": ", ",
-      "monthly": "Na {{day}} każdego miesiąca o {{time}}",
-      "ordinal_st": "{{n}}st",
-      "ordinal_nd": "{{n}}nd",
-      "ordinal_rd": "{{n}}rd",
-      "ordinal_th": "{{n}}th",
+      "monthly": "{{day}} dnia każdego miesiąca o {{time}}",
+      "ordinal_st": "{{n}}.",
+      "ordinal_nd": "{{n}}.",
+      "ordinal_rd": "{{n}}.",
+      "ordinal_th": "{{n}}.",
       "time_am": "{{hour}}:{{minute}} AM",
       "time_pm": "{{hour}}:{{minute}} PM",
       "hour_am": "{{hour}} AM",
@@ -1260,7 +1273,7 @@
   },
   "home": {
     "welcome_title": "Witaj w AnythingLLM",
-    "get_started": "Začąć, tworząc nowy obszar roboczy.",
+    "get_started": "Zacząć, tworząc nowy obszar roboczy.",
     "create_workspace": "Utwórz obszar roboczy",
     "default_workspace_name": "Mój obszar roboczy"
   },

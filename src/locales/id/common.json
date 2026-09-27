@@ -289,7 +289,9 @@
     },
     "errors": {
       "processing": "Error memproses obrolan",
-      "timed_out": "Permintaan habis waktu sebelum respons diterima. Koneksi mungkin terputus."
+      "timed_out": "Permintaan habis waktu sebelum respons diterima. Koneksi mungkin terputus.",
+      "show_more": "Tampilkan lebih banyak",
+      "show_less": "Tampilkan lebih sedikit"
     },
     "status": {
       "recalling_notes": "Mengingat catatan ruang kerja"
@@ -633,7 +635,7 @@
     "search_results": "Repo GGUF yang cocok \"{{query}}\", paling banyak diunduh terlebih dahulu. Ketuk satu untuk melihat filenya.",
     "no_search_results": "Tidak ada repo GGUF yang ditemukan untuk \"{{query}}\".",
     "tip": "Tip: sebagian besar model memiliki versi GGUF dengan nama yang diakhiri dengan \"-GGUF\" dari unsloth, bartowski, atau lmstudio-community. Quant yang lebih kecil (Q4_K_M dan di bawahnya) berjalan terbaik di ponsel. Model gated atau pribadi tidak didukung.",
-    "params": "{{value}} param",
+    "params": "{{value}} parameter",
     "context": "{{value}}k konteks",
     "downloads": "{{value}} unduhan",
     "gated": "Repo ini di-gated. Unduhan memerlukan login Hugging Face, yang belum didukung.",
@@ -699,6 +701,17 @@
     "memory_warning": {
       "short": "Peringatan Memori",
       "full": "Peringatan: Ukuran model dapat melebihi memori yang tersedia. Ini dapat mempengaruhi kinerja dan stabilitas perangkat Anda."
+    },
+    "low_memory": {
+      "title": "Kapasitas memori terbatas",
+      "advice": "Jika memori habis, ponsel Anda mungkin menutup AnythingLLM di tengah-tengah balasan untuk menghemat memori, yang terlihat seperti terjadi kesalahan. Tutup aplikasi lain, atau gunakan koneksi model jarak jauh untuk respons yang lebih stabil.",
+      "free": "Tersedia",
+      "total": "Total",
+      "model_loaded": "Model (dimuat)",
+      "model_needs": "Kebutuhan model",
+      "send_anyway": "Tetap kirim",
+      "got_it": "Dimengerti",
+      "indicator_label": "Peringatan: Memori hampir habis"
     },
     "catalog": {
       "gemma_3_1b": "(Q8_0) Gemma3 1B adalah versi ringan yang lebih kecil dari model Gemma3 4B untuk tugas yang lebih kompleks.",
@@ -1093,11 +1106,11 @@
       "weekly_single": "Setiap {{day}} pada {{time}}",
       "weekly_multiple": "Setiap {{days}} dan {{last}} pada {{time}}",
       "list_separator": ", ",
-      "monthly": "Pada {{day}} setiap bulan pada {{time}}",
-      "ordinal_st": "{{n}}st",
-      "ordinal_nd": "{{n}}nd",
-      "ordinal_rd": "{{n}}rd",
-      "ordinal_th": "{{n}}ke",
+      "monthly": "Setiap tanggal {{day}} pukul {{time}}",
+      "ordinal_st": "{{n}}",
+      "ordinal_nd": "{{n}}",
+      "ordinal_rd": "{{n}}",
+      "ordinal_th": "{{n}}",
       "time_am": "{{hour}}:{{minute}} AM",
       "time_pm": "{{hour}}:{{minute}} PM",
       "hour_am": "{{hour}} AM",

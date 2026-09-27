@@ -294,7 +294,9 @@
     },
     "errors": {
       "processing": "Fehler bei der Chat-Verarbeitung",
-      "timed_out": "Die Anfrage ist abgelaufen, bevor eine Antwort empfangen wurde. Die Verbindung kann unterbrochen worden sein."
+      "timed_out": "Die Anfrage ist abgelaufen, bevor eine Antwort empfangen wurde. Die Verbindung kann unterbrochen worden sein.",
+      "show_more": "Mehr anzeigen",
+      "show_less": "Weniger anzeigen"
     },
     "status": {
       "recalling_notes": "Workspace-Notizen abrufen"
@@ -730,6 +732,17 @@
       "short": "Speicherwarnung",
       "full": "Warnung: Die Modellgröße kann den verfügbaren Speicher überschreiten. Dies kann sich auf die Leistung und Stabilität Ihres Geräts auswirken."
     },
+    "low_memory": {
+      "title": "Geringer Speicher",
+      "advice": "Wenn der Speicher zur Neige geht, kann Ihr Telefon AnythingLLM möglicherweise mitten in einer Antwort schließen, um Speicher freizugeben. Das sieht wie ein Absturz aus. Schließen Sie andere Apps oder wechseln Sie zu einer Remote-Modellverbindung für zuverlässigere Antworten.",
+      "free": "Frei",
+      "total": "Gesamt",
+      "model_loaded": "Modell (geladen)",
+      "model_needs": "Modell benötigt",
+      "send_anyway": "Trotzdem senden",
+      "got_it": "Verstanden",
+      "indicator_label": "Speicherplatz wird knapp"
+    },
     "catalog": {
       "gemma_3_1b": "(Q8_0) Gemma3 1B ist eine kleinere leichte Version des Gemma3 4B-Modells für komplexere Aufgaben.",
       "qwen3_0_6b": "(Q8_0) Qwen3 0.6B ist ein winziges, sehr schnelles Modell für schnelle Antworten und einfache Aufgaben. Ersetzt durch Qwen3.5 0.8B.",
@@ -1130,11 +1143,11 @@
       "weekly_single": "Jeden {{day}} um {{time}}",
       "weekly_multiple": "Jeden {{days}} und {{last}} um {{time}}",
       "list_separator": ", ",
-      "monthly": "Am {{day}} des Monats jeden Monat um {{time}}",
-      "ordinal_st": "{{n}}st",
-      "ordinal_nd": "{{n}}nd",
-      "ordinal_rd": "{{n}}rd",
-      "ordinal_th": "{{n}}th",
+      "monthly": "Am {{day}} jedes Monats um {{time}}",
+      "ordinal_st": "{{n}}.",
+      "ordinal_nd": "{{n}}.",
+      "ordinal_rd": "{{n}}.",
+      "ordinal_th": "{{n}}.",
       "time_am": "{{hour}}:{{minute}} AM",
       "time_pm": "{{hour}}:{{minute}} PM",
       "hour_am": "{{hour}} AM",

@@ -40,7 +40,7 @@ yarn translations:normalize && yarn translations:create
 
 `OLLAMA_HOST` and `TRANSLATE_MODEL` override the defaults (`http://127.0.0.1:11434`, `translategemma:4b`).
 `{{placeholders}}`, `<tags>` and the brand words in `scripts/translations/brandWords.json` are swapped for tokens
-before a string reaches the model, and a translation that loses any of them is retried and, failing that, left
+before a string reaches the model, and a translation that loses any of them is not retried - it is left
 `null` (English) rather than written broken. Add a word to `brandWords.json` when it must never be translated.
 
 ## Adding a language

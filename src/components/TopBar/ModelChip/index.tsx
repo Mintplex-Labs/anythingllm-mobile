@@ -584,6 +584,7 @@ function VisibleSheetCenter({ children, style }: { children: React.ReactNode; st
  * explains why that leads to "crashes" (the OS evicting us) and what to do about it.
  */
 function LowMemoryIndicator({ provider, enabled }: { provider: unknown; enabled: boolean }) {
+  const { t } = useTranslation();
   const status = useLowMemoryStatus(provider, enabled);
   const [open, setOpen] = useState(false);
   if (!status) return null;
@@ -594,7 +595,7 @@ function LowMemoryIndicator({ provider, enabled }: { provider: unknown; enabled:
         onPress={() => setOpen(true)}
         style={{ marginTop: -5, padding: 2 }}
         hitSlop={10}
-        accessibilityLabel="Low memory warning">
+        accessibilityLabel={t('models.low_memory.indicator_label')}>
         <Warning size={18} color={LOW_MEMORY_COLOR} weight="bold" />
       </TouchableOpacity>
       <LowMemoryModal status={status} visible={open} onClose={() => setOpen(false)} />

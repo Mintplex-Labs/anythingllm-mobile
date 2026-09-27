@@ -26,7 +26,6 @@ import {
 
 const OLLAMA_HOST = (process.env.OLLAMA_HOST || "http://127.0.0.1:11434").replace(/\/$/, "");
 const MODEL = process.env.TRANSLATE_MODEL || "translategemma:latest";
-const MAX_ATTEMPTS = 3;
 // Write progress to disk this often so an interrupted run keeps its work.
 const SAVE_EVERY = 25;
 
@@ -123,18 +122,11 @@ async function translateLanguage(code) {
       continue;
     }
 
-    let output = null;
-    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-      const candidate = await ollamaTranslate(source, code);
-      const reason = rejectReason(source, candidate);
-      if (!reason) {
-        output = candidate;
-        break;
-      }
-      warn(`${code} "${key}" attempt ${attempt}: ${reason} -> ${JSON.stringify(candidate)}`);
-    }
-
-    if (output === null) {
+    // One attempt only - at low temperature a retry almost always fails the same way.
+    const output = await ollamaTranslate(source, code);
+    const reason = rejectReason(source, output);
+    if (reason) {
+      warn(`${code} "${key}": ${reason} -> ${JSON.stringify(output)}`);
       // Left null so the app falls back to English rather than showing a broken string.
       skipped++;
       continue;

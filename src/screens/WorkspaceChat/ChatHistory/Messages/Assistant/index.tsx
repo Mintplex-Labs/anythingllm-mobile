@@ -1,6 +1,7 @@
 import { memo, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { WarningCircle } from "phosphor-react-native";
+import { useTranslation } from "react-i18next";
 import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ActivityChain from "./ActivityChain";
 import CitationsContainer from "./Citations";
@@ -66,6 +67,7 @@ const ERROR_COLORS = {
 const ERROR_COLLAPSED_LINES = 4;
 
 function ErrorContainer({ message, onLongPress }: { message?: string; onLongPress?: () => void }) {
+    const { t } = useTranslation();
     const [expanded, setExpanded] = useState(false);
     const [truncatable, setTruncatable] = useState(false);
     if (!message) return null;
@@ -82,7 +84,7 @@ function ErrorContainer({ message, onLongPress }: { message?: string; onLongPres
                 <WarningCircle size={16} color={ERROR_COLORS.accent} weight="bold" />
             </View>
             <View style={{ flex: 1, minWidth: 0, gap: 2, paddingTop: 4 }}>
-                <Text style={{ color: ERROR_COLORS.text, fontSize: 14, fontWeight: '500', lineHeight: 18 }}>Something went wrong</Text>
+                <Text style={{ color: ERROR_COLORS.text, fontSize: 14, fontWeight: '500', lineHeight: 18 }}>{t('errors.boundary.something_went_wrong')}</Text>
                 <Text
                     numberOfLines={expanded ? undefined : ERROR_COLLAPSED_LINES}
                     onTextLayout={(e) => { if (!truncatable && e.nativeEvent.lines.length > ERROR_COLLAPSED_LINES) setTruncatable(true); }}
@@ -90,7 +92,7 @@ function ErrorContainer({ message, onLongPress }: { message?: string; onLongPres
                     {message}
                 </Text>
                 {truncatable && (
-                    <Text style={{ color: ERROR_COLORS.text, fontSize: 12, fontWeight: '500', marginTop: 2 }}>{expanded ? 'Show less' : 'Show more'}</Text>
+                    <Text style={{ color: ERROR_COLORS.text, fontSize: 12, fontWeight: '500', marginTop: 2 }}>{expanded ? t('chat.errors.show_less') : t('chat.errors.show_more')}</Text>
                 )}
             </View>
         </TouchableOpacity>

@@ -289,7 +289,9 @@
     },
     "errors": {
       "processing": "チャット処理エラー",
-      "timed_out": "応答が受信される前にリクエストがタイムアウトしました。接続が失われている可能性があります。"
+      "timed_out": "応答が受信される前にリクエストがタイムアウトしました。接続が失われている可能性があります。",
+      "show_more": "詳細を見る",
+      "show_less": "詳細を表示しない"
     },
     "status": {
       "recalling_notes": "ワークスペースノートを回想"
@@ -700,6 +702,17 @@
       "short": "メモリ警告",
       "full": "警告：モデルサイズが利用可能なメモリを超える可能性があります。これはデバイスのパフォーマンスと安定性に影響を与える可能性があります。"
     },
+    "low_memory": {
+      "title": "メモリ不足",
+      "advice": "メモリが不足すると、携帯電話がAnythingLLMを応答の途中で閉じてクラッシュして見えることがあります。他のアプリを閉じるか、より信頼性の高い応答のためにリモートモデル接続に切り替えてください。",
+      "free": "空き",
+      "total": "合計",
+      "model_loaded": "モデル (読み込み済み)",
+      "model_needs": "モデルの必要量",
+      "send_anyway": "このまま送信",
+      "got_it": "了解",
+      "indicator_label": "メモリ不足警告"
+    },
     "catalog": {
       "gemma_3_1b": "（Q8_0）Gemma3 1Bはより複雑なタスク用のGemma3 4Bモデルのより小さい軽量バージョンです。",
       "qwen3_0_6b": "（Q8_0）Qwen3 0.6Bは小さく、非常に高速なモデルで、クイック回答とシンプルなタスク用です。Qwen3.5 0.8Bで置き換えられました。",
@@ -1093,11 +1106,11 @@
       "weekly_single": "毎{{day}}{{time}}に",
       "weekly_multiple": "毎{{days}}と{{last}}{{time}}に",
       "list_separator": ", ",
-      "monthly": "毎月{{day}}{{time}}に",
-      "ordinal_st": "{{n}}番目",
-      "ordinal_nd": "{{n}}番目",
-      "ordinal_rd": "{{n}}番目",
-      "ordinal_th": "{{n}}番目",
+      "monthly": "毎月{{day}}の{{time}}",
+      "ordinal_st": "{{n}}日",
+      "ordinal_nd": "{{n}}日",
+      "ordinal_rd": "{{n}}日",
+      "ordinal_th": "{{n}}日",
       "time_am": "{{hour}}:{{minute}} AM",
       "time_pm": "{{hour}}:{{minute}} PM",
       "hour_am": "{{hour}} AM",

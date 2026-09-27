@@ -299,7 +299,9 @@
     },
     "errors": {
       "processing": "Error al procesar el chat",
-      "timed_out": "El tiempo de espera de la solicitud agotó antes de recibir una respuesta. La conexión puede perderse."
+      "timed_out": "El tiempo de espera de la solicitud agotó antes de recibir una respuesta. La conexión puede perderse.",
+      "show_more": "Mostrar más",
+      "show_less": "Mostrar menos"
     },
     "status": {
       "recalling_notes": "Recordando notas del espacio de trabajo"
@@ -760,6 +762,17 @@
       "short": "Advertencia de memoria",
       "full": "Advertencia: El tamaño del modelo puede exceder la memoria disponible. Esto podría afectar el rendimiento y la estabilidad de su dispositivo."
     },
+    "low_memory": {
+      "title": "Poca memoria",
+      "advice": "Si la memoria se agota, tu teléfono podría cerrarse AnythingLLM mientras responde para liberar espacio, lo que puede parecer un fallo. Cierra otras aplicaciones o cambia a una conexión con un modelo remoto para obtener respuestas más fiables.",
+      "free": "Libre",
+      "total": "Total",
+      "model_loaded": "Modelo (cargado)",
+      "model_needs": "Requisitos del modelo",
+      "send_anyway": "Enviar de todos modos",
+      "got_it": "Entendido",
+      "indicator_label": "¡Baja memoria!"
+    },
     "catalog": {
       "gemma_3_1b": "(Q8_0) Gemma3 1B es una versión más pequeña y ligera del modelo Gemma3 4B para tareas más complejas.",
       "qwen3_0_6b": "(Q8_0) Qwen3 0.6B es un modelo muy pequeño y rápido para respuestas rápidas y tareas simples. Supersedido por Qwen3.5 0.8B.",
@@ -1167,11 +1180,11 @@
       "weekly_single": "Cada {{day}} a las {{time}}",
       "weekly_multiple": "Cada {{days}} y {{last}} a las {{time}}",
       "list_separator": ", ",
-      "monthly": "El {{day}} de cada mes a las {{time}}",
-      "ordinal_st": "{{n}}º",
-      "ordinal_nd": "{{n}}º",
-      "ordinal_rd": "{{n}}º",
-      "ordinal_th": "{{n}}º",
+      "monthly": "El día {{day}} de cada mes a las {{time}}",
+      "ordinal_st": "{{n}}",
+      "ordinal_nd": "{{n}}",
+      "ordinal_rd": "{{n}}",
+      "ordinal_th": "{{n}}",
       "time_am": "{{hour}}:{{minute}} AM",
       "time_pm": "{{hour}}:{{minute}} PM",
       "hour_am": "{{hour}} AM",

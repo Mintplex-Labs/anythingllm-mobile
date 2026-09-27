@@ -289,7 +289,9 @@
     },
     "errors": {
       "processing": "Lỗi xử lý trò chuyện",
-      "timed_out": "Yêu cầu hết thời gian chờ trước khi nhận được phản hồi. Kết nối có thể đã mất."
+      "timed_out": "Yêu cầu hết thời gian chờ trước khi nhận được phản hồi. Kết nối có thể đã mất.",
+      "show_more": "Xem thêm",
+      "show_less": "Hiển thị ít hơn"
     },
     "status": {
       "recalling_notes": "Nhớ lại ghi chú không gian làm việc"
@@ -633,7 +635,7 @@
     "search_results": "Kho GGUF khớp với \"{{query}}\", được tải xuống nhiều nhất trước. Nhấn một để xem các tệp của nó.",
     "no_search_results": "Không tìm thấy kho GGUF nào cho \"{{query}}\".",
     "tip": "Mẹo: hầu hết các mô hình có phiên bản GGUF dưới một tên kết thúc bằng \"-GGUF\" từ unsloth, bartowski hoặc lmstudio-community. Quants nhỏ hơn (Q4_K_M và dưới) chạy tốt nhất trên điện thoại. Các mô hình được gated hoặc riêng tư không được hỗ trợ.",
-    "params": "{{value}} params",
+    "params": "{{value}} tham số",
     "context": "{{value}}k ngữ cảnh",
     "downloads": "{{value}} tải xuống",
     "gated": "Repo này được gated. Tải xuống cần đăng nhập Hugging Face, chưa được hỗ trợ.",
@@ -689,7 +691,7 @@
       "image_unreadable": "Hình ảnh được chọn không thể đọc được",
       "images_skipped_unreadable_other": "{{count}} hình ảnh không thể đọc được và đã bị bỏ qua",
       "image_attach_failed": "Không thể đính kèm hình ảnh",
-      "max_reached_skipped_other": "Bạn có thể đính kèm tới {{max}} mục trên mỗi lời nhắc - {{count}} bị bỏ qua",
+      "max_reached_skipped_other": "Bạn có thể đính kèm tối đa {{max}} mục trên mỗi lời nhắc - {{count}} bị bỏ qua",
       "images_skipped_no_vision_other": "Mô hình hiện tại của bạn không thể đọc hình ảnh - {{count}} hình ảnh đã bị bỏ qua",
       "read_failed": "Không thể đọc {{name}}",
       "remove_title": "Xóa đính kèm",
@@ -699,6 +701,17 @@
     "memory_warning": {
       "short": "Cảnh báo bộ nhớ",
       "full": "Cảnh báo: Kích thước mô hình có thể vượt quá bộ nhớ khả dụng. Điều này có thể ảnh hưởng đến hiệu suất và độ ổn định của thiết bị của bạn."
+    },
+    "low_memory": {
+      "title": "Ít bộ nhớ",
+      "advice": "Khi bộ nhớ hết, điện thoại có thể đóng AnythingLLM giữa lúc đang trả lời để giải phóng, trông giống như bị treo. Đóng các ứng dụng khác, hoặc chuyển sang kết nối với mô hình từ xa để có phản hồi ổn định hơn.",
+      "free": "Còn trống",
+      "total": "Tổng",
+      "model_loaded": "Mô hình (đã tải)",
+      "model_needs": "Yêu cầu mô hình",
+      "send_anyway": "Vẫn gửi",
+      "got_it": "Đã hiểu",
+      "indicator_label": "Cảnh báo bộ nhớ thấp"
     },
     "catalog": {
       "gemma_3_1b": "(Q8_0) Gemma3 1B là phiên bản nhỏ gọn hơn của mô hình Gemma3 4B cho các nhiệm vụ phức tạp hơn.",
@@ -1094,10 +1107,10 @@
       "weekly_multiple": "Mỗi {{days}} và {{last}} lúc {{time}}",
       "list_separator": ", ",
       "monthly": "Vào ngày {{day}} của mỗi tháng lúc {{time}}",
-      "ordinal_st": "{{n}}st",
-      "ordinal_nd": "{{n}}nd",
-      "ordinal_rd": "{{n}}rd",
-      "ordinal_th": "{{n}}th",
+      "ordinal_st": "{{n}}",
+      "ordinal_nd": "{{n}}",
+      "ordinal_rd": "{{n}}",
+      "ordinal_th": "{{n}}",
       "time_am": "{{hour}}:{{minute}} AM",
       "time_pm": "{{hour}}:{{minute}} PM",
       "hour_am": "{{hour}} AM",

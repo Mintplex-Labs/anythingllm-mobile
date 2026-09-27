@@ -35,7 +35,14 @@ export default class OnDeviceEmbedderProvider {
         embed_document: 'search_document: ',
     }
 
-    private _isWorking: boolean = false;
+    /** In-flight `embed` calls - a count, not a flag, so one finishing never marks overlapping calls as done. */
+    private activeJobs = 0;
+    /**
+     * Serialises every native call on `context` AND its release. Two embeddings must not decode on one
+     * context at once, and llama.rn's `release()` only waits for tasks already running on a worker - a
+     * queued embedding can still grab the context pointer after it was deleted (SIGSEGV).
+     */
+    private contextQueue: Promise<unknown> = Promise.resolve();
     private model = EMBEDDING_MODEL.modelId;
     private modelPath = resolveDestinationPathFromGGUFUrl(EMBEDDING_MODEL.tag);
     private keepAliveTimer: ReturnType<typeof setTimeout> | null = null;
@@ -130,7 +137,7 @@ export default class OnDeviceEmbedderProvider {
     private keepAlive() {
         if (this.keepAliveTimer) clearTimeout(this.keepAliveTimer);
         this.keepAliveTimer = setTimeout(() => {
-            if (!this._isWorking) this.cleanup();
+            if (!this.activeJobs) this.cleanup();
             else {
                 /**
                  * If we are still working we cannot unload the model
@@ -145,16 +152,25 @@ export default class OnDeviceEmbedderProvider {
         }, this.keepAliveInterval);
     }
 
+    /** Never call from inside a queued task - it would wait on itself. */
+    private runExclusive<T>(task: () => Promise<T>): Promise<T> {
+        const run = this.contextQueue.catch(() => null).then(task);
+        this.contextQueue = run.catch(() => null);
+        return run;
+    }
+
     private async unloadModel(): Promise<void> {
         if (this.keepAliveTimer) {
             clearTimeout(this.keepAliveTimer);
             this.keepAliveTimer = null;
         }
-        if (!this.context) return;
-        this.log('Unloading model');
-        const context = this.context;
-        this.context = null;
-        await context.release();
+        return this.runExclusive(async () => {
+            if (!this.context) return;
+            this.log('Unloading model');
+            const context = this.context;
+            this.context = null;
+            await context.release();
+        });
     }
 
     /**
@@ -165,13 +181,13 @@ export default class OnDeviceEmbedderProvider {
      */
     private async wrapInKeepAlive(func: () => Promise<any>) {
         try {
-            this._isWorking = true;
+            this.activeJobs++;
             this.keepAlive();
             return await func();
         } catch (error) {
             this.log('error running function', error);
         } finally {
-            this._isWorking = false;
+            this.activeJobs--;
         }
     }
 
@@ -189,7 +205,7 @@ export default class OnDeviceEmbedderProvider {
      * @returns The embedding.
      */
     async embed(text: string, as: 'query' | 'embed_document' = 'query') {
-        return this.wrapInKeepAlive(async () => {
+        return this.wrapInKeepAlive(() => this.runExclusive(async () => {
             await this.initialize();
             if (!this.context) throw new Error('OnDeviceEmbedderProvider::embed: could not initialize');
 
@@ -198,7 +214,7 @@ export default class OnDeviceEmbedderProvider {
             this.log(`Embedding text with prefix: ${prefixedText}`);
             const msgResult: NativeEmbeddingResult = await this.context.embedding(prefixedText, { embd_normalize: this.EMBEDDING_NORMALIZATION });
             return msgResult.embedding;
-        });
+        }));
     }
 
     /**

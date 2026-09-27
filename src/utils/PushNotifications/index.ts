@@ -229,7 +229,8 @@ class PushNotifications {
 
         try {
             await this.send('chat', {
-                title: failed ? 'Reply failed' : 'Reply ready',
+                // A successful reply speaks for itself - just the workspace and the reply text
+                title: failed ? 'Reply failed' : undefined,
                 subtitle: workspaceName || undefined,
                 body,
                 data: route ? { wsSlug: route.wsSlug, threadSlug: route.threadSlug } : undefined,

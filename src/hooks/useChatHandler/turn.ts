@@ -211,6 +211,7 @@ export default class AssistantTurn {
         this.chat.type = 'error';
         this.chat.isLoading = false;
         this.response.textResponse = message || 'Error processing chat';
+        this.response.error = true;
     }
 
     /**

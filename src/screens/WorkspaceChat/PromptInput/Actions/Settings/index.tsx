@@ -14,7 +14,7 @@ import uiStore from '@/store/UIStore';
 export default function SettingsActionSheet({ workspace, thread }: { workspace: WorkspaceType, thread: WorkspaceThreadType }) {
     const settingsSheetRef = useRef<BottomSheetModal>(null);
     const { registerSheet, presentSheet, isSheetActive } = useBottomSheet();
-    const isRemote = workspace.isRemote || thread.isRemote;
+    const isRemote = !!(workspace?.isRemote || thread?.isRemote);
 
     function goToSettings() {
         if (!workspace?.slug) return;

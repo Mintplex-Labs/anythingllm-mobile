@@ -13,6 +13,7 @@ export default function useWorkspaceThread(wsSlug: string, threadSlug: string | 
   async function fetchWorkspaceThread() {
     try {
       setIsLoading(true);
+      setError(null);
       if (!wsSlug) throw new Error('Workspace slug is required');
       if (!threadSlug) throw new Error('Thread slug is required');
 
@@ -20,6 +21,9 @@ export default function useWorkspaceThread(wsSlug: string, threadSlug: string | 
         Workspace.first([{ field: 'slug', value: wsSlug }]),
         WorkspaceThread.first([{ field: 'workspace_slug', value: wsSlug }, { field: 'slug', value: threadSlug }])
       ]);
+      // `first` returns null rather than throwing - the chat screen assumes both exist, so surface it as an error
+      if (!workspace) throw new Error('This workspace no longer exists');
+      if (!thread) throw new Error('This thread no longer exists');
 
       setWorkspace(workspace);
       setThread(thread);

@@ -7,6 +7,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AwaitableAlert from '@/components/AwaitableAlert';
 import { navigateWhenReady } from '@/utils/navigationRef';
 import { PATHS } from '@/utils/paths';
+import { showToast } from '@/utils/Notification';
+import Workspace from '@/database/models/Workspace';
+import WorkspaceThread from '@/database/models/WorkspaceThread';
 
 /** Longest reply preview we put in the "reply ready" notification body. */
 const CHAT_PREVIEW_MAX_CHARS = 140;
@@ -226,7 +229,8 @@ class PushNotifications {
 
         try {
             await this.send('chat', {
-                title: failed ? 'Reply failed' : 'Reply ready',
+                // A successful reply speaks for itself - just the workspace and the reply text
+                title: failed ? 'Reply failed' : undefined,
                 subtitle: workspaceName || undefined,
                 body,
                 data: route ? { wsSlug: route.wsSlug, threadSlug: route.threadSlug } : undefined,
@@ -291,6 +295,22 @@ function routeFromNotification(notification?: Notification | null): ChatNotifica
     return { wsSlug: data.wsSlug, threadSlug: data.threadSlug };
 }
 
+/**
+ * A notification can outlive its thread - the user may delete the thread or workspace (or reset
+ * the app, or re-import a remote workspace under a new slug) before tapping it.
+ */
+async function chatRouteExists({ wsSlug, threadSlug }: ChatNotificationRoute): Promise<boolean> {
+    try {
+        const [workspace, thread] = await Promise.all([
+            Workspace.first([{ field: 'slug', value: wsSlug }]),
+            WorkspaceThread.first([{ field: 'workspace_slug', value: wsSlug }, { field: 'slug', value: threadSlug }]),
+        ]);
+        return !!workspace && !!thread;
+    } catch {
+        return false;
+    }
+}
+
 /** Reads the scheduled job run off a tapped notification, if it carries one. */
 function jobRouteFromNotification(notification?: Notification | null): ScheduledJobNotificationRoute | null {
     const data = notification?.data as Partial<Record<keyof ScheduledJobNotificationRoute, unknown>> | undefined;
@@ -310,11 +330,13 @@ export function useEnablePushNotifications() {
  */
 export function useNotificationTapNavigation() {
     useEffect(() => {
-        const openRoute = (notification?: Notification | null) => {
+        const openRoute = async (notification?: Notification | null) => {
             const jobRoute = jobRouteFromNotification(notification);
             if (jobRoute) return navigateWhenReady(PATHS.scheduled_jobs, jobRoute);
             const route = routeFromNotification(notification);
-            if (route) navigateWhenReady(PATHS.workspace_chat, route);
+            if (!route) return;
+            if (!(await chatRouteExists(route))) return showToast('That chat no longer exists');
+            navigateWhenReady(PATHS.workspace_chat, route);
         };
 
         notifee.getInitialNotification()

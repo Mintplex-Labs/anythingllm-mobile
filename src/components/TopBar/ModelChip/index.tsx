@@ -21,7 +21,7 @@ import {
   BottomSheetModal,
   BottomSheetFlatList,
 } from '@gorhom/bottom-sheet';
-import { ArrowsClockwise, Check, MagnifyingGlass, Tag, WarningCircle, X } from 'phosphor-react-native';
+import { ArrowsClockwise, Check, MagnifyingGlass, Tag, Warning, WarningCircle, X } from 'phosphor-react-native';
 import { findIconByModelName, findIconByProvider } from '@/components/MonoProviderIcon';
 import useLlmPreference from '@/hooks/useLLMPreference';
 import useModelManager from '@/hooks/useModelManager';
@@ -48,6 +48,8 @@ import AddFromHuggingFaceCard from '@/components/HuggingFaceImport/AddCard';
 import useModelFit from '@/hooks/useModelFit';
 import ImportedModels, { ImportedModel } from '@/utils/models/imported';
 import { IAvailableModel } from '@/utils/AiProviders/baseOpenAILikeProvider';
+import useLowMemoryStatus from '@/hooks/useLowMemoryStatus';
+import LowMemoryModal, { LOW_MEMORY_COLOR } from '@/components/LowMemoryModal';
 
 function getPresetModelName(llmPreferences: { provider: string; config: any }) {
   if (llmPreferences.provider !== 'native') return llmPreferences.config.model;
@@ -125,29 +127,35 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
   if (!modelName && workspace?.isRemote) return null;
   return (
     <Fragment>
-      <TouchableOpacity
-        onPress={() => {
-          if (workspace?.isRemote) return showToast('This workspace is managed remotely. You cannot change the model here.');
-          presentSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)
-        }}
-        style={{ marginTop: -5, maxWidth: 200 }}
-        className={`rounded-full ${!modelName ? 'bg-red-500/20' : 'bg-white/10'
-          }`}>
-        <View className="flex flex-row items-center justify-center" style={{ gap: 4, paddingVertical: 4, paddingHorizontal: 12 }}>
-          <ProviderIcon
-            provider={llmPreferences.provider}
-            // On-device `modelName` is the friendly display name; the raw id (eg. `unsloth/Qwen3.5-2B-GGUF`) matches more reliably.
-            modelName={llmPreferences.provider === 'native' ? llmPreferences.config?.model || modelName : modelName}
-          />
-          <Text
-            style={{ fontSize: 14 }}
-            className={`${!modelName ? 'text-red-500' : 'text-white'}`}
-            numberOfLines={1}
-            ellipsizeMode="middle">
-            {modelNameToDisplayName(modelName) || 'No model loaded'}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <View className="flex flex-row items-center" style={{ gap: 6 }}>
+        <LowMemoryIndicator
+          provider={LLMProvider}
+          enabled={llmPreferences.provider === 'native' && !workspace?.isRemote && !!modelName}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            if (workspace?.isRemote) return showToast('This workspace is managed remotely. You cannot change the model here.');
+            presentSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)
+          }}
+          style={{ marginTop: -5, maxWidth: 200 }}
+          className={`rounded-full ${!modelName ? 'bg-red-500/20' : 'bg-white/10'
+            }`}>
+          <View className="flex flex-row items-center justify-center" style={{ gap: 4, paddingVertical: 4, paddingHorizontal: 12 }}>
+            <ProviderIcon
+              provider={llmPreferences.provider}
+              // On-device `modelName` is the friendly display name; the raw id (eg. `unsloth/Qwen3.5-2B-GGUF`) matches more reliably.
+              modelName={llmPreferences.provider === 'native' ? llmPreferences.config?.model || modelName : modelName}
+            />
+            <Text
+              style={{ fontSize: 14 }}
+              className={`${!modelName ? 'text-red-500' : 'text-white'}`}
+              numberOfLines={1}
+              ellipsizeMode="middle">
+              {modelNameToDisplayName(modelName) || 'No model loaded'}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
       <BottomSheetModal
         ref={bottomSheetRef}
         index={0}
@@ -543,6 +551,29 @@ function ExternalProviderModels({
         />
       )}
     </View>
+  );
+}
+
+/**
+ * Amber outline triangle left of the chip while the on-device model is short on free RAM. Tapping it
+ * explains why that leads to "crashes" (the OS evicting us) and what to do about it.
+ */
+function LowMemoryIndicator({ provider, enabled }: { provider: unknown; enabled: boolean }) {
+  const status = useLowMemoryStatus(provider, enabled);
+  const [open, setOpen] = useState(false);
+  if (!status) return null;
+
+  return (
+    <Fragment>
+      <TouchableOpacity
+        onPress={() => setOpen(true)}
+        style={{ marginTop: -5, padding: 2 }}
+        hitSlop={10}
+        accessibilityLabel="Low memory warning">
+        <Warning size={18} color={LOW_MEMORY_COLOR} weight="bold" />
+      </TouchableOpacity>
+      <LowMemoryModal status={status} visible={open} onClose={() => setOpen(false)} />
+    </Fragment>
   );
 }
 

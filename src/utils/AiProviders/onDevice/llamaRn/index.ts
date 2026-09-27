@@ -15,6 +15,7 @@ import type OnDeviceProvider from '@/utils/AiProviders/onDevice/index';
 import { getDefaultContextLength } from '@/utils/contextLength';
 import ContextCompactor, { type CompactionChatMessage, truncateMiddle } from '@/utils/chat/contextCompaction';
 import { throwIfAborted } from '@/utils/chat/abort';
+import { ChatMemoryEstimate, enableAllocationLogging, estimateChatMemory, readGgufShape } from '@/utils/models/memoryEstimate';
 
 export type NativeLlamaChatMessage = {
   role: string;
@@ -232,6 +233,36 @@ export default class LlamaRnWrapper {
   }
 
   /**
+   * Estimated RAM a chat with this model needs (weights, projector, KV cache, compute buffers) at the
+   * workspace's context window, and whether it is already loaded. Used by the low-memory warning;
+   * returns null when the model file cannot be found.
+   */
+  async memoryProfile(): Promise<{ estimate: ChatMemoryEstimate; loaded: boolean } | null> {
+    try {
+      const ggufPath = await this.determineGgufFilePath();
+      // Not `availableMmprojPath` - it logs when the projector is missing and this runs on a 15s poll.
+      const mmprojPath = this.mmprojFilePath && (await RNFS.exists(this.mmprojFilePath)) ? this.mmprojFilePath : null;
+      const [weights, mmproj, shape] = await Promise.all([
+        RNFS.stat(ggufPath),
+        mmprojPath ? RNFS.stat(mmprojPath) : null,
+        readGgufShape(ggufPath),
+      ]);
+      const nCtx = this.contextLength;
+      const estimate = estimateChatMemory({
+        weightsBytes: Number(weights.size) || 0,
+        mmprojBytes: Number(mmproj?.size) || 0,
+        shape,
+        nCtx,
+        // Same batch sizing as `createContext`.
+        nUbatch: Math.min(LlamaRnWrapper.N_BATCH, nCtx),
+      });
+      return { estimate, loaded: this.isLoaded };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
    * True when the loaded model ships a jinja template that knows how to render tools
    * and parse tool calls (Qwen, Gemma 4, Granite, Llama 3.x, ...). When false we do not
    * send tools at all - chat.cpp would otherwise fall back to a generic JSON-only mode.
@@ -369,6 +400,7 @@ export default class LlamaRnWrapper {
 
   private async createContext({ multimodal }: { multimodal: boolean }) {
     const nCtx = this.contextLength;
+    enableAllocationLogging(); // TODO: remove before release - see memoryEstimate.ts
     return initLlama({
       model: this.ggufFilePath!,
       n_ctx: nCtx,

@@ -1,8 +1,7 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { Warning } from "phosphor-react-native";
+import { WarningCircle } from "phosphor-react-native";
 import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
-import { BASE_MESSAGE_STYLES } from "./styles";
 import ActivityChain from "./ActivityChain";
 import CitationsContainer from "./Citations";
 import ActionsContainer from "./Actions";
@@ -37,7 +36,8 @@ export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessa
         <View className="flex flex-col items-start w-full justify-start" style={{ gap: 11, paddingBottom: hasTrailingChips ? TRAILING_CHIPS_BOTTOM_PADDING : 0 }}>
             <ActivityChain chat={chat} />
             <ToolApprovalRequest chat={chat} />
-            {chat.type === 'error' ? (
+            {/* `type` only lives in memory - a thread reloaded from the database has just the persisted flag */}
+            {chat.type === 'error' || response?.error ? (
                 <ErrorContainer message={response?.textResponse} onLongPress={handleLongPress} />
             ) : (
                 <TextResponseContainer uuid={chat.uuid} textResponse={response?.textResponse} metrics={response?.metrics} onLongPress={handleLongPress} />
@@ -50,19 +50,49 @@ export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessa
     );
 });
 
+const ERROR_COLORS = {
+    /** zinc-800 - same surface as the tool approval and file download cards */
+    card: '#27272A',
+    /** red-400 */
+    accent: '#F87171',
+    /** red-400 @ 15% */
+    badge: 'rgba(248,113,113,0.15)',
+    text: '#FFFFFF',
+    /** zinc-400 */
+    muted: '#A1A1AA',
+} as const;
+
+/** Provider errors can be whole JSON dumps - clamp them and let the user expand */
+const ERROR_COLLAPSED_LINES = 4;
+
 function ErrorContainer({ message, onLongPress }: { message?: string; onLongPress?: () => void }) {
+    const [expanded, setExpanded] = useState(false);
+    const [truncatable, setTruncatable] = useState(false);
     if (!message) return null;
     return (
-        <View className="flex flex-row items-start w-full justify-start">
-            <TouchableOpacity
-                onLongPress={onLongPress}
-                delayLongPress={500}
-                activeOpacity={0.7}
-                className="rounded-lg flex flex-row items-center"
-                style={[BASE_MESSAGE_STYLES, { gap: 4, borderWidth: 1, borderColor: '#F97066', maxWidth: '100%', backgroundColor: 'rgba(122,39,26,0.2)' }]}>
-                <Warning size={18} color="#F97066" />
-                <Text style={{ color: '#F97066', flexShrink: 1 }} className="text-lg">{message}</Text>
-            </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+            onPress={truncatable ? () => setExpanded(v => !v) : undefined}
+            onLongPress={onLongPress}
+            delayLongPress={500}
+            activeOpacity={0.8}
+            accessibilityRole="alert"
+            style={{ width: '100%', backgroundColor: ERROR_COLORS.card, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 10, gap: 10 }}
+            className="flex flex-row items-start">
+            <View style={{ width: 28, height: 28, borderRadius: 14, backgroundColor: ERROR_COLORS.badge }} className="flex items-center justify-center">
+                <WarningCircle size={16} color={ERROR_COLORS.accent} weight="bold" />
+            </View>
+            <View style={{ flex: 1, minWidth: 0, gap: 2, paddingTop: 4 }}>
+                <Text style={{ color: ERROR_COLORS.text, fontSize: 14, fontWeight: '500', lineHeight: 18 }}>Something went wrong</Text>
+                <Text
+                    numberOfLines={expanded ? undefined : ERROR_COLLAPSED_LINES}
+                    onTextLayout={(e) => { if (!truncatable && e.nativeEvent.lines.length > ERROR_COLLAPSED_LINES) setTruncatable(true); }}
+                    style={{ color: ERROR_COLORS.muted, fontSize: 13, lineHeight: 18 }}>
+                    {message}
+                </Text>
+                {truncatable && (
+                    <Text style={{ color: ERROR_COLORS.text, fontSize: 12, fontWeight: '500', marginTop: 2 }}>{expanded ? 'Show less' : 'Show more'}</Text>
+                )}
+            </View>
+        </TouchableOpacity>
     );
 }

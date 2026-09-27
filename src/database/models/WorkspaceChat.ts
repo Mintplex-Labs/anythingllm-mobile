@@ -170,6 +170,12 @@ export type WorkspaceChatResponseType = {
    */
   activity?: IActivityNode[];
   isLoading?: boolean;
+  /**
+   * The turn failed and `textResponse` holds the error message, not a reply. Persisted so a
+   * reloaded thread still renders it as an error. Rows written before this field existed
+   * have no flag and render as normal replies.
+   */
+  error?: boolean;
 }
 
 export type WorkspaceChatType = {

@@ -14,12 +14,15 @@ import {
   TextInput,
   Keyboard,
   Image,
+  ViewStyle,
 } from 'react-native';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetModal,
   BottomSheetFlatList,
+  useBottomSheetInternal,
 } from '@gorhom/bottom-sheet';
 import { ArrowsClockwise, Check, MagnifyingGlass, Tag, Warning, WarningCircle, X } from 'phosphor-react-native';
 import { findIconByModelName, findIconByProvider } from '@/components/MonoProviderIcon';
@@ -428,7 +431,6 @@ function ExternalProviderModels({
       console.log(`[ModelChip] Could not list models for ${llmPreferences.provider}`, error);
       setModels([]);
       setStatus('error');
-      showToast(`Could not list models for ${providerName}.`, 'long');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [llmPreferences.provider, baseUrl, apiKey, providerName]);
@@ -463,16 +465,16 @@ function ExternalProviderModels({
 
   if (status === 'loading') {
     return (
-      <View className="flex flex-col items-center justify-center w-full h-full" style={{ gap: 12, paddingBottom: 100 }}>
+      <VisibleSheetCenter style={{ gap: 12 }}>
         <ActivityIndicator size="large" color="white" />
         <Text className="text-[#9F9FA0] text-sm">Loading models from {providerName}...</Text>
-      </View>
+      </VisibleSheetCenter>
     );
   }
 
   if (status === 'error') {
     return (
-      <View className="flex flex-col items-center justify-center w-full h-full px-8" style={{ gap: 12, paddingBottom: 100 }}>
+      <VisibleSheetCenter style={{ gap: 12, paddingHorizontal: 32 }}>
         <WarningCircle size={40} color="#f87171" weight="bold" />
         <Text className="text-white text-base font-semibold text-center">
           Could not list models for {providerName}
@@ -487,7 +489,7 @@ function ExternalProviderModels({
           <ArrowsClockwise size={16} color="white" weight="bold" />
           <Text className="text-white text-sm font-medium">Try again</Text>
         </TouchableOpacity>
-      </View>
+      </VisibleSheetCenter>
     );
   }
 
@@ -551,6 +553,25 @@ function ExternalProviderModels({
         />
       )}
     </View>
+  );
+}
+
+/**
+ * Centers its children in the part of the sheet that is actually on screen. With dynamic sizing off
+ * the content area is always as tall as the highest snap point, so plain `justify-center` puts a
+ * status message near the bottom edge (or off screen) while the sheet sits at its lower snap point.
+ * Tracks the sheet position so it stays centered while dragging between snap points too.
+ */
+function VisibleSheetCenter({ children, style }: { children: React.ReactNode; style?: ViewStyle }) {
+  const { animatedPosition, animatedLayoutState } = useBottomSheetInternal();
+  const visibleStyle = useAnimatedStyle(() => {
+    const { containerHeight, handleHeight } = animatedLayoutState.value;
+    return { height: Math.max(0, containerHeight - animatedPosition.value - handleHeight) };
+  });
+  return (
+    <Animated.View style={[{ width: '100%', alignItems: 'center', justifyContent: 'center' }, style, visibleStyle]}>
+      {children}
+    </Animated.View>
   );
 }
 

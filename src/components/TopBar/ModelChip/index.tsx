@@ -430,7 +430,6 @@ function ExternalProviderModels({
     } catch (error) {
       console.log(`[ModelChip] Could not list models for ${llmPreferences.provider}`, error);
       setModels([]);
-      // No toast - the sheet itself shows the error state.
       setStatus('error');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

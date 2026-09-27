@@ -93,8 +93,12 @@ export default class LlamaRnWrapper {
   private model: string;
   private ggufFilePath: string | null = null;
   private context: LlamaContext | null = null;
-  /** Serialises everything that touches `context.completion` - llama.rn owns one context and cannot run two completions at once. */
-  private completionQueue: Promise<unknown> = Promise.resolve();
+  /**
+   * Serialises every native call on `context` (completion, tokenize, getFormattedChat) AND its release.
+   * llama.rn cannot run two completions at once, and its `release()` only waits for tasks already running
+   * on a worker - a queued tokenize/completion can still grab the context pointer after it was deleted (SIGSEGV).
+   */
+  private contextQueue: Promise<unknown> = Promise.resolve();
   private _compactor: { contextLength: number; instance: ContextCompactor } | null = null;
   private initializing: Promise<boolean> | null = null;
   private keepAliveTimer: ReturnType<typeof setTimeout> | null = null;
@@ -434,16 +438,20 @@ export default class LlamaRnWrapper {
   }
 
   /** Tokens `messages` render to through the model's chat template. Loads the model if needed. */
-  async countTokens(messages: CompactionChatMessage[]): Promise<number> {
-    if (!this.context) await this.initialize();
-    return this.countPromptTokens(messages as any);
+  countTokens(messages: CompactionChatMessage[]): Promise<number> {
+    return this.runExclusive(async () => {
+      if (!this.context) await this.initialize();
+      return this.countPromptTokens(messages as any);
+    });
   }
 
-  private async countText(text: string): Promise<number> {
-    if (!this.context) await this.initialize();
-    if (!this.context) throw new Error('LlamaRnWrapper::countText: Model not initialized');
-    const { tokens } = await this.context.tokenize(text);
-    return tokens.length;
+  private countText(text: string): Promise<number> {
+    return this.runExclusive(async () => {
+      if (!this.context) await this.initialize();
+      if (!this.context) throw new Error('LlamaRnWrapper::countText: Model not initialized');
+      const { tokens } = await this.context.tokenize(text);
+      return tokens.length;
+    });
   }
 
   /**
@@ -546,9 +554,10 @@ export default class LlamaRnWrapper {
     };
   }
 
+  /** Never call from inside a queued task - it would wait on itself. */
   private runExclusive<T>(task: () => Promise<T>): Promise<T> {
-    const run = this.completionQueue.catch(() => null).then(task);
-    this.completionQueue = run.catch(() => null);
+    const run = this.contextQueue.catch(() => null).then(task);
+    this.contextQueue = run.catch(() => null);
     return run;
   }
 
@@ -577,7 +586,7 @@ export default class LlamaRnWrapper {
     throwIfAborted(signal); // may have been stopped while queued behind another round
     if (this.reloadRequested) {
       this.reloadRequested = false;
-      await this.unloadModel();
+      await this.unloadModelUnlocked();
     }
     if (!this.context) await this.initialize();
     if (!this.context) throw new Error('LlamaRnWrapper::runCompletion: Model not initialized');
@@ -689,7 +698,21 @@ export default class LlamaRnWrapper {
     await this.context.stopCompletion();
   }
 
+  /**
+   * Releases the context once every queued native call on it has finished. A running generation is
+   * interrupted first (as release always did) so unloading never waits out a full reply.
+   */
   async unloadModel(): Promise<void> {
+    if (this.keepAliveTimer) {
+      clearTimeout(this.keepAliveTimer);
+      this.keepAliveTimer = null;
+    }
+    if (this.isGenerating) await this.stop().catch((e) => this.log('Failed to stop generation before unload', e));
+    return this.runExclusive(() => this.unloadModelUnlocked());
+  }
+
+  private async unloadModelUnlocked(): Promise<void> {
+    // A completion queued ahead of us restarts keep-alive in its finally - drop that timer too.
     if (this.keepAliveTimer) {
       clearTimeout(this.keepAliveTimer);
       this.keepAliveTimer = null;

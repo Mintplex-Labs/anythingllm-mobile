@@ -5,6 +5,17 @@ type ChangelogEntry = {
 
 const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.2.3',
+    content: [
+      '- **Choose your language** — the app is now available in 17 languages and follows your phone\'s language by default. Change it under Settings > App language',
+      '- **Low memory warning** — get a heads-up before an on-device chat runs out of memory and the app is closed by your phone',
+      '- **Clearer chat errors** — failed replies show as an error card, with a Show more toggle for long errors, and stay marked as errors when you reopen the thread',
+      '- **Fixed crashes** when using on-device models, including while switching models or embedding documents',
+      '- **Fixed a crash** when tapping a reply notification for a thread or workspace that was deleted',
+      '- **Cleaner notifications** — reply notifications now show just the workspace and the reply',
+    ].join('\n'),
+  },
+  {
     version: '1.2.2',
     content: [
       '- **Fixed a crash** when tapping a suggested context length in workspace settings',

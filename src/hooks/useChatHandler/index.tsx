@@ -14,6 +14,10 @@ import Telemetry from "@/utils/Telemetry";
 import AssistantTurn from "./turn";
 import { isAbortError } from "@/utils/chat/abort";
 import PushNotifications from "@/utils/PushNotifications";
+import { claimLowMemoryWarning, type LowMemoryStatus } from "@/utils/models/lowMemory";
+import LowMemoryModal from "@/components/LowMemoryModal";
+
+type LowMemoryWarning = { status: LowMemoryStatus; resolve: (proceed: boolean) => void };
 
 const SHOW_DEBUG_LOGS = true;
 
@@ -115,7 +119,7 @@ function debug(text: string, ...args: any[]) {
     if (SHOW_DEBUG_LOGS) console.log(`\x1b[33m[ChatHandler]\x1b[0m ${text}`, ...args);
 }
 
-function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: IChatHandlerInterfaceProps): { handler: ChatHandlerInterface, history: ChatHistoryInterface } {
+function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: IChatHandlerInterfaceProps): { handler: ChatHandlerInterface, history: ChatHistoryInterface, lowMemoryWarning: LowMemoryWarning | null } {
     const [chatsMap, setChatsMap] = useState<Map<string, DynamicChatMessage>>(new Map());
 
     const [prompt, _setPrompt] = useState('');
@@ -124,6 +128,8 @@ function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: I
     const [_promptDisabled, _setPromptDisabled] = useState<boolean>(false);
     const [isWorking, setIsWorking] = useState<boolean>(false);
     const [isRemote] = useState<boolean>(!!(workspace?.isRemote || thread?.isRemote));
+    /** Pending send-time low memory warning - `ChatHandlerWrapper` renders it and resolves with the user's choice. */
+    const [lowMemoryWarning, setLowMemoryWarning] = useState<LowMemoryWarning | null>(null);
 
     // Keep the latest chatsMap in a ref to avoid stale closures inside callbacks
     const chatsMapRef = useRef(chatsMap);
@@ -391,6 +397,16 @@ function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: I
 
     const submitPrompt = useCallback(async (promptToSubmit?: string, attachments: IAttachment[] = []) => {
         if (!promptToSubmit) promptToSubmit = prompt;
+        // Once per app launch, warn before an on-device model runs on nearly no free RAM. Runs before
+        // PROMPT_SUBMITTED so "Cancel" leaves the prompt and its attachments in the input untouched.
+        if (!isRemote) {
+            const lowMemoryStatus = await claimLowMemoryWarning(llmProvider);
+            if (lowMemoryStatus) {
+                const proceed = await new Promise<boolean>(resolve => setLowMemoryWarning({ status: lowMemoryStatus, resolve }));
+                setLowMemoryWarning(null);
+                if (!proceed) return;
+            }
+        }
         // Emit the submit prompt event to the UI store
         uiStore.emitter.emit(CHAT_HANDLER_EVENTS.PROMPT_SUBMITTED);
 
@@ -409,7 +425,7 @@ function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: I
             enablePromptInput();
             setIsWorking(false);
         }
-    }, [prompt, _processChat, disablePromptInput, enablePromptInput]);
+    }, [prompt, _processChat, disablePromptInput, enablePromptInput, isRemote, llmProvider]);
 
     const setPrompt = useCallback((promptToSet: string, autoSubmit: boolean = false) => {
         _setPrompt(promptToSet);
@@ -491,18 +507,24 @@ function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: I
         fetchChats,
     }), [chatsArray, isLoadingChats, errorLoadingChats, canScrollChatHistory, isWorking, fetchChats]);
 
-    return { handler, history };
+    return { handler, history, lowMemoryWarning };
 }
 
 const ChatHandlerContext = createContext<ChatHandlerInterface | null>(null);
 const ChatHistoryContext = createContext<ChatHistoryInterface | null>(null);
 
 export function ChatHandlerWrapper({ children, workspace, thread, llmProvider, ephemeral }: { children: React.ReactNode, workspace: WorkspaceType, thread: WorkspaceThreadType, llmProvider: LLMProvider, ephemeral?: boolean }) {
-    const { handler, history } = useChatHandler({ workspace, thread, llmProvider, ephemeral });
+    const { handler, history, lowMemoryWarning } = useChatHandler({ workspace, thread, llmProvider, ephemeral });
     return (
         <ChatHandlerContext.Provider value={handler}>
             <ChatHistoryContext.Provider value={history}>
                 {children}
+                <LowMemoryModal
+                    status={lowMemoryWarning?.status ?? null}
+                    visible={!!lowMemoryWarning}
+                    onClose={() => lowMemoryWarning?.resolve(false)}
+                    onConfirm={() => lowMemoryWarning?.resolve(true)}
+                />
             </ChatHistoryContext.Provider>
         </ChatHandlerContext.Provider>
     );

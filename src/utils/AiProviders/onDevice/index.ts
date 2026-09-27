@@ -98,6 +98,11 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     return this.submodule?.runtimeInfo ?? null;
   }
 
+  /** Model file size and load state for the low-memory warning (null when no model is selected). */
+  async memoryProfile() {
+    return this.submodule?.memoryProfile() ?? null;
+  }
+
   /**
    * Whether the selected model can take image input right now (vision capability + mmproj on disk).
    * This is a filesystem check, not a model load, so it is cheap enough to call from the UI.

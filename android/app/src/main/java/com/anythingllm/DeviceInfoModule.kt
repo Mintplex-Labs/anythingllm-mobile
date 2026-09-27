@@ -1,6 +1,8 @@
 package com.anythingllm
 
 import com.facebook.react.bridge.*
+import android.app.ActivityManager
+import android.content.Context
 import android.os.Build
 import java.io.File
 
@@ -13,6 +15,29 @@ class DeviceInfoModule(reactContext: ReactApplicationContext) : ReactContextBase
         try {
             val chipset = Build.HARDWARE.takeUnless { it.isNullOrEmpty() } ?: Build.BOARD
             promise.resolve(chipset)
+        } catch (e: Exception) {
+            promise.reject("ERROR", e.message)
+        }
+    }
+
+    /**
+     * System-wide RAM snapshot. `available` is what the OS could hand out right now without
+     * killing anything (free + reclaimable cache) - react-native-device-info only exposes total RAM
+     * and this app's own usage, neither of which tells us if an on-device model will fit.
+     */
+    @ReactMethod
+    fun getMemoryInfo(promise: Promise) {
+        try {
+            val activityManager = reactApplicationContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val memoryInfo = ActivityManager.MemoryInfo()
+            activityManager.getMemoryInfo(memoryInfo)
+
+            val result = Arguments.createMap()
+            result.putDouble("total", memoryInfo.totalMem.toDouble())
+            result.putDouble("available", memoryInfo.availMem.toDouble())
+            result.putDouble("threshold", memoryInfo.threshold.toDouble())
+            result.putBoolean("lowMemory", memoryInfo.lowMemory)
+            promise.resolve(result)
         } catch (e: Exception) {
             promise.reject("ERROR", e.message)
         }

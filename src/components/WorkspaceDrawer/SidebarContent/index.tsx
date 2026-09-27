@@ -14,8 +14,10 @@ import { useDrawerStatus } from '@react-navigation/drawer';
 import { BOTTOM_SHEET_NAMES, useBottomSheet } from '@/contexts/BottomSheetContext';
 import { PATHS } from '@/utils/paths';
 import uiStore from '@/store/UIStore';
+import { useTranslation } from 'react-i18next';
 
 export default function SidebarContent({ navigation }: { navigation: any }) {
+  const { t } = useTranslation();
   const drawerStatus = useDrawerStatus();
   const { presentSheet, dismissAllSheets } = useBottomSheet();
   const { loadingWorkspaces, workspaces, activeWorkspaceSlug, activeThreadSlug, fetchWorkspaces } = useWorkspaces(true);
@@ -81,9 +83,9 @@ export default function SidebarContent({ navigation }: { navigation: any }) {
         <View className='flex-1 justify-between'>
           {/* Topbar */}
           <View className='flex flex-row items-center justify-between pt-[20px] w-full p-[16px] border-b border-[--hex-gray-8] shrink-0'>
-            <Text className='text-2xl font-semibold text-white'>Workspaces</Text>
+            <Text className='text-2xl font-semibold text-white'>{t('drawer.workspaces')}</Text>
             <View className='flex flex-row items-center' style={{ gap: 18 }}>
-              <TouchableOpacity activeOpacity={0.6} onPress={goToScheduledJobs} accessibilityLabel={unseenJobRuns > 0 ? `Scheduled jobs, ${unseenJobRuns} unseen result${unseenJobRuns === 1 ? '' : 's'}` : 'Scheduled jobs'}>
+              <TouchableOpacity activeOpacity={0.6} onPress={goToScheduledJobs} accessibilityLabel={unseenJobRuns > 0 ? t('drawer.scheduled_jobs_unseen', { count: unseenJobRuns }) : t('drawer.scheduled_jobs')}>
                 <ClockCountdown size={30} color='#FFF' />
                 {unseenJobRuns > 0 && (
                   // Unseen job results - same accent as the dots on the job and run rows
@@ -132,7 +134,7 @@ export default function SidebarContent({ navigation }: { navigation: any }) {
           {/* Sticky Bottom Icons */}
           <View style={{ paddingVertical: 16, height: 80, paddingHorizontal: 8, gap: 16 }} className='flex flex-row justify-between items-center border-t border-[--hex-gray-8]'>
             <TouchableOpacity activeOpacity={0.8} onPress={openNewWorkspaceModal} className='flex flex-1 flex-row items-center justify-center bg-white/10 rounded-lg py-[11px]'>
-              <Text className='text-lg text-white'>New Workspace</Text>
+              <Text className='text-lg text-white'>{t('drawer.new_workspace')}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={goToWorkspaceImportStart} activeOpacity={0.8} style={{ height: '100%', width: 42 }} className='flex items-center justify-center bg-white/10 rounded-lg p-[11px]'>
               <QrCode size={30} color='#FFF' />

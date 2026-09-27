@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import SafeView from '@/components/SafeView';
 import ToggleSwitch from '@/components/ToggleSwitch';
 import AwaitableAlert from '@/components/AwaitableAlert';
@@ -26,6 +27,7 @@ const EMPTY_FORM: ScheduledJobWritable = {
 
 /** Create a new job, or edit `jobUuid`. `onDone` receives the saved job's uuid (undefined after a delete). */
 export default function JobForm({ jobUuid, onDone, onCancel }: { jobUuid?: string; onDone: (jobUuid?: string) => void; onCancel: () => void }) {
+    const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const editing = !!jobUuid;
     const [form, setForm] = useState<ScheduledJobWritable>(EMPTY_FORM);
@@ -39,7 +41,7 @@ export default function JobForm({ jobUuid, onDone, onCancel }: { jobUuid?: strin
         if (!jobUuid) return;
         ScheduledJob.findByUuid(jobUuid).then((job) => {
             if (!job) {
-                showToast('That job no longer exists');
+                showToast(t('scheduled_jobs.job_missing'));
                 return onCancel();
             }
             setForm({ name: job.name, prompt: job.prompt, tools: job.tools, schedule: job.schedule, enabled: job.enabled, notifyOnComplete: job.notifyOnComplete });
@@ -60,13 +62,13 @@ export default function JobForm({ jobUuid, onDone, onCancel }: { jobUuid?: strin
             // Notifications are the point of "notify me" - ask now if the user has never been asked.
             if (form.notifyOnComplete) await PushNotifications.requestPermissionIfUndecided();
             const saved = editing ? await ScheduledJob.update(jobUuid!, form) : await ScheduledJob.create(form);
-            if (!saved) throw new Error('The job could not be saved');
+            if (!saved) throw new Error(t('scheduled_jobs.form.save_failed'));
             await syncNativeSchedule();
             if (!editing) Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.SCHEDULED_JOB_CREATED, { tools: form.tools.length, notify: form.notifyOnComplete });
-            showToast(editing ? 'Job updated' : 'Job scheduled');
+            showToast(editing ? t('scheduled_jobs.form.job_updated') : t('scheduled_jobs.form.job_scheduled'));
             onDone(saved.uuid);
         } catch (error: any) {
-            showToast(error?.message || 'Could not save the job', 'long');
+            showToast(error?.message || t('scheduled_jobs.form.could_not_save'), 'long');
         } finally {
             setSaving(false);
         }
@@ -75,27 +77,27 @@ export default function JobForm({ jobUuid, onDone, onCancel }: { jobUuid?: strin
     const remove = async () => {
         if (!jobUuid) return;
         const confirmed = await AwaitableAlert(
-            'Delete this job?',
-            `"${form.name}" and every result it produced will be removed. This cannot be undone.`,
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Delete', style: 'destructive' },
+            t('scheduled_jobs.form.delete_title'),
+            t('scheduled_jobs.form.delete_message', { name: form.name }),
+            { text: t('common.cancel'), style: 'cancel' },
+            { text: t('common.delete'), style: 'destructive' },
         );
         if (!confirmed) return;
         setDeleting(true);
         try {
             await ScheduledJob.delete(jobUuid);
             await syncNativeSchedule();
-            showToast('Job deleted');
+            showToast(t('scheduled_jobs.form.job_deleted'));
             onDone(undefined);
         } catch (error: any) {
-            showToast(error?.message || 'Could not delete the job');
+            showToast(error?.message || t('scheduled_jobs.form.delete_failed'));
             setDeleting(false);
         }
     };
 
     return (
         <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" safeAreaStyle={{ backgroundColor: JOB_COLORS.page }}>
-            <ScreenHeader title={editing ? 'Edit Job' : 'New Job'} onBack={onCancel} />
+            <ScreenHeader title={editing ? t('scheduled_jobs.form.edit_title') : t('scheduled_jobs.form.new_title')} onBack={onCancel} />
             {loading ? (
                 <View className="flex-1 items-center justify-center"><ActivityIndicator size="large" color="#FFF" /></View>
             ) : (
@@ -106,26 +108,26 @@ export default function JobForm({ jobUuid, onDone, onCancel }: { jobUuid?: strin
                         contentContainerStyle={{ paddingHorizontal: 8, paddingBottom: insets.bottom + 24, gap: 24 }}>
                         {/* Name + prompt */}
                         <View className="flex flex-col" style={{ gap: 12 }}>
-                            <SectionLabel>What should it do?</SectionLabel>
+                            <SectionLabel>{t('scheduled_jobs.form.what_section')}</SectionLabel>
                             <Card style={{ gap: 12 }}>
-                                <Field label="Name">
+                                <Field label={t('scheduled_jobs.form.name')}>
                                     <TextInput
                                         value={form.name}
                                         onChangeText={(name) => patch({ name })}
-                                        placeholder="Morning news digest"
+                                        placeholder={t('scheduled_jobs.form.name_placeholder')}
                                         placeholderTextColor="rgba(255,255,255,0.4)"
                                         maxLength={ScheduledJob.maxNameLength}
                                         style={{ backgroundColor: JOB_COLORS.row, padding: 14 }}
                                         className="rounded-lg text-white text-base"
                                     />
                                 </Field>
-                                <Field label="Prompt" hint="Written as if you were sending it in a chat. Be specific - nobody is around to answer follow-up questions.">
+                                <Field label={t('scheduled_jobs.prompt')} hint={t('scheduled_jobs.form.prompt_hint')}>
                                     <TextInput
                                         value={form.prompt}
                                         onChangeText={(prompt) => patch({ prompt })}
                                         multiline
                                         numberOfLines={6}
-                                        placeholder="Read https://news.ycombinator.com and write a short digest of the five most interesting stories, with a one-line take on each."
+                                        placeholder={t('scheduled_jobs.form.prompt_placeholder')}
                                         placeholderTextColor="rgba(255,255,255,0.4)"
                                         maxLength={ScheduledJob.maxPromptLength}
                                         style={{ backgroundColor: JOB_COLORS.row, padding: 14, minHeight: 140, textAlignVertical: 'top' }}
@@ -137,7 +139,7 @@ export default function JobForm({ jobUuid, onDone, onCancel }: { jobUuid?: strin
 
                         {/* Schedule */}
                         <View className="flex flex-col" style={{ gap: 12 }}>
-                            <SectionLabel>When should it run?</SectionLabel>
+                            <SectionLabel>{t('scheduled_jobs.form.when_section')}</SectionLabel>
                             <Card>
                                 <ScheduleBuilder value={form.schedule} mode={scheduleMode} onChange={(schedule) => patch({ schedule })} onModeChange={setScheduleMode} />
                             </Card>
@@ -148,17 +150,17 @@ export default function JobForm({ jobUuid, onDone, onCancel }: { jobUuid?: strin
 
                         {/* Options */}
                         <View className="flex flex-col" style={{ gap: 12 }}>
-                            <SectionLabel>Options</SectionLabel>
+                            <SectionLabel>{t('scheduled_jobs.form.options')}</SectionLabel>
                             <Card style={{ gap: 16 }}>
                                 <OptionRow
-                                    title="Notify me when it finishes"
-                                    description="Sends a notification when a run completes with a result. Failed or empty runs only show a dot in the app."
+                                    title={t('scheduled_jobs.form.notify_title')}
+                                    description={t('scheduled_jobs.form.notify_description')}
                                     isOn={form.notifyOnComplete}
                                     onToggle={() => patch({ notifyOnComplete: !form.notifyOnComplete })}
                                 />
                                 <OptionRow
-                                    title="Enabled"
-                                    description="Turn off to keep the job and its results without running it."
+                                    title={t('common.enabled')}
+                                    description={t('scheduled_jobs.form.enabled_description')}
                                     isOn={form.enabled}
                                     onToggle={() => patch({ enabled: !form.enabled })}
                                 />
@@ -166,11 +168,11 @@ export default function JobForm({ jobUuid, onDone, onCancel }: { jobUuid?: strin
                         </View>
 
                         <View className="flex flex-col" style={{ gap: 12 }}>
-                            <ActionButton title={editing ? 'Save changes' : 'Schedule job'} onPress={save} loading={saving} disabled={!validation.valid || !scheduleValid || deleting} />
+                            <ActionButton title={editing ? t('scheduled_jobs.form.save_changes') : t('scheduled_jobs.form.schedule_job')} onPress={save} loading={saving} disabled={!validation.valid || !scheduleValid || deleting} />
                             {!validation.valid && (form.name || form.prompt) ? (
                                 <Text style={{ color: JOB_COLORS.muted, textAlign: 'center' }} className="text-sm">{validation.error}</Text>
                             ) : null}
-                            {editing && <ActionButton title="Delete job" tone="danger" onPress={remove} loading={deleting} disabled={saving} />}
+                            {editing && <ActionButton title={t('scheduled_jobs.form.delete_job')} tone="danger" onPress={remove} loading={deleting} disabled={saving} />}
                         </View>
                     </ScrollView>
                 </KeyboardAvoidingView>

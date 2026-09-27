@@ -1,4 +1,5 @@
 import moment from 'moment';
+import i18n from '@/i18n';
 
 /**
  * The current date and time is deliberately a tool rather than a system prompt line: a
@@ -8,8 +9,8 @@ import moment from 'moment';
  */
 export default {
     id: 'getTime',
-    name: 'Get Time',
-    description: 'Get the current date and time based on your device timezone.',
+    get name() { return i18n.t('tools.get_time.name'); },
+    get description() { return i18n.t('tools.get_time.description'); },
     defaultEnabled: true,
     category: 'default',
     definition: {

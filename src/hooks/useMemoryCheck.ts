@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import DeviceInfo from 'react-native-device-info';
 import { Model } from '@/utils/types';
+import i18n from '@/i18n';
 
 function memoryRequirementEstimate(model: Model) {
   // Model parameters derived by fitting a linear regression to benchmark data
@@ -25,8 +26,8 @@ export const useMemoryCheck = (model: Model) => {
         const memoryRequirement = memoryRequirementEstimate(model);
 
         if (memoryRequirement > availableMemory) {
-          setShortMemoryWarning("Memory Warning");
-          setMemoryWarning('Warning: Model size may exceed available memory. This could affect performance and stability of your device.');
+          setShortMemoryWarning(i18n.t('models.memory_warning.short'));
+          setMemoryWarning(i18n.t('models.memory_warning.full'));
         }
       } catch (error) {
         // TODO: Handle error appropriately

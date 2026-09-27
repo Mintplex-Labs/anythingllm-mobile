@@ -8,6 +8,7 @@ import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';
 import { showToast } from '@/utils/Notification';
 import Telemetry from '@/utils/Telemetry';
 import { IWorkspacePageKey } from '../index';
+import { useTranslation } from 'react-i18next';
 
 interface AnonymousTelemetryProps {
   goToPage: (page: IWorkspacePageKey) => void;
@@ -19,6 +20,7 @@ interface AnonymousTelemetryProps {
  * every later event is dropped before it leaves the device.
  */
 export default function AnonymousTelemetry({ goToPage }: AnonymousTelemetryProps) {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const goBack = () => {
     goToPage('main');
@@ -39,7 +41,7 @@ export default function AnonymousTelemetry({ goToPage }: AnonymousTelemetryProps
         <TouchableOpacity onPress={goBack} className="absolute left-0 flex flex-row items-center gap-2">
           <ArrowLeft size={24} color="#FFF" weight="bold" />
         </TouchableOpacity>
-        <Text className="text-white text-lg font-medium">Anonymous telemetry</Text>
+        <Text className="text-white text-lg font-medium">{t('settings.utility.anonymous_telemetry')}</Text>
       </View>
 
       <ScrollView
@@ -52,6 +54,7 @@ export default function AnonymousTelemetry({ goToPage }: AnonymousTelemetryProps
 }
 
 function TelemetrySetting() {
+  const { t } = useTranslation();
   const [enabled, setEnabled] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -64,35 +67,35 @@ function TelemetrySetting() {
     setEnabled(next);
     try {
       await Telemetry.setEnabled(next);
-      showToast(next ? 'Anonymous telemetry enabled' : 'Anonymous telemetry disabled');
+      showToast(next ? t('settings.telemetry.enabled_toast') : t('settings.telemetry.disabled_toast'));
     } catch (e) {
       console.error('[AnonymousTelemetry] could not update setting', e);
       setEnabled(!next);
-      showToast('Could not update the setting');
+      showToast(t('settings.update_failed'));
     }
   }
 
   return (
     <View className="w-full flex flex-col" style={{ gap: 12 }}>
-      <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">Usage data</Text>
+      <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">{t('settings.telemetry.usage_data')}</Text>
       <View className="flex flex-col rounded-lg" style={{ backgroundColor: '#1B1B1E', padding: 14, gap: 12 }}>
         <View className="flex flex-row items-center justify-between" style={{ gap: 12 }}>
           <View className="flex flex-row items-center flex-1" style={{ gap: 10 }}>
             <ChartBar size={20} color="#FFF" />
-            <Text className="text-white text-lg">Share anonymous telemetry</Text>
+            <Text className="text-white text-lg">{t('settings.telemetry.share_toggle')}</Text>
           </View>
           <ToggleSwitch isOn={enabled ?? true} onToggle={toggle} />
         </View>
       </View>
       <View className="flex flex-col" style={{ gap: 8 }}>
         <Text style={{ color: '#9F9FA0' }} className="text-sm">
-          AnythingLLM sends a small number of anonymous events, such as "a chat was completed" or "a tool was used", so we can see which features matter and where things break.
+          {t('settings.telemetry.description_events')}
         </Text>
         <Text style={{ color: '#9F9FA0' }} className="text-sm">
-          This never includes your chats, documents, prompts, or anything specific about how you use the app. There is no account and nothing that identifies you.
+          {t('settings.telemetry.description_privacy')}
         </Text>
         <Text style={{ color: '#9F9FA0' }} className="text-sm">
-          Leaving this on helps us build a better application. You can turn it off at any time and nothing further will be sent.
+          {t('settings.telemetry.description_opt_out')}
         </Text>
       </View>
     </View>

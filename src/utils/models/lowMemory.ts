@@ -2,6 +2,7 @@ import { NativeModules } from 'react-native';
 import OnDeviceProvider from '@/utils/AiProviders/onDevice';
 import { formatBytes } from '@/utils/formatters';
 import uiStore from '@/store/UIStore';
+import i18n from '@/i18n';
 import type { ChatMemoryEstimate } from '@/utils/models/memoryEstimate';
 
 /**
@@ -80,8 +81,8 @@ export async function getLowMemoryStatus(provider: unknown): Promise<LowMemorySt
 /** Copy for `LowMemoryModal` (send-time warning and chip popover). */
 export function describeLowMemory(status: LowMemoryStatus) {
   return {
-    title: 'Low memory',
-    advice: 'When memory runs out your phone may close AnythingLLM mid-reply to reclaim it, which looks like a crash. Close other apps, or switch to a remote model connection for more reliable responses.',
+    title: i18n.t('models.low_memory.title'),
+    advice: i18n.t('models.low_memory.advice'),
     stats: {
       free: formatBytes(status.available, 1),
       total: formatBytes(status.total, 1),

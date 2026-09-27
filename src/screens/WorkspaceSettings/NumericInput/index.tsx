@@ -12,6 +12,8 @@ import Workspace from '@/database/models/Workspace';
 import { showToast } from "@/utils/Notification";
 import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
 import useLLMProvider from "@/hooks/useLLMPreference";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 
 interface NumericInputViewProps {
     workspace: WorkspaceType;
@@ -22,7 +24,11 @@ interface NumericInputViewProps {
      * reset clears the input and the workspace stores `null` (eg: temperature -> provider default).
      */
     resetValue: number | null;
+    /** Translation keys - resolved with t() when rendered */
     title: string;
+    currentLabel: string;
+    suggestionsLabel?: string;
+    saveErrorMessage: string;
     hint?: string;
     placeholder: string;
     reattachProviderOnSave?: boolean;
@@ -37,7 +43,8 @@ const DEFAULT_SAVE_STATUS = {
 /** How a numeric (or null) workspace value is shown in the input. */
 const toText = (value: number | null | undefined) => (typeof value === 'number' ? value.toString() : '');
 
-export function NumericInputView({ workspace, goToPage, field, title, placeholder, resetValue, hint, reattachProviderOnSave = false, suggestions = [] }: NumericInputViewProps) {
+export function NumericInputView({ workspace, goToPage, field, title, currentLabel, suggestionsLabel, saveErrorMessage, placeholder, resetValue, hint, reattachProviderOnSave = false, suggestions = [] }: NumericInputViewProps) {
+    const { t } = useTranslation();
     useHighjackBackButtonPress(() => { goToPage('main'); return true; });
     const insets = useSafeAreaInsets();
     const keyboardHeight = useKeyboardHeight();
@@ -57,7 +64,7 @@ export function NumericInputView({ workspace, goToPage, field, title, placeholde
                 return;
             }
 
-            setSaveStatus({ text: 'Autosaving...', state: 'saving' });
+            setSaveStatus({ text: i18n.t('workspace_settings.autosaving'), state: 'saving' });
             try {
                 const updatedWorkspace = await Workspace.update([{ field: 'slug', value: workspace.slug }], { [field]: newValue });
 
@@ -69,10 +76,10 @@ export function NumericInputView({ workspace, goToPage, field, title, placeholde
                     }
                 }
 
-                setSaveStatus({ text: 'Autosaved!', state: 'saved' });
+                setSaveStatus({ text: i18n.t('workspace_settings.autosaved'), state: 'saved' });
             } catch (err) {
                 console.error(`Error saving ${field}:`, err);
-                showToast(`Error saving ${title.toLowerCase()}`);
+                showToast(i18n.t(saveErrorMessage));
             } finally {
                 setTimeout(() => setSaveStatus(DEFAULT_SAVE_STATUS), 2000);
             }
@@ -106,13 +113,13 @@ export function NumericInputView({ workspace, goToPage, field, title, placeholde
                 <TouchableOpacity onPress={() => goToPage('main')} className="absolute left-0 flex flex-row items-center gap-2">
                     <ArrowLeft size={24} color="#FFF" weight="bold" />
                 </TouchableOpacity>
-                <Text style={{ maxWidth: '80%', color: '#9F9FA0' }} numberOfLines={1} ellipsizeMode="middle" className="text-lg font-medium">{title}</Text>
+                <Text style={{ maxWidth: '80%', color: '#9F9FA0' }} numberOfLines={1} ellipsizeMode="middle" className="text-lg font-medium">{t(title)}</Text>
             </View>
 
             <KeyboardAvoidingView style={{ paddingHorizontal: 18, gap: 8 }} behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1 flex flex-col">
                 <View className="w-full flex flex-col" style={{ gap: 12 }}>
                     <View className="flex flex-row items-center justify-between">
-                        <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">Current {title}</Text>
+                        <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">{t(currentLabel)}</Text>
                         <View className="flex flex-row items-center">
                             <ActivityIndicator size="small" color="#FFF" animating={saveStatus.state === 'saving'} style={{ transform: [{ scale: 0.5 }] }} />
                             {saveStatus.state === 'saved' && <CheckCircle size={12} color="#6CE9A6" style={{ marginRight: 2 }} />}
@@ -131,20 +138,20 @@ export function NumericInputView({ workspace, goToPage, field, title, placeholde
                         className="rounded-lg text-white placeholder:text-white/50 text-left"
                         value={text}
                         onChangeText={handleValueChange}
-                        placeholder={placeholder}
+                        placeholder={t(placeholder)}
                     />
                     {text !== resetText && (
                         <TouchableOpacity onPress={() => handleValueChange(resetText)} className="flex flex-row items-center justify-center">
-                            <Text className="text-white">Reset</Text>
+                            <Text className="text-white">{t('common.reset')}</Text>
                         </TouchableOpacity>
                     )}
                 </View>
                 <View className="w-full flex flex-col" style={{ gap: 12 }}>
-                    {hint && <Text style={{ color: '#9F9FA0' }} className="text-sm">{hint.replace(/\\n/g, '\n')}</Text>}
+                    {hint && <Text style={{ color: '#9F9FA0' }} className="text-sm">{t(hint).replace(/\\n/g, '\n')}</Text>}
                 </View>
-                {suggestions?.length > 0 && (
+                {suggestions?.length > 0 && !!suggestionsLabel && (
                     <View style={{ gap: 10, marginTop: 30 }} className="flex flex-col">
-                        <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">Suggested {title}</Text>
+                        <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">{t(suggestionsLabel)}</Text>
                         <View style={{ gap: 10, flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'flex-start' }} className="flex flex-row items-center justify-center">
                             {suggestions
                                 .filter((suggestion) => suggestion.toString() !== text)

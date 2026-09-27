@@ -11,6 +11,8 @@ import useMmprojDownload from '@/hooks/useMmprojDownload';
 import useLlmPreference from '@/hooks/useLLMPreference';
 import { formatBytes } from '@/utils/formatters';
 import { GenericSettingsItem } from '../Settings';
+import { useTranslation } from 'react-i18next';
+import { tKey } from '@/i18n';
 
 /**
  * Bottom sheet opened by the "+" in the prompt input. Mirrors the sliders (settings) sheet.
@@ -26,6 +28,7 @@ import { GenericSettingsItem } from '../Settings';
  * Must live at the top level of the chat screen (not inside PromptInput) so its ref survives.
  */
 export default function AttachmentsActionSheet({ workspace, thread, attachmentHandler }: { workspace: WorkspaceType, thread: WorkspaceThreadType, attachmentHandler: AttachmentInterface }) {
+    const { t } = useTranslation();
     const sheetRef = useRef<BottomSheetModal>(null);
     const { registerSheet, presentSheet, activeSheet, isSheetActive } = useBottomSheet();
     const { llmPreferences } = useLlmPreference();
@@ -76,19 +79,19 @@ export default function AttachmentsActionSheet({ workspace, thread, attachmentHa
                     <GenericSettingsItem
                         disabled={filesDisabled}
                         icon={<Paperclip size={32} color="#FFF" />}
-                        text="Attach files"
+                        text={t('chat.attachments.attach_files')}
                         onPress={() => runAction(attachmentHandler.askForAttachment)}
                     />
                     <GenericSettingsItem
                         disabled={imagesDisabled}
                         icon={<Images size={32} color="#FFF" />}
-                        text="Gallery"
+                        text={t('chat.attachments.gallery')}
                         onPress={() => pickImage('gallery')}
                     />
                     <GenericSettingsItem
                         disabled={imagesDisabled}
                         icon={<Camera size={32} color="#FFF" />}
-                        text="Take photo"
+                        text={t('chat.attachments.take_photo')}
                         onPress={() => pickImage('camera')}
                     />
                 </View>
@@ -103,10 +106,10 @@ export default function AttachmentsActionSheet({ workspace, thread, attachmentHa
     );
 }
 
-/** What happens to an attached file with the current provider - shown when nothing else needs explaining. */
+/** What happens to an attached file with the current provider - shown when nothing else needs explaining. Translation keys. */
 const DOCUMENT_MODE_HINTS: Record<DocumentAttachmentMode, string> = {
-    embed: 'Files are split up and embedded so your on-device model can search them.',
-    full: 'Files are sent to your model in full with every message in this workspace.',
+    embed: tKey('chat.attachments.hint_embed'),
+    full: tKey('chat.attachments.hint_full'),
 };
 
 /**
@@ -116,6 +119,7 @@ const DOCUMENT_MODE_HINTS: Record<DocumentAttachmentMode, string> = {
  * tells the user how files reach the model instead.
  */
 function SheetHint({ isRemote, isMaxAttachments, documentMode, vision }: { isRemote: boolean; isMaxAttachments: boolean; documentMode: DocumentAttachmentMode; vision: VisionSupport }) {
+    const { t } = useTranslation();
     const { supportsVision, reason, needsProjectorDownload, model, refresh } = vision;
     const download = useMmprojDownload(model);
 
@@ -124,19 +128,19 @@ function SheetHint({ isRemote, isMaxAttachments, documentMode, vision }: { isRem
         if (download.status === 'complete') refresh();
     }, [download.status, refresh]);
 
-    if (isMaxAttachments) return <HintText>You have reached the maximum number of attachments for one prompt.</HintText>;
+    if (isMaxAttachments) return <HintText>{t('chat.attachments.max_reached')}</HintText>;
     if (isRemote) return <HintText>{VISION_UNSUPPORTED_REASONS.REMOTE}</HintText>;
-    if (supportsVision) return <HintText>{DOCUMENT_MODE_HINTS[documentMode]}</HintText>;
+    if (supportsVision) return <HintText>{t(DOCUMENT_MODE_HINTS[documentMode])}</HintText>;
 
     if (needsProjectorDownload && model?.mmproj) {
         if (download.isDownloading) {
             return (
                 <View style={{ marginTop: 14, gap: 8 }}>
                     <View className='flex flex-row items-center justify-between'>
-                        <Text className='text-sm' style={{ color: '#9F9FA0' }}>Downloading image support... {download.progress}%</Text>
-                        <TouchableOpacity onPress={download.cancel} accessibilityLabel='Cancel download' className='flex flex-row items-center' style={{ gap: 4 }}>
+                        <Text className='text-sm' style={{ color: '#9F9FA0' }}>{t('chat.attachments.downloading_image_support', { progress: download.progress })}</Text>
+                        <TouchableOpacity onPress={download.cancel} accessibilityLabel={t('chat.attachments.cancel_download')} className='flex flex-row items-center' style={{ gap: 4 }}>
                             <X size={14} color="#FFF" />
-                            <Text className='text-white text-sm font-medium'>Cancel</Text>
+                            <Text className='text-white text-sm font-medium'>{t('common.cancel')}</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{ height: 6, borderRadius: 3, backgroundColor: '#3f3f42', overflow: 'hidden' }}>
@@ -150,17 +154,17 @@ function SheetHint({ isRemote, isMaxAttachments, documentMode, vision }: { isRem
             <View style={{ marginTop: 14, gap: 6 }}>
                 <TouchableOpacity
                     onPress={() => download.requestDownload()}
-                    accessibilityLabel='Download image support'
+                    accessibilityLabel={t('chat.attachments.download_image_support')}
                     className='flex flex-row items-center justify-center'
                     style={{ gap: 8 }}
                 >
                     <DownloadSimple size={18} color="#FFF" />
                     <Text className='text-white text-sm font-medium text-center'>
-                        {VISION_UNSUPPORTED_REASONS.NEEDS_DOWNLOAD} Tap to download ({formatBytes(model.mmproj.size)}).
+                        {t('chat.attachments.needs_download_tap', { size: formatBytes(model.mmproj.size) })}
                     </Text>
                 </TouchableOpacity>
-                {download.status === 'failed' && <HintText>{download.error || 'The download failed. Tap to try again.'}</HintText>}
-                {download.status === 'cancelled' && <HintText>Download cancelled.</HintText>}
+                {download.status === 'failed' && <HintText>{download.error || t('chat.attachments.download_failed')}</HintText>}
+                {download.status === 'cancelled' && <HintText>{t('chat.attachments.download_cancelled')}</HintText>}
             </View>
         );
     }

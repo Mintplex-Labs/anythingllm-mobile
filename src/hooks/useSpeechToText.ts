@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Alert, PermissionsAndroid, Platform } from 'react-native';
+import i18n from '@/i18n';
 import { useSharedValue, type SharedValue } from 'react-native-reanimated';
 import Voice, {
     SpeechResultsEvent,
@@ -44,10 +45,10 @@ async function ensureMicPermission(): Promise<boolean> {
     const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
         {
-            title: 'Microphone access',
-            message: 'AnythingLLM needs microphone access to transcribe your speech into a prompt.',
-            buttonPositive: 'Allow',
-            buttonNegative: 'Cancel',
+            title: i18n.t('models.speech_to_text.permission_title'),
+            message: i18n.t('models.speech_to_text.permission_message'),
+            buttonPositive: i18n.t('common.allow'),
+            buttonNegative: i18n.t('common.cancel'),
         },
     );
     return granted === PermissionsAndroid.RESULTS.GRANTED;
@@ -220,8 +221,8 @@ export default function useSpeechToText(
         const hasPermission = await ensureMicPermission();
         if (!hasPermission) {
             Alert.alert(
-                'Microphone access required',
-                'Enable microphone access in your device settings to use speech-to-text.',
+                i18n.t('models.speech_to_text.permission_required_title'),
+                i18n.t('models.speech_to_text.permission_required_message'),
             );
             return;
         }

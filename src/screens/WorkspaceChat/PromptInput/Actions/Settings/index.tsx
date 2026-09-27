@@ -10,8 +10,10 @@ import { WorkspaceThreadType } from '@/database/models/WorkspaceThread';
 import { WorkspaceFilesActionButton } from './Files';
 import { PATHS } from '@/utils/paths';
 import uiStore from '@/store/UIStore';
+import { useTranslation } from 'react-i18next';
 
 export default function SettingsActionSheet({ workspace, thread }: { workspace: WorkspaceType, thread: WorkspaceThreadType }) {
+    const { t } = useTranslation();
     const settingsSheetRef = useRef<BottomSheetModal>(null);
     const { registerSheet, presentSheet, isSheetActive } = useBottomSheet();
     const isRemote = !!(workspace?.isRemote || thread?.isRemote);
@@ -44,7 +46,7 @@ export default function SettingsActionSheet({ workspace, thread }: { workspace: 
                 <WorkspaceFilesActionButton disabled={isRemote} />
                 <ResetChatActionButton />
                 <ToolsActionButton disabled={isRemote} />
-                <GenericSettingsItem disabled={isRemote} icon={<Gear size={32} color="#FFF" />} text="Settings" onPress={goToSettings} />
+                <GenericSettingsItem disabled={isRemote} icon={<Gear size={32} color="#FFF" />} text={t('common.settings')} onPress={goToSettings} />
             </View>
         </BottomSheetModal>
     );

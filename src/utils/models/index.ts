@@ -1,7 +1,9 @@
 import { Model, ModelOrigin } from '@/utils/types';
 import { chatTemplates } from '@/utils/chat';
 import { Platform } from 'react-native';
+import { tKey } from '@/i18n';
 
+// Catalog `description`s are translation keys - resolved with i18n.t() in OnDeviceProvider.availableModels().
 export const MODEL_LIST_VERSION = 13;
 const iosOnlyModels: Model[] = [];
 const androidOnlyModels: Model[] = [];
@@ -13,7 +15,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'Google',
     name: 'Gemma-3-1b',
-    description: '(Q8_0) Gemma3 1B is a smaller lightweight version of the Gemma3 4B model for more complex tasks.',
+    description: tKey('models.catalog.gemma_3_1b'),
     type: 'Gemma',
     capabilities: ['questionAnswering', 'summarization', 'reasoning'],
     size: 1.07e+9,
@@ -96,7 +98,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'Qwen',
     name: 'Qwen3-0.6B',
-    description: '(Q8_0) Qwen3 0.6B is a tiny, very fast model for quick answers and simple tasks. Superseded by Qwen3.5 0.8B.',
+    description: tKey('models.catalog.qwen3_0_6b'),
     type: 'Qwen',
     capabilities: ['text-generation', 'reasoning'],
     size: 639447744,
@@ -121,7 +123,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'Qwen',
     name: 'Qwen3-1.7B',
-    description: '(Q8_0) Qwen3 1.7B is a much more capable version of the Qwen3-0.6B model for more complex tasks.',
+    description: tKey('models.catalog.qwen3_1_7b'),
     type: 'Qwen',
     capabilities: ['text-generation', 'reasoning'],
     size: 1.83e+9,
@@ -150,7 +152,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'Meta',
     name: 'Llama 3.2 1B',
-    description: '(Q8_0) Llama 3.2 1B is the smallest version of the Llama 3.2 model.',
+    description: tKey('models.catalog.llama_3_2_1b'),
     type: 'Llama',
     capabilities: ['text-generation'],
     size: 1.32e+9,
@@ -290,7 +292,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'Qwen',
     name: 'Qwen3.5 0.8B',
-    description: '(Q8_0) Qwen3.5 0.8B is the smallest model in the Qwen3.5 family. Very fast on any phone with solid instruction following.',
+    description: tKey('models.catalog.qwen3_5_0_8b'),
     type: 'Qwen',
     capabilities: ['text-generation', 'tool-use', 'multilingual', 'vision'],
     mmproj: {
@@ -321,7 +323,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'Qwen',
     name: 'Qwen3.5 2B',
-    description: '(Q8_0) Qwen3.5 2B is a strong general purpose small model with tool calling and good reasoning for its size.',
+    description: tKey('models.catalog.qwen3_5_2b'),
     type: 'Qwen',
     capabilities: ['text-generation', 'reasoning', 'tool-use', 'multilingual', 'vision'],
     mmproj: {
@@ -351,7 +353,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'Qwen',
     name: 'Qwen3.5 4B',
-    description: '(Q6_K) Qwen3.5 4B is the most capable Qwen3.5 model that still fits on a phone. Best accuracy, reasoning and tool calling; needs a device with 8GB+ of RAM.',
+    description: tKey('models.catalog.qwen3_5_4b'),
     type: 'Qwen',
     capabilities: ['text-generation', 'reasoning', 'tool-use', 'multilingual', 'vision'],
     mmproj: {
@@ -383,7 +385,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'Qwen',
     name: 'Qwen3-VL 2B Instruct',
-    description: '(Q4_K_XL) Qwen3-VL 2B is a vision-language model that can describe and answer questions about photos.',
+    description: tKey('models.catalog.qwen3_vl_2b_instruct'),
     type: 'Qwen',
     capabilities: ['text-generation', 'vision', 'multilingual'],
     mmproj: {
@@ -415,7 +417,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'IBM Research',
     name: 'Granite 3.3 2B Instruct',
-    description: '(Q4_K_XL) Granite 3.3 2B from IBM is tuned for RAG, summarization and tool calling. Apache 2.0 licensed.',
+    description: tKey('models.catalog.granite_3_3_2b_instruct'),
     type: 'Granite',
     capabilities: ['text-generation', 'summarization', 'tool-use', 'questionAnswering'],
     size: 1570731264,
@@ -440,7 +442,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'IBM Research',
     name: 'Granite 4.2 3B',
-    description: '(Q4_K_M) Granite 4.2 3B is the newest small Granite model with stronger reasoning and tool calling. Larger download.',
+    description: tKey('models.catalog.granite_4_2_3b'),
     type: 'Granite',
     capabilities: ['text-generation', 'reasoning', 'tool-use', 'questionAnswering'],
     size: 2244011552,
@@ -469,7 +471,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'Liquid AI',
     name: 'LFM2.5 1.2B Instruct',
-    description: '(Q8_0) LFM2.5 1.2B is a very fast small model tuned for on-device chat, tool calling and 16 languages. Full quality quant.',
+    description: tKey('models.catalog.lfm2_5_1_2b_instruct'),
     type: 'LFM',
     capabilities: ['text-generation', 'tool-use', 'multilingual', 'questionAnswering'],
     size: 1246253888,
@@ -494,7 +496,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'Liquid AI',
     name: 'LFM2.5 2.6B',
-    description: '(Q5_K_M) LFM2.5 2.6B is the most capable Liquid model for phones with strong instruction following, tool calling and reasoning.',
+    description: tKey('models.catalog.lfm2_5_2_6b'),
     type: 'LFM',
     capabilities: ['text-generation', 'reasoning', 'tool-use', 'multilingual'],
     size: 1939744768,
@@ -523,7 +525,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'Google',
     name: 'Gemma 4 E2B',
-    description: "(QAT Q2_K_XL) Gemma 4 E2B is Google's mobile-first model with an effective 2B parameters. Quantization-aware trained for this size.",
+    description: tKey('models.catalog.gemma_4_e2b'),
     type: 'Gemma',
     capabilities: ['text-generation', 'reasoning', 'tool-use', 'multilingual', 'vision'],
     mmproj: {
@@ -553,7 +555,7 @@ const crossPlatformModels: Model[] = [
     runtime: 'CPU',
     author: 'Google',
     name: 'Gemma 4 E4B',
-    description: '(QAT Q2_K_XL) Gemma 4 E4B is the most capable Gemma that fits on a phone. Large download, needs a recent high-memory device.',
+    description: tKey('models.catalog.gemma_4_e4b'),
     type: 'Gemma',
     capabilities: ['text-generation', 'reasoning', 'tool-use', 'multilingual', 'vision'],
     mmproj: {

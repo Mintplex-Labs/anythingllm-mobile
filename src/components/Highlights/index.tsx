@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Image, Modal, Pressable, Text, TouchableOp
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
 import { ArrowRight, Pause, Play, X } from 'phosphor-react-native';
+import { useTranslation } from 'react-i18next';
 import { type HighlightCard, type HighlightMedia, type HighlightsDeck } from '@/utils/highlights';
 
 const COLORS = {
@@ -33,6 +34,7 @@ export default function HighlightsCarousel({
   /** Navigate to a card's deep link. The carousel closes first. */
   onCta?: (cta: NonNullable<HighlightCard['cta']>) => void;
 }) {
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const listRef = useRef<FlatList<HighlightCard>>(null);
@@ -60,8 +62,8 @@ export default function HighlightsCarousel({
       <View style={{ flex: 1, backgroundColor: COLORS.page, paddingTop: insets.top + 12, paddingBottom: insets.bottom + 16 }}>
         {/* Header */}
         <View className="flex flex-row items-center justify-between" style={{ paddingHorizontal: 20, marginBottom: 8 }}>
-          <Text className="text-white text-lg font-semibold">{deck.title}</Text>
-          <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} accessibilityLabel="Close">
+          <Text className="text-white text-lg font-semibold">{t(deck.title)}</Text>
+          <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} accessibilityLabel={t('common.close')}>
             <X size={22} color="#FFF" />
           </TouchableOpacity>
         </View>
@@ -95,7 +97,7 @@ export default function HighlightsCarousel({
             activeOpacity={0.8}
             className="flex flex-row items-center justify-center rounded-lg"
             style={{ backgroundColor: COLORS.accent, paddingVertical: 14, gap: 8 }}>
-            <Text style={{ color: '#0E0F0F' }} className="text-lg font-semibold">{last ? 'Done' : 'Next'}</Text>
+            <Text style={{ color: '#0E0F0F' }} className="text-lg font-semibold">{last ? t('common.done') : t('common.next')}</Text>
             {!last && <ArrowRight size={18} color="#0E0F0F" weight="bold" />}
           </TouchableOpacity>
         </View>
@@ -105,6 +107,7 @@ export default function HighlightsCarousel({
 }
 
 function HighlightPage({ card, active, onCta }: { card: HighlightCard; active: boolean; onCta: (cta: NonNullable<HighlightCard['cta']>) => void }) {
+  const { t } = useTranslation();
   const { width, height } = useWindowDimensions();
   return (
     <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 8, gap: 18 }}>
@@ -114,11 +117,11 @@ function HighlightPage({ card, active, onCta }: { card: HighlightCard; active: b
         </View>
       )}
       <View style={{ gap: 8, flexGrow: card.media ? 0 : 1, justifyContent: card.media ? 'flex-start' : 'center' }}>
-        <Text className="text-white text-2xl font-bold">{card.title}</Text>
-        <Text style={{ color: COLORS.muted, lineHeight: 22 }} className="text-base">{card.body}</Text>
+        <Text className="text-white text-2xl font-bold">{t(card.title)}</Text>
+        <Text style={{ color: COLORS.muted, lineHeight: 22 }} className="text-base">{t(card.body)}</Text>
         {card.cta && (
           <TouchableOpacity onPress={() => onCta(card.cta!)} activeOpacity={0.7} style={{ marginTop: 6, alignSelf: 'flex-start' }} className="flex flex-row items-center" >
-            <Text style={{ color: COLORS.accent }} className="text-base font-medium">{card.cta.label}</Text>
+            <Text style={{ color: COLORS.accent }} className="text-base font-medium">{t(card.cta.label)}</Text>
             <ArrowRight size={16} color={COLORS.accent} style={{ marginLeft: 4 }} />
           </TouchableOpacity>
         )}
@@ -133,6 +136,7 @@ function HighlightPage({ card, active, onCta }: { card: HighlightCard; active: b
  * poster (video) or a neutral placeholder (image) is shown instead - never a broken frame.
  */
 export function HighlightMediaView({ media, active, maxWidth, maxHeight }: { media: HighlightMedia; active: boolean; maxWidth: number; maxHeight: number }) {
+  const { t } = useTranslation();
   const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [paused, setPaused] = useState(false);
@@ -158,7 +162,7 @@ export function HighlightMediaView({ media, active, maxWidth, maxHeight }: { med
   }
 
   return (
-    <Pressable onPress={() => setPaused((p) => !p)} style={frame} accessibilityLabel={paused ? 'Play video' : 'Pause video'}>
+    <Pressable onPress={() => setPaused((p) => !p)} style={frame} accessibilityLabel={paused ? t('highlights.play_video') : t('highlights.pause_video')}>
       <Video
         source={{ uri: media.src }}
         poster={media.poster ? { source: { uri: media.poster }, resizeMode: 'cover' } : undefined}

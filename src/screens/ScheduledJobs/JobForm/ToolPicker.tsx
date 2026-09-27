@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import ToggleSwitch from '@/components/ToggleSwitch';
 import ToolsManager, { TOOL_GROUPS, type ToolGroupId, type ToolManagerTool } from '@/utils/ToolsManager';
 import { Card, JOB_COLORS, SectionLabel } from '../components';
@@ -9,6 +10,7 @@ import { Card, JOB_COLORS, SectionLabel } from '../components';
  * offers the model all of them with no relevance reranking. Nothing selected means a plain reply.
  */
 export default function ToolPicker({ selected, onChange }: { selected: string[]; onChange: (ids: string[]) => void }) {
+    const { t } = useTranslation();
     const toggle = (tool: ToolManagerTool) => {
         onChange(selected.includes(tool.id) ? selected.filter((id) => id !== tool.id) : [...selected, tool.id]);
     };
@@ -23,8 +25,8 @@ export default function ToolPicker({ selected, onChange }: { selected: string[];
 
     return (
         <View className="flex flex-col" style={{ gap: 12 }}>
-            <SectionLabel trailing={<Text style={{ color: JOB_COLORS.muted }} className="text-sm">{selected.length ? `${selected.length} selected` : 'None - reply only'}</Text>}>
-                Tools
+            <SectionLabel trailing={<Text style={{ color: JOB_COLORS.muted }} className="text-sm">{selected.length ? t('scheduled_jobs.tool_picker.selected_count', { count: selected.length }) : t('scheduled_jobs.tool_picker.none_reply_only')}</Text>}>
+                {t('scheduled_jobs.tools')}
             </SectionLabel>
             <Card style={{ gap: 16 }}>
                 {ungrouped.map((tool) => <ToolRow key={tool.id} tool={tool} isOn={selected.includes(tool.id)} onToggle={() => toggle(tool)} />)}
@@ -35,12 +37,12 @@ export default function ToolPicker({ selected, onChange }: { selected: string[];
                     </View>
                 ))}
                 <View className="flex flex-col" style={{ gap: 12, paddingTop: 4 }}>
-                    <Text className="text-white font-semibold">App Connections</Text>
+                    <Text className="text-white font-semibold">{t('scheduled_jobs.tool_picker.app_connections')}</Text>
                     {appConnections.map((tool) => <ToolRow key={tool.id} tool={tool} isOn={selected.includes(tool.id)} onToggle={() => toggle(tool)} />)}
                 </View>
             </Card>
             <Text style={{ color: JOB_COLORS.muted }} className="text-sm">
-                Every tool you turn on is offered to the model on each run. Tools that would normally ask for your approval are approved automatically, since nobody is there to tap.
+                {t('scheduled_jobs.tool_picker.explainer')}
             </Text>
         </View>
     );

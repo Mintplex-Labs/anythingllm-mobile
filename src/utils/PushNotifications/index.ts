@@ -10,6 +10,7 @@ import { PATHS } from '@/utils/paths';
 import { showToast } from '@/utils/Notification';
 import Workspace from '@/database/models/Workspace';
 import WorkspaceThread from '@/database/models/WorkspaceThread';
+import i18n from '@/i18n';
 
 /** Longest reply preview we put in the "reply ready" notification body. */
 const CHAT_PREVIEW_MAX_CHARS = 140;
@@ -72,6 +73,12 @@ class PushNotifications {
         // A user who enables notifications from system settings comes back to the app with new state.
         AppState.addEventListener('change', state => { if (state === 'active') this.refreshSettings(); });
 
+        this.createChannels();
+        // Channel names show in the system notification settings - re-create them so they follow the app language.
+        i18n.on('languageChanged', () => this.createChannels());
+    }
+
+    private createChannels() {
         // Primary notification channel
         notifee.createChannel({
             id: 'anythingllm-channel',
@@ -81,7 +88,7 @@ class PushNotifications {
         // Progress channel to prevent vibration/sounds
         notifee.createChannel({
             id: 'anythingllm-progress',
-            name: 'Download Progress',
+            name: i18n.t('notifications.channels.download_progress'),
             vibration: false,
             importance: 3,
             vibrationPattern: [],
@@ -92,8 +99,8 @@ class PushNotifications {
         // Android channel settings are immutable once created, so changes here need a new channel id.
         notifee.createChannel({
             id: 'anythingllm-chat-replies',
-            name: 'Chat Replies',
-            description: 'Alerts when a reply finishes while AnythingLLM is in the background',
+            name: i18n.t('notifications.channels.chat_replies'),
+            description: i18n.t('notifications.channels.chat_replies_description'),
             importance: AndroidImportance.HIGH,
             vibration: true,
             vibrationPattern: [50, 250],
@@ -103,8 +110,8 @@ class PushNotifications {
         // A scheduled job finished with something to show. Same heads-up treatment as chat replies.
         notifee.createChannel({
             id: 'anythingllm-scheduled-jobs',
-            name: 'Scheduled Jobs',
-            description: 'Alerts when a scheduled job finishes running',
+            name: i18n.t('notifications.channels.scheduled_jobs'),
+            description: i18n.t('notifications.channels.scheduled_jobs_description'),
             importance: AndroidImportance.HIGH,
             vibration: true,
             vibrationPattern: [50, 250],
@@ -145,10 +152,10 @@ class PushNotifications {
             if (await AsyncStorage.getItem(BLOCKED_NUDGE_SHOWN_KEY)) return false;
             await AsyncStorage.setItem(BLOCKED_NUDGE_SHOWN_KEY, '1');
             const openSettings = await AwaitableAlert(
-                'Get notified when replies finish',
-                'Notifications are turned off for AnythingLLM. Turn them on to get a buzz when a reply finishes while your phone is locked.',
-                { text: 'Not now', style: 'cancel' },
-                { text: 'Open settings', style: 'default' },
+                i18n.t('notifications.blocked_nudge.title'),
+                i18n.t('notifications.blocked_nudge.message'),
+                { text: i18n.t('notifications.blocked_nudge.not_now'), style: 'cancel' },
+                { text: i18n.t('notifications.blocked_nudge.open_settings'), style: 'default' },
             );
             if (openSettings) await notifee.openNotificationSettings();
         } catch (error) {
@@ -224,13 +231,13 @@ class PushNotifications {
         if (!(await isScreenLocked())) return;
 
         const body = failed
-            ? 'Your reply could not be completed. Tap to see what happened.'
-            : truncatePreview(preview) || 'Your reply is ready.';
+            ? i18n.t('notifications.chat.failed_body')
+            : truncatePreview(preview) || i18n.t('notifications.chat.ready_body');
 
         try {
             await this.send('chat', {
                 // A successful reply speaks for itself - just the workspace and the reply text
-                title: failed ? 'Reply failed' : undefined,
+                title: failed ? i18n.t('notifications.chat.failed_title') : undefined,
                 subtitle: workspaceName || undefined,
                 body,
                 data: route ? { wsSlug: route.wsSlug, threadSlug: route.threadSlug } : undefined,
@@ -260,8 +267,8 @@ class PushNotifications {
         if (!this.notificationsEnabled) return;
         try {
             await this.send('jobs', {
-                title: `${jobName} finished`,
-                body: truncatePreview(stripThinkTags(preview)) || 'Your scheduled job has a result for you.',
+                title: i18n.t('notifications.scheduled_job.finished_title', { name: jobName }),
+                body: truncatePreview(stripThinkTags(preview)) || i18n.t('notifications.scheduled_job.fallback_body'),
                 data: { jobUuid, runUuid },
                 android: {
                     pressAction: { id: 'default' },

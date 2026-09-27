@@ -7,6 +7,7 @@ import { CaretDown, CaretRight, Copy, GithubLogo, House, WarningCircle } from 'p
 import telemetry from '@/utils/Telemetry';
 import { PATHS } from '@/utils/paths';
 import { showToast } from '@/utils/Notification';
+import { useTranslation } from 'react-i18next';
 
 export type ErrorFallbackProps = { error: Error; reset: () => void };
 
@@ -96,19 +97,20 @@ function useTelemetryEnabled() {
 
 /** Scrollable, copyable error trace. Shown only when telemetry is off - otherwise the report already reached us. */
 function ErrorDetailsBox({ error }: { error: Error }) {
+  const { t } = useTranslation();
   return (
     <View className="bg-[--hex-gray-10] border border-white/10 rounded-xl">
       <View className="flex-row items-center justify-between px-3 pt-2">
-        <Text className="text-[--hex-gray-4] text-xs font-semibold">Error details</Text>
+        <Text className="text-[--hex-gray-4] text-xs font-semibold">{t('errors.boundary.details')}</Text>
         <TouchableOpacity
           onPress={() => {
             Clipboard.setString(errorDetails(error));
-            showToast('Error details copied', 'short');
+            showToast(t('errors.boundary.details_copied'), 'short');
           }}
           hitSlop={8}
           className="flex-row items-center gap-x-1 py-1">
           <Copy size={14} color="#FFF" />
-          <Text className="text-[--primary-text] text-xs font-semibold">Copy</Text>
+          <Text className="text-[--primary-text] text-xs font-semibold">{t('common.copy')}</Text>
         </TouchableOpacity>
       </View>
       {/* nestedScrollEnabled: the box can sit inside the chat list, which also scrolls vertically */}
@@ -122,18 +124,20 @@ function ErrorDetailsBox({ error }: { error: Error }) {
 }
 
 function ReportOnGitHubButton({ error }: { error: Error }) {
+  const { t } = useTranslation();
   return (
     <TouchableOpacity
       onPress={() => Linking.openURL(githubIssueUrl(error))}
       className="flex-row items-center justify-center gap-x-2 bg-[--bg-white-5] border border-white/10 rounded-xl py-3">
       <GithubLogo size={18} color="#FFF" />
-      <Text className="text-[--primary-text] text-base font-semibold">Report on GitHub</Text>
+      <Text className="text-[--primary-text] text-base font-semibold">{t('errors.boundary.report_github')}</Text>
     </TouchableOpacity>
   );
 }
 
 /** Full-screen fallback for the root boundary - the whole app failed to render. */
 export function RootErrorFallback({ error, reset }: ErrorFallbackProps) {
+  const { t } = useTranslation();
   const telemetryEnabled = useTelemetryEnabled();
 
   return (
@@ -142,13 +146,13 @@ export function RootErrorFallback({ error, reset }: ErrorFallbackProps) {
         <View className="items-center gap-y-3">
           <WarningCircle size={48} color="#F97066" />
           <Text className="text-[--primary-text] text-xl font-semibold text-center">
-            Something went wrong
+            {t('errors.boundary.something_went_wrong')}
           </Text>
           {telemetryEnabled !== null && (
             <Text className="text-[--hex-gray-4] text-base text-center">
               {telemetryEnabled
-                ? 'This error was reported to Mintplex Labs automatically.'
-                : 'You have telemetry disabled, so we did not auto-report this error to Mintplex Labs, you should open a GitHub issue instead.'}
+                ? t('errors.boundary.reported_automatically')
+                : t('errors.boundary.telemetry_disabled')}
             </Text>
           )}
         </View>
@@ -160,7 +164,7 @@ export function RootErrorFallback({ error, reset }: ErrorFallbackProps) {
             onPress={reset}
             className="flex-row items-center justify-center gap-x-2 bg-[--cta-blue] rounded-xl py-3">
             <House size={18} color="#000" weight="bold" />
-            <Text className="text-black text-base font-semibold">Go Home</Text>
+            <Text className="text-black text-base font-semibold">{t('errors.boundary.go_home')}</Text>
           </TouchableOpacity>
           {telemetryEnabled === false && <ReportOnGitHubButton error={error} />}
         </View>
@@ -171,6 +175,7 @@ export function RootErrorFallback({ error, reset }: ErrorFallbackProps) {
 
 /** Inline fallback for a single chat row, so one bad message does not take down the thread. */
 export function MessageErrorFallback({ error }: { error: Error }) {
+  const { t } = useTranslation();
   const telemetryEnabled = useTelemetryEnabled();
   const [expanded, setExpanded] = useState(false);
   const Caret = expanded ? CaretDown : CaretRight;
@@ -180,13 +185,13 @@ export function MessageErrorFallback({ error }: { error: Error }) {
       <View className="flex-row items-center gap-x-2">
         <WarningCircle size={16} color="#F97066" />
         <Text className="flex-1 text-[--hex-gray-4] text-sm">
-          This message could not be displayed due to an error.
+          {t('errors.boundary.message_failed')}
         </Text>
       </View>
 
       {telemetryEnabled === true && (
         <Text className="text-[--hex-gray-4] text-xs opacity-70">
-          This error was reported to Mintplex Labs automatically.
+          {t('errors.boundary.reported_automatically')}
         </Text>
       )}
 
@@ -198,13 +203,13 @@ export function MessageErrorFallback({ error }: { error: Error }) {
             className="flex-row items-center gap-x-1">
             <Caret size={12} color="#9F9FA0" />
             <Text className="text-[--hex-gray-4] text-xs font-semibold">
-              {expanded ? 'Hide error details' : 'Show error details'}
+              {expanded ? t('errors.boundary.hide_details') : t('errors.boundary.show_details')}
             </Text>
           </TouchableOpacity>
           {expanded && (
             <View className="gap-y-3">
               <Text className="text-[--hex-gray-4] text-xs">
-                You have telemetry disabled, so we did not auto-report this error to Mintplex Labs, you should open a GitHub issue instead.
+                {t('errors.boundary.telemetry_disabled')}
               </Text>
               <ErrorDetailsBox error={error} />
               <ReportOnGitHubButton error={error} />

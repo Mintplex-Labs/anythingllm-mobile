@@ -8,7 +8,8 @@ import { DEFAULT_GGUF_FOLDER } from "@/utils/models/manager";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
-import ImportedModels from "@/utils/models/imported";
+import ImportedModels, { describeImportedModel } from "@/utils/models/imported";
+import i18n from "@/i18n";
 import { throwIfAborted } from "@/utils/chat/abort";
 import { type Model } from "@/utils/types";
 
@@ -132,7 +133,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
    * generation can be interrupted mid-response.
    */
   private runSubmoduleStream(messages: any[], callback: (token: string) => void, availableTools: any[]): Promise<ICompleteResponse> {
-    if (!this.submodule) throw new Error('No model loaded. Please select a model first.');
+    if (!this.submodule) throw new Error(i18n.t('models.no_model_loaded_error'));
     return this.submodule.streamGetChatCompletion(messages, callback, availableTools, this.abortSignal);
   }
 
@@ -203,7 +204,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
             id: modelId,
             modelId,
             name: OnDeviceProvider.humanizeModelFolderName(modelDir.name),
-            description: `Found on this device in ${modelId} but it is not in our model list. You can still use it or uninstall it.`,
+            description: i18n.t('models.unknown_model_description', { modelId }),
             size: Number(ggufFile.size),
             downloadUrl: `https://huggingface.co/${modelId}/resolve/main/${ggufFile.name}`,
             isPreset: false,
@@ -226,8 +227,8 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     // confirmation work from the same number.
     const basicModels: IOnDeviceAvailableModel[] = MODEL_CARDS.map(m => ({
       id: m.id,
-      name: m.name,
-      description: m.description,
+      name: i18n.t(m.name),
+      description: i18n.t(m.description),
       size: defaultModels.find(d => d.id === m.modelId)?.size ?? m.size,
       modelId: m.modelId,
       downloadUrl: m.tag,
@@ -240,7 +241,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
         return {
           id: m.id,
           // @ts-ignore
-          description: m.description || '',
+          description: m.description ? i18n.t(m.description) : '',
           name: m.name,
           size: m.size,
           modelId: m.id,
@@ -256,7 +257,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
       id: m.modelId,
       modelId: m.modelId,
       name: m.name,
-      description: m.description,
+      description: m.repoId ? describeImportedModel(m) : m.description,
       size: m.size,
       downloadUrl: m.downloadUrl,
       isPreset: false,
@@ -310,16 +311,16 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
     if (compactor.isRunning) {
       this.log('A background compaction is still running - waiting for it before building the prompt');
-      onStatus?.('Summarizing earlier conversation');
+      onStatus?.(i18n.t('models.status.summarizing'));
       resolved = await compactor.compact({ threadSlug, history: shape.history, trigger: 'inline before prompt, after waiting on background pass' });
     } else if (await compactor.shouldCompact(resolved.recent)) {
       this.log('History outgrew the prompt budget since the last background pass (or that pass was skipped/failed) - compacting before this prompt');
-      onStatus?.('Summarizing earlier conversation');
+      onStatus?.(i18n.t('models.status.summarizing'));
       resolved = await compactor.compact({ threadSlug, history: shape.history, trigger: 'inline before prompt' });
     }
     if (resolved.summary) {
       this.log(`Sending a summary in place of the ${resolved.coveredCount} oldest chat(s); ${resolved.recent.length} sent verbatim`);
-      onStatus?.(`Using a summary of ${resolved.coveredCount} earlier message${resolved.coveredCount === 1 ? '' : 's'}`);
+      onStatus?.(i18n.t('models.status.using_summary', { count: resolved.coveredCount }));
     }
     return { history: resolved.recent, contextTexts, summary: resolved.summary };
   }
@@ -354,11 +355,11 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     toolset?: unknown;
     autoApproveTools?: boolean;
   }) {
-    if (!this.submodule || !this.model) throw new Error('No model loaded. Please select a model first.');
+    if (!this.submodule || !this.model) throw new Error(i18n.t('models.no_model_loaded_error'));
     // Loading a GGUF into memory can take several seconds on first use - surface it in the
     // activity chain instead of leaving the user staring at an empty bubble.
     if (streaming && this.runtimeInfo === null) {
-      onStream('report_status', 'Loading model into memory');
+      onStream('report_status', i18n.t('models.status.loading_model'));
     }
     const { formattedMessages, citations } = await this.buildPrompt(messages, streaming ? (status) => onStream('report_status', status) : undefined);
     if (!streaming) {
@@ -399,7 +400,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
     });
 
     throwIfAborted(this.abortSignal);
-    if (finalResult.truncatedByContext) onStream('report_status', 'Reply was cut short - the context window is full');
+    if (finalResult.truncatedByContext) onStream('report_status', i18n.t('models.status.reply_truncated'));
     if (!!fullResult.metrics) onStream('report_metrics', fullResult.metrics);
     if (!!citations) onStream('report_citations', citations);
     onStream('complete', '');

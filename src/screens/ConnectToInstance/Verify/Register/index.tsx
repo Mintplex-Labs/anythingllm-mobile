@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { IStatus } from "..";
 import { IExternalConnection } from "../..";
 import Telemetry from "@/utils/Telemetry";
+import { useTranslation } from "react-i18next";
 
 interface RegisterProps {
     connectionUrl: string; // eg: http://192.168.1.100:3000/api/mobile
@@ -15,6 +16,7 @@ interface RegisterProps {
 }
 
 export default function Register({ connectionUrl, registrationToken, updateStatus }: RegisterProps) {
+    const { t } = useTranslation();
     const navigation = useNavigation();
     const [deviceToken, setDeviceToken] = useState<string | null>(null);
     const [state, setState] = useState<'waiting_for_registration' | 'awaiting_approval'>('waiting_for_registration');
@@ -41,7 +43,7 @@ export default function Register({ connectionUrl, registrationToken, updateStatu
                 console.error('Registration error:', error);
                 updateStatus({
                     status: 'error',
-                    message: !!error ? (error as Error)?.message : 'Failed to register device. Please try again.',
+                    message: !!error ? (error as Error)?.message : t('connect.verify.register_failed'),
                 });
             }
         }
@@ -59,7 +61,7 @@ export default function Register({ connectionUrl, registrationToken, updateStatu
                     if (isApproved) {
                         updateStatus({
                             status: 'import',
-                            message: 'Collecting instance data...',
+                            message: t('connect.verify.collecting_data'),
                         });
                         break;
                     }
@@ -71,7 +73,7 @@ export default function Register({ connectionUrl, registrationToken, updateStatu
                 if (!isApproved) {
                     updateStatus({
                         status: 'error',
-                        message: 'Failed to register or approve device. Please try again.',
+                        message: t('connect.verify.approval_failed'),
                     });
                 } else {
                     navigation.reset({
@@ -89,8 +91,8 @@ export default function Register({ connectionUrl, registrationToken, updateStatu
         return (
             <View className="flex flex-col items-center justify-center gap-4">
                 <ActivityIndicator size="large" color="#FFF" />
-                <Text style={{ textAlign: 'center' }} className="text-white text-lg">Registering your device...</Text>
-                <Text style={{ textAlign: 'center' }} className="text-white text-sm">This may take a few seconds...</Text>
+                <Text style={{ textAlign: 'center' }} className="text-white text-lg">{t('connect.verify.registering')}</Text>
+                <Text style={{ textAlign: 'center' }} className="text-white text-sm">{t('connect.verify.few_seconds')}</Text>
             </View>
         );
     }
@@ -99,8 +101,8 @@ export default function Register({ connectionUrl, registrationToken, updateStatu
         return (
             <View className="flex flex-col items-center justify-center gap-4">
                 <ActivityIndicator size="large" color="#FFF" />
-                <Text style={{ textAlign: 'center' }} className="text-white text-lg">Awaiting approval...</Text>
-                <Text style={{ textAlign: 'center' }} className="text-white text-sm">Please approve the device in the AnythingLLM application...</Text>
+                <Text style={{ textAlign: 'center' }} className="text-white text-lg">{t('connect.verify.awaiting_approval')}</Text>
+                <Text style={{ textAlign: 'center' }} className="text-white text-sm">{t('connect.verify.approve_in_app')}</Text>
             </View>
         );
     }

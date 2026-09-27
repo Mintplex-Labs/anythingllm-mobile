@@ -3,6 +3,8 @@ import { ActivityIndicator, Text, TouchableOpacity, View, type StyleProp, type V
 import { ArrowLeft } from 'phosphor-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { type ScheduledJobRunStatus } from '@/database/models/ScheduledJobRun';
+import { useTranslation } from 'react-i18next';
+import i18n, { tKey } from '@/i18n';
 
 /** Palette shared by the scheduled jobs screens - matches the user settings screens */
 export const JOB_COLORS = {
@@ -21,10 +23,11 @@ export const JOB_COLORS = {
 
 /** Centered title with a back arrow on the left and an optional action on the right (settings screen header) */
 export function ScreenHeader({ title, subtitle, onBack, right }: { title: string; subtitle?: string; onBack: () => void; right?: React.ReactNode }) {
+    const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     return (
         <View style={{ paddingHorizontal: 30, paddingTop: insets.top, paddingBottom: 16 }} className="w-full flex flex-row items-center justify-center relative">
-            <TouchableOpacity onPress={onBack} className="absolute left-0 flex flex-row items-center gap-2" hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} accessibilityLabel="Back">
+            <TouchableOpacity onPress={onBack} className="absolute left-0 flex flex-row items-center gap-2" hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} accessibilityLabel={t('common.back')}>
                 <ArrowLeft size={24} color="#FFF" weight="bold" />
             </TouchableOpacity>
             <View className="flex flex-col items-center" style={{ maxWidth: '70%' }}>
@@ -57,7 +60,8 @@ export function Card({ children, style }: { children: React.ReactNode; style?: S
 
 /** Small accent dot marking something the user has not seen yet */
 export function UnreadDot({ size = 8, style }: { size?: number; style?: StyleProp<ViewStyle> }) {
-    return <View accessibilityLabel="Unseen" style={[{ width: size, height: size, borderRadius: size / 2, backgroundColor: JOB_COLORS.accent }, style]} />;
+    const { t } = useTranslation();
+    return <View accessibilityLabel={t('scheduled_jobs.unseen')} style={[{ width: size, height: size, borderRadius: size / 2, backgroundColor: JOB_COLORS.accent }, style]} />;
 }
 
 /** Selectable pill - used for frequency, weekday and time choices */
@@ -104,13 +108,14 @@ export function ActionButton({ title, onPress, tone = 'primary', disabled = fals
     );
 }
 
+/** Translation keys - resolve with t() when rendering */
 export const RUN_STATUS_LABELS: Record<ScheduledJobRunStatus, string> = {
-    queued: 'Queued',
-    running: 'Running',
-    completed: 'Completed',
-    failed: 'Failed',
-    timed_out: 'Timed out',
-    cancelled: 'Stopped',
+    queued: tKey('scheduled_jobs.status.queued'),
+    running: tKey('scheduled_jobs.status.running'),
+    completed: tKey('scheduled_jobs.status.completed'),
+    failed: tKey('scheduled_jobs.status.failed'),
+    timed_out: tKey('scheduled_jobs.status.timed_out'),
+    cancelled: tKey('scheduled_jobs.status.stopped'),
 };
 
 export function runStatusColor(status: ScheduledJobRunStatus): string {
@@ -127,12 +132,13 @@ export function runStatusColor(status: ScheduledJobRunStatus): string {
 
 /** Status word colored by outcome, with a spinner while the run is in flight */
 export function RunStatusLabel({ status, size = 'sm' }: { status: ScheduledJobRunStatus; size?: 'sm' | 'md' }) {
+    const { t } = useTranslation();
     const inFlight = status === 'running' || status === 'queued';
     return (
         <View className="flex flex-row items-center" style={{ gap: 6 }}>
             {inFlight && <ActivityIndicator size="small" color={runStatusColor(status)} style={{ transform: [{ scale: 0.7 }] }} />}
             <Text style={{ color: runStatusColor(status) }} className={size === 'md' ? 'text-base font-medium' : 'text-sm font-medium'}>
-                {RUN_STATUS_LABELS[status] ?? status}
+                {RUN_STATUS_LABELS[status] ? t(RUN_STATUS_LABELS[status]) : status}
             </Text>
         </View>
     );
@@ -161,15 +167,22 @@ export function formatRelativeTime(timestamp: number | null | undefined, now: nu
     const minute = 60_000;
     const hour = 60 * minute;
     const day = 24 * hour;
-    const suffix = (label: string) => (diff >= 0 ? `in ${label}` : `${label} ago`);
-    if (abs < minute) return diff >= 0 ? 'in under a minute' : 'just now';
-    if (abs < hour) return suffix(`${Math.round(abs / minute)} min`);
+    const future = diff >= 0;
+    if (abs < minute) return future ? i18n.t('scheduled_jobs.relative_time.in_under_a_minute') : i18n.t('scheduled_jobs.relative_time.just_now');
+    if (abs < hour) {
+        const minutes = Math.round(abs / minute);
+        return future ? i18n.t('scheduled_jobs.relative_time.in_minutes', { minutes }) : i18n.t('scheduled_jobs.relative_time.minutes_ago', { minutes });
+    }
     if (abs < day) {
         const hours = Math.floor(abs / hour);
         const minutes = Math.round((abs % hour) / minute);
-        return suffix(minutes ? `${hours}h ${minutes}m` : `${hours}h`);
+        if (minutes) return future ? i18n.t('scheduled_jobs.relative_time.in_hours_minutes', { hours, minutes }) : i18n.t('scheduled_jobs.relative_time.hours_minutes_ago', { hours, minutes });
+        return future ? i18n.t('scheduled_jobs.relative_time.in_hours', { hours }) : i18n.t('scheduled_jobs.relative_time.hours_ago', { hours });
     }
-    if (abs < 7 * day) return suffix(`${Math.round(abs / day)}d`);
+    if (abs < 7 * day) {
+        const days = Math.round(abs / day);
+        return future ? i18n.t('scheduled_jobs.relative_time.in_days', { days }) : i18n.t('scheduled_jobs.relative_time.days_ago', { days });
+    }
     return new Date(timestamp).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 

@@ -1,0 +1,1177 @@
+{
+  "common": {
+    "add": "Thêm",
+    "allow": "Cho phép",
+    "apply": "Áp dụng",
+    "back": "Quay lại",
+    "cancel": "Hủy",
+    "clear": "Xóa",
+    "close": "Đóng",
+    "confirm": "Xác nhận",
+    "continue": "Tiếp tục",
+    "copied": "Đã sao chép",
+    "copy": "Sao chép",
+    "create": "Tạo",
+    "default": "Mặc định",
+    "delete": "Xóa",
+    "disable": "Tắt",
+    "disabled": "Đã tắt",
+    "dismiss": "Bỏ qua",
+    "done": "Xong",
+    "download": "Tải xuống",
+    "downloading": "Đang tải xuống",
+    "edit": "Chỉnh sửa",
+    "enable": "Bật",
+    "enabled": "Đã bật",
+    "error": "Lỗi",
+    "export": "Xuất",
+    "import": "Nhập",
+    "install": "Cài đặt",
+    "installed": "Đã cài đặt",
+    "learn_more": "Tìm hiểu thêm",
+    "loading": "Đang tải...",
+    "next": "Tiếp",
+    "no": "Không",
+    "none": "Không có",
+    "off": "Tắt",
+    "ok": "OK",
+    "on": "Trên",
+    "open": "Mở",
+    "optional": "Tùy chọn",
+    "refresh": "Làm mới",
+    "remove": "Xóa",
+    "rename": "Đổi tên",
+    "required": "Bắt buộc",
+    "reset": "Đặt lại",
+    "retry": "Thử lại",
+    "save": "Lưu",
+    "search": "Tìm kiếm",
+    "select": "Chọn",
+    "selected": "Đã chọn",
+    "send": "Gửi",
+    "settings": "Cài đặt",
+    "share": "Chia sẻ",
+    "skip": "Bỏ qua",
+    "stop": "Dừng",
+    "success": "Thành công",
+    "uninstall": "Gỡ cài đặt",
+    "unknown": "Không xác định",
+    "unknown_error": "Lỗi không xác định",
+    "update": "Cập nhật",
+    "upload": "Tải lên",
+    "yes": "Có"
+  },
+  "language": {
+    "title": "Ngôn ngữ",
+    "search_placeholder": "Tìm kiếm ngôn ngữ",
+    "no_results": "Không có ngôn ngữ nào khớp với \"{{query}}\"",
+    "changed": "Ngôn ngữ đã thay đổi thành {{language}}"
+  },
+  "settings": {
+    "llm_preference": {
+      "title": "Tùy chọn LLM",
+      "description": "Đây là tùy chọn LLM sẽ được sử dụng cho tất cả không gian làm việc. Bạn có thể thay đổi để sử dụng nhà cung cấp LLM khác hoặc mô hình trên thiết bị."
+    },
+    "language": {
+      "app_language": "Ngôn ngữ ứng dụng"
+    },
+    "special_tools": {
+      "title": "Công cụ đặc biệt",
+      "ask_with_anythingllm": "\"Hỏi với AnythingLLM\"",
+      "page_title": "Công cụ đặc biệt",
+      "added_toast": "Đã thêm \"Hỏi với AnythingLLM\" vào menu lựa chọn văn bản",
+      "removed_toast": "Đã xóa \"Hỏi với AnythingLLM\" khỏi menu lựa chọn văn bản",
+      "context_awareness": "Nhận biết ngữ cảnh",
+      "ask_with_anythingllm_toggle": "Hỏi với AnythingLLM",
+      "android_only": "Chỉ Android",
+      "description_available": "Thêm \"Hỏi với AnythingLLM\" vào menu xuất hiện khi bạn chọn văn bản trong bất kỳ ứng dụng nào. Sử dụng nó để hoàn thiện, rút ngắn hoặc sửa những gì bạn đang viết, hoặc để tóm tắt, giải thích và nghiên cứu những gì bạn đang đọc - với bất kỳ mô hình nào bạn đã chọn ở đây.",
+      "description_unavailable": "Trên Android, AnythingLLM có thể xuất hiện trong menu hiển thị khi bạn chọn văn bản trong bất kỳ ứng dụng nào, để chỉnh sửa hoặc tóm tắt nó bằng mô hình bạn chọn. iOS không cung cấp hook này cho các ứng dụng."
+    },
+    "about": {
+      "release_notes": "Ghi chú phát hành cho v{{version}}",
+      "star_github": "Sao trên GitHub",
+      "join_discord": "Tham gia Discord"
+    },
+    "utility": {
+      "title": "Tiện ích",
+      "anonymous_telemetry": "Dữ liệu viễn cảm ẩn danh",
+      "clear_temp_files": "Xóa tệp tạm thời",
+      "temp_files_cleared": "Đã xóa tệp tạm thời"
+    },
+    "legal": {
+      "title": "Pháp lý & Quyền riêng tư",
+      "terms": "Điều khoản dịch vụ",
+      "privacy": "Chính sách quyền riêng tư"
+    },
+    "reset": {
+      "title": "Đặt lại AnythingLLM",
+      "confirm_message": "Bạn có chắc chắn muốn đặt lại AnythingLLM không? Điều này sẽ xóa tất cả không gian làm việc, trò chuyện, mô hình đã cài đặt và tùy chọn của bạn.",
+      "confirm_button": "Có, Đặt lại tất cả"
+    },
+    "update_failed": "Không thể cập nhật cài đặt",
+    "version": {
+      "about": "Về AnythingLLM",
+      "update_available_title": "Có bản cập nhật",
+      "update_available_message": "Phiên bản {{version}} có sẵn. Vui lòng cập nhật lên phiên bản mới nhất.",
+      "go_to_app_store": "Đi đến cửa hàng ứng dụng"
+    },
+    "telemetry": {
+      "enabled_toast": "Đã bật dữ liệu viễn cảm ẩn danh",
+      "disabled_toast": "Đã tắt dữ liệu viễn cảm ẩn danh",
+      "usage_data": "Dữ liệu sử dụng",
+      "share_toggle": "Chia sẻ dữ liệu viễn cảm ẩn danh",
+      "description_events": "AnythingLLM gửi một số lượng nhỏ các sự kiện ẩn danh, chẳng hạn như \"một trò chuyện đã hoàn thành\" hoặc \"một công cụ được sử dụng\", để chúng ta có thể thấy tính năng nào quan trọng và nơi có sự cố.",
+      "description_privacy": "Điều này không bao giờ bao gồm các trò chuyện, tài liệu, lời nhắc hoặc bất cứ điều gì cụ thể về cách bạn sử dụng ứng dụng của bạn. Không có tài khoản và không có gì xác định bạn.",
+      "description_opt_out": "Để lại điều này giúp chúng tôi xây dựng một ứng dụng tốt hơn. Bạn có thể tắt nó bất cứ lúc nào và sẽ không có gì khác được gửi."
+    },
+    "advanced_model_preferences": {
+      "title": "Lựa chọn mô hình",
+      "choose_provider": "Chọn Nhà cung cấp LLM",
+      "llm_model": "Mô hình LLM",
+      "provider_settings": "Cài đặt nhà cung cấp",
+      "show_less": "Hiển thị ít hơn",
+      "view_more": "Xem thêm"
+    },
+    "provider_options": {
+      "base_url": "URL cơ sở",
+      "base_url_placeholder": "Nhập URL cơ sở của bạn (ví dụ: {{example}})",
+      "api_key": "Khóa API",
+      "api_key_optional": "Khóa API (tùy chọn)",
+      "api_key_placeholder": "Nhập khóa API của bạn",
+      "aws_region": "Vùng AWS",
+      "select_region": "Chọn một vùng",
+      "choose_region": "Chọn vùng AWS của bạn",
+      "search_region": "Tìm kiếm hoặc nhập mã vùng",
+      "use_region": "Sử dụng \"{{region}}\"",
+      "model_selection": "Lựa chọn mô hình",
+      "select_model": "Chọn một mô hình",
+      "choose_model": "Chọn mô hình của bạn",
+      "search_models": "Tìm kiếm mô hình",
+      "fetching_models": "Đang tìm nạp mô hình...",
+      "model_placeholder": "Nhập mô hình của bạn (ví dụ: {{example}})",
+      "models_load_failed": "Không thể tải mô hình từ nhà cung cấp này. Kiểm tra thông tin đăng nhập của bạn hoặc nhập tên mô hình theo cách thủ công.",
+      "no_tool_calls": "Mô hình này được phát hiện có <bold>không hỗ trợ gọi công cụ</bold>. Chỉ trò chuyện đơn giản + RAG sẽ được hỗ trợ"
+    }
+  },
+  "chat": {
+    "error_loading_provider": "Lỗi tải nhà cung cấp LLM",
+    "error_loading_thread": "Lỗi tải chủ đề không gian làm việc",
+    "unknown_error": "Lỗi không xác định",
+    "loading_history": "Đang tải lịch sử trò chuyện...",
+    "suggestions": {
+      "hello": "Xin chào, bạn có thể giúp tôi điều gì?",
+      "research": "Tìm kiếm trực tuyến một số điều vui vẻ để làm ở {{city}}, {{region}}",
+      "calendar_monday": "Những gì trên lịch của tôi vào thứ Hai?",
+      "calendar_tomorrow": "Những gì trên lịch của tôi cho ngày mai?",
+      "calendar_today": "Những gì trên lịch của tôi cho hôm nay?",
+      "email": "Soạn thảo email bán hàng cho John Doe về lợi ích của các tác nhân AI cục bộ",
+      "summarize_example": "Tóm tắt paulgraham.com/foundermode.html",
+      "summarize_file": "Tóm tắt {{name}}",
+      "summarize_websites_other": "Tóm tắt những trang web này",
+      "summarize_documents_other": "Tóm tắt những tài liệu này",
+      "explain_images_other": "Giải thích những hình ảnh này"
+    },
+    "citations": {
+      "title": "Trích dẫn",
+      "score": "Điểm: {{score}}",
+      "sources": "Nguồn"
+    },
+    "message_actions": {
+      "copied": "Đã sao chép vào bộ nhớ tạm",
+      "retry_failed": "Không thể thử lại tin nhắn này",
+      "delete_failed": "Không thể xóa câu trả lời này",
+      "fork_failed": "Không thể tách luồng: {{error}}",
+      "fork_name": "Bản sao của {{name}}",
+      "copy_title": "Sao chép tin nhắn",
+      "copy_description": "Sao chép văn bản vào bộ nhớ tạm của bạn",
+      "retry_wait": "Chờ câu trả lời hiện tại kết thúc",
+      "retry_description": "Xóa trao đổi này và gửi lời nhắc lại",
+      "fork_title": "Tách chủ đề",
+      "fork_remote_unavailable": "Không khả dụng cho các luồng từ xa",
+      "fork_description": "Bắt đầu một luồng mới với một bản sao của cuộc trò chuyện này",
+      "delete_title": "Xóa câu trả lời",
+      "delete_description": "Xóa tin nhắn này và câu trả lời của nó từ luồng"
+    },
+    "activity": {
+      "running": "Đang chạy",
+      "waiting_approval_to_run": "Chờ phê duyệt để chạy {{tool}}",
+      "approved_tool": "Đã phê duyệt {{tool}}",
+      "rejected_tool": "Đã từ chối {{tool}}",
+      "waiting_for_you": "Chờ bạn",
+      "tool_approved": "Cuộc gọi công cụ đã được phê duyệt",
+      "tool_rejected": "Cuộc gọi công cụ đã bị từ chối",
+      "thinking": "Đang suy nghĩ...",
+      "waiting_your_approval": "Chờ phê duyệt của bạn",
+      "calling_tool": "Đang gọi {{tool}}",
+      "working": "Đang làm việc...",
+      "worked_for": "Làm việc trong {{duration}}",
+      "thought_for": "Suy nghĩ trong {{duration}}",
+      "thoughts": "Suy nghĩ"
+    },
+    "file_download": {
+      "saved_to": "Đã lưu {{filename}} vào {{location}}",
+      "save_failed": "Không thể lưu tệp: {{error}}",
+      "share_failed": "Không thể mở bảng chia sẻ: {{error}}",
+      "missing": "Không còn trên thiết bị này",
+      "missing_label": "{{title}}, tệp không còn khả dụng",
+      "download_label": "Tải xuống {{title}}",
+      "share_label": "Chia sẻ {{title}}",
+      "unknown_file": "Tệp không xác định",
+      "saving": "Đang lưu...",
+      "saved": "Đã lưu"
+    },
+    "scheduled_job_card": {
+      "open_label": "Mở công việc được lên lịch {{name}}",
+      "subtitle": "Công việc được lên lịch · {{schedule}}",
+      "view": "Xem"
+    },
+    "metrics": {
+      "tokens_other": "{{count}} token"
+    },
+    "tool_approval": {
+      "wants_to_call": "Mô hình muốn gọi <skill>{{skill}}</skill>",
+      "show_details": "Hiển thị chi tiết",
+      "hide_details": "Ẩn chi tiết",
+      "approve": "Phê duyệt",
+      "reject": "Từ chối"
+    },
+    "attachments": {
+      "attach_files": "Đính kèm tệp",
+      "gallery": "Thư viện",
+      "take_photo": "Chụp ảnh",
+      "add_attachment": "Thêm đính kèm",
+      "hint_embed": "Các tệp được chia nhỏ và nhúng để mô hình trên thiết bị của bạn có thể tìm kiếm chúng.",
+      "hint_full": "Các tệp được gửi đầy đủ đến mô hình của bạn với mỗi tin nhắn trong không gian làm việc này.",
+      "max_reached": "Bạn đã đạt số lượng tối đa của các đính kèm cho một lời nhắc.",
+      "downloading_image_support": "Đang tải xuống hỗ trợ hình ảnh... {{progress}}%",
+      "cancel_download": "Hủy tải xuống",
+      "download_image_support": "Tải xuống hỗ trợ hình ảnh",
+      "needs_download_tap": "Mô hình này có thể nhìn thấy hình ảnh, nhưng cần một lần tải xuống bổ sung. Nhấn để tải xuống ({{size}}).",
+      "download_failed": "Tải xuống không thành công. Nhấn để thử lại.",
+      "download_cancelled": "Đã hủy tải xuống."
+    },
+    "prompt_input": {
+      "placeholder": "Nhập lời nhắc của bạn",
+      "select_model_first": "Vui lòng chọn một mô hình trước tiên",
+      "stop_generating": "Dừng tạo",
+      "stop_recording": "Dừng ghi",
+      "voice_input": "Nhập giọng nói",
+      "send_prompt": "Gửi lời nhắc"
+    },
+    "files": {
+      "title": "Tệp",
+      "empty": "Không có tệp nào trong không gian làm việc này",
+      "error_loading": "Lỗi tải tệp",
+      "deleted_other": "{{count}} tệp đã được xóa thành công!",
+      "select_all": "Chọn tất cả",
+      "deselect_all": "Bỏ chọn tất cả",
+      "delete_selected": "Xóa tệp được chọn",
+      "embedded": "Nhúng · được tìm kiếm trong mọi luồng",
+      "full_every_thread": "Gửi đầy đủ · mọi luồng",
+      "full_this_thread": "Gửi đầy đủ · luồng này",
+      "full_another_thread": "Gửi đầy đủ · luồng khác"
+    },
+    "history_cleared": "Lịch sử trò chuyện đã được xóa",
+    "tools": {
+      "title": "Công cụ",
+      "group_status": "{{enabled}} trong {{total}} bật",
+      "app_connections": "Kết nối ứng dụng",
+      "group_files_note": "{{description}} Các tệp được giữ trên thiết bị này cho đến khi bạn xóa tệp tạm thời trong cài đặt.",
+      "needs_cloud_model": "{{description}} Cần một mô hình đám mây.",
+      "unavailable_on_device": "Các công cụ bị tắt không khả dụng với mô hình trên thiết bị. Chuyển sang nhà cung cấp đám mây để sử dụng chúng."
+    },
+    "remote_unreachable": {
+      "title": "Máy chủ từ xa không thể truy cập được",
+      "message": "Chúng tôi hiện không thể tiếp cận phiên bản của bạn. Bạn có muốn tiếp tục cuộc trò chuyện này cục bộ không?",
+      "cancel": "Không, hủy",
+      "continue": "Có, tiếp tục cục bộ",
+      "not_sent": "Máy chủ từ xa không thể truy cập - trò chuyện không được gửi."
+    },
+    "errors": {
+      "processing": "Lỗi xử lý trò chuyện",
+      "timed_out": "Yêu cầu hết thời gian chờ trước khi nhận được phản hồi. Kết nối có thể đã mất.",
+      "show_more": "Xem thêm",
+      "show_less": "Hiển thị ít hơn"
+    },
+    "status": {
+      "recalling_notes": "Nhớ lại ghi chú không gian làm việc"
+    }
+  },
+  "quick_context": {
+    "modes": {
+      "summarize": "Tóm tắt"
+    },
+    "actions": {
+      "polish": "Đánh bóng",
+      "shorten": "Rút ngắn",
+      "fix_grammar": "Sửa ngữ pháp",
+      "more_formal": "Chính thức hơn",
+      "summarize": "Tóm tắt",
+      "key_points": "Các điểm chính",
+      "explain": "Giải thích",
+      "research": "Nghiên cứu"
+    },
+    "could_not_start": "Không thể bắt đầu Hành động nhanh",
+    "dismiss": "Bỏ qua",
+    "setup_needed": "Kết thúc cài đặt AnythingLLM để sử dụng nó từ menu lựa chọn.",
+    "open_anythingllm": "Mở AnythingLLM",
+    "select_model": "Chọn một mô hình ở trên để bắt đầu.",
+    "copied_paste": "Đã sao chép - dán nó trên lựa chọn của bạn",
+    "copy_and_close": "Sao chép & đóng",
+    "open_in_app": "Mở trong ứng dụng",
+    "placeholders": {
+      "edit_new": "Văn bản này nên thay đổi như thế nào?",
+      "edit_started": "Điều chỉnh văn bản thêm...",
+      "summarize_new": "Hỏi bất cứ điều gì về văn bản này...",
+      "summarize_started": "Hỏi thêm câu hỏi..."
+    }
+  },
+  "attachments": {
+    "processing": "Đang xử lý...",
+    "image": "Hình ảnh",
+    "file_type_generic": "TỆP",
+    "name_processing": "{{name}}, đang xử lý",
+    "remove_named": "Xóa {{name}}",
+    "more_images_other": "{{count}} hình ảnh nữa",
+    "attached_image": "Hình ảnh được đính kèm",
+    "image_position": "{{current}} trong {{total}}",
+    "close_image_preview": "Đóng bản xem trước hình ảnh",
+    "remove_image": "Xóa hình ảnh"
+  },
+  "errors": {
+    "boundary": {
+      "details": "Chi tiết lỗi",
+      "details_copied": "Đã sao chép chi tiết lỗi",
+      "report_github": "Báo cáo trên GitHub",
+      "something_went_wrong": "Có điều gì đó không đúng",
+      "reported_automatically": "Lỗi này đã được báo cáo cho Mintplex Labs một cách tự động.",
+      "telemetry_disabled": "Bạn đã tắt viễn cảm, vì vậy chúng tôi không tự động báo cáo lỗi này cho Mintplex Labs, bạn nên mở một vấn đề GitHub thay thế.",
+      "go_home": "Về nhà",
+      "message_failed": "Tin nhắn này không thể hiển thị do lỗi.",
+      "hide_details": "Ẩn chi tiết lỗi",
+      "show_details": "Hiển thị chi tiết lỗi"
+    }
+  },
+  "highlights": {
+    "play_video": "Phát video",
+    "pause_video": "Tạm dừng video",
+    "whats_new": "Có gì mới",
+    "tour_title": "AnythingLLM có thể làm gì",
+    "quick_actions": {
+      "title": "Hỏi với AnythingLLM ở bất cứ nơi nào",
+      "body": "Chọn văn bản trong bất kỳ ứng dụng nào và nhấn \"Hỏi với AnythingLLM\" để đánh bóng, rút ngắn, tóm tắt hoặc giải thích nó bằng mô hình của bạn. Tắt nó bất cứ lúc nào trong Cài đặt > Công cụ đặc biệt."
+    },
+    "share_sheet": {
+      "title": "Chia sẻ bất cứ điều gì vào cuộc trò chuyện",
+      "body": "Gửi ảnh, tài liệu và liên kết từ bất kỳ ứng dụng nào trực tiếp đến AnythingLLM. Chúng sẽ đi vào một luồng mới, được đính kèm và sẵn sàng để hỏi."
+    },
+    "scheduled_jobs": {
+      "title": "Công việc được lên lịch",
+      "body": "Hỏi về một nhiệm vụ định kỳ - một bản tóm tắt tin tức buổi sáng, một cuộc kiểm tra hàng tuần - và nó chạy theo lịch, ngay cả khi ứng dụng đóng. Kết quả chờ bạn với một thông báo."
+    }
+  },
+  "new_workspace": {
+    "default_name": "Không gian làm việc mới",
+    "title": "Không gian làm việc mới",
+    "description": "Đặt tên cho không gian làm việc của bạn. Bạn có thể thay đổi nó sau.",
+    "placeholder": "ví dụ: Nghiên cứu, Công việc, Cá nhân"
+  },
+  "files": {
+    "types": {
+      "text_file": "Tệp văn bản",
+      "spreadsheet": "Bảng tính",
+      "pdf_document": "Tài liệu PDF",
+      "word_document": "Tài liệu Word",
+      "file": "Tệp"
+    },
+    "location": {
+      "downloads": "Tải xuống",
+      "ios_exports": "Tệp > Trên iPhone của tôi > AnythingLLM > Xuất",
+      "open_downloads": "Mở trong Tải xuống",
+      "open_files": "Mở trong Tệp"
+    },
+    "storage_permission": {
+      "title": "Lưu vào Tải xuống",
+      "message": "AnythingLLM cần quyền truy cập lưu trữ để lưu tệp vào thư mục Tải xuống của bạn."
+    },
+    "export": {
+      "text_label": "Văn bản",
+      "txt_description": "Bảng ghi chép văn bản thuần túy",
+      "md_description": "Bảng ghi chép được định dạng cho các ứng dụng ghi chú",
+      "json_description": "Tin nhắn với mô hình và số liệu",
+      "pdf_description": "Tài liệu được định dạng"
+    }
+  },
+  "misc": {
+    "new_thread": "Luồng mới",
+    "remote_thread_create_failed": "Chúng tôi không thể tạo một luồng trong không gian làm việc từ xa của bạn. Vui lòng kiểm tra kết nối của bạn và thử lại.",
+    "job_run": {
+      "failed": "Công việc thất bại",
+      "timed_out": "Công việc mất quá lâu và đã bị dừng",
+      "cancelled": "Bạn đã dừng lần chạy này",
+      "app_closed": "Ứng dụng đã đóng trước khi công việc hoàn thành"
+    },
+    "validation": {
+      "memory_not_text": "Bộ nhớ phải là văn bản",
+      "memory_too_short": "Bộ nhớ quá ngắn",
+      "memory_too_long_other": "Bộ nhớ phải có {{count}} ký tự hoặc ít hơn",
+      "job_name_required": "Đặt tên cho công việc",
+      "job_name_too_long_other": "Tên phải có {{count}} ký tự hoặc ít hơn",
+      "job_prompt_required": "Viết lời nhắc mà công việc sẽ chạy",
+      "job_prompt_too_long_other": "Lời nhắc phải có {{count}} ký tự hoặc ít hơn",
+      "job_schedule_invalid": "Lịch không phải là một biểu thức cron hợp lệ",
+      "job_tools_not_list": "Công cụ phải là một danh sách",
+      "name_not_string": "Tên phải là một chuỗi",
+      "name_required": "Tên là bắt buộc",
+      "name_too_short_other": "Tên phải dài ít nhất {{count}} ký tự",
+      "name_too_long_other": "Tên phải dài ít hơn {{count}} ký tự",
+      "system_prompt_not_string": "Lời nhắc hệ thống phải là một chuỗi",
+      "system_prompt_required": "Lời nhắc hệ thống là bắt buộc",
+      "system_prompt_too_short_other": "Lời nhắc hệ thống phải dài ít nhất {{count}} ký tự",
+      "system_prompt_too_long_other": "Lời nhắc hệ thống phải dài ít hơn {{count}} ký tự",
+      "temperature_not_number": "Nhiệt độ phải là một số",
+      "temperature_range": "Nhiệt độ phải nằm trong khoảng {{min}} và {{max}}",
+      "context_length_not_number": "Độ dài bối cảnh phải là một số",
+      "context_length_min": "Độ dài bối cảnh phải lớn hơn {{min}}"
+    }
+  },
+  "tools": {
+    "groups": {
+      "create_files": {
+        "name": "Tạo tệp",
+        "description": "Để trợ lý viết các tài liệu bạn có thể tải xuống và chia sẻ."
+      }
+    },
+    "reranker": {
+      "download_required_title": "Cần tải xuống",
+      "download_required_message": "Lựa chọn công cụ thông minh yêu cầu tải xuống mô hình nhỏ ({{size}}). Bạn đang sử dụng dữ liệu di động. Tiếp tục?",
+      "status_downloading": "Đang tải xuống mô hình lựa chọn công cụ",
+      "status_selecting": "Chọn công cụ tốt nhất"
+    },
+    "calendar_event_creation": {
+      "name": "Tạo sự kiện lịch",
+      "description": "Sử dụng trợ lý để tạo một sự kiện lịch cho bạn.",
+      "status_preparing": "Chuẩn bị sự kiện lịch \"{{title}}\""
+    },
+    "calendar_event_reading": {
+      "name": "Đọc lịch",
+      "description": "Sử dụng trợ lý để đọc các sự kiện lịch của bạn.",
+      "status_date": "Đang đọc lịch của bạn cho {{date}}",
+      "status_today": "Đang đọc lịch của bạn cho hôm nay",
+      "status_tomorrow": "Đang đọc lịch của bạn cho ngày mai",
+      "status_this_week": "Đang đọc lịch của bạn cho tuần này",
+      "status_next_week": "Đang đọc lịch của bạn cho tuần tới",
+      "status_this_month": "Đang đọc lịch của bạn cho tháng này",
+      "status_next_month": "Đang đọc lịch của bạn cho tháng tới"
+    },
+    "create_files": {
+      "status_creating": "Đang tạo {{name}}",
+      "status_created": "Đã tạo {{name}}"
+    },
+    "create_docx_file": {
+      "name": "Tài liệu Word",
+      "description": "Viết một .docx được tạo kiểu từ markdown với các chủ đề và một trang tiêu đề tùy chọn.",
+      "status_creating": "Đang tạo tài liệu Word \"{{name}}\""
+    },
+    "create_pdf_file": {
+      "name": "Tài liệu PDF",
+      "description": "Chuyển markdown hoặc văn bản thuần túy thành PDF được định dạng.",
+      "status_creating": "Đang tạo PDF \"{{name}}\""
+    },
+    "create_text_file": {
+      "name": "Văn bản, Markdown & CSV",
+      "description": "Viết tệp .txt, .md, .csv và .json từ cuộc trò chuyện."
+    },
+    "create_pptx": {
+      "name": "Bản trình bày PowerPoint",
+      "description": "Lên kế hoạch và xây dựng một bộ .pptx có chủ đề, từng phần một.",
+      "status_planning_other": "Lên kế hoạch bài thuyết trình \"{{title}}\" - {{count}} phần, chủ đề {{theme}}",
+      "approval_description_other": "Tạo bài thuyết trình PowerPoint \"{{title}}\" với {{count}} phần? Mỗi phần cần một cuộc gọi mô hình để xây dựng.",
+      "status_not_approved": "Bài thuyết trình đã không được phê duyệt",
+      "status_building_section": "[{{current}}/{{total}}] Đang xây dựng phần \"{{title}}\"",
+      "status_section_complete_other": "[{{current}}/{{total}}] Phần \"{{title}}\" hoàn thành - {{count}} slide",
+      "status_section_complete_from_outline_other": "[{{current}}/{{total}}] Phần \"{{title}}\" hoàn thành - {{count}} slide (từ phác thảo)",
+      "status_assembling_other": "Đang lắp ráp bộ - {{count}} slide"
+    },
+    "create_scheduled_job": {
+      "name": "Tạo công việc được lên lịch",
+      "description": "Để trợ lý thiết lập một công việc định kỳ từ cuộc trò chuyện, sau khi bạn phê duyệt nó.",
+      "status_asking": "Đang yêu cầu lên lịch \"{{name}}\" ({{when}})",
+      "approval_tools_other": "Tạo công việc được lên lịch \"{{name}}\"? Nó sẽ chạy {{when}} sử dụng {{count}} công cụ.",
+      "approval_tools_notify_other": "Tạo công việc được lên lịch \"{{name}}\"? Nó sẽ chạy {{when}} sử dụng {{count}} công cụ và thông báo cho bạn khi nó hoàn thành.",
+      "approval_no_tools": "Tạo công việc được lên lịch \"{{name}}\"? Nó sẽ chạy {{when}} không có công cụ.",
+      "approval_no_tools_notify": "Tạo công việc được lên lịch \"{{name}}\"? Nó sẽ chạy {{when}} không có công cụ và thông báo cho bạn khi nó hoàn thành.",
+      "status_not_approved": "Công việc được lên lịch đã không được phê duyệt",
+      "status_scheduled": "Đã lên lịch \"{{name}}\""
+    },
+    "draft_email": {
+      "name": "Soạn thảo email",
+      "description": "Sử dụng trợ lý để soạn thảo email cho bạn.",
+      "status_drafting": "Đang soạn thảo email \"{{subject}}\"",
+      "open_action": "Mở email nháp"
+    },
+    "draft_text": {
+      "name": "Soạn thảo văn bản",
+      "description": "Sử dụng trợ lý để soạn thảo văn bản cho bạn.",
+      "status_drafting_to": "Đang soạn thảo một văn bản cho {{recipient}}",
+      "status_drafting": "Đang soạn thảo tin nhắn văn bản",
+      "open_action": "Mở nháp văn bản"
+    },
+    "get_time": {
+      "name": "Lấy thời gian",
+      "description": "Lấy ngày và giờ hiện tại dựa trên múi giờ của thiết bị bạn."
+    },
+    "get_location": {
+      "name": "Lấy vị trí",
+      "description": "Lấy vị trí xấp xỉ của bạn. Điều này sẽ trả về thành phố, tiểu bang và quốc gia.",
+      "status_looking_up": "Đang tìm kiếm vị trí xấp xỉ của bạn"
+    },
+    "summarize": {
+      "name": "Tóm tắt",
+      "description": "Tóm tắt nội dung từ URL hoặc tên tệp được cung cấp.",
+      "status_reading": "Đang đọc {{source}}",
+      "status_looking_for_file": "Đang tìm kiếm \"{{name}}\" trong các tệp của bạn",
+      "status_analyzing": "Đang phân tích cấu trúc tài liệu",
+      "status_document_long_other": "Tài liệu dài - đang tóm tắt {{count}} phần đầu tiên",
+      "approval_description_other": "Nội dung này có {{count}} phần để tóm tắt. Điều này có thể mất một lúc - tiếp tục?",
+      "status_not_approved": "Tóm tắt đã không được phê duyệt",
+      "status_complete": "Tóm tắt hoàn thành",
+      "status_summarizing_sections": "Đang tóm tắt các phần tài liệu",
+      "status_summarizing_section": "Đang tóm tắt phần {{current}} trong {{total}}",
+      "status_combining": "Đang kết hợp các bản tóm tắt phần"
+    },
+    "web_scraping": {
+      "name": "Web Scraping",
+      "description": "Scrape một trang web cụ thể để lấy thông tin.",
+      "status_reading": "Đang đọc {{host}}",
+      "status_reading_document": "Đang đọc tài liệu {{name}}",
+      "cellular_title": "Tải xuống trên di động?",
+      "cellular_message": "Đọc \"{{name}}\" yêu cầu tải xuống một tài liệu có kích thước {{size}}. Bạn đang sử dụng dữ liệu di động. Tiếp tục?",
+      "cellular_message_unknown_size": "Đọc \"{{name}}\" yêu cầu tải xuống một tài liệu có kích thước không xác định. Bạn đang sử dụng dữ liệu di động. Tiếp tục?"
+    },
+    "web_search": {
+      "name": "Tìm kiếm web",
+      "description": "Tìm kiếm web để lấy kết quả tìm kiếm dựa trên truy vấn.",
+      "status_searching": "Đang tìm kiếm trên web cho \"{{query}}\"",
+      "status_reviewing_other": "Đang xem xét {{count}} kết quả tìm kiếm"
+    },
+    "approval": {
+      "auto_approved_status": "Đã phê duyệt {{tool}} tự động"
+    }
+  },
+  "top_bar": {
+    "model_chip": {
+      "remote_managed": "Không gian làm việc này được quản lý từ xa. Bạn không thể thay đổi mô hình ở đây.",
+      "no_model_loaded": "Không có mô hình nào được tải",
+      "no_models_found": "Không tìm thấy mô hình nào cho \"{{query}}\"",
+      "hf_lookup_hint": "Tìm kiếm \"{{query}}\" trên Hugging Face và tải xuống phiên bản GGUF.",
+      "list_failed_toast": "Không thể liệt kê các mô hình cho {{provider}}.",
+      "switch_failed": "Không thể chuyển mô hình. Vui lòng thử lại.",
+      "loading_models": "Đang tải mô hình từ {{provider}}...",
+      "list_failed_title": "Không thể liệt kê các mô hình cho {{provider}}",
+      "list_failed_description": "Nhà cung cấp này không trả về bất kỳ mô hình nào. Kiểm tra xem điểm cuối có thể truy cập được và hỗ trợ liệt kê mô hình, hoặc đặt mô hình theo cách thủ công trong Cài đặt.",
+      "try_again": "Thử lại",
+      "search_provider_models": "Tìm kiếm mô hình {{provider}}"
+    },
+    "dev_shortcut_hint_other": "Nhấn {{count}} lần nữa để mở công cụ nhà phát triển",
+    "thread_menu": {
+      "options": "Tùy chọn luồng",
+      "export_failed": "Không thể xuất luồng: {{error}}",
+      "share_failed": "Không thể mở bảng chia sẻ: {{error}}",
+      "unknown_error": "lỗi không xác định",
+      "open_location_failed": "Đã lưu vào {{location}}, nhưng thư mục không thể mở được",
+      "memories": "Ký ức",
+      "memories_description": "Xem ký ức về bạn hoặc tùy chọn của bạn",
+      "export_thread": "Xuất chủ đề trò chuyện",
+      "saved_to_device": "Đã lưu vào thiết bị của bạn"
+    },
+    "memories": {
+      "global": {
+        "tab": "Ở mọi nơi",
+        "hint": "Những sự thật về bạn mà mô hình phải luôn biết - tên của bạn, những gì bạn làm, cách bạn thích câu trả lời. Được gửi với mọi trò chuyện trong mọi không gian làm việc. Hãy giữ chúng ngắn gọn để chúng vừa với các mô hình nhỏ.",
+        "placeholder": "ví dụ: Tên tôi là Sam. Tôi viết Python và thích câu trả lời ngắn.",
+        "empty": "Chưa có ký ức nào. Thêm một sự thật về chính bạn ở trên."
+      },
+      "workspace": {
+        "tab": "Không gian làm việc này",
+        "hint": "Những ghi chú chỉ quan trọng ở đây - dự án, thuật ngữ của nó, các quyết định đã được đưa ra. Được quản lý và tiêm động.",
+        "placeholder": "ví dụ: Dự án này là một ứng dụng React Native gọi là Orbit. Sử dụng yarn, không phải npm.",
+        "empty": "Chưa có ký ức không gian làm việc nào. Thêm một ghi chú về không gian làm việc này ở trên."
+      },
+      "no_longer_exists": "Ký ức đó không còn tồn tại",
+      "save_failed": "Không thể lưu bộ nhớ",
+      "delete_title": "Xóa bộ nhớ?",
+      "enable": "Kích hoạt ký ức",
+      "enable_description": "Cho phép tiêm các sự thật về bạn hoặc không gian làm việc này.",
+      "remote_notice": "Không gian làm việc này được trả lời bởi máy chủ AnythingLLM của bạn, vì vậy ký ức không được sử dụng trong các trò chuyện của nó. Ký ức toàn cầu vẫn áp dụng cho các không gian làm việc trên thiết bị và đám mây của bạn.",
+      "edit_memory": "Chỉnh sửa bộ nhớ",
+      "new_memory": "Bộ nhớ mới",
+      "delete_memory": "Xóa bộ nhớ"
+    }
+  },
+  "drawer": {
+    "workspaces": "Không gian làm việc",
+    "scheduled_jobs": "Công việc được lên lịch",
+    "scheduled_jobs_unseen_other": "Công việc được lên lịch, {{count}} kết quả chưa xem",
+    "new_workspace": "Không gian làm việc mới",
+    "delete_thread_title": "Xóa luồng",
+    "delete_thread_message": "Bạn có chắc chắn muốn xóa luồng này không? Tất cả lịch sử trò chuyện sẽ bị mất.",
+    "delete_workspace_title": "Xóa không gian làm việc",
+    "delete_workspace_message": "Bạn có chắc chắn muốn xóa không gian làm việc này không? Tất cả các luồng sẽ bị mất.",
+    "delete_workspace_message_remote": "Bạn có chắc chắn muốn xóa không gian làm việc này không? Tất cả các luồng sẽ bị mất.\n\nĐiều này sẽ không xóa không gian làm việc trong phiên bản từ xa của bạn.",
+    "rename_thread": "Đổi tên luồng",
+    "rename_thread_placeholder": "Nhập tên luồng mới"
+  },
+  "hf_import": {
+    "title": "Thêm mô hình từ Hugging Face",
+    "add_card_hint": "Dán id repo hoặc url và chọn bất kỳ quant GGUF nào để chạy trên thiết bị này.",
+    "generic_error": "Có điều gì đó không ổn khi nói chuyện với Hugging Face.",
+    "description": "Dán id mô hình hoặc url, hoặc tìm kiếm. Bất kỳ quant GGUF công khai nào cũng có thể được tải xuống và chạy trên thiết bị này.",
+    "show_files": "Hiển thị tệp GGUF",
+    "search_hf": "Tìm kiếm Hugging Face",
+    "files_available_other": "{{count}} tệp GGUF có sẵn để tải xuống",
+    "highlighted_file": "Tệp bạn chọn trên Hugging Face được đánh dấu bên dưới. Nhấn nó để tải xuống.",
+    "highlight_missing": "\"{{filename}}\" không phải là một trong các tệp GGUF của repo này. Chọn một quant khác bên dưới.",
+    "search_results": "Kho GGUF khớp với \"{{query}}\", được tải xuống nhiều nhất trước. Nhấn một để xem các tệp của nó.",
+    "no_search_results": "Không tìm thấy kho GGUF nào cho \"{{query}}\".",
+    "tip": "Mẹo: hầu hết các mô hình có phiên bản GGUF dưới một tên kết thúc bằng \"-GGUF\" từ unsloth, bartowski hoặc lmstudio-community. Quants nhỏ hơn (Q4_K_M và dưới) chạy tốt nhất trên điện thoại. Các mô hình được gated hoặc riêng tư không được hỗ trợ.",
+    "params": "{{value}} tham số",
+    "context": "{{value}}k ngữ cảnh",
+    "downloads": "{{value}} tải xuống",
+    "gated": "Repo này được gated. Tải xuống cần đăng nhập Hugging Face, chưa được hỗ trợ.",
+    "requested": "Được yêu cầu"
+  },
+  "models": {
+    "recommended": "Được đề xuất",
+    "memory_fit": {
+      "tight": "Có thể không vừa với bộ nhớ",
+      "tight_compact": "Có thể không vừa",
+      "impossible": "Quá lớn cho thiết bị này",
+      "impossible_compact": "Quá lớn"
+    },
+    "sections": {
+      "found_on_device": "Tìm thấy trên thiết bị này",
+      "added_from_hf": "Thêm từ Hugging Face",
+      "other": "Khác"
+    },
+    "vector_storage": {
+      "reset_title": "Đặt lại lưu trữ vectơ",
+      "reset_message": "Bạn có chắc chắn muốn đặt lại lưu trữ vectơ cho không gian làm việc này không?",
+      "cleared": "Lưu trữ vectơ đã được xóa!"
+    },
+    "vision": {
+      "remote": "Hình ảnh chưa được hỗ trợ khi trò chuyện với không gian làm việc từ xa.",
+      "no_model": "Chọn một mô hình để đính kèm hình ảnh.",
+      "on_device": "Mô hình trên thiết bị được chọn không thể đọc hình ảnh.",
+      "needs_download": "Mô hình này có thể nhìn thấy hình ảnh, nhưng cần một lần tải xuống bổ sung."
+    },
+    "speech_to_text": {
+      "permission_title": "Quyền truy cập micrô",
+      "permission_message": "AnythingLLM cần quyền truy cập micrô để chuyển đổi bài phát biểu của bạn thành lời nhắc.",
+      "permission_required_title": "Cần quyền truy cập micrô",
+      "permission_required_message": "Kích hoạt quyền truy cập micrô trong cài đặt thiết bị của bạn để sử dụng chuyển đổi giọng nói thành văn bản."
+    },
+    "attachments": {
+      "vectors_cleared": "Vectơ không gian làm việc đã được xóa",
+      "clear_vectors_title": "Xóa vectơ không gian làm việc",
+      "clear_vectors_message": "Bạn có chắc chắn muốn xóa các vectơ cho không gian làm việc này không? Điều này sẽ xóa tất cả các vectơ cho không gian làm việc này và không thể hoàn tác.",
+      "not_found": "Không tìm thấy đính kèm",
+      "empty_content": "Nội dung đính kèm trống hoặc không thể đọc được",
+      "large_document_title": "Tài liệu lớn",
+      "large_document_message": "\"{{name}}\" có khoảng {{tokens}} token. Với {{provider}}, toàn bộ tài liệu được gửi với mỗi tin nhắn trong không gian làm việc này, có thể chậm và tốn kém. Vẫn đính kèm nó?",
+      "large_document_message_generic": "\"{{name}}\" có khoảng {{tokens}} token. Với nhà cung cấp mô hình của bạn, toàn bộ tài liệu được gửi với mỗi tin nhắn trong không gian làm việc này, có thể chậm và tốn kém. Vẫn đính kèm nó?",
+      "attach": "Đính kèm",
+      "create_failed": "Không thể tạo tài liệu để đính kèm",
+      "camera_permission_title": "Quyền truy cập camera",
+      "camera_permission_message": "AnythingLLM cần camera để chụp ảnh cho lời nhắc của bạn.",
+      "max_reached_other": "Bạn có thể đính kèm tới {{count}} mục trên mỗi lời nhắc",
+      "camera_permission_required": "Quyền truy cập camera được yêu cầu để chụp ảnh",
+      "camera_open_failed": "Không thể mở camera",
+      "gallery_open_failed": "Không thể mở thư viện",
+      "image_unreadable": "Hình ảnh được chọn không thể đọc được",
+      "images_skipped_unreadable_other": "{{count}} hình ảnh không thể đọc được và đã bị bỏ qua",
+      "image_attach_failed": "Không thể đính kèm hình ảnh",
+      "max_reached_skipped_other": "Bạn có thể đính kèm tối đa {{max}} mục trên mỗi lời nhắc - {{count}} bị bỏ qua",
+      "images_skipped_no_vision_other": "Mô hình hiện tại của bạn không thể đọc hình ảnh - {{count}} hình ảnh đã bị bỏ qua",
+      "read_failed": "Không thể đọc {{name}}",
+      "remove_title": "Xóa đính kèm",
+      "remove_message": "Bạn có chắc chắn muốn xóa đính kèm này khỏi trò chuyện không?",
+      "shared_content_failed": "Không thể đính kèm nội dung được chia sẻ"
+    },
+    "memory_warning": {
+      "short": "Cảnh báo bộ nhớ",
+      "full": "Cảnh báo: Kích thước mô hình có thể vượt quá bộ nhớ khả dụng. Điều này có thể ảnh hưởng đến hiệu suất và độ ổn định của thiết bị của bạn."
+    },
+    "low_memory": {
+      "title": "Ít bộ nhớ",
+      "advice": "Khi bộ nhớ hết, điện thoại có thể đóng AnythingLLM giữa lúc đang trả lời để giải phóng, trông giống như bị treo. Đóng các ứng dụng khác, hoặc chuyển sang kết nối với mô hình từ xa để có phản hồi ổn định hơn.",
+      "free": "Còn trống",
+      "total": "Tổng",
+      "model_loaded": "Mô hình (đã tải)",
+      "model_needs": "Yêu cầu mô hình",
+      "send_anyway": "Vẫn gửi",
+      "got_it": "Đã hiểu",
+      "indicator_label": "Cảnh báo bộ nhớ thấp"
+    },
+    "catalog": {
+      "gemma_3_1b": "(Q8_0) Gemma3 1B là phiên bản nhỏ gọn hơn của mô hình Gemma3 4B cho các nhiệm vụ phức tạp hơn.",
+      "qwen3_0_6b": "(Q8_0) Qwen3 0.6B là một mô hình rất nhỏ, rất nhanh cho câu trả lời nhanh và các tác vụ đơn giản. Được thay thế bằng Qwen3.5 0.8B.",
+      "qwen3_1_7b": "(Q8_0) Qwen3 1.7B là phiên bản có khả năng cao hơn nhiều của mô hình Qwen3-0.6B cho các nhiệm vụ phức tạp hơn.",
+      "llama_3_2_1b": "(Q8_0) Llama 3.2 1B là phiên bản nhỏ nhất của mô hình Llama 3.2.",
+      "qwen3_5_0_8b": "(Q8_0) Qwen3.5 0.8B là mô hình nhỏ nhất trong họ Qwen3.5. Rất nhanh trên bất kỳ điện thoại nào với theo dõi hướng dẫn vững chắc.",
+      "qwen3_5_2b": "(Q8_0) Qwen3.5 2B là một mô hình nhỏ đa mục đích mạnh với gọi công cụ và lý luận tốt cho kích thước của nó.",
+      "qwen3_5_4b": "(Q6_K) Qwen3.5 4B là mô hình Qwen3.5 có khả năng nhất vẫn vừa với điện thoại. Độ chính xác tốt nhất, lý luận và gọi công cụ; cần một thiết bị có 8GB+ RAM.",
+      "qwen3_vl_2b_instruct": "(Q4_K_XL) Qwen3-VL 2B là một mô hình ngôn ngữ tầm nhìn có thể mô tả và trả lời các câu hỏi về ảnh.",
+      "granite_3_3_2b_instruct": "(Q4_K_XL) Granite 3.3 2B từ IBM được điều chỉnh cho RAG, tóm tắt và gọi công cụ. Được cấp phép Apache 2.0.",
+      "granite_4_2_3b": "(Q4_K_M) Granite 4.2 3B là mô hình Granite nhỏ mới nhất với lý luận mạnh hơn và gọi công cụ. Tải xuống lớn hơn.",
+      "lfm2_5_1_2b_instruct": "(Q8_0) LFM2.5 1.2B là một mô hình nhỏ rất nhanh được điều chỉnh cho trò chuyện trên thiết bị, gọi công cụ và 16 ngôn ngữ. Quant chất lượng đầy đủ.",
+      "lfm2_5_2_6b": "(Q5_K_M) LFM2.5 2.6B là mô hình Liquid có khả năng nhất cho điện thoại với theo dõi hướng dẫn mạnh mẽ, gọi công cụ và lý luận.",
+      "gemma_4_e2b": "(QAT Q2_K_XL) Gemma 4 E2B là mô hình ưu tiên di động của Google với các tham số 2B hiệu quả. Được đào tạo nhận thức về lượng tử cho kích thước này.",
+      "gemma_4_e4b": "(QAT Q2_K_XL) Gemma 4 E4B là Gemma có khả năng nhất vừa với điện thoại. Tải xuống lớn, cần một thiết bị bộ nhớ cao gần đây."
+    },
+    "presets": {
+      "lightweight": {
+        "name": "Nhẹ",
+        "description": "Để có phản hồi nhanh và các tác vụ đơn giản."
+      },
+      "balanced": {
+        "name": "Cân bằng",
+        "description": "Để cân bằng giữa tốc độ và độ chính xác."
+      },
+      "powerful": {
+        "name": "Mạnh mẽ",
+        "description": "Các mô hình nặng hơn để có độ chính xác tốt nhất."
+      }
+    },
+    "imported_description": "Thêm từ Hugging Face ({{repo}}).",
+    "imported_description_specs": "Thêm từ Hugging Face ({{repo}}). {{specs}}.",
+    "no_model_loaded_error": "Không có mô hình nào được tải. Vui lòng chọn mô hình trước tiên.",
+    "unknown_model_description": "Tìm thấy trên thiết bị này trong {{modelId}} nhưng nó không có trong danh sách mô hình của chúng tôi. Bạn vẫn có thể sử dụng hoặc gỡ cài đặt nó.",
+    "status": {
+      "summarizing": "Tóm tắt cuộc trò chuyện trước đó",
+      "using_summary_other": "Sử dụng bản tóm tắt {{count}} tin nhắn trước đó",
+      "loading_model": "Đang tải mô hình vào bộ nhớ",
+      "reply_truncated": "Câu trả lời bị cắt ngắn - cửa sổ bối cảnh đã đầy",
+      "searching_documents": "Đang tìm kiếm tài liệu của bạn",
+      "reranking": "Đang xếp hạng lại kết quả",
+      "reading_documents_other": "Đang đọc {{count}} tài liệu được đính kèm"
+    }
+  },
+  "providers": {
+    "descriptions": {
+      "native": "Cài đặt và chạy mô hình trên điện thoại của bạn.",
+      "ollama": "Chạy LLM cục bộ trên máy của bạn với Ollama.",
+      "lmstudio": "Khám phá, tải xuống và chạy hàng nghìn LLM tiên tiến chỉ trong vài cú nhấp chuột.",
+      "openai": "Tận dụng các mô hình mạnh mẽ của OpenAI.",
+      "anthropic": "Một trợ lý AI thân thiện được lưu trữ bởi Anthropic.",
+      "gemini": "Mô hình AI lớn nhất và có khả năng nhất của Google",
+      "openrouter": "Một API thống nhất của các dịch vụ AI từ các nhà cung cấp hàng đầu",
+      "bedrock": "Chạy các mô hình nền tảng mạnh mẽ một cách riêng tư với AWS Bedrock.",
+      "deepseek": "Chạy các LLM mạnh mẽ của DeepSeek.",
+      "fireworksai": "Công cụ suy luận nhanh nhất và hiệu quả nhất để xây dựng các hệ thống AI tổng hợp sẵn sàng sản xuất.",
+      "minimax": "Chạy các LLM mạnh mẽ của MiniMax.",
+      "moonshotai": "Chạy các mô hình Kimi của Moonshot AI.",
+      "novita": "Đáng tin cậy, Có thể mở rộng và Hiệu quả về chi phí cho LLM từ Novita AI",
+      "togetherai": "Chạy các mô hình nguồn mở từ Together AI.",
+      "xai": "Chạy các LLM mạnh mẽ của xAI như Grok và hơn thế nữa.",
+      "litellm": "Chạy proxy tương thích OpenAI của LiteLLM cho các LLM khác nhau.",
+      "localai": "Chạy LLM cục bộ trên máy của bạn.",
+      "lemonade": "Chạy LLM trên phần cứng AMD với Lemonade Server.",
+      "llmman": "Chạy LLM cục bộ bằng cách sử dụng llmman.",
+      "generic_openai": "Kết nối với bất kỳ dịch vụ tương thích OpenAI nào thông qua cấu hình tùy chỉnh"
+    },
+    "sections": {
+      "local": "Nhà cung cấp cục bộ",
+      "cloud": "Nhà cung cấp đám mây"
+    },
+    "validation": {
+      "unknown_provider": "Nhà cung cấp không xác định.",
+      "api_key_required": "Vui lòng nhập khóa API cho nhà cung cấp này.",
+      "base_url_required": "Vui lòng nhập URL cơ sở của nhà cung cấp của bạn.",
+      "region_required": "Vui lòng chọn vùng AWS của triển khai Bedrock của bạn.",
+      "model_required": "Vui lòng chọn một mô hình để sử dụng."
+    }
+  },
+  "llm_selection": {
+    "choose_provider": "Chọn nhà cung cấp của bạn",
+    "no_providers_found": "Không tìm thấy nhà cung cấp nào cho \"{{query}}\"",
+    "download_model_title": "Tải xuống mô hình?",
+    "download_model_message": "Điều này sẽ tải xuống mô hình vào thiết bị của bạn. Nó là {{size}} byte.",
+    "preferred_model": "Mô hình được ưa thích"
+  },
+  "downloads": {
+    "no_internet_title": "Không có kết nối internet.",
+    "no_internet_image_support": "Bạn sẽ cần kết nối internet để tải xuống hỗ trợ hình ảnh.",
+    "no_internet_model": "Bạn sẽ cần kết nối internet để tải xuống bất kỳ mô hình nào.",
+    "data_usage_title": "Cảnh báo sử dụng dữ liệu",
+    "data_usage_image_support": "Chúng tôi khuyên bạn nên sử dụng kết nối Wi-Fi để tải xuống hỗ trợ hình ảnh vì nó có kích thước {{size}}.",
+    "data_usage_model": "Chúng tôi khuyên bạn nên sử dụng kết nối Wi-Fi để tải xuống mô hình vì nó có kích thước {{size}}.",
+    "continue_anyway": "Tiếp tục dù sao",
+    "continue_with_download": "Tiếp tục tải xuống",
+    "image_support_title": "Tải xuống hỗ trợ hình ảnh?",
+    "image_support_message": "{{model}} có thể hiểu các ảnh khi tệp hỗ trợ hình ảnh của nó được tải xuống. Nó có kích thước {{size}}.",
+    "download_model_title": "Tải xuống mô hình?",
+    "download_model_message": "Điều này sẽ tải xuống mô hình vào thiết bị của bạn. Nó có kích thước {{size}}.",
+    "notification_downloading_title": "Đang tải xuống mô hình",
+    "notification_downloading_body": "Đang tải xuống {{model}}",
+    "notification_complete_title": "Tải xuống hoàn thành",
+    "notification_complete_body": "Đã tải xuống {{model}}",
+    "download_failed_title": "Tải xuống không thành công",
+    "download_failed_message": "Có lỗi khi tải xuống mô hình.",
+    "uninstall_model_title": "Gỡ cài đặt mô hình?",
+    "uninstall_model_message": "Điều này sẽ xóa mô hình khỏi thiết bị của bạn.",
+    "storage_low": "Lưu trữ thấp! Mô hình {{modelSize}} > {{freeSpace}} miễn phí",
+    "storage_check_failed": "Không thể kiểm tra lưu trữ",
+    "setup_failed_title": "Cài đặt tải xuống không thành công",
+    "setup_failed_message": "Không thể thiết lập tải xuống mô hình HF: {{error}}"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Chào mừng",
+      "description": "Một tác nhân AI sống trên điện thoại của bạn. Trò chuyện với tài liệu, tìm kiếm web và tích hợp vào ứng dụng của bạn.",
+      "get_started": "Bắt đầu",
+      "back_blocked": "Vui lòng tiếp tục quy trình bắt đầu để tiếp tục."
+    },
+    "model_selection": {
+      "title": "Bạn muốn sử dụng mô hình nào?",
+      "description": "Bạn có thể thay đổi nó sau, nhưng chọn cái phù hợp nhất với nhu cầu của bạn.",
+      "use_external": "Không muốn tải xuống mô hình? Sử dụng nhà cung cấp bên ngoài"
+    },
+    "external": {
+      "title": "Kết nối nhà cung cấp bên ngoài",
+      "description": "Sử dụng mô hình được lưu trữ ở nơi khác thay vì tải xuống một mô hình vào điện thoại của bạn. Bạn có thể thay đổi nó sau.",
+      "choose_provider": "Chọn Nhà cung cấp LLM",
+      "provider_settings": "Cài đặt nhà cung cấp",
+      "incomplete_setup": "Cài đặt nhà cung cấp không hoàn thành"
+    },
+    "download": {
+      "error_title": "Có lỗi xảy ra",
+      "error_message": "Lỗi tải xuống mô hình {{error}}",
+      "success_title": "Mô hình đã được tải xuống",
+      "success_message": "Mô hình đã được tải xuống thành công",
+      "url_must_be_gguf": "URL phải kết thúc bằng .gguf"
+    },
+    "survey": {
+      "title": "AnythingLLM có thể giúp bạn điều gì?",
+      "description": "Chọn cái áp dụng nhất cho bạn.",
+      "options": {
+        "productivity": "Tăng năng suất",
+        "privacy": "Trò chuyện tập trung vào quyền riêng tư",
+        "custom_ai": "Tác nhân AI tùy chỉnh",
+        "automation": "Tự động hóa AI",
+        "other": "Khác"
+      }
+    },
+    "data_handling": {
+      "title": "Xử lý dữ liệu & Quyền riêng tư",
+      "description": "Với AnythingLLM, tất cả trò chuyện, tài liệu và dữ liệu khác được xử lý và lưu trữ trên thiết bị của bạn.",
+      "local_chats_title": "Trò chuyện hoàn toàn cục bộ",
+      "local_chats_description": "Tất cả trò chuyện được lưu trữ trên thiết bị của bạn.",
+      "embedding_title": "Nhúng tài liệu",
+      "embedding_description": "Tất cả tài liệu và xử lý được thực hiện trên thiết bị của bạn.",
+      "agents_title": "Tác nhân AI",
+      "agents_description": "Tất cả các tác nhân được chạy trên thiết bị của bạn và chỉ sử dụng internet khi cần (ví dụ: tìm kiếm web)",
+      "experience": "Trải nghiệm AnythingLLM",
+      "setting_up": "Thiết lập không gian làm việc đầu tiên của bạn",
+      "default_workspace_name": "Không gian làm việc của tôi"
+    }
+  },
+  "workspace_settings": {
+    "load_error": "Lỗi tải không gian làm việc",
+    "autosaving": "Đang lưu tự động...",
+    "autosaved": "Đã lưu tự động!",
+    "name": {
+      "section": "Tên không gian làm việc",
+      "title": "Tên",
+      "current": "Tên hiện tại",
+      "placeholder": "Nhập tên của bạn ở đây...",
+      "save_error": "Lỗi lưu tên"
+    },
+    "system_prompt": {
+      "title": "Lời nhắc hệ thống",
+      "label": "Lời nhắc",
+      "current": "Lời nhắc hệ thống hiện tại",
+      "placeholder": "Nhập lời nhắc hệ thống của bạn ở đây...",
+      "save_error": "Lỗi lưu lời nhắc hệ thống",
+      "description": "Lời nhắc hệ thống là lời nhắc hướng dẫn và hướng dẫn cho AI. Nó sẽ được sử dụng để hướng dẫn hành vi của AI và loại phản hồi."
+    },
+    "temperature": {
+      "title": "Nhiệt độ",
+      "current": "Nhiệt độ hiện tại",
+      "suggested": "Nhiệt độ được đề xuất",
+      "placeholder": "Mặc định (nhà cung cấp quyết định)",
+      "save_error": "Lỗi lưu nhiệt độ",
+      "hint": "Để trống để sử dụng nhiệt độ mặc định của nhà cung cấp LLM và mô hình của bạn. Đặt giá trị từ 0 đến 1 để ghi đè nó.",
+      "description": "Nhiệt độ là mức độ ngẫu nhiên của các phản hồi của AI. Càng cao nhiệt độ, các phản hồi càng ngẫu nhiên."
+    },
+    "context_length": {
+      "title": "Độ dài bối cảnh",
+      "current": "Độ dài bối cảnh hiện tại",
+      "suggested": "Độ dài bối cảnh được đề xuất",
+      "placeholder": "Nhập độ dài bối cảnh của bạn ở đây...",
+      "save_error": "Lỗi lưu độ dài bối cảnh",
+      "hint": "Hãy nhớ rằng độ dài bối cảnh cũng phụ thuộc vào mô hình bạn đang sử dụng và có ý nghĩa bộ nhớ cho thiết bị của bạn.",
+      "description": "Độ dài bối cảnh là số token tối đa mà AI có thể sử dụng khi tạo phản hồi."
+    },
+    "vectors": {
+      "section": "Lưu trữ vectơ",
+      "count": "Số lượng vectơ",
+      "description": "Đây là số lượng vectơ hiện được lưu trữ trong không gian làm việc. Điều này được sử dụng để lưu trữ bối cảnh của không gian làm việc."
+    },
+    "delete": {
+      "button": "Xóa không gian làm việc",
+      "confirm_title": "Xóa không gian làm việc?",
+      "confirm_message": "Bạn có chắc chắn muốn xóa không gian làm việc này không? Tất cả các luồng sẽ bị mất.",
+      "confirm_message_remote": "Bạn có chắc chắn muốn xóa không gian làm việc này không? Tất cả các luồng sẽ bị mất.\n\nĐiều này sẽ không xóa không gian làm việc trong phiên bản từ xa của bạn."
+    }
+  },
+  "connect": {
+    "title": "Kết nối với AnythingLLM",
+    "scan_description": "Quét mã QR cho phiên bản AnythingLLM của bạn hoặc máy khách để đồng bộ dữ liệu của nó với thiết bị di động này để sử dụng AI khi đi lại!",
+    "previous_connections": "Kết nối trước đó",
+    "verify": {
+      "title": "Xác minh kết nối",
+      "go_back": "Quay lại",
+      "registering": "Đang đăng ký thiết bị của bạn...",
+      "few_seconds": "Điều này có thể mất vài giây...",
+      "awaiting_approval": "Chờ phê duyệt...",
+      "approve_in_app": "Vui lòng phê duyệt thiết bị trong ứng dụng AnythingLLM...",
+      "collecting_data": "Đang thu thập dữ liệu phiên bản...",
+      "register_failed": "Không thể đăng ký thiết bị. Vui lòng thử lại.",
+      "register_failed_reason": "Không thể đăng ký thiết bị: {{reason}}",
+      "approval_failed": "Không thể đăng ký hoặc phê duyệt thiết bị. Vui lòng thử lại."
+    },
+    "import": {
+      "connection_expired": "Kết nối hiện tại của bạn với AnythingLLM Desktop đã hết hạn.",
+      "refresh_failed": "Không thể làm mới các không gian làm việc",
+      "go_home": "Trở về nhà",
+      "thread_count_other": "{{formatted}} luồng",
+      "chat_count_other": "{{formatted}} trò chuyện",
+      "sync": "Đồng bộ",
+      "synced": "Đã đồng bộ",
+      "sync_failed": "Thất bại",
+      "sync_workspace_failed": "Không thể đồng bộ không gian làm việc {{name}}"
+    }
+  },
+  "scheduled_jobs": {
+    "title": "Công việc được lên lịch",
+    "job_missing": "Công việc đó không còn tồn tại",
+    "update_failed": "Không thể cập nhật công việc",
+    "prompt": "Lời nhắc",
+    "tools": "Công cụ",
+    "paused": "Tạm dừng",
+    "running_now": "Đang chạy ngay bây giờ",
+    "stop_run": "Dừng chạy",
+    "run_already_finished": "Chạy đó đã hoàn thành",
+    "stop_failed": "Không thể dừng lần chạy",
+    "blocked": {
+      "no_provider_title": "Chọn nhà cung cấp LLM trước tiên",
+      "no_provider_body": "Các công việc được lên lịch chạy mà không có bạn, vì vậy chúng cần một LLM đám mây hoặc tự lưu trữ để nói chuyện. Chọn một trong Cài đặt.",
+      "on_device_title": "Các công việc được lên lịch cần một LLM đám mây",
+      "on_device_body": "Mô hình trên thiết bị không thể chạy ở chế độ nền, vì vậy các công việc bị tạm dừng khi nó được chọn. Chuyển sang nhà cung cấp đám mây hoặc tự lưu trữ trong Cài đặt để chạy chúng."
+    },
+    "list": {
+      "open_llm_settings": "Mở cài đặt LLM",
+      "enabled_count": "{{enabled}} trong {{total}} bật",
+      "your_jobs": "Công việc của bạn",
+      "explainer_background": "Công việc là lời nhắc mà trợ lý chạy cho bạn theo lịch, sử dụng các công cụ bạn chọn cho nó. Kết quả thu thập ở đây và chạy ngay cả khi ứng dụng đóng - Android có thể trì hoãn chạy vài phút để tiết kiệm pin.",
+      "explainer_foreground": "Công việc là lời nhắc mà trợ lý chạy cho bạn theo lịch, sử dụng các công cụ bạn chọn cho nó. Kết quả thu thập ở đây vào lần tiếp theo bạn mở ứng dụng.",
+      "new_job": "Công việc mới",
+      "waiting_for_cloud": "Chờ một LLM đám mây",
+      "next_run": "Chạy tiếp {{time}}",
+      "not_scheduled": "Không được lên lịch",
+      "empty_title": "Chưa có công việc được lên lịch",
+      "empty_body": "Cho phép trợ lý kiểm tra một trang web mỗi sáng, soạn thảo bản tóm tắt hàng tuần hoặc xây dựng một báo cáo vào ngày đầu tiên của tháng - tất cả mà không cần mở trò chuyện.",
+      "create_first": "Tạo công việc đầu tiên của bạn"
+    },
+    "runs": {
+      "already_running": "Công việc này đã được chạy",
+      "start_failed": "Không thể bắt đầu công việc",
+      "fallback_title": "Công việc",
+      "edit_job": "Chỉnh sửa công việc",
+      "next_run_with_date": "Chạy tiếp {{relative}} · {{date}}",
+      "not_scheduled_to_run": "Không được lên lịch để chạy",
+      "notify": "Thông báo",
+      "last_run": "Chạy lần cuối",
+      "never": "Không bao giờ",
+      "run_now": "Chạy ngay bây giờ",
+      "run_count_other": "{{count}} chạy",
+      "history": "Lịch sử",
+      "empty_with_next": "Công việc này chưa chạy. Lần chạy đầu tiên của nó là {{time}}. Bạn cũng có thể chạy nó ngay bây giờ để thử.",
+      "empty": "Công việc này chưa chạy. Bạn cũng có thể chạy nó ngay bây giờ để thử.",
+      "manual": "· thủ công"
+    },
+    "form": {
+      "save_failed": "Công việc không thể được lưu",
+      "job_updated": "Công việc đã được cập nhật",
+      "job_scheduled": "Công việc đã được lên lịch",
+      "could_not_save": "Không thể lưu công việc",
+      "delete_title": "Xóa công việc này?",
+      "delete_message": "\"{{name}}\" và mọi kết quả nó tạo ra sẽ bị xóa. Điều này không thể hoàn tác.",
+      "job_deleted": "Công việc đã được xóa",
+      "delete_failed": "Không thể xóa công việc",
+      "edit_title": "Chỉnh sửa công việc",
+      "new_title": "Công việc mới",
+      "what_section": "Nó nên làm gì?",
+      "name": "Tên",
+      "name_placeholder": "Tóm tắt tin tức buổi sáng",
+      "prompt_hint": "Viết như thể bạn đang gửi nó trong một cuộc trò chuyện. Hãy cụ thể - không có ai quanh để trả lời các câu hỏi tiếp theo.",
+      "prompt_placeholder": "Đọc https://news.ycombinator.com và viết bản tóm tắt ngắn gọn năm câu chuyện thú vị nhất, với một dòng nhận xét cho mỗi câu.",
+      "when_section": "Nó nên chạy khi nào?",
+      "options": "Tùy chọn",
+      "notify_title": "Thông báo cho tôi khi nó hoàn thành",
+      "notify_description": "Gửi thông báo khi chạy hoàn thành với kết quả. Các lần chạy không thành công hoặc trống chỉ hiển thị một dấu chấm trong ứng dụng.",
+      "enabled_description": "Tắt để giữ công việc và các kết quả của nó mà không cần chạy nó.",
+      "save_changes": "Lưu thay đổi",
+      "schedule_job": "Công việc theo lịch",
+      "delete_job": "Xóa công việc"
+    },
+    "tool_picker": {
+      "selected_count_other": "{{count}} được chọn",
+      "none_reply_only": "Không có - chỉ trả lời",
+      "app_connections": "Kết nối ứng dụng",
+      "explainer": "Mỗi công cụ bạn bật được cung cấp cho mô hình trên mỗi lần chạy. Các công cụ thường yêu cầu sự phê duyệt của bạn được phê duyệt tự động, vì không có ai ở đó để nhấn."
+    },
+    "builder": {
+      "daily": "Hàng ngày",
+      "weekly": "Hàng tuần",
+      "monthly": "Hàng tháng",
+      "hourly": "Hàng giờ",
+      "every_few_minutes": "Mỗi vài phút",
+      "mode_schedule": "Lịch biểu",
+      "mode_cron": "Biểu thức Cron",
+      "run": "Chạy",
+      "every": "Mỗi",
+      "minutes_chip": "{{minutes}} phút",
+      "at_minute": "Tại phút",
+      "on": "Trên",
+      "on_day": "Vào ngày",
+      "days_skipped": "Các tháng không có ngày {{day}} bị bỏ qua.",
+      "at_time": "Tại {{time}}",
+      "custom_minute": "Phút :{{minute}} được đặt bằng biểu thức cron - chọn một bước ở trên để thay đổi nó.",
+      "cron_help": "Năm trường: phút, giờ, ngày trong tháng, tháng, ngày trong tuần (0 = Chủ nhật). Các lần được tính theo múi giờ của điện thoại của bạn.",
+      "invalid_cron": "Đây không phải là biểu thức cron hợp lệ"
+    },
+    "run_detail": {
+      "run_missing": "Chạy đó không còn tồn tại",
+      "delete_title": "Xóa chạy này?",
+      "delete_message": "Kết quả và bất kỳ tệp nào nó tạo ra sẽ bị xóa.",
+      "run_deleted": "Chạy đã bị xóa",
+      "fallback_title": "Chạy",
+      "delete_run": "Xóa chạy",
+      "run_manually": "Chạy thủ công",
+      "scheduled": "Được lên lịch",
+      "tokens": "{{prompt}} lời nhắc · {{completion}} token hoàn thành",
+      "result": "Kết quả",
+      "empty_completed": "Mô hình hoàn thành mà không viết gì.",
+      "empty_stopped": "Không có gì được tạo ra trước khi chạy dừng.",
+      "stopping": "Đang dừng...",
+      "working": "Đang làm việc trên nó..."
+    },
+    "status": {
+      "queued": "Xếp hàng",
+      "running": "Đang chạy",
+      "completed": "Hoàn thành",
+      "failed": "Thất bại",
+      "timed_out": "Hết thời gian",
+      "stopped": "Dừng"
+    },
+    "unseen": "Chưa xem",
+    "relative_time": {
+      "in_under_a_minute": "trong chưa đầy một phút",
+      "just_now": "vừa xong",
+      "in_minutes": "trong {{minutes}} phút",
+      "minutes_ago": "{{minutes}} phút trước",
+      "in_hours": "trong {{hours}}h",
+      "hours_ago": "{{hours}}h trước",
+      "in_hours_minutes": "trong {{hours}}h {{minutes}}m",
+      "hours_minutes_ago": "{{hours}}h {{minutes}}m trước",
+      "in_days": "trong {{days}}d",
+      "days_ago": "{{days}}d trước"
+    },
+    "runner": {
+      "job_failed": "Công việc thất bại",
+      "created_files": "Công việc của bạn đã hoàn thành và tạo các tệp cho bạn."
+    },
+    "schedule": {
+      "custom": "Lịch biểu tùy chỉnh ({{expression}})",
+      "invalid": "Lịch biểu không hợp lệ",
+      "every_minute": "Mỗi phút",
+      "every_minutes_other": "Mỗi {{count}} phút",
+      "every_hour": "Mỗi giờ",
+      "every_hour_at": "Mỗi giờ tại {{minute}} qua",
+      "every_day_at": "Mỗi ngày lúc {{time}}",
+      "weekdays_at": "Các ngày trong tuần lúc {{time}}",
+      "weekends_at": "Cuối tuần lúc {{time}}",
+      "weekly_single": "Mỗi {{day}} lúc {{time}}",
+      "weekly_multiple": "Mỗi {{days}} và {{last}} lúc {{time}}",
+      "list_separator": ", ",
+      "monthly": "Vào ngày {{day}} của mỗi tháng lúc {{time}}",
+      "ordinal_st": "{{n}}",
+      "ordinal_nd": "{{n}}",
+      "ordinal_rd": "{{n}}",
+      "ordinal_th": "{{n}}",
+      "time_am": "{{hour}}:{{minute}} AM",
+      "time_pm": "{{hour}}:{{minute}} PM",
+      "hour_am": "{{hour}} AM",
+      "hour_pm": "{{hour}} PM"
+    },
+    "weekdays_short": {
+      "sun": "CN",
+      "mon": "Th 2",
+      "tue": "Th 3",
+      "wed": "Th 4",
+      "thu": "Th 5",
+      "fri": "Th 6",
+      "sat": "Th 7"
+    },
+    "weekdays_long": {
+      "sunday": "Chủ nhật",
+      "monday": "Thứ hai",
+      "tuesday": "Thứ ba",
+      "wednesday": "Thứ tư",
+      "thursday": "Thứ năm",
+      "friday": "Thứ sáu",
+      "saturday": "Thứ bảy"
+    }
+  },
+  "notifications": {
+    "channels": {
+      "download_progress": "Tiến trình tải xuống",
+      "chat_replies": "Phản hồi trò chuyện",
+      "chat_replies_description": "Cảnh báo khi một phản hồi kết thúc khi AnythingLLM ở chế độ nền",
+      "scheduled_jobs": "Công việc được lên lịch",
+      "scheduled_jobs_description": "Cảnh báo khi công việc được lên lịch hoàn thành chạy"
+    },
+    "blocked_nudge": {
+      "title": "Nhận thông báo khi các phản hồi hoàn thành",
+      "message": "Thông báo bị tắt cho AnythingLLM. Bật chúng để nhận cảnh báo khi câu trả lời hoàn thành khi điện thoại của bạn bị khóa.",
+      "not_now": "Không phải bây giờ",
+      "open_settings": "Mở cài đặt"
+    },
+    "chat": {
+      "ready_title": "Câu trả lời sẵn sàng",
+      "failed_title": "Câu trả lời thất bại",
+      "ready_body": "Câu trả lời của bạn sẵn sàng.",
+      "failed_body": "Câu trả lời của bạn không thể hoàn thành. Nhấn để xem chuyện gì đã xảy ra."
+    },
+    "scheduled_job": {
+      "finished_title": "{{name}} đã hoàn thành",
+      "fallback_body": "Công việc được lên lịch của bạn có kết quả cho bạn."
+    }
+  },
+  "home": {
+    "welcome_title": "Chào mừng đến với AnythingLLM",
+    "get_started": "Bắt đầu bằng cách tạo một không gian làm việc mới.",
+    "create_workspace": "Tạo không gian làm việc",
+    "default_workspace_name": "Không gian làm việc của tôi"
+  },
+  "share": {
+    "unsupported_content": "Chỉ các tệp, hình ảnh và liên kết có thể được chia sẻ với AnythingLLM",
+    "finish_onboarding": "Kết thúc cài đặt AnythingLLM trước khi chia sẻ nó",
+    "open_failed": "Không thể mở nội dung được chia sẻ"
+  },
+  "deep_links": {
+    "finish_onboarding": "Kết thúc cài đặt AnythingLLM trước khi mở các liên kết đến nó"
+  }
+}

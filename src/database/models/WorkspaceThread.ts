@@ -10,6 +10,10 @@ import uiStore from '@/store/UIStore';
 import truncate from 'truncate';
 import WorkspaceChat from './WorkspaceChat';
 import Document from './Document';
+import i18n from '@/i18n';
+
+/** Name threads were created with before the UI was translated - still counts as "not named yet" */
+const ENGLISH_DEFAULT_NAME = 'New Thread';
 
 /**
  * Rolling summary of the oldest chats in a thread, produced by `ContextCompactor` so
@@ -45,17 +49,20 @@ export type WorkspaceThreadType = {
 
 export default class WorkspaceThread extends Model {
   static table = 'workspace_threads';
-  static defaultName = 'New Thread';
+  /** In the UI language at the time it is read - it is stored as the name of the thread being created */
+  static get defaultName(): string {
+    return i18n.t('misc.new_thread');
+  }
   /** Max length (ellipsis included) of an auto-generated thread name. Kept short so it fits the sidebar on small screens. */
   static autoRenameMaxLength = 20;
   static writableFields = {
     name: {
       validate: (value: string) => {
         let error = '';
-        if (typeof value !== 'string') error = 'Name must be a string';
-        if (!value) error = 'Name is required';
-        if (value.length < 3) error = 'Name must be at least 3 characters long';
-        if (value.length > 100) error = 'Name must be less than 100 characters long';
+        if (typeof value !== 'string') error = i18n.t('misc.validation.name_not_string');
+        if (!value) error = i18n.t('misc.validation.name_required');
+        if (value.length < 3) error = i18n.t('misc.validation.name_too_short', { count: 3 });
+        if (value.length > 100) error = i18n.t('misc.validation.name_too_long', { count: 100 });
         return { valid: !error, error };
       },
     },
@@ -140,7 +147,7 @@ export default class WorkspaceThread extends Model {
     const slug = slugify(generateUUID());
     const parentWorkspace = await Workspace.first([{ field: 'slug', value: workspaceSlug }]);
     const creationConfig = {
-      name: 'New Thread',
+      name: WorkspaceThread.defaultName,
       slug,
       workspaceSlug,
       isRemote: false,
@@ -156,7 +163,7 @@ export default class WorkspaceThread extends Model {
       const { thread: fkThread } = await externalModule.sendCommand('new-thread', { workspaceSlug: parentWorkspaceSlug });
       this.log('Created thread in remote workspace', { fkThread });
       if (!fkThread) {
-        showToast("We could not create a thread in your remote workspace. Please check your connection and try again.");
+        showToast(i18n.t('misc.remote_thread_create_failed'));
         throw new Error('Failed to create thread in remote workspace');
       }
 
@@ -262,7 +269,7 @@ export default class WorkspaceThread extends Model {
     try {
       if (!thread || !prompt) return null;
       if (thread.isRemote) return null; // mirrored threads are named by the remote instance - leave them alone
-      if (thread.name !== WorkspaceThread.defaultName) return null; // already named by the user
+      if (thread.name !== WorkspaceThread.defaultName && thread.name !== ENGLISH_DEFAULT_NAME) return null; // already named by the user
 
       const existingChats = await WorkspaceChat.find([{ field: 'workspace_thread_slug', value: thread.slug }]);
       if (existingChats.length !== 0) return null;

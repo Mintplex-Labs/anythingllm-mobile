@@ -3,6 +3,7 @@ import useLlmPreference from '@/hooks/useLLMPreference';
 import OnDeviceProvider from '@/utils/AiProviders/onDevice';
 import { MmprojDownloader } from '@/utils/models/mmproj';
 import { type Model } from '@/utils/types';
+import i18n from '@/i18n';
 
 export type VisionSupport = {
     /** True when the current provider/model can take an image with the prompt */
@@ -19,12 +20,13 @@ export type VisionSupport = {
     refresh: () => void;
 };
 
+/** Getters so each read returns the reason in the current UI language. */
 export const VISION_UNSUPPORTED_REASONS = {
-    REMOTE: 'Images are not yet supported when chatting with a remote workspace.',
-    NO_MODEL: 'Select a model to attach images.',
-    ON_DEVICE: 'The selected on-device model cannot read images.',
-    NEEDS_DOWNLOAD: 'This model can see images, but needs an additional download.',
-} as const;
+    get REMOTE() { return i18n.t('models.vision.remote'); },
+    get NO_MODEL() { return i18n.t('models.vision.no_model'); },
+    get ON_DEVICE() { return i18n.t('models.vision.on_device'); },
+    get NEEDS_DOWNLOAD() { return i18n.t('models.vision.needs_download'); },
+};
 
 type State = Pick<VisionSupport, 'supportsVision' | 'reason' | 'needsProjectorDownload' | 'model'>;
 const UNSUPPORTED = (reason: string, model?: Model): State => ({ supportsVision: false, reason, needsProjectorDownload: false, model });

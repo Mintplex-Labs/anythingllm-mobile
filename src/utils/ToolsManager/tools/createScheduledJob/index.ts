@@ -5,6 +5,7 @@ import ToolApproval from "@/utils/ToolsManager/toolApproval";
 import { describeCron, isValidCron, nextCronRun } from "@/utils/ScheduledJobs/cron";
 import { parseToolArgs, type StreamEmitter } from "../createFiles/shared";
 import Telemetry from "@/utils/Telemetry";
+import i18n from "@/i18n";
 
 type Args = {
     name: string;
@@ -34,8 +35,8 @@ function eligibleToolIds(): string[] {
  */
 const tool = {
     id: TOOL_ID,
-    name: 'Create Scheduled Job',
-    description: 'Let the assistant set up a recurring job from the conversation, after you approve it.',
+    get name() { return i18n.t('tools.create_scheduled_job.name'); },
+    get description() { return i18n.t('tools.create_scheduled_job.description'); },
     defaultEnabled: true,
     category: 'default' as const,
     supportsOnDevice: false,
@@ -94,16 +95,26 @@ const tool = {
             if (rejected.length) return `Unknown tool id(s): ${rejected.join(', ')}. Available tool ids: ${[...eligible].join(', ')}. No job was created - call again with valid ids.`;
 
             const when = describeCron(schedule);
-            streamEmitter('report_status', `Asking to schedule "${name}" (${when})`);
+            // The tool result goes back to the model, so it always describes the schedule in English.
+            const whenForModel = describeCron(schedule, 'en');
+            streamEmitter('report_status', i18n.t('tools.create_scheduled_job.status_asking', { name, when }));
+            const whenInSentence = `${when.charAt(0).toLowerCase()}${when.slice(1)}`;
+            const approvalDescription = tools.length
+                ? notifyOnComplete
+                    ? i18n.t('tools.create_scheduled_job.approval_tools_notify', { name, when: whenInSentence, count: tools.length })
+                    : i18n.t('tools.create_scheduled_job.approval_tools', { name, when: whenInSentence, count: tools.length })
+                : notifyOnComplete
+                    ? i18n.t('tools.create_scheduled_job.approval_no_tools_notify', { name, when: whenInSentence })
+                    : i18n.t('tools.create_scheduled_job.approval_no_tools', { name, when: whenInSentence });
             const approval = await ToolApproval.request({
                 skillName: this.definition.function.name,
-                description: `Create the scheduled job "${name}"? It will run ${when.charAt(0).toLowerCase()}${when.slice(1)}${tools.length ? ` using ${tools.length} tool${tools.length === 1 ? '' : 's'}` : ' with no tools'}${notifyOnComplete ? ' and notify you when it finishes' : ''}.`,
+                description: approvalDescription,
                 payload: { name, schedule: when, cron: schedule, tools, prompt },
                 streamEmitter,
                 signal: context.signal,
             });
             if (!approval.approved) {
-                streamEmitter('report_status', 'Scheduled job was not approved');
+                streamEmitter('report_status', i18n.t('tools.create_scheduled_job.status_not_approved'));
                 return `${approval.message} The job was not created.`;
             }
 
@@ -118,10 +129,10 @@ const tool = {
                 action: { jobUuid: job.uuid, jobName: job.name, schedule: job.schedule },
             };
             streamEmitter('report_action', action);
-            streamEmitter('report_status', `Scheduled "${job.name}"`);
+            streamEmitter('report_status', i18n.t('tools.create_scheduled_job.status_scheduled', { name: job.name }));
 
             const next = nextCronRun(job.schedule);
-            return `Created the scheduled job "${job.name}" (${when}).${next ? ` First run: ${next.toLocaleString()}.` : ''} Tools: ${tools.length ? tools.join(', ') : 'none'}. The user can see it in Scheduled Jobs from the sidebar; tell them briefly what it will do and when. Do not repeat the prompt back verbatim.`;
+            return `Created the scheduled job "${job.name}" (${whenForModel}).${next ? ` First run: ${next.toLocaleString()}.` : ''} Tools: ${tools.length ? tools.join(', ') : 'none'}. The user can see it in Scheduled Jobs from the sidebar; tell them briefly what it will do and when. Do not repeat the prompt back verbatim.`;
         } catch (error: any) {
             console.error('[createScheduledJob] failed', error);
             return `Could not create the scheduled job: ${error?.message ?? 'unknown error'}.`;

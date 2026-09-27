@@ -53,6 +53,7 @@ import ImportedModels, { ImportedModel } from '@/utils/models/imported';
 import { IAvailableModel } from '@/utils/AiProviders/baseOpenAILikeProvider';
 import useLowMemoryStatus from '@/hooks/useLowMemoryStatus';
 import LowMemoryModal, { LOW_MEMORY_COLOR } from '@/components/LowMemoryModal';
+import { useTranslation } from 'react-i18next';
 
 function getPresetModelName(llmPreferences: { provider: string; config: any }) {
   if (llmPreferences.provider !== 'native') return llmPreferences.config.model;
@@ -81,6 +82,7 @@ function modelNameToDisplayName(modelName?: string | null) {
 }
 
 export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
+  const { t } = useTranslation();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { registerSheet, presentSheet, dismissSheet } = useBottomSheet();
   const { llmPreferences, LLMProvider } = useLlmPreference();
@@ -137,7 +139,7 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
         />
         <TouchableOpacity
           onPress={() => {
-            if (workspace?.isRemote) return showToast('This workspace is managed remotely. You cannot change the model here.');
+            if (workspace?.isRemote) return showToast(t('top_bar.model_chip.remote_managed'));
             presentSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)
           }}
           style={{ marginTop: -5, maxWidth: 200 }}
@@ -154,7 +156,7 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
               className={`${!modelName ? 'text-red-500' : 'text-white'}`}
               numberOfLines={1}
               ellipsizeMode="middle">
-              {modelNameToDisplayName(modelName) || 'No model loaded'}
+              {modelNameToDisplayName(modelName) || t('top_bar.model_chip.no_model_loaded')}
             </Text>
           </View>
         </TouchableOpacity>
@@ -202,6 +204,7 @@ function AvailableModels({
 }: {
   bottomSheetRef: React.RefObject<BottomSheetModal>;
 }) {
+  const { t } = useTranslation();
   const { llmPreferences, LLMProvider, isLoading, fetchLLMPreference } = useLlmPreference();
   const [availableModels, setAvailableModels] = useState<AvailableModel[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -311,7 +314,7 @@ function AvailableModels({
           ref={searchInputRef}
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholder="Search"
+          placeholder={t('common.search')}
           placeholderTextColor="#9F9FA0"
           className="flex-1 h-[38px] ml-2 text-white"
           scrollEnabled={false}
@@ -338,12 +341,12 @@ function AvailableModels({
       {!filteredModels.length && (
         <View className="w-full px-5" style={{ gap: 12 }}>
           <Text className="text-white text-sm text-center pt-4">
-            No models found for "{searchQuery}"
+            {t('top_bar.model_chip.no_models_found', { query: searchQuery })}
           </Text>
           {isNative && (
             <AddFromHuggingFaceCard
               onPress={() => openImport(searchQuery)}
-              hint={`Look up "${searchQuery}" on Hugging Face and download a GGUF version.`}
+              hint={t('top_bar.model_chip.hf_lookup_hint', { query: searchQuery })}
             />
           )}
         </View>
@@ -399,6 +402,7 @@ function ExternalProviderModels({
 }: {
   bottomSheetRef: React.RefObject<BottomSheetModal>;
 }) {
+  const { t } = useTranslation();
   const { llmPreferences, LLMProvider, updateLLMPreference, providerToName } = useLlmPreference();
   const { dismissSheet } = useBottomSheet();
   const [models, setModels] = useState<IAvailableModel[]>([]);
@@ -457,7 +461,7 @@ function ExternalProviderModels({
       dismissSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION);
     } catch (error) {
       console.error('[ModelChip] Failed to switch model', error);
-      showToast('Could not switch model. Please try again.');
+      showToast(t('top_bar.model_chip.switch_failed'));
     } finally {
       setIsSaving(false);
     }
@@ -467,7 +471,7 @@ function ExternalProviderModels({
     return (
       <VisibleSheetCenter style={{ gap: 12 }}>
         <ActivityIndicator size="large" color="white" />
-        <Text className="text-[#9F9FA0] text-sm">Loading models from {providerName}...</Text>
+        <Text className="text-[#9F9FA0] text-sm">{t('top_bar.model_chip.loading_models', { provider: providerName })}</Text>
       </VisibleSheetCenter>
     );
   }
@@ -477,17 +481,17 @@ function ExternalProviderModels({
       <VisibleSheetCenter style={{ gap: 12, paddingHorizontal: 32 }}>
         <WarningCircle size={40} color="#f87171" weight="bold" />
         <Text className="text-white text-base font-semibold text-center">
-          Could not list models for {providerName}
+          {t('top_bar.model_chip.list_failed_title', { provider: providerName })}
         </Text>
         <Text className="text-[#9F9FA0] text-sm text-center">
-          This provider did not return any models. Check that the endpoint is reachable and supports model listing, or set the model manually in Settings.
+          {t('top_bar.model_chip.list_failed_description')}
         </Text>
         <TouchableOpacity
           onPress={fetchModels}
           className="flex flex-row items-center bg-white/10 rounded-lg px-4 py-2 mt-2"
           style={{ gap: 6 }}>
           <ArrowsClockwise size={16} color="white" weight="bold" />
-          <Text className="text-white text-sm font-medium">Try again</Text>
+          <Text className="text-white text-sm font-medium">{t('top_bar.model_chip.try_again')}</Text>
         </TouchableOpacity>
       </VisibleSheetCenter>
     );
@@ -500,7 +504,7 @@ function ExternalProviderModels({
         <TextInput
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholder={`Search ${providerName} models`}
+          placeholder={t('top_bar.model_chip.search_provider_models', { provider: providerName })}
           placeholderTextColor="#9F9FA0"
           className="flex-1 h-[38px] ml-2 text-white"
           scrollEnabled={false}
@@ -514,7 +518,7 @@ function ExternalProviderModels({
       </View>
       {!filteredModels.length && (
         <Text className="text-white text-sm text-center pt-4 px-5">
-          No models found for "{searchQuery}"
+          {t('top_bar.model_chip.no_models_found', { query: searchQuery })}
         </Text>
       )}
       {filteredModels.length > 0 && (
@@ -580,6 +584,7 @@ function VisibleSheetCenter({ children, style }: { children: React.ReactNode; st
  * explains why that leads to "crashes" (the OS evicting us) and what to do about it.
  */
 function LowMemoryIndicator({ provider, enabled }: { provider: unknown; enabled: boolean }) {
+  const { t } = useTranslation();
   const status = useLowMemoryStatus(provider, enabled);
   const [open, setOpen] = useState(false);
   if (!status) return null;
@@ -590,7 +595,7 @@ function LowMemoryIndicator({ provider, enabled }: { provider: unknown; enabled:
         onPress={() => setOpen(true)}
         style={{ marginTop: -5, padding: 2 }}
         hitSlop={10}
-        accessibilityLabel="Low memory warning">
+        accessibilityLabel={t('models.low_memory.indicator_label')}>
         <Warning size={18} color={LOW_MEMORY_COLOR} weight="bold" />
       </TouchableOpacity>
       <LowMemoryModal status={status} visible={open} onClose={() => setOpen(false)} />

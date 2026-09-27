@@ -4,11 +4,14 @@ import useWorkspace from "@/hooks/useWorkspace";
 import { useEffect, useState } from "react";
 import { NativeEventEmitter } from "react-native";
 import Workspace from "@/database/models/Workspace";
+import { useTranslation } from "react-i18next";
+import { tKey } from "@/i18n";
 
 import { LoadingView, ErrorView, MainView } from "./Main";
 import { NumericInputView } from "./NumericInput";
 import { TextInputView } from "./TextInput";
 
+// title/placeholder/hint/label props are translation keys - the input views resolve them with t()
 const PAGES = {
   main: (props: any) => <MainView {...props} />,
   system_prompt: (props: any) => (
@@ -16,8 +19,10 @@ const PAGES = {
       {...props}
       multiLine={true}
       field="systemPrompt"
-      title="System Prompt"
-      placeholder="Enter your system prompt here..."
+      title={tKey('workspace_settings.system_prompt.title')}
+      currentLabel={tKey('workspace_settings.system_prompt.current')}
+      placeholder={tKey('workspace_settings.system_prompt.placeholder')}
+      saveErrorMessage={tKey('workspace_settings.system_prompt.save_error')}
       resetValue={Workspace.defaultSystemPrompt}
     />
   ),
@@ -25,8 +30,10 @@ const PAGES = {
     <TextInputView
       {...props}
       field="name"
-      title="Name"
-      placeholder="Enter your name here..."
+      title={tKey('workspace_settings.name.title')}
+      currentLabel={tKey('workspace_settings.name.current')}
+      placeholder={tKey('workspace_settings.name.placeholder')}
+      saveErrorMessage={tKey('workspace_settings.name.save_error')}
       resetValue={Workspace.defaultName}
     />
   ),
@@ -34,10 +41,13 @@ const PAGES = {
     <NumericInputView
       {...props}
       field="temperature"
-      title="Temperature"
-      placeholder="Default (provider decides)"
+      title={tKey('workspace_settings.temperature.title')}
+      currentLabel={tKey('workspace_settings.temperature.current')}
+      suggestionsLabel={tKey('workspace_settings.temperature.suggested')}
+      placeholder={tKey('workspace_settings.temperature.placeholder')}
+      saveErrorMessage={tKey('workspace_settings.temperature.save_error')}
       resetValue={Workspace.defaultTemperature}
-      hint="Leave empty to use the default temperature of your LLM provider and model. Set a value between 0 and 1 to override it."
+      hint={tKey('workspace_settings.temperature.hint')}
       reattachProviderOnSave={true}
     />
   ),
@@ -45,10 +55,13 @@ const PAGES = {
     <NumericInputView
       {...props}
       field="contextLength"
-      title="Context Length"
-      placeholder="Enter your context length here..."
+      title={tKey('workspace_settings.context_length.title')}
+      currentLabel={tKey('workspace_settings.context_length.current')}
+      suggestionsLabel={tKey('workspace_settings.context_length.suggested')}
+      placeholder={tKey('workspace_settings.context_length.placeholder')}
+      saveErrorMessage={tKey('workspace_settings.context_length.save_error')}
       resetValue={Workspace.defaultContextLength}
-      hint="Keep in mind that the context length is also dependent on the model you are using and has memory implications for your device."
+      hint={tKey('workspace_settings.context_length.hint')}
       reattachProviderOnSave={true}
       suggestions={[512, 1024, 2048, 4096, 8192]}
     />
@@ -59,6 +72,7 @@ export type IWorkspacePageKey = keyof typeof PAGES;
 // Local event emitter for Settings page navigation
 const eventEmitter = new NativeEventEmitter();
 export default function WorkspaceSettings() {
+  const { t } = useTranslation();
   useRedirect();
   const { wsSlug, threadSlug } = useChatInfoEmit();
   const { loadingWorkspace, workspace, error: errorWorkspace } = useWorkspace(wsSlug);
@@ -77,7 +91,7 @@ export default function WorkspaceSettings() {
   }, []);
 
   if (loadingWorkspace) return <LoadingView />;
-  if (!!errorWorkspace) return <ErrorView title="Error loading workspace" error={errorWorkspace} />;
+  if (!!errorWorkspace) return <ErrorView title={t('workspace_settings.load_error')} error={errorWorkspace} />;
   const Page = PAGES[page as keyof typeof PAGES];
   return <Page goToPage={navigateToPage} workspace={workspace} initialThreadSlug={threadSlug} />;
 }

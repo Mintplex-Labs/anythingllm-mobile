@@ -9,6 +9,7 @@ import uiStore from "@/store/UIStore";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useLLMPreference from "@/hooks/useLLMPreference";
 import ToolsManager, { TOOL_GROUPS, toolSupportsProvider, type ToolGroupId, type ToolManagerTool } from "@/utils/ToolsManager";
+import { useTranslation } from "react-i18next";
 
 type ToolsPage = 'menu' | ToolGroupId;
 
@@ -22,6 +23,7 @@ type ToolsPage = 'menu' | ToolGroupId;
  * from the model's tool list as well, so an earlier "on" setting is harmless.
  */
 export default function ToolsActionSheet() {
+    const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const { registerSheet, presentSheet, isSheetActive } = useBottomSheet();
@@ -81,7 +83,7 @@ export default function ToolsActionSheet() {
                 {page === 'menu' ? (
                     <>
                         <View style={{ marginBottom: 24 }} className='flex w-full flex-row items-center justify-center'>
-                            <Text className='text-white text-lg font-medium'>Tools</Text>
+                            <Text className='text-white text-lg font-medium'>{t('chat.tools.title')}</Text>
                         </View>
                         <View style={{ gap: 16 }} className='flex flex-col items-start justify-between'>
                             {ungroupedDefaultTools.map(tool => (
@@ -95,13 +97,13 @@ export default function ToolsActionSheet() {
                                         key={groupId}
                                         title={TOOL_GROUPS[groupId].name}
                                         description={TOOL_GROUPS[groupId].description}
-                                        status={enabledCount === 0 ? 'Off' : `${enabledCount} of ${tools.length} on`}
+                                        status={enabledCount === 0 ? t('common.off') : t('chat.tools.group_status', { enabled: enabledCount, total: tools.length })}
                                         onPress={() => setPage(groupId)}
                                     />
                                 );
                             })}
                             <View style={{ gap: 12 }} className='flex w-full flex-col items-start justify-between'>
-                                <Text className='text-white font-semibold'>App Connections</Text>
+                                <Text className='text-white font-semibold'>{t('chat.tools.app_connections')}</Text>
                                 {appConnectionTools.map(tool => (
                                     <TogglableItem key={tool.id} title={tool.name} description={tool.description} isOn={isToolOn(tool)} onToggle={() => handleToggle(tool)} />
                                 ))}
@@ -139,13 +141,14 @@ function ToolGroupPage({
     onToggle: (tool: ToolManagerTool) => void;
     onBack: () => void;
 }) {
+    const { t } = useTranslation();
     const group = TOOL_GROUPS[groupId];
     const unavailableCount = tools.filter(tool => !isAvailable(tool)).length;
     return (
         <View>
             <SheetHeader title={group.name} onBack={onBack} />
             <Text style={{ color: MUTED_TEXT, marginBottom: 20 }} className='text-sm'>
-                {group.description} Files are kept on this device until you clear temporary files in settings.
+                {t('chat.tools.group_files_note', { description: group.description })}
             </Text>
             <View style={{ gap: 16 }} className='flex flex-col items-start justify-between'>
                 {tools.map(tool => {
@@ -155,7 +158,7 @@ function ToolGroupPage({
                             key={tool.id}
                             primary
                             title={tool.name}
-                            description={available ? tool.description : `${tool.description} Needs a cloud model.`}
+                            description={available ? tool.description : t('chat.tools.needs_cloud_model', { description: tool.description })}
                             isOn={isOn(tool)}
                             disabled={!available}
                             onToggle={() => onToggle(tool)}
@@ -165,7 +168,7 @@ function ToolGroupPage({
             </View>
             {unavailableCount > 0 && (
                 <Text style={{ color: MUTED_TEXT, marginTop: 20 }} className='text-xs'>
-                    Greyed out tools are not available with the on-device model. Switch to a cloud provider to use them.
+                    {t('chat.tools.unavailable_on_device')}
                 </Text>
             )}
         </View>
@@ -203,6 +206,7 @@ function TogglableItem({ title, description, isOn, onToggle, primary = false, di
 }
 
 export function ToolsActionButton({ disabled = false }: { disabled: boolean }) {
+    const { t } = useTranslation();
     const { presentSheet } = useBottomSheet();
     return (
         <TouchableOpacity
@@ -214,7 +218,7 @@ export function ToolsActionButton({ disabled = false }: { disabled: boolean }) {
             <View style={{ backgroundColor: '#3f3f42', width: 52, height: 52 }} className='flex flex-col items-center justify-center rounded-full'>
                 <Wrench size={32} color="#FFF" />
             </View>
-            <Text className='text-white text-lg font-medium'>Tools</Text>
+            <Text className='text-white text-lg font-medium'>{t('chat.tools.title')}</Text>
         </TouchableOpacity>
 
     );

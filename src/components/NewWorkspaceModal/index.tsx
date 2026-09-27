@@ -3,6 +3,7 @@ import WorkspaceThread from '@/database/models/WorkspaceThread';
 import { PATHS } from '@/utils/paths';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   View,
   TouchableOpacity,
@@ -18,6 +19,7 @@ import {
 
 const eventEmitter = new NativeEventEmitter();
 export default function NewWorkspaceModal({ showing, close }: { showing: boolean, close: () => void }) {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const inputRef = useRef<TextInput>(null);
   const [name, setName] = useState("");
@@ -41,7 +43,7 @@ export default function NewWorkspaceModal({ showing, close }: { showing: boolean
     if (creating) return;
     setCreating(true);
     try {
-      const workspace = await Workspace.create({ name: name.trim() || 'New Workspace' });
+      const workspace = await Workspace.create({ name: name.trim() || t('new_workspace.default_name') });
       eventEmitter.emit('workspaceUpdate', {
         type: 'add-workspace',
         details: {
@@ -79,15 +81,15 @@ export default function NewWorkspaceModal({ showing, close }: { showing: boolean
       >
         <Pressable className="flex-1 justify-center items-center bg-black/60 px-6" onPress={handleClose}>
           <Pressable className="bg-[--hex-gray-10] border border-white/10 rounded-2xl p-6 w-full max-w-[420px]" onPress={() => {}}>
-            <Text className="text-xl font-bold mb-1 text-white">New Workspace</Text>
-            <Text className="text-sm text-white/60 mb-4">Give your workspace a name. You can change it later.</Text>
+            <Text className="text-xl font-bold mb-1 text-white">{t('new_workspace.title')}</Text>
+            <Text className="text-sm text-white/60 mb-4">{t('new_workspace.description')}</Text>
             <TextInput
               ref={inputRef}
               className="border border-white/20 bg-white/5 rounded-xl px-4 py-3.5 mb-5 text-base !text-white placeholder:text-white/40"
               style={{ minHeight: 48 }}
               value={name}
               onChangeText={setName}
-              placeholder="e.g. Research, Work, Personal"
+              placeholder={t('new_workspace.placeholder')}
               placeholderTextColor="rgba(255,255,255,0.4)"
               returnKeyType="done"
               onSubmitEditing={handleCreateWorkspace}
@@ -101,7 +103,7 @@ export default function NewWorkspaceModal({ showing, close }: { showing: boolean
                 className="px-5 py-3 rounded-xl bg-transparent"
                 onPress={handleClose}
               >
-                <Text className="text-white/60 text-base">Cancel</Text>
+                <Text className="text-white/60 text-base">{t('common.cancel')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 activeOpacity={0.7}
@@ -109,7 +111,7 @@ export default function NewWorkspaceModal({ showing, close }: { showing: boolean
                 className={`px-5 py-3 rounded-xl bg-white ${creating ? 'opacity-50' : ''}`}
                 onPress={handleCreateWorkspace}
               >
-                <Text className="text-black font-semibold text-base">Create</Text>
+                <Text className="text-black font-semibold text-base">{t('common.create')}</Text>
               </TouchableOpacity>
             </View>
           </Pressable>

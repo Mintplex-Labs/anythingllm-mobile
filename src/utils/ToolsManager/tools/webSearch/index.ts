@@ -2,6 +2,7 @@ import { IAgentWebSearchCitation } from "@/database/models/WorkspaceChat";
 import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { safeJsonParse } from "@/utils/formatters";
 import DeviceInfo from "react-native-device-info";
+import i18n from "@/i18n";
 
 type SearXNGResult = {
     url: string;
@@ -46,8 +47,8 @@ type SERPResultItem = {
 
 export default {
     id: 'webSearch',
-    name: 'Web Search',
-    description: 'Search the web for search results based on a query.',
+    get name() { return i18n.t('tools.web_search.name'); },
+    get description() { return i18n.t('tools.web_search.description'); },
     defaultEnabled: true,
     category: 'default',
     definition: {
@@ -78,7 +79,7 @@ export default {
         try {
             const query = typeof args === 'string' ? safeJsonParse(args)?.query : args?.query;
             if (!query) return `No query provided. No results were found.`;
-            streamEmitter('report_status', `Searching the web for "${query}"`);
+            streamEmitter('report_status', i18n.t('tools.web_search.status_searching', { query }));
 
             let data = await this._youSearch(query);
             if (data === null) {
@@ -88,7 +89,7 @@ export default {
             if (data.length === 0) return `No information was found online for the search query.`;
             console.log(`I found ${data.length} results - reviewing top ${this.config.maxResults} results now`);
             data = data.slice(0, this.config.maxResults);
-            streamEmitter('report_status', `Reviewing ${data.length} search result${data.length === 1 ? '' : 's'}`);
+            streamEmitter('report_status', i18n.t('tools.web_search.status_reviewing', { count: data.length }));
 
             // Report the citations to the UI
             const citations = this._extractWebSearchCitations(data);

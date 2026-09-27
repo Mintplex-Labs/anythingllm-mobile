@@ -1,11 +1,12 @@
 import { ICalendarEventAction } from "@/database/models/WorkspaceChat";
 import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { safeJsonParse } from "@/utils/formatters";
+import i18n from "@/i18n";
 
 export default {
     id: 'calendarEventCreation',
-    name: 'Calendar Event Creation',
-    description: 'Use the assistant to create a calendar event for you.',
+    get name() { return i18n.t('tools.calendar_event_creation.name'); },
+    get description() { return i18n.t('tools.calendar_event_creation.description'); },
     defaultEnabled: false,
     category: 'appConnections',
     definition: {
@@ -50,7 +51,7 @@ export default {
         try {
             const { beginTime, endTime, title, eventLocation, description, allDay = false } = typeof args === 'string' ? safeJsonParse(args) : args;
             if (!beginTime || !endTime || !title || !eventLocation || !description) return `No beginTime, endTime, title, eventLocation, or description provided. No calendar event was created.`;
-            streamEmitter('report_status', `Preparing calendar event "${title}"`);
+            streamEmitter('report_status', i18n.t('tools.calendar_event_creation.status_preparing', { title }));
             streamEmitter('report_action', {
                 type: 'calendar_event_creation',
                 action: {

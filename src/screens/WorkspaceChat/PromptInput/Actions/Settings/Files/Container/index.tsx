@@ -5,6 +5,8 @@ import Loading from "./loading";
 import Error from "./error";
 import Empty from "./empty";
 import { Circle, File } from "phosphor-react-native";
+import { useTranslation } from "react-i18next";
+import { tKey } from "@/i18n";
 
 interface FilesListContainerProps {
     selectedFileUuids: string[];
@@ -67,15 +69,19 @@ interface FileItemProps {
     disabled: boolean;
 }
 
-/** "Embedded" documents are searched from every thread; full-context ones only apply to the thread they were attached in. */
+/**
+ * "Embedded" documents are searched from every thread; full-context ones only apply to the thread they were attached in.
+ * `label` is a translation key.
+ */
 function describeDocument(file: DocumentType, currentThreadSlug: string | null): { label: string; active: boolean } {
-    if (!Document.isFullContext(file)) return { label: 'Embedded · searched in every thread', active: true };
-    if (!file.threadSlug) return { label: 'Sent in full · every thread', active: true };
-    if (file.threadSlug === currentThreadSlug) return { label: 'Sent in full · this thread', active: true };
-    return { label: 'Sent in full · another thread', active: false };
+    if (!Document.isFullContext(file)) return { label: tKey('chat.files.embedded'), active: true };
+    if (!file.threadSlug) return { label: tKey('chat.files.full_every_thread'), active: true };
+    if (file.threadSlug === currentThreadSlug) return { label: tKey('chat.files.full_this_thread'), active: true };
+    return { label: tKey('chat.files.full_another_thread'), active: false };
 }
 
 function FileItem({ file, currentThreadSlug, selected, onSelect, disabled }: FileItemProps) {
+    const { t } = useTranslation();
     const { label, active } = describeDocument(file, currentThreadSlug);
     return (
         <TouchableOpacity
@@ -92,7 +98,7 @@ function FileItem({ file, currentThreadSlug, selected, onSelect, disabled }: Fil
                 <File size={20} color={active ? '#FFF' : '#888'} />
                 <View className='flex flex-col shrink'>
                     <Text className="text-lg text-[--primary-text]" numberOfLines={1} style={{ opacity: active ? 1 : 0.6 }}>{file.name}</Text>
-                    <Text className="text-xs" style={{ color: '#9F9FA0' }}>{label}</Text>
+                    <Text className="text-xs" style={{ color: '#9F9FA0' }}>{t(label)}</Text>
                 </View>
             </View>
         </TouchableOpacity>

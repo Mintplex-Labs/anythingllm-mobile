@@ -2,6 +2,8 @@ import { Text, View, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 
 /**
  * Hook to download a model from a url
@@ -20,9 +22,9 @@ function useDownloadModelFromUrl() {
         // Validate the url ends with .gguf (for now)
         try {
             new URL(url);
-            if (!url.toLowerCase().endsWith('.gguf')) throw new Error('The url must end with .gguf');
+            if (!url.toLowerCase().endsWith('.gguf')) throw new Error(i18n.t('onboarding.download.url_must_be_gguf'));
         } catch (error) {
-            Alert.alert('An error occurred', `Error downloading model ${error instanceof Error ? error.message : 'Unknown error'}`);
+            Alert.alert(i18n.t('onboarding.download.error_title'), i18n.t('onboarding.download.error_message', { error: error instanceof Error ? error.message : i18n.t('common.unknown_error') }));
             setDownloading(false);
             setProgress(0);
             return;
@@ -64,7 +66,7 @@ function useDownloadModelFromUrl() {
                 setProgress(0);
             })
         } catch (error) {
-            Alert.alert('An error occurred', `Error downloading model ${error instanceof Error ? error.message : 'Unknown error'}`);
+            Alert.alert(i18n.t('onboarding.download.error_title'), i18n.t('onboarding.download.error_message', { error: error instanceof Error ? error.message : i18n.t('common.unknown_error') }));
             setCompleted(false);
             return;
         }
@@ -79,6 +81,7 @@ function useDownloadModelFromUrl() {
  * @returns A component that displays the progress of a download
  */
 export default function DownloadProgress({ downloadUrl, onComplete }: { downloadUrl: string, onComplete: () => void }) {
+    const { t } = useTranslation();
     const { progress, downloading, startDownload, completed } = useDownloadModelFromUrl();
 
     useEffect(() => {
@@ -87,11 +90,11 @@ export default function DownloadProgress({ downloadUrl, onComplete }: { download
 
     useEffect(() => {
         if (completed) Alert.alert(
-            'Model downloaded',
-            'The model has been downloaded successfully',
+            t('onboarding.download.success_title'),
+            t('onboarding.download.success_message'),
             [
                 {
-                    text: 'Continue',
+                    text: t('common.continue'),
                     onPress: () => onComplete(),
                 }
             ]

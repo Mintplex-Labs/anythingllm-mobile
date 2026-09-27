@@ -11,7 +11,7 @@ import { EXPORT_FORMATS, type ExportFormat, type ThreadExportContext } from './t
 import { openDeviceDownloadsLocation, shareDeviceFile, writeToDeviceDownloads } from '@/utils/fs/deviceDownloads';
 
 export { EXPORT_FORMATS, type ExportFormat, type ThreadExportContext } from './types';
-export { OPEN_LOCATION_LABEL } from '@/utils/fs/deviceDownloads';
+export { openLocationLabel } from '@/utils/fs/deviceDownloads';
 
 export type SavedThreadExport = {
   /** Absolute path of the file on disk */

@@ -1,4 +1,5 @@
 import { Alert } from "react-native";
+import i18n from "@/i18n";
 
 export interface AwaitableAlertButton {
     text?: string;
@@ -28,8 +29,8 @@ export default async function AwaitableAlert(
     resolveButton: AwaitableAlertButton
 ) {
     return await new Promise<any>((resolve) => {
-        const rejectionButton: AwaitableAlertButton = { text: 'Cancel', style: 'cancel', onPress: () => { resolve(false) }, ...rejectButton }
-        const resolutionButton: AwaitableAlertButton = { text: 'Continue', style: 'default', onPress: () => { resolve(true) }, ...resolveButton }
+        const rejectionButton: AwaitableAlertButton = { text: i18n.t('common.cancel'), style: 'cancel', onPress: () => { resolve(false) }, ...rejectButton }
+        const resolutionButton: AwaitableAlertButton = { text: i18n.t('common.continue'), style: 'default', onPress: () => { resolve(true) }, ...resolveButton }
         return Alert.alert(
             title,
             message,

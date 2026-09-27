@@ -14,6 +14,7 @@ import {
     type ChainStepStatus,
 } from "./ChainOfThought";
 import { useActivityExpansion } from "./ExpansionContext";
+import { useTranslation } from "react-i18next";
 import { chainDurationSeconds, chainHeaderLabel, deriveActivity, formatDuration, nodeDurationSeconds } from "./utils";
 
 /** Thought steps clamp to this many lines until tapped */
@@ -124,6 +125,7 @@ const ThoughtStep = memo(function ThoughtStep({ content, status, isLast, duratio
 });
 
 const ToolCallStep = memo(function ToolCallStep({ signature, result, status, isLast, duration }: Pick<IToolCallActivity, 'signature' | 'result'> & { status: ChainStepStatus; isLast: boolean; duration?: string }) {
+    const { t } = useTranslation();
     const [showAll, setShowAll] = useState(false);
     const running = !result;
     return (
@@ -141,7 +143,7 @@ const ToolCallStep = memo(function ToolCallStep({ signature, result, status, isL
             {running ? (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                     <ActivityIndicator size="small" color={CHAIN_COLORS.muted} style={{ transform: [{ scale: 0.7 }] }} />
-                    <Text style={[CHAIN_SMALL_TEXT, { color: CHAIN_COLORS.muted }]}>Running</Text>
+                    <Text style={[CHAIN_SMALL_TEXT, { color: CHAIN_COLORS.muted }]}>{t('chat.activity.running')}</Text>
                 </View>
             ) : (
                 <Pressable onPress={() => setShowAll((v) => !v)}>
@@ -166,11 +168,12 @@ const APPROVAL_COLORS = { approved: '#4ADE80', rejected: '#F87171' } as const;
  * so this step only needs to say the turn is waiting.
  */
 const ToolApprovalStep = memo(function ToolApprovalStep({ skillName, approved, message, status, isLast, duration }: Pick<IToolApprovalActivity, 'skillName' | 'approved' | 'message'> & { status: ChainStepStatus; isLast: boolean; duration?: string }) {
+    const { t } = useTranslation();
     const pending = approved === null;
     const color = status === 'active' ? CHAIN_COLORS.active : CHAIN_COLORS.muted;
     const label = pending
-        ? `Waiting for approval to run ${skillName}`
-        : approved ? `Approved ${skillName}` : `Rejected ${skillName}`;
+        ? t('chat.activity.waiting_approval_to_run', { tool: skillName })
+        : approved ? t('chat.activity.approved_tool', { tool: skillName }) : t('chat.activity.rejected_tool', { tool: skillName });
     return (
         <ChainOfThoughtStep
             icon={Hammer}
@@ -182,13 +185,13 @@ const ToolApprovalStep = memo(function ToolApprovalStep({ skillName, approved, m
             {pending ? (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                     <ActivityIndicator size="small" color={CHAIN_COLORS.muted} style={{ transform: [{ scale: 0.7 }] }} />
-                    <Text style={[CHAIN_SMALL_TEXT, { color: CHAIN_COLORS.muted }]}>Waiting for you</Text>
+                    <Text style={[CHAIN_SMALL_TEXT, { color: CHAIN_COLORS.muted }]}>{t('chat.activity.waiting_for_you')}</Text>
                 </View>
             ) : (
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
                     {approved ? <Check size={14} color={APPROVAL_COLORS.approved} weight="bold" /> : <X size={14} color={APPROVAL_COLORS.rejected} weight="bold" />}
                     <Text style={[CHAIN_SMALL_TEXT, { color: approved ? APPROVAL_COLORS.approved : APPROVAL_COLORS.rejected, flexShrink: 1 }]}>
-                        {message || (approved ? 'Tool call was approved' : 'Tool call was rejected')}
+                        {message || (approved ? t('chat.activity.tool_approved') : t('chat.activity.tool_rejected'))}
                     </Text>
                 </View>
             )}

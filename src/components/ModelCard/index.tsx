@@ -7,6 +7,7 @@ import truncate from 'truncate';
 import { DownloadRing } from '@/components/DownloadSurface';
 import { MemoryFitBadge, RecommendedBadge, RECOMMENDED_COLOR } from '@/components/ModelCard/FitBadges';
 import type { MemoryFit } from '@/utils/models/memoryFit';
+import { useTranslation } from 'react-i18next';
 
 interface ModelCardProps {
   model: any;
@@ -33,6 +34,7 @@ export default function ModelCard({
   memoryFit = null,
   isRecommended = false,
 }: ModelCardProps) {
+  const { t } = useTranslation();
   const getModelIcon = () => {
     // Only the preset alias rows (Lightweight/Balanced/Powerful) use their phosphor icon.
     // The catalog entry for the same model keeps its provider mark, so match on the
@@ -108,7 +110,7 @@ export default function ModelCard({
               </Text>
               {model.isUnknown && (
                 <View className="rounded-full px-2 py-0.5 bg-yellow-500/30">
-                  <Text className="text-yellow-200 text-[10px] font-medium">Unknown</Text>
+                  <Text className="text-yellow-200 text-[10px] font-medium">{t('common.unknown')}</Text>
                 </View>
               )}
               {/* Recommended already implies a good fit, so only one of the two pills shows. */}
@@ -127,7 +129,7 @@ export default function ModelCard({
           ) : isDownloaded ? (
             <TouchableOpacity onPress={onUninstall} className="px-3 py-1 ml-4">
               <Text className="text-white font-medium text-sm py-2 px-4 bg-white/10 rounded-lg">
-                Uninstall
+                {t('common.uninstall')}
               </Text>
             </TouchableOpacity>
           ) : (

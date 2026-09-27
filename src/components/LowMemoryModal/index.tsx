@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Warning } from 'phosphor-react-native';
+import { useTranslation } from 'react-i18next';
 import { describeLowMemory, LowMemoryStatus } from '@/utils/models/lowMemory';
 
 export const LOW_MEMORY_COLOR = '#FBBF24';
@@ -23,6 +24,7 @@ export default function LowMemoryModal({
   onClose: () => void;
   onConfirm?: () => void;
 }) {
+  const { t } = useTranslation();
   if (!status) return null;
   const { title, advice, stats } = describeLowMemory(status);
 
@@ -38,11 +40,11 @@ export default function LowMemoryModal({
           </View>
 
           <View style={styles.stats}>
-            <MemoryStat label="Free" value={stats.free} highlight />
+            <MemoryStat label={t('models.low_memory.free')} value={stats.free} highlight />
             <View style={styles.statDivider} />
-            <MemoryStat label="Total" value={stats.total} />
+            <MemoryStat label={t('models.low_memory.total')} value={stats.total} />
             <View style={styles.statDivider} />
-            <MemoryStat label={status.loaded ? 'Model (loaded)' : 'Model needs'} value={stats.model} />
+            <MemoryStat label={status.loaded ? t('models.low_memory.model_loaded') : t('models.low_memory.model_needs')} value={stats.model} />
           </View>
 
           <Text style={styles.body}>{advice}</Text>
@@ -51,15 +53,15 @@ export default function LowMemoryModal({
             {onConfirm ? (
               <>
                 <TouchableOpacity onPress={onClose} style={styles.secondaryButton} activeOpacity={0.7}>
-                  <Text style={styles.secondaryButtonText}>Cancel</Text>
+                  <Text style={styles.secondaryButtonText}>{t('common.cancel')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={onConfirm} style={styles.button} activeOpacity={0.7}>
-                  <Text style={styles.buttonText}>Send anyway</Text>
+                  <Text style={styles.buttonText}>{t('models.low_memory.send_anyway')}</Text>
                 </TouchableOpacity>
               </>
             ) : (
               <TouchableOpacity onPress={onClose} style={styles.button} activeOpacity={0.7}>
-                <Text style={styles.buttonText}>Got it</Text>
+                <Text style={styles.buttonText}>{t('models.low_memory.got_it')}</Text>
               </TouchableOpacity>
             )}
           </View>

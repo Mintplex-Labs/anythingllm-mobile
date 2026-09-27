@@ -1,0 +1,1214 @@
+{
+  "common": {
+    "add": "Toevoegen",
+    "allow": "Toestaan",
+    "apply": "Toepassen",
+    "back": "Terug",
+    "cancel": "Annuleren",
+    "clear": "Wissen",
+    "close": "Sluiten",
+    "confirm": "Bevestigen",
+    "continue": "Doorgaan",
+    "copied": "Gekopieerd",
+    "copy": "Kopiëren",
+    "create": "Maken",
+    "default": "Standaard",
+    "delete": "Verwijderen",
+    "disable": "Uitschakelen",
+    "disabled": "Uitgeschakeld",
+    "dismiss": "Sluiten",
+    "done": "Klaar",
+    "download": "Downloaden",
+    "downloading": "Bezig met downloaden...",
+    "edit": "Bewerken",
+    "enable": "Inschakelen",
+    "enabled": "Ingeschakeld",
+    "error": "Fout",
+    "export": "Exporteren",
+    "import": "Importeren",
+    "install": "Installeren",
+    "installed": "Geïnstalleerd",
+    "learn_more": "Meer informatie",
+    "loading": "Bezig met laden...",
+    "next": "Volgende",
+    "no": "Nee",
+    "none": "Geen",
+    "off": "Uit",
+    "ok": "OK",
+    "on": "Aan",
+    "open": "Openen",
+    "optional": "Optioneel",
+    "refresh": "Vernieuwen",
+    "remove": "Verwijderen",
+    "rename": "Hernoemen",
+    "required": "Vereist",
+    "reset": "Opnieuw instellen",
+    "retry": "Opnieuw proberen",
+    "save": "Opslaan",
+    "search": "Zoeken",
+    "select": "Selecteren",
+    "selected": "Geselecteerd",
+    "send": "Verzenden",
+    "settings": "Instellingen",
+    "share": "Delen",
+    "skip": "Overslaan",
+    "stop": "Stoppen",
+    "success": "Succes",
+    "uninstall": "Verwijderen",
+    "unknown": "Onbekend",
+    "unknown_error": "Onbekende fout",
+    "update": "Bijwerken",
+    "upload": "Uploaden",
+    "yes": "Ja"
+  },
+  "language": {
+    "title": "Taal",
+    "search_placeholder": "Talen zoeken",
+    "no_results": "Geen talen gevonden die overeenkomen met \"{{query}}\"",
+    "changed": "Taal gewijzigd naar {{language}}"
+  },
+  "settings": {
+    "llm_preference": {
+      "title": "LLM Voorkeur",
+      "description": "Dit is de LLM-voorkeur die voor alle werkruimten wordt gebruikt. Je kunt dit wijzigen om een ander LLM-provider of model op het apparaat te gebruiken."
+    },
+    "language": {
+      "app_language": "Taal van app"
+    },
+    "special_tools": {
+      "title": "Speciale hulpmiddelen",
+      "ask_with_anythingllm": "\"Vragen aan AnythingLLM\"",
+      "page_title": "Speciale hulpmiddelen",
+      "added_toast": "Vragen aan AnythingLLM toegevoegd aan tekstselectiemenu's",
+      "removed_toast": "Vragen aan AnythingLLM verwijderd uit tekstselectiemenu's",
+      "context_awareness": "Contextbewustzijn",
+      "ask_with_anythingllm_toggle": "Vragen aan AnythingLLM",
+      "android_only": "Alleen Android",
+      "description_available": "Voegt \"Vragen aan AnythingLLM\" toe aan het menu dat verschijnt wanneer je tekst selecteert in een app. Gebruik het om wat je schrijft op te polijsten, in te korten of te corrigeren, of om wat je leest samen te vatten, uit te leggen en te onderzoeken - met welk model je hier hebt geselecteerd.",
+      "description_unavailable": "Op Android kan AnythingLLM verschijnen in het menu dat wordt weergegeven wanneer je tekst selecteert in een app, om het met je gekozen model te bewerken of samen te vatten. iOS biedt apps deze hook niet."
+    },
+    "about": {
+      "release_notes": "Releaseopmerkingen voor v{{version}}",
+      "star_github": "Ster op GitHub",
+      "join_discord": "Lid worden van Discord"
+    },
+    "utility": {
+      "title": "Hulpprogramma",
+      "anonymous_telemetry": "Anonieme telemetrie",
+      "clear_temp_files": "Tijdelijke bestanden wissen",
+      "temp_files_cleared": "Tijdelijke bestanden gewist"
+    },
+    "legal": {
+      "title": "Juridisch & Privacybeleid",
+      "terms": "Servicevoorwaarden",
+      "privacy": "Privacybeleid"
+    },
+    "reset": {
+      "title": "AnythingLLM opnieuw instellen",
+      "confirm_message": "Weet je zeker dat je AnythingLLM opnieuw wilt instellen? Dit zal al je werkruimten, chats, geïnstalleerde modellen en voorkeuren verwijderen.",
+      "confirm_button": "Ja, alles opnieuw instellen"
+    },
+    "update_failed": "Kon de instelling niet bijwerken",
+    "version": {
+      "about": "Over AnythingLLM",
+      "update_available_title": "Update beschikbaar",
+      "update_available_message": "Versie {{version}} is beschikbaar. Werk alstublieft bij naar de nieuwste versie.",
+      "go_to_app_store": "Ga naar app store"
+    },
+    "telemetry": {
+      "enabled_toast": "Anonieme telemetrie ingeschakeld",
+      "disabled_toast": "Anonieme telemetrie uitgeschakeld",
+      "usage_data": "Gebruiksgegevens",
+      "share_toggle": "Anonieme telemetrie delen",
+      "description_events": "AnythingLLM verzendt een klein aantal anonieme gebeurtenissen, zoals \"een chat werd voltooid\" of \"een hulpmiddel werd gebruikt\", zodat we kunnen zien welke functies belangrijk zijn en waar dingen kapot gaan.",
+      "description_privacy": "Dit omvat nooit je chats, documenten, prompts of iets specifieks over hoe je de app gebruikt. Er is geen account en niets wat jou identificeert.",
+      "description_opt_out": "Als je dit aanzet, help je ons een betere applicatie te bouwen. Je kunt het op elk moment uitschakelen en er zal niets meer worden verzonden."
+    },
+    "advanced_model_preferences": {
+      "title": "Modelselectie",
+      "choose_provider": "Kies een LLM-provider",
+      "llm_model": "LLM Model",
+      "provider_settings": "Provider-instellingen",
+      "show_less": "Minder weergeven",
+      "view_more": "Meer weergeven"
+    },
+    "provider_options": {
+      "base_url": "Basis-URL",
+      "base_url_placeholder": "Voer je basis-URL in (bijv. {{example}})",
+      "api_key": "API-sleutel",
+      "api_key_optional": "API-sleutel (optioneel)",
+      "api_key_placeholder": "Voer je API-sleutel in",
+      "aws_region": "AWS-regio",
+      "select_region": "Selecteer een regio",
+      "choose_region": "Kies je AWS-regio",
+      "search_region": "Zoek of typ een regiecode",
+      "use_region": "Gebruik \"{{region}}\"",
+      "model_selection": "Modelselectie",
+      "select_model": "Selecteer een model",
+      "choose_model": "Kies je model",
+      "search_models": "Modellen zoeken",
+      "fetching_models": "Modellen ophalen...",
+      "model_placeholder": "Voer je model in (bijv. {{example}})",
+      "models_load_failed": "Kon modellen van deze provider niet laden. Controleer je referenties of voer de modelnaam handmatig in.",
+      "no_tool_calls": "Dit model werd gedetecteerd als <bold>geen ondersteuning voor hulpmiddeloproepen</bold>. Alleen eenvoudige chat + RAG zal worden ondersteund"
+    }
+  },
+  "chat": {
+    "error_loading_provider": "Fout bij het laden van LLM-provider",
+    "error_loading_thread": "Fout bij het laden van werkruimte-thread",
+    "unknown_error": "Onbekende fout",
+    "loading_history": "Chatgeschiedenis laden...",
+    "suggestions": {
+      "hello": "Hallo, wat kan ik je helpen?",
+      "research": "Zoek online naar leuke dingen om te doen in {{city}}, {{region}}",
+      "calendar_monday": "Wat staat er maandag op mijn agenda?",
+      "calendar_tomorrow": "Wat staat er morgen op mijn agenda?",
+      "calendar_today": "Wat staat er vandaag op mijn agenda?",
+      "email": "Schrijf een verkoope-mail aan John Doe over de voordelen van lokale AI-agenten",
+      "summarize_example": "Vat paulgraham.com/foundermode.html samen",
+      "summarize_file": "Vat {{name}} samen",
+      "summarize_websites_one": "Vat deze website samen",
+      "summarize_websites_other": "Vat deze websites samen",
+      "summarize_documents_one": "Vat dit document samen",
+      "summarize_documents_other": "Vat deze documenten samen",
+      "explain_images_one": "Leg deze afbeelding uit",
+      "explain_images_other": "Leg deze afbeeldingen uit"
+    },
+    "citations": {
+      "title": "Citaten",
+      "score": "Score: {{score}}",
+      "sources": "Bronnen"
+    },
+    "message_actions": {
+      "copied": "Naar klembord gekopieerd",
+      "retry_failed": "Kon dit bericht niet opnieuw proberen",
+      "delete_failed": "Kon dit antwoord niet verwijderen",
+      "fork_failed": "Kon thread niet splitsen: {{error}}",
+      "fork_name": "Kopie van {{name}}",
+      "copy_title": "Bericht kopiëren",
+      "copy_description": "Kopieer de tekst naar je klembord",
+      "retry_wait": "Wacht tot het huidige antwoord klaar is",
+      "retry_description": "Verwijder deze uitwisseling en stuur de prompt opnieuw",
+      "fork_title": "Thread splitsen",
+      "fork_remote_unavailable": "Niet beschikbaar voor externe threads",
+      "fork_description": "Start een nieuwe thread met een kopie van dit gesprek",
+      "delete_title": "Antwoord verwijderen",
+      "delete_description": "Verwijder dit bericht en het antwoord ervan uit de thread"
+    },
+    "activity": {
+      "running": "Wordt uitgevoerd",
+      "waiting_approval_to_run": "Wachten op goedkeuring om {{tool}} uit te voeren",
+      "approved_tool": "Goedgekeurd {{tool}}",
+      "rejected_tool": "Afgewezen {{tool}}",
+      "waiting_for_you": "Wachten op jou",
+      "tool_approved": "Hulpmiddeloproep werd goedgekeurd",
+      "tool_rejected": "Hulpmiddeloproep werd afgewezen",
+      "thinking": "Denken...",
+      "waiting_your_approval": "Wachten op je goedkeuring",
+      "calling_tool": "Bellen {{tool}}",
+      "working": "Bezig...",
+      "worked_for": "Gewerkt voor {{duration}}",
+      "thought_for": "Nagedacht gedurende {{duration}}",
+      "thoughts": "Gedachten"
+    },
+    "file_download": {
+      "saved_to": "{{filename}} opgeslagen naar {{location}}",
+      "save_failed": "Kon bestand niet opslaan: {{error}}",
+      "share_failed": "Kon deelblad niet openen: {{error}}",
+      "missing": "Niet meer op dit apparaat",
+      "missing_label": "{{title}}, bestand niet meer beschikbaar",
+      "download_label": "Download {{title}}",
+      "share_label": "Deel {{title}}",
+      "unknown_file": "Onbekend bestand",
+      "saving": "Bezig met opslaan...",
+      "saved": "Opgeslagen"
+    },
+    "scheduled_job_card": {
+      "open_label": "Open geplande taak {{name}}",
+      "subtitle": "Geplande taak · {{schedule}}",
+      "view": "Bekijken"
+    },
+    "metrics": {
+      "tokens_one": "{{count}} token",
+      "tokens_other": "{{count}} tokens"
+    },
+    "tool_approval": {
+      "wants_to_call": "Model wil <skill>{{skill}}</skill> bellen",
+      "show_details": "Toon details",
+      "hide_details": "Verberg details",
+      "approve": "Goedkeuren",
+      "reject": "Afwijzen"
+    },
+    "attachments": {
+      "attach_files": "Bestanden bijvoegen",
+      "gallery": "Galerij",
+      "take_photo": "Foto maken",
+      "add_attachment": "Bijlage toevoegen",
+      "hint_embed": "Bestanden worden opgesplitst en ingebed zodat je model op het apparaat ze kan doorzoeken.",
+      "hint_full": "Bestanden worden in hun geheel naar je model verzonden met elk bericht in deze werkruimte.",
+      "max_reached": "Je hebt het maximale aantal bijlagen voor één prompt bereikt.",
+      "downloading_image_support": "Bezig met downloaden van afbeeldingsondersteuning... {{progress}}%",
+      "cancel_download": "Download annuleren",
+      "download_image_support": "Download afbeeldingsondersteuning",
+      "needs_download_tap": "Dit model kan afbeeldingen zien, maar heeft een aanvullende download nodig. Tik om te downloaden ({{size}}).",
+      "download_failed": "De download is mislukt. Tik om het opnieuw te proberen.",
+      "download_cancelled": "Download geannuleerd."
+    },
+    "prompt_input": {
+      "placeholder": "Voer je prompt in",
+      "select_model_first": "Selecteer eerst een model",
+      "stop_generating": "Stoppen met genereren",
+      "stop_recording": "Stop met opnemen",
+      "voice_input": "Spraakinvoer",
+      "send_prompt": "Prompt verzenden"
+    },
+    "files": {
+      "title": "Bestanden",
+      "empty": "Geen bestanden in deze werkruimte",
+      "error_loading": "Fout bij het laden van bestanden",
+      "deleted_one": "{{count}} bestand met succes verwijderd!",
+      "deleted_other": "{{count}} bestanden met succes verwijderd!",
+      "select_all": "Alles selecteren",
+      "deselect_all": "Alles deselecteren",
+      "delete_selected": "Geselecteerde bestanden verwijderen",
+      "embedded": "Ingebed · gezocht in elk draadje",
+      "full_every_thread": "Volledig verzonden · elk draadje",
+      "full_this_thread": "Volledig verzonden · dit draadje",
+      "full_another_thread": "Volledig verzonden · ander draadje"
+    },
+    "history_cleared": "Chatgeschiedenis gewist",
+    "tools": {
+      "title": "Hulpmiddelen",
+      "group_status": "{{enabled}} van {{total}} aan",
+      "app_connections": "App-verbindingen",
+      "group_files_note": "{{description}} Bestanden worden op dit apparaat bewaard tot je tijdelijke bestanden in instellingen wist.",
+      "needs_cloud_model": "{{description}} Heeft een cloudmodel nodig.",
+      "unavailable_on_device": "Vervaagde hulpmiddelen zijn niet beschikbaar met het model op het apparaat. Schakel over naar een cloudprovider om ze te gebruiken."
+    },
+    "remote_unreachable": {
+      "title": "Externe server is onbereikbaar",
+      "message": "We kunnen je exemplaar momenteel niet bereiken. Wil je dit gesprek lokaal voortzetten?",
+      "cancel": "Nee, annuleren",
+      "continue": "Ja, doorgaan lokaal",
+      "not_sent": "Externe server is onbereikbaar - chat niet verzonden."
+    },
+    "errors": {
+      "processing": "Fout bij chatverwerking",
+      "timed_out": "Het verzoek is verlopen voordat een respons werd ontvangen. De verbinding kan verloren zijn.",
+      "show_more": "Meer zien",
+      "show_less": "Minder weergeven"
+    },
+    "status": {
+      "recalling_notes": "Werkruimteopmerkingen oproepen"
+    }
+  },
+  "quick_context": {
+    "modes": {
+      "summarize": "Samenvatten"
+    },
+    "actions": {
+      "polish": "Polijsten",
+      "shorten": "Verkorten",
+      "fix_grammar": "Grammatica corrigeren",
+      "more_formal": "Formeler",
+      "summarize": "Samenvatten",
+      "key_points": "Sleutelpunten",
+      "explain": "Uitleggen",
+      "research": "Onderzoeken"
+    },
+    "could_not_start": "Kon Snelle acties niet starten",
+    "dismiss": "Sluiten",
+    "setup_needed": "Maak AnythingLLM af om het in het selectiemenu te gebruiken.",
+    "open_anythingllm": "Open AnythingLLM",
+    "select_model": "Selecteer hierboven een model om aan de slag te gaan.",
+    "copied_paste": "Gekopieerd - plak het over je selectie",
+    "copy_and_close": "Kopiëren en sluiten",
+    "open_in_app": "Openen in app",
+    "placeholders": {
+      "edit_new": "Hoe moet deze tekst veranderen?",
+      "edit_started": "Pas tekst verder aan…",
+      "summarize_new": "Vraag iets over deze tekst…",
+      "summarize_started": "Stel meer vragen…"
+    }
+  },
+  "attachments": {
+    "processing": "Bezig met verwerken…",
+    "image": "Afbeelding",
+    "file_type_generic": "BESTAND",
+    "name_processing": "{{name}}, bezig met verwerken",
+    "remove_named": "Verwijder {{name}}",
+    "more_images_one": "{{count}} meer afbeelding",
+    "more_images_other": "{{count}} meer afbeeldingen",
+    "attached_image": "Bijgevoegde afbeelding",
+    "image_position": "{{current}} van {{total}}",
+    "close_image_preview": "Sluit afbeeldingenvoorbeeld",
+    "remove_image": "Verwijder afbeelding"
+  },
+  "errors": {
+    "boundary": {
+      "details": "Foutgegevens",
+      "details_copied": "Foutgegevens gekopieerd",
+      "report_github": "Rapporteer op GitHub",
+      "something_went_wrong": "Er is iets misgegaan",
+      "reported_automatically": "Deze fout werd automatisch gerapporteerd aan Mintplex Labs.",
+      "telemetry_disabled": "Je hebt telemetrie uitgeschakeld, dus we hebben deze fout niet automatisch gerapporteerd aan Mintplex Labs. Je moet in plaats daarvan een GitHub-probleem openen.",
+      "go_home": "Ga naar startpagina",
+      "message_failed": "Dit bericht kon niet worden weergegeven vanwege een fout.",
+      "hide_details": "Verberg foutgegevens",
+      "show_details": "Toon foutgegevens"
+    }
+  },
+  "highlights": {
+    "play_video": "Video afspelen",
+    "pause_video": "Video onderbreken",
+    "whats_new": "Wat is nieuw",
+    "tour_title": "Wat AnythingLLM kan doen",
+    "quick_actions": {
+      "title": "Vragen aan AnythingLLM overal",
+      "body": "Selecteer tekst in een app en tik op \"Vragen aan AnythingLLM\" om het met je model op te polijsten, in te korten, samen te vatten of uit te leggen. Zet het op elk moment uit onder Instellingen > Speciale hulpmiddelen."
+    },
+    "share_sheet": {
+      "title": "Deel alles in een chat",
+      "body": "Stuur foto's, documenten en links van elke app rechtstreeks naar AnythingLLM. Ze belanden in een nieuw draadje, bijgevoegd en klaar om over te vragen."
+    },
+    "scheduled_jobs": {
+      "title": "Geplande taken",
+      "body": "Vraag om een terugkerende taak - een ochtendnieuws-digest, een wekelijks check-in - en deze wordt volgens schema uitgevoerd, zelfs als de app gesloten is. Resultaten wachten op je met een melding."
+    }
+  },
+  "new_workspace": {
+    "default_name": "Nieuwe werkruimte",
+    "title": "Nieuwe werkruimte",
+    "description": "Geef je werkruimte een naam. Je kunt dit later wijzigen.",
+    "placeholder": "bijv. Onderzoek, Werk, Persoonlijk"
+  },
+  "files": {
+    "types": {
+      "text_file": "Tekstbestand",
+      "spreadsheet": "Spreadsheet",
+      "pdf_document": "PDF-document",
+      "word_document": "Word-document",
+      "file": "Bestand"
+    },
+    "location": {
+      "downloads": "Downloads",
+      "ios_exports": "Bestanden > Op mijn iPhone > AnythingLLM > Exports",
+      "open_downloads": "Openen in Downloads",
+      "open_files": "Openen in Bestanden"
+    },
+    "storage_permission": {
+      "title": "Opslaan naar Downloads",
+      "message": "AnythingLLM heeft opslagtoegang nodig om het bestand naar je Downloads-map op te slaan."
+    },
+    "export": {
+      "text_label": "Tekst",
+      "txt_description": "Platte teksttranscript",
+      "md_description": "Opgemaakt transcript voor notitie-apps",
+      "json_description": "Berichten met model en statistieken",
+      "pdf_description": "Opgemaakt document"
+    }
+  },
+  "misc": {
+    "new_thread": "Nieuw draadje",
+    "remote_thread_create_failed": "We konden geen draadje in je externe werkruimte maken. Controleer je verbinding en probeer het opnieuw.",
+    "job_run": {
+      "failed": "Taak mislukt",
+      "timed_out": "De taak duurde te lang en werd gestopt",
+      "cancelled": "Je hebt deze uitvoering gestopt",
+      "app_closed": "De app werd gesloten voordat de taak klaar was"
+    },
+    "validation": {
+      "memory_not_text": "Geheugen moet tekst zijn",
+      "memory_too_short": "Geheugen is te kort",
+      "memory_too_long_one": "Geheugen moet {{count}} teken of minder zijn",
+      "memory_too_long_other": "Geheugen moet {{count}} tekens of minder zijn",
+      "job_name_required": "Geef de taak een naam",
+      "job_name_too_long_one": "Naam moet {{count}} teken of minder zijn",
+      "job_name_too_long_other": "Naam moet {{count}} tekens of minder zijn",
+      "job_prompt_required": "Schrijf de prompt die de taak moet uitvoeren",
+      "job_prompt_too_long_one": "Prompt moet {{count}} teken of minder zijn",
+      "job_prompt_too_long_other": "Prompt moet {{count}} tekens of minder zijn",
+      "job_schedule_invalid": "Het schema is geen geldige cron-expressie",
+      "job_tools_not_list": "Hulpmiddelen moeten een lijst zijn",
+      "name_not_string": "Naam moet een string zijn",
+      "name_required": "Naam is vereist",
+      "name_too_short_one": "Naam moet minstens {{count}} teken lang zijn",
+      "name_too_short_other": "Naam moet minstens {{count}} tekens lang zijn",
+      "name_too_long_one": "Naam moet minder dan {{count}} teken lang zijn",
+      "name_too_long_other": "Naam moet minder dan {{count}} tekens lang zijn",
+      "system_prompt_not_string": "Systeemprompt moet een string zijn",
+      "system_prompt_required": "Systeemprompt is vereist",
+      "system_prompt_too_short_one": "Systeemprompt moet minstens {{count}} teken lang zijn",
+      "system_prompt_too_short_other": "Systeemprompt moet minstens {{count}} tekens lang zijn",
+      "system_prompt_too_long_one": "Systeemprompt moet minder dan {{count}} teken lang zijn",
+      "system_prompt_too_long_other": "Systeemprompt moet minder dan {{count}} tekens lang zijn",
+      "temperature_not_number": "Temperatuur moet een getal zijn",
+      "temperature_range": "Temperatuur moet tussen {{min}} en {{max}} liggen",
+      "context_length_not_number": "Contextlengte moet een getal zijn",
+      "context_length_min": "Contextlengte moet groter zijn dan {{min}}"
+    }
+  },
+  "tools": {
+    "groups": {
+      "create_files": {
+        "name": "Bestanden maken",
+        "description": "Laat de assistent documenten schrijven die je kunt downloaden en delen."
+      }
+    },
+    "reranker": {
+      "download_required_title": "Download vereist",
+      "download_required_message": "Intelligente hulpmiddelselectie vereist een kleine modeldownload ({{size}}). Je bent op mobiele data. Doorgaan?",
+      "status_downloading": "Bezig met downloaden van hulpmiddelselectiemodel",
+      "status_selecting": "Beste hulpmiddelen selecteren"
+    },
+    "calendar_event_creation": {
+      "name": "Agendagebeurtenis maken",
+      "description": "Gebruik de assistent om een agendagebeurtenis voor je te maken.",
+      "status_preparing": "Agendagebeurtenis \"{{title}}\" voorbereiden"
+    },
+    "calendar_event_reading": {
+      "name": "Agenda lezen",
+      "description": "Gebruik de assistent om je agendagebeurtenissen te lezen.",
+      "status_date": "Je agenda lezen voor {{date}}",
+      "status_today": "Je agenda lezen voor vandaag",
+      "status_tomorrow": "Je agenda lezen voor morgen",
+      "status_this_week": "Je agenda lezen voor deze week",
+      "status_next_week": "Je agenda lezen voor volgende week",
+      "status_this_month": "Je agenda lezen voor deze maand",
+      "status_next_month": "Je agenda lezen voor volgende maand"
+    },
+    "create_files": {
+      "status_creating": "Bezig met maken van {{name}}",
+      "status_created": "{{name}} gemaakt"
+    },
+    "create_docx_file": {
+      "name": "Word-document",
+      "description": "Schrijf een gestileerd .docx uit markdown met thema's en optioneel titelblad.",
+      "status_creating": "Word-document \"{{name}}\" maken"
+    },
+    "create_pdf_file": {
+      "name": "PDF-document",
+      "description": "Zet markdown of platte tekst om in een opgemaakt PDF.",
+      "status_creating": "PDF \"{{name}}\" maken"
+    },
+    "create_text_file": {
+      "name": "Tekst, Markdown & CSV",
+      "description": "Schrijf .txt, .md, .csv en .json bestanden uit het gesprek."
+    },
+    "create_pptx": {
+      "name": "PowerPoint-presentatie",
+      "description": "Plan en bouw een thema .pptx-deck, één sectie tegelijk.",
+      "status_planning_one": "Presentatie \"{{title}}\" plannen - {{count}} sectie, {{theme}} thema",
+      "status_planning_other": "Presentatie \"{{title}}\" plannen - {{count}} secties, {{theme}} thema",
+      "approval_description_one": "Maak de PowerPoint-presentatie \"{{title}}\" met {{count}} sectie? Elk sectie kost een modeloproep om te bouwen.",
+      "approval_description_other": "Maak de PowerPoint-presentatie \"{{title}}\" met {{count}} secties? Elk sectie kost een modeloproep om te bouwen.",
+      "status_not_approved": "Presentatie werd niet goedgekeurd",
+      "status_building_section": "[{{current}}/{{total}}] Sectie \"{{title}}\" aan het bouwen",
+      "status_section_complete_one": "[{{current}}/{{total}}] Sectie \"{{title}}\" voltooid - {{count}} dia",
+      "status_section_complete_other": "[{{current}}/{{total}}] Sectie \"{{title}}\" voltooid - {{count}} dia's",
+      "status_section_complete_from_outline_one": "[{{current}}/{{total}}] Sectie \"{{title}}\" voltooid - {{count}} dia (van schets)",
+      "status_section_complete_from_outline_other": "[{{current}}/{{total}}] Sectie \"{{title}}\" voltooid - {{count}} dia's (van schets)",
+      "status_assembling_one": "Deck samenstellen - {{count}} dia",
+      "status_assembling_other": "Deck samenstellen - {{count}} dia's"
+    },
+    "create_scheduled_job": {
+      "name": "Geplande taak maken",
+      "description": "Laat de assistent een terugkerende taak uit het gesprek instellen, nadat je deze hebt goedgekeurd.",
+      "status_asking": "Vraag om \"{{name}}\" in te plannen ({{when}})",
+      "approval_tools_one": "Maak de geplande taak \"{{name}}\"? Het zal {{when}} draaien met {{count}} hulpmiddel.",
+      "approval_tools_other": "Maak de geplande taak \"{{name}}\"? Het zal {{when}} draaien met {{count}} hulpmiddelen.",
+      "approval_tools_notify_one": "Maak de geplande taak \"{{name}}\"? Het zal {{when}} draaien met {{count}} hulpmiddel en je op de hoogte stellen wanneer het klaar is.",
+      "approval_tools_notify_other": "Maak de geplande taak \"{{name}}\"? Het zal {{when}} draaien met {{count}} hulpmiddelen en je op de hoogte stellen wanneer het klaar is.",
+      "approval_no_tools": "Maak de geplande taak \"{{name}}\"? Het zal {{when}} draaien zonder hulpmiddelen.",
+      "approval_no_tools_notify": "Maak de geplande taak \"{{name}}\"? Het zal {{when}} draaien zonder hulpmiddelen en je op de hoogte stellen wanneer het klaar is.",
+      "status_not_approved": "Geplande taak werd niet goedgekeurd",
+      "status_scheduled": "\"{{name}}\" ingepland"
+    },
+    "draft_email": {
+      "name": "E-mail concepten",
+      "description": "Gebruik de assistent om een e-mail voor je op te stellen.",
+      "status_drafting": "E-mail \"{{subject}}\" opstellen",
+      "open_action": "Open concept e-mail"
+    },
+    "draft_text": {
+      "name": "Sms-concept",
+      "description": "Gebruik de assistent om een sms voor je op te stellen.",
+      "status_drafting_to": "Een sms opstellen naar {{recipient}}",
+      "status_drafting": "Een sms-bericht opstellen",
+      "open_action": "Open concept sms"
+    },
+    "get_time": {
+      "name": "Huidige tijd",
+      "description": "Haal de huidige datum en tijd op op basis van je apparaattijdzone."
+    },
+    "get_location": {
+      "name": "Locatie ophalen",
+      "description": "Haal je geschatte locatie op. Dit retourneert de stad, staat en land.",
+      "status_looking_up": "Je geschatte locatie opzoeken"
+    },
+    "summarize": {
+      "name": "Samenvatting",
+      "description": "Vat inhoud van een gegeven URL of bestandsnaam samen.",
+      "status_reading": "{{source}} lezen",
+      "status_looking_for_file": "Zoeken naar \"{{name}}\" in je bestanden",
+      "status_analyzing": "Documentstructuur analyseren",
+      "status_document_long_one": "Document is lang - het eerste {{count}} gedeelte samenvatten",
+      "status_document_long_other": "Document is lang - de eerste {{count}} gedeelten samenvatten",
+      "approval_description_one": "Deze inhoud heeft {{count}} gedeelte om samen te vatten. Dit kan een poosje duren - doorgaan?",
+      "approval_description_other": "Deze inhoud heeft {{count}} gedeelten om samen te vatten. Dit kan een poosje duren - doorgaan?",
+      "status_not_approved": "Samenvatting werd niet goedgekeurd",
+      "status_complete": "Samenvatting voltooid",
+      "status_summarizing_sections": "Documentgedeelten samenvatten",
+      "status_summarizing_section": "Gedeelte {{current}} van {{total}} samenvatten",
+      "status_combining": "Samenvattingen van gedeelten combineren"
+    },
+    "web_scraping": {
+      "name": "Web scraping",
+      "description": "Scrape een enkele specifieke website voor informatie.",
+      "status_reading": "{{host}} lezen",
+      "status_reading_document": "Document {{name}} lezen",
+      "cellular_title": "Downloaden op mobiele data?",
+      "cellular_message": "\"{{name}}\" lezen vereist het downloaden van een document van {{size}}. Je bent op mobiele data. Doorgaan?",
+      "cellular_message_unknown_size": "\"{{name}}\" lezen vereist het downloaden van een document van onbekende grootte. Je bent op mobiele data. Doorgaan?"
+    },
+    "web_search": {
+      "name": "Web zoeken",
+      "description": "Zoek op het web naar zoekresultaten op basis van een zoekopdracht.",
+      "status_searching": "Het web doorzoeken voor \"{{query}}\"",
+      "status_reviewing_one": "{{count}} zoekresultaat controleren",
+      "status_reviewing_other": "{{count}} zoekresultaten controleren"
+    },
+    "approval": {
+      "auto_approved_status": "{{tool}} automatisch goedgekeurd"
+    }
+  },
+  "top_bar": {
+    "model_chip": {
+      "remote_managed": "Deze werkruimte wordt op afstand beheerd. Je kunt het model hier niet wijzigen.",
+      "no_model_loaded": "Geen model geladen",
+      "no_models_found": "Geen modellen gevonden voor \"{{query}}\"",
+      "hf_lookup_hint": "Zoek \"{{query}}\" op Hugging Face en download een GGUF-versie.",
+      "list_failed_toast": "Kon modellen voor {{provider}} niet weergeven.",
+      "switch_failed": "Kon model niet wijzigen. Probeer het opnieuw.",
+      "loading_models": "Modellen laden van {{provider}}...",
+      "list_failed_title": "Kon modellen voor {{provider}} niet weergeven",
+      "list_failed_description": "Deze provider gaf geen modellen terug. Controleer of het eindpunt bereikbaar is en modelweergave ondersteunt, of stel het model handmatig in onder Instellingen.",
+      "try_again": "Probeer opnieuw",
+      "search_provider_models": "{{provider}} modellen zoeken"
+    },
+    "dev_shortcut_hint_one": "Druk {{count}} meer keer om ontwikkelaarshulpmiddelen te openen",
+    "dev_shortcut_hint_other": "Druk {{count}} meer keren om ontwikkelaarshulpmiddelen te openen",
+    "thread_menu": {
+      "options": "Draadje-opties",
+      "export_failed": "Kon draadje niet exporteren: {{error}}",
+      "share_failed": "Kon deelblad niet openen: {{error}}",
+      "unknown_error": "onbekende fout",
+      "open_location_failed": "Opgeslagen naar {{location}}, maar de map kon niet worden geopend",
+      "memories": "Herinneringen",
+      "memories_description": "Zie herinneringen over jezelf of je voorkeuren",
+      "export_thread": "Chatdraadje exporteren",
+      "saved_to_device": "Opgeslagen naar je apparaat"
+    },
+    "memories": {
+      "global": {
+        "tab": "Overal",
+        "hint": "Feiten over jou die het model altijd moet weten - je naam, wat je doet, hoe je antwoorden graag hebt. Verzonden met elke chat in elke werkruimte. Zorg dat ze kort zijn zodat ze allemaal op kleine modellen passen.",
+        "placeholder": "bijv. Mijn naam is Sam. Ik schrijf Python en geef de voorkeur aan korte antwoorden.",
+        "empty": "Nog geen herinneringen. Voeg hierboven een feit over jezelf toe."
+      },
+      "workspace": {
+        "tab": "Deze werkruimte",
+        "hint": "Notities die hier alleen van belang zijn - het project, zijn jargon, reeds genomen besluiten. Dynamisch beheerd en ingespoten.",
+        "placeholder": "bijv. Dit project is een React Native app genaamd Orbit. Gebruik yarn, niet npm.",
+        "empty": "Nog geen werkruimteherinneringen. Voeg hierboven een opmerking over deze werkruimte toe."
+      },
+      "no_longer_exists": "Die herinnering bestaat niet meer",
+      "save_failed": "Kon herinnering niet opslaan",
+      "delete_title": "Herinnering verwijderen?",
+      "enable": "Herinneringen inschakelen",
+      "enable_description": "Sta het injecteren van feiten over je of deze werkruimte toe.",
+      "remote_notice": "Deze werkruimte wordt beantwoord door je AnythingLLM-server, dus herinneringen worden niet in zijn chats gebruikt. Globale herinneringen zijn nog steeds van toepassing op je apparaat- en cloudwerkruimten.",
+      "edit_memory": "Herinnering bewerken",
+      "new_memory": "Nieuwe herinnering",
+      "delete_memory": "Herinnering verwijderen"
+    }
+  },
+  "drawer": {
+    "workspaces": "Werkruimten",
+    "scheduled_jobs": "Geplande taken",
+    "scheduled_jobs_unseen_one": "Geplande taken, {{count}} ongelezen resultaat",
+    "scheduled_jobs_unseen_other": "Geplande taken, {{count}} ongelezen resultaten",
+    "new_workspace": "Nieuwe werkruimte",
+    "delete_thread_title": "Draadje verwijderen",
+    "delete_thread_message": "Weet je zeker dat je dit draadje wilt verwijderen? Alle chatgeschiedenis gaat verloren.",
+    "delete_workspace_title": "Werkruimte verwijderen",
+    "delete_workspace_message": "Weet je zeker dat je deze werkruimte wilt verwijderen? Alle draadje gaat verloren.",
+    "delete_workspace_message_remote": "Weet je zeker dat je deze werkruimte wilt verwijderen? Alle draadje gaat verloren.\n\nDit zal de werkruimte in je externe instantie niet verwijderen.",
+    "rename_thread": "Draadje hernoemen",
+    "rename_thread_placeholder": "Voer nieuwe draadjenaam in"
+  },
+  "hf_import": {
+    "title": "Voeg een model van Hugging Face toe",
+    "add_card_hint": "Plak een repo-id of url en kies elke GGUF-kwantisering om op dit apparaat uit te voeren.",
+    "generic_error": "Er ging iets mis bij het praten met Hugging Face.",
+    "description": "Plak een model-id of url, of zoek. Elke openbare GGUF-kwantisering kan op dit apparaat worden gedownload en uitgevoerd.",
+    "show_files": "GGUF-bestanden weergeven",
+    "search_hf": "Hugging Face doorzoeken",
+    "files_available_one": "{{count}} GGUF-bestand beschikbaar om te downloaden",
+    "files_available_other": "{{count}} GGUF-bestanden beschikbaar om te downloaden",
+    "highlighted_file": "Het bestand dat je hebt gekozen op Hugging Face wordt hieronder gemarkeerd. Tik erop om te downloaden.",
+    "highlight_missing": "\"{{filename}}\" is geen van de GGUF-bestanden van deze repo. Kies hieronder een ander kwantisering.",
+    "search_results": "GGUF-repo's die overeenkomen met \"{{query}}\", meest gedownload eerst. Tik er een op om de bestanden ervan te zien.",
+    "no_search_results": "Geen GGUF-repo's gevonden voor \"{{query}}\".",
+    "tip": "Tip: de meeste modellen hebben een GGUF-versie onder een naam die eindigt op \"-GGUF\" van unsloth, bartowski of lmstudio-community. Kleinere kwantigeringen (Q4_K_M en lager) werken het beste op telefoons. Gesloten of privémodellen worden niet ondersteund.",
+    "params": "{{value}} parameters",
+    "context": "{{value}}k context",
+    "downloads": "{{value}} downloads",
+    "gated": "Deze repo is gesloten. Downloads vereisen een Hugging Face-aanmelding, die nog niet wordt ondersteund.",
+    "requested": "Aangevraagd"
+  },
+  "models": {
+    "recommended": "Aanbevolen",
+    "memory_fit": {
+      "tight": "Mogelijk niet in geheugen",
+      "tight_compact": "Mogelijk niet geschikt",
+      "impossible": "Te groot voor dit apparaat",
+      "impossible_compact": "Te groot"
+    },
+    "sections": {
+      "found_on_device": "Op dit apparaat gevonden",
+      "added_from_hf": "Toegevoegd van Hugging Face",
+      "other": "Overige"
+    },
+    "vector_storage": {
+      "reset_title": "Vectoropslag opnieuw instellen",
+      "reset_message": "Weet je zeker dat je de vectoropslag voor deze werkruimte opnieuw wilt instellen?",
+      "cleared": "Vectoropslag gewist!"
+    },
+    "vision": {
+      "remote": "Afbeeldingen worden nog niet ondersteund bij het chatten met een externe werkruimte.",
+      "no_model": "Selecteer een model om afbeeldingen bij te voegen.",
+      "on_device": "Het geselecteerde model op het apparaat kan geen afbeeldingen lezen.",
+      "needs_download": "Dit model kan afbeeldingen zien, maar heeft een aanvullende download nodig."
+    },
+    "speech_to_text": {
+      "permission_title": "Microfontoegang",
+      "permission_message": "AnythingLLM heeft microfontoegang nodig om je spraak in een prompt om te zetten.",
+      "permission_required_title": "Microfontoegang vereist",
+      "permission_required_message": "Schakel microfontoegang in je apparaatinstellingen in om spraak-naar-tekst te gebruiken."
+    },
+    "attachments": {
+      "vectors_cleared": "Werkruimtevectoren gewist",
+      "clear_vectors_title": "Werkruimtevectoren wissen",
+      "clear_vectors_message": "Weet je zeker dat je de vectoren voor deze werkruimte wilt wissen? Dit verwijdert alle vectoren voor deze werkruimte en kan niet ongedaan worden gemaakt.",
+      "not_found": "Bijlage kon niet worden gevonden",
+      "empty_content": "Bijlage-inhoud was leeg of kon niet worden gelezen",
+      "large_document_title": "Groot document",
+      "large_document_message": "\"{{name}}\" is ongeveer {{tokens}} tokens. Bij {{provider}} wordt het hele document met elk bericht in deze werkruimte verzonden, wat traag en duur kan zijn. Toch bijvoegen?",
+      "large_document_message_generic": "\"{{name}}\" is ongeveer {{tokens}} tokens. Bij je modelprovider wordt het hele document met elk bericht in deze werkruimte verzonden, wat traag en duur kan zijn. Toch bijvoegen?",
+      "attach": "Bijvoegen",
+      "create_failed": "Kon document voor bijlage niet maken",
+      "camera_permission_title": "Cameratoegang",
+      "camera_permission_message": "AnythingLLM heeft cameratoegang nodig om een foto voor je prompt te maken.",
+      "max_reached_one": "Je kunt per prompt tot {{count}} item bijvoegen",
+      "max_reached_other": "Je kunt per prompt tot {{count}} items bijvoegen",
+      "camera_permission_required": "Cameramachtiging is vereist om een foto te maken",
+      "camera_open_failed": "Kon camera niet openen",
+      "gallery_open_failed": "Kon galerij niet openen",
+      "image_unreadable": "De geselecteerde afbeelding kon niet worden gelezen",
+      "images_skipped_unreadable_one": "{{count}} afbeelding kon niet worden gelezen en werd overgeslagen",
+      "images_skipped_unreadable_other": "{{count}} afbeeldingen konden niet worden gelezen en werden overgeslagen",
+      "image_attach_failed": "Kon afbeelding niet bijvoegen",
+      "max_reached_skipped_one": "Je kunt per prompt tot {{max}} items bijvoegen - {{count}} overgeslagen",
+      "max_reached_skipped_other": "Je kunt per prompt tot {{max}} items bijvoegen - {{count}} overgeslagen",
+      "images_skipped_no_vision_one": "Je huidige model kan geen afbeeldingen lezen - {{count}} afbeelding werd overgeslagen",
+      "images_skipped_no_vision_other": "Je huidige model kan geen afbeeldingen lezen - {{count}} afbeeldingen werden overgeslagen",
+      "read_failed": "Kon {{name}} niet lezen",
+      "remove_title": "Bijlage verwijderen",
+      "remove_message": "Weet je zeker dat je deze bijlage uit de chat wilt verwijderen?",
+      "shared_content_failed": "Kon de gedeelde inhoud niet bijvoegen"
+    },
+    "memory_warning": {
+      "short": "Geheugen waarschuwing",
+      "full": "Waarschuwing: Modelgrootte kan het beschikbare geheugen overschrijden. Dit kan de prestaties en stabiliteit van je apparaat beïnvloeden."
+    },
+    "low_memory": {
+      "title": "Weinig geheugen",
+      "advice": "Als het geheugen vol raakt, kan je telefoon AnythingLLM halverwege een antwoord sluiten om geheugen vrij te maken, wat op een crash lijkt. Sluit andere apps of schakel over op een externe modelverbinding voor betrouwbaardere antwoorden.",
+      "free": "Vrij",
+      "total": "Totaal",
+      "model_loaded": "Model (geladen)",
+      "model_needs": "Model vereist",
+      "send_anyway": "Toch verzenden",
+      "got_it": "Begrepen",
+      "indicator_label": "Waarschuwing: weinig geheugen"
+    },
+    "catalog": {
+      "gemma_3_1b": "(Q8_0) Gemma3 1B is een kleinere lichte versie van het Gemma3 4B-model voor meer complexe taken.",
+      "qwen3_0_6b": "(Q8_0) Qwen3 0.6B is een klein, zeer snel model voor snelle antwoorden en eenvoudige taken. Vervangen door Qwen3.5 0.8B.",
+      "qwen3_1_7b": "(Q8_0) Qwen3 1.7B is een veel capabelere versie van het Qwen3-0.6B-model voor meer complexe taken.",
+      "llama_3_2_1b": "(Q8_0) Llama 3.2 1B is de kleinste versie van het Llama 3.2-model.",
+      "qwen3_5_0_8b": "(Q8_0) Qwen3.5 0.8B is het kleinste model in de Qwen3.5-familie. Zeer snel op elke telefoon met solide instructievolging.",
+      "qwen3_5_2b": "(Q8_0) Qwen3.5 2B is een sterk general-purpose klein model met hulpmiddeloproepen en goed redeneren voor zijn grootte.",
+      "qwen3_5_4b": "(Q6_K) Qwen3.5 4B is het meest capabele Qwen3.5-model dat nog op een telefoon past. Beste nauwkeurigheid, redeneren en hulpmiddeloproepen; heeft een apparaat met 8GB+ RAM nodig.",
+      "qwen3_vl_2b_instruct": "(Q4_K_XL) Qwen3-VL 2B is een taal-visiemodel dat foto's kan beschrijven en vragen over kan beantwoorden.",
+      "granite_3_3_2b_instruct": "(Q4_K_XL) Granite 3.3 2B van IBM is afgestemd op RAG, samenvatting en hulpmiddeloproepen. Apache 2.0-licentie.",
+      "granite_4_2_3b": "(Q4_K_M) Granite 4.2 3B is het nieuwste kleine Granite-model met sterker redeneren en hulpmiddeloproepen. Grotere download.",
+      "lfm2_5_1_2b_instruct": "(Q8_0) LFM2.5 1.2B is een zeer snel klein model afgestemd op chat op het apparaat, hulpmiddeloproepen en 16 talen. Volledige kwaliteit kwantisering.",
+      "lfm2_5_2_6b": "(Q5_K_M) LFM2.5 2.6B is het meest capabele Liquid-model voor telefoons met sterke instructievolging, hulpmiddeloproepen en redeneren.",
+      "gemma_4_e2b": "(QAT Q2_K_XL) Gemma 4 E2B is Google's mobiel-eerst model met effectieve 2B-parameters. Kwantisering-bewust getraind voor deze grootte.",
+      "gemma_4_e4b": "(QAT Q2_K_XL) Gemma 4 E4B is het meest capabele Gemma dat op een telefoon past. Grote download, heeft een recent apparaat met veel geheugen nodig."
+    },
+    "presets": {
+      "lightweight": {
+        "name": "Licht",
+        "description": "Voor snelle antwoorden en eenvoudige taken."
+      },
+      "balanced": {
+        "name": "Uitgebalanceerd",
+        "description": "Voor een balans tussen snelheid en nauwkeurigheid."
+      },
+      "powerful": {
+        "name": "Krachtig",
+        "description": "Zwaardere modellen voor de beste nauwkeurigheid."
+      }
+    },
+    "imported_description": "Toegevoegd van Hugging Face ({{repo}}).",
+    "imported_description_specs": "Toegevoegd van Hugging Face ({{repo}}). {{specs}}.",
+    "no_model_loaded_error": "Geen model geladen. Selecteer eerst een model.",
+    "unknown_model_description": "Op dit apparaat gevonden in {{modelId}}, maar het staat niet op onze modellijst. Je kunt het nog steeds gebruiken of verwijderen.",
+    "status": {
+      "summarizing": "Eerder gesprek samenvatten",
+      "using_summary_one": "Een samenvatting van {{count}} eerder bericht gebruiken",
+      "using_summary_other": "Een samenvatting van {{count}} eerdere berichten gebruiken",
+      "loading_model": "Model in geheugen laden",
+      "reply_truncated": "Antwoord was afgekort - het contextvenster is vol",
+      "searching_documents": "Je documenten doorzoeken",
+      "reranking": "Resultaten opnieuw rangschikken",
+      "reading_documents_one": "{{count}} bijgevoegd document lezen",
+      "reading_documents_other": "{{count}} bijgevoegde documenten lezen"
+    }
+  },
+  "providers": {
+    "descriptions": {
+      "native": "Installeer en voer modellen op je telefoon uit.",
+      "ollama": "Voer LLM's lokaal uit op je eigen machine met Ollama.",
+      "lmstudio": "Ontdek, download en voer duizenden geavanceerde LLM's in slechts een paar klikken uit.",
+      "openai": "Maak gebruik van OpenAI's krachtige modellen.",
+      "anthropic": "Een vriendelijke AI-assistent van Anthropic.",
+      "gemini": "Google's grootste en meest capabele AI-model",
+      "openrouter": "Een uniforme API van AI-services van toonaangevende leveranciers",
+      "bedrock": "Voer krachtige basismodellen privé uit met AWS Bedrock.",
+      "deepseek": "Voer DeepSeek's krachtige LLM's uit.",
+      "fireworksai": "De snelste en meest efficiënte inferentie-engine om productie-klare samengestelde AI-systemen te bouwen.",
+      "minimax": "Voer MiniMax's krachtige LLM's uit.",
+      "moonshotai": "Voer Moonshot AI's Kimi-modellen uit.",
+      "novita": "Betrouwbaar, schaalbaar en kosteneffectief voor LLM's van Novita AI",
+      "togetherai": "Voer open source-modellen van Together AI uit.",
+      "xai": "Voer xAI's krachtige LLM's uit, zoals Grok en meer.",
+      "litellm": "Voer LiteLLM's OpenAI-compatibele proxy voor verschillende LLM's uit.",
+      "localai": "Voer LLM's lokaal uit op je eigen machine.",
+      "lemonade": "Voer LLM's op AMD-hardware uit met Lemonade Server.",
+      "llmman": "Voer LLM's lokaal uit met llmman.",
+      "generic_openai": "Verbind met elke OpenAI-compatibele service via een aangepaste configuratie"
+    },
+    "sections": {
+      "local": "Lokale providers",
+      "cloud": "Cloudproviders"
+    },
+    "validation": {
+      "unknown_provider": "Onbekende provider.",
+      "api_key_required": "Voer alstublieft een API-sleutel voor deze provider in.",
+      "base_url_required": "Voer alstublieft de basis-URL van je provider in.",
+      "region_required": "Selecteer alstublieft de AWS-regio van je Bedrock-implementatie.",
+      "model_required": "Selecteer alstublieft een model om te gebruiken."
+    }
+  },
+  "llm_selection": {
+    "choose_provider": "Kies je provider",
+    "no_providers_found": "Geen providers gevonden voor \"{{query}}\"",
+    "download_model_title": "Model downloaden?",
+    "download_model_message": "Dit zal het model naar je apparaat downloaden. Het is {{size}} bytes.",
+    "preferred_model": "Voorkeurmodel"
+  },
+  "downloads": {
+    "no_internet_title": "Geen internetverbinding.",
+    "no_internet_image_support": "Je moet met het internet verbonden zijn om afbeeldingsondersteuning te downloaden.",
+    "no_internet_model": "Je moet met het internet verbonden zijn om een model te downloaden.",
+    "data_usage_title": "Waarschuwing gegevensgebruik",
+    "data_usage_image_support": "We raden aan een Wi-Fi-verbinding te gebruiken om afbeeldingsondersteuning te downloaden omdat het {{size}} groot is.",
+    "data_usage_model": "We raden aan een Wi-Fi-verbinding te gebruiken om het model te downloaden omdat het {{size}} groot is.",
+    "continue_anyway": "Toch doorgaan",
+    "continue_with_download": "Doorgaan met download",
+    "image_support_title": "Afbeeldingsondersteuning downloaden?",
+    "image_support_message": "{{model}} kan foto's begrijpen zodra het afbeeldingsondersteuningsbestand is gedownload. Het is {{size}} groot.",
+    "download_model_title": "Model downloaden?",
+    "download_model_message": "Dit zal het model naar je apparaat downloaden. Het is {{size}} groot.",
+    "notification_downloading_title": "Model downloaden",
+    "notification_downloading_body": "{{model}} aan het downloaden",
+    "notification_complete_title": "Download voltooid",
+    "notification_complete_body": "{{model}} gedownload",
+    "download_failed_title": "Download mislukt",
+    "download_failed_message": "Er was een fout bij het downloaden van het model.",
+    "uninstall_model_title": "Model verwijderen?",
+    "uninstall_model_message": "Dit zal het model van je apparaat verwijderen.",
+    "storage_low": "Opslag laag! Model {{modelSize}} > {{freeSpace}} vrij",
+    "storage_check_failed": "Opslagcontrole mislukt",
+    "setup_failed_title": "Download-setup mislukt",
+    "setup_failed_message": "Kon HF-modeldownload niet instellen: {{error}}"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Welkom",
+      "description": "Een AI-agent die op je telefoon leeft. Chatten met documenten, het web doorzoeken en integreren in je apps.",
+      "get_started": "Aan de slag",
+      "back_blocked": "Ga alstublieft door de onboarding-stroom om door te gaan."
+    },
+    "model_selection": {
+      "title": "Welk model wil je gebruiken?",
+      "description": "Je kunt dit later wijzigen, maar kies het model dat het beste bij je behoeften past.",
+      "use_external": "Wil je geen model downloaden? Gebruik een externe provider"
+    },
+    "external": {
+      "title": "Verbind een externe provider",
+      "description": "Gebruik een model dat ergens anders wordt gehost in plaats van er een naar je telefoon te downloaden. Je kunt dit later wijzigen.",
+      "choose_provider": "Kies een LLM-provider",
+      "provider_settings": "Provider-instellingen",
+      "incomplete_setup": "Onvolledige provider-setup"
+    },
+    "download": {
+      "error_title": "Er is een fout opgetreden",
+      "error_message": "Fout bij downloaden van model {{error}}",
+      "success_title": "Model gedownload",
+      "success_message": "Het model is met succes gedownload",
+      "url_must_be_gguf": "De url moet eindigen met .gguf"
+    },
+    "survey": {
+      "title": "Waarmee kan AnythingLLM je helpen?",
+      "description": "Selecteer degene die het meest op jou van toepassing is.",
+      "options": {
+        "productivity": "Productiviteit verhogen",
+        "privacy": "Privacy-gericht chatten",
+        "custom_ai": "Aangepaste AI-agenten",
+        "automation": "AI-automatisering",
+        "other": "Overige"
+      }
+    },
+    "data_handling": {
+      "title": "Gegevensverwerking & Privacy",
+      "description": "Met AnythingLLM wordt alle chat, documenten en andere gegevens op je apparaat verwerkt en opgeslagen.",
+      "local_chats_title": "Volledig lokale chats",
+      "local_chats_description": "Alle chats worden op je apparaat opgeslagen.",
+      "embedding_title": "Document inbedding",
+      "embedding_description": "Alle documenten en verwerking worden op je apparaat gedaan.",
+      "agents_title": "AI-agenten",
+      "agents_description": "Alle agenten worden op je apparaat uitgevoerd en gebruiken het internet alleen wanneer nodig (bijv. webzoeken)",
+      "experience": "Ervaar AnythingLLM",
+      "setting_up": "Je eerste werkruimte instellen",
+      "default_workspace_name": "Mijn werkruimte"
+    }
+  },
+  "workspace_settings": {
+    "load_error": "Fout bij het laden van werkruimte",
+    "autosaving": "Automatisch opslaan...",
+    "autosaved": "Automatisch opgeslagen!",
+    "name": {
+      "section": "Werkruimte naam",
+      "title": "Naam",
+      "current": "Huidige naam",
+      "placeholder": "Voer hier je naam in...",
+      "save_error": "Fout bij opslaan van naam"
+    },
+    "system_prompt": {
+      "title": "Systeemprompt",
+      "label": "Prompt",
+      "current": "Huidige systeemprompt",
+      "placeholder": "Voer hier je systeemprompt in...",
+      "save_error": "Fout bij opslaan van systeemprompt",
+      "description": "De systeemprompt is de sturende prompt en instructies voor de AI. Het moet worden gebruikt om het gedrag van de AI en het type antwoorden te sturen."
+    },
+    "temperature": {
+      "title": "Temperatuur",
+      "current": "Huidige temperatuur",
+      "suggested": "Aanbevolen temperatuur",
+      "placeholder": "Standaard (provider bepaalt)",
+      "save_error": "Fout bij opslaan van temperatuur",
+      "hint": "Laat leeg om de standaardtemperatuur van je LLM-provider en -model te gebruiken. Stel een waarde tussen 0 en 1 in om dit te overschrijven.",
+      "description": "Temperatuur is het niveau van willekeur van de antwoorden van de AI. Hoe hoger de temperatuur, hoe willekeuriger de antwoorden zullen zijn."
+    },
+    "context_length": {
+      "title": "Contextlengte",
+      "current": "Huidige contextlengte",
+      "suggested": "Aanbevolen contextlengte",
+      "placeholder": "Voer hier je contextlengte in...",
+      "save_error": "Fout bij opslaan van contextlengte",
+      "hint": "Houd in gedachte dat de contextlengte ook afhankelijk is van het model dat je gebruikt en geheugenimplicaties voor je apparaat heeft.",
+      "description": "Contextlengte is het maximale aantal tokens dat de AI kan gebruiken bij het genereren van een antwoord."
+    },
+    "vectors": {
+      "section": "Vectoropslag",
+      "count": "Vectortellingen",
+      "description": "Dit is het aantal vectoren dat momenteel in de werkruimte is opgeslagen. Dit wordt gebruikt om de context van de werkruimte op te slaan."
+    },
+    "delete": {
+      "button": "Werkruimte verwijderen",
+      "confirm_title": "Werkruimte verwijderen?",
+      "confirm_message": "Weet je zeker dat je deze werkruimte wilt verwijderen? Alle draadje gaat verloren.",
+      "confirm_message_remote": "Weet je zeker dat je deze werkruimte wilt verwijderen? Alle draadje gaat verloren.\n\nDit zal de werkruimte in je externe instantie niet verwijderen."
+    }
+  },
+  "connect": {
+    "title": "Verbind met AnythingLLM",
+    "scan_description": "Scan de QR-code voor je AnythingLLM-instantie of -client om de gegevens ervan met dit mobiele apparaat te synchroniseren voor AI onderweg!",
+    "previous_connections": "Vorige verbindingen",
+    "verify": {
+      "title": "Verbinding verifiëren",
+      "go_back": "Ga terug",
+      "registering": "Je apparaat registreren...",
+      "few_seconds": "Dit kan enkele seconden duren...",
+      "awaiting_approval": "Wachten op goedkeuring...",
+      "approve_in_app": "Keur het apparaat alstublieft goed in de AnythingLLM-applicatie...",
+      "collecting_data": "Instantiegegevens verzamelen...",
+      "register_failed": "Kon apparaat niet registreren. Probeer het opnieuw.",
+      "register_failed_reason": "Kon apparaat niet registreren: {{reason}}",
+      "approval_failed": "Kon apparaat niet registreren of goedkeuren. Probeer het opnieuw."
+    },
+    "import": {
+      "connection_expired": "Je bestaande verbinding met AnythingLLM Desktop is verlopen.",
+      "refresh_failed": "Kon werkruimten niet vernieuwen",
+      "go_home": "Ga terug naar startpagina",
+      "thread_count_one": "{{formatted}} draadje",
+      "thread_count_other": "{{formatted}} draadje",
+      "chat_count_one": "{{formatted}} chat",
+      "chat_count_other": "{{formatted}} chats",
+      "sync": "Synchroniseren",
+      "synced": "Gesynchroniseerd",
+      "sync_failed": "Mislukt",
+      "sync_workspace_failed": "Kon werkruimte {{name}} niet synchroniseren"
+    }
+  },
+  "scheduled_jobs": {
+    "title": "Geplande taken",
+    "job_missing": "Die taak bestaat niet meer",
+    "update_failed": "Kon taak niet bijwerken",
+    "prompt": "Prompt",
+    "tools": "Hulpmiddelen",
+    "paused": "Gepauzeerd",
+    "running_now": "Draait nu",
+    "stop_run": "Uitvoering stoppen",
+    "run_already_finished": "Die uitvoering was al voltooid",
+    "stop_failed": "Kon de uitvoering niet stoppen",
+    "blocked": {
+      "no_provider_title": "Kies eerst een LLM-provider",
+      "no_provider_body": "Geplande taken draaien zonder jou, dus ze hebben een cloud of self-hosted LLM nodig om mee te praten. Kies er een in Instellingen.",
+      "on_device_title": "Geplande taken hebben een cloud LLM nodig",
+      "on_device_body": "Het model op het apparaat kan niet op de achtergrond draaien, dus taken zijn gepauzeerd terwijl het geselecteerd is. Schakel in Instellingen over naar een cloud of self-hosted provider om deze uit te voeren."
+    },
+    "list": {
+      "open_llm_settings": "Open LLM-instellingen",
+      "enabled_count": "{{enabled}} van {{total}} aan",
+      "your_jobs": "Je taken",
+      "explainer_background": "Een taak is een prompt die de assistent voor je volgens schema uitvoert, met behulp van de hulpmiddelen die je ervan kiest. Resultaten verzamelen hier en draaien zelfs terwijl de app gesloten is - Android kan een uitvoering met enkele minuten vertraag om batterij te besparen.",
+      "explainer_foreground": "Een taak is een prompt die de assistent voor je volgens schema uitvoert, met behulp van de hulpmiddelen die je ervan kiest. Resultaten verzamelen hier de volgende keer dat je de app opent.",
+      "new_job": "Nieuwe taak",
+      "waiting_for_cloud": "Wachten op een cloud LLM",
+      "next_run": "Volgende uitvoering {{time}}",
+      "not_scheduled": "Niet ingepland",
+      "empty_title": "Nog geen geplande taken",
+      "empty_body": "Laat de assistent elke ochtend een website controleren, schrijf een wekelijkse samenvatting op, of bouw een rapport op de eerste van de maand - allemaal zonder een chat te openen.",
+      "create_first": "Maak je eerste taak"
+    },
+    "runs": {
+      "already_running": "Deze taak wordt al uitgevoerd",
+      "start_failed": "Kon de taak niet starten",
+      "fallback_title": "Taak",
+      "edit_job": "Taak bewerken",
+      "next_run_with_date": "Volgende uitvoering {{relative}} · {{date}}",
+      "not_scheduled_to_run": "Niet ingepland om uit te voeren",
+      "notify": "Melden",
+      "last_run": "Laatste uitvoering",
+      "never": "Nooit",
+      "run_now": "Nu uitvoeren",
+      "run_count_one": "{{count}} uitvoering",
+      "run_count_other": "{{count}} uitvoeringen",
+      "history": "Geschiedenis",
+      "empty_with_next": "Deze taak is nog niet uitgevoerd. De eerste uitvoering is {{time}}. Je kunt het ook nu uitvoeren om het uit te proberen.",
+      "empty": "Deze taak is nog niet uitgevoerd. Je kunt het ook nu uitvoeren om het uit te proberen.",
+      "manual": "· handmatig"
+    },
+    "form": {
+      "save_failed": "De taak kon niet worden opgeslagen",
+      "job_updated": "Taak bijgewerkt",
+      "job_scheduled": "Taak ingepland",
+      "could_not_save": "Kon de taak niet opslaan",
+      "delete_title": "Deze taak verwijderen?",
+      "delete_message": "\"{{name}}\" en elk resultaat dat het voortbracht, zal worden verwijderd. Dit kan niet ongedaan worden gemaakt.",
+      "job_deleted": "Taak verwijderd",
+      "delete_failed": "Kon de taak niet verwijderen",
+      "edit_title": "Taak bewerken",
+      "new_title": "Nieuwe taak",
+      "what_section": "Wat moet het doen?",
+      "name": "Naam",
+      "name_placeholder": "Ochtendnieuws digest",
+      "prompt_hint": "Geschreven alsof je het in een chat zou verzenden. Wees specifiek - er is niemand in de buurt om vervolgvragen te beantwoorden.",
+      "prompt_placeholder": "Lees https://news.ycombinator.com en schrijf een korte digest van de vijf meest interessante verhalen, met een eenregels take op elk.",
+      "when_section": "Wanneer moet het draaien?",
+      "options": "Opties",
+      "notify_title": "Meld me wanneer het klaar is",
+      "notify_description": "Stuurt een melding wanneer een uitvoering voltooid is met een resultaat. Mislukte of lege uitvoeringen tonen alleen een puntje in de app.",
+      "enabled_description": "Zet uit om de taak en resultaten te behouden zonder deze uit te voeren.",
+      "save_changes": "Wijzigingen opslaan",
+      "schedule_job": "Taak inplannen",
+      "delete_job": "Taak verwijderen"
+    },
+    "tool_picker": {
+      "selected_count_one": "{{count}} geselecteerd",
+      "selected_count_other": "{{count}} geselecteerd",
+      "none_reply_only": "Geen - alleen antwoord",
+      "app_connections": "App-verbindingen",
+      "explainer": "Elk hulpmiddel dat je inschakelt, wordt aan het model aangeboden bij elke uitvoering. Hulpmiddelen die normaal om je goedkeuring zouden vragen, worden automatisch goedgekeurd, aangezien niemand daar is om te tikken."
+    },
+    "builder": {
+      "daily": "Dagelijks",
+      "weekly": "Wekelijks",
+      "monthly": "Maandelijks",
+      "hourly": "Elk uur",
+      "every_few_minutes": "Elke paar minuten",
+      "mode_schedule": "Schema",
+      "mode_cron": "Cron-expressie",
+      "run": "Uitvoering",
+      "every": "Elke",
+      "minutes_chip": "{{minutes}} min",
+      "at_minute": "Op minuut",
+      "on": "Op",
+      "on_day": "Op dag",
+      "days_skipped": "Maanden zonder dag {{day}} worden overgeslagen.",
+      "at_time": "Om {{time}}",
+      "custom_minute": "Minuut :{{minute}} werd ingesteld met een cron-expressie - kies een stap hierboven om het te wijzigen.",
+      "cron_help": "Vijf velden: minuut, uur, dag van maand, maand, dag van week (0 = zondag). Tijden zijn in de tijdzone van je telefoon.",
+      "invalid_cron": "Dit is geen geldige cron-expressie"
+    },
+    "run_detail": {
+      "run_missing": "Die uitvoering bestaat niet meer",
+      "delete_title": "Deze uitvoering verwijderen?",
+      "delete_message": "Het resultaat en eventuele bestanden die het heeft gemaakt, worden verwijderd.",
+      "run_deleted": "Uitvoering verwijderd",
+      "fallback_title": "Uitvoering",
+      "delete_run": "Uitvoering verwijderen",
+      "run_manually": "Handmatig uitvoeren",
+      "scheduled": "Ingepland",
+      "tokens": "{{prompt}} prompt · {{completion}} completiontoken",
+      "result": "Resultaat",
+      "empty_completed": "Het model is klaar zonder iets te schrijven.",
+      "empty_stopped": "Er werd niets geproduceerd voordat de uitvoering stopte.",
+      "stopping": "Aan het stoppen…",
+      "working": "Bezig…"
+    },
+    "status": {
+      "queued": "In de wachtrij",
+      "running": "Wordt uitgevoerd",
+      "completed": "Voltooid",
+      "failed": "Mislukt",
+      "timed_out": "Verlopen",
+      "stopped": "Gestopt"
+    },
+    "unseen": "Ongelezen",
+    "relative_time": {
+      "in_under_a_minute": "in minder dan een minuut",
+      "just_now": "net nu",
+      "in_minutes": "in {{minutes}} min",
+      "minutes_ago": "{{minutes}} min geleden",
+      "in_hours": "in {{hours}}u",
+      "hours_ago": "{{hours}}u geleden",
+      "in_hours_minutes": "in {{hours}}u {{minutes}}m",
+      "hours_minutes_ago": "{{hours}}u {{minutes}}m geleden",
+      "in_days": "in {{days}}d",
+      "days_ago": "{{days}}d geleden"
+    },
+    "runner": {
+      "job_failed": "Taak mislukt",
+      "created_files": "Je taak is klaar en heeft bestanden voor je gemaakt."
+    },
+    "schedule": {
+      "custom": "Aangepast schema ({{expression}})",
+      "invalid": "Ongeldig schema",
+      "every_minute": "Elke minuut",
+      "every_minutes_one": "Elke {{count}} minuut",
+      "every_minutes_other": "Elke {{count}} minuten",
+      "every_hour": "Elk uur",
+      "every_hour_at": "Elk uur op {{minute}} voorbij",
+      "every_day_at": "Elke dag om {{time}}",
+      "weekdays_at": "Weekdagen om {{time}}",
+      "weekends_at": "Weekends om {{time}}",
+      "weekly_single": "Elke {{day}} om {{time}}",
+      "weekly_multiple": "Elke {{days}} en {{last}} om {{time}}",
+      "list_separator": ", ",
+      "monthly": "Op de {{day}} van elke maand om {{time}}",
+      "ordinal_st": "{{n}}e",
+      "ordinal_nd": "{{n}}e",
+      "ordinal_rd": "{{n}}e",
+      "ordinal_th": "{{n}}e",
+      "time_am": "{{hour}}:{{minute}} AM",
+      "time_pm": "{{hour}}:{{minute}} PM",
+      "hour_am": "{{hour}} AM",
+      "hour_pm": "{{hour}} PM"
+    },
+    "weekdays_short": {
+      "sun": "Zon",
+      "mon": "Maa",
+      "tue": "Din",
+      "wed": "Woe",
+      "thu": "Don",
+      "fri": "Vri",
+      "sat": "Zat"
+    },
+    "weekdays_long": {
+      "sunday": "Zondag",
+      "monday": "Maandag",
+      "tuesday": "Dinsdag",
+      "wednesday": "Woensdag",
+      "thursday": "Donderdag",
+      "friday": "Vrijdag",
+      "saturday": "Zaterdag"
+    }
+  },
+  "notifications": {
+    "channels": {
+      "download_progress": "Download voortgang",
+      "chat_replies": "Chat-antwoorden",
+      "chat_replies_description": "Waarschuwingen wanneer een antwoord wordt voltooid terwijl AnythingLLM op de achtergrond staat",
+      "scheduled_jobs": "Geplande taken",
+      "scheduled_jobs_description": "Waarschuwingen wanneer een geplande taak klaar is met draaien"
+    },
+    "blocked_nudge": {
+      "title": "Ontvang berichten wanneer antwoorden klaar zijn",
+      "message": "Meldingen zijn uitgeschakeld voor AnythingLLM. Zet ze aan om een zoem te krijgen wanneer een antwoord wordt voltooid terwijl je telefoon vergrendeld is.",
+      "not_now": "Nu niet",
+      "open_settings": "Open instellingen"
+    },
+    "chat": {
+      "ready_title": "Antwoord klaar",
+      "failed_title": "Antwoord mislukt",
+      "ready_body": "Je antwoord is klaar.",
+      "failed_body": "Je antwoord kon niet worden voltooid. Tik om te zien wat er gebeurde."
+    },
+    "scheduled_job": {
+      "finished_title": "{{name}} klaar",
+      "fallback_body": "Je geplande taak heeft een resultaat voor je."
+    }
+  },
+  "home": {
+    "welcome_title": "Welkom bij AnythingLLM",
+    "get_started": "Begin met het maken van een nieuwe werkruimte.",
+    "create_workspace": "Werkruimte maken",
+    "default_workspace_name": "Mijn werkruimte"
+  },
+  "share": {
+    "unsupported_content": "Alleen bestanden, afbeeldingen en links kunnen naar AnythingLLM worden gedeeld",
+    "finish_onboarding": "Maak AnythingLLM klaar voordat je er iets naar deelt",
+    "open_failed": "Kon de gedeelde inhoud niet openen"
+  },
+  "deep_links": {
+    "finish_onboarding": "Maak AnythingLLM klaar voordat je links ernaartoe opent"
+  }
+}

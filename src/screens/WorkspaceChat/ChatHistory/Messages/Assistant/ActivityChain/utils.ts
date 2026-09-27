@@ -1,5 +1,6 @@
 import { type IActivityNode, type WorkspaceChatResponseType } from "@/database/models/WorkspaceChat";
 import { contentIsNotEmpty, stripThoughtTags } from "@/hooks/useChatHandler/parser";
+import i18n from "@/i18n";
 
 /**
  * Mirrors `formatDuration` from the desktop frontend (utils/numbers.js).
@@ -95,17 +96,18 @@ export function chainHeaderLabel({
     workingActive: boolean;
     totalDuration: number | null;
 }): string {
-    if (thinkingActive) return 'Thinking...';
+    if (thinkingActive) return i18n.t('chat.activity.thinking');
     if (workingActive) {
         const last = nodes[nodes.length - 1];
-        if (last?.type === 'toolApproval' && last.approved === null) return 'Waiting for your approval';
+        if (last?.type === 'toolApproval' && last.approved === null) return i18n.t('chat.activity.waiting_your_approval');
         if (last?.type === 'status') return last.content;
-        if (last?.type === 'toolCall') return `Calling ${toolNameFromSignature(last.signature)}`;
-        return 'Working...';
+        if (last?.type === 'toolCall') return i18n.t('chat.activity.calling_tool', { tool: toolNameFromSignature(last.signature) });
+        return i18n.t('chat.activity.working');
     }
     if (totalDuration) {
         const didWork = nodes.some((n) => n.type !== 'thought');
-        return `${didWork ? 'Worked' : 'Thought'} for ${formatDuration(totalDuration)}`;
+        const duration = formatDuration(totalDuration);
+        return didWork ? i18n.t('chat.activity.worked_for', { duration }) : i18n.t('chat.activity.thought_for', { duration });
     }
-    return 'Thoughts';
+    return i18n.t('chat.activity.thoughts');
 }

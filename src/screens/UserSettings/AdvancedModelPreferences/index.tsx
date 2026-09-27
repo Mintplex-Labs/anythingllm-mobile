@@ -3,6 +3,7 @@ import SafeView from '@/components/SafeView';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'phosphor-react-native';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { IWorkspacePageKey } from '../index';
 import useLLMPreference from '@/hooks/useLLMPreference';
 import ProviderSelection from '@/components/LLMSelection/ProviderSelection';
@@ -25,6 +26,7 @@ interface AdvancedModelPreferencesProps {
 export default function AdvancedModelPreferences({
   goToPage,
 }: AdvancedModelPreferencesProps) {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const {
     llmPreferences,
@@ -150,14 +152,14 @@ export default function AdvancedModelPreferences({
           <ArrowLeft size={24} color="#FFF" weight="bold" />
         </TouchableOpacity>
         <Text className="text-white text-lg font-medium">
-          Model Selection
+          {t('settings.advanced_model_preferences.title')}
         </Text>
       </View>
 
       {/* Provider Selection */}
       <View style={{ gap: 16, marginBottom: 31 }} className="flex flex-col">
         <Text className="text-white font-semibold text-lg">
-          Choose an LLM Provider
+          {t('settings.advanced_model_preferences.choose_provider')}
         </Text>
         <ProviderSelection
           selection={{
@@ -171,7 +173,7 @@ export default function AdvancedModelPreferences({
 
       <View style={{ gap: 16 }} className="flex flex-col flex-1">
         <Text className="text-white font-semibold text-lg">
-          {llmPreferences.provider === 'native' ? 'LLM Model' : 'Provider Settings'}
+          {llmPreferences.provider === 'native' ? t('settings.advanced_model_preferences.llm_model') : t('settings.advanced_model_preferences.provider_settings')}
         </Text>
         <ScrollView
           className="flex-1"

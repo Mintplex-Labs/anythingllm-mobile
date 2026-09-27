@@ -1,6 +1,7 @@
 import React, { useRef, useCallback } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import { useTranslation } from 'react-i18next';
 
 export default function ThreadItem({
   isActive,
@@ -9,6 +10,7 @@ export default function ThreadItem({
   onDelete,
   onRename,
 }) {
+  const { t } = useTranslation();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const renderBackdrop = useCallback(
     (props) => (
@@ -65,13 +67,13 @@ export default function ThreadItem({
             onPress={handleRename}
             className="flex-row items-center py-3 px-2"
           >
-            <Text className="text-[--primary-text] text-lg">Rename</Text>
+            <Text className="text-[--primary-text] text-lg">{t('common.rename')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleDelete}
             className="flex-row items-center py-3 px-2"
           >
-            <Text className="text-red-500 text-lg">Delete</Text>
+            <Text className="text-red-500 text-lg">{t('common.delete')}</Text>
           </TouchableOpacity>
         </View>
       </BottomSheetModal >

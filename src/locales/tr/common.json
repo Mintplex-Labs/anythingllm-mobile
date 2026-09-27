@@ -1,0 +1,1214 @@
+{
+  "common": {
+    "add": "Ekle",
+    "allow": "İzin Ver",
+    "apply": "Uygula",
+    "back": "Geri",
+    "cancel": "İptal",
+    "clear": "Temizle",
+    "close": "Kapat",
+    "confirm": "Onayla",
+    "continue": "Devam Et",
+    "copied": "Kopyalandı",
+    "copy": "Kopyala",
+    "create": "Oluştur",
+    "default": "Varsayılan",
+    "delete": "Sil",
+    "disable": "Devre Dışı Bırak",
+    "disabled": "Devre Dışı",
+    "dismiss": "Kapat",
+    "done": "Tamamlandı",
+    "download": "İndir",
+    "downloading": "İndiriliyor",
+    "edit": "Düzenle",
+    "enable": "Etkinleştir",
+    "enabled": "Etkin",
+    "error": "Hata",
+    "export": "Dışa Aktar",
+    "import": "İçe Aktar",
+    "install": "Yükle",
+    "installed": "Yüklü",
+    "learn_more": "Daha Fazla Bilgi",
+    "loading": "Yükleniyor...",
+    "next": "İleri",
+    "no": "Hayır",
+    "none": "Hiçbiri",
+    "off": "Kapalı",
+    "ok": "Tamam",
+    "on": "Açık",
+    "open": "Aç",
+    "optional": "İsteğe Bağlı",
+    "refresh": "Yenile",
+    "remove": "Kaldır",
+    "rename": "Yeniden Adlandır",
+    "required": "Gerekli",
+    "reset": "Sıfırla",
+    "retry": "Yeniden Dene",
+    "save": "Kaydet",
+    "search": "Ara",
+    "select": "Seç",
+    "selected": "Seçildi",
+    "send": "Gönder",
+    "settings": "Ayarlar",
+    "share": "Paylaş",
+    "skip": "Atla",
+    "stop": "Durdur",
+    "success": "Başarılı",
+    "uninstall": "Kaldır",
+    "unknown": "Bilinmiyor",
+    "unknown_error": "Bilinmeyen hata",
+    "update": "Güncelle",
+    "upload": "Yükle",
+    "yes": "Evet"
+  },
+  "language": {
+    "title": "Dil",
+    "search_placeholder": "Dilleri ara",
+    "no_results": "\"{{query}}\" ile eşleşen dil yok",
+    "changed": "Dil {{language}} olarak değiştirildi"
+  },
+  "settings": {
+    "llm_preference": {
+      "title": "LLM Tercihi",
+      "description": "Bu, tüm çalışma alanları için kullanılacak LLM tercihidir. Farklı bir LLM sağlayıcısı veya cihazda çalışan modeli kullanmak için değiştirebilirsiniz."
+    },
+    "language": {
+      "app_language": "Uygulama dili"
+    },
+    "special_tools": {
+      "title": "Özel Araçlar",
+      "ask_with_anythingllm": "\"AnythingLLM ile Sor\"",
+      "page_title": "Özel araçlar",
+      "added_toast": "AnythingLLM ile Sor, metin seçimi menülerine eklendi",
+      "removed_toast": "AnythingLLM ile Sor, metin seçimi menülerinden kaldırıldı",
+      "context_awareness": "İçerik Farkındalığı",
+      "ask_with_anythingllm_toggle": "AnythingLLM ile Sor",
+      "android_only": "Yalnızca Android",
+      "description_available": "Herhangi bir uygulamada metni seçtiğinizde görünen menüye \"AnythingLLM ile Sor\" öğesini ekler. Yazdığınız şeyi cilalayabilir, kısaltabilir veya düzeltebilir, ya da buraya seçtiğiniz modeldi kullanarak okuduğunuz şeyi özetleyebilir, açıklayabilir ve araştırabilirsiniz.",
+      "description_unavailable": "Android'de AnythingLLM, herhangi bir uygulamada metin seçtiğinizde gösterilen menüde görünebilir ve seçtiğiniz modeldi onu düzenlemek veya özetlemek için kullanabilirsiniz. iOS uygulamalar için bu hook sunmuyor."
+    },
+    "about": {
+      "release_notes": "v{{version}} için Sürüm Notları",
+      "star_github": "GitHub'da Yıldız Ver",
+      "join_discord": "Discord'a Katıl"
+    },
+    "utility": {
+      "title": "Yardımcı Program",
+      "anonymous_telemetry": "Anonim Telemetri",
+      "clear_temp_files": "Geçici dosyaları temizle",
+      "temp_files_cleared": "Geçici dosyalar temizlendi"
+    },
+    "legal": {
+      "title": "Yasal & Gizlilik",
+      "terms": "Hizmet Şartları",
+      "privacy": "Gizlilik Politikası"
+    },
+    "reset": {
+      "title": "AnythingLLM'i Sıfırla",
+      "confirm_message": "AnythingLLM'i sıfırlamak istediğinizden emin misiniz? Bu, tüm çalışma alanlarınız, sohbetleriniz, yüklü modelleriniz ve tercihlelerinizi silecektir.",
+      "confirm_button": "Evet, Her Şeyi Sıfırla"
+    },
+    "update_failed": "Ayar güncellenemedi",
+    "version": {
+      "about": "AnythingLLM Hakkında",
+      "update_available_title": "Güncelleme Mevcut",
+      "update_available_message": "{{version}} sürümü mevcut. Lütfen en son sürüme güncelleyin.",
+      "go_to_app_store": "Uygulama Mağazasına Git"
+    },
+    "telemetry": {
+      "enabled_toast": "Anonim telemetri etkinleştirildi",
+      "disabled_toast": "Anonim telemetri devre dışı bırakıldı",
+      "usage_data": "Kullanım Verileri",
+      "share_toggle": "Anonim telemetri paylaş",
+      "description_events": "AnythingLLM, \"bir sohbet tamamlandı\" veya \"bir araç kullanıldı\" gibi az sayıda anonim etkinlik gönderir, böylece hangi özelliklerin önemli olduğunu ve nerede bir sorun olduğunu görebiliriz.",
+      "description_privacy": "Bu hiçbir zaman sohbetlerinizi, belgelerinizi, istemlerinizi veya uygulamayı nasıl kullandığınız hakkında herhangi bir özel şey içermez. Hiçbir hesap yok ve sizi tanımlayan hiçbir şey yok.",
+      "description_opt_out": "Bunu açık tutmak daha iyi bir uygulama oluşturmamıza yardımcı olur. İstediğiniz zaman kapatabilirsiniz ve başka hiçbir şey gönderilmeyecektir."
+    },
+    "advanced_model_preferences": {
+      "title": "Model Seçimi",
+      "choose_provider": "Bir LLM Sağlayıcısı Seçin",
+      "llm_model": "LLM Modeli",
+      "provider_settings": "Sağlayıcı Ayarları",
+      "show_less": "Daha Az Göster",
+      "view_more": "Daha Fazla Görüntüle"
+    },
+    "provider_options": {
+      "base_url": "Temel URL",
+      "base_url_placeholder": "Temel URL'nizi girin (örn. {{example}})",
+      "api_key": "API Anahtarı",
+      "api_key_optional": "API Anahtarı (isteğe bağlı)",
+      "api_key_placeholder": "API anahtarınızı girin",
+      "aws_region": "AWS Bölgesi",
+      "select_region": "Bir bölge seçin",
+      "choose_region": "AWS bölgenizi seçin",
+      "search_region": "Bir bölge kodu arayın veya yazın",
+      "use_region": "\"{{region}}\" kullan",
+      "model_selection": "Model Seçimi",
+      "select_model": "Bir model seçin",
+      "choose_model": "Modelinizi seçin",
+      "search_models": "Modelleri ara",
+      "fetching_models": "Modeller getiriliyor...",
+      "model_placeholder": "Modelinizi girin (örn. {{example}})",
+      "models_load_failed": "Bu sağlayıcıdan modeller yüklenemedi. Kimlik bilgilerinizi kontrol edin veya model adını manuel olarak girin.",
+      "no_tool_calls": "Bu modelin <bold>araç çağırma desteğinin olmadığı</bold> tespit edildi. Yalnızca basit sohbet + RAG desteklenecektir"
+    }
+  },
+  "chat": {
+    "error_loading_provider": "LLM sağlayıcısı yüklenirken hata",
+    "error_loading_thread": "Çalışma alanı iş parçacığı yüklenirken hata",
+    "unknown_error": "Bilinmeyen hata",
+    "loading_history": "Sohbet geçmişi yükleniyor...",
+    "suggestions": {
+      "hello": "Merhaba, ne konusunda yardımcı olabilirim?",
+      "research": "{{city}}, {{region}}'de yapılacak eğlenceli şeyler için çevrimiçi olarak arayın",
+      "calendar_monday": "Pazartesi günü takvimimde ne var?",
+      "calendar_tomorrow": "Yarın takvimimde ne var?",
+      "calendar_today": "Bugün takvimimde ne var?",
+      "email": "John Doe'ye yerel AI aracılarının faydaları hakkında bir satış e-postası taslağı oluşturun",
+      "summarize_example": "paulgraham.com/foundermode.html özetleyin",
+      "summarize_file": "{{name}} özetleyin",
+      "summarize_websites_one": "Bu web sitesini özetleyin",
+      "summarize_websites_other": "Bu web sitelerini özetleyin",
+      "summarize_documents_one": "Bu belgeyi özetleyin",
+      "summarize_documents_other": "Bu belgeleri özetleyin",
+      "explain_images_one": "Bu görüntüyü açıklayın",
+      "explain_images_other": "Bu görüntüleri açıklayın"
+    },
+    "citations": {
+      "title": "Alıntılar",
+      "score": "Puan: {{score}}",
+      "sources": "Kaynaklar"
+    },
+    "message_actions": {
+      "copied": "Panoya kopyalandı",
+      "retry_failed": "Bu mesaj yeniden denenemedi",
+      "delete_failed": "Bu yanıt silinemedi",
+      "fork_failed": "İş parçacığı çatallaştırılamadı: {{error}}",
+      "fork_name": "{{name}} Kopyası",
+      "copy_title": "Mesajı Kopyala",
+      "copy_description": "Metni panonuza kopyala",
+      "retry_wait": "Geçerli yanıtın bitmesini bekleyin",
+      "retry_description": "Bu değişimi kaldırın ve istemi tekrar gönderin",
+      "fork_title": "İş Parçacığını Çatalla",
+      "fork_remote_unavailable": "Uzak iş parçacıkları için mevcut değildir",
+      "fork_description": "Bu konuşmanın bir kopyasıyla yeni bir iş parçacığı başlatın",
+      "delete_title": "Yanıtı Sil",
+      "delete_description": "Bu iletiyi ve yanıtını iş parçacığından kaldırın"
+    },
+    "activity": {
+      "running": "Çalışıyor",
+      "waiting_approval_to_run": "{{tool}} çalıştırılması için onay bekleniyor",
+      "approved_tool": "{{tool}} Onaylandı",
+      "rejected_tool": "{{tool}} Reddedildi",
+      "waiting_for_you": "Seni bekleniyor",
+      "tool_approved": "Araç çağrısı onaylandı",
+      "tool_rejected": "Araç çağrısı reddedildi",
+      "thinking": "Düşünüyor...",
+      "waiting_your_approval": "Onayınız için bekleniyor",
+      "calling_tool": "{{tool}} çağrılıyor",
+      "working": "Çalışılıyor...",
+      "worked_for": "{{duration}} çalıştı",
+      "thought_for": "{{duration}} düşündü",
+      "thoughts": "Düşünceler"
+    },
+    "file_download": {
+      "saved_to": "{{filename}} dosyası {{location}} konumuna kaydedildi",
+      "save_failed": "Dosya kaydedilemedi: {{error}}",
+      "share_failed": "Paylaş sayfası açılamadı: {{error}}",
+      "missing": "Bu cihazda artık yok",
+      "missing_label": "{{title}}, dosya artık mevcut değildir",
+      "download_label": "{{title}} İndir",
+      "share_label": "{{title}} Paylaş",
+      "unknown_file": "Bilinmeyen dosya",
+      "saving": "Kaydediliyor...",
+      "saved": "Kaydedildi"
+    },
+    "scheduled_job_card": {
+      "open_label": "{{name}} zamanlanmış işini aç",
+      "subtitle": "Zamanlanmış iş · {{schedule}}",
+      "view": "Görüntüle"
+    },
+    "metrics": {
+      "tokens_one": "{{count}} belirteç",
+      "tokens_other": "{{count}} belirteç"
+    },
+    "tool_approval": {
+      "wants_to_call": "Model <skill>{{skill}}</skill> çağırmak istiyor",
+      "show_details": "Ayrıntıları göster",
+      "hide_details": "Ayrıntıları gizle",
+      "approve": "Onayla",
+      "reject": "Reddet"
+    },
+    "attachments": {
+      "attach_files": "Dosyaları ekle",
+      "gallery": "Galeri",
+      "take_photo": "Fotoğraf çek",
+      "add_attachment": "Ek ekle",
+      "hint_embed": "Dosyalar bölünür ve gömülür, böylece cihazda çalışan modeliniz bunları arayabilir.",
+      "hint_full": "Dosyalar bu çalışma alanında her iletiyle birlikte modelinize tam olarak gönderilir.",
+      "max_reached": "Tek bir isteme eklemeler için en fazla sayıya ulaştınız.",
+      "downloading_image_support": "Görüntü desteği indiriliyor... {{progress}}%",
+      "cancel_download": "İndirmeyi iptal et",
+      "download_image_support": "Görüntü desteğini indir",
+      "needs_download_tap": "Bu model görüntüleri görebiliyor, ancak ek bir indirime ihtiyaç duyuyor. İndirmek için dokunun ({{size}}).",
+      "download_failed": "İndirme başarısız oldu. Tekrar denemek için dokunun.",
+      "download_cancelled": "İndirme iptal edildi."
+    },
+    "prompt_input": {
+      "placeholder": "İsteminizi girin",
+      "select_model_first": "Lütfen önce bir model seçin",
+      "stop_generating": "Oluşturmayı durdur",
+      "stop_recording": "Kaydı durdur",
+      "voice_input": "Ses Girişi",
+      "send_prompt": "İstemi gönder"
+    },
+    "files": {
+      "title": "Dosyalar",
+      "empty": "Bu çalışma alanında dosya yok",
+      "error_loading": "Dosyaları yükleme hatası",
+      "deleted_one": "{{count}} dosya başarıyla silindi!",
+      "deleted_other": "{{count}} dosya başarıyla silindi!",
+      "select_all": "Tümünü Seç",
+      "deselect_all": "Tümünü Seçimi Kaldır",
+      "delete_selected": "Seçili Dosyaları Sil",
+      "embedded": "Gömülü · her iş parçacığında aranır",
+      "full_every_thread": "Tam olarak gönderilir · her iş parçacığında",
+      "full_this_thread": "Tam olarak gönderilir · bu iş parçacığında",
+      "full_another_thread": "Tam olarak gönderilir · başka bir iş parçacığında"
+    },
+    "history_cleared": "Sohbet geçmişi temizlendi",
+    "tools": {
+      "title": "Araçlar",
+      "group_status": "{{enabled}} / {{total}} açık",
+      "app_connections": "Uygulama Bağlantıları",
+      "group_files_note": "{{description}} Dosyalar ayarlarında geçici dosyaları temizleyene kadar bu cihazda tutulur.",
+      "needs_cloud_model": "{{description}} Bulut modeli gereklidir.",
+      "unavailable_on_device": "Gri araçlar cihazda çalışan modellerle kullanılamaz. Bunları kullanmak için bir bulut sağlayıcısına geçin."
+    },
+    "remote_unreachable": {
+      "title": "Uzak sunucu ulaşılamaz",
+      "message": "Şu anda örneğinize ulaşamıyoruz. Bu sohbeti yerel olarak devam ettirmek istiyor musunuz?",
+      "cancel": "Hayır, iptal et",
+      "continue": "Evet, yerel olarak devam et",
+      "not_sent": "Uzak sunucu ulaşılamaz - sohbet gönderilmedi."
+    },
+    "errors": {
+      "processing": "Sohbet işlemede hata",
+      "timed_out": "Bir yanıt alınmadan istek zaman aşımına uğradı. Bağlantı kaybolmuş olabilir.",
+      "show_more": "Daha fazla",
+      "show_less": "Daha az göster"
+    },
+    "status": {
+      "recalling_notes": "Çalışma alanı notlarını çağırma"
+    }
+  },
+  "quick_context": {
+    "modes": {
+      "summarize": "Özetle"
+    },
+    "actions": {
+      "polish": "Cilala",
+      "shorten": "Kısalt",
+      "fix_grammar": "Gramer düzelt",
+      "more_formal": "Daha resmi",
+      "summarize": "Özetle",
+      "key_points": "Ana noktalar",
+      "explain": "Açıkla",
+      "research": "Araştır"
+    },
+    "could_not_start": "Hızlı Eylemler başlatılamadı",
+    "dismiss": "Kapat",
+    "setup_needed": "AnythingLLM'i seçim menüsünde kullanmak için kurulumunu tamamlayın.",
+    "open_anythingllm": "AnythingLLM'i Aç",
+    "select_model": "Başlamak için yukarıda bir model seçin.",
+    "copied_paste": "Kopyalandı - seçiminizin üzerine yapıştırın",
+    "copy_and_close": "Kopyala ve kapat",
+    "open_in_app": "Uygulamada aç",
+    "placeholders": {
+      "edit_new": "Bu metin nasıl değişmelidir?",
+      "edit_started": "Metni daha da düzenleyin…",
+      "summarize_new": "Bu metin hakkında herhangi bir şey sorun…",
+      "summarize_started": "Daha fazla soru sorun…"
+    }
+  },
+  "attachments": {
+    "processing": "İşleniyor…",
+    "image": "Görüntü",
+    "file_type_generic": "DOSYA",
+    "name_processing": "{{name}}, işleniyor",
+    "remove_named": "{{name}} Kaldır",
+    "more_images_one": "{{count}} daha fazla görüntü",
+    "more_images_other": "{{count}} daha fazla görüntü",
+    "attached_image": "Ekli görüntü",
+    "image_position": "{{current}} / {{total}}",
+    "close_image_preview": "Görüntü önizlemesini kapat",
+    "remove_image": "Görüntüyü kaldır"
+  },
+  "errors": {
+    "boundary": {
+      "details": "Hata detayları",
+      "details_copied": "Hata detayları kopyalandı",
+      "report_github": "GitHub'da Bildir",
+      "something_went_wrong": "Bir şeyler yanlış gitti",
+      "reported_automatically": "Bu hata Mintplex Labs'a otomatik olarak bildirildi.",
+      "telemetry_disabled": "Telemetri devre dışı bırakılmış olması nedeniyle, bu hatayı Mintplex Labs'a otomatik olarak bildirmedik, bunun yerine bir GitHub sorunu açmalısınız.",
+      "go_home": "Evime Dön",
+      "message_failed": "Bu mesaj bir hata nedeniyle gösterilemedi.",
+      "hide_details": "Hata detaylarını gizle",
+      "show_details": "Hata detaylarını göster"
+    }
+  },
+  "highlights": {
+    "play_video": "Videoyu oynat",
+    "pause_video": "Videoyu Duraklat",
+    "whats_new": "Yeni Neler Var",
+    "tour_title": "AnythingLLM'in neler yapabileceği",
+    "quick_actions": {
+      "title": "Herhangi bir yerden AnythingLLM ile sor",
+      "body": "Herhangi bir uygulamada metni seçin ve modelinizle cilalaması, kısaltması, özetlemesi veya açıklaması için \"AnythingLLM ile Sor\" tuşuna dokunun. Ayarlar > Özel araçlar'dan istediğiniz zaman kapatabilirsiniz."
+    },
+    "share_sheet": {
+      "title": "Herhangi bir şeyi bir sohbete paylaşın",
+      "body": "Fotoğrafları, belgeleri ve bağlantıları herhangi bir uygulamadan doğrudan AnythingLLM'e gönderin. Yeni bir iş parçacığına giriş yaparlar, ekli ve sorulmaya hazırdırlar."
+    },
+    "scheduled_jobs": {
+      "title": "Zamanlanmış işler",
+      "body": "Tekrarlayan bir görev isteyin - sabah haber özeti, haftalık kontrol - ve uygulama kapalı olsa bile programa göre çalışır. Sonuçlar bildirimle sizin için bekler."
+    }
+  },
+  "new_workspace": {
+    "default_name": "Yeni Çalışma Alanı",
+    "title": "Yeni Çalışma Alanı",
+    "description": "Çalışma alanınıza bir ad verin. Bunu daha sonra değiştirebilirsiniz.",
+    "placeholder": "örn. Araştırma, İş, Kişisel"
+  },
+  "files": {
+    "types": {
+      "text_file": "Metin Dosyası",
+      "spreadsheet": "Elektronik Tablo",
+      "pdf_document": "PDF Belgesi",
+      "word_document": "Word Belgesi",
+      "file": "Dosya"
+    },
+    "location": {
+      "downloads": "İndirilenler",
+      "ios_exports": "Dosyalar > iPhone'umda > AnythingLLM > Dışa Aktarımlar",
+      "open_downloads": "İndirilenler'de Aç",
+      "open_files": "Dosyalar'da Aç"
+    },
+    "storage_permission": {
+      "title": "İndirilenler'e Kaydet",
+      "message": "AnythingLLM, dosyayı İndirilenler klasörünüze kaydetmek için depolama erişimine ihtiyaç duyuyor."
+    },
+    "export": {
+      "text_label": "Metin",
+      "txt_description": "Düz metin transkripti",
+      "md_description": "Not alma uygulamaları için biçimlendirilmiş transkript",
+      "json_description": "Mesajlar, model ve metrikler ile",
+      "pdf_description": "Biçimlendirilmiş belge"
+    }
+  },
+  "misc": {
+    "new_thread": "Yeni İş Parçacığı",
+    "remote_thread_create_failed": "Uzak çalışma alanında bir iş parçacığı oluşturamadık. Lütfen bağlantınızı kontrol edip tekrar deneyin.",
+    "job_run": {
+      "failed": "İş başarısız oldu",
+      "timed_out": "İş çok uzun sürdü ve durduruldu",
+      "cancelled": "Bu çalıştırmayı durdurdunuz",
+      "app_closed": "İş tamamlanmadan önce uygulama kapatıldı"
+    },
+    "validation": {
+      "memory_not_text": "Bellek metin olmalıdır",
+      "memory_too_short": "Bellek çok kısa",
+      "memory_too_long_one": "Bellek {{count}} karakter veya daha az olmalıdır",
+      "memory_too_long_other": "Bellek {{count}} karakter veya daha az olmalıdır",
+      "job_name_required": "İşe bir ad verin",
+      "job_name_too_long_one": "Ad {{count}} karakter veya daha az olmalıdır",
+      "job_name_too_long_other": "Ad {{count}} karakter veya daha az olmalıdır",
+      "job_prompt_required": "İşin çalıştırması gereken istemi yazın",
+      "job_prompt_too_long_one": "İstem {{count}} karakter veya daha az olmalıdır",
+      "job_prompt_too_long_other": "İstem {{count}} karakter veya daha az olmalıdır",
+      "job_schedule_invalid": "Program geçerli bir cron ifadesi değil",
+      "job_tools_not_list": "Araçlar bir liste olmalıdır",
+      "name_not_string": "Ad bir dize olmalıdır",
+      "name_required": "Ad gerekli",
+      "name_too_short_one": "Ad en az {{count}} karakter uzunluğunda olmalıdır",
+      "name_too_short_other": "Ad en az {{count}} karakter uzunluğunda olmalıdır",
+      "name_too_long_one": "Ad {{count}} karakterden daha kısa olmalıdır",
+      "name_too_long_other": "Ad {{count}} karakterden daha kısa olmalıdır",
+      "system_prompt_not_string": "Sistem istemi bir dize olmalıdır",
+      "system_prompt_required": "Sistem istemi gerekli",
+      "system_prompt_too_short_one": "Sistem istemi en az {{count}} karakter uzunluğunda olmalıdır",
+      "system_prompt_too_short_other": "Sistem istemi en az {{count}} karakter uzunluğunda olmalıdır",
+      "system_prompt_too_long_one": "Sistem istemi {{count}} karakterden daha kısa olmalıdır",
+      "system_prompt_too_long_other": "Sistem istemi {{count}} karakterden daha kısa olmalıdır",
+      "temperature_not_number": "Sıcaklık bir sayı olmalıdır",
+      "temperature_range": "Sıcaklık {{min}} ile {{max}} arasında olmalıdır",
+      "context_length_not_number": "Bağlam uzunluğu bir sayı olmalıdır",
+      "context_length_min": "Bağlam uzunluğu {{min}}'ten büyük olmalıdır"
+    }
+  },
+  "tools": {
+    "groups": {
+      "create_files": {
+        "name": "Dosya Oluştur",
+        "description": "Asistan'ın indirebilir ve paylaşabileceğiniz belgeler yazmasına izin verin."
+      }
+    },
+    "reranker": {
+      "download_required_title": "İndirme Gerekli",
+      "download_required_message": "Akıllı araç seçimi küçük bir model indirmesi gerektirir ({{size}}). Hücresel veriler üzerinde olmuşsunuz. Devam edilsin mi?",
+      "status_downloading": "Araç seçimi modeli indiriliyor",
+      "status_selecting": "En iyi araçlar seçiliyor"
+    },
+    "calendar_event_creation": {
+      "name": "Takvim Etkinliği Oluşturma",
+      "description": "Asistan'ı kullanarak bir takvim etkinliği oluşturun.",
+      "status_preparing": "\"{{title}}\" takvim etkinliği hazırlanıyor"
+    },
+    "calendar_event_reading": {
+      "name": "Takvimi Oku",
+      "description": "Asistan'ı kullanarak takvim etkinliklerinizi okuyun.",
+      "status_date": "{{date}} için takvim okuyor",
+      "status_today": "Bugün için takvim okuyor",
+      "status_tomorrow": "Yarın için takvim okuyor",
+      "status_this_week": "Bu hafta takvim okuyor",
+      "status_next_week": "Gelecek hafta takvim okuyor",
+      "status_this_month": "Bu ay takvim okuyor",
+      "status_next_month": "Gelecek ay takvim okuyor"
+    },
+    "create_files": {
+      "status_creating": "{{name}} oluşturuluyor",
+      "status_created": "{{name}} oluşturuldu"
+    },
+    "create_docx_file": {
+      "name": "Word Belgesi",
+      "description": "Temalar ve isteğe bağlı bir başlık sayfası ile markdown'dan stillendirilmiş bir .docx yazın.",
+      "status_creating": "\"{{name}}\" Word belgesi oluşturuluyor"
+    },
+    "create_pdf_file": {
+      "name": "PDF Belgesi",
+      "description": "Markdown veya düz metni biçimlendirilmiş bir PDF'ye dönüştürün.",
+      "status_creating": "\"{{name}}\" PDF oluşturuluyor"
+    },
+    "create_text_file": {
+      "name": "Metin, Markdown & CSV",
+      "description": "Konuşmadan .txt, .md, .csv ve .json dosyaları yazın."
+    },
+    "create_pptx": {
+      "name": "PowerPoint Sunusu",
+      "description": "Temalanmış bir .pptx destesini her seferinde bir bölüm halinde planlayın ve oluşturun.",
+      "status_planning_one": "\"{{title}}\" sunusu planlama - {{count}} bölüm, {{theme}} teması",
+      "status_planning_other": "\"{{title}}\" sunusu planlama - {{count}} bölüm, {{theme}} teması",
+      "approval_description_one": "{{count}} bölüm ile \"{{title}}\" PowerPoint sunusu oluşturulsun mu? Her bölüm oluşturmak için bir model çağrısı alır.",
+      "approval_description_other": "{{count}} bölüm ile \"{{title}}\" PowerPoint sunusu oluşturulsun mu? Her bölüm oluşturmak için bir model çağrısı alır.",
+      "status_not_approved": "Sunum onaylanmadı",
+      "status_building_section": "[{{current}}/{{total}}] \"{{title}}\" bölümü oluşturuluyor",
+      "status_section_complete_one": "[{{current}}/{{total}}] \"{{title}}\" bölümü tamamlandı - {{count}} slayt",
+      "status_section_complete_other": "[{{current}}/{{total}}] \"{{title}}\" bölümü tamamlandı - {{count}} slayt",
+      "status_section_complete_from_outline_one": "[{{current}}/{{total}}] \"{{title}}\" bölümü tamamlandı - {{count}} slayt (ana hatdan)",
+      "status_section_complete_from_outline_other": "[{{current}}/{{total}}] \"{{title}}\" bölümü tamamlandı - {{count}} slayt (ana hatdan)",
+      "status_assembling_one": "Deste birleştiriliyor - {{count}} slayt",
+      "status_assembling_other": "Deste birleştiriliyor - {{count}} slayt"
+    },
+    "create_scheduled_job": {
+      "name": "Zamanlanmış İş Oluştur",
+      "description": "Asistan'ın sizi onayladıktan sonra konuşmadan tekrarlayan bir iş kurup kurmasını sağlayın.",
+      "status_asking": "\"{{name}}\" zamanlanmasıncı isteniyor ({{when}})",
+      "approval_tools_one": "\"{{name}}\" zamanlanmış işi oluşturulsun mu? {{when}} {{count}} araç kullanarak çalışacaktır.",
+      "approval_tools_other": "\"{{name}}\" zamanlanmış işi oluşturulsun mu? {{when}} {{count}} araç kullanarak çalışacaktır.",
+      "approval_tools_notify_one": "\"{{name}}\" zamanlanmış işi oluşturulsun mu? {{when}} {{count}} araç kullanarak çalışacak ve tamamlandığında sizi haberdar edecektir.",
+      "approval_tools_notify_other": "\"{{name}}\" zamanlanmış işi oluşturulsun mu? {{when}} {{count}} araç kullanarak çalışacak ve tamamlandığında sizi haberdar edecektir.",
+      "approval_no_tools": "\"{{name}}\" zamanlanmış işi oluşturulsun mu? {{when}} araçlar olmadan çalışacaktır.",
+      "approval_no_tools_notify": "\"{{name}}\" zamanlanmış işi oluşturulsun mu? {{when}} araçlar olmadan çalışacak ve tamamlandığında sizi haberdar edecektir.",
+      "status_not_approved": "Zamanlanmış iş onaylanmadı",
+      "status_scheduled": "\"{{name}}\" zamanlandı"
+    },
+    "draft_email": {
+      "name": "E-posta Taslağı",
+      "description": "Asistan'ı kullanarak sizin için bir e-posta taslağı oluşturun.",
+      "status_drafting": "\"{{subject}}\" e-postası taslağı oluşturuluyor",
+      "open_action": "E-posta Taslağını Aç"
+    },
+    "draft_text": {
+      "name": "Metin Taslağı",
+      "description": "Asistan'ı kullanarak sizin için bir metin taslağı oluşturun.",
+      "status_drafting_to": "{{recipient}}'ye bir metin taslağı oluşturuluyor",
+      "status_drafting": "Bir metin mesajı taslağı oluşturuluyor",
+      "open_action": "Metin Taslağını Aç"
+    },
+    "get_time": {
+      "name": "Saati Al",
+      "description": "Cihazınızın saat dilimine göre geçerli tarihi ve saati alın."
+    },
+    "get_location": {
+      "name": "Konumu Al",
+      "description": "Yaklaşık konumunuzu alın. Bu, şehir, eyalet ve ülkeyi döndürecektir.",
+      "status_looking_up": "Yaklaşık konumunuz aranıyor"
+    },
+    "summarize": {
+      "name": "Özetleme",
+      "description": "Verilen bir URL veya dosya adından içeriği özetle.",
+      "status_reading": "{{source}} okunuyor",
+      "status_looking_for_file": "Dosyalarınızda \"{{name}}\" aranıyor",
+      "status_analyzing": "Belge yapısı analiz ediliyor",
+      "status_document_long_one": "Belge uzun - ilk {{count}} bölüm özetleniyor",
+      "status_document_long_other": "Belge uzun - ilk {{count}} bölüm özetleniyor",
+      "approval_description_one": "Bu içerikte özetlenecek {{count}} bölüm var. Bu biraz zaman alabilir - devam edilsin mi?",
+      "approval_description_other": "Bu içerikte özetlenecek {{count}} bölüm var. Bu biraz zaman alabilir - devam edilsin mi?",
+      "status_not_approved": "Özetleme onaylanmadı",
+      "status_complete": "Özet tamamlandı",
+      "status_summarizing_sections": "Belge bölümleri özetleniyor",
+      "status_summarizing_section": "{{current}} / {{total}} bölümü özetleniyor",
+      "status_combining": "Bölüm özetleri birleştiriliyor"
+    },
+    "web_scraping": {
+      "name": "Web Kazıma",
+      "description": "Bilgi için tek bir özel web sitesini kazıyın.",
+      "status_reading": "{{host}} okunuyor",
+      "status_reading_document": "{{name}} belgesi okunuyor",
+      "cellular_title": "Hücresel veri üzerinde indirilsin mi?",
+      "cellular_message": "\"{{name}}\" okuma, {{size}} belgesi indirmeyi gerektirir. Hücresel veri üzerinde olmuşsunuz. Devam edilsin mi?",
+      "cellular_message_unknown_size": "\"{{name}}\" okuma, bilinmeyen boyutta bir belge indirmeyi gerektirir. Hücresel veri üzerinde olmuşsunuz. Devam edilsin mi?"
+    },
+    "web_search": {
+      "name": "Web Araması",
+      "description": "Bir sorguya göre web arama sonuçlarını arayın.",
+      "status_searching": "\"{{query}}\" için web aranıyor",
+      "status_reviewing_one": "{{count}} arama sonucu inceleniyor",
+      "status_reviewing_other": "{{count}} arama sonucu inceleniyor"
+    },
+    "approval": {
+      "auto_approved_status": "{{tool}} otomatik olarak onaylandı"
+    }
+  },
+  "top_bar": {
+    "model_chip": {
+      "remote_managed": "Bu çalışma alanı uzaktan yönetilir. Burada modeli değiştiremezsiniz.",
+      "no_model_loaded": "Model yüklü değil",
+      "no_models_found": "\"{{query}}\" için model bulunamadı",
+      "hf_lookup_hint": "Hugging Face'de \"{{query}}\" araması yapın ve bir GGUF sürümü indirin.",
+      "list_failed_toast": "{{provider}} için modeller listelenemiyor.",
+      "switch_failed": "Model değiştirilemedi. Lütfen tekrar deneyin.",
+      "loading_models": "{{provider}}'den modeller yükleniyor...",
+      "list_failed_title": "{{provider}} için modeller listelenemiyor",
+      "list_failed_description": "Bu sağlayıcı herhangi bir model döndürmedi. Uç noktaya erişilebildiğini ve model listelemeyi desteklediğini kontrol edin, ya da modeli Ayarlar'da manuel olarak ayarlayın.",
+      "try_again": "Yeniden Dene",
+      "search_provider_models": "{{provider}} modellerini ara"
+    },
+    "dev_shortcut_hint_one": "Geliştirici araçlarını açmak için {{count}} kez daha basın",
+    "dev_shortcut_hint_other": "Geliştirici araçlarını açmak için {{count}} kez daha basın",
+    "thread_menu": {
+      "options": "İş parçacığı seçenekleri",
+      "export_failed": "İş parçacığı dışa aktarılamadı: {{error}}",
+      "share_failed": "Paylaş sayfası açılamadı: {{error}}",
+      "unknown_error": "bilinmeyen hata",
+      "open_location_failed": "{{location}} konumuna kaydedildi, ancak klasör açılamadı",
+      "memories": "Anılar",
+      "memories_description": "Sizin veya tercihleriniz hakkında anıları görün",
+      "export_thread": "Sohbet İş Parçacığını Dışa Aktar",
+      "saved_to_device": "Cihazınıza kaydedildi"
+    },
+    "memories": {
+      "global": {
+        "tab": "Her Yerde",
+        "hint": "Modelin her zaman bilmesi gereken sizin hakkında gerçekler - adınız, ne yaptığınız, cevapları nasıl sevdiğiniz. Her çalışma alanında her sohbetle gönderilir. Tüm küçük modellere sığması için kısa tutun.",
+        "placeholder": "örn. Adım Sam. Python yazıyorum ve kısa cevapları tercih ediyorum.",
+        "empty": "Henüz anı yok. Yukarıda kendiniz hakkında bir gerçek ekleyin."
+      },
+      "workspace": {
+        "tab": "Bu çalışma alanı",
+        "hint": "Burada önemli olan notlar - proje, jargon, alınan kararlar. Dinamik olarak yönetilir ve enjekte edilir.",
+        "placeholder": "örn. Bu proje Orbit adlı bir React Native uygulaması. Yarn kullanın, npm değil.",
+        "empty": "Henüz çalışma alanı anısı yok. Yukarıda bu çalışma alanı hakkında bir not ekleyin."
+      },
+      "no_longer_exists": "Bu anı artık yok",
+      "save_failed": "Bellek kaydedilemedi",
+      "delete_title": "Anıyı sil?",
+      "enable": "Anıları etkinleştir",
+      "enable_description": "Sizin veya bu çalışma alanı hakkındaki gerçeklerin enjeksiyonuna izin verin.",
+      "remote_notice": "Bu çalışma alanı AnythingLLM sunucunuz tarafından yanıtlanmaktadır, bu nedenle anıları sohbetlerde kullanılmaz. Global anılar yine de cihazda ve bulut çalışma alanlarınızda uygulanır.",
+      "edit_memory": "Anıyı düzenle",
+      "new_memory": "Yeni anı",
+      "delete_memory": "Anıyı sil"
+    }
+  },
+  "drawer": {
+    "workspaces": "Çalışma Alanları",
+    "scheduled_jobs": "Zamanlanmış işler",
+    "scheduled_jobs_unseen_one": "Zamanlanmış işler, {{count}} görülmemiş sonuç",
+    "scheduled_jobs_unseen_other": "Zamanlanmış işler, {{count}} görülmemiş sonuç",
+    "new_workspace": "Yeni Çalışma Alanı",
+    "delete_thread_title": "İş parçacığını sil",
+    "delete_thread_message": "Bu iş parçacığını silmek istediğinizden emin misiniz? Tüm sohbet geçmişi kaybedilecektir.",
+    "delete_workspace_title": "Çalışma alanını sil",
+    "delete_workspace_message": "Bu çalışma alanını silmek istediğinizden emin misiniz? Tüm iş parçacıkları kaybedilecektir.",
+    "delete_workspace_message_remote": "Bu çalışma alanını silmek istediğinizden emin misiniz? Tüm iş parçacıkları kaybedilecektir.\n\nBu, uzak örneğinizde çalışma alanını silmeyecektir.",
+    "rename_thread": "İş Parçacığını Yeniden Adlandır",
+    "rename_thread_placeholder": "Yeni iş parçacığı adını girin"
+  },
+  "hf_import": {
+    "title": "Hugging Face'den bir model ekleyin",
+    "add_card_hint": "Bir repo kimliği veya URL yapıştırın ve bu cihazda çalıştırmak için herhangi bir GGUF niceliğini seçin.",
+    "generic_error": "Hugging Face ile iletişim kurulurken bir sorun oluştu.",
+    "description": "Bir model kimliği veya URL yapıştırın veya arayın. Herhangi bir genel GGUF niceliği bu cihazda indirilip çalıştırılabilir.",
+    "show_files": "GGUF dosyalarını göster",
+    "search_hf": "Hugging Face'de Arayın",
+    "files_available_one": "İndirilecek {{count}} GGUF dosyası mevcut",
+    "files_available_other": "İndirilecek {{count}} GGUF dosyası mevcut",
+    "highlighted_file": "Hugging Face'da seçtiğiniz dosya aşağıda vurgulanmıştır. İndirmek için üzerine dokunun.",
+    "highlight_missing": "\"{{filename}}\" bu depodaki GGUF dosyalarından biri değildir. Aşağıdaki başka bir \"quant\" seçin.",
+    "search_results": "\"{{query}}\" ile eşleşen GGUF depoları, en çok indirilenler önce. Dosyalarını görmek için birine dokunun.",
+    "no_search_results": "\"{{query}}\" için GGUF depo bulunamadı.",
+    "tip": "İpuçları: Çoğu model, \"unsloth\", \"bartowski\" veya \"lmstudio-community\" gibi \"-GGUF\" ile biten bir isim altında GGUF sürümünü içerir. Daha küçük boyutlardaki modeller (Q4_K_M ve daha küçük) telefonlarda en iyi performansı gösterir. Kısıtlı veya özel modeller desteklenmez.",
+    "params": "{{value}} parametreler",
+    "context": "{{value}} bağlam",
+    "downloads": "{{value}} İndir",
+    "gated": "Bu depo, erişim kontrollu. İndirme için Hugging Face kimlik bilgisi gereklidir, ancak henüz desteklenmemektedir.",
+    "requested": "Talep edildi"
+  },
+  "models": {
+    "recommended": "Önerilen",
+    "memory_fit": {
+      "tight": "Bellek kapasitesine sığmayabilir",
+      "tight_compact": "Uygun olmayabilir",
+      "impossible": "Bu cihaz için çok büyük",
+      "impossible_compact": "Çok büyük"
+    },
+    "sections": {
+      "found_on_device": "Bu cihazda bulundu",
+      "added_from_hf": "Hugging Face ile eklendi",
+      "other": "Diğer"
+    },
+    "vector_storage": {
+      "reset_title": "Vektör depolamasını sıfırla",
+      "reset_message": "Bu çalışma alanının vektör depolamasını sıfırlamak istediğinden emin misiniz?",
+      "cleared": "Vektör depolama alanı boşaltıldı!"
+    },
+    "vision": {
+      "remote": "Uzak bir çalışma alanıyla sohbet ederken, resim desteği henüz sağlanmamıştır.",
+      "no_model": "Görüntüleri eklemek için bir model seçin.",
+      "on_device": "Seçilen yerel model, görüntüleri okuyamaz.",
+      "needs_download": "Bu model, görüntüleri algılayabilir, ancak ek bir indirme gerektirir."
+    },
+    "speech_to_text": {
+      "permission_title": "Mikrofon erişimi",
+      "permission_message": "AnythingLLM'ın, konuşmanızı metne dönüştürebilmesi için mikrofon erişimine ihtiyacı vardır.",
+      "permission_required_title": "Mikrofon erişimi gereklidir",
+      "permission_required_message": "Sesli metne dönüştürme özelliğini kullanmak için cihazınızın ayarlarında mikrofon erişimini etkinleştirin."
+    },
+    "attachments": {
+      "vectors_cleared": "Çalışma alanı verileri temizlendi",
+      "clear_vectors_title": "Net Çalışma Alanı Vektörleri",
+      "clear_vectors_message": "Bu çalışma alanındaki tüm vektörleri sillemekten emin misiniz? Bu işlem, bu çalışma alanındaki tüm vektörleri silecektir ve geri alınamaz.",
+      "not_found": "Ek yükleme bulunamadı",
+      "empty_content": "Eklenen dosyanın içeriği boş veya okunamazdı.",
+      "large_document_title": "Uzun belge",
+      "large_document_message": "\"{{name}}\" kabaca {{tokens}} token'dir. {{provider}} ile tüm belge bu çalışma alanındaki her mesajla gönderilir, bu da yavaş ve pahalı olabilir. Yine de ekle?",
+      "large_document_message_generic": "\"{{name}}\" yaklaşık olarak {{tokens}} token'dir. Model sağlayıcınızla birlikte, bu alanda gönderilen her mesajla tüm belge gönderilir, bu da yavaş ve maliyetli olabilir. Yine de eklemeyi mi istersiniz?",
+      "attach": "Ekleyin",
+      "create_failed": "Belge oluşturma başarısız oldu",
+      "camera_permission_title": "Kamera erişimi",
+      "camera_permission_message": "AnythingLLM'ın, isteğinizi yerine getirmek için fotoğraf çekmesi gerekiyor.",
+      "max_reached_one": "Her sorguya {{count}} kadar farklı öğe ekleyebilirsiniz.",
+      "max_reached_other": "Her sorguya {{count}} kadar farklı öğe ekleyebilirsiniz.",
+      "camera_permission_required": "Foto çekmek için kamera izni gereklidir.",
+      "camera_open_failed": "Kamera açılmadı",
+      "gallery_open_failed": "Galeriye erişilemedi",
+      "image_unreadable": "Seçilen görüntü okunamadı",
+      "images_skipped_unreadable_one": "{{count}} Görüntü okunamadı ve atlandı",
+      "images_skipped_unreadable_other": "{{count}} Görüntüler okunamaz durumda ve atılmıştır.",
+      "image_attach_failed": "Görüntü eklenemedi",
+      "max_reached_skipped_one": "Her sorguya {{max}} kadar öğe ekleyebilirsiniz - {{count}} öğe atlanacak",
+      "max_reached_skipped_other": "Her sorguya {{max}} kadar öğe ekleyebilirsiniz - {{count}} öğe atlanacak",
+      "images_skipped_no_vision_one": "Mevcut model, görüntüleri okuyamaz - {{count}} görüntü atlandı",
+      "images_skipped_no_vision_other": "Mevcut model, görüntüleri okuyamaz - {{count}} görüntü atlandı",
+      "read_failed": "{{name}} okunamadı",
+      "remove_title": "Eklemeyi Kaldır",
+      "remove_message": "Bu dosyayı sohbetten kaldırmak istediğinden emin misiniz?",
+      "shared_content_failed": "Paylaşılan içeriği eklenemedi"
+    },
+    "memory_warning": {
+      "short": "Bellek Dolu Uyarı",
+      "full": "Uyarı: Modelin boyutu, mevcut belleği aşabilir. Bu, cihazınızın performansını ve kararlılığını etkileyebilir."
+    },
+    "low_memory": {
+      "title": "Düşük bellek",
+      "advice": "Bellek dolduğunda telefonunuz, yanıtı tamamlamak için AnythingLLM kapatabilir ve bu, bir çöküş gibi görünebilir. Diğer uygulamaları kapatın veya daha güvenilir yanıtlar için uzak bir bağlantı kullanın.",
+      "free": "Boş",
+      "total": "Toplam",
+      "model_loaded": "Model (Yüklenmiş)",
+      "model_needs": "Model gereksinimleri",
+      "send_anyway": "Yine de gönder",
+      "got_it": "Anlaşıldı",
+      "indicator_label": "Bellek yetersiz"
+    },
+    "catalog": {
+      "gemma_3_1b": "(Q8_0) Gemma3 1B, daha karmaşık görevler için Gemma3 4B modelinin daha hafif ve daha küçük bir versiyonudur.",
+      "qwen3_0_6b": "(Q8_0) Qwen3 0.6B, hızlı yanıtlar ve basit görevler için tasarlanmış, küçük ve çok hızlı bir modeldir. Qwen3.5 0.8B ile yerini değiştirmiştir.",
+      "qwen3_1_7b": "(Q8_0) Qwen3 1.7B, Qwen3-0.6B modelinin daha karmaşık görevler için daha gelişmiş bir versiyonudur.",
+      "llama_3_2_1b": "(Q8_0) Llama 3.2 1B, Llama 3.2 modelinin en küçük versiyonudur.",
+      "qwen3_5_0_8b": "(Q8_0) Qwen3.5 0.8B, Qwen3.5 ailesindeki en küçük modeldir. Sağlam talimatlara göre çok hızlı çalışır.",
+      "qwen3_5_2b": "(Q8_0) Qwen3.5 2B, küçük boyutta olmasına rağmen, araç çağırma ve iyi muhakeme yeteneği ile güçlü bir genel amaçlı modeldir.",
+      "qwen3_5_4b": "(Q6_K) Qwen3.5 4B, telefonlarda çalışabilen en güçlü Qwen3.5 modelidir. En iyi doğruluk, akıl yürütme ve araç kullanımı; 8GB+ RAM'e sahip bir cihaz gerektirir.",
+      "qwen3_vl_2b_instruct": "(Q4_K_XL) Qwen3-VL 2B, fotoğraflar hakkında açıklama yapabilen ve soruları yanıtlayabilen bir görüntü-dil modeli.",
+      "granite_3_3_2b_instruct": "(Q4_K_XL) IBM'den Granite 3.3 2B, RAG, özetleme ve araç çağırma işlevleri için optimize edilmiştir. Apache 2.0 lisansı altında.",
+      "granite_4_2_3b": "(Q4_K_M) Granite 4.2 3B, daha güçlü akıl yürütme ve araç çağırma yeteneklerine sahip en yeni küçük Granite modelidir. Daha büyük indirme.",
+      "lfm2_5_1_2b_instruct": "(Q8_0) LFM2.5 1.2B, cihaz üzerinde sohbet, araç çağırma ve 16 dilde kullanım için optimize edilmiş, çok hızlı ve küçük bir modeldir. Tam kalite kuantizasyonu.",
+      "lfm2_5_2_6b": "(Q5_K_M) LFM2.5 2.6B, güçlü talimatları takip edebilen, araçları çağırabilen ve mantıksal çıkarımlar yapabilen telefonlar için en gelişmiş Liquid modelidir.",
+      "gemma_4_e2b": "(QAT Q2_K_XL) Gemma 4 E2B, Google'in mobil-ilk modeli etkili 2B parametre ile. Bu boyut i�in niceleme-farkinda egitilmistir.",
+      "gemma_4_e4b": "(QAT Q2_K_XL) 4 E4B, telefon için en uygun ve en güçlü Gemma seçeneğidir. Büyük indirme, güncel ve yüksek bellekli bir cihaz gerektirir."
+    },
+    "presets": {
+      "lightweight": {
+        "name": "Hafif",
+        "description": "Hızlı yanıtlar ve basit görevler için."
+      },
+      "balanced": {
+        "name": "Dengeli",
+        "description": "Hız ve doğruluk arasında denge arayanlar için."
+      },
+      "powerful": {
+        "name": "Güçlü",
+        "description": "En yüksek doğruluğu için daha güçlü modeller."
+      }
+    },
+    "imported_description": "Hugging Face'den eklendi. {{repo}}",
+    "imported_description_specs": "Eklenmiş: Hugging Face ({{repo}}). {{specs}}.",
+    "no_model_loaded_error": "Hiçbir model yüklenmedi. Lütfen önce bir model seçin.",
+    "unknown_model_description": "Bu cihazda {{modelId}} tarihinde bulundu, ancak model listemizde yer almamaktadır. Hala kullanmaya devam edebilir veya kaldırabilirsiniz.",
+    "status": {
+      "summarizing": "Önceki konuşmayı özetleme",
+      "using_summary_one": "{{count}} önceki mesajın bir özeti kullanılıyor",
+      "using_summary_other": "{{count}} önceki mesajın bir özeti kullanılıyor",
+      "loading_model": "Model belleğe yükleniyor",
+      "reply_truncated": "Yanıt kısaldı – bağlam penceresi dolu",
+      "searching_documents": "Belge arama",
+      "reranking": "Sonuçları yeniden sırala",
+      "reading_documents_one": "{{count}} ekli belgeyi okuyun",
+      "reading_documents_other": "{{count}} eklenen belgeleri okuma"
+    }
+  },
+  "providers": {
+    "descriptions": {
+      "native": "Uygula ve telefonunda modelleri çalıştır.",
+      "ollama": "Ollama ile kendi makinenizde LLM'leri çalıştırın.",
+      "lmstudio": "Binlerce gelişmiş LLM'yi keşfedin, indirin ve birkaç tıklamayla çalıştırın.",
+      "openai": "OpenAI'nin güçlü modellerinden yararlanın.",
+      "anthropic": "Anthropic tarafından sağlanan, arkadaş canlısı bir yapay zeka asistanı.",
+      "gemini": "Google'nin en büyük ve en güçlü yapay zeka modeli",
+      "openrouter": "Önde gelen sağlayıcıların API yapay zeka hizmetlerinin tek bir platformunda",
+      "bedrock": "AWS Bedrock ile güçlü temel modelleri güvenli bir şekilde kullanın.",
+      "deepseek": "Run DeepSeek'nin güçlü LLM'lerini.",
+      "fireworksai": "Üretim ortamında kullanıma hazır, karmaşık yapay zeka sistemleri oluşturmak için en hızlı ve verimli çıkarım motoru.",
+      "minimax": "MiniMax'in güçlü LLM'lerini kullanın.",
+      "moonshotai": "Moonshot AI'nin Kimi modellerini çalıştır.",
+      "novita": "Novita AI'den LLM'ler için güvenilir, ölçeklenebilir ve uygun maliyetli çözüm.",
+      "togetherai": "Together AI'den açık kaynaklı modelleri kullanın.",
+      "xai": "xAI'nin güçlü LLM'lerini (örneğin Grok) kullanın.",
+      "litellm": "LiteLLM'in OpenAI uyumlu proxy'sini farklı LLM'ler için kullanın.",
+      "localai": "Yerel makinenizde LLM'leri çalıştırın.",
+      "lemonade": "AMD donanım üzerinde LLM'leri Lemonade Sunucusu ile çalıştırın.",
+      "llmman": "Yerel olarak LLM'leri çalıştırmak için llmman'ı kullanın.",
+      "generic_openai": "Özel bir yapılandırma ile herhangi bir OpenAI uyumlu hizmete bağlanın"
+    },
+    "sections": {
+      "local": "Yerel Sağlayıcılar",
+      "cloud": "Bulut Sağlayıcıları"
+    },
+    "validation": {
+      "unknown_provider": "Bilinmeyen sağlayıcı.",
+      "api_key_required": "Lütfen bu sağlayıcı için bir anahtar girin. API",
+      "base_url_required": "Lütfen sağlayıcınızın temel URL numarasını girin.",
+      "region_required": "Lütfen Bedrock dağıtımınız için AWS bölgesini seçin.",
+      "model_required": "Lütfen kullanmak istediğiniz modeli seçin."
+    }
+  },
+  "llm_selection": {
+    "choose_provider": "Sağlayıcınızı seçin",
+    "no_providers_found": "\"{{query}}\" için sağlayıcı bulunamadı.",
+    "download_model_title": "Modeli indirin?",
+    "download_model_message": "Bu, modeli cihazınıza indirecektir. Boyutu {{size}} bayttır.",
+    "preferred_model": "Tercih Edilen Model"
+  },
+  "downloads": {
+    "no_internet_title": "İnternet bağlantısı yok.",
+    "no_internet_image_support": "Görüntüleri indirmek için internet bağlantınızın olması gerekmektedir.",
+    "no_internet_model": "Herhangi bir modeli indirmek için internet bağlantınızın olması gerekmektedir.",
+    "data_usage_title": "Veri kullanımı uyarısı",
+    "data_usage_image_support": "Resimleri indirmek için Wi-Fi bağlantısı kullanmanızı öneririz, çünkü boyutları oldukça {{size}}dir.",
+    "data_usage_model": "Modelin {{size}} boyutunda olması nedeniyle, indirmek için Wi-Fi bağlantısı kullanmanızı öneririz.",
+    "continue_anyway": "Devam et",
+    "continue_with_download": "İndirmeye devam et",
+    "image_support_title": "Resim indirme özelliği var mı?",
+    "image_support_message": "{{model}}, resim desteği dosyası indirildikten sonra fotoğrafları anlayabilir. Boyutu {{size}}'dir.",
+    "download_model_title": "Modeli indirin?",
+    "download_model_message": "Bu, modeli cihazınıza indirecektir. Boyutu {{size}}'dır.",
+    "notification_downloading_title": "Model indirme",
+    "notification_downloading_body": "İndirme {{model}}",
+    "notification_complete_title": "İndirme tamamlandı",
+    "notification_complete_body": "{{model}} indirildi",
+    "download_failed_title": "İndirme başarısız oldu",
+    "download_failed_message": "Modelin indirilmesinde bir hata oluştu.",
+    "uninstall_model_title": "Modeli sil?",
+    "uninstall_model_message": "Bu, modeli cihazınızdan kaldıracaktır.",
+    "storage_low": "Depolama alanı az! Model {{modelSize}} > {{freeSpace}} için yer var",
+    "storage_check_failed": "Depolama alanı kontrol edilemedi",
+    "setup_failed_title": "Kurulum başarısız oldu",
+    "setup_failed_message": "HF model indirme işlemi başarısız: {{error}}"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Hoş geldiniz",
+      "description": "Telefonunuzda çalışan, belgelerle sohbet edebilen, internette arama yapabilen ve uygulamalarınızla entegre olabilen bir yapay zeka asistanı.",
+      "get_started": "Başla",
+      "back_blocked": "Devam etmek için lütfen kurulum sürecini tamamlayın."
+    },
+    "model_selection": {
+      "title": "Hangi modeli kullanmak istersiniz?",
+      "description": "Bu ayarı daha sonra değiştirebilirsiniz, ancak ihtiyaçlarınıza en uygun olanı seçin.",
+      "use_external": "Model indirmek istemiyor musunuz? Harici bir sağlayıcı kullanın."
+    },
+    "external": {
+      "title": "Dış bir sağlayıcıyı bağla",
+      "description": "Telefonunuza indirmek yerine, başka bir yerde barındırılan bir modeli kullanın. Bu ayarı daha sonra değiştirebilirsiniz.",
+      "choose_provider": "Bir LLM sağlayıcısı seçin",
+      "provider_settings": "Sağlayıcı Ayarları",
+      "incomplete_setup": "Sağlayıcı kurulumu eksik"
+    },
+    "download": {
+      "error_title": "Bir hata oluştu",
+      "error_message": "Model {{error}} indirme hatası",
+      "success_title": "Model indirildi",
+      "success_message": "Model başarıyla indirildi",
+      "url_must_be_gguf": "URL'ün \".gguf\" ile bitmesi gerekir."
+    },
+    "survey": {
+      "title": "AnythingLLM size nasıl yardımcı olabilir?",
+      "description": "Size en uygun olanı seçin.",
+      "options": {
+        "productivity": "Verimliliği Artır",
+        "privacy": "Gizliliğe odaklı sohbetler",
+        "custom_ai": "Özel Yapay Zeka Temsilcileri",
+        "automation": "Yapay Zeka Otomasyonu",
+        "other": "Diğer"
+      }
+    },
+    "data_handling": {
+      "title": "Veri Yönetimi ve Gizlilik",
+      "description": "AnythingLLM ile, tüm sohbetler, belgeler ve diğer veriler cihazınızda işlenir ve saklanır.",
+      "local_chats_title": "Yerel Sohbetler",
+      "local_chats_description": "Tüm sohbetler cihazınızda saklanır.",
+      "embedding_title": "Belge Entegrasyonu",
+      "embedding_description": "Tüm belgeler ve işlemler cihazınızda gerçekleştirilir.",
+      "agents_title": "AI Destek",
+      "agents_description": "Tüm ajanlar, cihazınızda çalışır ve yalnızca gerekli durumlarda (örneğin, web araması) interneti kullanır.",
+      "experience": "Deneyin AnythingLLM",
+      "setting_up": "İlk çalışma alanınızı oluşturma",
+      "default_workspace_name": "Çalışma Alanım"
+    }
+  },
+  "workspace_settings": {
+    "load_error": "Çalışma alanı yüklenirken hata oluştu",
+    "autosaving": "Otomatik kaydet...",
+    "autosaved": "Kaydedildi!",
+    "name": {
+      "section": "Çalışma Alanı Adı",
+      "title": "Ad",
+      "current": "Mevcut Ad",
+      "placeholder": "Adınızı buraya girin...",
+      "save_error": "Adı kaydetmede hata"
+    },
+    "system_prompt": {
+      "title": "Sistem Talimatı",
+      "label": "Sorunuz",
+      "current": "Mevcut Sistem Talimatı",
+      "placeholder": "Sistem komutunuzu buraya girin...",
+      "save_error": "Sistem komutunu kaydetme hatası",
+      "description": "Sistem komutu, yapay zekayı yönlendirmek ve yanıt türünü belirlemek için kullanılan temel komut ve talimatlardır."
+    },
+    "temperature": {
+      "title": "Sıcaklık",
+      "current": "Mevcut Sıcaklık",
+      "suggested": "Önerilen Sıcaklık",
+      "placeholder": "Varsayılan (sağlayıcı tarafından belirlenir)",
+      "save_error": "Sıcaklık kaydetme hatası",
+      "hint": "Boş bırakmak, LLM sağlayıcınızın ve modelinizin varsayılan sıcaklığını kullanmanızı sağlar. Değeri 0 ile 1 arasında ayarlayarak bu değeri geçersiz kılabilirsiniz.",
+      "description": "Sıcaklık, yapay zekanın verdiği yanıtların rastgelelik düzeyini ifade eder. Sıcaklık arttıkça, yanıtlar daha rastgele olacaktır."
+    },
+    "context_length": {
+      "title": "Bağlam Uzunluğu",
+      "current": "Mevcut Bağlam Uzunluğu",
+      "suggested": "Önerilen Konuşma Uzunluğu",
+      "placeholder": "Konuşma bağlamınızı buraya girin...",
+      "save_error": "Bağlam uzunluğunu kaydetmede hata",
+      "hint": "Açıklayın ki, bağlam uzunluğu kullandığınız modele ve cihazınızın belleği için de bir etkiye sahiptir.",
+      "description": "Bağlam uzunluğu, yapay zekanın bir yanıt oluştururken kullanabileceği maksimum token sayısını ifade eder."
+    },
+    "vectors": {
+      "section": "Vektör Depolama",
+      "count": "Vektör Sayısı",
+      "description": "Bu, şu anda çalışma alanında depolanan vektörlerin sayısıdır. Bu, çalışma alanının bağlamını depolamak için kullanılır."
+    },
+    "delete": {
+      "button": "Çalışma Alanını Sil",
+      "confirm_title": "Çalışma Alanını Sil?",
+      "confirm_message": "Bu çalışma alanını gerçekten silmek istiyor musunuz? Tüm sohbetler kaybolacaktır.",
+      "confirm_message_remote": "Bu çalışma alanını gerçekten silmek istiyor musunuz? Tüm sohbetler kaybolacaktır.\n\nBu, uzak sunucunuzdaki çalışma alanını silmeyecektir."
+    }
+  },
+  "connect": {
+    "title": "AnythingLLM ile bağlantı kur",
+    "scan_description": "AnythingLLM örneğinizin veya istemcinizin QR kodunu tarayarak, AI'ınızı mobil cihazınızda kullanmak için verilerini senkronize edin!",
+    "previous_connections": "Önceki Sohbetler",
+    "verify": {
+      "title": "Bağlantıyı doğrula",
+      "go_back": "Geri dön",
+      "registering": "Cihazınızı kaydettiniz...",
+      "few_seconds": "Bu işlem birkaç saniye sürebilir...",
+      "awaiting_approval": "Onay bekleniyor...",
+      "approve_in_app": "Lütfen AnythingLLM uygulamasında cihazı onaylayın...",
+      "collecting_data": "Verileri toplama...",
+      "register_failed": "Cihazın kaydı başarısız oldu. Lütfen tekrar deneyin.",
+      "register_failed_reason": "Cihazın kaydı başarısız: {{reason}}",
+      "approval_failed": "Cihazın kaydı veya doğrulanması başarısız oldu. Lütfen tekrar deneyin."
+    },
+    "import": {
+      "connection_expired": "Mevcut AnythingLLM Desktop bağlantınızın süresi doldu.",
+      "refresh_failed": "Çalışma alanlarını yenileme başarısız oldu",
+      "go_home": "Ana sayfaya dön",
+      "thread_count_one": "{{formatted}} Konu",
+      "thread_count_other": "{{formatted}} Konular",
+      "chat_count_one": "{{formatted}} Sohbet",
+      "chat_count_other": "{{formatted}} Sohbetler",
+      "sync": "Senkronize et",
+      "synced": "Senkronize",
+      "sync_failed": "Başarısız",
+      "sync_workspace_failed": "Çalışma alanı senkronizasyonu başarısız {{name}}"
+    }
+  },
+  "scheduled_jobs": {
+    "title": "Planlanan Görevler",
+    "job_missing": "O iş artık mevcut değil",
+    "update_failed": "İş güncellenemedi",
+    "prompt": "Sorunuz",
+    "tools": "Araçlar",
+    "paused": "Durduruldu",
+    "running_now": "Çalışıyor",
+    "stop_run": "Durdur",
+    "run_already_finished": "O koşu zaten tamamlanmıştı.",
+    "stop_failed": "Koşuyu durduramadım",
+    "blocked": {
+      "no_provider_title": "Öncelikle bir LLM sağlayıcısı seçin",
+      "no_provider_body": "Zamanlanmis isler siz olmadan �alisir, bu nedenle konusmak i�in bir bulut veya kendi kendine barindirilan LLM gerekir. Ayarlar'da bir tane se�in.",
+      "on_device_title": "Planlanan görevler için bulut LLM gereklidir.",
+      "on_device_body": "Cihazda çalışan model arka planda çalışamaz, bu nedenle seçildiğinde işlemler durdurulur. İşlemleri çalıştırmak için Ayarlar'da bir bulut veya kendi barındırdığınız bir sağlayıcıya geçin."
+    },
+    "list": {
+      "open_llm_settings": "LLM ayarlarını aç",
+      "enabled_count": "{{enabled}}'da {{total}}' hakkında bilgi alın",
+      "your_jobs": "İşleriniz",
+      "explainer_background": "Bir görev, asistanın belirli bir zamanlamada, sizin için seçtiğiniz araçları kullanarak gerçekleştirdiği bir işlemdir. Sonuçlar burada toplanır ve uygulama kapalıyken bile çalışır. Android, pil ömrünü korumak için bir çalışmayı birkaç dakika geciktirebilir.",
+      "explainer_foreground": "Bir görev, asistanın belirli bir zaman diliminde sizin için çalıştıracağı, seçtiğiniz araçları kullanarak oluşturulan bir talimattır. Sonuçlar, uygulamayı açtığınızda otomatik olarak kaydedilir.",
+      "new_job": "Yeni iş",
+      "waiting_for_cloud": "Bulut bağlantısı bekleniyor LLM",
+      "next_run": "Son çalıştırmayı başlat {{time}}",
+      "not_scheduled": "Planlanmamış",
+      "empty_title": "Şimdilik planlanan görev yok.",
+      "empty_body": "Yardımcı, her sabah bir web sitesini kontrol etsin, haftalık bir özet hazırlasın veya ayın başında bir rapor oluştursun – tüm bunlar sohbet penceresini açmadan.",
+      "create_first": "İlk işinizi oluşturun"
+    },
+    "runs": {
+      "already_running": "Bu işlem zaten çalışıyor",
+      "start_failed": "İş başlatılamadı",
+      "fallback_title": "İş",
+      "edit_job": "İş düzenle",
+      "next_run_with_date": "Son çalıştırma {{relative}} · {{date}}",
+      "not_scheduled_to_run": "Planlanmamış",
+      "notify": "Bildirim",
+      "last_run": "Son çalıştırma",
+      "never": "Asla",
+      "run_now": "Başlat",
+      "run_count_one": "{{count}} çalıştırma",
+      "run_count_other": "{{count}} çalıştırma",
+      "history": "Tarih",
+      "empty_with_next": "Bu iş henüz çalışmadı. İlk çalışması {{time}}. Ayrıca, denemek için şimdi de çalıştırabilirsiniz.",
+      "empty": "Bu işlem henüz çalışmadı. Denemek için şimdi de çalıştırabilirsiniz.",
+      "manual": "· Elle"
+    },
+    "form": {
+      "save_failed": "İş kayboldu",
+      "job_updated": "İş güncellendi",
+      "job_scheduled": "İş programlandı",
+      "could_not_save": "Kaydedilemedi",
+      "delete_title": "Bu işi sil?",
+      "delete_message": "\"{{name}}\" ve bu tarafından üretilen tüm sonuçlar silinecektir. Bu işlemi geri alınamaz.",
+      "job_deleted": "İş silindi",
+      "delete_failed": "İş silme işlemi başarısız oldu",
+      "edit_title": "İş kaydını düzenle",
+      "new_title": "Yeni İş",
+      "what_section": "Ne yapmalı?",
+      "name": "Ad",
+      "name_placeholder": "Günlük haber özet",
+      "prompt_hint": "Tam olarak yazın, sanki bir sohbet ortamında gönderiyormuş gibi. Detaylı olun – kimse sorularınızı yanıtlayacak.",
+      "prompt_placeholder": "https://news.ycombinator.com adresini okuyun ve en ilginç beş haberi, her biri için bir cümleyle özetleyin.",
+      "when_section": "Ne zaman çalışmalı?",
+      "options": "Seçenekler",
+      "notify_title": "Tamamlandığında beni bilgilendir",
+      "notify_description": "Bir koşu tamamlandığında ve sonuç bildirildiğinde bildirim gönderir. Başarısız veya boş koşular yalnızca uygulamada bir nokta gösterir.",
+      "enabled_description": "Çalışmayı ve sonuçlarını kaydetmek için kapatın.",
+      "save_changes": "Değişiklikleri kaydet",
+      "schedule_job": "Görev zamanını ayarla",
+      "delete_job": "İlanı sil"
+    },
+    "tool_picker": {
+      "selected_count_one": "{{count}} seçildi",
+      "selected_count_other": "{{count}} seçildi",
+      "none_reply_only": "Yanıtla",
+      "app_connections": "Uygulama Bağlantıları",
+      "explainer": "Herhangi bir aracı her çalıştırmada modele sunulur. Normalde onay isteyen araçlar, kimsenin olmadığı için otomatik olarak onaylanır."
+    },
+    "builder": {
+      "daily": "Günlük",
+      "weekly": "Haftalık",
+      "monthly": "Aylık",
+      "hourly": "Saatlik",
+      "every_few_minutes": "Her birkaç dakika",
+      "mode_schedule": "Planla",
+      "mode_cron": "Zamanlama ifadesi",
+      "run": "Başlat",
+      "every": "Her",
+      "minutes_chip": "{{minutes}} dakika",
+      "at_minute": "Dakika",
+      "on": "On",
+      "on_day": "Bir gün",
+      "days_skipped": "Ayların {{day}} günleri atlanır.",
+      "at_time": "{{time}}'da",
+      "custom_minute": "Dakika: {{minute}} değeri, bir cron ifadesi ile ayarlanmıştır. Değiştirmek için bir adım daha yukarıya geçin.",
+      "cron_help": "Beş alan: dakika, saat, ayın günü, ay, haftanın günü (0 = Pazar). Zamanlar, telefonunuzun saat diliminde gösterilir.",
+      "invalid_cron": "Bu geçerli bir cron ifadesi değil"
+    },
+    "run_detail": {
+      "run_missing": "Bu özellik artık mevcut değil",
+      "delete_title": "Bu oturumu sil?",
+      "delete_message": "Sonuç ve oluşturulan tüm dosyalar silinecektir.",
+      "run_deleted": "Silinenleri geri yükle",
+      "fallback_title": "Başlat",
+      "delete_run": "Sil",
+      "run_manually": "Manuel olarak çalış",
+      "scheduled": "Planlanmış",
+      "tokens": "{{prompt}} istem {{completion}} tamamlanmış",
+      "result": "Sonuç",
+      "empty_completed": "Model, herhangi bir çıktı üretmedi.",
+      "empty_stopped": "Koşu durdurulana kadar herhangi bir sonuç üretilmedi.",
+      "stopping": "Dur...",
+      "working": "Çalışıyorum…"
+    },
+    "status": {
+      "queued": "Bekleme",
+      "running": "Çalışıyor",
+      "completed": "Tamamlandı",
+      "failed": "Başarısız",
+      "timed_out": "Zaman aşımı",
+      "stopped": "Durdu"
+    },
+    "unseen": "Görünmeyen",
+    "relative_time": {
+      "in_under_a_minute": "1 dakikadan daha kısa sürede",
+      "just_now": "Şimdi",
+      "in_minutes": "{{minutes}} dakika içinde",
+      "minutes_ago": "{{minutes}} önce",
+      "in_hours": "{{hours}} içinde",
+      "hours_ago": "{{hours}} önce",
+      "in_hours_minutes": "{{hours}} saatinde {{minutes}}'de",
+      "hours_minutes_ago": "{{hours}} önce {{minutes}} yıl önce",
+      "in_days": "{{days}} içinde",
+      "days_ago": "{{days}} önce"
+    },
+    "runner": {
+      "job_failed": "İş başarısız",
+      "created_files": "İşiniz tamamlandı ve sizin için gerekli dosyaları oluşturdu."
+    },
+    "schedule": {
+      "custom": "Özel program ({{expression}})",
+      "invalid": "Geçersiz program",
+      "every_minute": "Her dakika",
+      "every_minutes_one": "Her {{count}} dakika",
+      "every_minutes_other": "Her {{count}} dakika",
+      "every_hour": "Her saat",
+      "every_hour_at": "Her saat {{minute}}'dan sonra",
+      "every_day_at": "Her gün {{time}} saatinde",
+      "weekdays_at": "Haftanın iş günlerinde {{time}}",
+      "weekends_at": "Hafta sonları {{time}}",
+      "weekly_single": "Her {{day}} saat {{time}}",
+      "weekly_multiple": "Her {{days}} ve {{last}} saatinde {{time}}",
+      "list_separator": ", ",
+      "monthly": "Her ayın {{day}} günü, saat {{time}}",
+      "ordinal_st": "{{n}}.",
+      "ordinal_nd": "{{n}}.",
+      "ordinal_rd": "{{n}}.",
+      "ordinal_th": "{{n}}.",
+      "time_am": "{{hour}}:{{minute}} Sabah",
+      "time_pm": "{{hour}}: {{minute}}",
+      "hour_am": "{{hour}} Sabah",
+      "hour_pm": "{{hour}} öğleden sonra"
+    },
+    "weekdays_short": {
+      "sun": "Güneş",
+      "mon": "Pazartesi",
+      "tue": "Salı",
+      "wed": "Salı",
+      "thu": "Çarşamba",
+      "fri": "Cuma",
+      "sat": "Satın al"
+    },
+    "weekdays_long": {
+      "sunday": "Pazar",
+      "monday": "Pazartesi",
+      "tuesday": "Salı",
+      "wednesday": "Çarşamba",
+      "thursday": "Perşembe",
+      "friday": "Cuma",
+      "saturday": "Cumartesi"
+    }
+  },
+  "notifications": {
+    "channels": {
+      "download_progress": "İndirme durumu",
+      "chat_replies": "Yanıtlar",
+      "chat_replies_description": "Yanıtın tamamlandığında AnythingLLM arka planda olduğunda bildirim",
+      "scheduled_jobs": "Planlanan Görevler",
+      "scheduled_jobs_description": "Planlanan görev bittiğinde bildirim"
+    },
+    "blocked_nudge": {
+      "title": "Yanıtların tamamlandığında bildirim alın",
+      "message": "AnythingLLM için bildirimler kapalı. Telefonunuz kilitliyken yanıtın tamamlandığını bildirimle almak için açın.",
+      "not_now": "Şimdi değil",
+      "open_settings": "Ayarları aç"
+    },
+    "chat": {
+      "ready_title": "Yanıt hazır",
+      "failed_title": "Yanıtlanamadı",
+      "ready_body": "Yanıtınız hazır.",
+      "failed_body": "Yanıtınız tamamlanamadı. Detayları görmek için tıklayın."
+    },
+    "scheduled_job": {
+      "finished_title": "{{name}} tamamlandi",
+      "fallback_body": "Planlanan işiniz tamamlandı ve sonuçlandı."
+    }
+  },
+  "home": {
+    "welcome_title": "Hoş geldiniz AnythingLLM",
+    "get_started": "Yeni bir çalışma alanı oluşturarak başlayın.",
+    "create_workspace": "Çalışma Alanı Oluştur",
+    "default_workspace_name": "Çalışma Alanım"
+  },
+  "share": {
+    "unsupported_content": "Sadece dosyalar, resimler ve bağlantılar paylaşılabilir. AnythingLLM",
+    "finish_onboarding": "AnythingLLM'u tamamlamadan paylaşmayın",
+    "open_failed": "Paylaşılan içeriye erişilemedi"
+  },
+  "deep_links": {
+    "finish_onboarding": "AnythingLLM'u kurmayı tamamlamadan bağlantıları açmayın."
+  }
+}

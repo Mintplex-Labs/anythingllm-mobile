@@ -4,6 +4,7 @@ import { CaretDown, Hammer } from "phosphor-react-native";
 import { type DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import { type IToolApprovalActivity } from "@/database/models/WorkspaceChat";
 import ToolApproval from "@/utils/ToolsManager/toolApproval";
+import { Trans, useTranslation } from "react-i18next";
 
 /**
  * Native port of the desktop `ToolApprovalRequest` card
@@ -47,6 +48,7 @@ const COLORS = {
 } as const;
 
 function ToolApprovalCard({ node }: { node: IToolApprovalActivity }) {
+    const { t } = useTranslation();
     const [isExpanded, setIsExpanded] = useState(false);
     // Guard against a double tap landing before the settled snapshot arrives.
     const [responded, setResponded] = useState(false);
@@ -64,7 +66,11 @@ function ToolApprovalCard({ node }: { node: IToolApprovalActivity }) {
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexShrink: 1 }}>
                     <Hammer size={16} color={COLORS.text} />
                     <Text style={{ color: COLORS.text, fontSize: 14, fontWeight: '500', flexShrink: 1 }}>
-                        Model wants to call <Text style={{ color: COLORS.skill, fontWeight: '600' }}>{node.skillName}</Text>
+                        <Trans
+                            i18nKey="chat.tool_approval.wants_to_call"
+                            values={{ skill: node.skillName }}
+                            components={{ skill: <Text style={{ color: COLORS.skill, fontWeight: '600' }} /> }}
+                        />
                     </Text>
                 </View>
                 {hasPayload && (
@@ -72,7 +78,7 @@ function ToolApprovalCard({ node }: { node: IToolApprovalActivity }) {
                         onPress={() => setIsExpanded((v) => !v)}
                         hitSlop={8}
                         accessibilityRole="button"
-                        accessibilityLabel={isExpanded ? 'Hide details' : 'Show details'}
+                        accessibilityLabel={isExpanded ? t('chat.tool_approval.hide_details') : t('chat.tool_approval.show_details')}
                         style={{ transform: [{ rotate: isExpanded ? '180deg' : '0deg' }] }}
                     >
                         <CaretDown size={16} color={COLORS.text} />
@@ -97,7 +103,7 @@ function ToolApprovalCard({ node }: { node: IToolApprovalActivity }) {
                     onPress={() => respond(true)}
                     style={{ backgroundColor: '#FFFFFF', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8, opacity: responded ? 0.6 : 1 }}
                 >
-                    <Text style={{ color: '#000000', fontSize: 14 }}>Approve</Text>
+                    <Text style={{ color: '#000000', fontSize: 14 }}>{t('chat.tool_approval.approve')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     activeOpacity={0.6}
@@ -105,7 +111,7 @@ function ToolApprovalCard({ node }: { node: IToolApprovalActivity }) {
                     onPress={() => respond(false)}
                     style={{ width: 70, height: 36, borderRadius: 8, alignItems: 'center', justifyContent: 'center', opacity: responded ? 0.6 : 1 }}
                 >
-                    <Text style={{ color: '#FFFFFF', fontSize: 14, fontWeight: '500' }}>Reject</Text>
+                    <Text style={{ color: '#FFFFFF', fontSize: 14, fontWeight: '500' }}>{t('chat.tool_approval.reject')}</Text>
                 </TouchableOpacity>
             </View>
 

@@ -11,6 +11,7 @@ import Memory from './Memory';
 import AnythingLLMExternal from '@/utils/AnythingLLMExternal';
 import Telemetry from '@/utils/Telemetry';
 import { getDefaultContextLength } from '@/utils/contextLength';
+import i18n from '@/i18n';
 
 export type WorkspaceType = {
   name: string;
@@ -42,7 +43,10 @@ export type WorkspaceDBType = Model & WorkspaceType & {
 
 export default class Workspace extends Model {
   static table = 'workspaces';
-  static defaultName = 'New Workspace';
+  /** In the UI language at the time it is read - it is stored as the name of the workspace being created */
+  static get defaultName(): string {
+    return i18n.t('new_workspace.default_name');
+  }
   static defaultSystemPrompt = `You are a helpful assistant that can answer questions and help with tasks.`;
 
   /**
@@ -60,20 +64,20 @@ export default class Workspace extends Model {
     name: {
       validate: (value: string) => {
         let error = '';
-        if (typeof value !== 'string') error = 'Name must be a string';
-        if (!value) error = 'Name is required';
-        if (value.length < 3) error = 'Name must be at least 3 characters long';
-        if (value.length > 100) error = 'Name must be less than 100 characters long';
+        if (typeof value !== 'string') error = i18n.t('misc.validation.name_not_string');
+        if (!value) error = i18n.t('misc.validation.name_required');
+        if (value.length < 3) error = i18n.t('misc.validation.name_too_short', { count: 3 });
+        if (value.length > 100) error = i18n.t('misc.validation.name_too_long', { count: 100 });
         return { valid: !error, error };
       },
     },
     systemPrompt: {
       validate: (value: string) => {
         let error = '';
-        if (typeof value !== 'string') error = 'System prompt must be a string';
-        if (!value) error = 'System prompt is required';
-        if (value.length < 10) error = 'System prompt must be at least 10 characters long';
-        if (value.length > Workspace.maxSystemPromptLength) error = `System prompt must be less than ${Workspace.maxSystemPromptLength} characters long`;
+        if (typeof value !== 'string') error = i18n.t('misc.validation.system_prompt_not_string');
+        if (!value) error = i18n.t('misc.validation.system_prompt_required');
+        if (value.length < 10) error = i18n.t('misc.validation.system_prompt_too_short', { count: 10 });
+        if (value.length > Workspace.maxSystemPromptLength) error = i18n.t('misc.validation.system_prompt_too_long', { count: Workspace.maxSystemPromptLength });
         return { valid: !error, error };
       },
     },
@@ -81,8 +85,8 @@ export default class Workspace extends Model {
       validate: (value: number | null) => {
         let error = '';
         if (value === null) return { valid: true, error }; // null = use the provider default
-        if (typeof value !== 'number' || isNaN(Number(value))) error = 'Temperature must be a number';
-        else if (value < 0 || value > 1) error = 'Temperature must be between 0 and 1';
+        if (typeof value !== 'number' || isNaN(Number(value))) error = i18n.t('misc.validation.temperature_not_number');
+        else if (value < 0 || value > 1) error = i18n.t('misc.validation.temperature_range', { min: 0, max: 1 });
         return { valid: !error, error };
       },
     },
@@ -90,9 +94,9 @@ export default class Workspace extends Model {
       validate: (value: number) => {
         let error = '';
         const numValue = Number(value);
-        if (typeof value !== 'number' || isNaN(numValue)) error = 'Context length must be a number';
-        if (numValue <= 0) error = 'Context length must be greater than 0';
-        if (numValue <= 50) error = 'Context length must be greater than 50';
+        if (typeof value !== 'number' || isNaN(numValue)) error = i18n.t('misc.validation.context_length_not_number');
+        if (numValue <= 0) error = i18n.t('misc.validation.context_length_min', { min: 0 });
+        if (numValue <= 50) error = i18n.t('misc.validation.context_length_min', { min: 50 });
         return { valid: !error, error };
       },
     },

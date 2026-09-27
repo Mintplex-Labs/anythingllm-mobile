@@ -4,6 +4,7 @@ import uiStore from '@/store/UIStore';
 import { PATHS } from '@/utils/paths';
 import { resetToWhenReady } from '@/utils/navigationRef';
 import { showToast } from '@/utils/Notification';
+import i18n from '@/i18n';
 import Telemetry from '@/utils/Telemetry';
 import { parseHfRepoId } from '@/utils/api/hfGguf';
 
@@ -112,7 +113,7 @@ export async function handleDeepLink(url: string | null | undefined): Promise<vo
 
     const onboarded = await uiStore.getFromStorage('onboarding_data_handling_completed', false);
     if (!onboarded) {
-        showToast('Finish setting up AnythingLLM before opening links to it', 'long');
+        showToast(i18n.t('deep_links.finish_onboarding'), 'long');
         return;
     }
 

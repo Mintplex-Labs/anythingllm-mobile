@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import uiStore from '@/store/UIStore';
+import { tKey } from '@/i18n';
 import { isOnDeviceProviderName } from '@/utils/ToolsManager/providerGuards';
 import { type JobsBlockedReason } from '@/utils/ScheduledJobs/runner';
 
@@ -32,13 +33,14 @@ export default function useJobsBlockedReason(): { blocked: JobsBlockedReason; lo
     return { blocked, loading };
 }
 
+/** Translation keys - resolve with t() when rendering */
 export const BLOCKED_COPY: Record<Exclude<JobsBlockedReason, null>, { title: string; body: string }> = {
     no_provider: {
-        title: 'Choose an LLM provider first',
-        body: 'Scheduled jobs run without you, so they need a cloud or self-hosted LLM to talk to. Pick one in Settings.',
+        title: tKey('scheduled_jobs.blocked.no_provider_title'),
+        body: tKey('scheduled_jobs.blocked.no_provider_body'),
     },
     on_device_provider: {
-        title: 'Scheduled jobs need a cloud LLM',
-        body: 'The on-device model cannot run in the background, so jobs are paused while it is selected. Switch to a cloud or self-hosted provider in Settings to run them.',
+        title: tKey('scheduled_jobs.blocked.on_device_title'),
+        body: tKey('scheduled_jobs.blocked.on_device_body'),
     },
 };

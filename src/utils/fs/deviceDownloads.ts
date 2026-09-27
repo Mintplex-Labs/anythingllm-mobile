@@ -2,6 +2,7 @@ import { Linking, PermissionsAndroid, Platform } from 'react-native';
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import Share from 'react-native-share';
 import IntentLauncher from '@yz1311/react-native-intent-launcher';
+import i18n from '@/i18n';
 
 /**
  * Putting a file somewhere the user can find it outside the app.
@@ -35,9 +36,9 @@ function log(message: any, ...args: any[]) {
 export async function resolveDownloadsDirectory(): Promise<{ path: string; locationLabel: string }> {
   if (Platform.OS === 'android') {
     await ensureAndroidStoragePermission();
-    return { path: RNFS.DownloadDirectoryPath, locationLabel: 'Downloads' };
+    return { path: RNFS.DownloadDirectoryPath, locationLabel: i18n.t('files.location.downloads') };
   }
-  return { path: IOS_EXPORT_FOLDER_PATH, locationLabel: 'Files > On My iPhone > AnythingLLM > Exports' };
+  return { path: IOS_EXPORT_FOLDER_PATH, locationLabel: i18n.t('files.location.ios_exports') };
 }
 
 /**
@@ -47,10 +48,10 @@ export async function resolveDownloadsDirectory(): Promise<{ path: string; locat
 export async function ensureAndroidStoragePermission(): Promise<void> {
   if (Platform.OS !== 'android' || Platform.Version >= 29) return;
   const status = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, {
-    title: 'Save to Downloads',
-    message: 'AnythingLLM needs storage access to save the file to your Downloads folder.',
-    buttonPositive: 'Allow',
-    buttonNegative: 'Cancel',
+    title: i18n.t('files.storage_permission.title'),
+    message: i18n.t('files.storage_permission.message'),
+    buttonPositive: i18n.t('common.allow'),
+    buttonNegative: i18n.t('common.cancel'),
   });
   if (status !== PermissionsAndroid.RESULTS.GRANTED) throw new Error('Storage permission was not granted');
 }
@@ -111,7 +112,10 @@ export async function copyToDeviceDownloads({ filename, sourcePath }: { filename
 }
 
 /** Label for the button that jumps to the saved file's folder */
-export const OPEN_LOCATION_LABEL = Platform.OS === 'android' ? 'Open in Downloads' : 'Open in Files';
+/** Label for the button that jumps to where a file was saved - translated when called */
+export function openLocationLabel(): string {
+  return Platform.OS === 'android' ? i18n.t('files.location.open_downloads') : i18n.t('files.location.open_files');
+}
 
 /**
  * Jump to where a file was saved.

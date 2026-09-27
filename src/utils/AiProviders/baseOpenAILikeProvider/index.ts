@@ -15,6 +15,7 @@ import { isAbortError, linkAbortSignal, throwIfAborted } from "@/utils/chat/abor
 import MemoryManager, { type PromptMemories } from "@/utils/Memories";
 import Document from "@/database/models/Document";
 import { estimateTokens, formatDocumentsBlock, type FullContextDocument } from "@/utils/documents/fullContext";
+import i18n from "@/i18n";
 
 interface BaseLLMProviderConfig {
   provider: string;
@@ -433,7 +434,7 @@ export default abstract class BaseOpenAILikeProvider {
       if (userPrompt.length < 10) throw new SilentError('User prompt is too short to get context texts');
       const totalEmbeddings = await VectorDB.getWorkspaceVectorCount(this.workspace.slug);
       if (totalEmbeddings === 0) throw new SilentError('No vectors in vector store');
-      onStatus?.('Searching your documents');
+      onStatus?.(i18n.t('models.status.searching_documents'));
 
       const embedder = getEmbedder('native');
       const queryVector = await embedder.embed(userPrompt, 'query');
@@ -445,7 +446,7 @@ export default abstract class BaseOpenAILikeProvider {
       if (canRerank) {
         const searchLimit = DocumentReranker.searchLimit(totalEmbeddings);
         const wideResults = await VectorDB.runSemanticSearch(this.workspace.slug, queryVector, searchLimit);
-        onStatus?.('Reranking results');
+        onStatus?.(i18n.t('models.status.reranking'));
         const reranked = await reranker.rerank(userPrompt, wideResults, this.topN);
         results = reranked
           .filter(r => {
@@ -530,7 +531,7 @@ export default abstract class BaseOpenAILikeProvider {
     try {
       const documents = await Document.fullContextDocumentsFor(this.workspace.slug, threadSlug);
       if (!documents.length) return [];
-      onStatus?.(`Reading ${documents.length} attached document${documents.length === 1 ? '' : 's'}`);
+      onStatus?.(i18n.t('models.status.reading_documents', { count: documents.length }));
       const tokens = documents.reduce((sum, doc) => sum + estimateTokens(doc.content), 0);
       this.log(`Sending ${documents.length} document(s) in full (~${tokens} tokens): ${documents.map((doc) => doc.name).join(', ')}`);
       return documents;

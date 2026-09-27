@@ -1,0 +1,1177 @@
+{
+  "common": {
+    "add": "追加",
+    "allow": "許可",
+    "apply": "適用",
+    "back": "戻る",
+    "cancel": "キャンセル",
+    "clear": "クリア",
+    "close": "閉じる",
+    "confirm": "確認",
+    "continue": "続行",
+    "copied": "コピーしました",
+    "copy": "コピー",
+    "create": "作成",
+    "default": "デフォルト",
+    "delete": "削除",
+    "disable": "無効化",
+    "disabled": "無効",
+    "dismiss": "閉じる",
+    "done": "完了",
+    "download": "ダウンロード",
+    "downloading": "ダウンロード中",
+    "edit": "編集",
+    "enable": "有効化",
+    "enabled": "有効",
+    "error": "エラー",
+    "export": "エクスポート",
+    "import": "インポート",
+    "install": "インストール",
+    "installed": "インストール済み",
+    "learn_more": "詳細情報",
+    "loading": "読み込み中...",
+    "next": "次へ",
+    "no": "いいえ",
+    "none": "なし",
+    "off": "オフ",
+    "ok": "OK",
+    "on": "オン",
+    "open": "開く",
+    "optional": "オプション",
+    "refresh": "更新",
+    "remove": "削除",
+    "rename": "名前変更",
+    "required": "必須",
+    "reset": "リセット",
+    "retry": "再試行",
+    "save": "保存",
+    "search": "検索",
+    "select": "選択",
+    "selected": "選択済み",
+    "send": "送信",
+    "settings": "設定",
+    "share": "共有",
+    "skip": "スキップ",
+    "stop": "停止",
+    "success": "成功",
+    "uninstall": "アンインストール",
+    "unknown": "不明",
+    "unknown_error": "不明なエラー",
+    "update": "更新",
+    "upload": "アップロード",
+    "yes": "はい"
+  },
+  "language": {
+    "title": "言語",
+    "search_placeholder": "言語を検索",
+    "no_results": "「{{query}}」に一致する言語がありません",
+    "changed": "言語が{{language}}に変更されました"
+  },
+  "settings": {
+    "llm_preference": {
+      "title": "LLM環境設定",
+      "description": "これはすべてのワークスペースで使用されるLLM環境設定です。異なるLLMプロバイダーまたはオンデバイスモデルを使用するように変更できます。"
+    },
+    "language": {
+      "app_language": "アプリの言語"
+    },
+    "special_tools": {
+      "title": "特別なツール",
+      "ask_with_anythingllm": "\"AnythingLLMで質問\"",
+      "page_title": "特別なツール",
+      "added_toast": "AnythingLLMでの質問がテキスト選択メニューに追加されました",
+      "removed_toast": "AnythingLLMでの質問がテキスト選択メニューから削除されました",
+      "context_awareness": "コンテキスト認識",
+      "ask_with_anythingllm_toggle": "AnythingLLMで質問",
+      "android_only": "Androidのみ",
+      "description_available": "任意のアプリでテキストを選択したときに表示されるメニューに「AnythingLLMで質問」を追加します。選択したモデルを使用して、書いている内容を磨く、短縮、修正したり、読んでいる内容を要約、説明、調査したりするために使用できます。",
+      "description_unavailable": "Androidでは、任意のアプリでテキストを選択したときに表示されるメニューにAnythingLLMが表示され、選択したモデルで編集または要約できます。iOSはアプリにこのフックを提供しません。"
+    },
+    "about": {
+      "release_notes": "v{{version}}のリリースノート",
+      "star_github": "GitHubでスター",
+      "join_discord": "Discordに参加"
+    },
+    "utility": {
+      "title": "ユーティリティ",
+      "anonymous_telemetry": "匿名テレメトリ",
+      "clear_temp_files": "一時ファイルをクリア",
+      "temp_files_cleared": "一時ファイルがクリアされました"
+    },
+    "legal": {
+      "title": "法務とプライバシー",
+      "terms": "サービス利用規約",
+      "privacy": "プライバシーポリシー"
+    },
+    "reset": {
+      "title": "AnythingLLMをリセット",
+      "confirm_message": "AnythingLLMをリセットしてもよろしいですか？これにより、すべてのワークスペース、チャット、インストール済みモデル、および環境設定が削除されます。",
+      "confirm_button": "はい、すべてをリセット"
+    },
+    "update_failed": "設定を更新できませんでした",
+    "version": {
+      "about": "AnythingLLMについて",
+      "update_available_title": "更新利用可能",
+      "update_available_message": "バージョン{{version}}が利用可能です。最新バージョンに更新してください。",
+      "go_to_app_store": "アプリストアに移動"
+    },
+    "telemetry": {
+      "enabled_toast": "匿名テレメトリが有効になりました",
+      "disabled_toast": "匿名テレメトリが無効になりました",
+      "usage_data": "使用データ",
+      "share_toggle": "匿名テレメトリを共有",
+      "description_events": "AnythingLLMは「チャットが完了した」や「ツールが使用された」などの小数の匿名イベントを送信し、どの機能が重要であり、どこで問題が発生しているかを確認できます。",
+      "description_privacy": "これはチャット、ドキュメント、プロンプト、またはアプリの使用方法に関する具体的な情報を含みません。アカウントはなく、あなたを特定するものは何もありません。",
+      "description_opt_out": "これをオンのままにすると、より良いアプリケーションの構築に役立ちます。いつでも無効にでき、それ以上何も送信されません。"
+    },
+    "advanced_model_preferences": {
+      "title": "モデル選択",
+      "choose_provider": "LLMプロバイダーを選択",
+      "llm_model": "LLMモデル",
+      "provider_settings": "プロバイダー設定",
+      "show_less": "少なく表示",
+      "view_more": "さらに表示"
+    },
+    "provider_options": {
+      "base_url": "ベースURL",
+      "base_url_placeholder": "ベースURLを入力してください（例：{{example}}）",
+      "api_key": "APIキー",
+      "api_key_optional": "APIキー（オプション）",
+      "api_key_placeholder": "APIキーを入力してください",
+      "aws_region": "AWSリージョン",
+      "select_region": "リージョンを選択",
+      "choose_region": "AWSリージョンを選択",
+      "search_region": "リージョンコードを検索または入力",
+      "use_region": "\"{{region}}\"を使用",
+      "model_selection": "モデル選択",
+      "select_model": "モデルを選択",
+      "choose_model": "モデルを選択",
+      "search_models": "モデルを検索",
+      "fetching_models": "モデルを取得中...",
+      "model_placeholder": "モデルを入力してください（例：{{example}}）",
+      "models_load_failed": "このプロバイダーからモデルを読み込めませんでした。認証情報を確認するか、モデル名を手動で入力してください。",
+      "no_tool_calls": "このモデルは<bold>ツール呼び出しサポートなし</bold>が検出されました。シンプルなチャット+RAGのみがサポートされます"
+    }
+  },
+  "chat": {
+    "error_loading_provider": "LLMプロバイダーの読み込みエラー",
+    "error_loading_thread": "ワークスペーススレッドの読み込みエラー",
+    "unknown_error": "不明なエラー",
+    "loading_history": "チャット履歴を読み込み中...",
+    "suggestions": {
+      "hello": "こんにちは、何かお手伝いできることはありますか？",
+      "research": "{{city}}, {{region}}での楽しいことをオンラインで探してください",
+      "calendar_monday": "月曜日のカレンダーには何がありますか？",
+      "calendar_tomorrow": "明日のカレンダーには何がありますか？",
+      "calendar_today": "今日のカレンダーには何がありますか？",
+      "email": "John Doeへのセールスメールをドラフトして、ローカルAIエージェントの利点について説明",
+      "summarize_example": "paulgraham.com/foundermode.htmlを要約してください",
+      "summarize_file": "{{name}}を要約",
+      "summarize_websites_other": "これらのウェブサイトを要約",
+      "summarize_documents_other": "これらのドキュメントを要約",
+      "explain_images_other": "これらの画像を説明"
+    },
+    "citations": {
+      "title": "引用",
+      "score": "スコア：{{score}}",
+      "sources": "ソース"
+    },
+    "message_actions": {
+      "copied": "クリップボードにコピーしました",
+      "retry_failed": "このメッセージを再試行できませんでした",
+      "delete_failed": "この返信を削除できませんでした",
+      "fork_failed": "スレッドをフォークできませんでした：{{error}}",
+      "fork_name": "{{name}}のコピー",
+      "copy_title": "メッセージをコピー",
+      "copy_description": "テキストをクリップボードにコピー",
+      "retry_wait": "現在の返信が完了するまで待機",
+      "retry_description": "この交換を削除してプロンプトを再度送信",
+      "fork_title": "スレッドをフォーク",
+      "fork_remote_unavailable": "リモートスレッドでは利用できません",
+      "fork_description": "このメッセージングのコピーで新しいスレッドを開始",
+      "delete_title": "返信を削除",
+      "delete_description": "このメッセージとその返信をスレッドから削除"
+    },
+    "activity": {
+      "running": "実行中",
+      "waiting_approval_to_run": "{{tool}}を実行するための承認を待機中",
+      "approved_tool": "{{tool}}を承認",
+      "rejected_tool": "{{tool}}を却下",
+      "waiting_for_you": "あなたを待っています",
+      "tool_approved": "ツール呼び出しが承認されました",
+      "tool_rejected": "ツール呼び出しが却下されました",
+      "thinking": "考え中...",
+      "waiting_your_approval": "あなたの承認を待機中",
+      "calling_tool": "{{tool}}を呼び出し",
+      "working": "処理中...",
+      "worked_for": "{{duration}}作業しました",
+      "thought_for": "{{duration}}考えました",
+      "thoughts": "考え"
+    },
+    "file_download": {
+      "saved_to": "{{filename}}を{{location}}に保存しました",
+      "save_failed": "ファイルを保存できませんでした：{{error}}",
+      "share_failed": "共有シートを開くことができませんでした：{{error}}",
+      "missing": "このデバイスにはもう存在しません",
+      "missing_label": "{{title}}、ファイルは利用できません",
+      "download_label": "{{title}}をダウンロード",
+      "share_label": "{{title}}を共有",
+      "unknown_file": "不明なファイル",
+      "saving": "保存中...",
+      "saved": "保存完了"
+    },
+    "scheduled_job_card": {
+      "open_label": "スケジュール済みジョブ{{name}}を開く",
+      "subtitle": "スケジュール済みジョブ·{{schedule}}",
+      "view": "表示"
+    },
+    "metrics": {
+      "tokens_other": "{{count}}トークン"
+    },
+    "tool_approval": {
+      "wants_to_call": "モデルが<skill>{{skill}}</skill>を呼び出したいと考えています",
+      "show_details": "詳細を表示",
+      "hide_details": "詳細を非表示",
+      "approve": "承認",
+      "reject": "却下"
+    },
+    "attachments": {
+      "attach_files": "ファイルを添付",
+      "gallery": "ギャラリー",
+      "take_photo": "写真を撮影",
+      "add_attachment": "添付ファイルを追加",
+      "hint_embed": "ファイルは分割され、埋め込まれているため、オンデバイスモデルが検索できます。",
+      "hint_full": "ファイルは、このワークスペースのすべてのメッセージでモデルに完全に送信されます。",
+      "max_reached": "1つのプロンプトの最大添付ファイル数に達しました。",
+      "downloading_image_support": "画像サポートをダウンロード中...{{progress}}%",
+      "cancel_download": "ダウンロードをキャンセル",
+      "download_image_support": "画像サポートをダウンロード",
+      "needs_download_tap": "このモデルは画像を見ることができますが、追加ダウンロードが必要です。タップしてダウンロード（{{size}}）。",
+      "download_failed": "ダウンロードに失敗しました。タップして再試行してください。",
+      "download_cancelled": "ダウンロードがキャンセルされました。"
+    },
+    "prompt_input": {
+      "placeholder": "プロンプトを入力",
+      "select_model_first": "まずモデルを選択してください",
+      "stop_generating": "生成を停止",
+      "stop_recording": "録音を停止",
+      "voice_input": "音声入力",
+      "send_prompt": "プロンプトを送信"
+    },
+    "files": {
+      "title": "ファイル",
+      "empty": "このワークスペースにはファイルがありません",
+      "error_loading": "ファイルの読み込みエラー",
+      "deleted_other": "{{count}}個のファイルが正常に削除されました！",
+      "select_all": "すべて選択",
+      "deselect_all": "すべての選択を解除",
+      "delete_selected": "選択したファイルを削除",
+      "embedded": "埋め込み·すべてのスレッドで検索",
+      "full_every_thread": "完全に送信·すべてのスレッド",
+      "full_this_thread": "完全に送信·このスレッド",
+      "full_another_thread": "完全に送信·別のスレッド"
+    },
+    "history_cleared": "チャット履歴がクリアされました",
+    "tools": {
+      "title": "ツール",
+      "group_status": "{{enabled}}個中{{total}}個がオン",
+      "app_connections": "アプリ接続",
+      "group_files_note": "{{description}}ファイルは、設定で一時ファイルをクリアするまで、このデバイスに保持されます。",
+      "needs_cloud_model": "{{description}}クラウドモデルが必要です。",
+      "unavailable_on_device": "グレーアウトされたツールは、オンデバイスモデルでは利用できません。クラウドプロバイダーに切り替えてそれらを使用してください。"
+    },
+    "remote_unreachable": {
+      "title": "リモートサーバーに到達できません",
+      "message": "現在、インスタンスに到達することはできません。この会話をローカルで続行しますか？",
+      "cancel": "いいえ、キャンセル",
+      "continue": "はい、ローカルで続行",
+      "not_sent": "リモートサーバーに到達できません-チャットは送信されません。"
+    },
+    "errors": {
+      "processing": "チャット処理エラー",
+      "timed_out": "応答が受信される前にリクエストがタイムアウトしました。接続が失われている可能性があります。",
+      "show_more": "詳細を見る",
+      "show_less": "詳細を表示しない"
+    },
+    "status": {
+      "recalling_notes": "ワークスペースノートを回想"
+    }
+  },
+  "quick_context": {
+    "modes": {
+      "summarize": "要約"
+    },
+    "actions": {
+      "polish": "磨く",
+      "shorten": "短くする",
+      "fix_grammar": "文法を修正",
+      "more_formal": "より正式に",
+      "summarize": "要約",
+      "key_points": "重要なポイント",
+      "explain": "説明",
+      "research": "調査"
+    },
+    "could_not_start": "クイックアクションを開始できませんでした",
+    "dismiss": "閉じる",
+    "setup_needed": "AnythingLLMをセットアップして、選択メニューから使用できるようにしてください。",
+    "open_anythingllm": "AnythingLLMを開く",
+    "select_model": "上記でモデルを選択して開始してください。",
+    "copied_paste": "コピーしました-選択内容に貼り付けてください",
+    "copy_and_close": "コピーして閉じる",
+    "open_in_app": "アプリで開く",
+    "placeholders": {
+      "edit_new": "このテキストはどう変わるべきですか？",
+      "edit_started": "さらにテキストを調整してください…",
+      "summarize_new": "このテキストについて何か質問してください…",
+      "summarize_started": "さらに質問してください…"
+    }
+  },
+  "attachments": {
+    "processing": "処理中…",
+    "image": "画像",
+    "file_type_generic": "ファイル",
+    "name_processing": "{{name}}, 処理中",
+    "remove_named": "{{name}}を削除",
+    "more_images_other": "さらに{{count}}個の画像",
+    "attached_image": "添付画像",
+    "image_position": "{{current}} / {{total}}",
+    "close_image_preview": "画像プレビューを閉じる",
+    "remove_image": "画像を削除"
+  },
+  "errors": {
+    "boundary": {
+      "details": "エラーの詳細",
+      "details_copied": "エラーの詳細がコピーされました",
+      "report_github": "GitHubで報告",
+      "something_went_wrong": "問題が発生しました",
+      "reported_automatically": "このエラーはMintplex Labsに自動的に報告されました。",
+      "telemetry_disabled": "テレメトリが無効になっているため、このエラーをMintplex Labsに自動報告しませんでした。代わりにGitHubで問題を開いてください。",
+      "go_home": "ホームに移動",
+      "message_failed": "エラーのためこのメッセージを表示できませんでした。",
+      "hide_details": "エラーの詳細を非表示",
+      "show_details": "エラーの詳細を表示"
+    }
+  },
+  "highlights": {
+    "play_video": "ビデオを再生",
+    "pause_video": "ビデオを一時停止",
+    "whats_new": "新機能",
+    "tour_title": "AnythingLLMができること",
+    "quick_actions": {
+      "title": "AnythingLLMで質問どこでも",
+      "body": "任意のアプリでテキストを選択し、「AnythingLLMで質問」をタップして、モデルを使用して磨く、短くする、要約、または説明します。設定 > 特別なツールで常にオフにできます。"
+    },
+    "share_sheet": {
+      "title": "チャットに何かを共有",
+      "body": "任意のアプリから写真、ドキュメント、リンクをAnythingLLMに直接送信します。新しいスレッドに表示され、添付され、質問する準備ができています。"
+    },
+    "scheduled_jobs": {
+      "title": "スケジュール済みジョブ",
+      "body": "定期的なタスク（朝のニュースダイジェスト、週次チェックイン）をリクエストし、アプリが閉じている場合でもスケジュール通りに実行されます。結果は通知とともにあなたを待ちます。"
+    }
+  },
+  "new_workspace": {
+    "default_name": "新しいワークスペース",
+    "title": "新しいワークスペース",
+    "description": "ワークスペースに名前を付けてください。後で変更できます。",
+    "placeholder": "例えば、研究、仕事、個人"
+  },
+  "files": {
+    "types": {
+      "text_file": "テキストファイル",
+      "spreadsheet": "スプレッドシート",
+      "pdf_document": "PDFドキュメント",
+      "word_document": "Wordドキュメント",
+      "file": "ファイル"
+    },
+    "location": {
+      "downloads": "ダウンロード",
+      "ios_exports": "ファイル > iPhone上 > AnythingLLM > エクスポート",
+      "open_downloads": "ダウンロードで開く",
+      "open_files": "ファイルで開く"
+    },
+    "storage_permission": {
+      "title": "ダウンロードに保存",
+      "message": "AnythingLLMはストレージにアクセスしてファイルをダウンロードフォルダに保存する必要があります。"
+    },
+    "export": {
+      "text_label": "テキスト",
+      "txt_description": "プレーンテキストトランスクリプト",
+      "md_description": "ノートアプリ用のフォーマットされたトランスクリプト",
+      "json_description": "モデルとメトリクスを備えたメッセージ",
+      "pdf_description": "フォーマットされたドキュメント"
+    }
+  },
+  "misc": {
+    "new_thread": "新しいスレッド",
+    "remote_thread_create_failed": "リモートワークスペースにスレッドを作成できませんでした。接続を確認してもう一度試してください。",
+    "job_run": {
+      "failed": "ジョブが失敗しました",
+      "timed_out": "ジョブに時間がかかりすぎて停止されました",
+      "cancelled": "このジョブを停止しました",
+      "app_closed": "ジョブが終了する前にアプリが閉じられました"
+    },
+    "validation": {
+      "memory_not_text": "メモリはテキストである必要があります",
+      "memory_too_short": "メモリが短すぎます",
+      "memory_too_long_other": "メモリは{{count}}文字以下である必要があります",
+      "job_name_required": "ジョブに名前を付けてください",
+      "job_name_too_long_other": "名前は{{count}}文字以下である必要があります",
+      "job_prompt_required": "ジョブが実行するプロンプトを書いてください",
+      "job_prompt_too_long_other": "プロンプトは{{count}}文字以下である必要があります",
+      "job_schedule_invalid": "スケジュールは有効なcron式ではありません",
+      "job_tools_not_list": "ツールはリストである必要があります",
+      "name_not_string": "名前は文字列である必要があります",
+      "name_required": "名前は必須です",
+      "name_too_short_other": "名前は少なくとも{{count}}文字である必要があります",
+      "name_too_long_other": "名前は{{count}}文字未満である必要があります",
+      "system_prompt_not_string": "システムプロンプトは文字列である必要があります",
+      "system_prompt_required": "システムプロンプトは必須です",
+      "system_prompt_too_short_other": "システムプロンプトは少なくとも{{count}}文字である必要があります",
+      "system_prompt_too_long_other": "システムプロンプトは{{count}}文字未満である必要があります",
+      "temperature_not_number": "温度は数値である必要があります",
+      "temperature_range": "温度は{{min}}から{{max}}の間である必要があります",
+      "context_length_not_number": "コンテキスト長は数値である必要があります",
+      "context_length_min": "コンテキスト長は{{min}}より大きい必要があります"
+    }
+  },
+  "tools": {
+    "groups": {
+      "create_files": {
+        "name": "ファイルの作成",
+        "description": "アシスタントにドキュメントを作成させて、ダウンロードして共有できます。"
+      }
+    },
+    "reranker": {
+      "download_required_title": "ダウンロード必須",
+      "download_required_message": "インテリジェントツール選択には小さなモデルダウンロード（{{size}}）が必要です。セルラーデータを使用しています。続行しますか？",
+      "status_downloading": "ツール選択モデルをダウンロード中",
+      "status_selecting": "最適なツールを選択"
+    },
+    "calendar_event_creation": {
+      "name": "カレンダーイベント作成",
+      "description": "アシスタントを使用してカレンダーイベントを作成してもらいます。",
+      "status_preparing": "カレンダーイベント「{{title}}」を準備"
+    },
+    "calendar_event_reading": {
+      "name": "カレンダーを読む",
+      "description": "アシスタントを使用してカレンダーイベントを読んでもらいます。",
+      "status_date": "{{date}}のカレンダーを読み中",
+      "status_today": "今日のカレンダーを読み中",
+      "status_tomorrow": "明日のカレンダーを読み中",
+      "status_this_week": "今週のカレンダーを読み中",
+      "status_next_week": "来週のカレンダーを読み中",
+      "status_this_month": "今月のカレンダーを読み中",
+      "status_next_month": "来月のカレンダーを読み中"
+    },
+    "create_files": {
+      "status_creating": "{{name}}を作成",
+      "status_created": "{{name}}を作成しました"
+    },
+    "create_docx_file": {
+      "name": "Wordドキュメント",
+      "description": "テーマおよびオプションのタイトルページを含むMarkdownからスタイル付き.docxを作成します。",
+      "status_creating": "Wordドキュメント「{{name}}」を作成"
+    },
+    "create_pdf_file": {
+      "name": "PDFドキュメント",
+      "description": "MarkdownまたはプレーンテキストをフォーマットされたPDFに変換します。",
+      "status_creating": "PDF「{{name}}」を作成"
+    },
+    "create_text_file": {
+      "name": "テキスト、Markdown、CSV",
+      "description": "会話から.txt、.md、.csv、.jsonファイルを作成します。"
+    },
+    "create_pptx": {
+      "name": "PowerPointプレゼンテーション",
+      "description": "テーマのある.pptxデッキを計画して構築し、一度に1つのセクションで実行します。",
+      "status_planning_other": "プレゼンテーション「{{title}}」を計画 - {{count}}セクション、{{theme}}テーマ",
+      "approval_description_other": "PowerPointプレゼンテーション「{{title}}」を{{count}}セクションで作成しますか？各セクションはモデル呼び出しを構築するために取ります。",
+      "status_not_approved": "プレゼンテーションが承認されませんでした",
+      "status_building_section": "[{{current}}/{{total}}] セクション「{{title}}」を構築",
+      "status_section_complete_other": "[{{current}}/{{total}}] セクション「{{title}}」完了 - {{count}}スライド",
+      "status_section_complete_from_outline_other": "[{{current}}/{{total}}] セクション「{{title}}」完了 - {{count}}スライド（アウトラインから）",
+      "status_assembling_other": "デッキを組み立て - {{count}}スライド"
+    },
+    "create_scheduled_job": {
+      "name": "スケジュール済みジョブを作成",
+      "description": "アシスタントが承認後、会話からスケジュール済みジョブを設定することを許可します。",
+      "status_asking": "「{{name}}」をスケジュール（{{when}}）",
+      "approval_tools_other": "スケジュール済みジョブ「{{name}}」を作成しますか？{{when}}に{{count}}ツールを使用して実行されます。",
+      "approval_tools_notify_other": "スケジュール済みジョブ「{{name}}」を作成しますか？{{when}}に{{count}}ツールを使用して実行されて、完了時に通知します。",
+      "approval_no_tools": "スケジュール済みジョブ「{{name}}」を作成しますか？{{when}}にツールなしで実行されます。",
+      "approval_no_tools_notify": "スケジュール済みジョブ「{{name}}」を作成しますか？{{when}}にツールなしで実行されて、完了時に通知します。",
+      "status_not_approved": "スケジュール済みジョブが承認されませんでした",
+      "status_scheduled": "「{{name}}」がスケジュール"
+    },
+    "draft_email": {
+      "name": "メールをドラフト",
+      "description": "アシスタントを使用してメールをドラフトしてもらいます。",
+      "status_drafting": "メール「{{subject}}」をドラフト",
+      "open_action": "メールドラフトを開く"
+    },
+    "draft_text": {
+      "name": "テキストをドラフト",
+      "description": "アシスタントを使用してテキストをドラフトしてもらいます。",
+      "status_drafting_to": "{{recipient}}へのテキストをドラフト",
+      "status_drafting": "テキストメッセージをドラフト",
+      "open_action": "テキストドラフトを開く"
+    },
+    "get_time": {
+      "name": "時刻を取得",
+      "description": "デバイスのタイムゾーンに基づいて現在の日付と時刻を取得します。"
+    },
+    "get_location": {
+      "name": "位置を取得",
+      "description": "おおよその位置を取得します。これは都市、州、国を返します。",
+      "status_looking_up": "大雑把な場所を調べ中"
+    },
+    "summarize": {
+      "name": "要約",
+      "description": "指定されたURLまたはファイル名からコンテンツを要約します。",
+      "status_reading": "{{source}}を読み中",
+      "status_looking_for_file": "ファイルで「{{name}}」を探索中",
+      "status_analyzing": "ドキュメント構造を分析",
+      "status_document_long_other": "ドキュメントは長いです - 最初の{{count}}セクションを要約",
+      "approval_description_other": "このコンテンツには{{count}}セクションを要約します。これに時間がかかる可能性があります - 続行しますか？",
+      "status_not_approved": "要約が承認されませんでした",
+      "status_complete": "要約完了",
+      "status_summarizing_sections": "ドキュメントセクションを要約",
+      "status_summarizing_section": "セクション{{current}} / {{total}}を要約",
+      "status_combining": "セクション要約を結合"
+    },
+    "web_scraping": {
+      "name": "Webスクレイピング",
+      "description": "情報を求めて単一の特定のウェブサイトをスクレイプします。",
+      "status_reading": "{{host}}を読み中",
+      "status_reading_document": "ドキュメント{{name}}を読み中",
+      "cellular_title": "セルラーでダウンロード？",
+      "cellular_message": "「{{name}}」を読む場合は{{size}}のドキュメントをダウンロードする必要があります。セルラーデータを使用しています。続行しますか？",
+      "cellular_message_unknown_size": "「{{name}}」を読む場合は、不明なサイズのドキュメントをダウンロードする必要があります。セルラーデータを使用しています。続行しますか？"
+    },
+    "web_search": {
+      "name": "Web検索",
+      "description": "クエリに基づいてウェブの検索結果を検索します。",
+      "status_searching": "「{{query}}」をウェブで検索",
+      "status_reviewing_other": "{{count}}個の検索結果をレビュー"
+    },
+    "approval": {
+      "auto_approved_status": "{{tool}}を自動承認"
+    }
+  },
+  "top_bar": {
+    "model_chip": {
+      "remote_managed": "このワークスペースはリモートで管理されます。ここでモデルを変更することはできません。",
+      "no_model_loaded": "モデルが読み込まれていません",
+      "no_models_found": "「{{query}}」のモデルが見つかりません",
+      "hf_lookup_hint": "Hugging Faceで「{{query}}」を検索し、GGUF版をダウンロード",
+      "list_failed_toast": "{{provider}}のモデルをリストできませんでした。",
+      "switch_failed": "モデルを切り替えられませんでした。もう一度お試しください。",
+      "loading_models": "{{provider}}からモデルを読み込み中...",
+      "list_failed_title": "{{provider}}のモデルをリストできません",
+      "list_failed_description": "このプロバイダーはモデルを返しませんでした。エンドポイントが到達可能でモデルリストをサポートしているか確認するか、設定でモデルを手動で設定してください。",
+      "try_again": "もう一度やり直してください",
+      "search_provider_models": "{{provider}}モデルを検索"
+    },
+    "dev_shortcut_hint_other": "開発者ツールを開くには、{{count}}回さらに押してください",
+    "thread_menu": {
+      "options": "スレッドオプション",
+      "export_failed": "スレッドをエクスポートできませんでした：{{error}}",
+      "share_failed": "共有シートを開くことができませんでした：{{error}}",
+      "unknown_error": "不明なエラー",
+      "open_location_failed": "{{location}}に保存されましたが、フォルダを開くことができませんでした",
+      "memories": "思い出",
+      "memories_description": "あなたまたはあなたの設定についての思い出を参照してください",
+      "export_thread": "チャットスレッドをエクスポート",
+      "saved_to_device": "デバイスに保存"
+    },
+    "memories": {
+      "global": {
+        "tab": "どこでも",
+        "hint": "モデルが常に知るべきあなたについての事実 - あなたの名前、あなたが何をするか、あなたが答えをどのように好むか。すべてのワークスペースのすべてのチャットで送信されます。小さなモデルに合わせてそれらを短く保ちます。",
+        "placeholder": "例えば、私の名前はSamです。Pythonを書いて、短い答えを好みます。",
+        "empty": "まだメモリはありません。上記であなた自身について事実を追加してください。"
+      },
+      "workspace": {
+        "tab": "このワークスペース",
+        "hint": "ここにのみ関係する注記 - プロジェクト、その用語、既に行われた決定。動的に管理および注入されます。",
+        "placeholder": "例えば、このプロジェクトはOrbitという名前のReact Nativeアプリです。yarnを使用してnpmではありません。",
+        "empty": "まだワークスペースの思い出はありません。上記のワークスペースについてメモを追加してください。"
+      },
+      "no_longer_exists": "その記憶はもはや存在しません",
+      "save_failed": "メモリを保存できませんでした",
+      "delete_title": "メモリを削除？",
+      "enable": "メモリを有効にする",
+      "enable_description": "あなたまたはこのワークスペースについての事実の注入を許可します。",
+      "remote_notice": "このワークスペースはAnythingLLMサーバーで回答されるため、メモリはチャットで使用されません。グローバルメモリはまだオンデバイスおよびクラウドワークスペースに適用されます。",
+      "edit_memory": "メモリを編集",
+      "new_memory": "新しいメモリ",
+      "delete_memory": "メモリを削除"
+    }
+  },
+  "drawer": {
+    "workspaces": "ワークスペース",
+    "scheduled_jobs": "スケジュール済みジョブ",
+    "scheduled_jobs_unseen_other": "スケジュール済みジョブ、{{count}}未表示結果",
+    "new_workspace": "新しいワークスペース",
+    "delete_thread_title": "スレッドを削除",
+    "delete_thread_message": "このスレッドを削除してもよろしいですか？すべてのチャット履歴が失われます。",
+    "delete_workspace_title": "ワークスペースを削除",
+    "delete_workspace_message": "このワークスペースを削除してもよろしいですか？すべてのスレッドが失われます。",
+    "delete_workspace_message_remote": "このワークスペースを削除してもよろしいですか？すべてのスレッドが失われます。\n\nこれはリモートインスタンスのワークスペースを削除しません。",
+    "rename_thread": "スレッドの名前を変更",
+    "rename_thread_placeholder": "新しいスレッド名を入力"
+  },
+  "hf_import": {
+    "title": "Hugging Faceからモデルを追加",
+    "add_card_hint": "リポジオリまたはURLを貼り付けて、デバイスで実行するGGUFクォンツを選択してください。",
+    "generic_error": "Hugging Faceと通信するときに何か問題が発生しました。",
+    "description": "モデルIDまたはURLを貼り付けるか検索してください。任意のパブリックGGUFクォンツをダウンロードしてこのデバイスで実行できます。",
+    "show_files": "GGUFファイルを表示",
+    "search_hf": "Hugging Faceを検索",
+    "files_available_other": "ダウンロード可能な{{count}}個のGGUFファイル",
+    "highlighted_file": "Hugging Faceで選択したファイルは以下で強調表示されます。タップしてダウンロード。",
+    "highlight_missing": "「{{filename}}」はこのレポのGGUFファイルではありません。下から別のクォンツを選択してください。",
+    "search_results": "「{{query}}」に一致するGGUFリポ、最初にダウンロードした。1つをタップしてそのファイルを表示。",
+    "no_search_results": "「{{query}}」のGGUFレポが見つかりません。",
+    "tip": "ヒント：ほとんどのモデルは、unsloth、bartowski、またはlmstudio-communityによる「-GGUF」で終わる名前のGGUF版を持っています。小さいクォンツ（Q4_K_Mとそれ以下）は電話で最適に実行されます。ゲートメッセージまたはプライベートモデルはサポートされていません。",
+    "params": "{{value}}パラメータ",
+    "context": "{{value}}kコンテキスト",
+    "downloads": "{{value}}ダウンロード",
+    "gated": "このリポはゲートメッセージです。ダウンロードはHugging Faceログインが必要で、これはまだサポートされていません。",
+    "requested": "要求"
+  },
+  "models": {
+    "recommended": "推奨",
+    "memory_fit": {
+      "tight": "メモリに収まらない可能性があります",
+      "tight_compact": "収まらない可能性があります",
+      "impossible": "このデバイスでは大きすぎます",
+      "impossible_compact": "大きすぎます"
+    },
+    "sections": {
+      "found_on_device": "このデバイスで見つかり",
+      "added_from_hf": "Hugging Faceから追加",
+      "other": "その他"
+    },
+    "vector_storage": {
+      "reset_title": "ベクトルストレージをリセット",
+      "reset_message": "このワークスペースのベクトルストレージをリセットしてもよろしいですか？",
+      "cleared": "ベクトルストレージがクリアされました！"
+    },
+    "vision": {
+      "remote": "リモートワークスペースとチャットする場合、イメージはまだサポートされていません。",
+      "no_model": "画像を添付するモデルを選択してください。",
+      "on_device": "選択したオンデバイスモデルは画像を読みません。",
+      "needs_download": "このモデルは画像を見ることができますが、追加ダウンロードが必要です。"
+    },
+    "speech_to_text": {
+      "permission_title": "マイクアクセス",
+      "permission_message": "AnythingLLMはマイクにアクセスしてスピーチをプロンプトに変換する必要があります。",
+      "permission_required_title": "マイクアクセスが必要",
+      "permission_required_message": "音声テキスト変換を使用するには、デバイス設定でマイクアクセスを有効にしてください。"
+    },
+    "attachments": {
+      "vectors_cleared": "ワークスペースベクトルがクリアされました",
+      "clear_vectors_title": "ワークスペースベクトルをクリア",
+      "clear_vectors_message": "このワークスペースのベクトルをクリアしてもよろしいですか？これはこのワークスペースのすべてのベクトルを削除し、取り消すことはできません。",
+      "not_found": "添付ファイルが見つかりません",
+      "empty_content": "添付ファイルのコンテンツが空であるか読み取れませんでした",
+      "large_document_title": "大きなドキュメント",
+      "large_document_message": "「{{name}}」はおよそ{{tokens}}トークンです。{{provider}}では、ドキュメント全体がこのワークスペースのすべてのメッセージで送信されるため、遅くなり、コストがかかる可能性があります。とにかく添付しますか？",
+      "large_document_message_generic": "「{{name}}」はおよそ{{tokens}}トークンです。モデルプロバイダーでは、ドキュメント全体がこのワークスペースのすべてのメッセージで送信されるため、遅くなり、コストがかかる可能性があります。とにかく添付しますか？",
+      "attach": "添付",
+      "create_failed": "添付ファイル用のドキュメント作成に失敗しました",
+      "camera_permission_title": "カメラアクセス",
+      "camera_permission_message": "AnythingLLMはカメラで写真を撮ってプロンプトに追加する必要があります。",
+      "max_reached_other": "プロンプトごとに最大{{count}}個のアイテムを添付できます",
+      "camera_permission_required": "写真を撮るにはカメラの許可が必要です",
+      "camera_open_failed": "カメラを開くことができませんでした",
+      "gallery_open_failed": "ギャラリーを開くことができませんでした",
+      "image_unreadable": "選択した画像を読み取ることができません",
+      "images_skipped_unreadable_other": "{{count}}個の画像を読み取ることができず、スキップされました",
+      "image_attach_failed": "画像を添付できませんでした",
+      "max_reached_skipped_other": "プロンプトごとに最大{{max}}個のアイテムを添付できます - {{count}}がスキップされました",
+      "images_skipped_no_vision_other": "現在のモデルは画像を読むことができません - {{count}}個の画像がスキップされました",
+      "read_failed": "{{name}}を読み取ることができませんでした",
+      "remove_title": "添付ファイルを削除",
+      "remove_message": "このチャットから添付ファイルを削除してもよろしいですか？",
+      "shared_content_failed": "共有コンテンツを添付できませんでした"
+    },
+    "memory_warning": {
+      "short": "メモリ警告",
+      "full": "警告：モデルサイズが利用可能なメモリを超える可能性があります。これはデバイスのパフォーマンスと安定性に影響を与える可能性があります。"
+    },
+    "low_memory": {
+      "title": "メモリ不足",
+      "advice": "メモリが不足すると、携帯電話がAnythingLLMを応答の途中で閉じてクラッシュして見えることがあります。他のアプリを閉じるか、より信頼性の高い応答のためにリモートモデル接続に切り替えてください。",
+      "free": "空き",
+      "total": "合計",
+      "model_loaded": "モデル (読み込み済み)",
+      "model_needs": "モデルの必要量",
+      "send_anyway": "このまま送信",
+      "got_it": "了解",
+      "indicator_label": "メモリ不足警告"
+    },
+    "catalog": {
+      "gemma_3_1b": "（Q8_0）Gemma3 1Bはより複雑なタスク用のGemma3 4Bモデルのより小さい軽量バージョンです。",
+      "qwen3_0_6b": "（Q8_0）Qwen3 0.6Bは小さく、非常に高速なモデルで、クイック回答とシンプルなタスク用です。Qwen3.5 0.8Bで置き換えられました。",
+      "qwen3_1_7b": "（Q8_0）Qwen3 1.7Bはより複雑なタスク用のQwen3-0.6Bモデルのはるかに有能なバージョンです。",
+      "llama_3_2_1b": "（Q8_0）Llama 3.2 1BはLlama 3.2モデルの最小バージョンです。",
+      "qwen3_5_0_8b": "（Q8_0）Qwen3.5 0.8BはQwen3.5ファミリーの最小モデルです。任意の電話で非常に高速で、指示に従う固い。",
+      "qwen3_5_2b": "（Q8_0）Qwen3.5 2Bは強力な汎用小モデルで、ツール呼び出しと優れた推論を備えています。",
+      "qwen3_5_4b": "（Q6_K）Qwen3.5 4Bは、電話に最も適合できる最も有能なQwen3.5モデルです。最高の精度、推論、ツール呼び出し; 8GB以上のRAMを持つデバイスが必要です。",
+      "qwen3_vl_2b_instruct": "（Q4_K_XL）Qwen3-VL 2Bは、写真を説明し、質問に答えることができる視覚言語モデルです。",
+      "granite_3_3_2b_instruct": "（Q4_K_XL）IBMからのGranite 3.3 2BはRAG、要約、ツール呼び出し用にチューニングされています。Apache 2.0ライセンス。",
+      "granite_4_2_3b": "（Q4_K_M）Granite 4.2 3Bは最新の小さいGraniteモデルで、より強力な推論とツール呼び出しを備えています。大規模なダウンロード。",
+      "lfm2_5_1_2b_instruct": "（Q8_0）LFM2.5 1.2Bは、オンデバイスチャット、ツール呼び出し、16言語用にチューニングされた非常に高速な小モデルです。完全品質のクォント。",
+      "lfm2_5_2_6b": "（Q5_K_M）LFM2.5 2.6Bは電話用の最も有能なLiquidモデルで、強力な指示に従い、ツール呼び出しと推論を備えています。",
+      "gemma_4_e2b": "（QAT Q2_K_XL）Gemma 4 E2BはGoogleのモバイル優先モデルで、有効な2Bパラメーターです。このサイズ用に量子化認識トレーニング。",
+      "gemma_4_e4b": "（QAT Q2_K_XL）Gemma 4 E4Bは電話に最も適合できる最も有能なGemmaです。大規模なダウンロード、最新の高メモリデバイスが必要です。"
+    },
+    "presets": {
+      "lightweight": {
+        "name": "ライトウェイト",
+        "description": "クイック応答とシンプルなタスク用。"
+      },
+      "balanced": {
+        "name": "バランス型",
+        "description": "速度と精度のバランス。"
+      },
+      "powerful": {
+        "name": "パワフル",
+        "description": "最高の精度のためのより重いモデル。"
+      }
+    },
+    "imported_description": "Hugging Faceから追加（{{repo}}）。",
+    "imported_description_specs": "Hugging Faceから追加（{{repo}}）。{{specs}}。",
+    "no_model_loaded_error": "モデルが読み込まれていません。まずモデルを選択してください。",
+    "unknown_model_description": "{{modelId}}でこのデバイスで見つかりましたが、モデルリストにありません。それを使用またはアンインストールすることもできます。",
+    "status": {
+      "summarizing": "前の会話を要約",
+      "using_summary_other": "{{count}}個の前のメッセージの要約を使用",
+      "loading_model": "メモリにモデルを読み込み",
+      "reply_truncated": "返信は短縮されました-コンテキストウィンドウがいっぱいです",
+      "searching_documents": "ドキュメントを検索",
+      "reranking": "結果を再ランク付け",
+      "reading_documents_other": "{{count}}個の添付ドキュメントを読み中"
+    }
+  },
+  "providers": {
+    "descriptions": {
+      "native": "スマートフォンにモデルをインストールして実行します。",
+      "ollama": "Ollamaを使用してローカルマシンでLLMを実行します。",
+      "lmstudio": "数回のクリックで数千の最先端のLLMを発見、ダウンロード、実行します。",
+      "openai": "OpenAIの強力なモデルを活用します。",
+      "anthropic": "AnthropicでホストされているフレンドリーなAIアシスタント。",
+      "gemini": "Googleの最大かつ最も有能なAIモデル",
+      "openrouter": "主要なプロバイダーからのAIサービスの統一API",
+      "bedrock": "AWS Bedrockでプライベートに強力なファウンデーションモデルを実行します。",
+      "deepseek": "DeepSeekの強力なLLMを実行します。",
+      "fireworksai": "本番対応の複合AIシステムを構築するための最速で最も効率的な推論エンジン。",
+      "minimax": "MiniMaxの強力なLLMを実行します。",
+      "moonshotai": "Moonshot AIのKimiモデルを実行します。",
+      "novita": "Novita AIからのLLM用の信頼性が高く、スケーラブル、費用効果的。",
+      "togetherai": "Together AIからのオープンソースモデルを実行します。",
+      "xai": "xAIのGrokなどの強力なLLMを実行します。",
+      "litellm": "LiteLLMのOpenAI互換プロキシを実行して、さまざまなLLMを実行します。",
+      "localai": "ローカルマシンでLLMをローカルで実行します。",
+      "lemonade": "Lemonade Serverを使用してAMDハードウェアでLLMを実行します。",
+      "llmman": "llmmanを使用してローカルでLLMを実行します。",
+      "generic_openai": "カスタム構成を使用してOpenAi互換サービスに接続します"
+    },
+    "sections": {
+      "local": "ローカルプロバイダー",
+      "cloud": "クラウドプロバイダー"
+    },
+    "validation": {
+      "unknown_provider": "不明なプロバイダー。",
+      "api_key_required": "このプロバイダーのAPIキーを入力してください。",
+      "base_url_required": "プロバイダーのベースURLを入力してください。",
+      "region_required": "BedrockデプロイメントのAWSリージョンを選択してください。",
+      "model_required": "使用するモデルを選択してください。"
+    }
+  },
+  "llm_selection": {
+    "choose_provider": "プロバイダーを選択",
+    "no_providers_found": "「{{query}}」のプロバイダーが見つかりません",
+    "download_model_title": "モデルをダウンロードしますか？",
+    "download_model_message": "これはモデルをデバイスにダウンロードします。{{size}}バイトです。",
+    "preferred_model": "優先モデル"
+  },
+  "downloads": {
+    "no_internet_title": "インターネット接続がありません。",
+    "no_internet_image_support": "画像サポートをダウンロードするにはインターネットに接続する必要があります。",
+    "no_internet_model": "モデルをダウンロードするにはインターネットに接続する必要があります。",
+    "data_usage_title": "データ使用警告",
+    "data_usage_image_support": "画像サポートのサイズが{{size}}であるため、Wi-Fi接続を使用することをお勧めします。",
+    "data_usage_model": "モデルのサイズが{{size}}であるため、Wi-Fi接続を使用することをお勧めします。",
+    "continue_anyway": "とにかく続行",
+    "continue_with_download": "ダウンロードを続行",
+    "image_support_title": "画像サポートをダウンロードしますか？",
+    "image_support_message": "{{model}}は、画像サポートファイルがダウンロードされると写真を理解できます。サイズは{{size}}です。",
+    "download_model_title": "モデルをダウンロードしますか？",
+    "download_model_message": "これはモデルをデバイスにダウンロードします。サイズは{{size}}です。",
+    "notification_downloading_title": "モデルをダウンロード中",
+    "notification_downloading_body": "{{model}}をダウンロード中",
+    "notification_complete_title": "ダウンロード完了",
+    "notification_complete_body": "{{model}}をダウンロード",
+    "download_failed_title": "ダウンロード失敗",
+    "download_failed_message": "モデルのダウンロード中にエラーが発生しました。",
+    "uninstall_model_title": "モデルをアンインストールしますか？",
+    "uninstall_model_message": "これはモデルをデバイスから削除します。",
+    "storage_low": "ストレージが少ない! モデル{{modelSize}} > {{freeSpace}}空き",
+    "storage_check_failed": "ストレージのチェックに失敗しました",
+    "setup_failed_title": "ダウンロードセットアップ失敗",
+    "setup_failed_message": "HFモデルダウンロードのセットアップに失敗しました：{{error}}"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "ようこそ",
+      "description": "電話に住んでいるAIエージェント。ドキュメント、ウェブ検索、アプリへの統合とチャットします。",
+      "get_started": "開始",
+      "back_blocked": "オンボーディングフローを進めてください。"
+    },
+    "model_selection": {
+      "title": "どのモデルを使用しますか？",
+      "description": "これは後で変更できますが、ニーズに最適なものを選択してください。",
+      "use_external": "モデルをダウンロードしたくない? 外部プロバイダーを使用"
+    },
+    "external": {
+      "title": "外部プロバイダーを接続",
+      "description": "電話にダウンロードする代わりに、どこか別の場所にホストされているモデルを使用します。これは後で変更できます。",
+      "choose_provider": "LLMプロバイダーを選択",
+      "provider_settings": "プロバイダー設定",
+      "incomplete_setup": "不完全なプロバイダーセットアップ"
+    },
+    "download": {
+      "error_title": "エラーが発生しました",
+      "error_message": "モデルのダウンロードエラー{{error}}",
+      "success_title": "モデルをダウンロード",
+      "success_message": "モデルが正常にダウンロードされました",
+      "url_must_be_gguf": "URLは.ggufで終わる必要があります"
+    },
+    "survey": {
+      "title": "AnythingLLMは何であなたを手伝うことができますか？",
+      "description": "あなたに最も適用されるものを選択してください。",
+      "options": {
+        "productivity": "生産性を向上させる",
+        "privacy": "プライバシーフォーカスチャット",
+        "custom_ai": "カスタムAIエージェント",
+        "automation": "AI自動化",
+        "other": "その他"
+      }
+    },
+    "data_handling": {
+      "title": "データ処理とプライバシー",
+      "description": "AnythingLLMを使用すると、すべてのチャット、ドキュメント、その他のデータはデバイスで処理および保存されます。",
+      "local_chats_title": "完全にローカルチャット",
+      "local_chats_description": "すべてのチャットはデバイスに保存されます。",
+      "embedding_title": "ドキュメント埋め込み",
+      "embedding_description": "すべてのドキュメントと処理はデバイスで実行されます。",
+      "agents_title": "AIエージェント",
+      "agents_description": "すべてのエージェントはデバイスで実行され、必要な場合（例：ウェブ検索）のみインターネットを使用します",
+      "experience": "AnythingLLMを体験",
+      "setting_up": "最初のワークスペースをセットアップ",
+      "default_workspace_name": "マイワークスペース"
+    }
+  },
+  "workspace_settings": {
+    "load_error": "ワークスペースの読み込みエラー",
+    "autosaving": "自動保存中...",
+    "autosaved": "自動保存されました！",
+    "name": {
+      "section": "ワークスペース名",
+      "title": "名前",
+      "current": "現在の名前",
+      "placeholder": "ここに名前を入力してください...",
+      "save_error": "名前の保存エラー"
+    },
+    "system_prompt": {
+      "title": "システムプロンプト",
+      "label": "プロンプト",
+      "current": "現在のシステムプロンプト",
+      "placeholder": "ここにシステムプロンプトを入力してください...",
+      "save_error": "システムプロンプトの保存エラー",
+      "description": "システムプロンプトはAIのガイディングプロンプトと指示です。AIの動作と応答の種類をガイドするために使用する必要があります。"
+    },
+    "temperature": {
+      "title": "温度",
+      "current": "現在の温度",
+      "suggested": "推奨温度",
+      "placeholder": "デフォルト（プロバイダーが決定）",
+      "save_error": "温度の保存エラー",
+      "hint": "LLMプロバイダーとモデルのデフォルト温度を使用するために空にします。0から1の間の値を設定してオーバーライドします。",
+      "description": "温度はAIの応答のランダム性のレベルです。温度が高いほど、応答はより無作為になります。"
+    },
+    "context_length": {
+      "title": "コンテキスト長",
+      "current": "現在のコンテキスト長",
+      "suggested": "推奨コンテキスト長",
+      "placeholder": "ここにコンテキスト長を入力してください...",
+      "save_error": "コンテキスト長の保存エラー",
+      "hint": "コンテキスト長はまた、使用しているモデルに依存し、デバイスのメモリへの影響があることに注意してください。",
+      "description": "コンテキスト長は、AIが応答を生成する際に使用できるトークンの最大数です。"
+    },
+    "vectors": {
+      "section": "ベクトルストレージ",
+      "count": "ベクトル数",
+      "description": "これはワークスペースに現在保存されているベクトルの数です。これはワークスペースのコンテキストを保存するために使用されます。"
+    },
+    "delete": {
+      "button": "ワークスペースを削除",
+      "confirm_title": "ワークスペースを削除しますか？",
+      "confirm_message": "このワークスペースを削除してもよろしいですか？すべてのスレッドが失われます。",
+      "confirm_message_remote": "このワークスペースを削除してもよろしいですか？すべてのスレッドが失われます。\n\nこれはリモートインスタンスのワークスペースを削除しません。"
+    }
+  },
+  "connect": {
+    "title": "AnythingLLMに接続",
+    "scan_description": "AnythingLLMインスタンスまたはクライアントのQRコードをスキャンして、このモバイルデバイスにデータを同期し、外出先でAIを使用します！",
+    "previous_connections": "前の接続",
+    "verify": {
+      "title": "接続を確認",
+      "go_back": "戻る",
+      "registering": "デバイスを登録中...",
+      "few_seconds": "これは数秒かかる場合があります...",
+      "awaiting_approval": "承認を待機中...",
+      "approve_in_app": "AnythingLLMアプリケーションでデバイスを承認してください...",
+      "collecting_data": "インスタンスデータを収集中...",
+      "register_failed": "デバイスの登録に失敗しました。もう一度お試しください。",
+      "register_failed_reason": "デバイスの登録に失敗しました：{{reason}}",
+      "approval_failed": "デバイスの登録または承認に失敗しました。もう一度お試しください。"
+    },
+    "import": {
+      "connection_expired": "AnythingLLM Desktopへの既存の接続が期限切れになりました。",
+      "refresh_failed": "ワークスペースの更新に失敗しました",
+      "go_home": "ホームに戻る",
+      "thread_count_other": "{{formatted}}スレッド",
+      "chat_count_other": "{{formatted}}チャット",
+      "sync": "同期",
+      "synced": "同期されました",
+      "sync_failed": "失敗",
+      "sync_workspace_failed": "ワークスペース{{name}}の同期に失敗しました"
+    }
+  },
+  "scheduled_jobs": {
+    "title": "スケジュール済みジョブ",
+    "job_missing": "そのジョブはもう存在しません",
+    "update_failed": "ジョブを更新できませんでした",
+    "prompt": "プロンプト",
+    "tools": "ツール",
+    "paused": "一時停止",
+    "running_now": "今実行中",
+    "stop_run": "実行を停止",
+    "run_already_finished": "その実行は既に終了していました",
+    "stop_failed": "実行を停止できませんでした",
+    "blocked": {
+      "no_provider_title": "最初にLLMプロバイダーを選択",
+      "no_provider_body": "スケジュール済みジョブはあなたなしで実行されるため、話す必要があるクラウドまたは自己ホストされたLLMが必要です。設定でしたがってください。",
+      "on_device_title": "スケジュール済みジョブはクラウドLLMが必要です",
+      "on_device_body": "オンデバイスモデルはバックグラウンドで実行できないため、選択中はジョブが一時停止されます。設定でクラウドまたは自己ホストされたプロバイダーに切り替えてそれらを実行してください。"
+    },
+    "list": {
+      "open_llm_settings": "LLM設定を開く",
+      "enabled_count": "{{enabled}}個中{{total}}個がオン",
+      "your_jobs": "あなたのジョブ",
+      "explainer_background": "ジョブはアシスタントがあなたのためにスケジュール実行されるプロンプトで、選択したツールを使用します。結果がここに集まり、アプリが閉じている場合でも実行します - Androidはバッテリーを節約するために実行を数分遅延させる場合があります。",
+      "explainer_foreground": "ジョブはアシスタントがあなたのためにスケジュール実行されるプロンプトで、選択したツールを使用します。結果はアプリを次に開いた時にここに集まります。",
+      "new_job": "新しいジョブ",
+      "waiting_for_cloud": "クラウドLLMを待機",
+      "next_run": "次実行{{time}}",
+      "not_scheduled": "スケジュール されていません",
+      "empty_title": "スケジュール済みジョブはまだありません",
+      "empty_body": "毎朝ウェブサイトを確認し、週次要約をドラフトするか、月初にレポートを構築してください-すべてチャットを開かずに。",
+      "create_first": "最初のジョブを作成"
+    },
+    "runs": {
+      "already_running": "このジョブは既に実行中です",
+      "start_failed": "ジョブを開始できませんでした",
+      "fallback_title": "ジョブ",
+      "edit_job": "ジョブを編集",
+      "next_run_with_date": "次実行{{relative}} · {{date}}",
+      "not_scheduled_to_run": "実行するようにスケジュール されていません",
+      "notify": "通知",
+      "last_run": "最後の実行",
+      "never": "決して",
+      "run_now": "今すぐ実行",
+      "run_count_other": "{{count}}実行",
+      "history": "歴史",
+      "empty_with_next": "このジョブはまだ実行されていません。最初の実行は{{time}}です。それをテストするために今実行することもできます。",
+      "empty": "このジョブはまだ実行されていません。それをテストするために今実行することもできます。",
+      "manual": "·手動"
+    },
+    "form": {
+      "save_failed": "ジョブを保存できませんでした",
+      "job_updated": "ジョブが更新されました",
+      "job_scheduled": "ジョブがスケジュール",
+      "could_not_save": "ジョブを保存できませんでした",
+      "delete_title": "このジョブを削除しますか？",
+      "delete_message": "「{{name}}」と生成されたすべての結果が削除されます。これは取り消すことはできません。",
+      "job_deleted": "ジョブが削除されました",
+      "delete_failed": "ジョブを削除できませんでした",
+      "edit_title": "ジョブを編集",
+      "new_title": "新しいジョブ",
+      "what_section": "何をすべきですか？",
+      "name": "名前",
+      "name_placeholder": "朝のニュースダイジェスト",
+      "prompt_hint": "チャットに送信しているかのように書かれています。具体的に-フォローアップの質問に答える人は誰もいません。",
+      "prompt_placeholder": "https://news.ycombinator.comを読んで、5つの最も興味深いストーリーの短い概要を書いて、それぞれの1行の見解をしてください。",
+      "when_section": "いつ実行される必要がありますか？",
+      "options": "オプション",
+      "notify_title": "完了時に通知してください",
+      "notify_description": "実行が結果で完了したときに通知を送信します。失敗したか空の実行は、アプリにのみドットを表示します。",
+      "enabled_description": "オフにして、ジョブとその結果を実行せずに保持します。",
+      "save_changes": "変更を保存",
+      "schedule_job": "スケジュール ジョブ",
+      "delete_job": "ジョブを削除"
+    },
+    "tool_picker": {
+      "selected_count_other": "{{count}}選択",
+      "none_reply_only": "なし-返信のみ",
+      "app_connections": "アプリ接続",
+      "explainer": "オンにするすべてのツールは、各実行でモデルに提供されます。通常、あなたの承認を求めるツールは自動的に承認されます。誰も押すのに居ないので。"
+    },
+    "builder": {
+      "daily": "毎日",
+      "weekly": "毎週",
+      "monthly": "毎月",
+      "hourly": "毎時間",
+      "every_few_minutes": "数分ごと",
+      "mode_schedule": "スケジュール",
+      "mode_cron": "Cron式",
+      "run": "実行",
+      "every": "毎",
+      "minutes_chip": "{{minutes}}分",
+      "at_minute": "分で",
+      "on": "オン",
+      "on_day": "日に",
+      "days_skipped": "日{{day}}のない月はスキップされます。",
+      "at_time": "{{time}}で",
+      "custom_minute": "分：{{minute}}はcron式で設定されました-上記のステップを選択して変更します。",
+      "cron_help": "5つのフィールド：分、時間、月の日、月、曜日（0 =日曜日）。時間は電話のタイムゾーンにあります。",
+      "invalid_cron": "これは有効なcron式ではありません"
+    },
+    "run_detail": {
+      "run_missing": "その実行はもう存在しません",
+      "delete_title": "この実行を削除しますか？",
+      "delete_message": "結果と作成されたファイルが削除されます。",
+      "run_deleted": "実行が削除されました",
+      "fallback_title": "実行",
+      "delete_run": "実行を削除",
+      "run_manually": "手動で実行",
+      "scheduled": "スケジュール",
+      "tokens": "{{prompt}}プロンプト·{{completion}}完成トークン",
+      "result": "結果",
+      "empty_completed": "モデルは何も書かずに終了しました。",
+      "empty_stopped": "実行が停止される前に何も生成されませんでした。",
+      "stopping": "停止中…",
+      "working": "処理中…"
+    },
+    "status": {
+      "queued": "キューに入れられた",
+      "running": "実行中",
+      "completed": "完了",
+      "failed": "失敗",
+      "timed_out": "タイムアウト",
+      "stopped": "停止"
+    },
+    "unseen": "未表示",
+    "relative_time": {
+      "in_under_a_minute": "1分未満で",
+      "just_now": "たった今",
+      "in_minutes": "{{minutes}}分で",
+      "minutes_ago": "{{minutes}}分前",
+      "in_hours": "{{hours}}h で",
+      "hours_ago": "{{hours}}h 前",
+      "in_hours_minutes": "{{hours}}h {{minutes}}m で",
+      "hours_minutes_ago": "{{hours}}h {{minutes}}m 前",
+      "in_days": "{{days}}d で",
+      "days_ago": "{{days}}d 前"
+    },
+    "runner": {
+      "job_failed": "ジョブが失敗しました",
+      "created_files": "ジョブが完了し、あなたのためにファイルを作成しました。"
+    },
+    "schedule": {
+      "custom": "カスタムスケジュール（{{expression}}）",
+      "invalid": "無効なスケジュール",
+      "every_minute": "毎分",
+      "every_minutes_other": "{{count}}分ごと",
+      "every_hour": "毎時間",
+      "every_hour_at": "毎時間{{minute}}経過時に",
+      "every_day_at": "毎日{{time}}に",
+      "weekdays_at": "平日{{time}}に",
+      "weekends_at": "週末{{time}}に",
+      "weekly_single": "毎{{day}}{{time}}に",
+      "weekly_multiple": "毎{{days}}と{{last}}{{time}}に",
+      "list_separator": ", ",
+      "monthly": "毎月{{day}}の{{time}}",
+      "ordinal_st": "{{n}}日",
+      "ordinal_nd": "{{n}}日",
+      "ordinal_rd": "{{n}}日",
+      "ordinal_th": "{{n}}日",
+      "time_am": "{{hour}}:{{minute}} AM",
+      "time_pm": "{{hour}}:{{minute}} PM",
+      "hour_am": "{{hour}} AM",
+      "hour_pm": "{{hour}} PM"
+    },
+    "weekdays_short": {
+      "sun": "日",
+      "mon": "月",
+      "tue": "火",
+      "wed": "水",
+      "thu": "木",
+      "fri": "金",
+      "sat": "土"
+    },
+    "weekdays_long": {
+      "sunday": "日曜日",
+      "monday": "月曜日",
+      "tuesday": "火曜日",
+      "wednesday": "水曜日",
+      "thursday": "木曜日",
+      "friday": "金曜日",
+      "saturday": "土曜日"
+    }
+  },
+  "notifications": {
+    "channels": {
+      "download_progress": "ダウンロード進行状況",
+      "chat_replies": "チャット返信",
+      "chat_replies_description": "AnythingLLMがバックグラウンドにある場合、返信が完了したときにアラート",
+      "scheduled_jobs": "スケジュール済みジョブ",
+      "scheduled_jobs_description": "スケジュール済みジョブが実行を終了したときにアラート"
+    },
+    "blocked_nudge": {
+      "title": "返信が完了したときに通知を受け取ります",
+      "message": "AnythingLLMの通知が無効になっています。電話がロックされている間に返信が完了したときにバズを取得するためにそれらをオンにします。",
+      "not_now": "今すぐではなく",
+      "open_settings": "設定を開く"
+    },
+    "chat": {
+      "ready_title": "返信準備完了",
+      "failed_title": "返信に失敗しました",
+      "ready_body": "あなたの返信は準備ができています。",
+      "failed_body": "返信を完了できませんでした。タップして何が起きたかを確認します。"
+    },
+    "scheduled_job": {
+      "finished_title": "{{name}}が完了",
+      "fallback_body": "スケジュール済みジョブには、あなたのための結果があります。"
+    }
+  },
+  "home": {
+    "welcome_title": "AnythingLLMへようこそ",
+    "get_started": "新しいワークスペースを作成して開始してください。",
+    "create_workspace": "ワークスペースを作成",
+    "default_workspace_name": "マイワークスペース"
+  },
+  "share": {
+    "unsupported_content": "ファイル、画像、リンクのみがAnythingLLMに共有できます",
+    "finish_onboarding": "共有する前にAnythingLLMのセットアップを完了",
+    "open_failed": "共有コンテンツを開くことができませんでした"
+  },
+  "deep_links": {
+    "finish_onboarding": "リンクを開く前にAnythingLLMのセットアップを完了"
+  }
+}

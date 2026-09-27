@@ -32,6 +32,7 @@ import useRouteObserver from "@/hooks/useRouteObserver";
 import { useChatHandlerContext } from "@/hooks/useChatHandler/index";
 import useLlmPreference from "@/hooks/useLLMPreference";
 import useSpeechToText from "@/hooks/useSpeechToText";
+import { useTranslation } from "react-i18next";
 
 const defaultPadding = [0, 0, 32]; // top padding for snap points
 export const snapPointsDefault = ["22%", "60%", "100%"];
@@ -41,6 +42,7 @@ interface PromptInputProps {
 }
 
 export default function PromptInput({ attachmentHandler }: PromptInputProps) {
+  const { t } = useTranslation();
   const chatHandler = useChatHandlerContext();
   const { llmPreferences } = useLlmPreference();
   const insets = useSafeAreaInsets();
@@ -224,8 +226,8 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
             multiline={true}
             placeholder={
               hasModelSelected
-                ? "Enter your prompt"
-                : "Please select a model first"
+                ? t("chat.prompt_input.placeholder")
+                : t("chat.prompt_input.select_model_first")
             }
             placeholderTextColor="#9F9FA0"
             className="text-white text-lg"

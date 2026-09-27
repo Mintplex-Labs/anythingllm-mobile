@@ -9,8 +9,10 @@
  *  - Summarize: understand the selection - summarize, explain, pull out the key points or dig deeper.
  * Each mode has only a handful of chips; anything else goes in the free-form input.
  */
+import { tKey } from '@/i18n';
+
 export type QuickAction = {
-    /** Short label shown on the chip */
+    /** Short label shown on the chip - a translation key, resolved with t() when rendered */
     label: string;
     /** The instruction sent ahead of the selected text */
     prompt: () => string;
@@ -18,9 +20,10 @@ export type QuickAction = {
 
 export type QuickMode = 'edit' | 'summarize';
 
+/** `label` is a translation key */
 export const QUICK_MODES: { key: QuickMode; label: string }[] = [
-    { key: 'edit', label: 'Edit' },
-    { key: 'summarize', label: 'Summarize' },
+    { key: 'edit', label: tKey('common.edit') },
+    { key: 'summarize', label: tKey('quick_context.modes.summarize') },
 ];
 
 const PLAIN_TEXT_ONLY = 'Only return the resulting text - no explanation, no preamble, no quotes and no markdown formatting.';
@@ -28,19 +31,19 @@ const PLAIN_TEXT_ONLY = 'Only return the resulting text - no explanation, no pre
 /** Rewrites for text the user is typing - the result is pasted over the selection. */
 export const EDIT_ACTIONS: QuickAction[] = [
     {
-        label: 'Polish',
+        label: tKey('quick_context.actions.polish'),
         prompt: () => `Rewrite this text to be clear, grammatically correct and natural while keeping the original meaning, tone and length. ${PLAIN_TEXT_ONLY}`,
     },
     {
-        label: 'Shorten',
+        label: tKey('quick_context.actions.shorten'),
         prompt: () => `Condense this text to be more concise and direct without losing any important point. ${PLAIN_TEXT_ONLY}`,
     },
     {
-        label: 'Fix grammar',
+        label: tKey('quick_context.actions.fix_grammar'),
         prompt: () => `Correct the spelling, grammar and punctuation of this text. Change nothing else - keep the wording, tone and formatting as they are. ${PLAIN_TEXT_ONLY}`,
     },
     {
-        label: 'More formal',
+        label: tKey('quick_context.actions.more_formal'),
         prompt: () => `Rewrite this text to be professional and office-appropriate while keeping the same meaning and roughly the same length. ${PLAIN_TEXT_ONLY}`,
     },
 ];
@@ -48,19 +51,19 @@ export const EDIT_ACTIONS: QuickAction[] = [
 /** Making sense of text the user is reading - the reply is an answer about the selection, not a rewrite. */
 export const SUMMARIZE_ACTIONS: QuickAction[] = [
     {
-        label: 'Summarize',
+        label: tKey('quick_context.actions.summarize'),
         prompt: () => 'Summarize this text in a few short sentences, keeping only what matters.',
     },
     {
-        label: 'Key points',
+        label: tKey('quick_context.actions.key_points'),
         prompt: () => 'List the key points of this text as a short bulleted list, one line each.',
     },
     {
-        label: 'Explain',
+        label: tKey('quick_context.actions.explain'),
         prompt: () => 'Explain this text in plain, simple language, including any terms or references a reader might not know.',
     },
     {
-        label: 'Research',
+        label: tKey('quick_context.actions.research'),
         prompt: () => 'Research the subject of this text: give the essential background, related facts and anything worth knowing that the text leaves out. Be concise and note where you are unsure.',
     },
 ];

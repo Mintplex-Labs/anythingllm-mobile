@@ -4,8 +4,10 @@ import { defaultModels } from "@/utils/models";
 import { Model } from "@/utils/types";
 import { formatBytes } from "@/utils/formatters";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function OnDeviceLLMOptions({ selection, onChange }: { selection: ISelection, onChange: (config: Record<string, any>, autoConfirm?: boolean) => void }) {
+  const { t } = useTranslation();
   const [selectedModel, setSelectedModel] = useState<Model | null>(selection.config.model);
   const [isConfirming, setIsConfirming] = useState(false);
 
@@ -14,10 +16,10 @@ export default function OnDeviceLLMOptions({ selection, onChange }: { selection:
 
     setSelectedModel(model);
     setIsConfirming(true);
-    Alert.alert('Download model?', `This will download the model to your device. It is ${formatBytes(model.size)} bytes.`, [
-      { text: 'Cancel', style: 'cancel', onPress: () => setIsConfirming(false) },
+    Alert.alert(t('llm_selection.download_model_title'), t('llm_selection.download_model_message', { size: formatBytes(model.size) }), [
+      { text: t('common.cancel'), style: 'cancel', onPress: () => setIsConfirming(false) },
       {
-        text: 'OK', onPress: () => {
+        text: t('common.ok'), onPress: () => {
           onChange({ model: model.id }, true)
           setIsConfirming(false);
         }
@@ -27,7 +29,7 @@ export default function OnDeviceLLMOptions({ selection, onChange }: { selection:
 
   return (
     <View className="flex-1 px-4 mt-6 h-full justify-start">
-      <Text className="text-lg font-bold text-white mb-4">Preferred Model</Text>
+      <Text className="text-lg font-bold text-white mb-4">{t('llm_selection.preferred_model')}</Text>
       <ScrollView className="h-[80vh]">
         <View className="flex-col gap-y-4">
           {defaultModels?.map((model) => {

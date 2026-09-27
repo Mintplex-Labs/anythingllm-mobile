@@ -5,6 +5,7 @@ import useRedirect from "@/hooks/useRedirect";
 import useLlmPreference from "@/hooks/useLLMPreference";
 import useChatInfoEmit from "@/hooks/useChatInfoEmit";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import useWorkspaceThread from "@/hooks/useWorkspaceThread";
 import PromptInput from "./PromptInput";
 import useAttachments, { AttachmentsProvider } from "@/hooks/useAttachments";
@@ -24,6 +25,7 @@ import MessageActionsSheet from "./ChatHistory/MessageActionsSheet";
 
 export default function WorkspaceChat() {
   useRedirect();
+  const { t } = useTranslation();
   const { wsSlug, threadSlug } = useChatInfoEmit();
   const { LLMProvider, isLoading: isLoadingProvider, error, fetchLLMPreference } = useLlmPreference();
   const { loadingWorkspaceThread, workspace, thread, error: errorWorkspaceThread } = useWorkspaceThread(wsSlug, threadSlug);
@@ -34,8 +36,8 @@ export default function WorkspaceChat() {
   }, [wsSlug, threadSlug]);
 
   if (isLoadingProvider || loadingWorkspaceThread) return <LoadingView />;
-  if (!!error) return <ErrorView title="Error loading LLM provider" error={error} />;
-  if (!!errorWorkspaceThread) return <ErrorView title="Error loading workspace thread" error={errorWorkspaceThread} />;
+  if (!!error) return <ErrorView title={t('chat.error_loading_provider')} error={error} />;
+  if (!!errorWorkspaceThread) return <ErrorView title={t('chat.error_loading_thread')} error={errorWorkspaceThread} />;
   return (
     <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" applyGradient safeAreaStyle={{ backgroundColor: '#000' }}>
       <TopBar workspace={workspace} thread={thread} />
@@ -72,12 +74,13 @@ function LoadingView() {
 }
 
 function ErrorView({ title, error }: { title: string, error: any }) {
+  const { t } = useTranslation();
   return (
     <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" applyGradient safeAreaStyle={{ backgroundColor: '#000' }}>
       <TopBar />
       <View className="flex h-[80vh] justify-center items-center">
         <Text className="text-red-500">{title}</Text>
-        <Text className="text-red-500">{error?.message || 'Unknown error'}</Text>
+        <Text className="text-red-500">{error?.message || t('chat.unknown_error')}</Text>
       </View>
     </SafeView>
   );

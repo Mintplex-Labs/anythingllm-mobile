@@ -8,6 +8,7 @@ import { X, MagnifyingGlass, CaretDown } from 'phosphor-react-native';
 import getLLM from '@/utils/AiProviders';
 import LMStudioProvider, { LMStudioModel } from '@/utils/AiProviders/LMStudioProvider';
 import debounce from 'lodash/debounce';
+import { useTranslation } from 'react-i18next';
 
 export default function LMStudioOptions({
   provider,
@@ -22,6 +23,7 @@ export default function LMStudioOptions({
   onBaseUrlChange?: (provider: string, settings: { baseUrl?: string }) => Promise<void>;
   onModelChange?: (provider: string, settings: { model?: string; baseUrl?: string }) => Promise<void>;
 }) {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const keyboardHeight = useKeyboardHeight();
   const [currentBaseUrl, setCurrentBaseUrl] = useState(baseUrl || '');
@@ -115,7 +117,7 @@ export default function LMStudioOptions({
 
         <View className="w-full flex flex-col" style={{ gap: 12 }}>
           <View className="flex flex-row items-center justify-between">
-            <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">Base URL</Text>
+            <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">{t('settings.provider_options.base_url')}</Text>
           </View>
           <TextInput
             key="baseUrl"
@@ -135,13 +137,13 @@ export default function LMStudioOptions({
               setCurrentBaseUrl(cleanedValue);
               debouncedSaveBaseUrl(cleanedValue);
             }}
-            placeholder="Enter your base URL (e.g. http://192.168.86.238:1234)"
+            placeholder={t('settings.provider_options.base_url_placeholder', { example: 'http://192.168.86.238:1234' })}
           />
         </View>
 
         <View className="w-full flex flex-col" style={{ gap: 12 }}>
           <View className="flex flex-row items-center justify-between">
-            <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">Model Selection</Text>
+            <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">{t('settings.provider_options.model_selection')}</Text>
           </View>
           <TouchableOpacity
             onPress={() => bottomSheetRef.current?.present()}
@@ -155,7 +157,7 @@ export default function LMStudioOptions({
             }}>
             <View style={{ flex: 1 }}>
               <Text style={{ color: currentModelId ? 'white' : '#9F9FA0', fontSize: 16 }}>
-                {currentModelId ? currentModelId : 'Select a model'}
+                {currentModelId ? currentModelId : t('settings.provider_options.select_model')}
               </Text>
             </View>
             <CaretDown size={20} color="#9F9FA0" />
@@ -177,14 +179,14 @@ export default function LMStudioOptions({
         }}>
         <BottomSheetView className="flex-1 bg-[#1B1B1E]">
           <Text className="text-white text-lg font-semibold py-4 text-center">
-            Choose your model
+            {t('settings.provider_options.choose_model')}
           </Text>
           <View className="flex flex-row items-center mx-4 bg-[#27282A] rounded-lg px-4 mb-4">
             <MagnifyingGlass size={20} weight="bold" color="white" />
             <TextInput
               value={searchQuery}
               onChangeText={setSearchQuery}
-              placeholder="Search models"
+              placeholder={t('settings.provider_options.search_models')}
               placeholderTextColor="#9F9FA0"
               className="flex-1 h-[38px] ml-2 text-white"
               scrollEnabled={false}

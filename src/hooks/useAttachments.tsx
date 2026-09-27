@@ -27,6 +27,7 @@ import { providerDisplayName } from "@/utils/llmproviders";
 import { estimateTokens, formatTokenEstimate, isLargeDocument } from "@/utils/documents/fullContext";
 import { consumePendingShare, prepareSharedImage, removeSharedFile, sharedItemPath, SHARED_CONTENT_READY, type SharedAttachable, type SharedFileItem, type SharedUrlItem } from "@/utils/SharedContent";
 import { readUrlAsDocument } from "@/utils/ToolsManager/tools/webScraping";
+import i18n from "@/i18n";
 
 const MAX_ATTACHMENTS = 4;
 
@@ -172,15 +173,15 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
         setAttachments([]);
         await VectorDB.resetVectorsForWorkspace(workspaceSlug);
         await Document.delete([{ field: 'workspace_slug', value: workspaceSlug }]);
-        showToast('Workspace vectors cleared');
+        showToast(i18n.t('models.attachments.vectors_cleared'));
     }, []);
 
     const clearWorkspaceVectors = useCallback(async () => {
         Alert.alert(
-            'Clear Workspace Vectors',
-            'Are you sure you want to clear the vectors for this workspace? This will remove all vectors for this workspace and cannot be undone.', [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Clear', style: 'destructive', onPress: onClearWorkspaceVectors }
+            i18n.t('models.attachments.clear_vectors_title'),
+            i18n.t('models.attachments.clear_vectors_message'), [
+            { text: i18n.t('common.cancel'), style: 'cancel' },
+            { text: i18n.t('common.clear'), style: 'destructive', onPress: onClearWorkspaceVectors }
         ]);
     }, []);
 
@@ -233,7 +234,7 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
 
                 const realPath = await Storage.getRealPathFromUri(attachment.uri).catch((e) => {
                     console.log('error', e);
-                    throw new Error('Attachment could not be found');
+                    throw new Error(i18n.t('models.attachments.not_found'));
                 });
 
                 // Throws UnsupportedDocumentError / a descriptive Error which surfaces as the toast below.
@@ -241,17 +242,19 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
             };
 
             const result = await (extract ? extract() : extractFromFile());
-            if (!result?.trim()) throw new Error('Attachment content was empty or could not be read');
+            if (!result?.trim()) throw new Error(i18n.t('models.attachments.empty_content'));
 
             const { documentMode: mode, provider } = providerRef.current;
             if (mode === 'full' && isLargeDocument(result)) {
                 // The whole file rides along with every prompt in this workspace - make sure the user wants that.
-                const providerName = provider ? providerDisplayName(provider) : 'your model provider';
+                const tokens = formatTokenEstimate(estimateTokens(result));
                 const proceed = await AwaitableAlert(
-                    'Large document',
-                    `"${attachment.name}" is roughly ${formatTokenEstimate(estimateTokens(result))} tokens. With ${providerName} the whole document is sent with every message in this workspace, which can be slow and costly. Attach it anyway?`,
-                    { text: 'Cancel', style: 'cancel' },
-                    { text: 'Attach', style: 'default' },
+                    i18n.t('models.attachments.large_document_title'),
+                    provider
+                        ? i18n.t('models.attachments.large_document_message', { name: attachment.name, tokens, provider: providerDisplayName(provider) })
+                        : i18n.t('models.attachments.large_document_message_generic', { name: attachment.name, tokens }),
+                    { text: i18n.t('common.cancel'), style: 'cancel' },
+                    { text: i18n.t('models.attachments.attach'), style: 'default' },
                 );
                 if (!proceed) throw new AttachmentCancelled();
             }
@@ -290,7 +293,7 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
                     });
             }
 
-            if (!document) throw new Error('Failed to create document for attachment');
+            if (!document) throw new Error(i18n.t('models.attachments.create_failed'));
             const newAttachment: Attachment = {
                 ...attachment,
                 content: result,
@@ -349,10 +352,10 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
     const ensureCameraPermission = useCallback(async (): Promise<boolean> => {
         if (!deviceInfo.isAndroid) return true; // iOS prompts on first use via NSCameraUsageDescription
         const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
-            title: 'Camera access',
-            message: 'AnythingLLM needs the camera to take a photo for your prompt.',
-            buttonPositive: 'Allow',
-            buttonNegative: 'Cancel',
+            title: i18n.t('models.attachments.camera_permission_title'),
+            message: i18n.t('models.attachments.camera_permission_message'),
+            buttonPositive: i18n.t('common.allow'),
+            buttonNegative: i18n.t('common.cancel'),
         });
         return granted === PermissionsAndroid.RESULTS.GRANTED;
     }, [deviceInfo.isAndroid]);
@@ -360,7 +363,7 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
     const askForImage = useCallback(async (source: ImageSource, { maxDimension = IMAGE_MAX_DIMENSION.external }: { maxDimension?: number } = {}) => {
         try {
             const remaining = MAX_ATTACHMENTS - attachmentsRef.current.length;
-            if (remaining <= 0) return showToast(`You can attach up to ${MAX_ATTACHMENTS} items per prompt`);
+            if (remaining <= 0) return showToast(i18n.t('models.attachments.max_reached', { count: MAX_ATTACHMENTS }));
 
             // maxWidth/maxHeight scale the image down proportionally (aspect ratio is preserved)
             // and includeBase64 gives us the scaled bytes without touching the file system.
@@ -377,22 +380,22 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
 
             let result;
             if (source === 'camera') {
-                if (!(await ensureCameraPermission())) return showToast('Camera permission is required to take a photo');
+                if (!(await ensureCameraPermission())) return showToast(i18n.t('models.attachments.camera_permission_required'));
                 result = await launchCamera({ ...common, cameraType: 'back', saveToPhotos: false });
             } else {
                 result = await launchImageLibrary(common);
             }
 
             if (result.didCancel) return;
-            if (result.errorCode) throw new Error(result.errorMessage || `Could not open the ${source === 'camera' ? 'camera' : 'gallery'}`);
+            if (result.errorCode) throw new Error(result.errorMessage || (source === 'camera' ? i18n.t('models.attachments.camera_open_failed') : i18n.t('models.attachments.gallery_open_failed')));
             const allAssets = result.assets ?? [];
             const assets = allAssets.slice(0, remaining);
             const readable = assets.filter((asset) => !!asset.base64);
             // The picker writes a downscaled copy of every image to the cache dir (rn_image_picker_*).
             // We only keep the base64 it handed us, so drop those files right away.
             await Promise.all(allAssets.map((asset) => removePickerTempFile(asset.uri)));
-            if (!readable.length) throw new Error('The selected image could not be read');
-            if (readable.length < assets.length) showToast(`${assets.length - readable.length} image(s) could not be read and were skipped`);
+            if (!readable.length) throw new Error(i18n.t('models.attachments.image_unreadable'));
+            if (readable.length < assets.length) showToast(i18n.t('models.attachments.images_skipped_unreadable', { count: assets.length - readable.length }));
 
             const picked: Attachment[] = readable.map((asset, i) => {
                 const mime = asset.type || 'image/jpeg';
@@ -413,7 +416,7 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
             Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.IMAGE_ATTACHED, { source, maxDimension, count: picked.length });
         } catch (e) {
             console.log('askForImage error', e);
-            showToast((e as Error).message || 'Could not attach image');
+            showToast((e as Error).message || i18n.t('models.attachments.image_attach_failed'));
         }
     }, [ensureCameraPermission]);
 
@@ -421,7 +424,7 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
         const remaining = Math.max(0, MAX_ATTACHMENTS - attachmentsRef.current.length);
         const accepted = items.slice(0, remaining);
         const skipped = items.slice(accepted.length);
-        if (skipped.length) showToast(`You can attach up to ${MAX_ATTACHMENTS} items per prompt - ${skipped.length} skipped`, 'long');
+        if (skipped.length) showToast(i18n.t('models.attachments.max_reached_skipped', { max: MAX_ATTACHMENTS, count: skipped.length }), 'long');
         await Promise.all(skipped.filter((item): item is SharedFileItem => item.kind !== 'url').map(removeSharedFile));
 
         const images = accepted.filter((item): item is SharedFileItem => item.kind === 'image');
@@ -457,7 +460,7 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
         if (images.length) {
             const { provider, model } = providerRef.current;
             if (!(await sharedImagesSupported(provider, model))) {
-                showToast(`Your current model cannot read images - ${images.length} image${images.length === 1 ? ' was' : 's were'} skipped`, 'long');
+                showToast(i18n.t('models.attachments.images_skipped_no_vision', { count: images.length }), 'long');
             } else {
                 // Same sizing rules as the gallery picker: on-device images share a 1-2k token window.
                 const maxDimension = provider === 'native' ? IMAGE_MAX_DIMENSION.onDevice : IMAGE_MAX_DIMENSION.external;
@@ -478,7 +481,7 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
                         });
                     } catch (e) {
                         console.log('shared image could not be prepared', image.name, e);
-                        showToast(`Could not read ${image.name}`);
+                        showToast(i18n.t('models.attachments.read_failed', { name: image.name }));
                     }
                 }
                 if (prepared.length) {
@@ -521,9 +524,9 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
                 <View className="flex flex-row gap-x-2">
                     {attachments.map((attachment) => {
                         const isImage = attachment.kind === 'image' && !!attachment.contentString;
-                        const confirmRemove = () => Alert.alert('Remove Attachment', 'Are you sure you want to remove this attachment from chat?', [
-                            { text: 'Cancel', style: 'cancel' },
-                            { text: 'Remove', style: 'destructive', onPress: () => removeAttachment(attachment) }
+                        const confirmRemove = () => Alert.alert(i18n.t('models.attachments.remove_title'), i18n.t('models.attachments.remove_message'), [
+                            { text: i18n.t('common.cancel'), style: 'cancel' },
+                            { text: i18n.t('common.remove'), style: 'destructive', onPress: () => removeAttachment(attachment) }
                         ]);
                         return (
                             <AttachmentChip
@@ -566,7 +569,7 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
             if (!pending) return;
             addSharedItems(pending.items, { wsSlug: pending.wsSlug, threadSlug: pending.threadSlug }).catch((e) => {
                 console.log('shared content could not be attached', e);
-                showToast('Could not attach the shared content');
+                showToast(i18n.t('models.attachments.shared_content_failed'));
             });
         };
         consume();

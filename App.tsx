@@ -32,6 +32,7 @@ import { useSharedContentNavigation } from '@/utils/SharedContent';
 import { useDeepLinkNavigation } from '@/utils/DeepLinks';
 import HighlightsHost from '@/components/Highlights/HighlightsHost';
 import ErrorBoundary, { RootErrorFallback } from '@/components/ErrorBoundary';
+import { hydrateLanguage } from '@/i18n';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
@@ -47,6 +48,9 @@ const App = observer(() => {
   const styles = rootStyles(theme);
   const { initialRoute, isLoading } = useInitialRoute();
   const { onboardingCompleted, loadingOnboardingCompleted } = useOnboardingCompleted();
+  // Hold the first frame until the saved UI language is applied so it does not flash in the device language.
+  const [languageReady, setLanguageReady] = React.useState(false);
+  React.useEffect(() => { hydrateLanguage().finally(() => setLanguageReady(true)); }, []);
   // Sweep processed text, generated documents and picker temp files nothing references anymore.
   React.useEffect(() => { purgeOrphanedFiles(); }, []);
   // Once onboarding completes its screens are removed from the drawer, but initialRoute was
@@ -61,7 +65,7 @@ const App = observer(() => {
       ? PATHS.home
       : initialRoute.path;
 
-  if (isLoading || loadingOnboardingCompleted)
+  if (isLoading || loadingOnboardingCompleted || !languageReady)
     return (
       <SafeAreaProvider>
         <SafeView

@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import type { IOnDeviceAvailableModel } from '@/utils/AiProviders/onDevice';
+import i18n, { tKey } from '@/i18n';
 
-export const UNKNOWN_PROVIDER_LABEL = 'Found on this device';
-export const IMPORTED_PROVIDER_LABEL = 'Added from Hugging Face';
-export const OTHER_PROVIDER_LABEL = 'Other';
+// Translation keys - resolved with i18n.t() when the sections are built.
+export const UNKNOWN_PROVIDER_LABEL = tKey('models.sections.found_on_device');
+export const IMPORTED_PROVIDER_LABEL = tKey('models.sections.added_from_hf');
+export const OTHER_PROVIDER_LABEL = tKey('models.sections.other');
 /** Providers listed first, in this order, before the remaining providers are sorted alphabetically. */
 export const PINNED_PROVIDERS = ['Qwen'];
 
@@ -51,10 +53,13 @@ export function groupModelsByProvider<T extends IOnDeviceAvailableModel>(models:
     return PINNED_PROVIDERS.length;
   };
   const providers = [...byProvider.keys()].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
-  for (const provider of providers) sections.push({ title: provider, models: byProvider.get(provider)! });
+  for (const provider of providers) {
+    const title = provider === OTHER_PROVIDER_LABEL ? i18n.t(OTHER_PROVIDER_LABEL) : provider;
+    sections.push({ title, models: byProvider.get(provider)! });
+  }
 
-  if (imported.length) sections.push({ title: IMPORTED_PROVIDER_LABEL, models: imported });
-  if (unknown.length) sections.push({ title: UNKNOWN_PROVIDER_LABEL, models: unknown });
+  if (imported.length) sections.push({ title: i18n.t(IMPORTED_PROVIDER_LABEL), models: imported });
+  if (unknown.length) sections.push({ title: i18n.t(UNKNOWN_PROVIDER_LABEL), models: unknown });
   return sections;
 }
 

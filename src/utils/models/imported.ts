@@ -1,5 +1,6 @@
 import uiStore from '@/store/UIStore';
 import { HfGGUFQuant, HfGGUFRepoSummary } from '@/utils/api/hfGguf';
+import i18n from '@/i18n';
 
 /**
  * GGUF models the user added from Hugging Face (outside of our catalog).
@@ -36,12 +37,22 @@ export function importedModelId(repoId: string, filename: string) {
   return `${repoId}/${filename}`;
 }
 
+/**
+ * List description for an imported model, in the current UI language. Built when the list is shown
+ * (see OnDeviceProvider.availableModels) so it follows language changes after the model was added.
+ */
+export function describeImportedModel(model: { repoId: string; architecture?: string; contextLength?: number }): string {
+  const specs = [
+    model.architecture,
+    model.contextLength ? i18n.t('hf_import.context', { value: Math.round(model.contextLength / 1024) }) : null,
+  ].filter(Boolean).join(' · ');
+  return specs
+    ? i18n.t('models.imported_description_specs', { repo: model.repoId, specs })
+    : i18n.t('models.imported_description', { repo: model.repoId });
+}
+
 export function buildImportedModel(repo: HfGGUFRepoSummary, quant: HfGGUFQuant): ImportedModel {
   const quantLabel = quant.quant ? ` (${quant.quant})` : '';
-  const specs = [
-    repo.architecture,
-    repo.contextLength ? `${Math.round(repo.contextLength / 1024)}k context` : null,
-  ].filter(Boolean).join(' · ');
 
   return {
     modelId: importedModelId(repo.id, quant.filename),
@@ -49,7 +60,7 @@ export function buildImportedModel(repo: HfGGUFRepoSummary, quant: HfGGUFQuant):
     filename: quant.filename,
     quant: quant.quant,
     name: `${repo.title}${quantLabel}`,
-    description: `Added from Hugging Face (${repo.id}).${specs ? ` ${specs}.` : ''}`,
+    description: describeImportedModel({ repoId: repo.id, architecture: repo.architecture, contextLength: repo.contextLength }),
     size: quant.size,
     downloadUrl: quant.downloadUrl,
     author: repo.author,

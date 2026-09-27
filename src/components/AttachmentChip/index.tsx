@@ -1,5 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import {
     File, FileCode, FileCsv, FileDoc, FileHtml, FileMd, FilePdf, FilePpt, FileText, FileTxt, FileXls, X,
     type IconProps,
@@ -70,18 +71,20 @@ export interface AttachmentChipProps {
  * and size, and a remove button. While processing, the badge becomes a spinner and the card dims.
  */
 export default function AttachmentChip({ name, size = 0, processing = false, imageUri, onPress, onRemove }: AttachmentChipProps) {
+    const { t } = useTranslation();
     const isImage = !!imageUri;
     const visual = getFileVisual(name);
+    const typeLabel = visual === DEFAULT_VISUAL ? t('attachments.file_type_generic') : visual.label;
     const caption = processing
-        ? 'Processing…'
-        : [isImage ? 'Image' : visual.label, size > 0 ? formatBytes(size, 1) : null].filter(Boolean).join(' · ');
+        ? t('attachments.processing')
+        : [isImage ? t('attachments.image') : typeLabel, size > 0 ? formatBytes(size, 1) : null].filter(Boolean).join(' · ');
 
     return (
         <TouchableOpacity
             onPress={onPress}
             disabled={processing || !onPress}
             activeOpacity={0.75}
-            accessibilityLabel={`${name}${processing ? ', processing' : ''}`}
+            accessibilityLabel={processing ? t('attachments.name_processing', { name }) : name}
             className="flex flex-row items-center"
             style={{
                 height: ATTACHMENT_CHIP_HEIGHT,
@@ -129,7 +132,7 @@ export default function AttachmentChip({ name, size = 0, processing = false, ima
                     onPress={onRemove}
                     disabled={processing}
                     hitSlop={8}
-                    accessibilityLabel={`Remove ${name}`}
+                    accessibilityLabel={t('attachments.remove_named', { name })}
                     className="items-center justify-center"
                     style={{ width: 28, height: 28, borderRadius: 14 }}
                 >

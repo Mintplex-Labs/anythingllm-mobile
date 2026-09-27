@@ -3,6 +3,7 @@ import * as RNFS from '@dr.pogodin/react-native-fs';
 import { initLlama, LlamaContext } from "llama.rn";
 import NetInfo from "@react-native-community/netinfo";
 import { Alert } from "react-native";
+import i18n from "@/i18n";
 
 type ToolDefinition = {
     type: 'function';
@@ -88,11 +89,11 @@ export default class ToolReranker {
             } else if (netState.type === 'cellular') {
                 const confirmed = await new Promise<boolean>((resolve) => {
                     Alert.alert(
-                        'Download Required',
-                        `Intelligent tool selection requires a small model download (${RERANKER_MODEL.size}). You are on cellular data. Continue?`,
+                        i18n.t('tools.reranker.download_required_title'),
+                        i18n.t('tools.reranker.download_required_message', { size: RERANKER_MODEL.size }),
                         [
-                            { text: 'Cancel', style: 'cancel', onPress: () => resolve(false) },
-                            { text: 'Download', onPress: () => resolve(true) },
+                            { text: i18n.t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
+                            { text: i18n.t('common.download'), onPress: () => resolve(true) },
                         ]
                     );
                 });
@@ -151,7 +152,7 @@ export default class ToolReranker {
         try {
             // Ensure model is available
             if (!(await this.isModelReady())) {
-                onStatus?.('Downloading tool selection model');
+                onStatus?.(i18n.t('tools.reranker.status_downloading'));
                 const downloaded = await this.downloadModel({ silent: false });
                 if (!downloaded) {
                     this.log('Model not available, returning all tools');
@@ -159,7 +160,7 @@ export default class ToolReranker {
                 }
             }
 
-            onStatus?.('Selecting best tools');
+            onStatus?.(i18n.t('tools.reranker.status_selecting'));
             this.log(`Reranking ${tools.length} tools against prompt: "${prompt.slice(0, 100)}..."`);
             const startTime = Date.now();
 

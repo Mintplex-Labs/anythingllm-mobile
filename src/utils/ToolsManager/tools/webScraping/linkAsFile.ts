@@ -4,6 +4,7 @@ import type { DocumentKind } from '@/utils/DocumentParser';
 import { generateUUID } from '@/utils/constants';
 import NetInfo from '@react-native-community/netinfo';
 import AwaitableAlert from '@/components/AwaitableAlert';
+import i18n from '@/i18n';
 
 /**
  * Port of `collector/processLink/helpers/index.js` from AnythingLLM core.
@@ -146,12 +147,13 @@ export async function confirmDownloadOnCellular(fileName: string, contentLength:
     if (netType !== 'cellular') return true;
     if (contentLength !== null && contentLength <= CELLULAR_PROMPT_BYTES) return true;
 
-    const sizeLabel = contentLength !== null ? formatBytes(contentLength) : 'an unknown size';
     return await AwaitableAlert(
-        'Download on cellular?',
-        `Reading "${fileName}" requires downloading a document of ${sizeLabel}. You are on cellular data. Continue?`,
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Download' },
+        i18n.t('tools.web_scraping.cellular_title'),
+        contentLength !== null
+            ? i18n.t('tools.web_scraping.cellular_message', { name: fileName, size: formatBytes(contentLength) })
+            : i18n.t('tools.web_scraping.cellular_message_unknown_size', { name: fileName }),
+        { text: i18n.t('common.cancel'), style: 'cancel' },
+        { text: i18n.t('common.download') },
     );
 }
 

@@ -4,6 +4,7 @@ import getEmbedder from '@/utils/Embedder';
 import OnDeviceEmbedderProvider from '@/utils/Embedder/onDevice';
 import DocumentReranker from '@/utils/DocumentReranker';
 import Telemetry from '@/utils/Telemetry';
+import i18n from '@/i18n';
 import {
   cosineSimilarity,
   fitScoredMemories,
@@ -219,7 +220,7 @@ export default class MemoryManager {
       return [];
     }
 
-    onStatus?.('Recalling workspace notes');
+    onStatus?.(i18n.t('chat.status.recalling_notes'));
     const candidates = await this.backfillEmbeddings(plan.retrieval.candidates as MemoryType[]);
     if (!candidates.length) return [];
 

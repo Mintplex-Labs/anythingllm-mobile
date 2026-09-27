@@ -4,6 +4,7 @@ import { Q, Model } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
 import { isValidCron, nextCronRun } from '@/utils/ScheduledJobs/cron';
 import ScheduledJobRun from './ScheduledJobRun';
+import i18n from '@/i18n';
 
 export type ScheduledJobType = {
   uuid: string;
@@ -68,12 +69,12 @@ export default class ScheduledJob extends Model {
   static validate(input: Partial<ScheduledJobWritable>): { valid: boolean; error: string } {
     const name = String(input.name ?? '').trim();
     const prompt = String(input.prompt ?? '').trim();
-    if (!name) return { valid: false, error: 'Give the job a name' };
-    if (name.length > ScheduledJob.maxNameLength) return { valid: false, error: `Name must be ${ScheduledJob.maxNameLength} characters or fewer` };
-    if (!prompt) return { valid: false, error: 'Write the prompt the job should run' };
-    if (prompt.length > ScheduledJob.maxPromptLength) return { valid: false, error: `Prompt must be ${ScheduledJob.maxPromptLength} characters or fewer` };
-    if (!isValidCron(String(input.schedule ?? ''))) return { valid: false, error: 'The schedule is not a valid cron expression' };
-    if (input.tools !== undefined && !Array.isArray(input.tools)) return { valid: false, error: 'Tools must be a list' };
+    if (!name) return { valid: false, error: i18n.t('misc.validation.job_name_required') };
+    if (name.length > ScheduledJob.maxNameLength) return { valid: false, error: i18n.t('misc.validation.job_name_too_long', { count: ScheduledJob.maxNameLength }) };
+    if (!prompt) return { valid: false, error: i18n.t('misc.validation.job_prompt_required') };
+    if (prompt.length > ScheduledJob.maxPromptLength) return { valid: false, error: i18n.t('misc.validation.job_prompt_too_long', { count: ScheduledJob.maxPromptLength }) };
+    if (!isValidCron(String(input.schedule ?? ''))) return { valid: false, error: i18n.t('misc.validation.job_schedule_invalid') };
+    if (input.tools !== undefined && !Array.isArray(input.tools)) return { valid: false, error: i18n.t('misc.validation.job_tools_not_list') };
     return { valid: true, error: '' };
   }
 

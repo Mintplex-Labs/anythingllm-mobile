@@ -1,6 +1,7 @@
 import { type WorkspaceType } from '@/database/models/Workspace';
 import { type WorkspaceThreadType } from '@/database/models/WorkspaceThread';
 import { type WorkspaceChatType } from '@/database/models/WorkspaceChat';
+import i18n from '@/i18n';
 
 export type ExportFormat = 'txt' | 'md' | 'json' | 'pdf';
 
@@ -28,34 +29,35 @@ export type ExportFormatDefinition = {
   description: string;
 };
 
+// `label`/`description` are getters so they are translated when the export menu renders.
 export const EXPORT_FORMATS: Record<ExportFormat, ExportFormatDefinition> = {
   txt: {
     format: 'txt',
-    label: 'Text',
+    get label() { return i18n.t('files.export.text_label'); },
     extension: 'txt',
     mimeType: 'text/plain',
-    description: 'Plain text transcript',
+    get description() { return i18n.t('files.export.txt_description'); },
   },
   md: {
     format: 'md',
     label: 'Markdown',
     extension: 'md',
     mimeType: 'text/markdown',
-    description: 'Formatted transcript for notes apps',
+    get description() { return i18n.t('files.export.md_description'); },
   },
   json: {
     format: 'json',
     label: 'JSON',
     extension: 'json',
     mimeType: 'application/json',
-    description: 'Messages with model and metrics',
+    get description() { return i18n.t('files.export.json_description'); },
   },
   pdf: {
     format: 'pdf',
     label: 'PDF',
     extension: 'pdf',
     mimeType: 'application/pdf',
-    description: 'Formatted document',
+    get description() { return i18n.t('files.export.pdf_description'); },
   },
 };
 

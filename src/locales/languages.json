@@ -1,0 +1,19 @@
+[
+  { "code": "en", "nativeName": "English", "englishName": "English" },
+  { "code": "de", "nativeName": "Deutsch", "englishName": "German" },
+  { "code": "es", "nativeName": "Español", "englishName": "Spanish" },
+  { "code": "fr", "nativeName": "Français", "englishName": "French" },
+  { "code": "hi", "nativeName": "हिन्दी", "englishName": "Hindi" },
+  { "code": "id", "nativeName": "Bahasa Indonesia", "englishName": "Indonesian" },
+  { "code": "it", "nativeName": "Italiano", "englishName": "Italian" },
+  { "code": "ja", "nativeName": "日本語", "englishName": "Japanese" },
+  { "code": "ko", "nativeName": "한국어", "englishName": "Korean" },
+  { "code": "nl", "nativeName": "Nederlands", "englishName": "Dutch" },
+  { "code": "pl", "nativeName": "Polski", "englishName": "Polish" },
+  { "code": "pt-BR", "nativeName": "Português (Brasil)", "englishName": "Portuguese (Brazil)" },
+  { "code": "ru", "nativeName": "Русский", "englishName": "Russian" },
+  { "code": "tr", "nativeName": "Türkçe", "englishName": "Turkish" },
+  { "code": "vi", "nativeName": "Tiếng Việt", "englishName": "Vietnamese" },
+  { "code": "zh", "nativeName": "简体中文", "englishName": "Chinese (Simplified)" },
+  { "code": "zh-TW", "nativeName": "繁體中文", "englishName": "Chinese (Traditional)" }
+]

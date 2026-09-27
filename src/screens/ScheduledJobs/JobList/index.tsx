@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { ClockCountdown, CaretRight, Plus } from 'phosphor-react-native';
 import SafeView from '@/components/SafeView';
 import ToggleSwitch from '@/components/ToggleSwitch';
@@ -20,6 +21,7 @@ import useJobsBlockedReason, { BLOCKED_COPY } from '../useJobsBlockedReason';
 type JobRow = ScheduledJobType & { latestRun: ScheduledJobRunType | null; unread: number };
 
 export default function JobList({ onBack, onCreate, onOpenJob }: { onBack: () => void; onCreate: () => void; onOpenJob: (jobUuid: string) => void }) {
+    const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const navigation = useNavigation();
     const { blocked } = useJobsBlockedReason();
@@ -53,7 +55,7 @@ export default function JobList({ onBack, onCreate, onOpenJob }: { onBack: () =>
             await ScheduledJob.setEnabled(job.uuid, !job.enabled);
             await syncNativeSchedule();
         } catch (error: any) {
-            showToast(error?.message || 'Could not update the job');
+            showToast(error?.message || t('scheduled_jobs.update_failed'));
             load();
         }
     };
@@ -69,21 +71,21 @@ export default function JobList({ onBack, onCreate, onOpenJob }: { onBack: () =>
 
     return (
         <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" safeAreaStyle={{ backgroundColor: JOB_COLORS.page }}>
-            <ScreenHeader title="Scheduled Jobs" onBack={onBack} />
+            <ScreenHeader title={t('scheduled_jobs.title')} onBack={onBack} />
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingHorizontal: 8, paddingBottom: insets.bottom + 20, gap: 24, flexGrow: 1 }}>
                 {blocked && (
                     <NoticeBanner
-                        title={BLOCKED_COPY[blocked].title}
-                        body={BLOCKED_COPY[blocked].body}
-                        action={{ label: 'Open LLM settings', onPress: goToSettings }}
+                        title={t(BLOCKED_COPY[blocked].title)}
+                        body={t(BLOCKED_COPY[blocked].body)}
+                        action={{ label: t('scheduled_jobs.list.open_llm_settings'), onPress: goToSettings }}
                     />
                 )}
 
                 <View className="w-full flex flex-col" style={{ gap: 12 }}>
-                    <SectionLabel trailing={!!jobs.length && <Text style={{ color: JOB_COLORS.muted }} className="text-sm">{jobs.filter((j) => j.enabled).length} of {jobs.length} on</Text>}>
-                        Your jobs
+                    <SectionLabel trailing={!!jobs.length && <Text style={{ color: JOB_COLORS.muted }} className="text-sm">{t('scheduled_jobs.list.enabled_count', { enabled: jobs.filter((j) => j.enabled).length, total: jobs.length })}</Text>}>
+                        {t('scheduled_jobs.list.your_jobs')}
                     </SectionLabel>
                     {loading ? (
                         <View className="w-full items-center" style={{ paddingVertical: 40 }}>
@@ -106,15 +108,14 @@ export default function JobList({ onBack, onCreate, onOpenJob }: { onBack: () =>
                         </Card>
                     )}
                     <Text style={{ color: JOB_COLORS.muted }} className="text-sm">
-                        A job is a prompt the assistant runs for you on a schedule, using the tools you pick for it. Results collect here
-                        {supportsBackgroundRuns() ? ' and run even while the app is closed - Android may delay a run by a few minutes to save battery.' : ' the next time you open the app.'}
+                        {supportsBackgroundRuns() ? t('scheduled_jobs.list.explainer_background') : t('scheduled_jobs.list.explainer_foreground')}
                     </Text>
                 </View>
             </ScrollView>
 
             {(jobs.length > 0 || loading) && (
                 <View style={{ paddingHorizontal: 8, paddingBottom: insets.bottom + 12, paddingTop: 8 }}>
-                    <ActionButton title="New job" icon={<Plus size={20} color="#0E0F0F" weight="bold" />} onPress={onCreate} disabled={!!blocked} />
+                    <ActionButton title={t('scheduled_jobs.list.new_job')} icon={<Plus size={20} color="#0E0F0F" weight="bold" />} onPress={onCreate} disabled={!!blocked} />
                 </View>
             )}
         </SafeView>
@@ -122,13 +123,14 @@ export default function JobList({ onBack, onCreate, onOpenJob }: { onBack: () =>
 }
 
 function JobListRow({ job, last, paused, onPress, onToggle }: { job: JobRow; last: boolean; paused: boolean; onPress: () => void; onToggle: () => void }) {
+    const { t } = useTranslation();
     const inFlight = job.latestRun?.status === 'running' || job.latestRun?.status === 'queued';
     let statusLine: string;
-    if (inFlight) statusLine = 'Running now';
-    else if (!job.enabled) statusLine = 'Paused';
-    else if (paused) statusLine = 'Waiting for a cloud LLM';
-    else if (job.nextRunAt) statusLine = `Next run ${formatRelativeTime(job.nextRunAt)}`;
-    else statusLine = 'Not scheduled';
+    if (inFlight) statusLine = t('scheduled_jobs.running_now');
+    else if (!job.enabled) statusLine = t('scheduled_jobs.paused');
+    else if (paused) statusLine = t('scheduled_jobs.list.waiting_for_cloud');
+    else if (job.nextRunAt) statusLine = t('scheduled_jobs.list.next_run', { time: formatRelativeTime(job.nextRunAt) });
+    else statusLine = t('scheduled_jobs.list.not_scheduled');
 
     return (
         <TouchableOpacity
@@ -155,19 +157,20 @@ function JobListRow({ job, last, paused, onPress, onToggle }: { job: JobRow; las
 }
 
 function EmptyState({ blocked, onCreate }: { blocked: boolean; onCreate: () => void }) {
+    const { t } = useTranslation();
     return (
         <Card style={{ alignItems: 'center', paddingVertical: 32, gap: 16 }}>
             <View style={{ backgroundColor: JOB_COLORS.chip, width: 64, height: 64 }} className="flex items-center justify-center rounded-full">
                 <ClockCountdown size={32} color="#FFF" />
             </View>
             <View className="flex flex-col items-center" style={{ gap: 6 }}>
-                <Text className="text-white text-lg font-medium">No scheduled jobs yet</Text>
+                <Text className="text-white text-lg font-medium">{t('scheduled_jobs.list.empty_title')}</Text>
                 <Text style={{ color: JOB_COLORS.muted, textAlign: 'center', paddingHorizontal: 12 }} className="text-sm">
-                    Have the assistant check a website every morning, draft a weekly summary, or build a report on the first of the month - all without opening a chat.
+                    {t('scheduled_jobs.list.empty_body')}
                 </Text>
             </View>
             <View style={{ width: '100%' }}>
-                <ActionButton title="Create your first job" icon={<Plus size={20} color="#0E0F0F" weight="bold" />} onPress={onCreate} disabled={blocked} />
+                <ActionButton title={t('scheduled_jobs.list.create_first')} icon={<Plus size={20} color="#0E0F0F" weight="bold" />} onPress={onCreate} disabled={blocked} />
             </View>
         </Card>
     );

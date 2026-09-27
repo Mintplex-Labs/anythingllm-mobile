@@ -10,6 +10,7 @@ import { IAvailableModel } from '@/utils/AiProviders/baseOpenAILikeProvider';
 import { findProviderDefinition, type ProviderConfig } from '@/utils/llmproviders';
 import { BEDROCK_REGIONS } from '@/utils/AiProviders/BedrockProvider';
 import debounce from 'lodash/debounce';
+import { useTranslation } from 'react-i18next';
 
 type ProviderSettings = ProviderConfig;
 
@@ -60,6 +61,7 @@ export default function GenericOpenAiOptions({
   onRegionChange?: (provider: string, settings: ProviderSettings) => Promise<void>;
   onModelChange: (provider: string, settings: ProviderSettings) => Promise<void>;
 }) {
+  const { t } = useTranslation();
   const definition = findProviderDefinition(provider);
   const showApiKey = definition ? definition.fields.apiKey !== false : true;
   const requiresApiKey = definition?.fields.apiKey === 'required';
@@ -203,7 +205,7 @@ export default function GenericOpenAiOptions({
         {requiresBaseUrl && (
           <View className="w-full flex flex-col" style={{ gap: 12 }}>
             <View className="flex flex-row items-center justify-between">
-              <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">Base URL</Text>
+              <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">{t('settings.provider_options.base_url')}</Text>
             </View>
             <TextInput
               key="baseUrl"
@@ -217,7 +219,7 @@ export default function GenericOpenAiOptions({
               value={currentBaseUrl}
               onChangeText={(value) => setCurrentBaseUrl(value.toLowerCase().trim())}
               onBlur={() => onBaseUrlChange?.(provider, { baseUrl: currentBaseUrl })}
-              placeholder={`Enter your base URL (e.g. ${definition?.baseUrlPlaceholder ?? 'https://api.openai.com/v1/'})`}
+              placeholder={t('settings.provider_options.base_url_placeholder', { example: definition?.baseUrlPlaceholder ?? 'https://api.openai.com/v1/' })}
             />
           </View>
         )}
@@ -226,7 +228,7 @@ export default function GenericOpenAiOptions({
           <View className="w-full flex flex-col" style={{ gap: 12 }}>
             <View className="flex flex-row items-center justify-between">
               <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">
-                API Key{!requiresApiKey ? ' (optional)' : ''}
+                {requiresApiKey ? t('settings.provider_options.api_key') : t('settings.provider_options.api_key_optional')}
               </Text>
             </View>
             <TextInput
@@ -239,7 +241,7 @@ export default function GenericOpenAiOptions({
               value={currentApiKey}
               onChangeText={value => setCurrentApiKey(value)}
               onBlur={() => onApiKeyChange?.(provider, { apiKey: currentApiKey })}
-              placeholder="Enter your API key"
+              placeholder={t('settings.provider_options.api_key_placeholder')}
             />
           </View>
         )}
@@ -247,7 +249,7 @@ export default function GenericOpenAiOptions({
         {showRegion && (
           <View className="w-full flex flex-col" style={{ gap: 12 }}>
             <View className="flex flex-row items-center justify-between">
-              <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">AWS Region</Text>
+              <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">{t('settings.provider_options.aws_region')}</Text>
             </View>
             <TouchableOpacity
               onPress={() => regionSheetRef.current?.present()}
@@ -263,7 +265,7 @@ export default function GenericOpenAiOptions({
                 <Text style={{ color: currentRegion ? 'white' : '#9F9FA0', fontSize: 16 }}>
                   {currentRegion
                     ? `${currentRegion}${selectedRegion ? ` - ${selectedRegion.name}` : ''}`
-                    : 'Select a region'}
+                    : t('settings.provider_options.select_region')}
                 </Text>
               </View>
               <CaretDown size={20} color="#9F9FA0" />
@@ -273,11 +275,11 @@ export default function GenericOpenAiOptions({
 
         <View className="w-full flex flex-col" style={{ gap: 12 }}>
           <View className="flex flex-row items-center justify-between">
-            <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">Model Selection</Text>
+            <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">{t('settings.provider_options.model_selection')}</Text>
             {isFetchingModels && (
               <View className="flex flex-row items-center" style={{ gap: 6 }}>
                 <ActivityIndicator size="small" color="#9F9FA0" />
-                <Text style={{ color: '#9F9FA0' }} className="text-sm">Fetching models...</Text>
+                <Text style={{ color: '#9F9FA0' }} className="text-sm">{t('settings.provider_options.fetching_models')}</Text>
               </View>
             )}
           </View>
@@ -295,7 +297,7 @@ export default function GenericOpenAiOptions({
               }}>
               <View style={{ flex: 1 }}>
                 <Text style={{ color: currentModel ? 'white' : '#9F9FA0', fontSize: 16 }}>
-                  {currentModel ? currentModel : 'Select a model'}
+                  {currentModel ? currentModel : t('settings.provider_options.select_model')}
                 </Text>
               </View>
               <CaretDown size={20} color="#9F9FA0" />
@@ -313,13 +315,13 @@ export default function GenericOpenAiOptions({
               value={currentModel}
               onChangeText={value => setCurrentModel(value)}
               onBlur={() => onModelChange?.(provider, { model: currentModel })}
-              placeholder={`Enter your model (e.g. ${definition?.modelPlaceholder ?? 'gpt-4o'})`}
+              placeholder={t('settings.provider_options.model_placeholder', { example: definition?.modelPlaceholder ?? 'gpt-4o' })}
             />
           )}
 
           {showFallbackHint && (
             <Text style={{ color: '#9F9FA0' }} className="text-sm">
-              Could not load models from this provider. Check your credentials or enter the model name manually.
+              {t('settings.provider_options.models_load_failed')}
             </Text>
           )}
         </View>
@@ -340,14 +342,14 @@ export default function GenericOpenAiOptions({
         }}>
         <BottomSheetScrollView className="flex-1 bg-[#1B1B1E]">
           <Text className="text-white text-lg font-semibold py-4 text-center">
-            Choose your model
+            {t('settings.provider_options.choose_model')}
           </Text>
           <View className="flex flex-row items-center mx-4 bg-[#27282A] rounded-lg px-4 mb-4">
             <MagnifyingGlass size={20} weight="bold" color="white" />
             <TextInput
               value={searchQuery}
               onChangeText={setSearchQuery}
-              placeholder="Search models"
+              placeholder={t('settings.provider_options.search_models')}
               placeholderTextColor="#9F9FA0"
               className="flex-1 h-[38px] ml-2 text-white"
               scrollEnabled={false}
@@ -401,7 +403,7 @@ export default function GenericOpenAiOptions({
           }}>
           <BottomSheetScrollView className="flex-1 bg-[#1B1B1E]">
             <Text className="text-white text-lg font-semibold py-4 text-center">
-              Choose your AWS region
+              {t('settings.provider_options.choose_region')}
             </Text>
             <View className="flex flex-row items-center mx-4 bg-[#27282A] rounded-lg px-4 mb-4">
               <MagnifyingGlass size={20} weight="bold" color="white" />
@@ -410,7 +412,7 @@ export default function GenericOpenAiOptions({
                 onChangeText={setRegionQuery}
                 autoCapitalize="none"
                 autoCorrect={false}
-                placeholder="Search or type a region code"
+                placeholder={t('settings.provider_options.search_region')}
                 placeholderTextColor="#9F9FA0"
                 className="flex-1 h-[38px] ml-2 text-white"
                 scrollEnabled={false}
@@ -429,7 +431,7 @@ export default function GenericOpenAiOptions({
                   onPress={() => handleRegionSelect(regionQuery.toLowerCase())}
                   style={{ padding: 16, borderRadius: 8, marginBottom: 8, borderWidth: 1, borderColor: '#7cd4fd' }}>
                   <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>
-                    Use "{regionQuery.trim().toLowerCase()}"
+                    {t('settings.provider_options.use_region', { region: regionQuery.trim().toLowerCase() })}
                   </Text>
                 </TouchableOpacity>
               )}

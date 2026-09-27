@@ -9,8 +9,10 @@ import { useNavigation } from "@react-navigation/native";
 import { Camera, CameraDevice, useCameraPermission, getCameraDevice, useCodeScanner } from "react-native-vision-camera";
 import uiStore from "@/store/UIStore";
 import { IExternalConnection, unregisterConnection } from "../index";
+import { useTranslation } from "react-i18next";
 
 export function MainView() {
+    const { t } = useTranslation();
     const [existingConnections, setExistingConnections] = useState<IExternalConnection[]>([]);
     const navigation = useNavigation();
     const insets = useSafeAreaInsets();
@@ -60,19 +62,19 @@ export function MainView() {
                 <TouchableOpacity onPress={goHome} className="absolute top-8 left-0 flex flex-row items-center gap-2">
                     <ArrowLeft size={24} color="#FFF" weight="bold" />
                 </TouchableOpacity>
-                <Text style={{ maxWidth: '80%' }} numberOfLines={1} ellipsizeMode="middle" className="text-white text-lg font-medium">Connect to AnythingLLM</Text>
+                <Text style={{ maxWidth: '80%' }} numberOfLines={1} ellipsizeMode="middle" className="text-white text-lg font-medium">{t('connect.title')}</Text>
             </View>
 
             <View style={{ gap: 20 }} className="w-full flex flex-col items-center justify-center">
                 <CameraView onScanReceived={onQRCodeScanned} />
                 <Text style={{ textAlign: 'center', fontSize: 14, width: '80%' }} className="text-white/80">
-                    Scan the QR code for your AnythingLLM instance or client to sync it's data to this mobile device for AI on the go!
+                    {t('connect.scan_description')}
                 </Text>
             </View>
 
             {existingConnections.length > 0 && (
                 <View className="w-full flex flex-col items-center justify-center" style={{ paddingTop: 33 }}>
-                    <Text className="text-white text-lg font-medium">Previous Connections</Text>
+                    <Text className="text-white text-lg font-medium">{t('connect.previous_connections')}</Text>
                     <ScrollView
                         style={{ maxHeight: 150 }}
                         contentContainerStyle={{ gap: 8, paddingTop: 8 }}

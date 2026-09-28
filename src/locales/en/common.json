@@ -228,18 +228,32 @@
       "subtitle": "Scheduled job · {{schedule}}",
       "view": "View"
     },
+    "draft": {
+      "open": "Open",
+      "send_with": "Send with",
+      "more_apps": "More apps",
+      "open_in_failed": "Could not open {{app}}"
+    },
     "text_draft": {
       "new_message": "New message",
-      "open": "Open",
       "open_label": "Open text message draft to {{recipient}}",
-      "send_with": "Send with",
       "no_number_hint": "No phone number was given - the app will ask who to send it to.",
-      "more_apps": "More apps",
       "copy": "Copy message",
       "copied": "Message copied",
       "share_title": "Send message with",
-      "open_failed": "Could not open a messaging app",
-      "open_in_failed": "Could not open {{app}}"
+      "open_failed": "Could not open a messaging app"
+    },
+    "email_draft": {
+      "new_email": "New email",
+      "no_subject": "(no subject)",
+      "no_recipient": "No recipient yet",
+      "open_label": "Open email draft {{subject}}",
+      "cc": "Cc: {{addresses}}",
+      "no_recipient_hint": "No email address was given - add who it's for in your mail app.",
+      "copy": "Copy email",
+      "copied": "Email copied",
+      "share_title": "Send email with",
+      "open_failed": "Could not open a mail app"
     },
     "metrics": {
       "tokens_one": "{{value}} token",
@@ -539,9 +553,8 @@
     },
     "draft_email": {
       "name": "Draft Email",
-      "description": "Use the assistant to draft an email for you.",
-      "status_drafting": "Drafting email \"{{subject}}\"",
-      "open_action": "Open Draft Email"
+      "description": "Draft an email and open it in your mail app (Gmail, Outlook and more) to send.",
+      "status_drafting": "Drafting email \"{{subject}}\""
     },
     "draft_text": {
       "name": "Draft Text",

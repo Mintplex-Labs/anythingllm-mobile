@@ -22,7 +22,7 @@ import ToolsActionSheet from "./PromptInput/Actions/Settings/Tools";
 import WorkspaceFilesActionSheet from "./PromptInput/Actions/Settings/Files";
 import CitationsActionSheet from "./ChatHistory/CitationsActionSheet";
 import MessageActionsSheet from "./ChatHistory/MessageActionsSheet";
-import TextDraftSheet from "./ChatHistory/TextDraftSheet";
+import DraftSheet from "./ChatHistory/DraftSheet";
 
 export default function WorkspaceChat() {
   useRedirect();
@@ -59,7 +59,7 @@ export default function WorkspaceChat() {
       <ToolsActionSheet />
       <WorkspaceFilesActionSheet workspace={workspace} thread={thread} />
       <CitationsActionSheet />
-      <TextDraftSheet />
+      <DraftSheet />
     </SafeView >
   );
 }

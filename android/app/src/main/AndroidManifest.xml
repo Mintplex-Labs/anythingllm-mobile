@@ -19,6 +19,11 @@
         <package android:name="com.viber.voip" />
         <package android:name="jp.naver.line.android" />
         <package android:name="com.discord" />
+        <!-- Mail apps a drafted email can be opened in (MessagingModule) -->
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto"/>
+        </intent>
     </queries>
 
     <!-- Allow app to get advertising ID for Firebase Analytics -->

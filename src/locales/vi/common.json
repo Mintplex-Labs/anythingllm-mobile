@@ -225,6 +225,19 @@
       "subtitle": "Công việc được lên lịch · {{schedule}}",
       "view": "Xem"
     },
+    "text_draft": {
+      "new_message": null,
+      "open": null,
+      "open_label": null,
+      "send_with": null,
+      "no_number_hint": null,
+      "more_apps": null,
+      "copy": null,
+      "copied": null,
+      "share_title": null,
+      "open_failed": null,
+      "open_in_failed": null
+    },
     "metrics": {
       "tokens_other": "{{count}} token"
     },
@@ -514,8 +527,7 @@
       "name": "Soạn thảo văn bản",
       "description": "Sử dụng trợ lý để soạn thảo văn bản cho bạn.",
       "status_drafting_to": "Đang soạn thảo một văn bản cho {{recipient}}",
-      "status_drafting": "Đang soạn thảo tin nhắn văn bản",
-      "open_action": "Mở nháp văn bản"
+      "status_drafting": "Đang soạn thảo tin nhắn văn bản"
     },
     "get_time": {
       "name": "Lấy thời gian",

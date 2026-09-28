@@ -98,11 +98,27 @@ export type IEmailAction = {
   }
 }
 
+/** @deprecated rows written by the old draft-text tool - rendered as a `TextDraftCard` via `normalizeTextDraft` */
 export type ITextAction = {
   type: 'sms';
   action: {
     title: string;
     link: string;
+  }
+}
+
+/**
+ * A text message the assistant drafted (see the draft-text tool). Rendered as a card in the
+ * chat history that opens the user's messaging app with the draft filled in - we never send it.
+ */
+export type ITextDraftAction = {
+  type: 'text_draft';
+  action: {
+    /** Who the message is for, as the user named them eg: "Mom" - null when only a number is known */
+    recipientName: string | null;
+    /** Phone number when known - without one the messaging app asks who to send to */
+    phoneNumber: string | null;
+    body: string;
   }
 }
 
@@ -152,7 +168,7 @@ export type IScheduledJobCreatedAction = {
 
 export type IAgentCitation = IAgentWebSearchCitation;
 export type IChatCitation = IDocumentCitation | IAgentCitation;
-export type IAgentAction = IEmailAction | ITextAction | ICalendarEventAction | IFileDownloadAction | IScheduledJobCreatedAction;
+export type IAgentAction = IEmailAction | ITextAction | ITextDraftAction | ICalendarEventAction | IFileDownloadAction | IScheduledJobCreatedAction;
 export type WorkspaceChatResponseType = {
   textResponse: string;
   thoughts: string[];

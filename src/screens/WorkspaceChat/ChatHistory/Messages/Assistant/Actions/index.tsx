@@ -3,9 +3,12 @@ import { memo } from "react";
 import { IAgentAction } from "@/database/models/WorkspaceChat";
 import IntentLauncher, { IntentConstant } from "@yz1311/react-native-intent-launcher";
 
-/** Link-style chips for actions that open another app. Generated files and created jobs render as their own cards instead. */
+/** Action types that render as their own full-width card instead of a chip (`sms` is the old text draft) */
+export const CARD_ACTION_TYPES: string[] = ['file_download', 'scheduled_job_created', 'text_draft', 'sms'];
+
+/** Link-style chips for actions that open another app. Generated files, created jobs and text drafts render as their own cards instead. */
 export default memo(function ActionsContainer({ actions: allActions = [] }: { actions?: IAgentAction[] }) {
-    const actions = allActions.filter(action => action.type !== 'file_download' && action.type !== 'scheduled_job_created');
+    const actions = allActions.filter(action => !CARD_ACTION_TYPES.includes(action.type));
     if (actions.length === 0) return null;
 
     function onPress(action: IAgentAction) {

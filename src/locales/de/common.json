@@ -228,6 +228,19 @@
       "subtitle": "Geplanter Job · {{schedule}}",
       "view": "Anzeigen"
     },
+    "text_draft": {
+      "new_message": null,
+      "open": null,
+      "open_label": null,
+      "send_with": null,
+      "no_number_hint": null,
+      "more_apps": null,
+      "copy": null,
+      "copied": null,
+      "share_title": null,
+      "open_failed": null,
+      "open_in_failed": null
+    },
     "metrics": {
       "tokens_one": "{{count}} Token",
       "tokens_other": "{{count}} Token"
@@ -534,8 +547,7 @@
       "name": "Text entwerfen",
       "description": "Verwenden Sie den Assistenten, um einen Text für Sie zu entwerfen.",
       "status_drafting_to": "Text an {{recipient}} wird entworfen",
-      "status_drafting": "Eine Textnachricht wird entworfen",
-      "open_action": "Entwurfs-Text öffnen"
+      "status_drafting": "Eine Textnachricht wird entworfen"
     },
     "get_time": {
       "name": "Zeit abrufen",

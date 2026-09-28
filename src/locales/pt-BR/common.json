@@ -231,6 +231,19 @@
       "subtitle": "Trabalho agendado · {{schedule}}",
       "view": "Visualizar"
     },
+    "text_draft": {
+      "new_message": null,
+      "open": null,
+      "open_label": null,
+      "send_with": null,
+      "no_number_hint": null,
+      "more_apps": null,
+      "copy": null,
+      "copied": null,
+      "share_title": null,
+      "open_failed": null,
+      "open_in_failed": null
+    },
     "metrics": {
       "tokens_many": "{{count}} tokens",
       "tokens_one": "{{count}} token",
@@ -554,8 +567,7 @@
       "name": "Redigir Texto",
       "description": "Use o assistente para redigir uma mensagem de texto para você.",
       "status_drafting_to": "Redigindo uma mensagem de texto para {{recipient}}",
-      "status_drafting": "Redigindo uma mensagem de texto",
-      "open_action": "Abrir Texto Redigido"
+      "status_drafting": "Redigindo uma mensagem de texto"
     },
     "get_time": {
       "name": "Obter Hora",

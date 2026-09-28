@@ -225,6 +225,19 @@
       "subtitle": "排定的工作 · {{schedule}}",
       "view": "檢視"
     },
+    "text_draft": {
+      "new_message": null,
+      "open": null,
+      "open_label": null,
+      "send_with": null,
+      "no_number_hint": null,
+      "more_apps": null,
+      "copy": null,
+      "copied": null,
+      "share_title": null,
+      "open_failed": null,
+      "open_in_failed": null
+    },
     "metrics": {
       "tokens_other": "{{count}} 個標記"
     },
@@ -514,8 +527,7 @@
       "name": "草擬文字",
       "description": "使用助手為您草擬文字。",
       "status_drafting_to": "正在為 {{recipient}} 草擬文字",
-      "status_drafting": "正在草擬文字訊息",
-      "open_action": "開啟草擬文字"
+      "status_drafting": "正在草擬文字訊息"
     },
     "get_time": {
       "name": "取得時間",

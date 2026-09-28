@@ -42,7 +42,7 @@ export default function SafeView({
       )}
 
       {scrollable ? (
-        <ScrollView contentContainerClassName={`${containerClassInitial} ${containerClassNames}`}>
+        <ScrollView contentContainerClassName={`${containerClassInitial} ${containerClassNames}`} contentContainerStyle={containerStyle}>
           {children}
         </ScrollView>
       ) : (

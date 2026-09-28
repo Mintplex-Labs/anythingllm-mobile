@@ -59,8 +59,8 @@ export default function Survey() {
         style={{ backgroundColor: "#131314", position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}
       />
 
-      <SafeView scrollable={false} safeAreaClassNames="bg-transparent" containerClassNames="h-full z-[1]" containerStyle={{ paddingTop: insets.top + 20, paddingBottom: insets.bottom + 20 }}>
-        <View className="flex flex-col h-full justify-between">
+      <SafeView safeAreaClassNames="bg-transparent" containerClassNames="grow z-[1]" containerStyle={{ paddingTop: insets.top + 20, paddingBottom: insets.bottom + 20 }}>
+        <View className="flex flex-col grow justify-between gap-y-8">
           <ProgressBars numberOfBars={3} activeBar={2} />
 
           <React.Fragment>

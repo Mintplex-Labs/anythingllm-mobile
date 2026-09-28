@@ -36,6 +36,19 @@ class DeepSeekProvider extends BaseOpenAILikeProvider {
     this.log(`${this.connectionProvider} initialized with model ${this.model}`);
   }
 
+  /**
+   * DeepSeek thinking-mode models (deepseek-reasoner, v4 flash/pro, and newer) reject a request
+   * whose assistant messages lack `reasoning_content`. There is no reliable way to detect which
+   * models need it and all the current ones do, so every assistant message gets one - an empty
+   * string when absent, same as the desktop aibitat provider's `injectReasoningContent`.
+   */
+  protected override formatMessagesForRequest(messages: any[] = []): any[] {
+    return super.formatMessagesForRequest(messages).map((message) => {
+      if (message?.role !== 'assistant' || 'reasoning_content' in message) return message;
+      return { ...message, reasoning_content: '' };
+    });
+  }
+
   protected log = (text: string, ...args: any[]) => {
     console.log(`\x1b[36m[${this.constructor.name}]\x1b[0m ${text}`, ...args);
   }

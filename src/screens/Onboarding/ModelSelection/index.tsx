@@ -34,13 +34,14 @@ export default function OnboardingModelSelection() {
         source={require("@/assets/onboarding/bg-blobs.png")}
         style={{ backgroundColor: "#131314", position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}
       />
+      {/* Simple mode scrolls so the model cards stay reachable on short screens. External mode has its own ScrollView. */}
       <SafeView
-        scrollable={false}
+        scrollable={mode === 'simple'}
         safeAreaClassNames="bg-transparent"
-        containerClassNames="h-full"
+        containerClassNames={mode === 'simple' ? "grow" : "h-full"}
         containerStyle={{ zIndex: 1, paddingTop: insets.top + 20, paddingBottom: insets.bottom + 20 }}
       >
-        <View className="flex flex-col flex-1 gap-y-[66px]">
+        <View className="flex flex-col grow gap-y-[66px]">
           <ProgressBars numberOfBars={3} activeBar={1} />
           <SelectionMode setMode={setMode} />
         </View>

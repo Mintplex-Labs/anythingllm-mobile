@@ -228,6 +228,19 @@
       "subtitle": "Geplande taak · {{schedule}}",
       "view": "Bekijken"
     },
+    "text_draft": {
+      "new_message": null,
+      "open": null,
+      "open_label": null,
+      "send_with": null,
+      "no_number_hint": null,
+      "more_apps": null,
+      "copy": null,
+      "copied": null,
+      "share_title": null,
+      "open_failed": null,
+      "open_in_failed": null
+    },
     "metrics": {
       "tokens_one": "{{value}} token",
       "tokens_other": "{{value}} tokens"
@@ -534,8 +547,7 @@
       "name": "Sms-concept",
       "description": "Gebruik de assistent om een sms voor je op te stellen.",
       "status_drafting_to": "Een sms opstellen naar {{recipient}}",
-      "status_drafting": "Een sms-bericht opstellen",
-      "open_action": "Open concept sms"
+      "status_drafting": "Een sms-bericht opstellen"
     },
     "get_time": {
       "name": "Huidige tijd",

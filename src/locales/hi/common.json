@@ -228,6 +228,19 @@
       "subtitle": "निर्धारित नौकरी · {{schedule}}",
       "view": "देखें"
     },
+    "text_draft": {
+      "new_message": null,
+      "open": null,
+      "open_label": null,
+      "send_with": null,
+      "no_number_hint": null,
+      "more_apps": null,
+      "copy": null,
+      "copied": null,
+      "share_title": null,
+      "open_failed": null,
+      "open_in_failed": null
+    },
     "metrics": {
       "tokens_one": "{{value}} टोकन",
       "tokens_other": "{{value}} टोकन"
@@ -534,8 +547,7 @@
       "name": "पाठ का मसौदा",
       "description": "सहायक को आपके लिए एक पाठ का मसौदा तैयार करने के लिए उपयोग करें।",
       "status_drafting_to": "{{recipient}} को एक पाठ का मसौदा तैयार कर रहे हैं",
-      "status_drafting": "एक पाठ संदेश का मसौदा तैयार कर रहे हैं",
-      "open_action": "ड्राफ़्ट पाठ खोलें"
+      "status_drafting": "एक पाठ संदेश का मसौदा तैयार कर रहे हैं"
     },
     "get_time": {
       "name": "समय प्राप्त करें",

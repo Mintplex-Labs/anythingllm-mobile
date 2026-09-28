@@ -6,6 +6,19 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="https"/>
         </intent>
+        <!-- Messaging apps a drafted text can be opened in (MessagingModule) -->
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="smsto"/>
+        </intent>
+        <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" />
+        <package android:name="org.telegram.messenger" />
+        <package android:name="org.thoughtcrime.securesms" />
+        <package android:name="com.facebook.orca" />
+        <package android:name="com.viber.voip" />
+        <package android:name="jp.naver.line.android" />
+        <package android:name="com.discord" />
     </queries>
 
     <!-- Allow app to get advertising ID for Firebase Analytics -->

@@ -234,6 +234,19 @@
       "subtitle": "Zaplanowane zadanie · {{schedule}}",
       "view": "Widok"
     },
+    "text_draft": {
+      "new_message": null,
+      "open": null,
+      "open_label": null,
+      "send_with": null,
+      "no_number_hint": null,
+      "more_apps": null,
+      "copy": null,
+      "copied": null,
+      "share_title": null,
+      "open_failed": null,
+      "open_in_failed": null
+    },
     "metrics": {
       "tokens_few": "{{value}} tokeny",
       "tokens_many": "{{value}} tokenów",
@@ -574,8 +587,7 @@
       "name": "Wersja robocza tekstu",
       "description": "Użyj asystenta do napisania wiadomości tekstowej dla Ciebie.",
       "status_drafting_to": "Redagowanie wiadomości tekstowej do {{recipient}}",
-      "status_drafting": "Redagowanie wiadomości tekstowej",
-      "open_action": "Otwórz wersję roboczą tekstu"
+      "status_drafting": "Redagowanie wiadomości tekstowej"
     },
     "get_time": {
       "name": "Pobierz czas",

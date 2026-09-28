@@ -12,6 +12,7 @@ export const BOTTOM_SHEET_NAMES = {
     CITATIONS: 'citations',
     THREAD_MENU: 'thread-menu',
     MESSAGE_ACTIONS: 'message-actions',
+    TEXT_DRAFT: 'text-draft',
 } as const;
 export type BottomSheetType = (typeof BOTTOM_SHEET_NAMES)[keyof typeof BOTTOM_SHEET_NAMES] | null;
 

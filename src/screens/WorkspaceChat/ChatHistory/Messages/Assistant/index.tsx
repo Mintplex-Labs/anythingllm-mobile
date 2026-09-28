@@ -8,9 +8,11 @@ import CitationsContainer from "./Citations";
 import ActionsContainer from "./Actions";
 import FileDownloadCards from "./FileDownloadCard";
 import ScheduledJobCreatedCards from "./ScheduledJobCreatedCard";
+import TextDraftCards from "./TextDraftCard";
 import TextResponseContainer from "./TextResponse";
 import ToolApprovalRequest from "./ToolApprovalRequest";
 import { focusMessageActions } from "../focusMessageActions";
+import { CARD_ACTION_TYPES } from "./Actions";
 
 /**
  * The assistant half of a chat row. Receives the latest snapshot of the chat
@@ -29,7 +31,7 @@ export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessa
     const response = chat.response;
     const handleLongPress = () => focusMessageActions(chat, 'assistant');
     // File download cards and citations wait for the reply to finish so streaming text does not keep pushing them down the page.
-    const isCardAction = (type: string) => type === 'file_download' || type === 'scheduled_job_created';
+    const isCardAction = (type: string) => CARD_ACTION_TYPES.includes(type);
     const hasLinkChips = !!response?.actions?.some(action => !isCardAction(action.type));
     const hasDeferredChips = !chat.isLoading && (!!response?.citations?.length || !!response?.actions?.some(action => isCardAction(action.type)));
     const hasTrailingChips = hasLinkChips || hasDeferredChips;
@@ -45,6 +47,7 @@ export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessa
             )}
             <FileDownloadCards actions={response?.actions} isLoading={chat.isLoading} />
             <ScheduledJobCreatedCards actions={response?.actions} isLoading={chat.isLoading} />
+            <TextDraftCards actions={response?.actions} isLoading={chat.isLoading} />
             <ActionsContainer actions={response?.actions} />
             <CitationsContainer citations={response?.citations} isLoading={chat.isLoading} />
         </View>

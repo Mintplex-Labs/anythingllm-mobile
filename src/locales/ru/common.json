@@ -234,6 +234,19 @@
       "subtitle": "Запланированная задача · {{schedule}}",
       "view": "Просмотр"
     },
+    "text_draft": {
+      "new_message": null,
+      "open": null,
+      "open_label": null,
+      "send_with": null,
+      "no_number_hint": null,
+      "more_apps": null,
+      "copy": null,
+      "copied": null,
+      "share_title": null,
+      "open_failed": null,
+      "open_in_failed": null
+    },
     "metrics": {
       "tokens_few": "{{value}} токена",
       "tokens_many": "{{value}} токенов",
@@ -574,8 +587,7 @@
       "name": "Черновик текста",
       "description": "Используйте помощника для составления текстового сообщения.",
       "status_drafting_to": "Составление текстового сообщения для {{recipient}}",
-      "status_drafting": "Составление текстового сообщения",
-      "open_action": "Открыть черновик текста"
+      "status_drafting": "Составление текстового сообщения"
     },
     "get_time": {
       "name": "Получить время",

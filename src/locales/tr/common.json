@@ -228,6 +228,19 @@
       "subtitle": "Zamanlanmış iş · {{schedule}}",
       "view": "Görüntüle"
     },
+    "text_draft": {
+      "new_message": null,
+      "open": null,
+      "open_label": null,
+      "send_with": null,
+      "no_number_hint": null,
+      "more_apps": null,
+      "copy": null,
+      "copied": null,
+      "share_title": null,
+      "open_failed": null,
+      "open_in_failed": null
+    },
     "metrics": {
       "tokens_one": "{{value}} belirteç",
       "tokens_other": "{{value}} belirteç"
@@ -534,8 +547,7 @@
       "name": "Metin Taslağı",
       "description": "Asistan'ı kullanarak sizin için bir metin taslağı oluşturun.",
       "status_drafting_to": "{{recipient}}'ye bir metin taslağı oluşturuluyor",
-      "status_drafting": "Bir metin mesajı taslağı oluşturuluyor",
-      "open_action": "Metin Taslağını Aç"
+      "status_drafting": "Bir metin mesajı taslağı oluşturuluyor"
     },
     "get_time": {
       "name": "Saati Al",

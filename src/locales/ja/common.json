@@ -225,6 +225,19 @@
       "subtitle": "スケジュール済みジョブ·{{schedule}}",
       "view": "表示"
     },
+    "text_draft": {
+      "new_message": null,
+      "open": null,
+      "open_label": null,
+      "send_with": null,
+      "no_number_hint": null,
+      "more_apps": null,
+      "copy": null,
+      "copied": null,
+      "share_title": null,
+      "open_failed": null,
+      "open_in_failed": null
+    },
     "metrics": {
       "tokens_other": "{{value}}トークン"
     },
@@ -514,8 +527,7 @@
       "name": "テキストをドラフト",
       "description": "アシスタントを使用してテキストをドラフトしてもらいます。",
       "status_drafting_to": "{{recipient}}へのテキストをドラフト",
-      "status_drafting": "テキストメッセージをドラフト",
-      "open_action": "テキストドラフトを開く"
+      "status_drafting": "テキストメッセージをドラフト"
     },
     "get_time": {
       "name": "時刻を取得",

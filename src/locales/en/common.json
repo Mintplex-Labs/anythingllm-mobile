@@ -228,6 +228,19 @@
       "subtitle": "Scheduled job · {{schedule}}",
       "view": "View"
     },
+    "text_draft": {
+      "new_message": "New message",
+      "open": "Open",
+      "open_label": "Open text message draft to {{recipient}}",
+      "send_with": "Send with",
+      "no_number_hint": "No phone number was given - the app will ask who to send it to.",
+      "more_apps": "More apps",
+      "copy": "Copy message",
+      "copied": "Message copied",
+      "share_title": "Send message with",
+      "open_failed": "Could not open a messaging app",
+      "open_in_failed": "Could not open {{app}}"
+    },
     "metrics": {
       "tokens_one": "{{value}} token",
       "tokens_other": "{{value}} tokens"
@@ -532,10 +545,9 @@
     },
     "draft_text": {
       "name": "Draft Text",
-      "description": "Use the assistant to draft a text for you.",
+      "description": "Draft a text message and open it in your messaging app (SMS, WhatsApp and more) to send.",
       "status_drafting_to": "Drafting a text to {{recipient}}",
-      "status_drafting": "Drafting a text message",
-      "open_action": "Open Draft Text"
+      "status_drafting": "Drafting a text message"
     },
     "get_time": {
       "name": "Get Time",

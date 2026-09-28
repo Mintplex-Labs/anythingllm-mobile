@@ -229,8 +229,8 @@
       "view": "Görüntüle"
     },
     "metrics": {
-      "tokens_one": "{{count}} belirteç",
-      "tokens_other": "{{count}} belirteç"
+      "tokens_one": "{{value}} belirteç",
+      "tokens_other": "{{value}} belirteç"
     },
     "tool_approval": {
       "wants_to_call": "Model <skill>{{skill}}</skill> çağırmak istiyor",

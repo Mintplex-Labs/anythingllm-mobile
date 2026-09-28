@@ -62,6 +62,14 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
     return { reasoning_effort: 'none' };
   }
 
+  /**
+   * Arbitrary OpenAI-compatible servers can reject `stream_options` (desktop gates it behind
+   * GENERIC_OPEN_AI_REPORT_USAGE for the same reason) - only ask OpenAI itself for stream usage.
+   */
+  protected override supportsStreamUsage(): boolean {
+    return this.connectionProvider === 'openai';
+  }
+
   protected log = (text: string, ...args: any[]) => {
     console.log(`\x1b[36m[${this.constructor.name}]\x1b[0m ${text}`, ...args);
   }

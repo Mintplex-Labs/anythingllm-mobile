@@ -226,7 +226,7 @@
       "view": "檢視"
     },
     "metrics": {
-      "tokens_other": "{{count}} 個標記"
+      "tokens_other": "{{value}} 個標記"
     },
     "tool_approval": {
       "wants_to_call": "模型想呼叫 <skill>{{skill}}</skill>",

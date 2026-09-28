@@ -229,8 +229,8 @@
       "view": "Bekijken"
     },
     "metrics": {
-      "tokens_one": "{{count}} token",
-      "tokens_other": "{{count}} tokens"
+      "tokens_one": "{{value}} token",
+      "tokens_other": "{{value}} tokens"
     },
     "tool_approval": {
       "wants_to_call": "Model wil <skill>{{skill}}</skill> bellen",

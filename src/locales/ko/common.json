@@ -226,7 +226,7 @@
       "view": "보기"
     },
     "metrics": {
-      "tokens_other": "{{count}}개 토큰"
+      "tokens_other": "{{value}}개 토큰"
     },
     "tool_approval": {
       "wants_to_call": "모델이 <skill>{{skill}}</skill>를 호출하려고 함",

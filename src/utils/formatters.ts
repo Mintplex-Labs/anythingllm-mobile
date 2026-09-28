@@ -67,6 +67,35 @@ export function formatNumber(
   }
 }
 
+/**
+ * Formats a millisecond duration, scaling units up as it grows.
+ * eg: 850 -> "850ms", 12_340 -> "12.3s", 125_000 -> "2m 5s"
+ */
+export function formatDuration(ms: number): string {
+  const value = Number.isFinite(ms) && ms > 0 ? ms : 0;
+  if (value < 1000) return `${Math.round(value)}ms`;
+
+  const seconds = parseFloat((value / 1000).toFixed(1));
+  if (seconds < 60) return `${seconds}s`;
+
+  const totalSeconds = Math.round(value / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const remainder = totalSeconds % 60;
+  return remainder > 0 ? `${minutes}m ${remainder}s` : `${minutes}m`;
+}
+
+/**
+ * Formats a number with comma grouped thousands and fixed decimals, no unit suffix.
+ * Done by hand rather than `toLocaleString` so output is identical across JS engines.
+ * eg: 1234.567 -> "1,234.57"
+ */
+export function formatGroupedNumber(num: number, fractionDigits = 2): string {
+  const value = Number.isFinite(num) ? num : 0;
+  const [integer, fraction] = Math.abs(value).toFixed(fractionDigits).split('.');
+  const grouped = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return `${value < 0 ? '-' : ''}${grouped}${fraction ? `.${fraction}` : ''}`;
+}
+
 /** Returns formatted date used as a divider between different days in the chat history */
 export const getVerboseDateTimeRepresentation = (
   dateTime: number,

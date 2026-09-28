@@ -235,10 +235,10 @@
       "view": "Widok"
     },
     "metrics": {
-      "tokens_few": "{{count}} tokeny",
-      "tokens_many": "{{count}} tokenów",
-      "tokens_one": "{{count}} token",
-      "tokens_other": "{{count}} tokenów"
+      "tokens_few": "{{value}} tokeny",
+      "tokens_many": "{{value}} tokenów",
+      "tokens_one": "{{value}} token",
+      "tokens_other": "{{value}} tokenów"
     },
     "tool_approval": {
       "wants_to_call": "Model chce wywołać <skill>{{skill}}</skill>",

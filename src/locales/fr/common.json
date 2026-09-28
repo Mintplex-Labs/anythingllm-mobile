@@ -232,9 +232,9 @@
       "view": "Afficher"
     },
     "metrics": {
-      "tokens_many": "{{count}} jetons",
-      "tokens_one": "{{count}} jeton",
-      "tokens_other": "{{count}} jetons"
+      "tokens_many": "{{value}} jetons",
+      "tokens_one": "{{value}} jeton",
+      "tokens_other": "{{value}} jetons"
     },
     "tool_approval": {
       "wants_to_call": "Le modèle veut appeler <skill>{{skill}}</skill>",

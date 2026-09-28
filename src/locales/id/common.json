@@ -226,7 +226,7 @@
       "view": "Lihat"
     },
     "metrics": {
-      "tokens_other": "{{count}} token"
+      "tokens_other": "{{value}} token"
     },
     "tool_approval": {
       "wants_to_call": "Model ingin memanggil <skill>{{skill}}</skill>",

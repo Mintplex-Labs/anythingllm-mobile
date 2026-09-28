@@ -226,7 +226,7 @@
       "view": "表示"
     },
     "metrics": {
-      "tokens_other": "{{count}}トークン"
+      "tokens_other": "{{value}}トークン"
     },
     "tool_approval": {
       "wants_to_call": "モデルが<skill>{{skill}}</skill>を呼び出したいと考えています",

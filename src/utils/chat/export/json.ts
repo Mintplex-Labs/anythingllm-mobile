@@ -92,7 +92,8 @@ export function buildThreadJson(ctx: ThreadExportContext): ThreadExportJson {
             completionTokens: metrics.completion_tokens ?? 0,
             totalTokens: metrics.total_tokens ?? 0,
             outputTps: round(metrics.outputTps ?? 0),
-            duration: round(metrics.duration ?? 0, 3),
+            // Stored in milliseconds (on-device and remote providers alike).
+            duration: round((metrics.duration ?? 0) / 1000, 3),
           }
         : null,
     };

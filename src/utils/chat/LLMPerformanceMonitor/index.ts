@@ -12,7 +12,10 @@ export interface MonitoredStream {
   start: number;
   duration: number;
   metrics: StreamMetrics;
-  endMeasurement: (reportedUsage: { [key: string]: number, completion_tokens?: any, prompt_tokens?: any }) => StreamMetrics;
+  /** Restarts the clock when the first chunk arrives so network latency and prompt processing do not count as generation time. */
+  markFirstChunk: () => void;
+  /** `endedAt` pins the end time when the stream is drained past `finish_reason` for trailing usage. */
+  endMeasurement: (reportedUsage: { [key: string]: number, completion_tokens?: any, prompt_tokens?: any }, endedAt?: number) => StreamMetrics;
 }
 
 export default class LLMPerformanceMonitor {
@@ -23,6 +26,16 @@ export default class LLMPerformanceMonitor {
   static countTokens(messages: string[] = []) {
     try {
       return this.tokenManager.statsFrom(messages);
+    } catch (e) {
+      return 0;
+    }
+  }
+  /**
+   * Counts the tokens in a single string - the fallback for providers that do not report usage.
+   */
+  static countStringTokens(text: string = "") {
+    try {
+      return this.tokenManager.countFromString(text);
     } catch (e) {
       return 0;
     }
@@ -42,6 +55,7 @@ export default class LLMPerformanceMonitor {
   /**
    * Wraps a completion stream and and attaches a start time and duration property to the stream.
    * Also attaches an `endMeasurement` method to the stream that will calculate the duration of the stream and metrics.
+   * `duration` is reported in milliseconds (same unit as the on-device provider and the chat UI).
    */
   static async measureStream(
     func: () => Promise<any>,
@@ -59,9 +73,18 @@ export default class LLMPerformanceMonitor {
       duration: 0,
     };
 
-    stream.endMeasurement = (reportedUsage = {}) => {
-      const end = Date.now();
-      const duration = (end - stream.start) / 1000;
+    // The stream is lazy, so `start` above is set before the request is even sent. Measuring from
+    // the first chunk keeps TTFT (network, prompt processing, hidden thinking) out of the TPS math.
+    let sawFirstChunk = false;
+    stream.markFirstChunk = () => {
+      if (sawFirstChunk) return;
+      sawFirstChunk = true;
+      stream.start = Date.now();
+    };
+
+    stream.endMeasurement = (reportedUsage = {}, endedAt?: number) => {
+      const end = endedAt ?? Date.now();
+      const durationMs = Math.max(end - stream.start, 1);
 
       // Merge the reported usage with the existing metrics
       // so the math in the metrics object is correct when calculating
@@ -72,8 +95,9 @@ export default class LLMPerformanceMonitor {
 
       stream.metrics.total_tokens =
         stream.metrics.prompt_tokens + (stream.metrics.completion_tokens || 0);
-      stream.metrics.outputTps = stream.metrics.completion_tokens / duration;
-      stream.metrics.duration = duration;
+      stream.metrics.outputTps = (stream.metrics.completion_tokens || 0) / (durationMs / 1000);
+      stream.metrics.duration = durationMs;
+      stream.duration = durationMs;
       return stream.metrics;
     };
     return stream;

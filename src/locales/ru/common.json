@@ -235,10 +235,10 @@
       "view": "Просмотр"
     },
     "metrics": {
-      "tokens_few": "{{count}} токена",
-      "tokens_many": "{{count}} токенов",
-      "tokens_one": "{{count}} токен",
-      "tokens_other": "{{count}} токенов"
+      "tokens_few": "{{value}} токена",
+      "tokens_many": "{{value}} токенов",
+      "tokens_one": "{{value}} токен",
+      "tokens_other": "{{value}} токенов"
     },
     "tool_approval": {
       "wants_to_call": "Модель хочет вызвать <skill>{{skill}}</skill>",

@@ -229,8 +229,8 @@
       "view": "देखें"
     },
     "metrics": {
-      "tokens_one": "{{count}} टोकन",
-      "tokens_other": "{{count}} टोकन"
+      "tokens_one": "{{value}} टोकन",
+      "tokens_other": "{{value}} टोकन"
     },
     "tool_approval": {
       "wants_to_call": "मॉडल <skill>{{skill}}</skill> को कॉल करना चाहता है",

@@ -189,6 +189,15 @@ export default abstract class BaseOpenAILikeProvider {
   }
 
   /**
+   * Whether streamed requests ask for `stream_options.include_usage`. Without it most hosted APIs
+   * never report token usage on a stream and metrics fall back to a local token estimate.
+   * Generic OpenAI-compatible servers may reject unknown options, so those providers opt out.
+   */
+  protected supportsStreamUsage(): boolean {
+    return true;
+  }
+
+  /**
    * Whether `temperature` is sent at all. Some APIs (Moonshot's Kimi models) reject any value
    * other than their fixed default, so those providers omit the parameter entirely.
    */
@@ -689,8 +698,8 @@ export default abstract class BaseOpenAILikeProvider {
         prompt_tokens: result.output.usage?.prompt_tokens || 0,
         completion_tokens: result.output.usage?.completion_tokens || 0,
         total_tokens: result.output.usage?.total_tokens || 0,
-        outputTps: result.output.usage?.completion_tokens / result.duration,
-        duration: result.duration,
+        outputTps: (result.output.usage?.completion_tokens || 0) / result.duration,
+        duration: result.duration * 1000,
       },
     };
   }
@@ -705,6 +714,7 @@ export default abstract class BaseOpenAILikeProvider {
       this.client.chat.completions.create({
         model: this.model,
         stream: true,
+        ...(this.supportsStreamUsage() ? { stream_options: { include_usage: true } } : {}),
         messages: this.formatMessagesForRequest(messages),
         ...this.temperatureParam(),
         ...(availableTools.length > 0 ? { tools: availableTools, tool_choice: 'auto' } : {}),
@@ -722,6 +732,11 @@ export default abstract class BaseOpenAILikeProvider {
       prompt_tokens: 0,
       completion_tokens: 0,
     };
+    // Set once `finish_reason` arrives. OpenAI-style APIs send `usage` in a trailing chunk after
+    // it (empty `choices`), so the stream is drained a little longer to pick that up.
+    let finished = false;
+    let finishedAt: number | undefined;
+    let trailingTimeout: NodeJS.Timeout | null = null;
     let toolToCall: { type: 'function', id?: string, extra_content?: any, function: { name: string, arguments: string } } | null = null;
     // Stream `index` of the tool call we are assembling. One call is executed per round, so any
     // parallel call the model streams under another index is ignored rather than merged into it.
@@ -742,22 +757,34 @@ export default abstract class BaseOpenAILikeProvider {
         reasoningText = "";
       };
 
+      /**
+       * Closes the measurement. When the provider never reported usage, completion tokens are
+       * estimated by tokenizing everything generated (reasoning, text and tool call arguments) -
+       * counting chunks undercounts badly since providers like Gemini pack many tokens per chunk.
+       */
+      const finalizeMetrics = (): ICompleteResponse['metrics'] => {
+        if (!hasUsageMetrics) {
+          const generated = `${fullText}${reasoningText}${toolToCall?.function?.arguments ?? ''}`
+            .replace(/<\/?think>/g, '');
+          usage.completion_tokens = LLMPerformanceMonitor.countStringTokens(generated);
+        }
+        // Only override the locally counted prompt tokens when the provider reported a real value.
+        const reported = usage.prompt_tokens > 0 ? usage : { completion_tokens: usage.completion_tokens };
+        return { ...stream.endMeasurement(reported, finishedAt) };
+      };
+
+      const buildResult = (): ICompleteResponse => ({
+        textResponse: fullText,
+        toolCalls: toolToCall ? [toolToCall] : [],
+        metrics: finalizeMetrics(),
+      });
+
       const handleAbort = () => {
-        stream?.endMeasurement(usage);
         if (timeout) clearTimeout(timeout);
-        console.log("\x1b[43m\x1b[34m[STREAM ABORTED]\x1b[0m Client requested to abort stream. Exiting LLM stream handler early.");
-        resolve({
-          textResponse: fullText,
-          toolCalls: toolToCall ? [toolToCall] : [],
-          metrics: {
-            prompt_tokens: usage.prompt_tokens,
-            completion_tokens: usage.completion_tokens,
-            total_tokens: usage.prompt_tokens + usage.completion_tokens,
-            outputTps: usage.completion_tokens / stream.duration,
-            duration: stream.duration,
-            ...stream.metrics,
-          },
-        });
+        if (trailingTimeout) clearTimeout(trailingTimeout);
+        // Our own drain timeout fired after `finish_reason` - this is a normal completion.
+        if (!finished) console.log("\x1b[43m\x1b[34m[STREAM ABORTED]\x1b[0m Client requested to abort stream. Exiting LLM stream handler early.");
+        resolve(buildResult());
       };
       abortController.signal.addEventListener('abort', handleAbort);
 
@@ -782,6 +809,7 @@ export default abstract class BaseOpenAILikeProvider {
 
         for await (const chunk of stream) {
           if (timeout) clearTimeout(timeout); // on the first chunk, clear the timeout since we know the service is responding
+          stream?.markFirstChunk?.();
           const delta = chunk?.choices?.[0]?.delta;
           const content = delta?.content;
           const reasoningToken = extractReasoningContent(delta);
@@ -816,7 +844,6 @@ export default abstract class BaseOpenAILikeProvider {
             // First visible token after reasoning closes the think block.
             if (!reasoningToken) closeReasoning();
             fullText += content;
-            if (!hasUsageMetrics) usage.completion_tokens++;
             handler('chunk', content);
           }
 
@@ -856,26 +883,22 @@ export default abstract class BaseOpenAILikeProvider {
             if (typeof toolCall.function?.arguments === 'string') toolToCall.function.arguments += toolCall.function.arguments;
           }
 
-          // Check for completion
-          if (finishReason) {
+          // Check for completion. Generation time stops here even if we keep draining for usage.
+          if (finishReason && !finished) {
+            finished = true;
+            finishedAt = Date.now();
             // A tool-call-only round can end with reasoning and no content - close the tag.
             closeReasoning();
-            stream?.endMeasurement(usage);
-            resolve({
-              textResponse: fullText,
-              toolCalls: toolToCall ? [toolToCall] : [],
-              metrics: {
-                prompt_tokens: usage.prompt_tokens,
-                completion_tokens: usage.completion_tokens,
-                total_tokens: usage.prompt_tokens + usage.completion_tokens,
-                outputTps: usage.completion_tokens / stream.duration,
-                duration: stream.duration,
-                ...stream.metrics,
-              },
-            });
-            break;
+            // Don't hang on a server that keeps the connection open after finishing.
+            if (!hasUsageMetrics) trailingTimeout = setTimeout(() => abortController.abort(), 2_000);
           }
+          if (finished && hasUsageMetrics) break;
         }
+
+        if (trailingTimeout) clearTimeout(trailingTimeout);
+        abortController.signal.removeEventListener('abort', handleAbort);
+        closeReasoning();
+        resolve(buildResult());
       } catch (e: any) {
         // A cancelled fetch rejects the iterator - `handleAbort` already resolved with the
         // partial result and the caller checks the signal, so there is nothing to report.

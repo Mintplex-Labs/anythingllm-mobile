@@ -226,7 +226,7 @@
       "view": "Xem"
     },
     "metrics": {
-      "tokens_other": "{{count}} token"
+      "tokens_other": "{{value}} token"
     },
     "tool_approval": {
       "wants_to_call": "Mô hình muốn gọi <skill>{{skill}}</skill>",

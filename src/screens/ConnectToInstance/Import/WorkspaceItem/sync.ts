@@ -103,7 +103,8 @@ export async function syncFromRemote({
                         completion_tokens: fkChat.metrics?.completion_tokens ?? 0,
                         total_tokens: fkChat.metrics?.total_tokens ?? 0,
                         outputTps: fkChat.metrics?.outputTps ?? 0,
-                        duration: fkChat.metrics?.duration ?? 0,
+                        // Desktop reports seconds - mobile stores milliseconds.
+                        duration: (fkChat.metrics?.duration ?? 0) * 1000,
                     },
                     attachments: [],
                     citations: sources,

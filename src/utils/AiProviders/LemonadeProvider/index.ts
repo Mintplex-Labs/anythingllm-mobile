@@ -53,6 +53,11 @@ class LemonadeProvider extends BaseOpenAILikeProvider {
     this.log(`${this.connectionProvider} initialized with model ${this.model}`);
   }
 
+  /** Not confirmed to accept `stream_options` - metrics fall back to the local token estimate. */
+  protected override supportsStreamUsage(): boolean {
+    return false;
+  }
+
   protected log = (text: string, ...args: any[]) => {
     console.log(`\x1b[36m[${this.constructor.name}]\x1b[0m ${text}`, ...args);
   }

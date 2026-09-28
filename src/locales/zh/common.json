@@ -226,7 +226,7 @@
       "view": "查看"
     },
     "metrics": {
-      "tokens_other": "{{count}} 个令牌"
+      "tokens_other": "{{value}} 个令牌"
     },
     "tool_approval": {
       "wants_to_call": "模型想要调用 <skill>{{skill}}</skill>",

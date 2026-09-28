@@ -229,8 +229,8 @@
       "view": "Anzeigen"
     },
     "metrics": {
-      "tokens_one": "{{count}} Token",
-      "tokens_other": "{{count}} Token"
+      "tokens_one": "{{value}} Token",
+      "tokens_other": "{{value}} Token"
     },
     "tool_approval": {
       "wants_to_call": "Modell möchte <skill>{{skill}}</skill> aufrufen",

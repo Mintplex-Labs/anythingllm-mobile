@@ -103,6 +103,10 @@ android {
                 "**/librnllama_v8_2_dotprod_i8mm_hexagon_opencl.so",
                 "**/librnllama_jni_v8_2_dotprod_i8mm_hexagon_opencl.so",
             ]
+            // Extract .so files to lib/<abi> on install. On x86_64 devices with ARM translation
+            // (ChromeOS, WSA, emulators) SoLoader otherwise looks for lib/x86_64 inside the APKs,
+            // misses our arm64-only libs and crashes on launch finding libreactnative.so.
+            useLegacyPackaging = true
         }
     }
 }

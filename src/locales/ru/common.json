@@ -234,18 +234,32 @@
       "subtitle": "Запланированная задача · {{schedule}}",
       "view": "Просмотр"
     },
+    "draft": {
+      "open": null,
+      "send_with": null,
+      "more_apps": null,
+      "open_in_failed": null
+    },
     "text_draft": {
       "new_message": null,
-      "open": null,
       "open_label": null,
-      "send_with": null,
       "no_number_hint": null,
-      "more_apps": null,
       "copy": null,
       "copied": null,
       "share_title": null,
-      "open_failed": null,
-      "open_in_failed": null
+      "open_failed": null
+    },
+    "email_draft": {
+      "new_email": null,
+      "no_subject": null,
+      "no_recipient": null,
+      "open_label": null,
+      "cc": null,
+      "no_recipient_hint": null,
+      "copy": null,
+      "copied": null,
+      "share_title": null,
+      "open_failed": null
     },
     "metrics": {
       "tokens_few": "{{value}} токена",
@@ -580,8 +594,7 @@
     "draft_email": {
       "name": "Черновик письма",
       "description": "Используйте помощника для составления письма.",
-      "status_drafting": "Составление письма \"{{subject}}\"",
-      "open_action": "Открыть черновик письма"
+      "status_drafting": "Составление письма \"{{subject}}\""
     },
     "draft_text": {
       "name": "Черновик текста",

@@ -90,6 +90,7 @@ export type IToolApprovalActivity = IActivityNodeBase & IToolApprovalRequest & {
 }
 export type IActivityNode = IThoughtActivity | IStatusActivity | IToolCallActivity | IToolApprovalActivity;
 
+/** @deprecated rows written by the old draft-email tool - rendered as an email draft card via `normalizeEmailDraft` */
 export type IEmailAction = {
   type: 'email';
   action: {
@@ -98,7 +99,7 @@ export type IEmailAction = {
   }
 }
 
-/** @deprecated rows written by the old draft-text tool - rendered as a `TextDraftCard` via `normalizeTextDraft` */
+/** @deprecated rows written by the old draft-text tool - rendered as a text draft card via `normalizeTextDraft` */
 export type ITextAction = {
   type: 'sms';
   action: {
@@ -168,7 +169,24 @@ export type IScheduledJobCreatedAction = {
 
 export type IAgentCitation = IAgentWebSearchCitation;
 export type IChatCitation = IDocumentCitation | IAgentCitation;
-export type IAgentAction = IEmailAction | ITextAction | ITextDraftAction | ICalendarEventAction | IFileDownloadAction | IScheduledJobCreatedAction;
+/**
+ * An email the assistant drafted (see the draft-email tool). Rendered as a card in the chat
+ * history that opens the user's mail app with the draft filled in - we never send it.
+ */
+export type IEmailDraftAction = {
+  type: 'email_draft';
+  action: {
+    /** Who the email is for, as the user named them eg: "Sarah" - null when only addresses are known */
+    recipientName: string | null;
+    /** Recipient addresses - empty when unknown, the mail app then asks who to send to */
+    to: string[];
+    cc: string[];
+    subject: string;
+    body: string;
+  }
+}
+
+export type IAgentAction = IEmailAction | IEmailDraftAction | ITextAction | ITextDraftAction |ICalendarEventAction | IFileDownloadAction | IScheduledJobCreatedAction;
 export type WorkspaceChatResponseType = {
   textResponse: string;
   thoughts: string[];

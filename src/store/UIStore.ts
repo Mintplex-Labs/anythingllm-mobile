@@ -24,8 +24,8 @@ export const GLOBAL_EVENTS = {
   CITATIONS_FOCUSED: 'CITATIONS_FOCUSED',
   /** A chat message was long-pressed - payload is { chat, role } - opens the message actions sheet */
   MESSAGE_ACTIONS_FOCUSED: 'MESSAGE_ACTIONS_FOCUSED',
-  /** A text draft card wants to pick a messaging app - payload is the `TextDraft` - opens the text draft sheet */
-  TEXT_DRAFT_FOCUSED: 'TEXT_DRAFT_FOCUSED',
+  /** A text or email draft card wants to pick an app - payload is `{ kind, draft }` - opens the draft sheet */
+  DRAFT_FOCUSED: 'DRAFT_FOCUSED',
   SUBMIT_PROMPT: 'SUBMIT_PROMPT',
   REFRESH_WORKSPACES: 'REFRESH_WORKSPACES',
   CHAT_HISTORY_REFRESHED: 'CHAT_HISTORY_REFRESHED',

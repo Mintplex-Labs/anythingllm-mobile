@@ -16,16 +16,19 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.WritableArray
 import java.io.ByteArrayOutputStream
 
 /**
- * Hands a drafted text message off to the user's messaging app. We can never send a message
- * ourselves (no SEND_SMS, no contacts access) - this only opens the chosen app with the
- * recipient and body filled in so the user reviews and taps send.
+ * Hands a drafted text message or email off to an app the user already has. We can never send
+ * anything ourselves (no SEND_SMS, no contacts or account access) - this only opens the chosen
+ * app with the recipient and body filled in so the user reviews and taps send.
  *
- * Which apps show up: the default SMS app (Google Messages, Samsung Messages, ...) when a SIM is ready,
- * plus the popular chat apps in [KNOWN_MESSENGERS] that are installed. Both need matching
- * `<queries>` entries in the manifest to be visible on Android 11+.
+ * Texts: the default SMS app (Google Messages, Samsung Messages, ...) when a SIM is ready, plus the
+ * popular chat apps in [KNOWN_MESSENGERS] that are installed.
+ * Emails: every app that handles `mailto:` (Gmail, Outlook, Samsung Email, Proton Mail, ...).
+ * All of them need matching `<queries>` entries in the manifest to be visible on Android 11+.
  */
 class MessagingModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
@@ -49,10 +52,12 @@ class MessagingModule(private val reactContext: ReactApplicationContext) : React
 
     private val pm: PackageManager get() = reactContext.packageManager
 
-    private fun smsPackages(): List<String> =
-        pm.queryIntentActivities(Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:")), 0)
-            .map { it.activityInfo.packageName }
-            .distinct()
+    private fun packagesHandling(intent: Intent): List<String> =
+        pm.queryIntentActivities(intent, 0).map { it.activityInfo.packageName }.distinct()
+
+    private fun smsPackages(): List<String> = packagesHandling(Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:")))
+
+    private fun emailPackages(): List<String> = packagesHandling(Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:")))
 
     /** Any SIM slot (physical or eSIM) ready - no permission needed for the SIM state */
     private fun hasReadySim(): Boolean = try {
@@ -69,6 +74,12 @@ class MessagingModule(private val reactContext: ReactApplicationContext) : React
     private fun acceptsSharedText(packageName: String): Boolean {
         val intent = Intent(Intent.ACTION_SEND).setType("text/plain").setPackage(packageName)
         return pm.queryIntentActivities(intent, 0).isNotEmpty()
+    }
+
+    private fun labelOf(packageName: String): String? = try {
+        pm.getApplicationLabel(pm.getApplicationInfo(packageName, 0)).toString()
+    } catch (e: PackageManager.NameNotFoundException) {
+        null
     }
 
     private fun iconDataUri(packageName: String): String? = try {
@@ -92,8 +103,37 @@ class MessagingModule(private val reactContext: ReactApplicationContext) : React
         return bitmap
     }
 
+    /** `[{ packageName, label, icon }]` in the given order, skipping ourselves and anything uninstalled mid-listing */
+    private fun toAppArray(packages: Collection<String>): WritableArray {
+        val apps = Arguments.createArray()
+        for (packageName in packages) {
+            if (packageName == reactContext.packageName) continue
+            val label = labelOf(packageName) ?: continue
+            apps.pushMap(Arguments.createMap().apply {
+                putString("packageName", packageName)
+                putString("label", label)
+                putString("icon", iconDataUri(packageName))
+            })
+        }
+        return apps
+    }
+
+    /** Starts [intent] inside [packageName], rejecting when that app cannot handle it */
+    private fun launch(intent: Intent, packageName: String, promise: Promise) {
+        intent.setPackage(packageName)
+        if (pm.queryIntentActivities(intent, 0).isEmpty()) {
+            promise.reject("app_unavailable", "$packageName cannot open this draft")
+            return
+        }
+        // Launch from the activity when there is one - starting from the application context needs NEW_TASK.
+        val activity = reactContext.currentActivity
+        if (activity != null) activity.startActivity(intent)
+        else reactContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        promise.resolve(true)
+    }
+
     /**
-     * Installed apps a draft can be opened in, default SMS app first.
+     * Installed apps a text draft can be opened in, default SMS app first.
      * Resolves to `[{ packageName, label, icon }]` where `icon` is a PNG data URI or null.
      */
     @ReactMethod
@@ -107,31 +147,29 @@ class MessagingModule(private val reactContext: ReactApplicationContext) : React
             // swallows every touch - the app looks frozen.
             if (hasReadySim()) defaultSms?.let { if (it in sms) ordered.add(it) }
             KNOWN_MESSENGERS.filter { acceptsSharedText(it) }.forEach { ordered.add(it) }
-            ordered.remove(reactContext.packageName)
-
-            val apps = Arguments.createArray()
-            for (packageName in ordered) {
-                val label = try {
-                    pm.getApplicationLabel(pm.getApplicationInfo(packageName, 0)).toString()
-                } catch (e: PackageManager.NameNotFoundException) {
-                    continue
-                }
-                apps.pushMap(Arguments.createMap().apply {
-                    putString("packageName", packageName)
-                    putString("label", label)
-                    putString("icon", iconDataUri(packageName))
-                })
-            }
-            promise.resolve(apps)
+            promise.resolve(toAppArray(ordered))
         } catch (e: Exception) {
             promise.reject("messaging_apps_error", "Could not list messaging apps", e)
         }
     }
 
     /**
-     * Opens [packageName] with the draft filled in. With a phone number SMS apps and WhatsApp open
-     * straight into that conversation; without one (or for apps with no "chat with number" link)
-     * the text is shared into the app, which then asks who to send it to.
+     * Installed mail apps, alphabetical. Same shape as [getMessagingApps]. Android has no default
+     * email app role, so the JS side lists the last used one first.
+     */
+    @ReactMethod
+    fun getEmailApps(promise: Promise) {
+        try {
+            promise.resolve(toAppArray(emailPackages().sortedBy { labelOf(it)?.lowercase() }))
+        } catch (e: Exception) {
+            promise.reject("email_apps_error", "Could not list email apps", e)
+        }
+    }
+
+    /**
+     * Opens [packageName] with the text draft filled in. With a phone number SMS apps and WhatsApp
+     * open straight into that conversation; without one (or for apps with no "chat with number"
+     * link) the text is shared into the app, which then asks who to send it to.
      */
     @ReactMethod
     fun openDraft(packageName: String, phoneNumber: String?, body: String, promise: Promise) {
@@ -146,18 +184,33 @@ class MessagingModule(private val reactContext: ReactApplicationContext) : React
                 else ->
                     Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, body)
             }
-            intent.setPackage(packageName)
-            if (pm.queryIntentActivities(intent, 0).isEmpty()) {
-                promise.reject("messaging_app_unavailable", "$packageName cannot open this draft")
-                return
-            }
-            // Launch from the activity when there is one - starting from the application context needs NEW_TASK.
-            val activity = reactContext.currentActivity
-            if (activity != null) activity.startActivity(intent)
-            else reactContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-            promise.resolve(true)
+            launch(intent, packageName, promise)
         } catch (e: Exception) {
             promise.reject("messaging_open_error", "Could not open the messaging app", e)
         }
     }
+
+    /**
+     * Opens [packageName]'s compose screen with the email filled in. Everything goes in the
+     * standard extras on a bare `mailto:` - also putting the addresses in the URI makes some
+     * clients list every recipient twice.
+     */
+    @ReactMethod
+    fun openEmailDraft(packageName: String, to: ReadableArray, cc: ReadableArray, subject: String, body: String, promise: Promise) {
+        try {
+            val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"))
+                .putExtra(Intent.EXTRA_SUBJECT, subject)
+                .putExtra(Intent.EXTRA_TEXT, body)
+            val toList = to.toStringList()
+            val ccList = cc.toStringList()
+            if (toList.isNotEmpty()) intent.putExtra(Intent.EXTRA_EMAIL, toList.toTypedArray())
+            if (ccList.isNotEmpty()) intent.putExtra(Intent.EXTRA_CC, ccList.toTypedArray())
+            launch(intent, packageName, promise)
+        } catch (e: Exception) {
+            promise.reject("email_open_error", "Could not open the email app", e)
+        }
+    }
+
+    private fun ReadableArray.toStringList(): List<String> =
+        (0 until size()).mapNotNull { getString(it)?.trim()?.takeIf { value -> value.isNotEmpty() } }
 }

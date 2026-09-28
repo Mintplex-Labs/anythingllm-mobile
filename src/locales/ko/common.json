@@ -225,18 +225,32 @@
       "subtitle": "예약된 작업 · {{schedule}}",
       "view": "보기"
     },
+    "draft": {
+      "open": null,
+      "send_with": null,
+      "more_apps": null,
+      "open_in_failed": null
+    },
     "text_draft": {
       "new_message": null,
-      "open": null,
       "open_label": null,
-      "send_with": null,
       "no_number_hint": null,
-      "more_apps": null,
       "copy": null,
       "copied": null,
       "share_title": null,
-      "open_failed": null,
-      "open_in_failed": null
+      "open_failed": null
+    },
+    "email_draft": {
+      "new_email": null,
+      "no_subject": null,
+      "no_recipient": null,
+      "open_label": null,
+      "cc": null,
+      "no_recipient_hint": null,
+      "copy": null,
+      "copied": null,
+      "share_title": null,
+      "open_failed": null
     },
     "metrics": {
       "tokens_other": "{{value}}개 토큰"
@@ -520,8 +534,7 @@
     "draft_email": {
       "name": "이메일 초안",
       "description": "어시스턴트를 사용하여 이메일 초안을 작성합니다.",
-      "status_drafting": "이메일 \"{{subject}}\" 초안 작성 중",
-      "open_action": "초안 이메일 열기"
+      "status_drafting": "이메일 \"{{subject}}\" 초안 작성 중"
     },
     "draft_text": {
       "name": "텍스트 초안",

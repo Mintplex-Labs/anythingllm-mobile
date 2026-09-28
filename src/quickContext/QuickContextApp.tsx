@@ -30,7 +30,7 @@ import UserAssistantPair from '@/screens/WorkspaceChat/ChatHistory/Messages';
 import AssistantMessage from '@/screens/WorkspaceChat/ChatHistory/Messages/Assistant';
 import { ActivityExpansionProvider } from '@/screens/WorkspaceChat/ChatHistory/Messages/Assistant/ActivityChain/ExpansionContext';
 import CitationsActionSheet from '@/screens/WorkspaceChat/ChatHistory/CitationsActionSheet';
-import TextDraftSheet from '@/screens/WorkspaceChat/ChatHistory/TextDraftSheet';
+import DraftSheet from '@/screens/WorkspaceChat/ChatHistory/DraftSheet';
 import ModelChip from '@/components/TopBar/ModelChip';
 import VoiceRecordingIndicator from '@/components/VoiceRecordingIndicator';
 import { useKeyboardDimensions } from '@/components/KeyboardAccessoryView/hooks/useKeyboardDimensions';
@@ -223,7 +223,7 @@ function QuickContextCard({ selectedText }: Required<QuickContextProps>) {
                 )}
             </View>
             <CitationsActionSheet />
-            <TextDraftSheet />
+            <DraftSheet />
         </View>
     );
 }

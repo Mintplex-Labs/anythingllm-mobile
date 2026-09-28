@@ -228,18 +228,32 @@
       "subtitle": "निर्धारित नौकरी · {{schedule}}",
       "view": "देखें"
     },
+    "draft": {
+      "open": null,
+      "send_with": null,
+      "more_apps": null,
+      "open_in_failed": null
+    },
     "text_draft": {
       "new_message": null,
-      "open": null,
       "open_label": null,
-      "send_with": null,
       "no_number_hint": null,
-      "more_apps": null,
       "copy": null,
       "copied": null,
       "share_title": null,
-      "open_failed": null,
-      "open_in_failed": null
+      "open_failed": null
+    },
+    "email_draft": {
+      "new_email": null,
+      "no_subject": null,
+      "no_recipient": null,
+      "open_label": null,
+      "cc": null,
+      "no_recipient_hint": null,
+      "copy": null,
+      "copied": null,
+      "share_title": null,
+      "open_failed": null
     },
     "metrics": {
       "tokens_one": "{{value}} टोकन",
@@ -540,8 +554,7 @@
     "draft_email": {
       "name": "ईमेल का मसौदा",
       "description": "सहायक को आपके लिए एक ईमेल का मसौदा तैयार करने के लिए उपयोग करें।",
-      "status_drafting": "ईमेल \"{{subject}}\" का मसौदा तैयार कर रहे हैं",
-      "open_action": "ड्राफ़्ट ईमेल खोलें"
+      "status_drafting": "ईमेल \"{{subject}}\" का मसौदा तैयार कर रहे हैं"
     },
     "draft_text": {
       "name": "पाठ का मसौदा",

@@ -158,6 +158,14 @@
     "error_loading_thread": "Error loading workspace thread",
     "unknown_error": "Unknown error",
     "loading_history": "Loading chat history...",
+    "greetings": {
+      "working_on": "What are we working on?",
+      "noodle": "Let’s noodle on something.",
+      "on_your_mind": "What’s on your mind?",
+      "where_to_start": "Where should we start?",
+      "ready": "Ready when you are.",
+      "think_it_through": "Let’s think it through."
+    },
     "suggestions": {
       "hello": "Hello, what can you help me with?",
       "research": "Look online for some fun things to do in {{city}}, {{region}}",

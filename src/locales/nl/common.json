@@ -158,6 +158,14 @@
     "error_loading_thread": "Fout bij het laden van werkruimte-thread",
     "unknown_error": "Onbekende fout",
     "loading_history": "Chatgeschiedenis laden...",
+    "greetings": {
+      "working_on": null,
+      "noodle": null,
+      "on_your_mind": null,
+      "where_to_start": null,
+      "ready": null,
+      "think_it_through": null
+    },
     "suggestions": {
       "hello": "Hallo, wat kan ik je helpen?",
       "research": "Zoek online naar leuke dingen om te doen in {{city}}, {{region}}",

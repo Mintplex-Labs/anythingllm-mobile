@@ -158,6 +158,14 @@
     "error_loading_thread": "कार्यक्षेत्र धागा लोड करने में त्रुटि",
     "unknown_error": "अज्ञात त्रुटि",
     "loading_history": "चैट इतिहास लोड हो रहा है...",
+    "greetings": {
+      "working_on": null,
+      "noodle": null,
+      "on_your_mind": null,
+      "where_to_start": null,
+      "ready": null,
+      "think_it_through": null
+    },
     "suggestions": {
       "hello": "नमस्ते, आप मेरी क्या मदद कर सकते हैं?",
       "research": "{{city}}, {{region}} में करने के लिए कुछ मजेदार चीजों को ऑनलाइन खोजें",

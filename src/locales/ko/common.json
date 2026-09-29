@@ -158,6 +158,14 @@
     "error_loading_thread": "워크스페이스 스레드를 로드하는 중 오류",
     "unknown_error": "알 수 없는 오류",
     "loading_history": "채팅 기록을 로드 중...",
+    "greetings": {
+      "working_on": null,
+      "noodle": null,
+      "on_your_mind": null,
+      "where_to_start": null,
+      "ready": null,
+      "think_it_through": null
+    },
     "suggestions": {
       "hello": "안녕하세요, 무엇을 도와드릴 수 있나요?",
       "research": "{{city}}, {{region}}에서 할 재미있는 것들을 온라인에서 검색하세요",

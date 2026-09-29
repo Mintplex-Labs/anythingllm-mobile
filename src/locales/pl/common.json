@@ -158,6 +158,14 @@
     "error_loading_thread": "Błąd podczas ładowania wątku obszaru roboczego",
     "unknown_error": "Nieznany błąd",
     "loading_history": "Ładowanie historii czatu...",
+    "greetings": {
+      "working_on": null,
+      "noodle": null,
+      "on_your_mind": null,
+      "where_to_start": null,
+      "ready": null,
+      "think_it_through": null
+    },
     "suggestions": {
       "hello": "Cześć, w czym mi możesz pomóc?",
       "research": "Poszukaj w internecie zabawy do robienia w {{city}}, {{region}}",

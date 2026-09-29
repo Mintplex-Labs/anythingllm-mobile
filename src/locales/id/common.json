@@ -158,6 +158,14 @@
     "error_loading_thread": "Error memuat thread ruang kerja",
     "unknown_error": "Error tidak diketahui",
     "loading_history": "Memuat riwayat obrolan...",
+    "greetings": {
+      "working_on": null,
+      "noodle": null,
+      "on_your_mind": null,
+      "where_to_start": null,
+      "ready": null,
+      "think_it_through": null
+    },
     "suggestions": {
       "hello": "Halo, apa yang dapat Anda bantu?",
       "research": "Cari online beberapa hal menyenangkan untuk dilakukan di {{city}}, {{region}}",

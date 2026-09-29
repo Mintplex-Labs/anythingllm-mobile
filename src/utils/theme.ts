@@ -209,6 +209,8 @@ export const fontStyles = {
   light: { fontFamily: 'Inter-Light' },
   semibold: { fontFamily: 'Inter-SemiBold' },
   extraBold: { fontFamily: 'Inter-ExtraBold' },
+  // Brand display face - headlines only (e.g. the empty chat greeting).
+  display: { fontFamily: 'ClashDisplay-Medium' },
 };
 
 const baseFontVariants = configureFonts({

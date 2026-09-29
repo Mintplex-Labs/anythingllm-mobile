@@ -19,6 +19,7 @@
 		5C10CA122EF3A00100AB12C4 /* ScreenLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C10CA102EF3A00100AB12C2 /* ScreenLockModule.m */; };
 		7A5C0DE12F1B400100AB12D3 /* SharedContentModule.h in Sources */ = {isa = PBXBuildFile; fileRef = 7A5C0DE02F1B400100AB12D1 /* SharedContentModule.h */; };
 		7A5C0DE22F1B400100AB12D4 /* SharedContentModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5C0DE32F1B400100AB12D2 /* SharedContentModule.m */; };
+		C1A5D15A2F90000100C1A5D1 /* ClashDisplay-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C1A5D1592F90000100C1A5D1 /* ClashDisplay-Medium.ttf */; };
 		A8894CE22D0E02AF00FA6CAC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A8894CE12D0E02AF00FA6CAC /* GoogleService-Info.plist */; };
 		A88DF87F2D0B6F7400239E77 /* DeviceInfoModule.h in Sources */ = {isa = PBXBuildFile; fileRef = A88DF87D2D0B6F7400239E77 /* DeviceInfoModule.h */; };
 		A88DF8802D0B6F7400239E77 /* DeviceInfoModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A88DF87E2D0B6F7400239E77 /* DeviceInfoModule.m */; };
@@ -64,6 +65,7 @@
 		B2B1B50A483B5EBA13F9E622 /* libPods-AnythingLLM.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AnythingLLM.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4FD69AC6EA2DCF5F09D426E /* Pods-AnythingLLM-AnythingLLMTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnythingLLM-AnythingLLMTests.release.xcconfig"; path = "Target Support Files/Pods-AnythingLLM-AnythingLLMTests/Pods-AnythingLLM-AnythingLLMTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		C1A5D1592F90000100C1A5D1 /* ClashDisplay-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "ClashDisplay-Medium.ttf"; path = "../src/assets/fonts/ClashDisplay-Medium.ttf"; sourceTree = "<group>"; };
 		F6E78A942BFFAF1A00968174 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		F6FDF0F62BF10215004D619B /* MaterialIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -186,6 +188,7 @@
 			children = (
 				F6FDF0F62BF10215004D619B /* MaterialIcons.ttf */,
 				F6E78A942BFFAF1A00968174 /* MaterialCommunityIcons.ttf */,
+				C1A5D1592F90000100C1A5D1 /* ClashDisplay-Medium.ttf */,
 			);
 			name = Fonts;
 			sourceTree = "<group>";
@@ -288,6 +291,7 @@
 				A8894CE22D0E02AF00FA6CAC /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				1C5077855E738169D7580281 /* PrivacyInfo.xcprivacy in Resources */,
+				C1A5D15A2F90000100C1A5D1 /* ClashDisplay-Medium.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

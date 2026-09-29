@@ -1,7 +1,8 @@
-import { memo } from "react";
+import { memo, type ReactNode } from "react";
 import { type IChatCitation } from "@/database/models/WorkspaceChat";
-import { Text, TouchableOpacity, View } from "react-native";
-import { FileText } from "phosphor-react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import useCalendarApp from "@/hooks/useCalendarApp";
+import { CalendarBlank, FileText } from "phosphor-react-native";
 import Favicon from "@/screens/WorkspaceChat/ChatHistory/CitationsActionSheet/Favicon";
 import uiStore from "@/store/UIStore";
 import { useTranslation } from "react-i18next";
@@ -22,7 +23,10 @@ export function combineLikeCitations(citations: IChatCitation[]): IChatCitation[
     for (const citation of citations) {
         const key = citation.type === 'web-search'
             ? `web:${citation.reference.url}`
-            : `doc:${citation.document.uuid || citation.document.name}`;
+            : citation.type === 'calendar-event'
+                // Recurring events share an id - each occurrence is its own source.
+                ? `cal:${citation.event.id}:${citation.event.beginTime}`
+                : `doc:${citation.document.uuid || citation.document.name}`;
         if (seen.has(key)) continue;
         seen.add(key);
         unique.push(citation);
@@ -32,12 +36,24 @@ export function combineLikeCitations(citations: IChatCitation[]): IChatCitation[
 
 function SourceCircle({ citation }: { citation: IChatCitation }) {
     if (citation.type === 'web-search') return <Favicon url={citation.reference.url} size={ICON_SIZE} fallbackColor="#000" />;
+    if (citation.type === 'calendar-event') return <CalendarAppCircle />;
+    return <GlyphCircle><FileText size={11} color="#000" weight="bold" /></GlyphCircle>;
+}
+
+/** The calendar app's own icon, like a favicon for web sources - a plain calendar glyph when it is unknown */
+function CalendarAppCircle() {
+    const calendarApp = useCalendarApp();
+    if (calendarApp?.icon) return <Image source={{ uri: calendarApp.icon }} style={{ width: ICON_SIZE, height: ICON_SIZE, borderRadius: ICON_SIZE / 2 }} />;
+    return <GlyphCircle><CalendarBlank size={11} color="#000" weight="bold" /></GlyphCircle>;
+}
+
+function GlyphCircle({ children }: { children: ReactNode }) {
     return (
         <View
             style={{ width: ICON_SIZE, height: ICON_SIZE, borderRadius: ICON_SIZE / 2, backgroundColor: '#FFF' }}
             className="flex items-center justify-center"
         >
-            <FileText size={11} color="#000" weight="bold" />
+            {children}
         </View>
     );
 }

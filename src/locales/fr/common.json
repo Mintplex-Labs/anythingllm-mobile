@@ -180,7 +180,10 @@
     "citations": {
       "title": "Citations",
       "score": "Score : {{score}}",
-      "sources": "Sources"
+      "sources": "Sources",
+      "calendar_untitled": null,
+      "calendar_open_label": null,
+      "calendar_open_failed": null
     },
     "message_actions": {
       "copied": "Copié dans le presse-papiers",
@@ -258,6 +261,42 @@
       "share_title": null,
       "open_failed": null
     },
+    "calendar_event": {
+      "add": null,
+      "open_label": null,
+      "all_day": null,
+      "open_failed": null,
+      "saved": null,
+      "permission_denied": null,
+      "add_with": null,
+      "save_ics": null,
+      "save_failed": null,
+      "no_app_hint": null,
+      "reminders_hint": null,
+      "invitees": null,
+      "reminders": null,
+      "reminder_before": null,
+      "reminder_at_start": null,
+      "repeat": {
+        "daily_many": null,
+        "daily_one": null,
+        "daily_other": null,
+        "weekly_many": null,
+        "weekly_one": null,
+        "weekly_other": null,
+        "monthly_many": null,
+        "monthly_one": null,
+        "monthly_other": null,
+        "yearly_many": null,
+        "yearly_one": null,
+        "yearly_other": null,
+        "on_days": null,
+        "until": null,
+        "times_many": null,
+        "times_one": null,
+        "times_other": null
+      }
+    },
     "metrics": {
       "tokens_many": "{{value}} jetons",
       "tokens_one": "{{value}} jeton",
@@ -313,7 +352,6 @@
       "title": "Outils",
       "group_status": "{{enabled}} sur {{total}} activés",
       "app_connections": "Connexions d'application",
-      "group_files_note": "{{description}} Les fichiers sont conservés sur cet appareil jusqu'à ce que vous effaciez les fichiers temporaires dans les paramètres.",
       "needs_cloud_model": "{{description}} Nécessite un modèle cloud.",
       "unavailable_on_device": "Les outils grisés ne sont pas disponibles avec le modèle sur appareil. Passez à un fournisseur cloud pour les utiliser."
     },
@@ -492,7 +530,13 @@
     "groups": {
       "create_files": {
         "name": "Créer des fichiers",
-        "description": "Permettez à l'assistant d'écrire des documents que vous pouvez télécharger et partager."
+        "description": "Permettez à l'assistant d'écrire des documents que vous pouvez télécharger et partager.",
+        "note": null
+      },
+      "calendar": {
+        "name": null,
+        "description": null,
+        "note": null
       }
     },
     "reranker": {
@@ -509,6 +553,7 @@
     "calendar_event_reading": {
       "name": "Lire le calendrier",
       "description": "Utilisez l'assistant pour lire vos événements de calendrier.",
+      "permission_denied": null,
       "status_date": "Lecture de votre calendrier pour {{date}}",
       "status_today": "Lecture de votre calendrier pour aujourd'hui",
       "status_tomorrow": "Lecture de votre calendrier pour demain",

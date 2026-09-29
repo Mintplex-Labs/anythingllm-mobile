@@ -1,5 +1,6 @@
 package com.anythingllm.messaging
 
+import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -8,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
+import android.provider.CalendarContract
 import android.provider.Telephony
 import android.telephony.TelephonyManager
 import android.util.Base64
@@ -18,6 +20,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.WritableArray
+import com.facebook.react.bridge.WritableMap
 import java.io.ByteArrayOutputStream
 
 /**
@@ -28,6 +31,7 @@ import java.io.ByteArrayOutputStream
  * Texts: the default SMS app (Google Messages, Samsung Messages, ...) when a SIM is ready, plus the
  * popular chat apps in [KNOWN_MESSENGERS] that are installed.
  * Emails: every app that handles `mailto:` (Gmail, Outlook, Samsung Email, Proton Mail, ...).
+ * Calendar events: the default calendar app's new-event screen (Google Calendar, Samsung Calendar, ...).
  * All of them need matching `<queries>` entries in the manifest to be visible on Android 11+.
  */
 class MessagingModule(private val reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
@@ -103,18 +107,21 @@ class MessagingModule(private val reactContext: ReactApplicationContext) : React
         return bitmap
     }
 
-    /** `[{ packageName, label, icon }]` in the given order, skipping ourselves and anything uninstalled mid-listing */
+    /** `{ packageName, label, icon }`, or null for ourselves and anything uninstalled mid-listing */
+    private fun toAppMap(packageName: String): WritableMap? {
+        if (packageName == reactContext.packageName) return null
+        val label = labelOf(packageName) ?: return null
+        return Arguments.createMap().apply {
+            putString("packageName", packageName)
+            putString("label", label)
+            putString("icon", iconDataUri(packageName))
+        }
+    }
+
+    /** `[{ packageName, label, icon }]` in the given order, skipping what [toAppMap] skips */
     private fun toAppArray(packages: Collection<String>): WritableArray {
         val apps = Arguments.createArray()
-        for (packageName in packages) {
-            if (packageName == reactContext.packageName) continue
-            val label = labelOf(packageName) ?: continue
-            apps.pushMap(Arguments.createMap().apply {
-                putString("packageName", packageName)
-                putString("label", label)
-                putString("icon", iconDataUri(packageName))
-            })
-        }
+        for (packageName in packages) toAppMap(packageName)?.let { apps.pushMap(it) }
         return apps
     }
 
@@ -208,6 +215,106 @@ class MessagingModule(private val reactContext: ReactApplicationContext) : React
             launch(intent, packageName, promise)
         } catch (e: Exception) {
             promise.reject("email_open_error", "Could not open the email app", e)
+        }
+    }
+
+    private fun calendarInsertIntent(): Intent =
+        Intent(Intent.ACTION_INSERT).setData(CalendarContract.Events.CONTENT_URI)
+
+    /**
+     * The app a new calendar event opens in - the user's default calendar app, or the only one
+     * installed. Resolves to `{ packageName, label, icon }`, or null when there is none or several
+     * with no default (Android then shows its own chooser).
+     */
+    @ReactMethod
+    fun getCalendarApp(promise: Promise) {
+        try {
+            val resolved = pm.resolveActivity(calendarInsertIntent(), PackageManager.MATCH_DEFAULT_ONLY)?.activityInfo?.packageName
+            // With no default the resolver is the system chooser ("android"), which is not an app to show.
+            val packageName = resolved?.takeIf { it != "android" && packagesHandling(calendarInsertIntent()).contains(it) }
+            // Resolve a fresh map - one read back out of a WritableArray is read-only, which the bridge rejects.
+            promise.resolve(packageName?.let { toAppMap(it) })
+        } catch (e: Exception) {
+            promise.reject("calendar_app_error", "Could not find a calendar app", e)
+        }
+    }
+
+    /**
+     * Installed calendar apps that can add an event, alphabetical. Same shape as [getMessagingApps].
+     * Empty when there are none - the JS side then still offers the event as an .ics file.
+     */
+    @ReactMethod
+    fun getCalendarApps(promise: Promise) {
+        try {
+            promise.resolve(toAppArray(packagesHandling(calendarInsertIntent()).sortedBy { labelOf(it)?.lowercase() }))
+        } catch (e: Exception) {
+            promise.reject("calendar_apps_error", "Could not list calendar apps", e)
+        }
+    }
+
+    /**
+     * Opens [packageName]'s new-event screen with the event filled in, for the user to review and
+     * save - no calendar permission needed. Times are epoch millis; the CalendarContract extras
+     * must be longs, which is why this is not done through a generic intent launcher.
+     * [rrule] is an iCalendar RRULE value and [attendees] a comma separated list of emails, both
+     * optional. Reminders have no extra - the app applies its default.
+     */
+    @ReactMethod
+    fun openCalendarEvent(
+        packageName: String,
+        title: String,
+        beginTime: Double,
+        endTime: Double,
+        allDay: Boolean,
+        location: String?,
+        description: String?,
+        rrule: String?,
+        attendees: String?,
+        promise: Promise,
+    ) {
+        try {
+            val intent = calendarInsertIntent()
+                .putExtra(CalendarContract.Events.TITLE, title)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.toLong())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.toLong())
+                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, allDay)
+            location?.takeIf { it.isNotBlank() }?.let { intent.putExtra(CalendarContract.Events.EVENT_LOCATION, it) }
+            description?.takeIf { it.isNotBlank() }?.let { intent.putExtra(CalendarContract.Events.DESCRIPTION, it) }
+            rrule?.takeIf { it.isNotBlank() }?.let { intent.putExtra(CalendarContract.Events.RRULE, it) }
+            // CalendarContract documents Intent.EXTRA_EMAIL here as one comma separated string, not an array.
+            attendees?.takeIf { it.isNotBlank() }?.let { intent.putExtra(Intent.EXTRA_EMAIL, it) }
+            launch(intent, packageName, promise)
+        } catch (e: Exception) {
+            promise.reject("calendar_open_error", "Could not open the calendar app", e)
+        }
+    }
+
+    /**
+     * Opens an existing event in the calendar app. [beginTime] and [endTime] (epoch millis) pick
+     * the occurrence - recurring events share one id, and without them the app shows the first.
+     */
+    @ReactMethod
+    fun viewCalendarEvent(eventId: String, beginTime: Double, endTime: Double, promise: Promise) {
+        try {
+            val id = eventId.toLongOrNull()
+            if (id == null) {
+                promise.reject("invalid_event", "Not a calendar event id: $eventId")
+                return
+            }
+            val intent = Intent(Intent.ACTION_VIEW)
+                .setData(ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id))
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.toLong())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.toLong())
+            if (pm.queryIntentActivities(intent, 0).isEmpty()) {
+                promise.reject("app_unavailable", "No calendar app can show this event")
+                return
+            }
+            val activity = reactContext.currentActivity
+            if (activity != null) activity.startActivity(intent)
+            else reactContext.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            promise.resolve(true)
+        } catch (e: Exception) {
+            promise.reject("calendar_view_error", "Could not open the event", e)
         }
     }
 

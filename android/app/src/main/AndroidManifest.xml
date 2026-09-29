@@ -24,6 +24,16 @@
             <action android:name="android.intent.action.SENDTO" />
             <data android:scheme="mailto"/>
         </intent>
+        <!-- Calendar apps a drafted event can be added in (MessagingModule) -->
+        <intent>
+            <action android:name="android.intent.action.INSERT" />
+            <data android:mimeType="vnd.android.cursor.dir/event"/>
+        </intent>
+        <!-- Opening an event the read-calendar tool cited -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="vnd.android.cursor.item/event"/>
+        </intent>
     </queries>
 
     <!-- Allow app to get advertising ID for Firebase Analytics -->

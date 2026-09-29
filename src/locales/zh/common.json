@@ -174,7 +174,10 @@
     "citations": {
       "title": "引用",
       "score": "分数：{{score}}",
-      "sources": "来源"
+      "sources": "来源",
+      "calendar_untitled": null,
+      "calendar_open_label": null,
+      "calendar_open_failed": null
     },
     "message_actions": {
       "copied": "已复制到剪贴板",
@@ -252,6 +255,32 @@
       "share_title": null,
       "open_failed": null
     },
+    "calendar_event": {
+      "add": null,
+      "open_label": null,
+      "all_day": null,
+      "open_failed": null,
+      "saved": null,
+      "permission_denied": null,
+      "add_with": null,
+      "save_ics": null,
+      "save_failed": null,
+      "no_app_hint": null,
+      "reminders_hint": null,
+      "invitees": null,
+      "reminders": null,
+      "reminder_before": null,
+      "reminder_at_start": null,
+      "repeat": {
+        "daily_other": null,
+        "weekly_other": null,
+        "monthly_other": null,
+        "yearly_other": null,
+        "on_days": null,
+        "until": null,
+        "times_other": null
+      }
+    },
     "metrics": {
       "tokens_other": "{{value}} 个令牌"
     },
@@ -303,7 +332,6 @@
       "title": "工具",
       "group_status": "{{enabled}} 的 {{total}} 打开",
       "app_connections": "应用连接",
-      "group_files_note": "{{description}} 文件保存在此设备上，直到您在设置中清除临时文件。",
       "needs_cloud_model": "{{description}} 需要云模型。",
       "unavailable_on_device": "灰显的工具在设备上模型中不可用。切换到云提供商以使用它们。"
     },
@@ -466,7 +494,13 @@
     "groups": {
       "create_files": {
         "name": "创建文件",
-        "description": "让助手编写您可以下载和分享的文档。"
+        "description": "让助手编写您可以下载和分享的文档。",
+        "note": null
+      },
+      "calendar": {
+        "name": null,
+        "description": null,
+        "note": null
       }
     },
     "reranker": {
@@ -483,6 +517,7 @@
     "calendar_event_reading": {
       "name": "阅读日历",
       "description": "使用助手阅读您的日历事件。",
+      "permission_denied": null,
       "status_date": "读取您的日历上的 {{date}}",
       "status_today": "读取您的日历上的今天",
       "status_tomorrow": "读取您的日历上的明天",

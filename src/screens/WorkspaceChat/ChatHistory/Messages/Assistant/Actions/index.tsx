@@ -1,41 +1,17 @@
 import { Linking, Text, TouchableOpacity, ScrollView } from "react-native";
 import { memo } from "react";
 import { IAgentAction } from "@/database/models/WorkspaceChat";
-import IntentLauncher, { IntentConstant } from "@yz1311/react-native-intent-launcher";
 
 /** Action types that render as their own full-width card instead of a chip (`sms` / `email` are the old text and email drafts) */
-export const CARD_ACTION_TYPES: string[] = ['file_download', 'scheduled_job_created', 'text_draft', 'sms', 'email_draft', 'email'];
+export const CARD_ACTION_TYPES: string[] = ['file_download', 'scheduled_job_created', 'text_draft', 'sms', 'email_draft', 'email', 'calendar_event_creation'];
 
-/** Link-style chips for actions that open another app. Generated files, created jobs and text/email drafts render as their own cards instead. */
+/** Link-style chips for actions that open another app. Generated files, created jobs, drafts and calendar events render as their own cards instead. */
 export default memo(function ActionsContainer({ actions: allActions = [] }: { actions?: IAgentAction[] }) {
     const actions = allActions.filter(action => !CARD_ACTION_TYPES.includes(action.type));
     if (actions.length === 0) return null;
 
     function onPress(action: IAgentAction) {
-        switch (action.type) {
-            case 'calendar_event_creation':
-                const { beginTime, endTime, title, eventLocation, description, allDay } = action.action;
-                const intentPayload = {
-                    action: IntentConstant.ACTION_INSERT,
-                    data: 'content://com.android.calendar/events',
-                    package: 'com.google.android.calendar',
-                    type: 'vnd.android.cursor.item/event',
-                    extra: {
-                        'android.intent.CalendarContract.EXTRA_EVENT_BEGIN_TIME': new Date(beginTime).getTime(),
-                        'android.intent.CalendarContract.EXTRA_EVENT_END_TIME': new Date(endTime).getTime(),
-                        'title': title,
-                        'description': description,
-                        'eventLocation': eventLocation,
-                        'allDay': allDay,
-                    } as any
-                }
-                // @ts-ignore
-                IntentLauncher.startActivity(intentPayload);
-                break;
-            default:
-                if ('link' in action.action) Linking.openURL(action.action.link);
-                break;
-        }
+        if ('link' in action.action) Linking.openURL(action.action.link);
     }
     return (
         <ScrollView

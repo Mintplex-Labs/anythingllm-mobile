@@ -14,13 +14,15 @@ interface WorkspaceItemProps {
 
 export default function WorkspaceItem({ module, workspace }: WorkspaceItemProps) {
     const { t } = useTranslation();
+    // The remote default thread is not imported - a workspace without threads gets one new thread.
+    const importedThreadCount = Math.max(workspace.threadCount, 1);
 
     return (
         <View className="flex flex-row justify-between w-full rounded-lg items-center" style={{ padding: 16, backgroundColor: '#27282A' }}>
             <View className="flex flex-col items-start" style={{ gap: 4, width: '65%' }}>
                 <Text numberOfLines={1} ellipsizeMode="tail" className="text-white text-lg font-medium" style={{ width: '100%' }}>{workspace.name}</Text>
                 <View className="flex flex-row items-center" style={{ gap: 4 }}>
-                    <Text className="text-white text-base" style={{ color: '#9F9FA0' }}>{t('connect.import.thread_count', { count: workspace.threadCount + 1, formatted: formatNumber(workspace.threadCount + 1) })}</Text>
+                    <Text className="text-white text-base" style={{ color: '#9F9FA0' }}>{t('connect.import.thread_count', { count: importedThreadCount, formatted: formatNumber(importedThreadCount) })}</Text>
                     <Text className="text-white text-base" style={{ color: '#9F9FA0' }}>|</Text>
                     <Text className="text-white text-base" style={{ color: '#9F9FA0' }}>{t('connect.import.chat_count', { count: workspace.chatCount, formatted: formatNumber(workspace.chatCount) })}</Text>
                 </View>

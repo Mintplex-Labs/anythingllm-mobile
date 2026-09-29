@@ -9,6 +9,9 @@ import WorkspaceChat, { WorkspaceChatType } from "@/database/models/WorkspaceCha
 import Telemetry from "@/utils/Telemetry";
 import i18n from "@/i18n";
 
+/** Placeholder slug `workspace-content` uses for chats that are not in any thread */
+const REMOTE_DEFAULT_THREAD_SLUG = 'default-thread';
+
 async function getPreviouslyImportedWorkspace(workspaceSlug: string): Promise<WorkspaceType | null> {
     const importedWorkspaces = await Workspace.find([{ field: 'is_remote', value: true }]);
     return importedWorkspaces.find((w) => w.remoteConfig.slug === workspaceSlug) ?? null;
@@ -32,7 +35,11 @@ export async function syncFromRemote({
             await Workspace.delete([{ field: 'slug', value: previouslyImportedWorkspace.slug }]);
         }
 
-        const { threads, chats } = await module.sendCommand('workspace-content', { workspaceSlug: workspace.slug });
+        const content = await module.sendCommand('workspace-content', { workspaceSlug: workspace.slug });
+        // The remote "default thread" (chats with no thread) is not imported - every imported thread
+        // maps to a real remote thread, so remote commands always carry a thread slug.
+        const threads = content.threads.filter((thread) => thread.slug !== REMOTE_DEFAULT_THREAD_SLUG);
+        const chats = content.chats.filter((chat) => threads.some((t) => t.id === chat.thread_id));
 
         // Create workspace replica
         const workspaceReplica = await Workspace.directCreate({
@@ -49,13 +56,8 @@ export async function syncFromRemote({
             },
         });
 
-        // Dont make real threads for remote workspaces - we will pull them in real time.
-        // make all threads - if default thread, generate a new uuid
-        // since that is just a placeholder value so we can bridge desktop and mobile
         const threadPromises = [] as Promise<WorkspaceThread>[];
         for (const thread of threads) {
-            const originalSlug = thread.slug;
-            if (originalSlug === 'default-thread') thread.slug = generateUUID();
             threadPromises.push(
                 WorkspaceThread.directCreate({
                     name: thread.name,
@@ -64,7 +66,7 @@ export async function syncFromRemote({
                     isRemote: true,
                     remoteConfig: {
                         wsSlug: workspace.slug,
-                        slug: originalSlug === 'default-thread' ? null : originalSlug,
+                        slug: thread.slug,
                         connectionUrl: module.connectionUrl,
                         deviceToken: module.deviceToken,
                         platform: workspace.platform,
@@ -72,6 +74,13 @@ export async function syncFromRemote({
                 }));
         }
         await Promise.all(threadPromises);
+        // Every workspace needs a thread to open - make a fresh one on the remote if it had none.
+        if (threads.length === 0) {
+            await WorkspaceThread.create({ workspaceSlug: workspaceReplica.slug }).catch(async (error) => {
+                await Workspace.delete([{ field: 'slug', value: workspaceReplica.slug }]);
+                throw error;
+            });
+        }
 
         // make all chats with associated thread and citations
         const chatPromises = [] as Promise<WorkspaceChatType>[];

@@ -1009,7 +1009,13 @@
       "sync": "Sinkronkan",
       "synced": "Tersinkronkan",
       "sync_failed": "Gagal",
-      "sync_workspace_failed": "Gagal menyinkronkan ruang kerja {{name}}"
+      "sync_workspace_failed": "Gagal menyinkronkan ruang kerja {{name}}",
+      "workspaces": null,
+      "platform_desktop": null,
+      "platform_server": null,
+      "empty_title": null,
+      "empty_body": null,
+      "sync_explainer": null
     }
   },
   "scheduled_jobs": {

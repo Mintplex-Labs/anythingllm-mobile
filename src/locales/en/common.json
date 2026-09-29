@@ -1048,7 +1048,13 @@
       "sync": "Sync",
       "synced": "Synced",
       "sync_failed": "Failed",
-      "sync_workspace_failed": "Failed to sync workspace {{name}}"
+      "sync_workspace_failed": "Failed to sync workspace {{name}}",
+      "workspaces": "Workspaces",
+      "platform_desktop": "AnythingLLM Desktop",
+      "platform_server": "AnythingLLM Server",
+      "empty_title": "No workspaces found",
+      "empty_body": "Create a workspace in AnythingLLM, then pull down to refresh.",
+      "sync_explainer": "Syncing copies a workspace's threads and chats to this device. Syncing it again replaces that copy. Chats in the default thread are not synced."
     }
   },
   "scheduled_jobs": {

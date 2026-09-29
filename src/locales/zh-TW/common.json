@@ -1009,7 +1009,13 @@
       "sync": "同步",
       "synced": "已同步",
       "sync_failed": "失敗",
-      "sync_workspace_failed": "無法同步工作區 {{name}}"
+      "sync_workspace_failed": "無法同步工作區 {{name}}",
+      "workspaces": null,
+      "platform_desktop": null,
+      "platform_server": null,
+      "empty_title": null,
+      "empty_body": null,
+      "sync_explainer": null
     }
   },
   "scheduled_jobs": {

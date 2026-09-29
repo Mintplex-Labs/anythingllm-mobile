@@ -1009,7 +1009,13 @@
       "sync": "同期",
       "synced": "同期されました",
       "sync_failed": "失敗",
-      "sync_workspace_failed": "ワークスペース{{name}}の同期に失敗しました"
+      "sync_workspace_failed": "ワークスペース{{name}}の同期に失敗しました",
+      "workspaces": null,
+      "platform_desktop": null,
+      "platform_server": null,
+      "empty_title": null,
+      "empty_body": null,
+      "sync_explainer": null
     }
   },
   "scheduled_jobs": {

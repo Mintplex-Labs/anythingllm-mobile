@@ -1048,7 +1048,13 @@
       "sync": "Synchroniseren",
       "synced": "Gesynchroniseerd",
       "sync_failed": "Mislukt",
-      "sync_workspace_failed": "Kon werkruimte {{name}} niet synchroniseren"
+      "sync_workspace_failed": "Kon werkruimte {{name}} niet synchroniseren",
+      "workspaces": null,
+      "platform_desktop": null,
+      "platform_server": null,
+      "empty_title": null,
+      "empty_body": null,
+      "sync_explainer": null
     }
   },
   "scheduled_jobs": {

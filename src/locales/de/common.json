@@ -1048,7 +1048,13 @@
       "sync": "Synchronisieren",
       "synced": "Synchronisiert",
       "sync_failed": "Fehlgeschlagen",
-      "sync_workspace_failed": "Fehler beim Synchronisieren des Workspace {{name}}"
+      "sync_workspace_failed": "Fehler beim Synchronisieren des Workspace {{name}}",
+      "workspaces": null,
+      "platform_desktop": null,
+      "platform_server": null,
+      "empty_title": null,
+      "empty_body": null,
+      "sync_explainer": null
     }
   },
   "scheduled_jobs": {

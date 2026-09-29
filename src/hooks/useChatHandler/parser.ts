@@ -1,4 +1,3 @@
-import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 
 export interface ParsedContent {

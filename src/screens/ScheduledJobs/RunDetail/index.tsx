@@ -60,13 +60,13 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
                 error: (error) => console.log('[RunDetail] observe failed', error),
             });
         return () => subscription.unsubscribe();
-    }, [runUuid]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [runUuid]);
 
     // Seen: clear the unread marker once the run has settled (an in-flight run is marked when it finishes on screen).
     useEffect(() => {
         if (!run || run.readAt || !ScheduledJobRun.isTerminal(run.status)) return;
         ScheduledJobRun.markRead(run.uuid);
-    }, [run?.uuid, run?.status, run?.readAt]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [run?.uuid, run?.status, run?.readAt]);
 
     const chat = useMemo<DynamicChatMessage | null>(() => {
         if (!run) return null;

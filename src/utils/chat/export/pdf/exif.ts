@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise -- byte-level EXIF parsing */
 /**
  * Minimal EXIF orientation reader for JPEG payloads.
  *

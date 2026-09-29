@@ -63,7 +63,7 @@ export default class ScheduledJob extends Model {
   @field('updated_at') updatedAt!: number;
 
   static log(message: any, ...args: any[]) {
-    console.log(`\x1b[32m[db:ScheduledJob]\x1b[0m`, message, ...args); // eslint-disable-line no-console
+    console.log(`\x1b[32m[db:ScheduledJob]\x1b[0m`, message, ...args);
   }
 
   static validate(input: Partial<ScheduledJobWritable>): { valid: boolean; error: string } {

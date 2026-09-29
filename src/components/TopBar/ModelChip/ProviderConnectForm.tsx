@@ -81,7 +81,6 @@ export default function ProviderConnectForm({
       const saved = provider === llmPreferences.provider ? llmPreferences.config : await restore(provider);
       setConfig({ ...(definition?.defaultConfig ?? {}), ...(saved ?? {}) });
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider]);
 
   if (!definition || !config) return <ActivityIndicator size="large" color="white" />;

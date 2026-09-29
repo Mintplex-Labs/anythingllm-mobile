@@ -260,7 +260,7 @@ export interface Model {
   chatTemplateString?: string;
   imageUrl?: string;
 
-  runtime: 'CPU';
+  runtime?: 'CPU';
   author: string;
   name: string;
   type?: string;

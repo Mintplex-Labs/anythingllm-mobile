@@ -15,7 +15,7 @@ const md3BaseColors: Partial<MD3BaseColors> = {
   error: '#FF653F',
 };
 
-const AnythingLLMColors = (isDark: boolean = false) => {
+const AnythingLLMColors = (_isDark: boolean = false) => {
   // TODO: add light theme colors
   const darkThemeColors = {
     text: {

@@ -31,7 +31,7 @@ export type GeneratedDocument = {
 };
 
 function log(text: string, ...args: any[]) {
-    console.log(`\x1b[35m[GeneratedDocuments] ${text}\x1b[0m`, ...args); // eslint-disable-line no-console
+    console.log(`\x1b[35m[GeneratedDocuments] ${text}\x1b[0m`, ...args);
 }
 
 /** Whether a name looks like one `saveGeneratedDocument` produced - guards against path traversal */

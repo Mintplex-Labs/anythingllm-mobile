@@ -32,7 +32,7 @@ const SWEEP_INTERVAL_MS = 24 * 60 * 60 * 1000;
 const IMAGE_PICKER_TEMP_PATTERN = /^rn_image_picker/i;
 
 function log(message: any, ...args: any[]) {
-    console.log('\x1b[33m[FsCleanup]\x1b[0m', message, ...args); // eslint-disable-line no-console
+    console.log('\x1b[33m[FsCleanup]\x1b[0m', message, ...args);
 }
 
 async function folderHasFiles(path: string): Promise<boolean> {

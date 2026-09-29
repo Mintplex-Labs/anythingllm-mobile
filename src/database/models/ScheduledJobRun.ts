@@ -56,7 +56,7 @@ export default class ScheduledJobRun extends Model {
   @field('read_at') readAt!: number | null;
 
   static log(message: any, ...args: any[]) {
-    console.log(`\x1b[32m[db:ScheduledJobRun]\x1b[0m`, message, ...args); // eslint-disable-line no-console
+    console.log(`\x1b[32m[db:ScheduledJobRun]\x1b[0m`, message, ...args);
   }
 
   static isTerminal(status: ScheduledJobRunStatus): boolean {

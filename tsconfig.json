@@ -9,6 +9,9 @@
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "@yz1311/react-native-intent-launcher": [
+        "src/types/intent-launcher.d.ts"
       ]
     }
   }

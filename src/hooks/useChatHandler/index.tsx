@@ -143,7 +143,7 @@ function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: I
     const remoteThreadSlugRef = useRef<string | null>(thread?.remoteConfig?.slug ?? null);
     useEffect(() => {
         remoteThreadSlugRef.current = thread?.remoteConfig?.slug ?? null;
-    }, [thread?.slug]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [thread?.slug]);
 
     const remoteThreadSlug = useCallback(async (): Promise<string> => {
         if (!remoteThreadSlugRef.current) remoteThreadSlugRef.current = await WorkspaceThread.linkRemote(thread);

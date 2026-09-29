@@ -84,3 +84,7 @@ android/app/src/main/assets/ggml-hexagon/
 
 # Per-build JS sourcemaps for decoding crash reports (scripts/buildAndroidRelease.js)
 sourcemaps/
+
+# Licensed brand fonts (Fontshare FFL - no redistribution). See scripts/checkBrandFonts.js
+src/assets/fonts/ClashDisplay-*
+android/app/src/main/assets/fonts/ClashDisplay-*

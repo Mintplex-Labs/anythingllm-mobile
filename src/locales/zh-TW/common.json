@@ -158,6 +158,14 @@
     "error_loading_thread": "載入工作區執行緒時出錯",
     "unknown_error": "未知錯誤",
     "loading_history": "正在載入聊天記錄...",
+    "greetings": {
+      "working_on": null,
+      "noodle": null,
+      "on_your_mind": null,
+      "where_to_start": null,
+      "ready": null,
+      "think_it_through": null
+    },
     "suggestions": {
       "hello": "哈囉，您需要什麼幫助？",
       "research": "在網路上搜尋 {{city}}, {{region}} 的一些有趣事物",

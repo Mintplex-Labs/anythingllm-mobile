@@ -158,6 +158,14 @@
     "error_loading_thread": "Lỗi tải chủ đề không gian làm việc",
     "unknown_error": "Lỗi không xác định",
     "loading_history": "Đang tải lịch sử trò chuyện...",
+    "greetings": {
+      "working_on": null,
+      "noodle": null,
+      "on_your_mind": null,
+      "where_to_start": null,
+      "ready": null,
+      "think_it_through": null
+    },
     "suggestions": {
       "hello": "Xin chào, bạn có thể giúp tôi điều gì?",
       "research": "Tìm kiếm trực tuyến một số điều vui vẻ để làm ở {{city}}, {{region}}",

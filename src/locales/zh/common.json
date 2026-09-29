@@ -158,6 +158,14 @@
     "error_loading_thread": "加载工作区线程时出错",
     "unknown_error": "未知错误",
     "loading_history": "正在加载聊天历史...",
+    "greetings": {
+      "working_on": null,
+      "noodle": null,
+      "on_your_mind": null,
+      "where_to_start": null,
+      "ready": null,
+      "think_it_through": null
+    },
     "suggestions": {
       "hello": "你好，有什么我可以帮助你的吗？",
       "research": "在网上寻找 {{city}}、{{region}} 的一些有趣的事情",

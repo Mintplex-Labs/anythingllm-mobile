@@ -158,6 +158,14 @@
     "error_loading_thread": "ワークスペーススレッドの読み込みエラー",
     "unknown_error": "不明なエラー",
     "loading_history": "チャット履歴を読み込み中...",
+    "greetings": {
+      "working_on": null,
+      "noodle": null,
+      "on_your_mind": null,
+      "where_to_start": null,
+      "ready": null,
+      "think_it_through": null
+    },
     "suggestions": {
       "hello": "こんにちは、何かお手伝いできることはありますか？",
       "research": "{{city}}, {{region}}での楽しいことをオンラインで探してください",

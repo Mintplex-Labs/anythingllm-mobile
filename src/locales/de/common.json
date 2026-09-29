@@ -158,6 +158,14 @@
     "error_loading_thread": "Fehler beim Laden des Workspace-Threads",
     "unknown_error": "Unbekannter Fehler",
     "loading_history": "Chat-Verlauf wird geladen...",
+    "greetings": {
+      "working_on": null,
+      "noodle": null,
+      "on_your_mind": null,
+      "where_to_start": null,
+      "ready": null,
+      "think_it_through": null
+    },
     "suggestions": {
       "hello": "Hallo, womit kann ich dir helfen?",
       "research": "Suchen Sie online nach einigen unterhaltsamen Aktivitäten in {{city}}, {{region}}",

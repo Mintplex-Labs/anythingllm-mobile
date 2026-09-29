@@ -158,6 +158,14 @@
     "error_loading_thread": "Error al cargar el hilo del espacio de trabajo",
     "unknown_error": "Error desconocido",
     "loading_history": "Cargando historial de chat...",
+    "greetings": {
+      "working_on": null,
+      "noodle": null,
+      "on_your_mind": null,
+      "where_to_start": null,
+      "ready": null,
+      "think_it_through": null
+    },
     "suggestions": {
       "hello": "Hola, ¿en qué puedo ayudarte?",
       "research": "Busca en línea algunas cosas divertidas para hacer en {{city}}, {{region}}",

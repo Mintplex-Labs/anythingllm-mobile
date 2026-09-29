@@ -401,8 +401,8 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
 
     throwIfAborted(this.abortSignal);
     if (finalResult.truncatedByContext) onStream('report_status', i18n.t('models.status.reply_truncated'));
-    if (!!fullResult.metrics) onStream('report_metrics', fullResult.metrics);
-    if (!!citations) onStream('report_citations', citations);
+    if (fullResult.metrics) onStream('report_metrics', fullResult.metrics);
+    if (citations) onStream('report_citations', citations);
     onStream('complete', '');
     this.scheduleCompaction(messages, finalResult.textResponse);
   }

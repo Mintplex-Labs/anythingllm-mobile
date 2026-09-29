@@ -37,7 +37,7 @@ export default function ScheduledJobs() {
         // Consume the params so re-rendering (or coming back later) does not re-open the run.
         // @ts-ignore - params are untyped on the drawer route
         navigation.setParams({ jobUuid: undefined, runUuid: undefined });
-    }, [params?.jobUuid, params?.runUuid]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [params?.jobUuid, params?.runUuid]);
 
     const exit = useCallback(() => {
         navigation.reset({

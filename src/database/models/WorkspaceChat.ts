@@ -280,7 +280,7 @@ export default class WorkspaceChat extends Model {
   @field('created_at') createdAt!: number;
 
   static log(message: any, ...args: any[]) {
-    console.log(`\x1b[32m[db:WorkspaceChat]\x1b[0m`, message, ...args) // eslint-disable-line no-console
+    console.log(`\x1b[32m[db:WorkspaceChat]\x1b[0m`, message, ...args)
   }
 
   static toWorkspaceChatObject(data: any): Partial<WorkspaceChatType> {

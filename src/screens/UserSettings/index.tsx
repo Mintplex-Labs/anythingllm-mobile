@@ -43,7 +43,7 @@ export default function UserSettings() {
     if (params.page in PAGES) setPage(params.page);
     // @ts-ignore - params are untyped on the drawer route
     navigation.setParams({ page: undefined });
-  }, [params?.page]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [params?.page]);
 
   useEffect(() => {
     eventEmitter.addListener('setUserSettingsPage', event => {

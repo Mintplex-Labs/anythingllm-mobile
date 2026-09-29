@@ -57,7 +57,6 @@ export default function AdvancedModelPreferences({
   useEffect(() => {
     if (!peekPendingHfPull()) return;
     if (llmPreferences.provider !== 'native') handleProviderSelection('native');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderProviderOptions = () => {

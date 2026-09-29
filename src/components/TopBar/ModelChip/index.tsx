@@ -530,7 +530,6 @@ function ExternalProviderModels({
       setModels([]);
       setStatus('error');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [llmPreferences.provider, baseUrl, apiKey, providerName]);
 
   useEffect(() => {

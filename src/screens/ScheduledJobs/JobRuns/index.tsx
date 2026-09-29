@@ -38,7 +38,7 @@ export default function JobRuns({ jobUuid, onBack, onEdit, onOpenRun }: { jobUui
         setJob(nextJob);
         setRuns(nextRuns);
         setLoading(false);
-    }, [jobUuid]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [jobUuid]);
 
     useEffect(() => { load(); }, [load]);
     useTableChanges([ScheduledJob.table, ScheduledJobRun.table], load);

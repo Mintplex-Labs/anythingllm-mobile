@@ -37,7 +37,7 @@ const native: ScheduledJobsNativeModule | null =
     Platform.OS === 'android' && NativeModules.ScheduledJobsModule ? NativeModules.ScheduledJobsModule : null;
 
 function log(text: string, ...args: any[]) {
-    console.log(`\x1b[36m[ScheduledJobs:scheduler] ${text}\x1b[0m`, ...args); // eslint-disable-line no-console
+    console.log(`\x1b[36m[ScheduledJobs:scheduler] ${text}\x1b[0m`, ...args);
 }
 
 /** Whether this platform can run jobs while the app is closed. */

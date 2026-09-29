@@ -43,7 +43,7 @@ export default function Register({ connectionUrl, registrationToken, updateStatu
                 console.error('Registration error:', error);
                 updateStatus({
                     status: 'error',
-                    message: !!error ? (error as Error)?.message : t('connect.verify.register_failed'),
+                    message: error ? (error as Error)?.message : t('connect.verify.register_failed'),
                 });
             }
         }

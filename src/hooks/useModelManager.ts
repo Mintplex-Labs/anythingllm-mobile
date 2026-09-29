@@ -166,7 +166,7 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
    * (see `utils/models/mmproj`).
    */
   const downloadModel = async (model: any, runPrefetchChecks = true) => {
-    if (!!modelDownloadUrl) return false;
+    if (modelDownloadUrl) return false;
 
     const isDownloaded = await checkModelDownloaded(model.downloadUrl);
     if (isDownloaded) return await selectModel(model);

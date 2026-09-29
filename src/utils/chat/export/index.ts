@@ -24,7 +24,7 @@ export type SavedThreadExport = {
 };
 
 function log(message: any, ...args: any[]) {
-  console.log('\x1b[36m[ThreadExport]\x1b[0m', message, ...args); // eslint-disable-line no-console
+  console.log('\x1b[36m[ThreadExport]\x1b[0m', message, ...args);
 }
 
 /**

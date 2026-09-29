@@ -71,7 +71,7 @@ export default function ModelCard({
         overflow: 'hidden',
         ...(containerStyle as object),
       }}
-      className={`flex flex-row rounded-lg gap-x-4 items-center ${!!downloadProgress ? 'disabled:opacity-50' : ''}`}
+      className={`flex flex-row rounded-lg gap-x-4 items-center ${downloadProgress ? 'disabled:opacity-50' : ''}`}
       disabled={!!modelDownloadUrl && modelDownloadUrl !== model.downloadUrl}
       onPress={isDownloading && onCancelDownload ? onCancelDownload : onSelect}
     >

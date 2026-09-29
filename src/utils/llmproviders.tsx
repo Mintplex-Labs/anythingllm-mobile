@@ -281,11 +281,33 @@ export function providerDisplayName(value: string): string {
  * provider can be saved and used for chatting.
  */
 export function validateProviderConfig(provider: string, config: ProviderConfig): string | null {
+  const connectionError = validateProviderConnection(provider, config);
+  if (connectionError) return connectionError;
+  if (!config.model?.trim()) return i18n.t('providers.validation.model_required');
+  return null;
+}
+
+/**
+ * Like `validateProviderConfig` but ignores the model - answers "do we have enough to reach
+ * the provider and list its models?".
+ */
+export function validateProviderConnection(provider: string, config: ProviderConfig): string | null {
   const definition = findProviderDefinition(provider);
   if (!definition) return i18n.t('providers.validation.unknown_provider');
   if (definition.fields.apiKey === 'required' && !config.apiKey?.trim()) return i18n.t('providers.validation.api_key_required');
   if (definition.fields.baseUrl && !config.baseUrl?.trim()) return i18n.t('providers.validation.base_url_required');
   if (definition.fields.region && !config.region?.trim()) return i18n.t('providers.validation.region_required');
-  if (!config.model?.trim()) return i18n.t('providers.validation.model_required');
   return null;
+}
+
+/**
+ * Base URLs to try when discovering models. Many OpenAI-compatible servers
+ * (LM Studio, vLLM, llama.cpp, ...) mount their routes under /v1, and users
+ * frequently omit it, so we retry with /v1 appended when the URL lacks it.
+ */
+export function baseUrlCandidates(baseUrl: string, requiresBaseUrl: boolean): string[] {
+  if (!requiresBaseUrl) return [baseUrl];
+  const trimmed = baseUrl.replace(/\/+$/, '');
+  if (/\/v\d+$/i.test(trimmed)) return [trimmed];
+  return [trimmed, `${trimmed}/v1`];
 }

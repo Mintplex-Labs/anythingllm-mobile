@@ -630,7 +630,17 @@
       "list_failed_title": "无法列出 {{provider}} 的模型",
       "list_failed_description": "该提供商未返回任何模型。检查端点是否可达并支持模型列表，或在设置中手动设置模型。",
       "try_again": "重试",
-      "search_provider_models": "搜索 {{provider}} 模型"
+      "search_provider_models": "搜索 {{provider}} 模型",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_other": "再按 {{count}} 次打开开发者工具",
     "thread_menu": {

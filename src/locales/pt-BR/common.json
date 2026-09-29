@@ -686,7 +686,17 @@
       "list_failed_title": "Não foi possível listar os modelos para {{provider}}",
       "list_failed_description": "Este provedor não retornou nenhum modelo. Verifique se o endpoint está acessível e suporta a listagem de modelos, ou defina o modelo manualmente nas configurações.",
       "try_again": "Tentar novamente",
-      "search_provider_models": "Pesquisar modelos {{provider}}"
+      "search_provider_models": "Pesquisar modelos {{provider}}",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_many": "Toque {{count}} repetidamente para abrir as ferramentas de desenvolvedor",
     "dev_shortcut_hint_one": "Toque {{count}} novamente para abrir as ferramentas de desenvolvedor",

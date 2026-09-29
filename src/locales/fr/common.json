@@ -686,7 +686,17 @@
       "list_failed_title": "Impossible de lister les modèles pour {{provider}}",
       "list_failed_description": "Ce fournisseur n'a retourné aucun modèle. Vérifiez que le point de terminaison est accessible et prend en charge le listage des modèles, ou définissez le modèle manuellement dans Paramètres.",
       "try_again": "Réessayer",
-      "search_provider_models": "Rechercher les modèles {{provider}}"
+      "search_provider_models": "Rechercher les modèles {{provider}}",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_many": "Appuyez {{count}} fois de plus pour ouvrir les outils de développeur",
     "dev_shortcut_hint_one": "Appuyez {{count}} fois de plus pour ouvrir les outils de développeur",

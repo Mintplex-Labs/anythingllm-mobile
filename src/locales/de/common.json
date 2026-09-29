@@ -658,7 +658,17 @@
       "list_failed_title": "Modelle für {{provider}} konnten nicht aufgelistet werden",
       "list_failed_description": "Dieser Anbieter hat keine Modelle zurückgegeben. Überprüfen Sie, dass der Endpunkt erreichbar ist und das Auflisten von Modellen unterstützt, oder legen Sie das Modell manuell in den Einstellungen fest.",
       "try_again": "Erneut versuchen",
-      "search_provider_models": "{{provider}}-Modelle durchsuchen"
+      "search_provider_models": "{{provider}}-Modelle durchsuchen",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_one": "Drücken Sie {{count}} Mal mehr, um Entwicklertools zu öffnen",
     "dev_shortcut_hint_other": "Drücken Sie {{count}} Mal mehr, um Entwicklertools zu öffnen",

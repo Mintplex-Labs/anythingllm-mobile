@@ -630,7 +630,17 @@
       "list_failed_title": "Không thể liệt kê các mô hình cho {{provider}}",
       "list_failed_description": "Nhà cung cấp này không trả về bất kỳ mô hình nào. Kiểm tra xem điểm cuối có thể truy cập được và hỗ trợ liệt kê mô hình, hoặc đặt mô hình theo cách thủ công trong Cài đặt.",
       "try_again": "Thử lại",
-      "search_provider_models": "Tìm kiếm mô hình {{provider}}"
+      "search_provider_models": "Tìm kiếm mô hình {{provider}}",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_other": "Nhấn {{count}} lần nữa để mở công cụ nhà phát triển",
     "thread_menu": {

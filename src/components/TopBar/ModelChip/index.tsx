@@ -54,6 +54,15 @@ import { IAvailableModel } from '@/utils/AiProviders/baseOpenAILikeProvider';
 import useLowMemoryStatus from '@/hooks/useLowMemoryStatus';
 import LowMemoryModal, { LOW_MEMORY_COLOR } from '@/components/LowMemoryModal';
 import { useTranslation } from 'react-i18next';
+import useProviderSwitcher from '@/hooks/useProviderSwitcher';
+import ProviderPicker, { ProviderBar } from './ProviderPicker';
+import ProviderConnectForm from './ProviderConnectForm';
+
+// Provider bar height (see `ProviderBar`) and the gap below it - keeps status messages centered under it.
+const HEADER_HEIGHT = 44;
+const HEADER_GAP = 16;
+// Short model lists fit on screen - only offer search once there is something to sift through.
+const MIN_MODELS_FOR_SEARCH = 5;
 
 function getPresetModelName(llmPreferences: { provider: string; config: any }) {
   if (llmPreferences.provider !== 'native') return llmPreferences.config.model;
@@ -177,12 +186,87 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
         keyboardBehavior="extend"
         keyboardBlurBehavior="restore"
         onDismiss={() => dismissSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION)}>
-        {LLMProvider?.isExternalProvider
-          ? <ExternalProviderModels bottomSheetRef={bottomSheetRef} />
-          : <AvailableModels bottomSheetRef={bottomSheetRef} />}
+        <ModelSheetContent bottomSheetRef={bottomSheetRef} />
       </BottomSheetModal>
     </Fragment>
   );
+}
+
+/**
+ * Close the sheet from inside its own content. Goes through the sheet ref rather than
+ * `dismissSheet()` so the active sheet only clears in `onDismiss`, once the close animation is done.
+ * Clearing it early lets the prompt input re-present while this sheet is still closing - the two
+ * collide in the modal stack and the chip sheet can never be opened again.
+ */
+function closeModelSheet(bottomSheetRef: React.RefObject<BottomSheetModal>) {
+  bottomSheetRef.current?.dismiss();
+}
+
+type SheetView ={ name: 'models' } | { name: 'providers' } | { name: 'connect'; provider: string };
+
+/**
+ * Everything inside the chip's sheet: the model list for the active provider, plus an in-sheet
+ * provider picker and connection form so switching providers never has to leave the chat.
+ * The sheet unmounts its content on dismiss, so it always reopens on the model list.
+ */
+function ModelSheetContent({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheetModal> }) {
+  const { llmPreferences, LLMProvider } = useLlmPreference();
+  const { configuredProviders, switchProvider } = useProviderSwitcher();
+  const [view, setView] = useState<SheetView>({ name: 'models' });
+  const [isSwitching, setIsSwitching] = useState(false);
+
+  // Ready-to-use providers switch in one tap; anything else needs its connection details first.
+  const pickProvider = async (provider: string) => {
+    if (provider === llmPreferences.provider) return setView({ name: 'models' });
+    if (provider !== 'native' && !configuredProviders.includes(provider)) return setView({ name: 'connect', provider });
+    setIsSwitching(true);
+    try {
+      await switchProvider(provider);
+      setView({ name: 'models' });
+    } finally {
+      setIsSwitching(false);
+    }
+  };
+
+  if (view.name === 'providers') {
+    return (
+      <ProviderPicker
+        currentProvider={llmPreferences.provider}
+        configuredProviders={configuredProviders}
+        disabled={isSwitching}
+        onSelect={pickProvider}
+        onEdit={provider => setView({ name: 'connect', provider })}
+        onBack={() => setView({ name: 'models' })}
+      />
+    );
+  }
+
+  if (view.name === 'connect') {
+    return (
+      <ProviderConnectForm
+        key={view.provider}
+        provider={view.provider}
+        onBack={() => setView({ name: 'providers' })}
+        onSave={async (config, listed) => {
+          await switchProvider(view.provider, config);
+          // A hand-typed model means the provider cannot list models, so there is no list to show.
+          if (listed) setView({ name: 'models' });
+          else closeModelSheet(bottomSheetRef);
+        }}
+      />
+    );
+  }
+
+  const header = <ProviderBar provider={llmPreferences.provider} onPress={() => setView({ name: 'providers' })} />;
+  return LLMProvider?.isExternalProvider
+    ? (
+      <ExternalProviderModels
+        bottomSheetRef={bottomSheetRef}
+        header={header}
+        onEditConnection={() => setView({ name: 'connect', provider: llmPreferences.provider })}
+      />
+    )
+    : <AvailableModels bottomSheetRef={bottomSheetRef} header={header} />;
 }
 
 export interface AvailableModel {
@@ -201,8 +285,10 @@ export interface AvailableModel {
 
 function AvailableModels({
   bottomSheetRef,
+  header,
 }: {
   bottomSheetRef: React.RefObject<BottomSheetModal>;
+  header: React.ReactNode;
 }) {
   const { t } = useTranslation();
   const { llmPreferences, LLMProvider, isLoading, fetchLLMPreference } = useLlmPreference();
@@ -308,36 +394,39 @@ function AvailableModels({
 
   return (
     <View className="flex flex-col items-center justify-center gap-y-4 w-full h-full">
-      <View className="flex flex-row items-center mx-6 bg-[#27282A] rounded-lg px-4">
-        <MagnifyingGlass size={20} weight="bold" color="white" />
-        <TextInput
-          ref={searchInputRef}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholder={t('common.search')}
-          placeholderTextColor="#9F9FA0"
-          className="flex-1 h-[38px] ml-2 text-white"
-          scrollEnabled={false}
-          onFocus={() => {
-            bottomSheetRef.current?.snapToIndex(1);
-            const keyboardListener = Keyboard.addListener(
-              'keyboardDidShow',
-              () => {
-                bottomSheetRef.current?.snapToIndex(1);
-              },
-            );
+      {header}
+      {availableModels.length >= MIN_MODELS_FOR_SEARCH && (
+        <View className="flex flex-row items-center mx-6 bg-[#27282A] rounded-lg px-4">
+          <MagnifyingGlass size={20} weight="bold" color="white" />
+          <TextInput
+            ref={searchInputRef}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder={t('common.search')}
+            placeholderTextColor="#9F9FA0"
+            className="flex-1 h-[38px] ml-2 text-white"
+            scrollEnabled={false}
+            onFocus={() => {
+              bottomSheetRef.current?.snapToIndex(1);
+              const keyboardListener = Keyboard.addListener(
+                'keyboardDidShow',
+                () => {
+                  bottomSheetRef.current?.snapToIndex(1);
+                },
+              );
 
-            return () => {
-              keyboardListener.remove();
-            };
-          }}
-        />
-        {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => setSearchQuery('')}>
-            <X size={20} color="white" />
-          </TouchableOpacity>
-        )}
-      </View>
+              return () => {
+                keyboardListener.remove();
+              };
+            }}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <X size={20} color="white" />
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
       {!filteredModels.length && (
         <View className="w-full px-5" style={{ gap: 12 }}>
           <Text className="text-white text-sm text-center pt-4">
@@ -399,12 +488,15 @@ function AvailableModels({
  */
 function ExternalProviderModels({
   bottomSheetRef,
+  header,
+  onEditConnection,
 }: {
   bottomSheetRef: React.RefObject<BottomSheetModal>;
+  header: React.ReactNode;
+  onEditConnection: () => void;
 }) {
   const { t } = useTranslation();
   const { llmPreferences, LLMProvider, updateLLMPreference, providerToName } = useLlmPreference();
-  const { dismissSheet } = useBottomSheet();
   const [models, setModels] = useState<IAvailableModel[]>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [searchQuery, setSearchQuery] = useState('');
@@ -454,11 +546,11 @@ function ExternalProviderModels({
 
   const selectModel = async (modelId: string) => {
     if (isSaving) return;
-    if (modelId === currentModelId) return dismissSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION);
+    if (modelId === currentModelId) return closeModelSheet(bottomSheetRef);
     setIsSaving(true);
     try {
       await updateLLMPreference(llmPreferences.provider, { ...llmPreferences.config, model: modelId });
-      dismissSheet(BOTTOM_SHEET_NAMES.MODEL_CHIP_SELECTION);
+      closeModelSheet(bottomSheetRef);
     } catch (error) {
       console.error('[ModelChip] Failed to switch model', error);
       showToast(t('top_bar.model_chip.switch_failed'));
@@ -469,53 +561,65 @@ function ExternalProviderModels({
 
   if (status === 'loading') {
     return (
-      <VisibleSheetCenter style={{ gap: 12 }}>
-        <ActivityIndicator size="large" color="white" />
-        <Text className="text-[#9F9FA0] text-sm">{t('top_bar.model_chip.loading_models', { provider: providerName })}</Text>
-      </VisibleSheetCenter>
+      <View className="w-full" style={{ gap: HEADER_GAP }}>
+        {header}
+        <VisibleSheetCenter inset={HEADER_HEIGHT + HEADER_GAP} style={{ gap: 12 }}>
+          <ActivityIndicator size="large" color="white" />
+          <Text className="text-[#9F9FA0] text-sm">{t('top_bar.model_chip.loading_models', { provider: providerName })}</Text>
+        </VisibleSheetCenter>
+      </View>
     );
   }
 
   if (status === 'error') {
     return (
-      <VisibleSheetCenter style={{ gap: 12, paddingHorizontal: 32 }}>
-        <WarningCircle size={40} color="#f87171" weight="bold" />
-        <Text className="text-white text-base font-semibold text-center">
-          {t('top_bar.model_chip.list_failed_title', { provider: providerName })}
-        </Text>
-        <Text className="text-[#9F9FA0] text-sm text-center">
-          {t('top_bar.model_chip.list_failed_description')}
-        </Text>
-        <TouchableOpacity
-          onPress={fetchModels}
-          className="flex flex-row items-center bg-white/10 rounded-lg px-4 py-2 mt-2"
-          style={{ gap: 6 }}>
-          <ArrowsClockwise size={16} color="white" weight="bold" />
-          <Text className="text-white text-sm font-medium">{t('top_bar.model_chip.try_again')}</Text>
-        </TouchableOpacity>
-      </VisibleSheetCenter>
+      <View className="w-full" style={{ gap: HEADER_GAP }}>
+        {header}
+        <VisibleSheetCenter inset={HEADER_HEIGHT + HEADER_GAP} style={{ gap: 12, paddingHorizontal: 32 }}>
+          <WarningCircle size={40} color="#f87171" weight="bold" />
+          <Text className="text-white text-base font-semibold text-center">
+            {t('top_bar.model_chip.list_failed_title', { provider: providerName })}
+          </Text>
+          <Text className="text-[#9F9FA0] text-sm text-center">
+            {t('top_bar.model_chip.list_failed_description')}
+          </Text>
+          <TouchableOpacity
+            onPress={fetchModels}
+            className="flex flex-row items-center bg-white/10 rounded-lg px-4 py-2 mt-2"
+            style={{ gap: 6 }}>
+            <ArrowsClockwise size={16} color="white" weight="bold" />
+            <Text className="text-white text-sm font-medium">{t('top_bar.model_chip.try_again')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onEditConnection} className="px-4 py-2">
+            <Text className="text-[#7cd4fd] text-sm font-medium">{t('top_bar.model_chip.edit_connection')}</Text>
+          </TouchableOpacity>
+        </VisibleSheetCenter>
+      </View>
     );
   }
 
   return (
     <View className="flex flex-col items-center justify-center gap-y-4 w-full h-full">
-      <View className="flex flex-row items-center mx-6 bg-[#27282A] rounded-lg px-4">
-        <MagnifyingGlass size={20} weight="bold" color="white" />
-        <TextInput
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholder={t('top_bar.model_chip.search_provider_models', { provider: providerName })}
-          placeholderTextColor="#9F9FA0"
-          className="flex-1 h-[38px] ml-2 text-white"
-          scrollEnabled={false}
-          onFocus={() => bottomSheetRef.current?.snapToIndex(1)}
-        />
-        {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => setSearchQuery('')}>
-            <X size={20} color="white" />
-          </TouchableOpacity>
-        )}
-      </View>
+      {header}
+      {models.length >= MIN_MODELS_FOR_SEARCH && (
+        <View className="flex flex-row items-center mx-6 bg-[#27282A] rounded-lg px-4">
+          <MagnifyingGlass size={20} weight="bold" color="white" />
+          <TextInput
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder={t('top_bar.model_chip.search_provider_models', { provider: providerName })}
+            placeholderTextColor="#9F9FA0"
+            className="flex-1 h-[38px] ml-2 text-white"
+            scrollEnabled={false}
+            onFocus={() => bottomSheetRef.current?.snapToIndex(1)}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <X size={20} color="white" />
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
       {!filteredModels.length && (
         <Text className="text-white text-sm text-center pt-4 px-5">
           {t('top_bar.model_chip.no_models_found', { query: searchQuery })}
@@ -565,12 +669,13 @@ function ExternalProviderModels({
  * the content area is always as tall as the highest snap point, so plain `justify-center` puts a
  * status message near the bottom edge (or off screen) while the sheet sits at its lower snap point.
  * Tracks the sheet position so it stays centered while dragging between snap points too.
+ * `inset` is the height of anything rendered above it (eg. the provider bar).
  */
-function VisibleSheetCenter({ children, style }: { children: React.ReactNode; style?: ViewStyle }) {
+function VisibleSheetCenter({ children, style, inset = 0 }: { children: React.ReactNode; style?: ViewStyle; inset?: number }) {
   const { animatedPosition, animatedLayoutState } = useBottomSheetInternal();
   const visibleStyle = useAnimatedStyle(() => {
     const { containerHeight, handleHeight } = animatedLayoutState.value;
-    return { height: Math.max(0, containerHeight - animatedPosition.value - handleHeight) };
+    return { height: Math.max(0, containerHeight - animatedPosition.value - handleHeight - inset) };
   });
   return (
     <Animated.View style={[{ width: '100%', alignItems: 'center', justifyContent: 'center' }, style, visibleStyle]}>

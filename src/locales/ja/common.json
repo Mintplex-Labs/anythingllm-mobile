@@ -630,7 +630,17 @@
       "list_failed_title": "{{provider}}のモデルをリストできません",
       "list_failed_description": "このプロバイダーはモデルを返しませんでした。エンドポイントが到達可能でモデルリストをサポートしているか確認するか、設定でモデルを手動で設定してください。",
       "try_again": "もう一度やり直してください",
-      "search_provider_models": "{{provider}}モデルを検索"
+      "search_provider_models": "{{provider}}モデルを検索",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_other": "開発者ツールを開くには、{{count}}回さらに押してください",
     "thread_menu": {

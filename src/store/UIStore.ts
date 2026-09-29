@@ -15,6 +15,7 @@ export type StorageKeys =
   'anythingllm_external_connections' |
   'hf_imported_models' |
   'provider_config_cache' |
+  'native_config_cache' |
   'memories' |
   'fs_cleanup_last_run' |
   'highlights_last_seen_version';
@@ -59,6 +60,7 @@ export class UIStore {
     'anythingllm_external_connections',
     'hf_imported_models',
     'provider_config_cache',
+    'native_config_cache',
     'memories',
     'fs_cleanup_last_run',
     'highlights_last_seen_version',

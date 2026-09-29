@@ -51,6 +51,8 @@ class Telemetry {
             /** The selection-toolbar entry was switched on or off in Settings > Special tools (payload: enabled) */
             QUICK_CONTEXT_TOGGLED: 'quick_context_toggled',
             TOOL_CALLED: 'tool_called',
+            /** The user switched a tool on from the tools sheet (payload: tool, provider) - disabling and suggestion-chip toggles are not tracked */
+            TOOL_ENABLED: 'tool_enabled',
             LLM_SETTINGS_UPDATED: 'llm_settings_updated',
             /** A chat thread was exported (txt/md/json/pdf) and handed to the share sheet */
             THREAD_EXPORTED: 'thread_exported',

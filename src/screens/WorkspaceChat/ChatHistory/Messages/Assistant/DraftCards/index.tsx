@@ -17,7 +17,6 @@ import {
     type TextDraft,
 } from "@/utils/messaging";
 import { describeRecurrence, formatEventWhen, normalizeCalendarEvent, saveCalendarEventOnIos, type CalendarEvent } from "@/utils/calendar";
-import useCalendarApp from "@/hooks/useCalendarApp";
 import { showToast } from "@/utils/Notification";
 import { focusCalendarEvent, focusEmailDraft, focusTextDraft } from "@/screens/WorkspaceChat/ChatHistory/DraftSheet";
 
@@ -26,7 +25,7 @@ import { focusCalendarEvent, focusEmailDraft, focusTextDraft } from "@/screens/W
  * (`text_draft` / `email_draft` / `calendar_event_creation` actions, plus the old `sms` / `email`
  * link actions). We can never send or save them ourselves - tapping one opens the app picker
  * (DraftSheet), which hands the draft to the user's messaging, mail or calendar app (events can
- * also be saved as an .ics file). The last app used shows on the card.
+ * also be saved as an .ics file). The last app used replaces the card's generic icon.
  *
  * Like file cards, they wait for the reply to finish so streaming text does not keep pushing them around.
  */
@@ -105,7 +104,6 @@ function TextDraftCard({ draft }: { draft: TextDraft }) {
             icon={<ChatCircleText size={22} color={COLORS.accent} />}
             title={title}
             app={preferred}
-            actionLabel={t('chat.draft.open')}
             accessibilityLabel={t('chat.text_draft.open_label', { recipient: title })}
             onPress={open}>
             <Text numberOfLines={1} style={{ color: COLORS.muted }} className="text-sm">{draft.body}</Text>
@@ -134,7 +132,6 @@ function EmailDraftCard({ draft }: { draft: EmailDraft }) {
             icon={<EnvelopeSimple size={22} color={COLORS.accent} />}
             title={subject}
             app={preferred}
-            actionLabel={t('chat.draft.open')}
             accessibilityLabel={t('chat.email_draft.open_label', { subject })}
             onPress={open}>
             <Text numberOfLines={1} style={{ color: COLORS.muted }} className="text-xs">{recipient}</Text>
@@ -146,8 +143,6 @@ function EmailDraftCard({ draft }: { draft: EmailDraft }) {
 function CalendarEventCard({ event }: { event: CalendarEvent }) {
     const { t } = useTranslation();
     const preferred = usePreferredApp('calendar');
-    // Before the user has picked one, show the calendar app Android would use.
-    const defaultApp = useCalendarApp();
     const detail = event.eventLocation || event.description;
 
     function add() {
@@ -168,8 +163,7 @@ function CalendarEventCard({ event }: { event: CalendarEvent }) {
         <DraftCard
             icon={<CalendarPlus size={22} color={COLORS.accent} />}
             title={event.title}
-            app={preferred ?? defaultApp}
-            actionLabel={t('chat.calendar_event.add')}
+            app={preferred}
             accessibilityLabel={t('chat.calendar_event.open_label', { title: event.title })}
             onPress={add}>
             <Text numberOfLines={1} style={{ color: COLORS.muted }} className="text-xs">
@@ -180,16 +174,19 @@ function CalendarEventCard({ event }: { event: CalendarEvent }) {
     );
 }
 
-/** Shared shell: icon chip, a title with detail lines under it, and the app it opens in (or the action label) on the right */
-function DraftCard({ icon, title, app, actionLabel, accessibilityLabel, onPress, children }: {
+/**
+ * Shared shell: on the left the app the draft last opened in (a generic icon until one is picked),
+ * a title with detail lines under it, and "Open" on the right.
+ */
+function DraftCard({ icon, title, app, accessibilityLabel, onPress, children }: {
     icon: ReactNode;
     title: string;
     app: MessagingApp | null;
-    actionLabel: string;
     accessibilityLabel: string;
     onPress: () => void;
     children: ReactNode;
 }) {
+    const { t } = useTranslation();
     return (
         <TouchableOpacity
             onPress={onPress}
@@ -198,21 +195,21 @@ function DraftCard({ icon, title, app, actionLabel, accessibilityLabel, onPress,
             accessibilityLabel={accessibilityLabel}
             style={{ backgroundColor: COLORS.card, borderRadius: 12, padding: 12, gap: 12, width: '100%' }}
             className="flex flex-row items-center">
-            <View style={{ backgroundColor: COLORS.iconChip, width: 40, height: 40 }} className="flex items-center justify-center rounded-lg">
-                {icon}
-            </View>
+            {app?.icon ? (
+                <Image source={{ uri: app.icon }} accessibilityLabel={app.label} style={{ width: 40, height: 40, borderRadius: 8 }} />
+            ) : (
+                <View style={{ backgroundColor: COLORS.iconChip, width: 40, height: 40 }} className="flex items-center justify-center rounded-lg">
+                    {icon}
+                </View>
+            )}
             <View style={{ flex: 1, minWidth: 0, gap: 2 }} className="flex flex-col">
                 <Text numberOfLines={1} style={{ color: COLORS.text }} className="text-base font-medium">{title}</Text>
                 {children}
             </View>
-            {app?.icon ? (
-                <Image source={{ uri: app.icon }} accessibilityLabel={app.label} style={{ width: 26, height: 26, borderRadius: 13 }} />
-            ) : (
-                <View className="flex flex-row items-center" style={{ gap: 2 }}>
-                    <Text style={{ color: COLORS.accent }} className="text-sm font-medium">{actionLabel}</Text>
-                    <CaretRight size={14} color={COLORS.accent} />
-                </View>
-            )}
+            <View className="flex flex-row items-center" style={{ gap: 2 }}>
+                <Text style={{ color: COLORS.accent }} className="text-sm font-medium">{t('chat.draft.open')}</Text>
+                <CaretRight size={14} color={COLORS.accent} />
+            </View>
         </TouchableOpacity>
     );
 }

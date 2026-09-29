@@ -259,7 +259,6 @@
       "open_failed": "Could not open a mail app"
     },
     "calendar_event": {
-      "add": "Add",
       "open_label": "Add {{title}} to your calendar",
       "all_day": "All day",
       "open_failed": "Could not open a calendar app",

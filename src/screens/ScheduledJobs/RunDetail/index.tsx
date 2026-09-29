@@ -14,6 +14,8 @@ import { type DynamicChatMessage } from '@/screens/WorkspaceChat/ChatHistory';
 import ActivityChain from '@/screens/WorkspaceChat/ChatHistory/Messages/Assistant/ActivityChain';
 import TextResponseContainer from '@/screens/WorkspaceChat/ChatHistory/Messages/Assistant/TextResponse';
 import FileDownloadCards from '@/screens/WorkspaceChat/ChatHistory/Messages/Assistant/FileDownloadCard';
+import { CalendarEventCards, EmailDraftCards, TextDraftCards } from '@/screens/WorkspaceChat/ChatHistory/Messages/Assistant/DraftCards';
+import DraftSheet from '@/screens/WorkspaceChat/ChatHistory/DraftSheet';
 import ActionsContainer from '@/screens/WorkspaceChat/ChatHistory/Messages/Assistant/Actions';
 import { formatDuration } from '@/screens/WorkspaceChat/ChatHistory/Messages/Assistant/ActivityChain/utils';
 import ScheduledJobRunner from '@/utils/ScheduledJobs/runner';
@@ -185,12 +187,16 @@ export default function RunDetail({ jobUuid, runUuid, onBack }: { jobUuid: strin
                                 )}
                                 <TextResponseContainer uuid={run.uuid} textResponse={chat.response?.textResponse} metrics={chat.response?.metrics} />
                                 <FileDownloadCards actions={chat.response?.actions} isLoading={chat.isLoading} />
+                                <TextDraftCards actions={chat.response?.actions} isLoading={chat.isLoading} />
+                                <EmailDraftCards actions={chat.response?.actions} isLoading={chat.isLoading} />
+                                <CalendarEventCards actions={chat.response?.actions} isLoading={chat.isLoading} />
                                 <ActionsContainer actions={chat.response?.actions} />
                             </View>
                         )}
                     </View>
                 </ScrollView>
             )}
+            <DraftSheet />
         </SafeView>
     );
 }

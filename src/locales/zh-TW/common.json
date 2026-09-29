@@ -174,7 +174,10 @@
     "citations": {
       "title": "引文",
       "score": "評分：{{score}}",
-      "sources": "來源"
+      "sources": "來源",
+      "calendar_untitled": "（無標題）",
+      "calendar_open_label": "在您的日曆中開啟 {{title}}",
+      "calendar_open_failed": "無法在日曆應用程式中開啟活動"
     },
     "message_actions": {
       "copied": "已複製到剪貼簿",
@@ -224,6 +227,58 @@
       "open_label": "開啟排定工作 {{name}}",
       "subtitle": "排定的工作 · {{schedule}}",
       "view": "檢視"
+    },
+    "draft": {
+      "open": "開啟",
+      "send_with": "發送",
+      "more_apps": "更多應用",
+      "open_in_failed": "無法開啟 {{app}}"
+    },
+    "text_draft": {
+      "new_message": "新訊息",
+      "open_label": "開啟文字訊息草稿 {{recipient}}",
+      "no_number_hint": "未提供電話號碼 - 應用程式會詢問您要將訊息發送給誰。",
+      "copy": "複製訊息",
+      "copied": "已複製訊息",
+      "share_title": "發送訊息",
+      "open_failed": "無法開啟訊息應用程式"
+    },
+    "email_draft": {
+      "new_email": "新的電子郵件",
+      "no_subject": "(無主題)",
+      "no_recipient": "目前沒有收件人",
+      "open_label": "開啟電子郵件草稿 {{subject}}",
+      "cc": "抄送：{{addresses}}",
+      "no_recipient_hint": "未提供電子郵件地址 - 請在您的郵件應用程式中新增收件人。",
+      "copy": "複製電子郵件",
+      "copied": "郵件已複製",
+      "share_title": "發送電子郵件",
+      "open_failed": "無法開啟郵件應用程式"
+    },
+    "calendar_event": {
+      "open_label": "將 {{title}} 新增至您的日曆",
+      "all_day": "全天",
+      "open_failed": "無法開啟日曆應用程式",
+      "saved": "已新增至您的日曆",
+      "permission_denied": "在「設定」中，允許AnythingLLM存取日曆，以便新增活動。",
+      "add_with": "新增",
+      "save_ics": "儲存 .ics 檔案",
+      "save_failed": "無法儲存活動檔案",
+      "no_app_hint": "未找到任何日曆應用程式 - 請將事件儲存為 .ics 檔案，以便在任何地方匯入。",
+      "reminders_hint": "日曆應用程式會自行設定提醒 - 這些提醒會儲存在 .ics 檔案中。",
+      "invitees": "邀請 {{addresses}}",
+      "reminders": "提醒：{{times}}",
+      "reminder_before": "{{time}} 之前",
+      "reminder_at_start": "開始時間",
+      "repeat": {
+        "daily_other": "每 {{count}} 天",
+        "weekly_other": "每 {{count}} 週",
+        "monthly_other": "每 {{count}} 個月",
+        "yearly_other": "每 {{count}} 年",
+        "on_days": "{{repeat}}（{{days}}）",
+        "until": "{{repeat}}，直到 {{date}}",
+        "times_other": "{{repeat}}，共 {{count}} 次"
+      }
     },
     "metrics": {
       "tokens_other": "{{value}} 個標記"
@@ -276,7 +331,6 @@
       "title": "工具",
       "group_status": "{{enabled}} 的 {{total}} 開",
       "app_connections": "應用程式連線",
-      "group_files_note": "{{description}} 檔案會保留在此裝置上，直到您在設定中清除暫存檔案。",
       "needs_cloud_model": "{{description}} 需要雲端模型。",
       "unavailable_on_device": "灰顯的工具不適用於裝置上的模型。切換至雲端提供者以使用它們。"
     },
@@ -439,7 +493,13 @@
     "groups": {
       "create_files": {
         "name": "建立檔案",
-        "description": "讓助手撰寫您可以下載及分享的文件。"
+        "description": "讓助手撰寫您可以下載及分享的文件。",
+        "note": "讓助手為您撰寫文件，您可以下載並分享。文件將儲存在此裝置上，直到您在設定中清除臨時檔案。"
+      },
+      "calendar": {
+        "name": "日曆",
+        "description": "讓助理為您新增活動，並查看日曆上的內容。",
+        "note": "助理創建的活動將自動儲存在您的日曆應用程式中，方便您查看。 為了查看日曆，需要授權日曆應用程式存取您的日曆。"
       }
     },
     "reranker": {
@@ -456,6 +516,7 @@
     "calendar_event_reading": {
       "name": "讀取日曆",
       "description": "使用助手讀取您的日曆事件。",
+      "permission_denied": "日曆存取權限未被允許。請在手機設定中為AnythingLLM開啟此權限，以便讀取您的日曆。",
       "status_date": "正在讀取您的日曆 {{date}}",
       "status_today": "正在讀取您今天的日曆",
       "status_tomorrow": "正在讀取您明天的日曆",
@@ -507,15 +568,13 @@
     "draft_email": {
       "name": "草擬電子郵件",
       "description": "使用助手為您草擬電子郵件。",
-      "status_drafting": "草擬電子郵件「{{subject}}」",
-      "open_action": "開啟草擬電子郵件"
+      "status_drafting": "草擬電子郵件「{{subject}}」"
     },
     "draft_text": {
       "name": "草擬文字",
       "description": "使用助手為您草擬文字。",
       "status_drafting_to": "正在為 {{recipient}} 草擬文字",
-      "status_drafting": "正在草擬文字訊息",
-      "open_action": "開啟草擬文字"
+      "status_drafting": "正在草擬文字訊息"
     },
     "get_time": {
       "name": "取得時間",

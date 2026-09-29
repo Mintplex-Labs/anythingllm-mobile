@@ -8,7 +8,8 @@ import { SheetHeader, MUTED_TEXT } from "@/components/SheetMenu";
 import uiStore from "@/store/UIStore";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useLLMPreference from "@/hooks/useLLMPreference";
-import ToolsManager, { TOOL_GROUPS, toolSupportsProvider, type ToolGroupId, type ToolManagerTool } from "@/utils/ToolsManager";
+import ToolsManager, { TOOL_GROUPS, toolSupportsProvider, type ToolGroup, type ToolGroupId, type ToolManagerTool } from "@/utils/ToolsManager";
+import { showToast } from "@/utils/Notification";
 import { useTranslation } from "react-i18next";
 
 type ToolsPage = 'menu' | ToolGroupId;
@@ -36,7 +37,12 @@ export default function ToolsActionSheet() {
 
     const handleToggle = async (tool: ToolManagerTool) => {
         if (!isToolAvailable(tool)) return;
-        const newToolSettings = { ...toolSettings, [tool.id]: !toolSettings[tool.id] };
+        const turningOn = !toolSettings[tool.id];
+        if (turningOn && tool.requestPermission && !(await tool.requestPermission())) {
+            if (tool.permissionDeniedMessage) showToast(tool.permissionDeniedMessage);
+            return;
+        }
+        const newToolSettings = { ...toolSettings, [tool.id]: turningOn };
         setToolSettings(newToolSettings);
         await uiStore.setToStorage('tools', newToolSettings);
         ToolsManager.resetTools();
@@ -64,9 +70,23 @@ export default function ToolsActionSheet() {
         if (isSheetActive(BOTTOM_SHEET_NAMES.TOOLS)) presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true);
     };
 
-    const ungroupedDefaultTools = ToolsManager.configurableTools.filter(tool => tool.category === 'default' && !tool.group);
-    const appConnectionTools = ToolsManager.configurableTools.filter(tool => tool.category === 'appConnections');
+    const ungroupedTools = (category: ToolManagerTool['category']) => ToolsManager.configurableTools.filter(tool => tool.category === category && !tool.group);
     const groupTools = (groupId: ToolGroupId) => ToolsManager.configurableTools.filter(tool => tool.group === groupId);
+    const groupRows = (category: ToolManagerTool['category']) => (Object.values(TOOL_GROUPS) as ToolGroup[])
+        .filter(group => group.category === category)
+        .map(group => {
+            const tools = groupTools(group.id);
+            const enabledCount = tools.filter(isToolOn).length;
+            return (
+                <ToolGroupRow
+                    key={group.id}
+                    title={group.name}
+                    description={group.description}
+                    status={enabledCount === 0 ? t('common.off') : t('chat.tools.group_status', { enabled: enabledCount, total: tools.length })}
+                    onPress={() => setPage(group.id)}
+                />
+            );
+        });
 
     return (
         <BottomSheetModal
@@ -86,27 +106,16 @@ export default function ToolsActionSheet() {
                             <Text className='text-white text-lg font-medium'>{t('chat.tools.title')}</Text>
                         </View>
                         <View style={{ gap: 16 }} className='flex flex-col items-start justify-between'>
-                            {ungroupedDefaultTools.map(tool => (
+                            {ungroupedTools('default').map(tool => (
                                 <TogglableItem key={tool.id} primary title={tool.name} description={tool.description} isOn={isToolOn(tool)} onToggle={() => handleToggle(tool)} />
                             ))}
-                            {(Object.keys(TOOL_GROUPS) as ToolGroupId[]).map(groupId => {
-                                const tools = groupTools(groupId);
-                                const enabledCount = tools.filter(isToolOn).length;
-                                return (
-                                    <ToolGroupRow
-                                        key={groupId}
-                                        title={TOOL_GROUPS[groupId].name}
-                                        description={TOOL_GROUPS[groupId].description}
-                                        status={enabledCount === 0 ? t('common.off') : t('chat.tools.group_status', { enabled: enabledCount, total: tools.length })}
-                                        onPress={() => setPage(groupId)}
-                                    />
-                                );
-                            })}
+                            {groupRows('default')}
                             <View style={{ gap: 12 }} className='flex w-full flex-col items-start justify-between'>
                                 <Text className='text-white font-semibold'>{t('chat.tools.app_connections')}</Text>
-                                {appConnectionTools.map(tool => (
+                                {ungroupedTools('appConnections').map(tool => (
                                     <TogglableItem key={tool.id} title={tool.name} description={tool.description} isOn={isToolOn(tool)} onToggle={() => handleToggle(tool)} />
                                 ))}
+                                {groupRows('appConnections')}
                             </View>
                         </View>
                     </>
@@ -148,7 +157,7 @@ function ToolGroupPage({
         <View>
             <SheetHeader title={group.name} onBack={onBack} />
             <Text style={{ color: MUTED_TEXT, marginBottom: 20 }} className='text-sm'>
-                {t('chat.tools.group_files_note', { description: group.description })}
+                {group.note}
             </Text>
             <View style={{ gap: 16 }} className='flex flex-col items-start justify-between'>
                 {tools.map(tool => {

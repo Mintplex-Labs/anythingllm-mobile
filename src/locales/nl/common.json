@@ -177,7 +177,10 @@
     "citations": {
       "title": "Citaten",
       "score": "Score: {{score}}",
-      "sources": "Bronnen"
+      "sources": "Bronnen",
+      "calendar_untitled": "(Geen titel)",
+      "calendar_open_label": "Open {{title}} in uw agenda",
+      "calendar_open_failed": "Kon het evenement niet openen in een agenda-app."
     },
     "message_actions": {
       "copied": "Naar klembord gekopieerd",
@@ -227,6 +230,63 @@
       "open_label": "Open geplande taak {{name}}",
       "subtitle": "Geplande taak · {{schedule}}",
       "view": "Bekijken"
+    },
+    "draft": {
+      "open": "Openen",
+      "send_with": "Verzenden met",
+      "more_apps": "Meer apps",
+      "open_in_failed": "Kon {{app}} niet openen"
+    },
+    "text_draft": {
+      "new_message": "Nieuw bericht",
+      "open_label": "Ontwerp van een tekstbericht naar {{recipient}}",
+      "no_number_hint": "Geen telefoonnummer is opgegeven – de app vraagt wie het bericht moet worden gestuurd.",
+      "copy": "Bericht kopiëren",
+      "copied": "Bericht gekopieerd",
+      "share_title": "Bericht sturen met",
+      "open_failed": "Kon de app voor berichten niet openen"
+    },
+    "email_draft": {
+      "new_email": "Nieuwe e-mail",
+      "no_subject": "(Geen onderwerp)",
+      "no_recipient": "Geen ontvanger nog gekozen",
+      "open_label": "Nieuwe e-mail: {{subject}}",
+      "cc": "CC: {{addresses}}",
+      "no_recipient_hint": "Geen e-mailadres is opgegeven – voeg de ontvanger toe in je e-mailapp.",
+      "copy": "E-mail kopiëren",
+      "copied": "E-mail gekopieerd",
+      "share_title": "Stuur e-mail met",
+      "open_failed": "Kon e-mail-app niet openen"
+    },
+    "calendar_event": {
+      "open_label": "Voeg {{title}} toe aan uw agenda",
+      "all_day": "Hele dag",
+      "open_failed": "Kon de kalender-app niet openen",
+      "saved": "Toegevoegd aan uw agenda",
+      "permission_denied": "Geef toegang tot de agenda voor AnythingLLM in de instellingen om evenementen toe te voegen.",
+      "add_with": "Toevoegen",
+      "save_ics": "Opslaan als .ics bestand",
+      "save_failed": "Kon het evenementbestand niet opslaan.",
+      "no_app_hint": "Geen kalender-app gevonden – sla het evenement op als een .ics-bestand om het in elke app te importeren.",
+      "reminders_hint": "Kalender-apps stellen zelf herinneringen in – het .ics-bestand slaat deze op.",
+      "invitees": "Uitnodigingen {{addresses}}",
+      "reminders": "Herinnering: {{times}}",
+      "reminder_before": "{{time}} voor",
+      "reminder_at_start": "bij het begin",
+      "repeat": {
+        "daily_one": "Dagelijks",
+        "daily_other": "Elke {{count}} dagen",
+        "weekly_one": "Per week",
+        "weekly_other": "Elke {{count}} weken",
+        "monthly_one": "Per maand",
+        "monthly_other": "Elke {{count}} maand",
+        "yearly_one": "Per jaar",
+        "yearly_other": "Elke {{count}} jaar",
+        "on_days": "{{repeat}} op {{days}}",
+        "until": "{{repeat}} tot {{date}}",
+        "times_one": "{{repeat}}, ooit",
+        "times_other": "{{repeat}}, {{count}} keer(en)"
+      }
     },
     "metrics": {
       "tokens_one": "{{value}} token",
@@ -281,7 +341,6 @@
       "title": "Hulpmiddelen",
       "group_status": "{{enabled}} van {{total}} aan",
       "app_connections": "App-verbindingen",
-      "group_files_note": "{{description}} Bestanden worden op dit apparaat bewaard tot je tijdelijke bestanden in instellingen wist.",
       "needs_cloud_model": "{{description}} Heeft een cloudmodel nodig.",
       "unavailable_on_device": "Vervaagde hulpmiddelen zijn niet beschikbaar met het model op het apparaat. Schakel over naar een cloudprovider om ze te gebruiken."
     },
@@ -452,7 +511,13 @@
     "groups": {
       "create_files": {
         "name": "Bestanden maken",
-        "description": "Laat de assistent documenten schrijven die je kunt downloaden en delen."
+        "description": "Laat de assistent documenten schrijven die je kunt downloaden en delen.",
+        "note": "Laat de assistent documenten maken die je kunt downloaden en delen. Bestanden worden op dit apparaat opgeslagen totdat je de tijdelijke bestanden in de instellingen verwijdert."
+      },
+      "calendar": {
+        "name": "Agenda",
+        "description": "Laat de assistent evenementen toevoegen aan je agenda en lees wat er staat.",
+        "note": "Evenementen die de assistent voor je aanmaakt, worden automatisch toegevoegd aan je agenda, zodat je ze kunt opslaan. Om je agenda te gebruiken, heb je toegang nodig, wat gevraagd wordt wanneer je de app start."
       }
     },
     "reranker": {
@@ -469,6 +534,7 @@
     "calendar_event_reading": {
       "name": "Agenda lezen",
       "description": "Gebruik de assistent om je agendagebeurtenissen te lezen.",
+      "permission_denied": "Toegang tot de agenda is niet mogelijk. Schakel dit in voor AnythingLLM in de instellingen van je telefoon om je agenda te bekijken.",
       "status_date": "Je agenda lezen voor {{date}}",
       "status_today": "Je agenda lezen voor vandaag",
       "status_tomorrow": "Je agenda lezen voor morgen",
@@ -527,15 +593,13 @@
     "draft_email": {
       "name": "E-mail concepten",
       "description": "Gebruik de assistent om een e-mail voor je op te stellen.",
-      "status_drafting": "E-mail \"{{subject}}\" opstellen",
-      "open_action": "Open concept e-mail"
+      "status_drafting": "E-mail \"{{subject}}\" opstellen"
     },
     "draft_text": {
       "name": "Sms-concept",
       "description": "Gebruik de assistent om een sms voor je op te stellen.",
       "status_drafting_to": "Een sms opstellen naar {{recipient}}",
-      "status_drafting": "Een sms-bericht opstellen",
-      "open_action": "Open concept sms"
+      "status_drafting": "Een sms-bericht opstellen"
     },
     "get_time": {
       "name": "Huidige tijd",

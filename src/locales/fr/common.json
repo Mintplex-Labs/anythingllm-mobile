@@ -180,7 +180,10 @@
     "citations": {
       "title": "Citations",
       "score": "Score : {{score}}",
-      "sources": "Sources"
+      "sources": "Sources",
+      "calendar_untitled": "(Pas de titre)",
+      "calendar_open_label": "Ouvrir {{title}} dans votre calendrier",
+      "calendar_open_failed": "Impossible d'ouvrir l'événement dans une application de calendrier."
     },
     "message_actions": {
       "copied": "Copié dans le presse-papiers",
@@ -230,6 +233,68 @@
       "open_label": "Ouvrir le travail programmé {{name}}",
       "subtitle": "Travail programmé · {{schedule}}",
       "view": "Afficher"
+    },
+    "draft": {
+      "open": "Ouvrir",
+      "send_with": "Envoyer",
+      "more_apps": "Plus d'applications",
+      "open_in_failed": "Impossible d'ouvrir {{app}}"
+    },
+    "text_draft": {
+      "new_message": "Nouveau message",
+      "open_label": "Ouvrir brouillon de message {{recipient}}",
+      "no_number_hint": "Aucun numéro de téléphone n'a été fourni – l'application vous demandera à qui l'envoyer.",
+      "copy": "Copier le message",
+      "copied": "Message copié",
+      "share_title": "Envoyer un message avec",
+      "open_failed": "Impossible d'ouvrir l'application de messagerie."
+    },
+    "email_draft": {
+      "new_email": "Nouvel e-mail",
+      "no_subject": "(Aucun sujet)",
+      "no_recipient": "Aucun destinataire sélectionné",
+      "open_label": "Ouvrir brouillon d'e-mail {{subject}}",
+      "cc": "CC : {{addresses}}",
+      "no_recipient_hint": "Aucune adresse e-mail n'a été fournie – ajoutez le destinataire dans votre application de messagerie.",
+      "copy": "Copier l'e-mail",
+      "copied": "Courriel copié",
+      "share_title": "Envoyer un e-mail",
+      "open_failed": "Impossible d'ouvrir l'application de messagerie."
+    },
+    "calendar_event": {
+      "open_label": "Ajouter {{title}} à votre calendrier",
+      "all_day": "Tout au long de la journée",
+      "open_failed": "Impossible d'ouvrir l'application calendrier.",
+      "saved": "Ajouté à votre calendrier",
+      "permission_denied": "Activer l'accès au calendrier pour AnythingLLM dans les paramètres pour ajouter des événements.",
+      "add_with": "Ajouter",
+      "save_ics": "Enregistrer le fichier .ics",
+      "save_failed": "Impossible de sauvegarder le fichier de l'événement.",
+      "no_app_hint": "Aucune application de calendrier détectée. Sauvegardez l'événement au format .ics pour pouvoir l'importer facilement.",
+      "reminders_hint": "Les applications de calendrier définissent leurs propres rappels – le fichier .ics les conserve.",
+      "invitees": "Invitations {{addresses}}",
+      "reminders": "Rappel : {{times}}",
+      "reminder_before": "{{time}} avant",
+      "reminder_at_start": "Au démarrage",
+      "repeat": {
+        "daily_many": "Tous les {{count}} jours",
+        "daily_one": "Quotidien",
+        "daily_other": "Tous les {{count}} jours",
+        "weekly_many": "Chaque {{count}} semaine(s)",
+        "weekly_one": "Hebdomadaire",
+        "weekly_other": "Chaque {{count}} semaine(s)",
+        "monthly_many": "Tous les {{count}} mois",
+        "monthly_one": "Mensuel",
+        "monthly_other": "Tous les {{count}} mois",
+        "yearly_many": "Tous les {{count}} ans",
+        "yearly_one": "Annuel",
+        "yearly_other": "Tous les {{count}} ans",
+        "on_days": "{{repeat}} sur {{days}}",
+        "until": "{{repeat}} jusqu'à {{date}}",
+        "times_many": "{{repeat}}, {{count}} fois",
+        "times_one": "{{repeat}}, une fois",
+        "times_other": "{{repeat}}, {{count}} fois"
+      }
     },
     "metrics": {
       "tokens_many": "{{value}} jetons",
@@ -286,7 +351,6 @@
       "title": "Outils",
       "group_status": "{{enabled}} sur {{total}} activés",
       "app_connections": "Connexions d'application",
-      "group_files_note": "{{description}} Les fichiers sont conservés sur cet appareil jusqu'à ce que vous effaciez les fichiers temporaires dans les paramètres.",
       "needs_cloud_model": "{{description}} Nécessite un modèle cloud.",
       "unavailable_on_device": "Les outils grisés ne sont pas disponibles avec le modèle sur appareil. Passez à un fournisseur cloud pour les utiliser."
     },
@@ -465,7 +529,13 @@
     "groups": {
       "create_files": {
         "name": "Créer des fichiers",
-        "description": "Permettez à l'assistant d'écrire des documents que vous pouvez télécharger et partager."
+        "description": "Permettez à l'assistant d'écrire des documents que vous pouvez télécharger et partager.",
+        "note": "Laissez l'assistant rédiger des documents que vous pourrez télécharger et partager. Les fichiers sont conservés sur cet appareil jusqu'à ce que vous supprimiez les fichiers temporaires dans les paramètres."
+      },
+      "calendar": {
+        "name": "Calendrier",
+        "description": "Laissez l'assistant ajouter des événements à votre calendrier et lire son contenu.",
+        "note": "Les événements que l'assistant crée sont automatiquement ajoutés à votre calendrier, pour que vous puissiez les enregistrer. L'accès à votre calendrier est nécessaire pour consulter les événements, et il est demandé lors de l'activation."
       }
     },
     "reranker": {
@@ -482,6 +552,7 @@
     "calendar_event_reading": {
       "name": "Lire le calendrier",
       "description": "Utilisez l'assistant pour lire vos événements de calendrier.",
+      "permission_denied": "L'accès au calendrier n'est pas autorisé. Activez-le pour AnythingLLM dans les paramètres de votre téléphone pour consulter votre calendrier.",
       "status_date": "Lecture de votre calendrier pour {{date}}",
       "status_today": "Lecture de votre calendrier pour aujourd'hui",
       "status_tomorrow": "Lecture de votre calendrier pour demain",
@@ -547,15 +618,13 @@
     "draft_email": {
       "name": "Rédiger un e-mail",
       "description": "Utilisez l'assistant pour rédiger un e-mail pour vous.",
-      "status_drafting": "Rédaction de l'e-mail \"{{subject}}\"",
-      "open_action": "Ouvrir l'e-mail brouillon"
+      "status_drafting": "Rédaction de l'e-mail \"{{subject}}\""
     },
     "draft_text": {
       "name": "Rédiger un message",
       "description": "Utilisez l'assistant pour rédiger un message pour vous.",
       "status_drafting_to": "Rédaction d'un message à {{recipient}}",
-      "status_drafting": "Rédaction d'un message texte",
-      "open_action": "Ouvrir le message brouillon"
+      "status_drafting": "Rédaction d'un message texte"
     },
     "get_time": {
       "name": "Obtenir l'heure",

@@ -183,7 +183,10 @@
     "citations": {
       "title": "Cytaty",
       "score": "Wynik: {{score}}",
-      "sources": "Źródła"
+      "sources": "Źródła",
+      "calendar_untitled": "(brak tytułu)",
+      "calendar_open_label": "Otwórz {{title}} w swoim kalendarzu",
+      "calendar_open_failed": "Nie udało się otworzyć wydarzenia w aplikacji kalendarza."
     },
     "message_actions": {
       "copied": "Skopiowano do schowka",
@@ -233,6 +236,73 @@
       "open_label": "Otwórz zaplanowane zadanie {{name}}",
       "subtitle": "Zaplanowane zadanie · {{schedule}}",
       "view": "Widok"
+    },
+    "draft": {
+      "open": "Otwórz",
+      "send_with": "Wyślij",
+      "more_apps": "Więcej aplikacji",
+      "open_in_failed": "Nie udało się otworzyć {{app}}"
+    },
+    "text_draft": {
+      "new_message": "Nowa wiadomość",
+      "open_label": "Otwórz projekt wiadomości tekstowej {{recipient}}",
+      "no_number_hint": "Nie podano numeru telefonu – aplikacja zapyta, do kogo ma je wysłać.",
+      "copy": "Skopiuj wiadomość",
+      "copied": "Wiadomość skopiowana",
+      "share_title": "Wyślij wiadomość",
+      "open_failed": "Nie udało się otworzyć aplikacji do komunikacji."
+    },
+    "email_draft": {
+      "new_email": "Nowa wiadomość",
+      "no_subject": "(brak tematu)",
+      "no_recipient": "Brak odbiorcy",
+      "open_label": "Otwórz wersję roboczą wiadomości {{subject}}",
+      "cc": "Kopia do: {{addresses}}",
+      "no_recipient_hint": "Nie podano adresu e-mail – dodaj go w swojej aplikacji poczty.",
+      "copy": "Skopiuj e-mail",
+      "copied": "E-mail skopiowany",
+      "share_title": "Wyślij e-mail",
+      "open_failed": "Nie udało się otworzyć aplikacji poczty."
+    },
+    "calendar_event": {
+      "open_label": "Dodaj {{title}} do swojego kalendarza",
+      "all_day": "Cały dzień",
+      "open_failed": "Nie udało się otworzyć aplikacji kalendarza.",
+      "saved": "Dodano do kalendarza",
+      "permission_denied": "W ustawieniach zezwól na dostęp do kalendarza dla AnythingLLM, aby dodawać wydarzenia.",
+      "add_with": "Dodaj",
+      "save_ics": "Zapisz plik .ics",
+      "save_failed": "Nie udało się zapisać pliku wydarzenia",
+      "no_app_hint": "Nie znaleziono aplikacji kalendarza – zapisz wydarzenie jako plik .ics, aby móc go zaimportować w dowolnym miejscu.",
+      "reminders_hint": "Aplikacje kalendarza tworzą własne przypomnienia – plik .ics przechowuje je.",
+      "invitees": "Zaproszenia {{addresses}}",
+      "reminders": "Przypomnienie: {{times}}",
+      "reminder_before": "{{time}} wcześniej",
+      "reminder_at_start": "na początku",
+      "repeat": {
+        "daily_few": "{{count}} dni",
+        "daily_many": "{{count}} dni",
+        "daily_one": "Codziennie",
+        "daily_other": "{{count}} dni",
+        "weekly_few": "Co {{count}} tygodni",
+        "weekly_many": "Co {{count}} tygodni",
+        "weekly_one": "Cotygodnio",
+        "weekly_other": "Co {{count}} tygodni",
+        "monthly_few": "Raz w {{count}} miesiące",
+        "monthly_many": "Raz w {{count}} miesiące",
+        "monthly_one": "Miesięcznie",
+        "monthly_other": "Raz w {{count}} miesiące",
+        "yearly_few": "Co {{count}} lat",
+        "yearly_many": "Co {{count}} lat",
+        "yearly_one": "Rocznie",
+        "yearly_other": "Co {{count}} lat",
+        "on_days": "{{repeat}} w {{days}}",
+        "until": "{{repeat}} do {{date}}",
+        "times_few": "{{repeat}}, {{count}} razy",
+        "times_many": "{{repeat}}, {{count}} razy",
+        "times_one": "{{repeat}}, wcześniej",
+        "times_other": "{{repeat}}, {{count}} razy"
+      }
     },
     "metrics": {
       "tokens_few": "{{value}} tokeny",
@@ -291,7 +361,6 @@
       "title": "Narzędzia",
       "group_status": "{{enabled}} z {{total}} włączonych",
       "app_connections": "Połączenia aplikacji",
-      "group_files_note": "{{description}} Pliki są przechowywane na tym urządzeniu do czasu wyczyszczenia plików tymczasowych w ustawieniach.",
       "needs_cloud_model": "{{description}} Wymaga modelu chmury.",
       "unavailable_on_device": "Wyszarzone narzędzia nie są dostępne w modelu działającym na urządzeniu. Przełącz się na dostawcę chmury, aby ich używać."
     },
@@ -478,7 +547,13 @@
     "groups": {
       "create_files": {
         "name": "Utwórz pliki",
-        "description": "Pozwól asystentowi pisać dokumenty, które możesz pobrać i udostępniać."
+        "description": "Pozwól asystentowi pisać dokumenty, które możesz pobrać i udostępniać.",
+        "note": "Pozwól asystentowi tworzyć dokumenty, które możesz pobrać i udostępnić. Pliki są przechowywane na tym urządzeniu, aż usuniesz tymczasowe pliki w ustawieniach."
+      },
+      "calendar": {
+        "name": "Kalendarz",
+        "description": "Pozwól asystentowi dodawać wydarzenia do Twojego kalendarza i czytać, co w nim znajduje się.",
+        "note": "Spotkania, które asystent tworzy, zostaną automatycznie dodane do Twojego kalendarza, abyś mógł je zapisać. Aby dodać spotkania, potrzebne jest połączenie z kalendarzem, które zostaniesz poproszony o aktywację podczas uruchamiania aplikacji."
       }
     },
     "reranker": {
@@ -495,6 +570,7 @@
     "calendar_event_reading": {
       "name": "Przeczytaj kalendarz",
       "description": "Użyj asystenta, aby przeczytać zdarzenia Twojego kalendarza.",
+      "permission_denied": "Dostęp do kalendarza nie był możliwy. Włącz go dla AnythingLLM w ustawieniach telefonu, aby korzystać z kalendarza.",
       "status_date": "Czytanie Twojego kalendarza dla {{date}}",
       "status_today": "Czytanie Twojego kalendarza na dzisiaj",
       "status_tomorrow": "Czytanie Twojego kalendarza na jutro",
@@ -567,15 +643,13 @@
     "draft_email": {
       "name": "Wersja robocza wiadomości e-mail",
       "description": "Użyj asystenta do napisania wiadomości e-mail dla Ciebie.",
-      "status_drafting": "Redagowanie wiadomości e-mail \"{{subject}}\"",
-      "open_action": "Otwórz wersję roboczą wiadomości e-mail"
+      "status_drafting": "Redagowanie wiadomości e-mail \"{{subject}}\""
     },
     "draft_text": {
       "name": "Wersja robocza tekstu",
       "description": "Użyj asystenta do napisania wiadomości tekstowej dla Ciebie.",
       "status_drafting_to": "Redagowanie wiadomości tekstowej do {{recipient}}",
-      "status_drafting": "Redagowanie wiadomości tekstowej",
-      "open_action": "Otwórz wersję roboczą tekstu"
+      "status_drafting": "Redagowanie wiadomości tekstowej"
     },
     "get_time": {
       "name": "Pobierz czas",

@@ -177,7 +177,10 @@
     "citations": {
       "title": "Zitate",
       "score": "Bewertung: {{score}}",
-      "sources": "Quellen"
+      "sources": "Quellen",
+      "calendar_untitled": "(kein Titel)",
+      "calendar_open_label": "Öffne {{title}} in deinem Kalender",
+      "calendar_open_failed": "Konnte das Ereignis nicht in einer Kalender-App öffnen"
     },
     "message_actions": {
       "copied": "In Zwischenablage kopiert",
@@ -227,6 +230,63 @@
       "open_label": "Geplanten Job {{name}} öffnen",
       "subtitle": "Geplanter Job · {{schedule}}",
       "view": "Anzeigen"
+    },
+    "draft": {
+      "open": "Öffnen",
+      "send_with": "Senden",
+      "more_apps": "Weitere Apps",
+      "open_in_failed": "Konnte {{app}} nicht öffnen"
+    },
+    "text_draft": {
+      "new_message": "Neue Nachricht",
+      "open_label": "Öffnen Sie den Entwurf für die Textnachricht {{recipient}}",
+      "no_number_hint": "Keine Telefonnummer angegeben – die App fragt, an wen die Nachricht gesendet werden soll.",
+      "copy": "Nachricht kopieren",
+      "copied": "Nachricht kopiert",
+      "share_title": "Nachricht senden mit",
+      "open_failed": "Keine Möglichkeit, eine Chat-App zu öffnen"
+    },
+    "email_draft": {
+      "new_email": "Neuer E-Mail",
+      "no_subject": "(kein Thema)",
+      "no_recipient": "Noch kein Empfänger",
+      "open_label": "E-Mail-Entwurf öffnen {{subject}}",
+      "cc": "CC: {{addresses}}",
+      "no_recipient_hint": "Keine E-Mail-Adresse angegeben – fügen Sie den Empfänger in Ihrer E-Mail-App hinzu.",
+      "copy": "E-Mail kopieren",
+      "copied": "E-Mail kopiert",
+      "share_title": "E-Mail senden mit",
+      "open_failed": "Keine E-Mail-App konnte geöffnet werden"
+    },
+    "calendar_event": {
+      "open_label": "Fügen Sie {{title}} zu Ihrem Kalender hinzu",
+      "all_day": "Ganztägig",
+      "open_failed": "Keine Kalender-App konnte geöffnet werden",
+      "saved": "Zur Kalender hinzugefügt",
+      "permission_denied": "Erlaube Zugriff auf den Kalender für AnythingLLM in den Einstellungen, um Ereignisse hinzuzufügen.",
+      "add_with": "Hinzufügen",
+      "save_ics": "Datei speichern (.ics)",
+      "save_failed": "Fehler beim Speichern der Ereignisdatei",
+      "no_app_hint": "Kein Kalender-App gefunden – Speichern Sie das Ereignis als .ics-Datei, um es überall importieren zu können.",
+      "reminders_hint": "Kalender-Apps erstellen ihre eigenen Erinnerungen – die .ics-Datei speichert diese.",
+      "invitees": "Einladungen {{addresses}}",
+      "reminders": "Erinnerung: {{times}}",
+      "reminder_before": "{{time}} vorher",
+      "reminder_at_start": "Zu Beginn",
+      "repeat": {
+        "daily_one": "Täglich",
+        "daily_other": "Alle {{count}} Tage",
+        "weekly_one": "Wöchentlich",
+        "weekly_other": "Alle {{count}} Wochen",
+        "monthly_one": "Monatlich",
+        "monthly_other": "Alle {{count}} Monate",
+        "yearly_one": "Jährlich",
+        "yearly_other": "Alle {{count}} Jahre",
+        "on_days": "{{repeat}} in {{days}}",
+        "until": "{{repeat}} bis {{date}}",
+        "times_one": "{{repeat}}, einmal",
+        "times_other": "{{repeat}}, {{count}} Mal"
+      }
     },
     "metrics": {
       "tokens_one": "{{value}} Token",
@@ -281,7 +341,6 @@
       "title": "Tools",
       "group_status": "{{enabled}} von {{total}} an",
       "app_connections": "App-Verbindungen",
-      "group_files_note": "{{description}} Dateien werden auf diesem Gerät gespeichert, bis Sie temporäre Dateien in den Einstellungen löschen.",
       "needs_cloud_model": "{{description}} Benötigt ein Cloud-Modell.",
       "unavailable_on_device": "Grau unterlegte Tools sind beim lokalen Modell nicht verfügbar. Wechseln Sie zu einem Cloud-Anbieter, um sie zu verwenden."
     },
@@ -452,7 +511,13 @@
     "groups": {
       "create_files": {
         "name": "Dateien erstellen",
-        "description": "Lassen Sie den Assistenten Dokumente schreiben, die Sie herunterladen und teilen können."
+        "description": "Lassen Sie den Assistenten Dokumente schreiben, die Sie herunterladen und teilen können.",
+        "note": "Lassen Sie den Assistenten Dokumente erstellen, die Sie herunterladen und teilen können. Die Dateien werden auf diesem Gerät gespeichert, bis Sie temporäre Dateien in den Einstellungen löschen."
+      },
+      "calendar": {
+        "name": "Kalender",
+        "description": "Lassen Sie den Assistenten Termine in Ihren Kalender eintragen und den Inhalt lesen.",
+        "note": "Ereignisse, die der Assistent erstellt, werden automatisch in Ihrer Kalender-App gespeichert. Um Ereignisse zu speichern, benötigen Sie Zugriff auf Ihren Kalender, der beim Start abgefragt wird."
       }
     },
     "reranker": {
@@ -469,6 +534,7 @@
     "calendar_event_reading": {
       "name": "Kalender lesen",
       "description": "Verwenden Sie den Assistenten, um Ihre Kalenderereignisse zu lesen.",
+      "permission_denied": "Der Zugriff auf den Kalender ist nicht erlaubt. Aktivieren Sie ihn für AnythingLLM in den Einstellungen Ihres Telefons, um Ihren Kalender anzuzeigen.",
       "status_date": "Ihren Kalender für {{date}} lesen",
       "status_today": "Ihren Kalender für heute lesen",
       "status_tomorrow": "Ihren Kalender für morgen lesen",
@@ -527,15 +593,13 @@
     "draft_email": {
       "name": "E-Mail entwerfen",
       "description": "Verwenden Sie den Assistenten, um eine E-Mail für Sie zu entwerfen.",
-      "status_drafting": "E-Mail \"{{subject}}\" wird entworfen",
-      "open_action": "Entwurfs-E-Mail öffnen"
+      "status_drafting": "E-Mail \"{{subject}}\" wird entworfen"
     },
     "draft_text": {
       "name": "Text entwerfen",
       "description": "Verwenden Sie den Assistenten, um einen Text für Sie zu entwerfen.",
       "status_drafting_to": "Text an {{recipient}} wird entworfen",
-      "status_drafting": "Eine Textnachricht wird entworfen",
-      "open_action": "Entwurfs-Text öffnen"
+      "status_drafting": "Eine Textnachricht wird entworfen"
     },
     "get_time": {
       "name": "Zeit abrufen",

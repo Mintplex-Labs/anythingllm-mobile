@@ -174,7 +174,10 @@
     "citations": {
       "title": "인용",
       "score": "점수: {{score}}",
-      "sources": "출처"
+      "sources": "출처",
+      "calendar_untitled": "(제목 없음)",
+      "calendar_open_label": "{{title}}를 캘린더에 추가",
+      "calendar_open_failed": "캘린더 앱에서 이벤트 열기 실패"
     },
     "message_actions": {
       "copied": "클립보드에 복사됨",
@@ -224,6 +227,58 @@
       "open_label": "예약된 작업 {{name}} 열기",
       "subtitle": "예약된 작업 · {{schedule}}",
       "view": "보기"
+    },
+    "draft": {
+      "open": "열기",
+      "send_with": "보내기",
+      "more_apps": "더 많은 앱",
+      "open_in_failed": "{{app}}를 열 수 없습니다."
+    },
+    "text_draft": {
+      "new_message": "새로운 메시지",
+      "open_label": "텍스트 메시지 초안 열기 {{recipient}}",
+      "no_number_hint": "전화번호는 제공되지 않습니다. 앱은 누구에게 보내야 할지 묻습니다.",
+      "copy": "메시지 복사",
+      "copied": "메시지 복사",
+      "share_title": "메시지 보내기",
+      "open_failed": "메시징 앱을 열 수 없음"
+    },
+    "email_draft": {
+      "new_email": "새로운 이메일",
+      "no_subject": "(제목 없음)",
+      "no_recipient": "수신자 없음",
+      "open_label": "이메일 초안 열기 {{subject}}",
+      "cc": "참조: {{addresses}}",
+      "no_recipient_hint": "이메일 주소가 제공되지 않았습니다. 이메일 앱에 수신자를 추가하세요.",
+      "copy": "이메일 복사",
+      "copied": "이메일 복사",
+      "share_title": "이메일 보내기",
+      "open_failed": "이메일 앱을 열 수 없습니다."
+    },
+    "calendar_event": {
+      "open_label": "{{title}}를 캘린더에 추가",
+      "all_day": "하루 종일",
+      "open_failed": "캘린더 앱을 열 수 없습니다.",
+      "saved": "캘린더에 추가됨",
+      "permission_denied": "설정에서 AnythingLLM에 대한 캘린더 접근 권한을 허용하여 이벤트를 추가합니다.",
+      "add_with": "추가",
+      "save_ics": ".ics 파일 저장",
+      "save_failed": "이벤트 파일을 저장하지 못했습니다.",
+      "no_app_hint": "캘린더 앱을 찾을 수 없음 - .ics 파일로 이벤트를 저장하여 어디서든 가져올 수 있습니다.",
+      "reminders_hint": "캘린더 앱은 자체 알림을 설정합니다. .ics 파일은 이러한 알림을 저장합니다.",
+      "invitees": "초대 {{addresses}}",
+      "reminders": "알림: {{times}}",
+      "reminder_before": "{{time}} 이전",
+      "reminder_at_start": "시작 시",
+      "repeat": {
+        "daily_other": "{{count}}일마다",
+        "weekly_other": "매 {{count}} 주",
+        "monthly_other": "매 {{count}}개월마다",
+        "yearly_other": "{{count}}년마다",
+        "on_days": "{{repeat}}에서 {{days}}",
+        "until": "{{repeat}} 부터 {{date}} 까지",
+        "times_other": "{{repeat}}, {{count}}회"
+      }
     },
     "metrics": {
       "tokens_other": "{{value}}개 토큰"
@@ -276,7 +331,6 @@
       "title": "도구",
       "group_status": "{{enabled}}개 중 {{total}}개 켜짐",
       "app_connections": "앱 연결",
-      "group_files_note": "{{description}} 파일은 설정에서 임시 파일을 지울 때까지 이 기기에 유지됩니다.",
       "needs_cloud_model": "{{description}} 클라우드 모델이 필요합니다.",
       "unavailable_on_device": "회색으로 표시된 도구는 온디바이스 모델에서 사용할 수 없습니다. 클라우드 제공자로 전환하여 사용하세요."
     },
@@ -439,7 +493,13 @@
     "groups": {
       "create_files": {
         "name": "파일 만들기",
-        "description": "어시스턴트가 다운로드하고 공유할 수 있는 문서를 작성하도록 합니다."
+        "description": "어시스턴트가 다운로드하고 공유할 수 있는 문서를 작성하도록 합니다.",
+        "note": "어시스턴트가 생성한 문서를 다운로드하고 공유할 수 있도록 도와줍니다. 파일은 설정에서 임시 파일을 삭제할 때까지 이 장치에 보관됩니다."
+      },
+      "calendar": {
+        "name": "달력",
+        "description": "어시스턴트가 캘린더에 이벤트를 추가하고, 캘린더 내용을 읽어줍니다.",
+        "note": "비서가 생성한 이벤트는 자동으로 캘린더 앱에 저장됩니다. 캘린더를 사용하려면 캘린더 접근 권한을 요청합니다."
       }
     },
     "reranker": {
@@ -456,6 +516,7 @@
     "calendar_event_reading": {
       "name": "캘린더 읽기",
       "description": "어시스턴트를 사용하여 캘린더 이벤트를 읽습니다.",
+      "permission_denied": "일정 접근 권한이 없습니다. 휴대폰 설정에서 AnythingLLM를 켜서 일정을 확인하세요.",
       "status_date": "{{date}}의 캘린더를 읽는 중",
       "status_today": "오늘의 캘린더를 읽는 중",
       "status_tomorrow": "내일의 캘린더를 읽는 중",
@@ -507,15 +568,13 @@
     "draft_email": {
       "name": "이메일 초안",
       "description": "어시스턴트를 사용하여 이메일 초안을 작성합니다.",
-      "status_drafting": "이메일 \"{{subject}}\" 초안 작성 중",
-      "open_action": "초안 이메일 열기"
+      "status_drafting": "이메일 \"{{subject}}\" 초안 작성 중"
     },
     "draft_text": {
       "name": "텍스트 초안",
       "description": "어시스턴트를 사용하여 텍스트 초안을 작성합니다.",
       "status_drafting_to": "{{recipient}}에게 텍스트 초안 작성 중",
-      "status_drafting": "텍스트 메시지 초안 작성 중",
-      "open_action": "초안 텍스트 열기"
+      "status_drafting": "텍스트 메시지 초안 작성 중"
     },
     "get_time": {
       "name": "시간 가져오기",

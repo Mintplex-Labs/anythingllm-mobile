@@ -180,7 +180,10 @@
     "citations": {
       "title": "Citas",
       "score": "Puntuación: {{score}}",
-      "sources": "Fuentes"
+      "sources": "Fuentes",
+      "calendar_untitled": "(sin título)",
+      "calendar_open_label": "Abrir {{title}} en tu calendario",
+      "calendar_open_failed": "No se pudo abrir el evento en una aplicación de calendario."
     },
     "message_actions": {
       "copied": "Copiado al portapapeles",
@@ -230,6 +233,68 @@
       "open_label": "Abrir trabajo programado {{name}}",
       "subtitle": "Trabajo programado · {{schedule}}",
       "view": "Ver"
+    },
+    "draft": {
+      "open": "Abrir",
+      "send_with": "Enviar",
+      "more_apps": "Más aplicaciones",
+      "open_in_failed": "No se pudo abrir {{app}}"
+    },
+    "text_draft": {
+      "new_message": "Nuevo mensaje",
+      "open_label": "Abrir borrador de mensaje de texto {{recipient}}",
+      "no_number_hint": "No se proporcionó número de teléfono; la aplicación preguntará a quién enviarlo.",
+      "copy": "Copiar mensaje",
+      "copied": "Mensaje copiado",
+      "share_title": "Enviar mensaje con",
+      "open_failed": "No se pudo abrir la aplicación de mensajería."
+    },
+    "email_draft": {
+      "new_email": "Nuevo correo electrónico",
+      "no_subject": "(sin tema)",
+      "no_recipient": "Aún no se ha seleccionado destinatario.",
+      "open_label": "Abrir borrador de correo electrónico {{subject}}",
+      "cc": "C.C: {{addresses}}",
+      "no_recipient_hint": "No se proporcionó una dirección de correo electrónico: añádala en tu aplicación de correo.",
+      "copy": "Copiar correo electrónico",
+      "copied": "Correo copiado",
+      "share_title": "Enviar correo electrónico con",
+      "open_failed": "No se pudo abrir la aplicación de correo."
+    },
+    "calendar_event": {
+      "open_label": "Añadir {{title}} a tu calendario",
+      "all_day": "Todo el día",
+      "open_failed": "No se pudo abrir la aplicación de calendario.",
+      "saved": "Agregado a tu calendario",
+      "permission_denied": "Permita el acceso al calendario para AnythingLLM en la configuración para añadir eventos.",
+      "add_with": "Añadir",
+      "save_ics": "Guardar archivo .ics",
+      "save_failed": "No se pudo guardar el archivo del evento.",
+      "no_app_hint": "No se encontró ninguna aplicación de calendario. Guarde el evento como un archivo .ics para importarlo en cualquier lugar.",
+      "reminders_hint": "Las aplicaciones de calendario crean sus propios recordatorios; el archivo .ics los guarda.",
+      "invitees": "Invitaciones {{addresses}}",
+      "reminders": "Recordatorio: {{times}}",
+      "reminder_before": "{{time}} antes",
+      "reminder_at_start": "Al inicio",
+      "repeat": {
+        "daily_many": "Cada {{count}} días",
+        "daily_one": "Diario",
+        "daily_other": "Cada {{count}} días",
+        "weekly_many": "Cada {{count}} semana",
+        "weekly_one": "Semanal",
+        "weekly_other": "Cada {{count}} semana",
+        "monthly_many": "Cada {{count}} meses",
+        "monthly_one": "Mensual",
+        "monthly_other": "Cada {{count}} meses",
+        "yearly_many": "Cada {{count}} años",
+        "yearly_one": "Anual",
+        "yearly_other": "Cada {{count}} años",
+        "on_days": "{{repeat}} en {{days}}",
+        "until": "{{repeat}} hasta {{date}}",
+        "times_many": "{{repeat}}, {{count}} veces",
+        "times_one": "{{repeat}}, una vez",
+        "times_other": "{{repeat}}, {{count}} veces"
+      }
     },
     "metrics": {
       "tokens_many": "{{value}} tokens",
@@ -286,7 +351,6 @@
       "title": "Herramientas",
       "group_status": "{{enabled}} de {{total}} activado",
       "app_connections": "Conexiones de aplicación",
-      "group_files_note": "{{description}} Los archivos se mantienen en este dispositivo hasta que borra los archivos temporales en la configuración.",
       "needs_cloud_model": "{{description}} Necesita un modelo en la nube.",
       "unavailable_on_device": "Las herramientas atenuadas no están disponibles con el modelo local. Cambie a un proveedor en la nube para usarlas."
     },
@@ -465,7 +529,13 @@
     "groups": {
       "create_files": {
         "name": "Crear archivos",
-        "description": "Deje que el asistente escriba documentos que pueda descargar y compartir."
+        "description": "Deje que el asistente escriba documentos que pueda descargar y compartir.",
+        "note": "Permite que el asistente cree documentos que puedes descargar y compartir. Los archivos se guardan en este dispositivo hasta que elimines los archivos temporales en la configuración."
+      },
+      "calendar": {
+        "name": "Calendario",
+        "description": "Permite que el asistente añada eventos a tu calendario y lea su contenido.",
+        "note": "Los eventos que el asistente crea se guardan automáticamente en tu aplicación de calendario. Para acceder a tu calendario, es necesario que la aplicación tenga permiso para acceder a él."
       }
     },
     "reranker": {
@@ -482,6 +552,7 @@
     "calendar_event_reading": {
       "name": "Leer calendario",
       "description": "Use el asistente para leer sus eventos de calendario.",
+      "permission_denied": "El acceso al calendario no está permitido. Actívalo para AnythingLLM en la configuración de tu teléfono para leer tu calendario.",
       "status_date": "Leyendo su calendario para {{date}}",
       "status_today": "Leyendo su calendario para hoy",
       "status_tomorrow": "Leyendo su calendario para mañana",
@@ -547,15 +618,13 @@
     "draft_email": {
       "name": "Borrador de correo",
       "description": "Use el asistente para redactar un correo para usted.",
-      "status_drafting": "Redactando correo \"{{subject}}\"",
-      "open_action": "Abrir borrador de correo"
+      "status_drafting": "Redactando correo \"{{subject}}\""
     },
     "draft_text": {
       "name": "Borrador de texto",
       "description": "Use el asistente para redactar un texto para usted.",
       "status_drafting_to": "Redactando un texto a {{recipient}}",
-      "status_drafting": "Redactando un mensaje de texto",
-      "open_action": "Abrir borrador de texto"
+      "status_drafting": "Redactando un mensaje de texto"
     },
     "get_time": {
       "name": "Obtener hora",

@@ -1,7 +1,8 @@
 import { Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import ToggleSwitch from '@/components/ToggleSwitch';
-import ToolsManager, { TOOL_GROUPS, type ToolGroupId, type ToolManagerTool } from '@/utils/ToolsManager';
+import ToolsManager, { TOOL_GROUPS, type ToolGroup, type ToolManagerTool } from '@/utils/ToolsManager';
+import { showToast } from '@/utils/Notification';
 import { Card, JOB_COLORS, SectionLabel } from '../components';
 
 /**
@@ -11,17 +12,29 @@ import { Card, JOB_COLORS, SectionLabel } from '../components';
  */
 export default function ToolPicker({ selected, onChange }: { selected: string[]; onChange: (ids: string[]) => void }) {
     const { t } = useTranslation();
-    const toggle = (tool: ToolManagerTool) => {
-        onChange(selected.includes(tool.id) ? selected.filter((id) => id !== tool.id) : [...selected, tool.id]);
+    const toggle = async (tool: ToolManagerTool) => {
+        if (selected.includes(tool.id)) return onChange(selected.filter((id) => id !== tool.id));
+        // A run has nobody to answer a permission dialog - ask now, while the user is here.
+        if (tool.requestPermission && !(await tool.requestPermission())) {
+            if (tool.permissionDeniedMessage) showToast(tool.permissionDeniedMessage);
+            return;
+        }
+        onChange([...selected, tool.id]);
     };
 
     const eligible = ToolsManager.scheduledJobEligibleTools;
     const ungrouped = eligible.filter((tool) => tool.category === 'default' && !tool.group);
-    const appConnections = eligible.filter((tool) => tool.category === 'appConnections');
-    const groups = (Object.keys(TOOL_GROUPS) as ToolGroupId[]).map((groupId) => ({
-        ...TOOL_GROUPS[groupId],
-        tools: eligible.filter((tool) => tool.group === groupId),
-    }));
+    const appConnections = eligible.filter((tool) => tool.category === 'appConnections' && !tool.group);
+    const groupsIn = (category: ToolManagerTool['category']) => (Object.values(TOOL_GROUPS) as ToolGroup[])
+        .filter((group) => group.category === category)
+        .map((group) => ({ ...group, tools: eligible.filter((tool) => tool.group === group.id) }))
+        .filter((group) => group.tools.length > 0);
+    const renderGroup = (group: ToolGroup & { tools: ToolManagerTool[] }) => (
+        <View key={group.id} className="flex flex-col" style={{ gap: 12, paddingTop: 4 }}>
+            <Text className="text-white font-semibold">{group.name}</Text>
+            {group.tools.map((tool) => <ToolRow key={tool.id} tool={tool} isOn={selected.includes(tool.id)} onToggle={() => toggle(tool)} />)}
+        </View>
+    );
 
     return (
         <View className="flex flex-col" style={{ gap: 12 }}>
@@ -30,16 +43,12 @@ export default function ToolPicker({ selected, onChange }: { selected: string[];
             </SectionLabel>
             <Card style={{ gap: 16 }}>
                 {ungrouped.map((tool) => <ToolRow key={tool.id} tool={tool} isOn={selected.includes(tool.id)} onToggle={() => toggle(tool)} />)}
-                {groups.map((group) => (
-                    <View key={group.id} className="flex flex-col" style={{ gap: 12, paddingTop: 4 }}>
-                        <Text className="text-white font-semibold">{group.name}</Text>
-                        {group.tools.map((tool) => <ToolRow key={tool.id} tool={tool} isOn={selected.includes(tool.id)} onToggle={() => toggle(tool)} />)}
-                    </View>
-                ))}
+                {groupsIn('default').map(renderGroup)}
                 <View className="flex flex-col" style={{ gap: 12, paddingTop: 4 }}>
                     <Text className="text-white font-semibold">{t('scheduled_jobs.tool_picker.app_connections')}</Text>
                     {appConnections.map((tool) => <ToolRow key={tool.id} tool={tool} isOn={selected.includes(tool.id)} onToggle={() => toggle(tool)} />)}
                 </View>
+                {groupsIn('appConnections').map(renderGroup)}
             </Card>
             <Text style={{ color: JOB_COLORS.muted }} className="text-sm">
                 {t('scheduled_jobs.tool_picker.explainer')}

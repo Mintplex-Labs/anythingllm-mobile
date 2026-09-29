@@ -25,6 +25,28 @@ export type IAgentWebSearchCitation = {
   };
 }
 
+/**
+ * An event the read-calendar tool read from the user's calendar. Shown in the sources sheet,
+ * where tapping it opens that event (or on iOS, that day) in the calendar app.
+ */
+export type IAgentCalendarEventCitation = {
+  type: 'calendar-event';
+  event: {
+    /** Calendar provider event id - on Android also opens the event in the calendar app */
+    id: string;
+    title: string;
+    /** Epoch millis of this occurrence - recurring events share an id */
+    beginTime: number;
+    endTime: number;
+    allDay: boolean;
+    location: string;
+    description: string;
+    calendarTitle: string | null;
+    /** Hex color of the calendar the event is in */
+    calendarColor: string | null;
+  };
+}
+
 export type IAgentToolCall = {
   uuid: string;
   signature: string;
@@ -90,6 +112,7 @@ export type IToolApprovalActivity = IActivityNodeBase & IToolApprovalRequest & {
 }
 export type IActivityNode = IThoughtActivity | IStatusActivity | IToolCallActivity | IToolApprovalActivity;
 
+/** @deprecated rows written by the old draft-email tool - rendered as an email draft card via `normalizeEmailDraft` */
 export type IEmailAction = {
   type: 'email';
   action: {
@@ -98,6 +121,7 @@ export type IEmailAction = {
   }
 }
 
+/** @deprecated rows written by the old draft-text tool - rendered as a text draft card via `normalizeTextDraft` */
 export type ITextAction = {
   type: 'sms';
   action: {
@@ -106,16 +130,59 @@ export type ITextAction = {
   }
 }
 
+/**
+ * A text message the assistant drafted (see the draft-text tool). Rendered as a card in the
+ * chat history that opens the user's messaging app with the draft filled in - we never send it.
+ */
+export type ITextDraftAction = {
+  type: 'text_draft';
+  action: {
+    /** Who the message is for, as the user named them eg: "Mom" - null when only a number is known */
+    recipientName: string | null;
+    /** Phone number when known - without one the messaging app asks who to send to */
+    phoneNumber: string | null;
+    body: string;
+  }
+}
+
+/**
+ * A calendar event the assistant drafted (see the calendar-event-creation tool). Rendered as a
+ * card in the chat history that opens the calendar app's new-event screen with it filled in -
+ * nothing is added until the user saves it there.
+ */
 export type ICalendarEventAction = {
   type: 'calendar_event_creation';
   action: {
+    /** Epoch millis */
     beginTime: number;
+    /** Epoch millis */
     endTime: number;
     title: string;
     eventLocation: string;
     description: string;
     allDay: boolean;
+    /** Invitee email addresses. Absent on rows written before invitees were supported. */
+    attendees?: string[];
+    /** Null for a one-off event. Absent on older rows. */
+    recurrence?: ICalendarRecurrence | null;
+    /** Reminders, in minutes before the start. Empty = the calendar app's default. Absent on older rows. */
+    reminderMinutes?: number[];
+    /** Meeting link (Zoom, Meet, Teams, ...). Absent on older rows. */
+    url?: string | null;
   }
+}
+
+/** How a drafted event repeats - maps onto an iCalendar RRULE */
+export type ICalendarRecurrence = {
+  frequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  /** Every N periods - 2 with weekly is every other week */
+  interval: number;
+  /** Weekly only: iCalendar day codes eg: ['MO', 'WE']. Empty = the start date's weekday. */
+  byDay: string[];
+  /** Total occurrences. Null when it repeats until a date or forever. */
+  count: number | null;
+  /** Epoch millis of the last day it can occur on. Null when it repeats a number of times or forever. */
+  until: number | null;
 }
 
 /**
@@ -150,9 +217,26 @@ export type IScheduledJobCreatedAction = {
   }
 }
 
-export type IAgentCitation = IAgentWebSearchCitation;
+export type IAgentCitation = IAgentWebSearchCitation | IAgentCalendarEventCitation;
 export type IChatCitation = IDocumentCitation | IAgentCitation;
-export type IAgentAction = IEmailAction | ITextAction | ICalendarEventAction | IFileDownloadAction | IScheduledJobCreatedAction;
+/**
+ * An email the assistant drafted (see the draft-email tool). Rendered as a card in the chat
+ * history that opens the user's mail app with the draft filled in - we never send it.
+ */
+export type IEmailDraftAction = {
+  type: 'email_draft';
+  action: {
+    /** Who the email is for, as the user named them eg: "Sarah" - null when only addresses are known */
+    recipientName: string | null;
+    /** Recipient addresses - empty when unknown, the mail app then asks who to send to */
+    to: string[];
+    cc: string[];
+    subject: string;
+    body: string;
+  }
+}
+
+export type IAgentAction = IEmailAction | IEmailDraftAction | ITextAction | ITextDraftAction |ICalendarEventAction | IFileDownloadAction | IScheduledJobCreatedAction;
 export type WorkspaceChatResponseType = {
   textResponse: string;
   thoughts: string[];

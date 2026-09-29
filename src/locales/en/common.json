@@ -177,7 +177,10 @@
     "citations": {
       "title": "Citations",
       "score": "Score: {{score}}",
-      "sources": "Sources"
+      "sources": "Sources",
+      "calendar_untitled": "(no title)",
+      "calendar_open_label": "Open {{title}} in your calendar",
+      "calendar_open_failed": "Could not open the event in a calendar app"
     },
     "message_actions": {
       "copied": "Copied to clipboard",
@@ -227,6 +230,63 @@
       "open_label": "Open scheduled job {{name}}",
       "subtitle": "Scheduled job · {{schedule}}",
       "view": "View"
+    },
+    "draft": {
+      "open": "Open",
+      "send_with": "Send with",
+      "more_apps": "More apps",
+      "open_in_failed": "Could not open {{app}}"
+    },
+    "text_draft": {
+      "new_message": "New message",
+      "open_label": "Open text message draft to {{recipient}}",
+      "no_number_hint": "No phone number was given - the app will ask who to send it to.",
+      "copy": "Copy message",
+      "copied": "Message copied",
+      "share_title": "Send message with",
+      "open_failed": "Could not open a messaging app"
+    },
+    "email_draft": {
+      "new_email": "New email",
+      "no_subject": "(no subject)",
+      "no_recipient": "No recipient yet",
+      "open_label": "Open email draft {{subject}}",
+      "cc": "Cc: {{addresses}}",
+      "no_recipient_hint": "No email address was given - add who it's for in your mail app.",
+      "copy": "Copy email",
+      "copied": "Email copied",
+      "share_title": "Send email with",
+      "open_failed": "Could not open a mail app"
+    },
+    "calendar_event": {
+      "open_label": "Add {{title}} to your calendar",
+      "all_day": "All day",
+      "open_failed": "Could not open a calendar app",
+      "saved": "Added to your calendar",
+      "permission_denied": "Allow calendar access for AnythingLLM in Settings to add events.",
+      "add_with": "Add with",
+      "save_ics": "Save .ics file",
+      "save_failed": "Could not save the event file",
+      "no_app_hint": "No calendar app found - save the event as an .ics file to import it anywhere.",
+      "reminders_hint": "Calendar apps set their own reminders - the .ics file keeps these ones.",
+      "invitees": "Invites {{addresses}}",
+      "reminders": "Reminder: {{times}}",
+      "reminder_before": "{{time}} before",
+      "reminder_at_start": "at start time",
+      "repeat": {
+        "daily_one": "Daily",
+        "daily_other": "Every {{count}} days",
+        "weekly_one": "Weekly",
+        "weekly_other": "Every {{count}} weeks",
+        "monthly_one": "Monthly",
+        "monthly_other": "Every {{count}} months",
+        "yearly_one": "Yearly",
+        "yearly_other": "Every {{count}} years",
+        "on_days": "{{repeat}} on {{days}}",
+        "until": "{{repeat}} until {{date}}",
+        "times_one": "{{repeat}}, once",
+        "times_other": "{{repeat}}, {{count}} times"
+      }
     },
     "metrics": {
       "tokens_one": "{{value}} token",
@@ -281,7 +341,6 @@
       "title": "Tools",
       "group_status": "{{enabled}} of {{total}} on",
       "app_connections": "App Connections",
-      "group_files_note": "{{description}} Files are kept on this device until you clear temporary files in settings.",
       "needs_cloud_model": "{{description}} Needs a cloud model.",
       "unavailable_on_device": "Greyed out tools are not available with the on-device model. Switch to a cloud provider to use them."
     },
@@ -452,7 +511,13 @@
     "groups": {
       "create_files": {
         "name": "Create Files",
-        "description": "Let the assistant write documents you can download and share."
+        "description": "Let the assistant write documents you can download and share.",
+        "note": "Let the assistant write documents you can download and share. Files are kept on this device until you clear temporary files in settings."
+      },
+      "calendar": {
+        "name": "Calendar",
+        "description": "Let the assistant add events to your calendar and read what is on it.",
+        "note": "Events the assistant drafts open in your calendar app for you to save. Reading your calendar needs calendar access, which is asked for when you turn it on."
       }
     },
     "reranker": {
@@ -462,13 +527,14 @@
       "status_selecting": "Selecting best tools"
     },
     "calendar_event_creation": {
-      "name": "Calendar Event Creation",
-      "description": "Use the assistant to create a calendar event for you.",
+      "name": "Create Events",
+      "description": "Draft events you add to your calendar with one tap.",
       "status_preparing": "Preparing calendar event \"{{title}}\""
     },
     "calendar_event_reading": {
       "name": "Read Calendar",
-      "description": "Use the assistant to read your calendar events.",
+      "description": "Let the assistant look up the events on your calendar.",
+      "permission_denied": "Calendar access was not allowed. Turn it on for AnythingLLM in your phone settings to read your calendar.",
       "status_date": "Reading your calendar for {{date}}",
       "status_today": "Reading your calendar for today",
       "status_tomorrow": "Reading your calendar for tomorrow",
@@ -526,16 +592,14 @@
     },
     "draft_email": {
       "name": "Draft Email",
-      "description": "Use the assistant to draft an email for you.",
-      "status_drafting": "Drafting email \"{{subject}}\"",
-      "open_action": "Open Draft Email"
+      "description": "Draft an email and open it in your mail app (Gmail, Outlook and more) to send.",
+      "status_drafting": "Drafting email \"{{subject}}\""
     },
     "draft_text": {
       "name": "Draft Text",
-      "description": "Use the assistant to draft a text for you.",
+      "description": "Draft a text message and open it in your messaging app (SMS, WhatsApp and more) to send.",
       "status_drafting_to": "Drafting a text to {{recipient}}",
-      "status_drafting": "Drafting a text message",
-      "open_action": "Open Draft Text"
+      "status_drafting": "Drafting a text message"
     },
     "get_time": {
       "name": "Get Time",

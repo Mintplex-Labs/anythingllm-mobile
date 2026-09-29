@@ -1,6 +1,7 @@
 import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { safeJsonParse } from "@/utils/formatters";
-import RNCalendarEvents, { CalendarEventReadable } from "react-native-calendar-events";
+import RNCalendarEvents from "react-native-calendar-events";
+import { ensureCalendarPermission, toCalendarCitation, type CalendarEventCitation } from "@/utils/calendar";
 import moment from 'moment';
 import i18n, { tKey } from "@/i18n";
 
@@ -20,6 +21,10 @@ export default {
     get description() { return i18n.t('tools.calendar_event_reading.description'); },
     defaultEnabled: false,
     category: 'appConnections',
+    group: 'calendar',
+    // Ask when the user turns the tool on, so a reply is never stuck behind the permission dialog.
+    requestPermission: () => ensureCalendarPermission(true),
+    get permissionDeniedMessage() { return i18n.t('tools.calendar_event_reading.permission_denied'); },
     definition: {
         type: 'function',
         function: {
@@ -52,15 +57,15 @@ export default {
                 ? i18n.t('tools.calendar_event_reading.status_date', { date: search === 'specific date' ? specificDate : search })
                 : i18n.t(READING_STATUS[search]));
 
-            const canRead = await RNCalendarEvents.checkPermissions();
-            if (['denied', 'restricted', 'undetermined'].includes(canRead)) {
-                const granted = await RNCalendarEvents.requestPermissions(true);
-                if (!granted) return 'Calendar permissions not granted. Please grant permissions to read your calendar events.';
-            }
+            // Normally granted when the tool was switched on - access can be revoked in settings since.
+            if (!(await ensureCalendarPermission(true))) return 'Calendar access is not granted, so the calendar could not be read. Tell the user to allow calendar access for AnythingLLM in their phone settings.';
 
-            console.log('Fetching events from', startDate, 'to', endDate);
             const events = await RNCalendarEvents.fetchAllEvents(startDate, endDate);
-            if (!events) return 'No calendar events found for the given time range.';
+            if (!events?.length) return `There are no events in the user's calendar for ${search === 'specific date' ? specificDate : search}.`;
+
+            // Every event read is a source the user can open in their calendar app.
+            const citations = events.map(toCalendarCitation).filter((citation): citation is CalendarEventCitation => !!citation);
+            if (citations.length > 0) streamEmitter('report_citations', citations);
 
             let eventText = `You have ${events.length} events in your calendar for ${search === 'specific date' ? specificDate : search}:\n\n`;
             const eventDescriptions: string[] = [];
@@ -99,8 +104,8 @@ export default {
             eventText += eventDescriptions.join('\n---\n');
             return eventText;
         } catch (e) {
-            console.error(`Calendar Event Creation Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
-            return `There was an error creating the calendar event.`;
+            console.error(`Calendar Event Reading Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
+            return `There was an error reading the calendar.`;
         }
     },
     _searchTypeToDate: function (searchType: 'today' | 'tomorrow' | 'this week' | 'next week' | 'this month' | 'next month' | 'specific date', specificDate?: string) {

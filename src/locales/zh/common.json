@@ -174,7 +174,10 @@
     "citations": {
       "title": "引用",
       "score": "分数：{{score}}",
-      "sources": "来源"
+      "sources": "来源",
+      "calendar_untitled": "（无标题）",
+      "calendar_open_label": "在您的日历中打开 {{title}}",
+      "calendar_open_failed": "无法在日历应用中打开活动"
     },
     "message_actions": {
       "copied": "已复制到剪贴板",
@@ -224,6 +227,58 @@
       "open_label": "打开计划任务 {{name}}",
       "subtitle": "计划任务 · {{schedule}}",
       "view": "查看"
+    },
+    "draft": {
+      "open": "打开",
+      "send_with": "发送",
+      "more_apps": "更多应用",
+      "open_in_failed": "无法打开 {{app}}"
+    },
+    "text_draft": {
+      "new_message": "新消息",
+      "open_label": "打开短信草稿 {{recipient}}",
+      "no_number_hint": "未提供电话号码 - 应用会询问您要发送给谁。",
+      "copy": "复制消息",
+      "copied": "已复制",
+      "share_title": "发送消息",
+      "open_failed": "无法打开消息应用"
+    },
+    "email_draft": {
+      "new_email": "新邮件",
+      "no_subject": "（无主题）",
+      "no_recipient": "暂无收件人",
+      "open_label": "打开邮件草稿 {{subject}}",
+      "cc": "抄送：{{addresses}}",
+      "no_recipient_hint": "未提供电子邮件地址 - 请在您的邮件应用中添加收件人。",
+      "copy": "复制邮件",
+      "copied": "邮件已复制",
+      "share_title": "发送邮件",
+      "open_failed": "无法打开邮件应用"
+    },
+    "calendar_event": {
+      "open_label": "将 {{title}} 添加到您的日历",
+      "all_day": "全天",
+      "open_failed": "无法打开日历应用",
+      "saved": "已添加到您的日历",
+      "permission_denied": "在“设置”中，允许AnythingLLM访问日历，以便添加活动。",
+      "add_with": "添加",
+      "save_ics": "保存 .ics 文件",
+      "save_failed": "无法保存活动文件",
+      "no_app_hint": "未找到日历应用 - 将事件保存为 .ics 文件，以便在任何地方导入。",
+      "reminders_hint": "日历应用可以设置自己的提醒 - .ics 文件会保存这些提醒。",
+      "invitees": "邀请 {{addresses}}",
+      "reminders": "提醒：{{times}}",
+      "reminder_before": "{{time}} 之前",
+      "reminder_at_start": "开始时间",
+      "repeat": {
+        "daily_other": "每 {{count}} 天",
+        "weekly_other": "每 {{count}} 周",
+        "monthly_other": "每 {{count}} 个月",
+        "yearly_other": "每 {{count}} 年",
+        "on_days": "{{repeat}}（{{days}}）",
+        "until": "{{repeat}}，直到 {{date}}",
+        "times_other": "{{repeat}}，共 {{count}} 次"
+      }
     },
     "metrics": {
       "tokens_other": "{{value}} 个令牌"
@@ -276,7 +331,6 @@
       "title": "工具",
       "group_status": "{{enabled}} 的 {{total}} 打开",
       "app_connections": "应用连接",
-      "group_files_note": "{{description}} 文件保存在此设备上，直到您在设置中清除临时文件。",
       "needs_cloud_model": "{{description}} 需要云模型。",
       "unavailable_on_device": "灰显的工具在设备上模型中不可用。切换到云提供商以使用它们。"
     },
@@ -439,7 +493,13 @@
     "groups": {
       "create_files": {
         "name": "创建文件",
-        "description": "让助手编写您可以下载和分享的文档。"
+        "description": "让助手编写您可以下载和分享的文档。",
+        "note": "让助手帮你撰写文档，你可以下载和分享。文件将保存在此设备上，直到你通过设置清除临时文件。"
+      },
+      "calendar": {
+        "name": "日历",
+        "description": "让助手添加事件到您的日历，并读取日历内容。",
+        "note": "助手创建的活动会自动添加到您的日历应用中，方便您保存。访问日历需要授权，在启用时会提示您。"
       }
     },
     "reranker": {
@@ -456,6 +516,7 @@
     "calendar_event_reading": {
       "name": "阅读日历",
       "description": "使用助手阅读您的日历事件。",
+      "permission_denied": "日历访问权限未被允许。请在手机设置中为AnythingLLM开启此权限，以便读取您的日历。",
       "status_date": "读取您的日历上的 {{date}}",
       "status_today": "读取您的日历上的今天",
       "status_tomorrow": "读取您的日历上的明天",
@@ -507,15 +568,13 @@
     "draft_email": {
       "name": "起草电子邮件",
       "description": "使用助手为您起草电子邮件。",
-      "status_drafting": "正在起草电子邮件\"{{subject}}\"",
-      "open_action": "打开草稿电子邮件"
+      "status_drafting": "正在起草电子邮件\"{{subject}}\""
     },
     "draft_text": {
       "name": "起草文本",
       "description": "使用助手为您起草文本。",
       "status_drafting_to": "正在为 {{recipient}} 起草文本",
-      "status_drafting": "正在起草文本消息",
-      "open_action": "打开草稿文本"
+      "status_drafting": "正在起草文本消息"
     },
     "get_time": {
       "name": "获取时间",

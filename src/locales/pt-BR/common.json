@@ -180,7 +180,10 @@
     "citations": {
       "title": "Citações",
       "score": "Pontuação: {{score}}",
-      "sources": "Fontes"
+      "sources": "Fontes",
+      "calendar_untitled": "(sem título)",
+      "calendar_open_label": "Abra {{title}} no seu calendário",
+      "calendar_open_failed": "Não foi possível abrir o evento em um aplicativo de calendário."
     },
     "message_actions": {
       "copied": "Copiado para a área de transferência",
@@ -230,6 +233,68 @@
       "open_label": "Abrir trabalho agendado {{name}}",
       "subtitle": "Trabalho agendado · {{schedule}}",
       "view": "Visualizar"
+    },
+    "draft": {
+      "open": "Abrir",
+      "send_with": "Enviar",
+      "more_apps": "Mais aplicativos",
+      "open_in_failed": "Não foi possível abrir {{app}}"
+    },
+    "text_draft": {
+      "new_message": "Nova mensagem",
+      "open_label": "Abrir rascunho de mensagem {{recipient}}",
+      "no_number_hint": "Não foi fornecido um número de telefone – o aplicativo perguntará para quem enviar.",
+      "copy": "Copiar mensagem",
+      "copied": "Mensagem copiada",
+      "share_title": "Enviar mensagem com",
+      "open_failed": "Não foi possível abrir o aplicativo de mensagens."
+    },
+    "email_draft": {
+      "new_email": "Nova mensagem",
+      "no_subject": "(sem assunto)",
+      "no_recipient": "Destinatário ainda não selecionado",
+      "open_label": "Abrir rascunho de e-mail {{subject}}",
+      "cc": "Ccs: {{addresses}}",
+      "no_recipient_hint": "Não foi fornecido um endereço de e-mail – adicione o destinatário no seu aplicativo de e-mail.",
+      "copy": "Copiar e-mail",
+      "copied": "E-mail copiado",
+      "share_title": "Enviar e-mail",
+      "open_failed": "Não foi possível abrir o aplicativo de e-mail."
+    },
+    "calendar_event": {
+      "open_label": "Adicione {{title}} ao seu calendário",
+      "all_day": "Durante todo o dia",
+      "open_failed": "Não foi possível abrir o aplicativo de calendário.",
+      "saved": "Adicionado ao seu calendário",
+      "permission_denied": "Permita o acesso ao calendário para AnythingLLM nas configurações para adicionar eventos.",
+      "add_with": "Adicionar",
+      "save_ics": "Salvar arquivo .ics",
+      "save_failed": "Não foi possível salvar o arquivo do evento.",
+      "no_app_hint": "Nenhuma aplicação de calendário encontrada. Salve o evento como um arquivo .ics para importá-lo em qualquer lugar.",
+      "reminders_hint": "Os aplicativos de calendário criam seus próprios lembretes – o arquivo .ics armazena essas informações.",
+      "invitees": "Convites {{addresses}}",
+      "reminders": "Lembrete: {{times}}",
+      "reminder_before": "{{time}} antes",
+      "reminder_at_start": "Início",
+      "repeat": {
+        "daily_many": "{{count}} dias",
+        "daily_one": "Diariamente",
+        "daily_other": "{{count}} dias",
+        "weekly_many": "A cada {{count}} semanas",
+        "weekly_one": "Semanal",
+        "weekly_other": "A cada {{count}} semanas",
+        "monthly_many": "A cada {{count}} meses",
+        "monthly_one": "Mensal",
+        "monthly_other": "A cada {{count}} meses",
+        "yearly_many": "A cada {{count}} anos",
+        "yearly_one": "Anual",
+        "yearly_other": "A cada {{count}} anos",
+        "on_days": "{{repeat}} em {{days}}",
+        "until": "{{repeat}} até {{date}}",
+        "times_many": "{{repeat}}, {{count}} vezes",
+        "times_one": "{{repeat}}, uma vez",
+        "times_other": "{{repeat}}, {{count}} vezes"
+      }
     },
     "metrics": {
       "tokens_many": "{{value}} tokens",
@@ -286,7 +351,6 @@
       "title": "Ferramentas",
       "group_status": "{{enabled}} de {{total}} ativadas",
       "app_connections": "Conexões de Aplicativo",
-      "group_files_note": "{{description}} Os arquivos são mantidos neste dispositivo até que você limpe os arquivos temporários nas configurações.",
       "needs_cloud_model": "{{description}} Precisa de um modelo em nuvem.",
       "unavailable_on_device": "As ferramentas esmaecidas não estão disponíveis com o modelo em dispositivo. Mude para um provedor em nuvem para usá-las."
     },
@@ -465,7 +529,13 @@
     "groups": {
       "create_files": {
         "name": "Criar Arquivos",
-        "description": "Deixe o assistente escrever documentos que você pode baixar e compartilhar."
+        "description": "Deixe o assistente escrever documentos que você pode baixar e compartilhar.",
+        "note": "Deixe o assistente criar documentos que você pode baixar e compartilhar. Os arquivos são armazenados neste dispositivo até que você limpe os arquivos temporários nas configurações."
+      },
+      "calendar": {
+        "name": "Calendário",
+        "description": "Deixe o assistente adicionar eventos ao seu calendário e ler o que está nele.",
+        "note": "Eventos criados pelo assistente serão adicionados ao seu aplicativo de calendário para que você possa salvá-los. Para acessar o calendário, é necessário conceder permissão ao aplicativo."
       }
     },
     "reranker": {
@@ -482,6 +552,7 @@
     "calendar_event_reading": {
       "name": "Ler Calendário",
       "description": "Use o assistente para ler seus eventos de calendário.",
+      "permission_denied": "O acesso ao calendário não está permitido. Ative-o para AnythingLLM nas configurações do seu telefone para visualizar seu calendário.",
       "status_date": "Lendo seu calendário para {{date}}",
       "status_today": "Lendo seu calendário para hoje",
       "status_tomorrow": "Lendo seu calendário para amanhã",
@@ -547,15 +618,13 @@
     "draft_email": {
       "name": "Redigir E-mail",
       "description": "Use o assistente para redigir um e-mail para você.",
-      "status_drafting": "Redigindo e-mail \"{{subject}}\"",
-      "open_action": "Abrir E-mail Redigido"
+      "status_drafting": "Redigindo e-mail \"{{subject}}\""
     },
     "draft_text": {
       "name": "Redigir Texto",
       "description": "Use o assistente para redigir uma mensagem de texto para você.",
       "status_drafting_to": "Redigindo uma mensagem de texto para {{recipient}}",
-      "status_drafting": "Redigindo uma mensagem de texto",
-      "open_action": "Abrir Texto Redigido"
+      "status_drafting": "Redigindo uma mensagem de texto"
     },
     "get_time": {
       "name": "Obter Hora",

@@ -174,7 +174,10 @@
     "citations": {
       "title": "引用",
       "score": "スコア：{{score}}",
-      "sources": "ソース"
+      "sources": "ソース",
+      "calendar_untitled": "（タイトルなし）",
+      "calendar_open_label": "カレンダーで「{{title}}」を開く",
+      "calendar_open_failed": "カレンダーアプリでイベントを開けませんでした"
     },
     "message_actions": {
       "copied": "クリップボードにコピーしました",
@@ -224,6 +227,58 @@
       "open_label": "スケジュール済みジョブ{{name}}を開く",
       "subtitle": "スケジュール済みジョブ·{{schedule}}",
       "view": "表示"
+    },
+    "draft": {
+      "open": "開く",
+      "send_with": "送信",
+      "more_apps": "その他のアプリ",
+      "open_in_failed": "{{app}} を開けませんでした"
+    },
+    "text_draft": {
+      "new_message": "新しいメッセージ",
+      "open_label": "テキストメッセージの草案を開く {{recipient}}",
+      "no_number_hint": "電話番号は指定されていません。アプリが宛先を尋ねます。",
+      "copy": "メッセージをコピー",
+      "copied": "メッセージをコピー",
+      "share_title": "メッセージを送信する",
+      "open_failed": "メッセージアプリを開けません"
+    },
+    "email_draft": {
+      "new_email": "新しいメール",
+      "no_subject": "（件名なし）",
+      "no_recipient": "宛先はまだ設定されていません",
+      "open_label": "メールの草案を開く {{subject}}",
+      "cc": "抄送: {{addresses}}",
+      "no_recipient_hint": "メールアドレスは指定されていません。ご自身のメールアプリで宛先を追加してください。",
+      "copy": "メールをコピー",
+      "copied": "メールをコピー",
+      "share_title": "メールを送信する",
+      "open_failed": "メールアプリを開けませんでした"
+    },
+    "calendar_event": {
+      "open_label": "カレンダーに{{title}}を追加する",
+      "all_day": "終日",
+      "open_failed": "カレンダーアプリを開けられません",
+      "saved": "カレンダーに追加",
+      "permission_denied": "設定で、イベントを追加するために、AnythingLLM へのカレンダーへのアクセスを許可する。",
+      "add_with": "追加する",
+      "save_ics": ".ics ファイルを保存する",
+      "save_failed": "イベントファイルの保存に失敗しました",
+      "no_app_hint": "カレンダーアプリが見つかりません。イベントを.ics形式で保存し、どこでもインポートできます。",
+      "reminders_hint": "カレンダーアプリは独自の通知を設定します。.icsファイルには、これらの通知の情報が保存されます。",
+      "invitees": "招待: {{addresses}}",
+      "reminders": "リマインダー: {{times}}",
+      "reminder_before": "{{time}} 以前",
+      "reminder_at_start": "開始時",
+      "repeat": {
+        "daily_other": "{{count}}日ごと",
+        "weekly_other": "{{count}}週間ごと",
+        "monthly_other": "{{count}}ヶ月ごと",
+        "yearly_other": "{{count}}年ごと",
+        "on_days": "{{repeat}}（{{days}}）",
+        "until": "{{repeat}}、{{date}}まで",
+        "times_other": "{{repeat}}、{{count}}回"
+      }
     },
     "metrics": {
       "tokens_other": "{{value}}トークン"
@@ -276,7 +331,6 @@
       "title": "ツール",
       "group_status": "{{enabled}}個中{{total}}個がオン",
       "app_connections": "アプリ接続",
-      "group_files_note": "{{description}}ファイルは、設定で一時ファイルをクリアするまで、このデバイスに保持されます。",
       "needs_cloud_model": "{{description}}クラウドモデルが必要です。",
       "unavailable_on_device": "グレーアウトされたツールは、オンデバイスモデルでは利用できません。クラウドプロバイダーに切り替えてそれらを使用してください。"
     },
@@ -439,7 +493,13 @@
     "groups": {
       "create_files": {
         "name": "ファイルの作成",
-        "description": "アシスタントにドキュメントを作成させて、ダウンロードして共有できます。"
+        "description": "アシスタントにドキュメントを作成させて、ダウンロードして共有できます。",
+        "note": "アシスタントが作成したドキュメントをダウンロードして共有できます。ファイルは、設定で一時ファイルを削除するまで、このデバイスに保存されます。"
+      },
+      "calendar": {
+        "name": "カレンダー",
+        "description": "アシスタントがカレンダーに予定を追加し、内容を確認できます。",
+        "note": "アシスタントが作成したイベントは、あなたのカレンダーアプリに自動的に登録されます。カレンダーの確認には、カレンダーへのアクセス許可が必要です（アプリを起動した際に確認されます）。"
       }
     },
     "reranker": {
@@ -456,6 +516,7 @@
     "calendar_event_reading": {
       "name": "カレンダーを読む",
       "description": "アシスタントを使用してカレンダーイベントを読んでもらいます。",
+      "permission_denied": "カレンダーへのアクセスは許可されていません。「AnythingLLM」の設定で、電話の設定を開き、カレンダーを読み取れるように設定してください。",
       "status_date": "{{date}}のカレンダーを読み中",
       "status_today": "今日のカレンダーを読み中",
       "status_tomorrow": "明日のカレンダーを読み中",
@@ -507,15 +568,13 @@
     "draft_email": {
       "name": "メールをドラフト",
       "description": "アシスタントを使用してメールをドラフトしてもらいます。",
-      "status_drafting": "メール「{{subject}}」をドラフト",
-      "open_action": "メールドラフトを開く"
+      "status_drafting": "メール「{{subject}}」をドラフト"
     },
     "draft_text": {
       "name": "テキストをドラフト",
       "description": "アシスタントを使用してテキストをドラフトしてもらいます。",
       "status_drafting_to": "{{recipient}}へのテキストをドラフト",
-      "status_drafting": "テキストメッセージをドラフト",
-      "open_action": "テキストドラフトを開く"
+      "status_drafting": "テキストメッセージをドラフト"
     },
     "get_time": {
       "name": "時刻を取得",

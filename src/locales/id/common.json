@@ -174,7 +174,10 @@
     "citations": {
       "title": "Kutipan",
       "score": "Skor: {{score}}",
-      "sources": "Sumber"
+      "sources": "Sumber",
+      "calendar_untitled": "(tanpa judul)",
+      "calendar_open_label": "Buka {{title}} di kalender Anda",
+      "calendar_open_failed": "Tidak dapat membuka acara di aplikasi kalender"
     },
     "message_actions": {
       "copied": "Disalin ke papan klip",
@@ -224,6 +227,58 @@
       "open_label": "Buka pekerjaan terjadwal {{name}}",
       "subtitle": "Pekerjaan terjadwal · {{schedule}}",
       "view": "Lihat"
+    },
+    "draft": {
+      "open": "Buka",
+      "send_with": "Kirim",
+      "more_apps": "Aplikasi lainnya",
+      "open_in_failed": "Tidak dapat membuka {{app}}"
+    },
+    "text_draft": {
+      "new_message": "Pesan baru",
+      "open_label": "Buka draf pesan teks ke {{recipient}}",
+      "no_number_hint": "Tidak ada nomor telepon yang diberikan – aplikasi akan meminta Anda untuk menentukan penerima.",
+      "copy": "Salin pesan",
+      "copied": "Pesan disalin",
+      "share_title": "Kirim pesan",
+      "open_failed": "Tidak dapat membuka aplikasi pesan"
+    },
+    "email_draft": {
+      "new_email": "Email baru",
+      "no_subject": "(tanpa subjek)",
+      "no_recipient": "Belum ada penerima",
+      "open_label": "Buka draf email {{subject}}",
+      "cc": "CC: {{addresses}}",
+      "no_recipient_hint": "Tidak ada alamat email yang diberikan – tambahkan penerima di aplikasi email Anda.",
+      "copy": "Salin email",
+      "copied": "Email disalin",
+      "share_title": "Kirim email dengan",
+      "open_failed": "Tidak dapat membuka aplikasi email"
+    },
+    "calendar_event": {
+      "open_label": "Tambahkan {{title}} ke kalender Anda",
+      "all_day": "Sepanjang hari",
+      "open_failed": "Tidak dapat membuka aplikasi kalender",
+      "saved": "Ditambahkan ke kalender Anda",
+      "permission_denied": "Izinkan akses kalender untuk AnythingLLM di Pengaturan untuk menambahkan acara.",
+      "add_with": "Tambahkan",
+      "save_ics": "Simpan file .ics",
+      "save_failed": "Gagal menyimpan file acara",
+      "no_app_hint": "Tidak ditemukan aplikasi kalender – simpan acara sebagai file .ics untuk mengimpornya ke perangkat lain.",
+      "reminders_hint": "Aplikasi kalender membuat pengingat sendiri – file .ics menyimpan pengingat-pengingat tersebut.",
+      "invitees": "Undangan {{addresses}}",
+      "reminders": "Pengingat: {{times}}",
+      "reminder_before": "{{time}} sebelumnya",
+      "reminder_at_start": "Saat memulai",
+      "repeat": {
+        "daily_other": "Setiap {{count}} hari",
+        "weekly_other": "Setiap {{count}} minggu",
+        "monthly_other": "Setiap {{count}} bulan",
+        "yearly_other": "Setiap {{count}} tahun",
+        "on_days": "{{repeat}} di {{days}}",
+        "until": "{{repeat}} hingga {{date}}",
+        "times_other": "{{repeat}}, {{count}} kali"
+      }
     },
     "metrics": {
       "tokens_other": "{{value}} token"
@@ -276,7 +331,6 @@
       "title": "Alat",
       "group_status": "{{enabled}} dari {{total}} aktif",
       "app_connections": "Koneksi Aplikasi",
-      "group_files_note": "{{description}} File disimpan di perangkat ini sampai Anda menghapus file sementara di pengaturan.",
       "needs_cloud_model": "{{description}} Membutuhkan model cloud.",
       "unavailable_on_device": "Alat yang diarsir tidak tersedia dengan model on-device. Beralih ke penyedia cloud untuk menggunakannya."
     },
@@ -439,7 +493,13 @@
     "groups": {
       "create_files": {
         "name": "Buat File",
-        "description": "Biarkan asisten menulis dokumen yang dapat Anda unduh dan bagikan."
+        "description": "Biarkan asisten menulis dokumen yang dapat Anda unduh dan bagikan.",
+        "note": "Biarkan asisten membuat dokumen yang dapat Anda unduh dan bagikan. File akan disimpan di perangkat ini hingga Anda menghapus file sementara di pengaturan."
+      },
+      "calendar": {
+        "name": "Kalender",
+        "description": "Biarkan asisten menambahkan acara ke kalender Anda dan membaca isinya.",
+        "note": "Acara yang dibuat oleh asisten akan otomatis tersimpan di aplikasi kalender Anda. Untuk mengakses kalender, Anda perlu memberikan izin akses."
       }
     },
     "reranker": {
@@ -456,6 +516,7 @@
     "calendar_event_reading": {
       "name": "Baca Kalender",
       "description": "Gunakan asisten untuk membaca acara kalender Anda.",
+      "permission_denied": "Akses kalender tidak diizinkan. Aktifkan untuk AnythingLLM di pengaturan ponsel Anda untuk membaca kalender Anda.",
       "status_date": "Membaca kalender Anda untuk {{date}}",
       "status_today": "Membaca kalender Anda untuk hari ini",
       "status_tomorrow": "Membaca kalender Anda untuk besok",
@@ -507,15 +568,13 @@
     "draft_email": {
       "name": "Konsep Email",
       "description": "Gunakan asisten untuk membuat konsep email untuk Anda.",
-      "status_drafting": "Membuat konsep email \"{{subject}}\"",
-      "open_action": "Buka Konsep Email"
+      "status_drafting": "Membuat konsep email \"{{subject}}\""
     },
     "draft_text": {
       "name": "Konsep Teks",
       "description": "Gunakan asisten untuk membuat konsep teks untuk Anda.",
       "status_drafting_to": "Membuat konsep teks untuk {{recipient}}",
-      "status_drafting": "Membuat konsep pesan teks",
-      "open_action": "Buka Konsep Teks"
+      "status_drafting": "Membuat konsep pesan teks"
     },
     "get_time": {
       "name": "Dapatkan Waktu",

@@ -177,7 +177,10 @@
     "citations": {
       "title": "Alıntılar",
       "score": "Puan: {{score}}",
-      "sources": "Kaynaklar"
+      "sources": "Kaynaklar",
+      "calendar_untitled": "(Başlık yok)",
+      "calendar_open_label": "{{title}}'yi takviminize ekleyin",
+      "calendar_open_failed": "Takvim uygulamasında etkinliği açamadım"
     },
     "message_actions": {
       "copied": "Panoya kopyalandı",
@@ -227,6 +230,63 @@
       "open_label": "{{name}} zamanlanmış işini aç",
       "subtitle": "Zamanlanmış iş · {{schedule}}",
       "view": "Görüntüle"
+    },
+    "draft": {
+      "open": "Aç",
+      "send_with": "Gönder",
+      "more_apps": "Daha fazla uygulama",
+      "open_in_failed": "{{app}}'u açamadım"
+    },
+    "text_draft": {
+      "new_message": "Yeni mesaj",
+      "open_label": "Metin mesajı taslağını aç {{recipient}}",
+      "no_number_hint": "Telefon numarası belirtilmedi – uygulama, numarayı kime göndereceğinizi soracaktır.",
+      "copy": "Mesajı kopyala",
+      "copied": "Mesaj kopyalandı",
+      "share_title": "Mesajı gönder",
+      "open_failed": "Mesajlaşma uygulamasını açamadım"
+    },
+    "email_draft": {
+      "new_email": "Yeni e-posta",
+      "no_subject": "(Konu yok)",
+      "no_recipient": "Henüz gönderici yok",
+      "open_label": "E-posta taslağını aç {{subject}}",
+      "cc": "Kopyala: {{addresses}}",
+      "no_recipient_hint": "E-posta adresi belirtilmedi – lütfen kendi e-posta uygulamanızda kimin için olduğunu ekleyin.",
+      "copy": "E-postayı kopyala",
+      "copied": "E-posta kopyalandı",
+      "share_title": "E-posta gönder",
+      "open_failed": "E-posta uygulamasını açamadım"
+    },
+    "calendar_event": {
+      "open_label": "{{title}}'yi takvime ekle",
+      "all_day": "Tüm gün boyunca",
+      "open_failed": "Takvim uygulamasını açamadım",
+      "saved": "Takviminize eklendi",
+      "permission_denied": "Ayar menüsünden, \"AnythingLLM\" için takvim erişimini etkinleştirerek etkinlik ekleyin.",
+      "add_with": "Ekle",
+      "save_ics": ".ics dosyasını kaydet",
+      "save_failed": "Etkinlik dosyasını kaydedemedi.",
+      "no_app_hint": "Takvim uygulaması bulunamadı – etkinliği .ics dosyası olarak kaydederek istediğiniz yerde içe aktarabilirsiniz.",
+      "reminders_hint": "Takvim uygulamaları kendi hatırlatmalarını ayarlar – .ics dosyası bu hatırlatmaları saklar.",
+      "invitees": "Davetler {{addresses}}",
+      "reminders": "Hatırlatma: {{times}}",
+      "reminder_before": "{{time}} öncesinde",
+      "reminder_at_start": "Başlangıç zamanı",
+      "repeat": {
+        "daily_one": "Günlük",
+        "daily_other": "{{count}} gün boyunca",
+        "weekly_one": "Haftalık",
+        "weekly_other": "Her {{count}} hafta",
+        "monthly_one": "Aylık",
+        "monthly_other": "Her {{count}} ayda",
+        "yearly_one": "Yıllık",
+        "yearly_other": "Her {{count}} yılda",
+        "on_days": "{{repeat}} ile {{days}}",
+        "until": "{{repeat}}'dan {{date}}'ye",
+        "times_one": "{{repeat}}, bir kez",
+        "times_other": "{{repeat}}, {{count}} defter"
+      }
     },
     "metrics": {
       "tokens_one": "{{value}} belirteç",
@@ -281,7 +341,6 @@
       "title": "Araçlar",
       "group_status": "{{enabled}} / {{total}} açık",
       "app_connections": "Uygulama Bağlantıları",
-      "group_files_note": "{{description}} Dosyalar ayarlarında geçici dosyaları temizleyene kadar bu cihazda tutulur.",
       "needs_cloud_model": "{{description}} Bulut modeli gereklidir.",
       "unavailable_on_device": "Gri araçlar cihazda çalışan modellerle kullanılamaz. Bunları kullanmak için bir bulut sağlayıcısına geçin."
     },
@@ -452,7 +511,13 @@
     "groups": {
       "create_files": {
         "name": "Dosya Oluştur",
-        "description": "Asistan'ın indirebilir ve paylaşabileceğiniz belgeler yazmasına izin verin."
+        "description": "Asistan'ın indirebilir ve paylaşabileceğiniz belgeler yazmasına izin verin.",
+        "note": "Asistan, indirme ve paylaşma imkanı sunan belgeler oluşturabilir. Dosyalar, ayarlar bölümünden geçici dosyaları temizlemene kadar bu cihazda saklanır."
+      },
+      "calendar": {
+        "name": "Takvim",
+        "description": "Asistan, takvimine etkinlikler eklesin ve takvimindeki içeriği okusun.",
+        "note": "Yardımcı tarafından oluşturulan etkinlikler, sizin için doğrudan takvim uygulamanızda kaydedilebilmeleri için takvime eklenecektir. Takvime erişim, uygulamanın çalıştırılması sırasında talep edilir."
       }
     },
     "reranker": {
@@ -469,6 +534,7 @@
     "calendar_event_reading": {
       "name": "Takvimi Oku",
       "description": "Asistan'ı kullanarak takvim etkinliklerinizi okuyun.",
+      "permission_denied": "Takvim erişimi engellendi. Telefon ayarlarınızda AnythingLLM için etkinleştirerek takviminizi görüntüleyebilirsiniz.",
       "status_date": "{{date}} için takvim okuyor",
       "status_today": "Bugün için takvim okuyor",
       "status_tomorrow": "Yarın için takvim okuyor",
@@ -527,15 +593,13 @@
     "draft_email": {
       "name": "E-posta Taslağı",
       "description": "Asistan'ı kullanarak sizin için bir e-posta taslağı oluşturun.",
-      "status_drafting": "\"{{subject}}\" e-postası taslağı oluşturuluyor",
-      "open_action": "E-posta Taslağını Aç"
+      "status_drafting": "\"{{subject}}\" e-postası taslağı oluşturuluyor"
     },
     "draft_text": {
       "name": "Metin Taslağı",
       "description": "Asistan'ı kullanarak sizin için bir metin taslağı oluşturun.",
       "status_drafting_to": "{{recipient}}'ye bir metin taslağı oluşturuluyor",
-      "status_drafting": "Bir metin mesajı taslağı oluşturuluyor",
-      "open_action": "Metin Taslağını Aç"
+      "status_drafting": "Bir metin mesajı taslağı oluşturuluyor"
     },
     "get_time": {
       "name": "Saati Al",

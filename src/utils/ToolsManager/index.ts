@@ -18,13 +18,31 @@ export { isOnDeviceProvider, isOnDeviceProviderName, toolSupportsProvider } from
  * page that opens a sub-page with one toggle per tool (mirrors how the desktop app groups the
  * create-files skills).
  */
-export type ToolGroupId = 'createFiles';
-export const TOOL_GROUPS: Record<ToolGroupId, { id: ToolGroupId; name: string; description: string }> = {
+export type ToolGroupId = 'createFiles' | 'calendar';
+export type ToolGroup = {
+    id: ToolGroupId;
+    /** Which section of the tools sheet the group's row sits in - same as its tools' category */
+    category: ToolManagerTool['category'];
+    name: string;
+    description: string;
+    /** Longer text shown at the top of the group's sub-page */
+    note: string;
+};
+export const TOOL_GROUPS: Record<ToolGroupId, ToolGroup> = {
     createFiles: {
         id: 'createFiles',
+        category: 'default',
         // Getters so the text is translated when it is shown, not at module load
         get name() { return i18n.t('tools.groups.create_files.name'); },
         get description() { return i18n.t('tools.groups.create_files.description'); },
+        get note() { return i18n.t('tools.groups.create_files.note'); },
+    },
+    calendar: {
+        id: 'calendar',
+        category: 'appConnections',
+        get name() { return i18n.t('tools.groups.calendar.name'); },
+        get description() { return i18n.t('tools.groups.calendar.description'); },
+        get note() { return i18n.t('tools.groups.calendar.note'); },
     },
 };
 
@@ -39,6 +57,13 @@ export type ToolManagerTool = {
     category: 'default' | 'appConnections';
     /** Grouped tools live on a sub-page of the tools sheet instead of the main list */
     group?: ToolGroupId;
+    /**
+     * Asked when the user switches the tool on (chat tools sheet or a scheduled job's tool picker),
+     * eg: to get an OS permission up front instead of mid-reply. Resolve false to leave it off.
+     */
+    requestPermission?: () => Promise<boolean>;
+    /** Shown when `requestPermission` resolves false - translated (define as a getter calling i18n.t) */
+    permissionDeniedMessage?: string;
     /**
      * Set to false for tools the on-device provider cannot run (they are pruned from the tool
      * list and shown disabled in the tools sheet while the on-device provider is selected).

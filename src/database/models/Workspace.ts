@@ -20,6 +20,11 @@ export type WorkspaceType = {
   /** `null` means no override - the provider/model default is used and the param is omitted from requests. */
   temperature: number | null;
   contextLength: number;
+  /**
+   * Max tool calls the agent may run for one reply. `null` = the provider type's default
+   * (see `Workspace.defaultMaxToolCalls`), `0` = no limit.
+   */
+  maxToolCalls: number | null;
   isRemote: boolean;
   remoteConfig: {
     connectionUrl: string;
@@ -58,6 +63,19 @@ export default class Workspace extends Model {
     return getDefaultContextLength();
   }
   static maxSystemPromptLength = 10_000;
+  /** Tool call cap applied when the workspace has no explicit `maxToolCalls` */
+  static defaultMaxToolCalls = { cloud: 10, onDevice: 5 };
+
+  /**
+   * Resolves the tool call cap for one reply. Returns `null` when there is no cap. The default
+   * depends on the provider type at chat time, so it is never stored on the workspace.
+   */
+  static maxToolCallsFor(workspace: Pick<WorkspaceType, 'maxToolCalls'> | null | undefined, providerType: 'on-device' | 'cloud'): number | null {
+    const value = workspace?.maxToolCalls;
+    if (value === 0) return null;
+    if (typeof value === 'number' && value > 0) return value;
+    return providerType === 'on-device' ? Workspace.defaultMaxToolCalls.onDevice : Workspace.defaultMaxToolCalls.cloud;
+  }
 
   static writableFields = {
     name: {
@@ -89,6 +107,15 @@ export default class Workspace extends Model {
         return { valid: !error, error };
       },
     },
+    maxToolCalls: {
+      validate: (value: number | null) => {
+        let error = '';
+        if (value === null) return { valid: true, error }; // null = provider type default
+        if (typeof value !== 'number' || !Number.isInteger(value)) error = i18n.t('misc.validation.max_tool_calls_not_integer');
+        else if (value < 0) error = i18n.t('misc.validation.max_tool_calls_min');
+        return { valid: !error, error };
+      },
+    },
     contextLength: {
       validate: (value: number) => {
         let error = '';
@@ -117,6 +144,7 @@ export default class Workspace extends Model {
   @text('system_prompt') systemPrompt!: string;
   @field('temperature') temperature!: number | null;
   @field('context_length') contextLength!: number;
+  @field('max_tool_calls') maxToolCalls!: number | null;
   @field('is_remote') isRemote!: boolean;
   @json('remote_config', (json: any) => json) remoteConfig!: WorkspaceType['remoteConfig'];
   @field('created_at') createdAt!: number;
@@ -126,13 +154,14 @@ export default class Workspace extends Model {
   }
 
   static toWorkspaceObject(data: any): WorkspaceType {
-    const { name, slug, createdAt, systemPrompt, temperature, contextLength, isRemote = false, remoteConfig = null } = data;
+    const { name, slug, createdAt, systemPrompt, temperature, contextLength, maxToolCalls = null, isRemote = false, remoteConfig = null } = data;
     return {
       name: name,
       slug: slug,
       systemPrompt,
       temperature,
       contextLength,
+      maxToolCalls: maxToolCalls ?? null,
       isRemote,
       remoteConfig,
       threads: [],
@@ -220,6 +249,7 @@ export default class Workspace extends Model {
         workspace.system_prompt = Workspace.defaultSystemPrompt;
         workspace.temperature = Workspace.defaultTemperature; // null - inherit the provider default
         workspace.context_length = Workspace.defaultContextLength;
+        workspace.max_tool_calls = null; // provider type default
         workspace.is_remote = false;
         workspace.remote_config = null;
         workspace.created_at = Date.now();

@@ -493,7 +493,9 @@
       "temperature_not_number": "온도는 숫자여야 합니다",
       "temperature_range": "온도는 {{min}}과(와) {{max}} 사이여야 합니다",
       "context_length_not_number": "컨텍스트 길이는 숫자여야 합니다",
-      "context_length_min": "컨텍스트 길이는 {{min}}보다 커야 합니다"
+      "context_length_min": "컨텍스트 길이는 {{min}}보다 커야 합니다",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -828,6 +830,7 @@
       "using_summary_other": "{{count}}개 이전 메시지의 요약 사용",
       "loading_model": "메모리에 모델 로드 중",
       "reply_truncated": "답변이 단축됨 - 컨텍스트 창이 가득 참",
+      "tool_call_limit_reached_other": null,
       "searching_documents": "문서 검색 중",
       "reranking": "결과 재순위 매기기 중",
       "reading_documents_other": "{{count}}개 첨부 문서 읽는 중"
@@ -993,6 +996,17 @@
       "save_error": "컨텍스트 길이 저장 중 오류",
       "hint": "컨텍스트 길이는 또한 사용 중인 모델에 따라 다르며 기기에 메모리 영향이 있습니다.",
       "description": "컨텍스트 길이는 AI가 응답을 생성할 때 사용할 수 있는 최대 토큰 수입니다."
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "벡터 스토리지",

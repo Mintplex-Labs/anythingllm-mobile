@@ -547,7 +547,9 @@
       "temperature_not_number": "Temperatura musi być liczbą",
       "temperature_range": "Temperatura musi być między {{min}} a {{max}}",
       "context_length_not_number": "Długość kontekstu musi być liczbą",
-      "context_length_min": "Długość kontekstu musi być większa niż {{min}}"
+      "context_length_min": "Długość kontekstu musi być większa niż {{min}}",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -936,6 +938,10 @@
       "using_summary_other": "Używanie streszczenia {{count}} wcześniejszych wiadomości",
       "loading_model": "Ładowanie modelu do pamięci",
       "reply_truncated": "Odpowiedź została przycięta - okno kontekstu jest pełne",
+      "tool_call_limit_reached_few": null,
+      "tool_call_limit_reached_many": null,
+      "tool_call_limit_reached_one": null,
+      "tool_call_limit_reached_other": null,
       "searching_documents": "Wyszukiwanie Twoich dokumentów",
       "reranking": "Przeklasyfikowanie wyników",
       "reading_documents_few": "Czytanie {{count}} dołączonych dokumentów",
@@ -1104,6 +1110,17 @@
       "save_error": "Błąd zapisywania długości kontekstu",
       "hint": "Pamiętaj, że długość kontekstu zależy również od modelu, którego używasz, i ma implikacje pamięci dla Twojego urządzenia.",
       "description": "Długość kontekstu to maksymalna liczba tokenów, które AI może użyć podczas generowania odpowiedzi."
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "Magazyn wektorowy",

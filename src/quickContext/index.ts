@@ -69,6 +69,7 @@ export function createEphemeralSession(): QuickContextSession {
         systemPrompt: QUICK_CONTEXT_SYSTEM_PROMPT,
         temperature: Workspace.defaultTemperature,
         contextLength: Workspace.defaultContextLength,
+        maxToolCalls: null,
         isRemote: false,
         remoteConfig: null as unknown as WorkspaceType['remoteConfig'],
         remoteServerReachable: unreachable,

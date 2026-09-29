@@ -493,7 +493,9 @@
       "temperature_not_number": "温度は数値である必要があります",
       "temperature_range": "温度は{{min}}から{{max}}の間である必要があります",
       "context_length_not_number": "コンテキスト長は数値である必要があります",
-      "context_length_min": "コンテキスト長は{{min}}より大きい必要があります"
+      "context_length_min": "コンテキスト長は{{min}}より大きい必要があります",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -828,6 +830,7 @@
       "using_summary_other": "{{count}}個の前のメッセージの要約を使用",
       "loading_model": "メモリにモデルを読み込み",
       "reply_truncated": "返信は短縮されました-コンテキストウィンドウがいっぱいです",
+      "tool_call_limit_reached_other": null,
       "searching_documents": "ドキュメントを検索",
       "reranking": "結果を再ランク付け",
       "reading_documents_other": "{{count}}個の添付ドキュメントを読み中"
@@ -993,6 +996,17 @@
       "save_error": "コンテキスト長の保存エラー",
       "hint": "コンテキスト長はまた、使用しているモデルに依存し、デバイスのメモリへの影響があることに注意してください。",
       "description": "コンテキスト長は、AIが応答を生成する際に使用できるトークンの最大数です。"
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "ベクトルストレージ",

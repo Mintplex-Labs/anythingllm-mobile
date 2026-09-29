@@ -493,7 +493,9 @@
       "temperature_not_number": "温度必须是数字",
       "temperature_range": "温度必须在 {{min}} 和 {{max}} 之间",
       "context_length_not_number": "上下文长度必须是数字",
-      "context_length_min": "上下文长度必须大于 {{min}}"
+      "context_length_min": "上下文长度必须大于 {{min}}",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -828,6 +830,7 @@
       "using_summary_other": "使用 {{count}} 条较早消息的摘要",
       "loading_model": "将模型加载到内存中",
       "reply_truncated": "回复被截断 - 上下文窗口已满",
+      "tool_call_limit_reached_other": null,
       "searching_documents": "搜索您的文档",
       "reranking": "重新排列结果",
       "reading_documents_other": "正在读取 {{count}} 个附加文档"
@@ -993,6 +996,17 @@
       "save_error": "保存上下文长度时出错",
       "hint": "请记住，上下文长度也取决于您使用的模型，对您的设备有内存影响。",
       "description": "上下文长度是 AI 在生成响应时可以使用的最大令牌数。"
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "向量存储",

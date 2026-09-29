@@ -511,7 +511,9 @@
       "temperature_not_number": "Temperatur muss eine Zahl sein",
       "temperature_range": "Temperatur muss zwischen {{min}} und {{max}} liegen",
       "context_length_not_number": "Kontextlänge muss eine Zahl sein",
-      "context_length_min": "Kontextlänge muss größer als {{min}} sein"
+      "context_length_min": "Kontextlänge muss größer als {{min}} sein",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -864,6 +866,8 @@
       "using_summary_other": "Verwendung einer Zusammenfassung von {{count}} früheren Nachrichten",
       "loading_model": "Modell wird in den Speicher geladen",
       "reply_truncated": "Antwort war abgeschnitten - das Kontextfenster ist voll",
+      "tool_call_limit_reached_one": null,
+      "tool_call_limit_reached_other": null,
       "searching_documents": "Ihre Dokumente werden durchsucht",
       "reranking": "Ergebnisse werden neu geordnet",
       "reading_documents_one": "{{count}} angehängtes Dokument wird gelesen",
@@ -1030,6 +1034,17 @@
       "save_error": "Fehler beim Speichern der Kontextlänge",
       "hint": "Beachten Sie, dass die Kontextlänge auch vom verwendeten Modell abhängt und Speicherauswirkungen auf Ihrem Gerät hat.",
       "description": "Die Kontextlänge ist die maximale Anzahl von Tokens, die die KI beim Generieren einer Antwort verwenden kann."
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "Vektor-Speicher",

@@ -511,7 +511,9 @@
       "temperature_not_number": "Sıcaklık bir sayı olmalıdır",
       "temperature_range": "Sıcaklık {{min}} ile {{max}} arasında olmalıdır",
       "context_length_not_number": "Bağlam uzunluğu bir sayı olmalıdır",
-      "context_length_min": "Bağlam uzunluğu {{min}}'ten büyük olmalıdır"
+      "context_length_min": "Bağlam uzunluğu {{min}}'ten büyük olmalıdır",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -864,6 +866,8 @@
       "using_summary_other": "{{count}} önceki mesajın bir özeti kullanılıyor",
       "loading_model": "Model belleğe yükleniyor",
       "reply_truncated": "Yanıt kısaldı – bağlam penceresi dolu",
+      "tool_call_limit_reached_one": null,
+      "tool_call_limit_reached_other": null,
       "searching_documents": "Belge arama",
       "reranking": "Sonuçları yeniden sırala",
       "reading_documents_one": "{{count}} ekli belgeyi okuyun",
@@ -1030,6 +1034,17 @@
       "save_error": "Bağlam uzunluğunu kaydetmede hata",
       "hint": "Açıklayın ki, bağlam uzunluğu kullandığınız modele ve cihazınızın belleği için de bir etkiye sahiptir.",
       "description": "Bağlam uzunluğu, yapay zekanın bir yanıt oluştururken kullanabileceği maksimum token sayısını ifade eder."
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "Vektör Depolama",

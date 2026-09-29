@@ -493,7 +493,9 @@
       "temperature_not_number": "溫度必須是數字",
       "temperature_range": "溫度必須介於 {{min}} 和 {{max}} 之間",
       "context_length_not_number": "內容長度必須是數字",
-      "context_length_min": "內容長度必須大於 {{min}}"
+      "context_length_min": "內容長度必須大於 {{min}}",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -828,6 +830,7 @@
       "using_summary_other": "使用 {{count}} 條較早訊息的摘要",
       "loading_model": "正在將模型載入記憶",
       "reply_truncated": "回覆被切短 - 內容視窗已滿",
+      "tool_call_limit_reached_other": null,
       "searching_documents": "正在搜尋您的文件",
       "reranking": "重新排列結果",
       "reading_documents_other": "正在讀取 {{count}} 個附加文件"
@@ -993,6 +996,17 @@
       "save_error": "儲存內容長度時出錯",
       "hint": "請記住，內容長度也取決於您使用的模型，並對您的裝置有記憶體影響。",
       "description": "內容長度是 AI 在產生回應時可以使用的最大標記數。"
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "向量儲存",

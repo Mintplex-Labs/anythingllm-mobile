@@ -1,7 +1,7 @@
 import { appSchema, tableSchema } from '@nozbe/watermelondb';
 
 export default appSchema({
-  version: 5,
+  version: 6,
   tables: [
     tableSchema({
       name: 'workspaces',
@@ -11,6 +11,8 @@ export default appSchema({
         { name: 'system_prompt', type: 'string', isOptional: true },
         { name: 'temperature', type: 'number', isOptional: true },
         { name: 'context_length', type: 'number', isOptional: true },
+        // null = provider type default, 0 = no limit - see Workspace.maxToolCallsFor
+        { name: 'max_tool_calls', type: 'number', isOptional: true },
         { name: 'is_remote', type: 'boolean', isOptional: true },
         { name: 'remote_config', type: 'string', isOptional: true },
         { name: 'created_at', type: 'number' },

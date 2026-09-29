@@ -6,6 +6,7 @@ import OpenAILite from "@/utils/openai";
 import MODEL_CARDS, { EMBEDDING_MODEL, RERANKER_MODEL } from "@/utils/models/defaults";
 import { DEFAULT_GGUF_FOLDER } from "@/utils/models/manager";
 import * as RNFS from '@dr.pogodin/react-native-fs';
+import Workspace from "@/database/models/Workspace";
 import { DynamicChatMessage } from "@/screens/WorkspaceChat/ChatHistory";
 import ToolsManager from "@/utils/ToolsManager";
 import ImportedModels, { describeImportedModel } from "@/utils/models/imported";
@@ -397,6 +398,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
       currentMessageHistory: formattedMessages,
       signal: this.abortSignal,
       maxToolResultChars: this.submodule.maxToolResultChars,
+      maxToolCalls: Workspace.maxToolCallsFor(this.workspace, 'on-device'),
     });
 
     throwIfAborted(this.abortSignal);

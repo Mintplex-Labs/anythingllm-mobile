@@ -547,7 +547,9 @@
       "temperature_not_number": "Температура должна быть числом",
       "temperature_range": "Температура должна быть между {{min}} и {{max}}",
       "context_length_not_number": "Длина контекста должна быть числом",
-      "context_length_min": "Длина контекста должна быть больше {{min}}"
+      "context_length_min": "Длина контекста должна быть больше {{min}}",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -936,6 +938,10 @@
       "using_summary_other": "Использование резюме {{count}} более ранних сообщений",
       "loading_model": "Загрузка модели в память",
       "reply_truncated": "Ответ был обрезан — окно контекста заполнено",
+      "tool_call_limit_reached_few": null,
+      "tool_call_limit_reached_many": null,
+      "tool_call_limit_reached_one": null,
+      "tool_call_limit_reached_other": null,
       "searching_documents": "Поиск в ваших документах",
       "reranking": "Переранжирование результатов",
       "reading_documents_few": "Чтение {{count}} прикреплённых документов",
@@ -1104,6 +1110,17 @@
       "save_error": "Ошибка при сохранении длины контекста",
       "hint": "Имейте в виду, что длина контекста также зависит от используемой модели и имеет последствия для памяти вашего устройства.",
       "description": "Длина контекста — это максимальное количество токенов, которые AI может использовать при генерации ответа."
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "Хранилище векторов",

@@ -529,7 +529,9 @@
       "temperature_not_number": "La température doit être un nombre",
       "temperature_range": "La température doit être comprise entre {{min}} et {{max}}",
       "context_length_not_number": "La longueur du contexte doit être un nombre",
-      "context_length_min": "La longueur du contexte doit être supérieure à {{min}}"
+      "context_length_min": "La longueur du contexte doit être supérieure à {{min}}",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -900,6 +902,9 @@
       "using_summary_other": "Utilisation d'un résumé de {{count}} messages antérieurs",
       "loading_model": "Chargement du modèle en mémoire",
       "reply_truncated": "La réponse a été coupée courte - la fenêtre de contexte est pleine",
+      "tool_call_limit_reached_many": null,
+      "tool_call_limit_reached_one": null,
+      "tool_call_limit_reached_other": null,
       "searching_documents": "Recherche dans vos documents",
       "reranking": "Réorganisation des résultats",
       "reading_documents_many": "Lecture de {{count}} documents joints",
@@ -1067,6 +1072,17 @@
       "save_error": "Erreur lors de l'enregistrement de la longueur du contexte",
       "hint": "Gardez à l'esprit que la longueur du contexte dépend également du modèle que vous utilisez et a des implications en mémoire pour votre appareil.",
       "description": "La longueur du contexte est le nombre maximum de jetons que l'IA peut utiliser lors de la génération d'une réponse."
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "Stockage vectoriel",

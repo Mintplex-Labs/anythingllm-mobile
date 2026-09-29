@@ -33,6 +33,15 @@ interface NumericInputViewProps {
     placeholder: string;
     reattachProviderOnSave?: boolean;
     suggestions?: (string | number)[];
+    /**
+     * Stored when the input is cleared, and shown as an empty input. Lets a field tell "cleared"
+     * apart from "reset" (eg: max tool calls -> 0 = no limit, while reset stores `null` = default).
+     */
+    emptyValue?: number;
+    /** Shown in the input while the stored value is `null`, eg: the default the provider will use */
+    nullDisplayValue?: number;
+    /** Translation key for extra hint text - resolved with t() and these params */
+    hintParams?: Record<string, string | number>;
 }
 
 const DEFAULT_SAVE_STATUS = {
@@ -43,15 +52,23 @@ const DEFAULT_SAVE_STATUS = {
 /** How a numeric (or null) workspace value is shown in the input. */
 const toText = (value: number | null | undefined) => (typeof value === 'number' ? value.toString() : '');
 
-export function NumericInputView({ workspace, goToPage, field, title, currentLabel, suggestionsLabel, saveErrorMessage, placeholder, resetValue, hint, reattachProviderOnSave = false, suggestions = [] }: NumericInputViewProps) {
+export function NumericInputView({ workspace, goToPage, field, title, currentLabel, suggestionsLabel, saveErrorMessage, placeholder, resetValue, hint, hintParams, reattachProviderOnSave = false, suggestions = [], emptyValue, nullDisplayValue }: NumericInputViewProps) {
     const { t } = useTranslation();
     useHighjackBackButtonPress(() => { goToPage('main'); return true; });
     const insets = useSafeAreaInsets();
     const keyboardHeight = useKeyboardHeight();
     const { LLMProvider } = useLLMProvider();
-    const allowEmpty = resetValue === null;
+    const allowEmpty = resetValue === null || emptyValue !== undefined;
+    const valueToText = (value: number | null | undefined) => {
+        if (emptyValue !== undefined && value === emptyValue) return '';
+        if (value === null || value === undefined) return toText(nullDisplayValue);
+        return toText(value);
+    };
+    const initialValue = (workspace[field] as number | null | undefined) ?? resetValue;
     // The raw text is kept separately from the parsed number so partial input like "0." is not rewritten while typing.
-    const [text, setText] = useState(toText((workspace[field] as number | null | undefined) ?? resetValue));
+    const [text, setText] = useState(valueToText(initialValue));
+    // The value the input maps to - differs from the text when it has a display stand-in (eg: null -> the default).
+    const [pendingValue, setPendingValue] = useState<number | null>(initialValue);
     const [saveStatus, setSaveStatus] = useState(DEFAULT_SAVE_STATUS);
 
     const debouncedSave = useRef(
@@ -91,20 +108,30 @@ export function NumericInputView({ workspace, goToPage, field, title, currentLab
 
         if (nextText.trim() === '') {
             // Empty input only means something for optional fields - otherwise wait for a number.
-            if (allowEmpty) debouncedSave(null);
+            if (!allowEmpty) return;
+            const value = emptyValue ?? null;
+            setPendingValue(value);
+            debouncedSave(value);
             return;
         }
 
         const value = parseFloat(nextText);
         if (isNaN(value)) return;
+        setPendingValue(value);
         debouncedSave(value);
-    }, [debouncedSave, allowEmpty]);
+    }, [debouncedSave, allowEmpty, emptyValue]);
+
+    const handleReset = useCallback(() => {
+        setText(valueToText(resetValue));
+        setPendingValue(resetValue);
+        debouncedSave(resetValue);
+    }, [debouncedSave, resetValue]);
 
     useEffect(() => {
         return () => debouncedSave.cancel();
     }, [debouncedSave]);
 
-    const resetText = toText(resetValue);
+    const resetText = valueToText(resetValue);
 
     return (
         <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" safeAreaStyle={{ backgroundColor: '#1B1B1E' }}>
@@ -140,14 +167,14 @@ export function NumericInputView({ workspace, goToPage, field, title, currentLab
                         onChangeText={handleValueChange}
                         placeholder={t(placeholder)}
                     />
-                    {text !== resetText && (
-                        <TouchableOpacity onPress={() => handleValueChange(resetText)} className="flex flex-row items-center justify-center">
+                    {(text !== resetText || pendingValue !== resetValue) && (
+                        <TouchableOpacity onPress={handleReset} className="flex flex-row items-center justify-center">
                             <Text className="text-white">{t('common.reset')}</Text>
                         </TouchableOpacity>
                     )}
                 </View>
                 <View className="w-full flex flex-col" style={{ gap: 12 }}>
-                    {hint && <Text style={{ color: '#9F9FA0' }} className="text-sm">{t(hint).replace(/\\n/g, '\n')}</Text>}
+                    {hint && <Text style={{ color: '#9F9FA0' }} className="text-sm">{t(hint, hintParams).replace(/\\n/g, '\n')}</Text>}
                 </View>
                 {suggestions?.length > 0 && !!suggestionsLabel && (
                     <View style={{ gap: 10, marginTop: 30 }} className="flex flex-col">

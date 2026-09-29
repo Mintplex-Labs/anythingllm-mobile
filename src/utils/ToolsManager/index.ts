@@ -129,7 +129,16 @@ type ToolCallLoopProps = {
     toolset?: ToolManagerTool[];
     /** Extra per-turn context handed to every tool execution (merged with `signal`) */
     executionContext?: Omit<ToolExecutionContext, 'signal'>;
+    /**
+     * Max tool calls executed for this reply, counted across all rounds (see `Workspace.maxToolCallsFor`).
+     * Once reached, the model gets one last round with no tools so it answers from what it has.
+     * Unset/null = no limit.
+     */
+    maxToolCalls?: number | null;
 }
+
+/** Appended to the final tools-off round so the model answers instead of asking for more tools */
+const TOOL_LIMIT_NOTE = 'The tool call limit for this reply was reached and no more tools are available. Answer the user now using the tool results above. If they are not enough to fully answer, say what is missing.';
 
 class ToolsManager {
     static instance: ToolsManager;
@@ -347,6 +356,36 @@ class ToolsManager {
     }
 
     /**
+     * Rewrites a working history for a round with no tools offered. The assistant `tool_calls`
+     * messages and `tool` results are replaced by plain text folded into the last user message
+     * (the same shape the on-device merge flow uses), because some APIs reject tool messages in a
+     * request that defines no tools. `note` is appended after the results.
+     */
+    private toolFreeHistory(messages: any[], note: string): any[] {
+        const lastUserIndex = messages.map(m => m?.role).lastIndexOf('user');
+        if (lastUserIndex === -1) return [...messages, { role: 'user', content: note }];
+
+        const results: string[] = [];
+        const kept: any[] = [];
+        for (const [index, message] of messages.entries()) {
+            if (index > lastUserIndex && message?.role === 'tool') {
+                results.push(`Function: ${message.signature ?? message.function ?? 'tool'}\nResult: ${message.content}`);
+                continue;
+            }
+            if (index > lastUserIndex && message?.role === 'assistant' && message.tool_calls) continue;
+            kept.push(message);
+        }
+
+        const suffix = [...results, note].join('\n');
+        const userMessage = kept[lastUserIndex];
+        const content = Array.isArray(userMessage.content)
+            ? [...userMessage.content, { type: 'text', text: suffix }]
+            : `${userMessage.content ?? ''}\n${suffix}`;
+        kept[lastUserIndex] = { ...userMessage, content };
+        return kept;
+    }
+
+    /**
      * This is the main loop that manages the tool calls.
      * It will loop until there are no more tool calls to make.
      * It will also manage the tool call responses and update the message history.
@@ -356,6 +395,8 @@ class ToolsManager {
      * - Each loop will append the tool call responses to the previous message since most times, if a role: function exists in the history, it will refuse to call any more tool calls, even if they are different
      * - The loop will continue until there are no more tool calls to make - determined by the toolCalls property of the response
      * - Each loop will remove any already called tool from the available tools to prevent infinite loops of tools (TBD on if we keep this eg: deep-research)
+     * - Only one tool call runs per round - parallel calls are dropped down to the first, which is also all the model sees it asked for, so it can call the next tool in the following round.
+     * - Once `maxToolCalls` tool calls have run, the model gets one last round with no tools, so the reply still ends in an answer.
      * - The loop will return the final response from the LLM.
      */
     async toolCallLoop({
@@ -368,6 +409,7 @@ class ToolsManager {
         maxToolResultChars,
         toolset,
         executionContext = {},
+        maxToolCalls = null,
     }: ToolCallLoopProps): Promise<ICompleteResponse> {
         let willLoop = currentResponse.toolCalls && currentResponse.toolCalls.length > 0;
         if (!willLoop) return currentResponse;
@@ -375,16 +417,23 @@ class ToolsManager {
         let availableTools = toolset ? toolset.map(tool => tool.definition) : await this.injectAvailableTools();
         let nextResponse = currentResponse;
         let nextMessages = [...currentMessageHistory];
+        let toolCallsUsed = 0;
 
         do {
             // The user stopped the chat mid-round - do not execute tools or ask the LLM again.
             throwIfAborted(signal);
+            // No parallel tool calls - run the first one only. Trimming the response itself keeps the echoed
+            // assistant `tool_calls` message in step with the results, so no call is left without a result.
+            const [toolCall] = nextResponse.toolCalls ?? [];
+            if ((nextResponse.toolCalls?.length ?? 0) > 1) this.log(`ToolsManager::toolCallLoop: Model asked for ${nextResponse.toolCalls!.length} tool calls at once - running only ${toolCall.function.name}`);
+            nextResponse = { ...nextResponse, toolCalls: [toolCall] };
             // Cloud providers get the round echoed back as a real assistant `tool_calls` message so the
             // model sees that *it* already made this call before it sees the result. Without it, models
             // that reply then call a tool see a result for a call that is not in the history and call
             // the same tool again on every round. The on-device merge flow keeps its text-only history.
             if (!mergeToolCallResults) nextMessages.push(this.assistantToolCallMessage(nextResponse));
-            nextMessages = await this.manageToolCallExecutions(nextResponse.toolCalls ?? [], streamEmitter, nextMessages, maxToolResultChars, { ...executionContext, signal }, toolset ?? null);
+            nextMessages = await this.manageToolCallExecutions([toolCall], streamEmitter, nextMessages, maxToolResultChars, { ...executionContext, signal }, toolset ?? null);
+            toolCallsUsed += 1;
             throwIfAborted(signal);
             for (const [index, message] of nextMessages.entries()) {
                 if (message.role === 'tool' && mergeToolCallResults) {
@@ -393,6 +442,12 @@ class ToolsManager {
                     availableTools = availableTools.filter(tool => tool.function.name !== message.function); // Remove the tool from the available tools
                     nextMessages.pop(); // Remove the tool message
                 }
+            }
+
+            if (maxToolCalls && toolCallsUsed >= maxToolCalls) {
+                this.log(`ToolsManager::toolCallLoop: Tool call limit (${maxToolCalls}) reached - running a final round with no tools`);
+                streamEmitter('report_status', i18n.t('models.status.tool_call_limit_reached', { count: maxToolCalls }));
+                return runStreamCompletion(this.toolFreeHistory(nextMessages, TOOL_LIMIT_NOTE), (token: string) => streamEmitter('chunk', token), []);
             }
 
             nextResponse = await runStreamCompletion(nextMessages, (token: string) => streamEmitter('chunk', token), availableTools);

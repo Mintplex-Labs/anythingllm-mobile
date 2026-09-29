@@ -51,6 +51,7 @@ function scheduledJobsWorkspace(): WorkspaceType {
         systemPrompt: SCHEDULED_JOBS_SYSTEM_PROMPT,
         temperature: null,
         contextLength: getDefaultContextLength(),
+        maxToolCalls: null,
         isRemote: false,
         remoteConfig: null as any,
         threads: [],

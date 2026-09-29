@@ -529,7 +529,9 @@
       "temperature_not_number": "La temperatura deve essere un numero",
       "temperature_range": "La temperatura deve essere tra {{min}} e {{max}}",
       "context_length_not_number": "La lunghezza del contesto deve essere un numero",
-      "context_length_min": "La lunghezza del contesto deve essere maggiore di {{min}}"
+      "context_length_min": "La lunghezza del contesto deve essere maggiore di {{min}}",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -900,6 +902,9 @@
       "using_summary_other": "Utilizzo di un riepilogo di {{count}} messaggi precedenti",
       "loading_model": "Caricamento del modello in memoria",
       "reply_truncated": "La risposta è stata interrotta - la finestra del contesto è piena",
+      "tool_call_limit_reached_many": null,
+      "tool_call_limit_reached_one": null,
+      "tool_call_limit_reached_other": null,
       "searching_documents": "Ricerca dei tuoi documenti",
       "reranking": "Riclassificazione dei risultati",
       "reading_documents_many": "Lettura di {{count}} documenti allegati",
@@ -1067,6 +1072,17 @@
       "save_error": "Errore nel salvataggio della lunghezza del contesto",
       "hint": "Tieni presente che la lunghezza del contesto dipende anche dal modello che stai utilizzando e ha implicazioni di memoria per il tuo dispositivo.",
       "description": "La lunghezza del contesto è il numero massimo di token che l'AI può utilizzare durante la generazione di una risposta."
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "Archiviazione vettoriale",

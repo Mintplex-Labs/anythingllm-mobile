@@ -181,9 +181,9 @@
       "title": "Citações",
       "score": "Pontuação: {{score}}",
       "sources": "Fontes",
-      "calendar_untitled": null,
-      "calendar_open_label": null,
-      "calendar_open_failed": null
+      "calendar_untitled": "(sem título)",
+      "calendar_open_label": "Abra {{title}} no seu calendário",
+      "calendar_open_failed": "Não foi possível abrir o evento em um aplicativo de calendário."
     },
     "message_actions": {
       "copied": "Copiado para a área de transferência",
@@ -235,65 +235,65 @@
       "view": "Visualizar"
     },
     "draft": {
-      "open": null,
-      "send_with": null,
-      "more_apps": null,
-      "open_in_failed": null
+      "open": "Abrir",
+      "send_with": "Enviar",
+      "more_apps": "Mais aplicativos",
+      "open_in_failed": "Não foi possível abrir {{app}}"
     },
     "text_draft": {
-      "new_message": null,
-      "open_label": null,
-      "no_number_hint": null,
-      "copy": null,
-      "copied": null,
-      "share_title": null,
-      "open_failed": null
+      "new_message": "Nova mensagem",
+      "open_label": "Abrir rascunho de mensagem {{recipient}}",
+      "no_number_hint": "Não foi fornecido um número de telefone – o aplicativo perguntará para quem enviar.",
+      "copy": "Copiar mensagem",
+      "copied": "Mensagem copiada",
+      "share_title": "Enviar mensagem com",
+      "open_failed": "Não foi possível abrir o aplicativo de mensagens."
     },
     "email_draft": {
-      "new_email": null,
-      "no_subject": null,
-      "no_recipient": null,
-      "open_label": null,
-      "cc": null,
-      "no_recipient_hint": null,
-      "copy": null,
-      "copied": null,
-      "share_title": null,
-      "open_failed": null
+      "new_email": "Nova mensagem",
+      "no_subject": "(sem assunto)",
+      "no_recipient": "Destinatário ainda não selecionado",
+      "open_label": "Abrir rascunho de e-mail {{subject}}",
+      "cc": "Ccs: {{addresses}}",
+      "no_recipient_hint": "Não foi fornecido um endereço de e-mail – adicione o destinatário no seu aplicativo de e-mail.",
+      "copy": "Copiar e-mail",
+      "copied": "E-mail copiado",
+      "share_title": "Enviar e-mail",
+      "open_failed": "Não foi possível abrir o aplicativo de e-mail."
     },
     "calendar_event": {
-      "open_label": null,
-      "all_day": null,
-      "open_failed": null,
-      "saved": null,
-      "permission_denied": null,
-      "add_with": null,
-      "save_ics": null,
-      "save_failed": null,
-      "no_app_hint": null,
-      "reminders_hint": null,
-      "invitees": null,
-      "reminders": null,
-      "reminder_before": null,
-      "reminder_at_start": null,
+      "open_label": "Adicione {{title}} ao seu calendário",
+      "all_day": "Durante todo o dia",
+      "open_failed": "Não foi possível abrir o aplicativo de calendário.",
+      "saved": "Adicionado ao seu calendário",
+      "permission_denied": "Permita o acesso ao calendário para AnythingLLM nas configurações para adicionar eventos.",
+      "add_with": "Adicionar",
+      "save_ics": "Salvar arquivo .ics",
+      "save_failed": "Não foi possível salvar o arquivo do evento.",
+      "no_app_hint": "Nenhuma aplicação de calendário encontrada. Salve o evento como um arquivo .ics para importá-lo em qualquer lugar.",
+      "reminders_hint": "Os aplicativos de calendário criam seus próprios lembretes – o arquivo .ics armazena essas informações.",
+      "invitees": "Convites {{addresses}}",
+      "reminders": "Lembrete: {{times}}",
+      "reminder_before": "{{time}} antes",
+      "reminder_at_start": "Início",
       "repeat": {
-        "daily_many": null,
-        "daily_one": null,
-        "daily_other": null,
-        "weekly_many": null,
-        "weekly_one": null,
-        "weekly_other": null,
-        "monthly_many": null,
-        "monthly_one": null,
-        "monthly_other": null,
-        "yearly_many": null,
-        "yearly_one": null,
-        "yearly_other": null,
-        "on_days": null,
-        "until": null,
-        "times_many": null,
-        "times_one": null,
-        "times_other": null
+        "daily_many": "{{count}} dias",
+        "daily_one": "Diariamente",
+        "daily_other": "{{count}} dias",
+        "weekly_many": "A cada {{count}} semanas",
+        "weekly_one": "Semanal",
+        "weekly_other": "A cada {{count}} semanas",
+        "monthly_many": "A cada {{count}} meses",
+        "monthly_one": "Mensal",
+        "monthly_other": "A cada {{count}} meses",
+        "yearly_many": "A cada {{count}} anos",
+        "yearly_one": "Anual",
+        "yearly_other": "A cada {{count}} anos",
+        "on_days": "{{repeat}} em {{days}}",
+        "until": "{{repeat}} até {{date}}",
+        "times_many": "{{repeat}}, {{count}} vezes",
+        "times_one": "{{repeat}}, uma vez",
+        "times_other": "{{repeat}}, {{count}} vezes"
       }
     },
     "metrics": {
@@ -530,12 +530,12 @@
       "create_files": {
         "name": "Criar Arquivos",
         "description": "Deixe o assistente escrever documentos que você pode baixar e compartilhar.",
-        "note": null
+        "note": "Deixe o assistente criar documentos que você pode baixar e compartilhar. Os arquivos são armazenados neste dispositivo até que você limpe os arquivos temporários nas configurações."
       },
       "calendar": {
-        "name": null,
-        "description": null,
-        "note": null
+        "name": "Calendário",
+        "description": "Deixe o assistente adicionar eventos ao seu calendário e ler o que está nele.",
+        "note": "Eventos criados pelo assistente serão adicionados ao seu aplicativo de calendário para que você possa salvá-los. Para acessar o calendário, é necessário conceder permissão ao aplicativo."
       }
     },
     "reranker": {
@@ -552,7 +552,7 @@
     "calendar_event_reading": {
       "name": "Ler Calendário",
       "description": "Use o assistente para ler seus eventos de calendário.",
-      "permission_denied": null,
+      "permission_denied": "O acesso ao calendário não está permitido. Ative-o para AnythingLLM nas configurações do seu telefone para visualizar seu calendário.",
       "status_date": "Lendo seu calendário para {{date}}",
       "status_today": "Lendo seu calendário para hoje",
       "status_tomorrow": "Lendo seu calendário para amanhã",

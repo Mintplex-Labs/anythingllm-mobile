@@ -178,9 +178,9 @@
       "title": "उद्धरण",
       "score": "स्कोर: {{score}}",
       "sources": "स्रोत",
-      "calendar_untitled": null,
-      "calendar_open_label": null,
-      "calendar_open_failed": null
+      "calendar_untitled": "(कोई शीर्षक नहीं)",
+      "calendar_open_label": "अपने कैलेंडर में {{title}} खोलें",
+      "calendar_open_failed": "कैलेंडर ऐप में इवेंट खोलने में असमर्थ"
     },
     "message_actions": {
       "copied": "क्लिपबोर्ड में कॉपी किया गया",
@@ -232,60 +232,60 @@
       "view": "देखें"
     },
     "draft": {
-      "open": null,
-      "send_with": null,
-      "more_apps": null,
-      "open_in_failed": null
+      "open": "खोलें",
+      "send_with": "भेजें",
+      "more_apps": "और ऐप",
+      "open_in_failed": "{{app}} खोलने में असमर्थ"
     },
     "text_draft": {
-      "new_message": null,
-      "open_label": null,
-      "no_number_hint": null,
-      "copy": null,
-      "copied": null,
-      "share_title": null,
-      "open_failed": null
+      "new_message": "नया संदेश",
+      "open_label": "टेक्स्ट संदेश का मसौदा {{recipient}} पर खोलें",
+      "no_number_hint": "कोई फ़ोन नंबर नहीं दिया गया - ऐप आपसे यह पूछेंगे कि इसे किसे भेजना है।",
+      "copy": "संदेश कॉपी करें",
+      "copied": "संदेश कॉपी किया गया",
+      "share_title": "संदेश भेजें",
+      "open_failed": "संदेश ऐप खोलने में असमर्थ"
     },
     "email_draft": {
-      "new_email": null,
-      "no_subject": null,
-      "no_recipient": null,
-      "open_label": null,
-      "cc": null,
-      "no_recipient_hint": null,
-      "copy": null,
-      "copied": null,
-      "share_title": null,
-      "open_failed": null
+      "new_email": "नया ईमेल",
+      "no_subject": "(कोई विषय नहीं)",
+      "no_recipient": "अभी तक कोई प्राप्तकर्ता नहीं",
+      "open_label": "ईमेल ड्राफ़ को खोलें {{subject}}",
+      "cc": "सीसी: {{addresses}}",
+      "no_recipient_hint": "कोई ईमेल पता नहीं दिया गया - अपने ईमेल ऐप में यह किसके लिए है, वह जानकारी जोड़ें।",
+      "copy": "ईमेल कॉपी करें",
+      "copied": "ईमेल कॉपी किया गया",
+      "share_title": "ईमेल भेजें",
+      "open_failed": "ईमेल ऐप खोलने में असमर्थ"
     },
     "calendar_event": {
-      "open_label": null,
-      "all_day": null,
-      "open_failed": null,
-      "saved": null,
-      "permission_denied": null,
-      "add_with": null,
-      "save_ics": null,
-      "save_failed": null,
-      "no_app_hint": null,
-      "reminders_hint": null,
-      "invitees": null,
-      "reminders": null,
-      "reminder_before": null,
-      "reminder_at_start": null,
+      "open_label": "अपने कैलेंडर में {{title}} जोड़ें",
+      "all_day": "पूरे दिन",
+      "open_failed": "कैलेंडर ऐप खोलने में असमर्थ",
+      "saved": "आपके कैलेंडर में जोड़ा गया",
+      "permission_denied": "सेटिंग्स में AnythingLLM के लिए कैलेंडर एक्सेस को सक्षम करें ताकि इवेंट जोड़े जा सकें।",
+      "add_with": "जोड़ें",
+      "save_ics": ".ics फ़ाइल सहेजें",
+      "save_failed": "इवेंट फ़ाइल को सहेजने में असमर्थ",
+      "no_app_hint": "कोई कैलेंडर ऐप नहीं मिला - इस इवेंट को .ics फ़ाइल के रूप में सहेजें ताकि इसे कहीं भी आयात किया जा सके।",
+      "reminders_hint": "कैलेंडर ऐप्स अपने स्वयं के रिमाइंडर सेट करते हैं - .ics फ़ाइल इन रिमाइंडर को सहेजती है।",
+      "invitees": "आमंत्रण {{addresses}}",
+      "reminders": "याद दिलाएं: {{times}}",
+      "reminder_before": "{{time}} से पहले",
+      "reminder_at_start": "शुरू होने पर",
       "repeat": {
-        "daily_one": null,
-        "daily_other": null,
-        "weekly_one": null,
-        "weekly_other": null,
-        "monthly_one": null,
-        "monthly_other": null,
-        "yearly_one": null,
-        "yearly_other": null,
-        "on_days": null,
-        "until": null,
-        "times_one": null,
-        "times_other": null
+        "daily_one": "दैनिक",
+        "daily_other": "हर {{count}} दिन",
+        "weekly_one": "साप्ताहिक",
+        "weekly_other": "हर {{count}} हफ़्तों में",
+        "monthly_one": "मासिक",
+        "monthly_other": "हर {{count}} महीने",
+        "yearly_one": "वार्षिक",
+        "yearly_other": "हर {{count}} साल",
+        "on_days": "{{repeat}} पर {{days}}",
+        "until": "{{repeat}} से {{date}} तक",
+        "times_one": "{{repeat}}, एक बार",
+        "times_other": "{{repeat}}, {{count}} बार"
       }
     },
     "metrics": {
@@ -512,12 +512,12 @@
       "create_files": {
         "name": "फ़ाइलें बनाएँ",
         "description": "सहायक को दस्तावेज़ लिखने दें जिसे आप डाउनलोड और साझा कर सकते हैं।",
-        "note": null
+        "note": "सहायक द्वारा बनाए गए दस्तावेज़ डाउनलोड और साझा करें। फ़ाइलें इस डिवाइस पर तब तक रहेंगी जब तक आप सेटिंग्स में अस्थायी फ़ाइलों को हटा नहीं देते।"
       },
       "calendar": {
-        "name": null,
-        "description": null,
-        "note": null
+        "name": "कैलेंडर",
+        "description": "सहायक को अपने कैलेंडर में घटनाओं को जोड़ने और उसमें मौजूद जानकारी पढ़ने दें।",
+        "note": "सहायक द्वारा बनाए गए कार्यक्रम आपके कैलेंडर ऐप में सहेजने के लिए उपलब्ध होते हैं। कैलेंडर का उपयोग करने के लिए, आपको कैलेंडर तक पहुंच की अनुमति देनी होगी, जो ऐप चालू करते समय मांगी जाती है।"
       }
     },
     "reranker": {
@@ -534,7 +534,7 @@
     "calendar_event_reading": {
       "name": "कैलेंडर पढ़ें",
       "description": "सहायक को अपने कैलेंडर इवेंट्स पढ़ने के लिए उपयोग करें।",
-      "permission_denied": null,
+      "permission_denied": "कैलेंडर एक्सेस की अनुमति नहीं दी गई थी। अपना कैलेंडर पढ़ने के लिए अपने फ़ोन की सेटिंग्स में AnythingLLM के लिए इसे चालू करें।",
       "status_date": "{{date}} के लिए अपना कैलेंडर पढ़ रहे हैं",
       "status_today": "आज के लिए अपना कैलेंडर पढ़ रहे हैं",
       "status_tomorrow": "कल के लिए अपना कैलेंडर पढ़ रहे हैं",

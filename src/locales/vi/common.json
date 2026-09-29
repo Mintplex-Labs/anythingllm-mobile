@@ -175,9 +175,9 @@
       "title": "Trích dẫn",
       "score": "Điểm: {{score}}",
       "sources": "Nguồn",
-      "calendar_untitled": null,
-      "calendar_open_label": null,
-      "calendar_open_failed": null
+      "calendar_untitled": "(Không có tiêu đề)",
+      "calendar_open_label": "Mở {{title}} trong lịch của bạn",
+      "calendar_open_failed": "Không thể mở sự kiện trên ứng dụng lịch"
     },
     "message_actions": {
       "copied": "Đã sao chép vào bộ nhớ tạm",
@@ -229,55 +229,55 @@
       "view": "Xem"
     },
     "draft": {
-      "open": null,
-      "send_with": null,
-      "more_apps": null,
-      "open_in_failed": null
+      "open": "Mở",
+      "send_with": "Gửi",
+      "more_apps": "Các ứng dụng khác",
+      "open_in_failed": "Không thể mở {{app}}"
     },
     "text_draft": {
-      "new_message": null,
-      "open_label": null,
-      "no_number_hint": null,
-      "copy": null,
-      "copied": null,
-      "share_title": null,
-      "open_failed": null
+      "new_message": "Tin nhắn mới",
+      "open_label": "Mở bản nháp tin nhắn văn bản gửi đến {{recipient}}",
+      "no_number_hint": "Không có số điện thoại được cung cấp – ứng dụng sẽ hỏi bạn muốn gửi cho ai.",
+      "copy": "Sao chép tin nhắn",
+      "copied": "Đã sao chép",
+      "share_title": "Gửi tin nhắn",
+      "open_failed": "Không thể mở ứng dụng nhắn tin"
     },
     "email_draft": {
-      "new_email": null,
-      "no_subject": null,
-      "no_recipient": null,
-      "open_label": null,
-      "cc": null,
-      "no_recipient_hint": null,
-      "copy": null,
-      "copied": null,
-      "share_title": null,
-      "open_failed": null
+      "new_email": "Tin nhắn mới",
+      "no_subject": "(Không có chủ đề)",
+      "no_recipient": "Chưa có người nhận",
+      "open_label": "Mở bản nháp email {{subject}}",
+      "cc": "Cc: {{addresses}}",
+      "no_recipient_hint": "Không có địa chỉ email – vui lòng thêm thông tin người nhận trong ứng dụng email của bạn.",
+      "copy": "Sao chép email",
+      "copied": "Email đã sao chép",
+      "share_title": "Gửi email với",
+      "open_failed": "Không thể mở ứng dụng email"
     },
     "calendar_event": {
-      "open_label": null,
-      "all_day": null,
-      "open_failed": null,
-      "saved": null,
-      "permission_denied": null,
-      "add_with": null,
-      "save_ics": null,
-      "save_failed": null,
-      "no_app_hint": null,
-      "reminders_hint": null,
-      "invitees": null,
-      "reminders": null,
-      "reminder_before": null,
-      "reminder_at_start": null,
+      "open_label": "Thêm {{title}} vào lịch",
+      "all_day": "Cả ngày",
+      "open_failed": "Không thể mở ứng dụng lịch",
+      "saved": "Đã thêm vào lịch",
+      "permission_denied": "Cho phép quyền truy cập lịch cho AnythingLLM trong Cài đặt để thêm sự kiện.",
+      "add_with": "Thêm",
+      "save_ics": "Lưu tệp .ics",
+      "save_failed": "Không thể lưu tệp sự kiện",
+      "no_app_hint": "Không tìm thấy ứng dụng lịch – lưu sự kiện dưới dạng tệp .ics để nhập vào mọi nơi.",
+      "reminders_hint": "Các ứng dụng lịch tự tạo thông báo – tệp .ics lưu trữ các thông báo này.",
+      "invitees": "Mời {{addresses}}",
+      "reminders": "Nhắc nhở: {{times}}",
+      "reminder_before": "{{time}} trước",
+      "reminder_at_start": "Khi bắt đầu",
       "repeat": {
-        "daily_other": null,
-        "weekly_other": null,
-        "monthly_other": null,
-        "yearly_other": null,
-        "on_days": null,
-        "until": null,
-        "times_other": null
+        "daily_other": "Mỗi {{count}} ngày",
+        "weekly_other": "Hàng {{count}} tuần",
+        "monthly_other": "Hàng {{count}} tháng",
+        "yearly_other": "Mỗi {{count}} năm",
+        "on_days": "{{repeat}} trên {{days}}",
+        "until": "Từ {{repeat}} đến {{date}}",
+        "times_other": "{{repeat}}, {{count}} lần"
       }
     },
     "metrics": {
@@ -494,12 +494,12 @@
       "create_files": {
         "name": "Tạo tệp",
         "description": "Để trợ lý viết các tài liệu bạn có thể tải xuống và chia sẻ.",
-        "note": null
+        "note": "Cho trợ lý soạn thảo tài liệu để bạn tải xuống và chia sẻ. Các tệp sẽ được lưu trên thiết bị này cho đến khi bạn xóa các tệp tạm thời trong cài đặt."
       },
       "calendar": {
-        "name": null,
-        "description": null,
-        "note": null
+        "name": "Lịch",
+        "description": "Cho trợ lý thêm sự kiện vào lịch của bạn và đọc nội dung lịch.",
+        "note": "Các sự kiện mà trợ lý tạo sẽ được thêm vào lịch của bạn để bạn lưu. Để đọc lịch, ứng dụng cần quyền truy cập vào lịch, và quyền này sẽ được yêu cầu khi bạn bật ứng dụng."
       }
     },
     "reranker": {
@@ -516,7 +516,7 @@
     "calendar_event_reading": {
       "name": "Đọc lịch",
       "description": "Sử dụng trợ lý để đọc các sự kiện lịch của bạn.",
-      "permission_denied": null,
+      "permission_denied": "Quyền truy cập lịch không được cho phép. Bật quyền này cho AnythingLLM trong cài đặt điện thoại để đọc lịch của bạn.",
       "status_date": "Đang đọc lịch của bạn cho {{date}}",
       "status_today": "Đang đọc lịch của bạn cho hôm nay",
       "status_tomorrow": "Đang đọc lịch của bạn cho ngày mai",

@@ -178,9 +178,9 @@
       "title": "Alıntılar",
       "score": "Puan: {{score}}",
       "sources": "Kaynaklar",
-      "calendar_untitled": null,
-      "calendar_open_label": null,
-      "calendar_open_failed": null
+      "calendar_untitled": "(Başlık yok)",
+      "calendar_open_label": "{{title}}'yi takviminize ekleyin",
+      "calendar_open_failed": "Takvim uygulamasında etkinliği açamadım"
     },
     "message_actions": {
       "copied": "Panoya kopyalandı",
@@ -232,60 +232,60 @@
       "view": "Görüntüle"
     },
     "draft": {
-      "open": null,
-      "send_with": null,
-      "more_apps": null,
-      "open_in_failed": null
+      "open": "Aç",
+      "send_with": "Gönder",
+      "more_apps": "Daha fazla uygulama",
+      "open_in_failed": "{{app}}'u açamadım"
     },
     "text_draft": {
-      "new_message": null,
-      "open_label": null,
-      "no_number_hint": null,
-      "copy": null,
-      "copied": null,
-      "share_title": null,
-      "open_failed": null
+      "new_message": "Yeni mesaj",
+      "open_label": "Metin mesajı taslağını aç {{recipient}}",
+      "no_number_hint": "Telefon numarası belirtilmedi – uygulama, numarayı kime göndereceğinizi soracaktır.",
+      "copy": "Mesajı kopyala",
+      "copied": "Mesaj kopyalandı",
+      "share_title": "Mesajı gönder",
+      "open_failed": "Mesajlaşma uygulamasını açamadım"
     },
     "email_draft": {
-      "new_email": null,
-      "no_subject": null,
-      "no_recipient": null,
-      "open_label": null,
-      "cc": null,
-      "no_recipient_hint": null,
-      "copy": null,
-      "copied": null,
-      "share_title": null,
-      "open_failed": null
+      "new_email": "Yeni e-posta",
+      "no_subject": "(Konu yok)",
+      "no_recipient": "Henüz gönderici yok",
+      "open_label": "E-posta taslağını aç {{subject}}",
+      "cc": "Kopyala: {{addresses}}",
+      "no_recipient_hint": "E-posta adresi belirtilmedi – lütfen kendi e-posta uygulamanızda kimin için olduğunu ekleyin.",
+      "copy": "E-postayı kopyala",
+      "copied": "E-posta kopyalandı",
+      "share_title": "E-posta gönder",
+      "open_failed": "E-posta uygulamasını açamadım"
     },
     "calendar_event": {
-      "open_label": null,
-      "all_day": null,
-      "open_failed": null,
-      "saved": null,
-      "permission_denied": null,
-      "add_with": null,
-      "save_ics": null,
-      "save_failed": null,
-      "no_app_hint": null,
-      "reminders_hint": null,
-      "invitees": null,
-      "reminders": null,
-      "reminder_before": null,
-      "reminder_at_start": null,
+      "open_label": "{{title}}'yi takvime ekle",
+      "all_day": "Tüm gün boyunca",
+      "open_failed": "Takvim uygulamasını açamadım",
+      "saved": "Takviminize eklendi",
+      "permission_denied": "Ayar menüsünden, \"AnythingLLM\" için takvim erişimini etkinleştirerek etkinlik ekleyin.",
+      "add_with": "Ekle",
+      "save_ics": ".ics dosyasını kaydet",
+      "save_failed": "Etkinlik dosyasını kaydedemedi.",
+      "no_app_hint": "Takvim uygulaması bulunamadı – etkinliği .ics dosyası olarak kaydederek istediğiniz yerde içe aktarabilirsiniz.",
+      "reminders_hint": "Takvim uygulamaları kendi hatırlatmalarını ayarlar – .ics dosyası bu hatırlatmaları saklar.",
+      "invitees": "Davetler {{addresses}}",
+      "reminders": "Hatırlatma: {{times}}",
+      "reminder_before": "{{time}} öncesinde",
+      "reminder_at_start": "Başlangıç zamanı",
       "repeat": {
-        "daily_one": null,
-        "daily_other": null,
-        "weekly_one": null,
-        "weekly_other": null,
-        "monthly_one": null,
-        "monthly_other": null,
-        "yearly_one": null,
-        "yearly_other": null,
-        "on_days": null,
-        "until": null,
-        "times_one": null,
-        "times_other": null
+        "daily_one": "Günlük",
+        "daily_other": "{{count}} gün boyunca",
+        "weekly_one": "Haftalık",
+        "weekly_other": "Her {{count}} hafta",
+        "monthly_one": "Aylık",
+        "monthly_other": "Her {{count}} ayda",
+        "yearly_one": "Yıllık",
+        "yearly_other": "Her {{count}} yılda",
+        "on_days": "{{repeat}} ile {{days}}",
+        "until": "{{repeat}}'dan {{date}}'ye",
+        "times_one": "{{repeat}}, bir kez",
+        "times_other": "{{repeat}}, {{count}} defter"
       }
     },
     "metrics": {
@@ -512,12 +512,12 @@
       "create_files": {
         "name": "Dosya Oluştur",
         "description": "Asistan'ın indirebilir ve paylaşabileceğiniz belgeler yazmasına izin verin.",
-        "note": null
+        "note": "Asistan, indirme ve paylaşma imkanı sunan belgeler oluşturabilir. Dosyalar, ayarlar bölümünden geçici dosyaları temizlemene kadar bu cihazda saklanır."
       },
       "calendar": {
-        "name": null,
-        "description": null,
-        "note": null
+        "name": "Takvim",
+        "description": "Asistan, takvimine etkinlikler eklesin ve takvimindeki içeriği okusun.",
+        "note": "Yardımcı tarafından oluşturulan etkinlikler, sizin için doğrudan takvim uygulamanızda kaydedilebilmeleri için takvime eklenecektir. Takvime erişim, uygulamanın çalıştırılması sırasında talep edilir."
       }
     },
     "reranker": {
@@ -534,7 +534,7 @@
     "calendar_event_reading": {
       "name": "Takvimi Oku",
       "description": "Asistan'ı kullanarak takvim etkinliklerinizi okuyun.",
-      "permission_denied": null,
+      "permission_denied": "Takvim erişimi engellendi. Telefon ayarlarınızda AnythingLLM için etkinleştirerek takviminizi görüntüleyebilirsiniz.",
       "status_date": "{{date}} için takvim okuyor",
       "status_today": "Bugün için takvim okuyor",
       "status_tomorrow": "Yarın için takvim okuyor",

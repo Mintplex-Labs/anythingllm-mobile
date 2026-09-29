@@ -175,9 +175,9 @@
       "title": "引用",
       "score": "スコア：{{score}}",
       "sources": "ソース",
-      "calendar_untitled": null,
-      "calendar_open_label": null,
-      "calendar_open_failed": null
+      "calendar_untitled": "（タイトルなし）",
+      "calendar_open_label": "カレンダーで「{{title}}」を開く",
+      "calendar_open_failed": "カレンダーアプリでイベントを開けませんでした"
     },
     "message_actions": {
       "copied": "クリップボードにコピーしました",
@@ -229,55 +229,55 @@
       "view": "表示"
     },
     "draft": {
-      "open": null,
-      "send_with": null,
-      "more_apps": null,
-      "open_in_failed": null
+      "open": "開く",
+      "send_with": "送信",
+      "more_apps": "その他のアプリ",
+      "open_in_failed": "{{app}} を開けませんでした"
     },
     "text_draft": {
-      "new_message": null,
-      "open_label": null,
-      "no_number_hint": null,
-      "copy": null,
-      "copied": null,
-      "share_title": null,
-      "open_failed": null
+      "new_message": "新しいメッセージ",
+      "open_label": "テキストメッセージの草案を開く {{recipient}}",
+      "no_number_hint": "電話番号は指定されていません。アプリが宛先を尋ねます。",
+      "copy": "メッセージをコピー",
+      "copied": "メッセージをコピー",
+      "share_title": "メッセージを送信する",
+      "open_failed": "メッセージアプリを開けません"
     },
     "email_draft": {
-      "new_email": null,
-      "no_subject": null,
-      "no_recipient": null,
-      "open_label": null,
-      "cc": null,
-      "no_recipient_hint": null,
-      "copy": null,
-      "copied": null,
-      "share_title": null,
-      "open_failed": null
+      "new_email": "新しいメール",
+      "no_subject": "（件名なし）",
+      "no_recipient": "宛先はまだ設定されていません",
+      "open_label": "メールの草案を開く {{subject}}",
+      "cc": "抄送: {{addresses}}",
+      "no_recipient_hint": "メールアドレスは指定されていません。ご自身のメールアプリで宛先を追加してください。",
+      "copy": "メールをコピー",
+      "copied": "メールをコピー",
+      "share_title": "メールを送信する",
+      "open_failed": "メールアプリを開けませんでした"
     },
     "calendar_event": {
-      "open_label": null,
-      "all_day": null,
-      "open_failed": null,
-      "saved": null,
-      "permission_denied": null,
-      "add_with": null,
-      "save_ics": null,
-      "save_failed": null,
-      "no_app_hint": null,
-      "reminders_hint": null,
-      "invitees": null,
-      "reminders": null,
-      "reminder_before": null,
-      "reminder_at_start": null,
+      "open_label": "カレンダーに{{title}}を追加する",
+      "all_day": "終日",
+      "open_failed": "カレンダーアプリを開けられません",
+      "saved": "カレンダーに追加",
+      "permission_denied": "設定で、イベントを追加するために、AnythingLLM へのカレンダーへのアクセスを許可する。",
+      "add_with": "追加する",
+      "save_ics": ".ics ファイルを保存する",
+      "save_failed": "イベントファイルの保存に失敗しました",
+      "no_app_hint": "カレンダーアプリが見つかりません。イベントを.ics形式で保存し、どこでもインポートできます。",
+      "reminders_hint": "カレンダーアプリは独自の通知を設定します。.icsファイルには、これらの通知の情報が保存されます。",
+      "invitees": "招待: {{addresses}}",
+      "reminders": "リマインダー: {{times}}",
+      "reminder_before": "{{time}} 以前",
+      "reminder_at_start": "開始時",
       "repeat": {
-        "daily_other": null,
-        "weekly_other": null,
-        "monthly_other": null,
-        "yearly_other": null,
-        "on_days": null,
-        "until": null,
-        "times_other": null
+        "daily_other": "{{count}}日ごと",
+        "weekly_other": "{{count}}週間ごと",
+        "monthly_other": "{{count}}ヶ月ごと",
+        "yearly_other": "{{count}}年ごと",
+        "on_days": "{{repeat}}（{{days}}）",
+        "until": "{{repeat}}、{{date}}まで",
+        "times_other": "{{repeat}}、{{count}}回"
       }
     },
     "metrics": {
@@ -494,12 +494,12 @@
       "create_files": {
         "name": "ファイルの作成",
         "description": "アシスタントにドキュメントを作成させて、ダウンロードして共有できます。",
-        "note": null
+        "note": "アシスタントが作成したドキュメントをダウンロードして共有できます。ファイルは、設定で一時ファイルを削除するまで、このデバイスに保存されます。"
       },
       "calendar": {
-        "name": null,
-        "description": null,
-        "note": null
+        "name": "カレンダー",
+        "description": "アシスタントがカレンダーに予定を追加し、内容を確認できます。",
+        "note": "アシスタントが作成したイベントは、あなたのカレンダーアプリに自動的に登録されます。カレンダーの確認には、カレンダーへのアクセス許可が必要です（アプリを起動した際に確認されます）。"
       }
     },
     "reranker": {
@@ -516,7 +516,7 @@
     "calendar_event_reading": {
       "name": "カレンダーを読む",
       "description": "アシスタントを使用してカレンダーイベントを読んでもらいます。",
-      "permission_denied": null,
+      "permission_denied": "カレンダーへのアクセスは許可されていません。「AnythingLLM」の設定で、電話の設定を開き、カレンダーを読み取れるように設定してください。",
       "status_date": "{{date}}のカレンダーを読み中",
       "status_today": "今日のカレンダーを読み中",
       "status_tomorrow": "明日のカレンダーを読み中",

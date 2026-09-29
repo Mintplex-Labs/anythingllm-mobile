@@ -178,9 +178,9 @@
       "title": "Zitate",
       "score": "Bewertung: {{score}}",
       "sources": "Quellen",
-      "calendar_untitled": null,
-      "calendar_open_label": null,
-      "calendar_open_failed": null
+      "calendar_untitled": "(kein Titel)",
+      "calendar_open_label": "Öffne {{title}} in deinem Kalender",
+      "calendar_open_failed": "Konnte das Ereignis nicht in einer Kalender-App öffnen"
     },
     "message_actions": {
       "copied": "In Zwischenablage kopiert",
@@ -232,60 +232,60 @@
       "view": "Anzeigen"
     },
     "draft": {
-      "open": null,
-      "send_with": null,
-      "more_apps": null,
-      "open_in_failed": null
+      "open": "Öffnen",
+      "send_with": "Senden",
+      "more_apps": "Weitere Apps",
+      "open_in_failed": "Konnte {{app}} nicht öffnen"
     },
     "text_draft": {
-      "new_message": null,
-      "open_label": null,
-      "no_number_hint": null,
-      "copy": null,
-      "copied": null,
-      "share_title": null,
-      "open_failed": null
+      "new_message": "Neue Nachricht",
+      "open_label": "Öffnen Sie den Entwurf für die Textnachricht {{recipient}}",
+      "no_number_hint": "Keine Telefonnummer angegeben – die App fragt, an wen die Nachricht gesendet werden soll.",
+      "copy": "Nachricht kopieren",
+      "copied": "Nachricht kopiert",
+      "share_title": "Nachricht senden mit",
+      "open_failed": "Keine Möglichkeit, eine Chat-App zu öffnen"
     },
     "email_draft": {
-      "new_email": null,
-      "no_subject": null,
-      "no_recipient": null,
-      "open_label": null,
-      "cc": null,
-      "no_recipient_hint": null,
-      "copy": null,
-      "copied": null,
-      "share_title": null,
-      "open_failed": null
+      "new_email": "Neuer E-Mail",
+      "no_subject": "(kein Thema)",
+      "no_recipient": "Noch kein Empfänger",
+      "open_label": "E-Mail-Entwurf öffnen {{subject}}",
+      "cc": "CC: {{addresses}}",
+      "no_recipient_hint": "Keine E-Mail-Adresse angegeben – fügen Sie den Empfänger in Ihrer E-Mail-App hinzu.",
+      "copy": "E-Mail kopieren",
+      "copied": "E-Mail kopiert",
+      "share_title": "E-Mail senden mit",
+      "open_failed": "Keine E-Mail-App konnte geöffnet werden"
     },
     "calendar_event": {
-      "open_label": null,
-      "all_day": null,
-      "open_failed": null,
-      "saved": null,
-      "permission_denied": null,
-      "add_with": null,
-      "save_ics": null,
-      "save_failed": null,
-      "no_app_hint": null,
-      "reminders_hint": null,
-      "invitees": null,
-      "reminders": null,
-      "reminder_before": null,
-      "reminder_at_start": null,
+      "open_label": "Fügen Sie {{title}} zu Ihrem Kalender hinzu",
+      "all_day": "Ganztägig",
+      "open_failed": "Keine Kalender-App konnte geöffnet werden",
+      "saved": "Zur Kalender hinzugefügt",
+      "permission_denied": "Erlaube Zugriff auf den Kalender für AnythingLLM in den Einstellungen, um Ereignisse hinzuzufügen.",
+      "add_with": "Hinzufügen",
+      "save_ics": "Datei speichern (.ics)",
+      "save_failed": "Fehler beim Speichern der Ereignisdatei",
+      "no_app_hint": "Kein Kalender-App gefunden – Speichern Sie das Ereignis als .ics-Datei, um es überall importieren zu können.",
+      "reminders_hint": "Kalender-Apps erstellen ihre eigenen Erinnerungen – die .ics-Datei speichert diese.",
+      "invitees": "Einladungen {{addresses}}",
+      "reminders": "Erinnerung: {{times}}",
+      "reminder_before": "{{time}} vorher",
+      "reminder_at_start": "Zu Beginn",
       "repeat": {
-        "daily_one": null,
-        "daily_other": null,
-        "weekly_one": null,
-        "weekly_other": null,
-        "monthly_one": null,
-        "monthly_other": null,
-        "yearly_one": null,
-        "yearly_other": null,
-        "on_days": null,
-        "until": null,
-        "times_one": null,
-        "times_other": null
+        "daily_one": "Täglich",
+        "daily_other": "Alle {{count}} Tage",
+        "weekly_one": "Wöchentlich",
+        "weekly_other": "Alle {{count}} Wochen",
+        "monthly_one": "Monatlich",
+        "monthly_other": "Alle {{count}} Monate",
+        "yearly_one": "Jährlich",
+        "yearly_other": "Alle {{count}} Jahre",
+        "on_days": "{{repeat}} in {{days}}",
+        "until": "{{repeat}} bis {{date}}",
+        "times_one": "{{repeat}}, einmal",
+        "times_other": "{{repeat}}, {{count}} Mal"
       }
     },
     "metrics": {
@@ -512,12 +512,12 @@
       "create_files": {
         "name": "Dateien erstellen",
         "description": "Lassen Sie den Assistenten Dokumente schreiben, die Sie herunterladen und teilen können.",
-        "note": null
+        "note": "Lassen Sie den Assistenten Dokumente erstellen, die Sie herunterladen und teilen können. Die Dateien werden auf diesem Gerät gespeichert, bis Sie temporäre Dateien in den Einstellungen löschen."
       },
       "calendar": {
-        "name": null,
-        "description": null,
-        "note": null
+        "name": "Kalender",
+        "description": "Lassen Sie den Assistenten Termine in Ihren Kalender eintragen und den Inhalt lesen.",
+        "note": "Ereignisse, die der Assistent erstellt, werden automatisch in Ihrer Kalender-App gespeichert. Um Ereignisse zu speichern, benötigen Sie Zugriff auf Ihren Kalender, der beim Start abgefragt wird."
       }
     },
     "reranker": {
@@ -534,7 +534,7 @@
     "calendar_event_reading": {
       "name": "Kalender lesen",
       "description": "Verwenden Sie den Assistenten, um Ihre Kalenderereignisse zu lesen.",
-      "permission_denied": null,
+      "permission_denied": "Der Zugriff auf den Kalender ist nicht erlaubt. Aktivieren Sie ihn für AnythingLLM in den Einstellungen Ihres Telefons, um Ihren Kalender anzuzeigen.",
       "status_date": "Ihren Kalender für {{date}} lesen",
       "status_today": "Ihren Kalender für heute lesen",
       "status_tomorrow": "Ihren Kalender für morgen lesen",

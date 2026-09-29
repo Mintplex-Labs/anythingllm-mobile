@@ -1033,7 +1033,9 @@
       "placeholder": "Konuşma bağlamınızı buraya girin...",
       "save_error": "Bağlam uzunluğunu kaydetmede hata",
       "hint": "Açıklayın ki, bağlam uzunluğu kullandığınız modele ve cihazınızın belleği için de bir etkiye sahiptir.",
-      "description": "Bağlam uzunluğu, yapay zekanın bir yanıt oluştururken kullanabileceği maksimum token sayısını ifade eder."
+      "description": "Bağlam uzunluğu, yapay zekanın bir yanıt oluştururken kullanabileceği maksimum token sayısını ifade eder.",
+      "provider_managed": null,
+      "disabled_description": null
     },
     "max_tool_calls": {
       "title": null,

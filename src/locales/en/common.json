@@ -1033,7 +1033,9 @@
       "placeholder": "Enter your context length here...",
       "save_error": "Error saving context length",
       "hint": "Keep in mind that the context length is also dependent on the model you are using and has memory implications for your device.",
-      "description": "The context length is the maximum number of tokens that the AI can use while generating a response."
+      "description": "The context length is the maximum number of tokens that the AI can use while generating a response.",
+      "provider_managed": "Set by provider",
+      "disabled_description": "Context length only applies to on-device models. Your current provider manages its own context window."
     },
     "max_tool_calls": {
       "title": "Max Tool Calls",

@@ -1033,7 +1033,9 @@
       "placeholder": "Voer hier je contextlengte in...",
       "save_error": "Fout bij opslaan van contextlengte",
       "hint": "Houd in gedachte dat de contextlengte ook afhankelijk is van het model dat je gebruikt en geheugenimplicaties voor je apparaat heeft.",
-      "description": "Contextlengte is het maximale aantal tokens dat de AI kan gebruiken bij het genereren van een antwoord."
+      "description": "Contextlengte is het maximale aantal tokens dat de AI kan gebruiken bij het genereren van een antwoord.",
+      "provider_managed": null,
+      "disabled_description": null
     },
     "max_tool_calls": {
       "title": null,

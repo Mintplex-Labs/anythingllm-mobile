@@ -995,7 +995,9 @@
       "placeholder": "Nhập độ dài bối cảnh của bạn ở đây...",
       "save_error": "Lỗi lưu độ dài bối cảnh",
       "hint": "Hãy nhớ rằng độ dài bối cảnh cũng phụ thuộc vào mô hình bạn đang sử dụng và có ý nghĩa bộ nhớ cho thiết bị của bạn.",
-      "description": "Độ dài bối cảnh là số token tối đa mà AI có thể sử dụng khi tạo phản hồi."
+      "description": "Độ dài bối cảnh là số token tối đa mà AI có thể sử dụng khi tạo phản hồi.",
+      "provider_managed": null,
+      "disabled_description": null
     },
     "max_tool_calls": {
       "title": null,

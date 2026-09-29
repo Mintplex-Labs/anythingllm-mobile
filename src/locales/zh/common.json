@@ -995,7 +995,9 @@
       "placeholder": "在此输入您的上下文长度...",
       "save_error": "保存上下文长度时出错",
       "hint": "请记住，上下文长度也取决于您使用的模型，对您的设备有内存影响。",
-      "description": "上下文长度是 AI 在生成响应时可以使用的最大令牌数。"
+      "description": "上下文长度是 AI 在生成响应时可以使用的最大令牌数。",
+      "provider_managed": null,
+      "disabled_description": null
     },
     "max_tool_calls": {
       "title": null,

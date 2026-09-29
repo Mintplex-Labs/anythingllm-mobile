@@ -14,25 +14,27 @@ export type MessagingApp = {
 export type TextDraft = ITextDraftAction['action'];
 export type EmailDraft = IEmailDraftAction['action'];
 
-/** Which kind of app a draft opens in - texts go to messaging apps, emails to mail apps */
-export type DraftKind = 'text' | 'email';
+/** Which kind of app a draft opens in - texts go to messaging apps, emails to mail apps, events to calendar apps */
+export type DraftKind = 'text' | 'email' | 'calendar';
 
 /** The text key predates email drafts - kept so the saved choice survives the update */
 const PREFERRED_APP_KEYS: Record<DraftKind, string> = {
   text: 'messaging_preferred_app',
   email: 'email_preferred_app',
+  calendar: 'calendar_preferred_app',
 };
 
 const NATIVE_LISTERS: Record<DraftKind, string> = {
   text: 'getMessagingApps',
   email: 'getEmailApps',
+  calendar: 'getCalendarApps',
 };
 
 const appsCache: Partial<Record<DraftKind, Promise<MessagingApp[]>>> = {};
 
 /**
  * Installed apps a draft of this kind can be opened in, in display order (default SMS app first
- * for texts, alphabetical for email). Empty off Android or if the module is missing. Cached for
+ * for texts, alphabetical for email and calendar). Empty off Android or if the module is missing. Cached for
  * the session since every draft card asks - pass `refresh` when the user is about to pick, so
  * newly installed or removed apps show up.
  */

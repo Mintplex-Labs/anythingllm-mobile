@@ -174,7 +174,10 @@
     "citations": {
       "title": "引用",
       "score": "スコア：{{score}}",
-      "sources": "ソース"
+      "sources": "ソース",
+      "calendar_untitled": null,
+      "calendar_open_label": null,
+      "calendar_open_failed": null
     },
     "message_actions": {
       "copied": "クリップボードにコピーしました",
@@ -252,6 +255,32 @@
       "share_title": null,
       "open_failed": null
     },
+    "calendar_event": {
+      "add": null,
+      "open_label": null,
+      "all_day": null,
+      "open_failed": null,
+      "saved": null,
+      "permission_denied": null,
+      "add_with": null,
+      "save_ics": null,
+      "save_failed": null,
+      "no_app_hint": null,
+      "reminders_hint": null,
+      "invitees": null,
+      "reminders": null,
+      "reminder_before": null,
+      "reminder_at_start": null,
+      "repeat": {
+        "daily_other": null,
+        "weekly_other": null,
+        "monthly_other": null,
+        "yearly_other": null,
+        "on_days": null,
+        "until": null,
+        "times_other": null
+      }
+    },
     "metrics": {
       "tokens_other": "{{value}}トークン"
     },
@@ -303,7 +332,6 @@
       "title": "ツール",
       "group_status": "{{enabled}}個中{{total}}個がオン",
       "app_connections": "アプリ接続",
-      "group_files_note": "{{description}}ファイルは、設定で一時ファイルをクリアするまで、このデバイスに保持されます。",
       "needs_cloud_model": "{{description}}クラウドモデルが必要です。",
       "unavailable_on_device": "グレーアウトされたツールは、オンデバイスモデルでは利用できません。クラウドプロバイダーに切り替えてそれらを使用してください。"
     },
@@ -466,7 +494,13 @@
     "groups": {
       "create_files": {
         "name": "ファイルの作成",
-        "description": "アシスタントにドキュメントを作成させて、ダウンロードして共有できます。"
+        "description": "アシスタントにドキュメントを作成させて、ダウンロードして共有できます。",
+        "note": null
+      },
+      "calendar": {
+        "name": null,
+        "description": null,
+        "note": null
       }
     },
     "reranker": {
@@ -483,6 +517,7 @@
     "calendar_event_reading": {
       "name": "カレンダーを読む",
       "description": "アシスタントを使用してカレンダーイベントを読んでもらいます。",
+      "permission_denied": null,
       "status_date": "{{date}}のカレンダーを読み中",
       "status_today": "今日のカレンダーを読み中",
       "status_tomorrow": "明日のカレンダーを読み中",

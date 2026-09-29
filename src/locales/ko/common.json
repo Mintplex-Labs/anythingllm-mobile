@@ -174,7 +174,10 @@
     "citations": {
       "title": "인용",
       "score": "점수: {{score}}",
-      "sources": "출처"
+      "sources": "출처",
+      "calendar_untitled": null,
+      "calendar_open_label": null,
+      "calendar_open_failed": null
     },
     "message_actions": {
       "copied": "클립보드에 복사됨",
@@ -252,6 +255,32 @@
       "share_title": null,
       "open_failed": null
     },
+    "calendar_event": {
+      "add": null,
+      "open_label": null,
+      "all_day": null,
+      "open_failed": null,
+      "saved": null,
+      "permission_denied": null,
+      "add_with": null,
+      "save_ics": null,
+      "save_failed": null,
+      "no_app_hint": null,
+      "reminders_hint": null,
+      "invitees": null,
+      "reminders": null,
+      "reminder_before": null,
+      "reminder_at_start": null,
+      "repeat": {
+        "daily_other": null,
+        "weekly_other": null,
+        "monthly_other": null,
+        "yearly_other": null,
+        "on_days": null,
+        "until": null,
+        "times_other": null
+      }
+    },
     "metrics": {
       "tokens_other": "{{value}}개 토큰"
     },
@@ -303,7 +332,6 @@
       "title": "도구",
       "group_status": "{{enabled}}개 중 {{total}}개 켜짐",
       "app_connections": "앱 연결",
-      "group_files_note": "{{description}} 파일은 설정에서 임시 파일을 지울 때까지 이 기기에 유지됩니다.",
       "needs_cloud_model": "{{description}} 클라우드 모델이 필요합니다.",
       "unavailable_on_device": "회색으로 표시된 도구는 온디바이스 모델에서 사용할 수 없습니다. 클라우드 제공자로 전환하여 사용하세요."
     },
@@ -466,7 +494,13 @@
     "groups": {
       "create_files": {
         "name": "파일 만들기",
-        "description": "어시스턴트가 다운로드하고 공유할 수 있는 문서를 작성하도록 합니다."
+        "description": "어시스턴트가 다운로드하고 공유할 수 있는 문서를 작성하도록 합니다.",
+        "note": null
+      },
+      "calendar": {
+        "name": null,
+        "description": null,
+        "note": null
       }
     },
     "reranker": {
@@ -483,6 +517,7 @@
     "calendar_event_reading": {
       "name": "캘린더 읽기",
       "description": "어시스턴트를 사용하여 캘린더 이벤트를 읽습니다.",
+      "permission_denied": null,
       "status_date": "{{date}}의 캘린더를 읽는 중",
       "status_today": "오늘의 캘린더를 읽는 중",
       "status_tomorrow": "내일의 캘린더를 읽는 중",

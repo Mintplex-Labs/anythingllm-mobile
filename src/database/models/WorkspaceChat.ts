@@ -25,6 +25,28 @@ export type IAgentWebSearchCitation = {
   };
 }
 
+/**
+ * An event the read-calendar tool read from the user's calendar. Shown in the sources sheet,
+ * where tapping it opens that event (or on iOS, that day) in the calendar app.
+ */
+export type IAgentCalendarEventCitation = {
+  type: 'calendar-event';
+  event: {
+    /** Calendar provider event id - on Android also opens the event in the calendar app */
+    id: string;
+    title: string;
+    /** Epoch millis of this occurrence - recurring events share an id */
+    beginTime: number;
+    endTime: number;
+    allDay: boolean;
+    location: string;
+    description: string;
+    calendarTitle: string | null;
+    /** Hex color of the calendar the event is in */
+    calendarColor: string | null;
+  };
+}
+
 export type IAgentToolCall = {
   uuid: string;
   signature: string;
@@ -123,16 +145,44 @@ export type ITextDraftAction = {
   }
 }
 
+/**
+ * A calendar event the assistant drafted (see the calendar-event-creation tool). Rendered as a
+ * card in the chat history that opens the calendar app's new-event screen with it filled in -
+ * nothing is added until the user saves it there.
+ */
 export type ICalendarEventAction = {
   type: 'calendar_event_creation';
   action: {
+    /** Epoch millis */
     beginTime: number;
+    /** Epoch millis */
     endTime: number;
     title: string;
     eventLocation: string;
     description: string;
     allDay: boolean;
+    /** Invitee email addresses. Absent on rows written before invitees were supported. */
+    attendees?: string[];
+    /** Null for a one-off event. Absent on older rows. */
+    recurrence?: ICalendarRecurrence | null;
+    /** Reminders, in minutes before the start. Empty = the calendar app's default. Absent on older rows. */
+    reminderMinutes?: number[];
+    /** Meeting link (Zoom, Meet, Teams, ...). Absent on older rows. */
+    url?: string | null;
   }
+}
+
+/** How a drafted event repeats - maps onto an iCalendar RRULE */
+export type ICalendarRecurrence = {
+  frequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  /** Every N periods - 2 with weekly is every other week */
+  interval: number;
+  /** Weekly only: iCalendar day codes eg: ['MO', 'WE']. Empty = the start date's weekday. */
+  byDay: string[];
+  /** Total occurrences. Null when it repeats until a date or forever. */
+  count: number | null;
+  /** Epoch millis of the last day it can occur on. Null when it repeats a number of times or forever. */
+  until: number | null;
 }
 
 /**
@@ -167,7 +217,7 @@ export type IScheduledJobCreatedAction = {
   }
 }
 
-export type IAgentCitation = IAgentWebSearchCitation;
+export type IAgentCitation = IAgentWebSearchCitation | IAgentCalendarEventCitation;
 export type IChatCitation = IDocumentCitation | IAgentCitation;
 /**
  * An email the assistant drafted (see the draft-email tool). Rendered as a card in the chat

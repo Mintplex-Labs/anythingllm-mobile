@@ -183,7 +183,10 @@
     "citations": {
       "title": "Cytaty",
       "score": "Wynik: {{score}}",
-      "sources": "Źródła"
+      "sources": "Źródła",
+      "calendar_untitled": null,
+      "calendar_open_label": null,
+      "calendar_open_failed": null
     },
     "message_actions": {
       "copied": "Skopiowano do schowka",
@@ -261,6 +264,47 @@
       "share_title": null,
       "open_failed": null
     },
+    "calendar_event": {
+      "add": null,
+      "open_label": null,
+      "all_day": null,
+      "open_failed": null,
+      "saved": null,
+      "permission_denied": null,
+      "add_with": null,
+      "save_ics": null,
+      "save_failed": null,
+      "no_app_hint": null,
+      "reminders_hint": null,
+      "invitees": null,
+      "reminders": null,
+      "reminder_before": null,
+      "reminder_at_start": null,
+      "repeat": {
+        "daily_few": null,
+        "daily_many": null,
+        "daily_one": null,
+        "daily_other": null,
+        "weekly_few": null,
+        "weekly_many": null,
+        "weekly_one": null,
+        "weekly_other": null,
+        "monthly_few": null,
+        "monthly_many": null,
+        "monthly_one": null,
+        "monthly_other": null,
+        "yearly_few": null,
+        "yearly_many": null,
+        "yearly_one": null,
+        "yearly_other": null,
+        "on_days": null,
+        "until": null,
+        "times_few": null,
+        "times_many": null,
+        "times_one": null,
+        "times_other": null
+      }
+    },
     "metrics": {
       "tokens_few": "{{value}} tokeny",
       "tokens_many": "{{value}} tokenów",
@@ -318,7 +362,6 @@
       "title": "Narzędzia",
       "group_status": "{{enabled}} z {{total}} włączonych",
       "app_connections": "Połączenia aplikacji",
-      "group_files_note": "{{description}} Pliki są przechowywane na tym urządzeniu do czasu wyczyszczenia plików tymczasowych w ustawieniach.",
       "needs_cloud_model": "{{description}} Wymaga modelu chmury.",
       "unavailable_on_device": "Wyszarzone narzędzia nie są dostępne w modelu działającym na urządzeniu. Przełącz się na dostawcę chmury, aby ich używać."
     },
@@ -505,7 +548,13 @@
     "groups": {
       "create_files": {
         "name": "Utwórz pliki",
-        "description": "Pozwól asystentowi pisać dokumenty, które możesz pobrać i udostępniać."
+        "description": "Pozwól asystentowi pisać dokumenty, które możesz pobrać i udostępniać.",
+        "note": null
+      },
+      "calendar": {
+        "name": null,
+        "description": null,
+        "note": null
       }
     },
     "reranker": {
@@ -522,6 +571,7 @@
     "calendar_event_reading": {
       "name": "Przeczytaj kalendarz",
       "description": "Użyj asystenta, aby przeczytać zdarzenia Twojego kalendarza.",
+      "permission_denied": null,
       "status_date": "Czytanie Twojego kalendarza dla {{date}}",
       "status_today": "Czytanie Twojego kalendarza na dzisiaj",
       "status_tomorrow": "Czytanie Twojego kalendarza na jutro",

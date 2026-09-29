@@ -183,7 +183,10 @@
     "citations": {
       "title": "Цитаты",
       "score": "Оценка: {{score}}",
-      "sources": "Источники"
+      "sources": "Источники",
+      "calendar_untitled": null,
+      "calendar_open_label": null,
+      "calendar_open_failed": null
     },
     "message_actions": {
       "copied": "Скопировано в буфер обмена",
@@ -261,6 +264,47 @@
       "share_title": null,
       "open_failed": null
     },
+    "calendar_event": {
+      "add": null,
+      "open_label": null,
+      "all_day": null,
+      "open_failed": null,
+      "saved": null,
+      "permission_denied": null,
+      "add_with": null,
+      "save_ics": null,
+      "save_failed": null,
+      "no_app_hint": null,
+      "reminders_hint": null,
+      "invitees": null,
+      "reminders": null,
+      "reminder_before": null,
+      "reminder_at_start": null,
+      "repeat": {
+        "daily_few": null,
+        "daily_many": null,
+        "daily_one": null,
+        "daily_other": null,
+        "weekly_few": null,
+        "weekly_many": null,
+        "weekly_one": null,
+        "weekly_other": null,
+        "monthly_few": null,
+        "monthly_many": null,
+        "monthly_one": null,
+        "monthly_other": null,
+        "yearly_few": null,
+        "yearly_many": null,
+        "yearly_one": null,
+        "yearly_other": null,
+        "on_days": null,
+        "until": null,
+        "times_few": null,
+        "times_many": null,
+        "times_one": null,
+        "times_other": null
+      }
+    },
     "metrics": {
       "tokens_few": "{{value}} токена",
       "tokens_many": "{{value}} токенов",
@@ -318,7 +362,6 @@
       "title": "Инструменты",
       "group_status": "{{enabled}} из {{total}} включено",
       "app_connections": "Подключения приложений",
-      "group_files_note": "{{description}} Файлы остаются на этом устройстве, пока вы не очистите временные файлы в параметрах.",
       "needs_cloud_model": "{{description}} Требуется облачная модель.",
       "unavailable_on_device": "Неактивные инструменты недоступны для модели на устройстве. Переключитесь на облачного поставщика, чтобы использовать их."
     },
@@ -505,7 +548,13 @@
     "groups": {
       "create_files": {
         "name": "Создать файлы",
-        "description": "Позвольте помощнику писать документы, которые вы можете загружать и делиться."
+        "description": "Позвольте помощнику писать документы, которые вы можете загружать и делиться.",
+        "note": null
+      },
+      "calendar": {
+        "name": null,
+        "description": null,
+        "note": null
       }
     },
     "reranker": {
@@ -522,6 +571,7 @@
     "calendar_event_reading": {
       "name": "Чтение календаря",
       "description": "Используйте помощника для чтения событий вашего календаря.",
+      "permission_denied": null,
       "status_date": "Чтение вашего календаря на {{date}}",
       "status_today": "Чтение вашего календаря на сегодня",
       "status_tomorrow": "Чтение вашего календаря на завтра",

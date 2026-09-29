@@ -177,7 +177,10 @@
     "citations": {
       "title": "Alıntılar",
       "score": "Puan: {{score}}",
-      "sources": "Kaynaklar"
+      "sources": "Kaynaklar",
+      "calendar_untitled": null,
+      "calendar_open_label": null,
+      "calendar_open_failed": null
     },
     "message_actions": {
       "copied": "Panoya kopyalandı",
@@ -255,6 +258,37 @@
       "share_title": null,
       "open_failed": null
     },
+    "calendar_event": {
+      "add": null,
+      "open_label": null,
+      "all_day": null,
+      "open_failed": null,
+      "saved": null,
+      "permission_denied": null,
+      "add_with": null,
+      "save_ics": null,
+      "save_failed": null,
+      "no_app_hint": null,
+      "reminders_hint": null,
+      "invitees": null,
+      "reminders": null,
+      "reminder_before": null,
+      "reminder_at_start": null,
+      "repeat": {
+        "daily_one": null,
+        "daily_other": null,
+        "weekly_one": null,
+        "weekly_other": null,
+        "monthly_one": null,
+        "monthly_other": null,
+        "yearly_one": null,
+        "yearly_other": null,
+        "on_days": null,
+        "until": null,
+        "times_one": null,
+        "times_other": null
+      }
+    },
     "metrics": {
       "tokens_one": "{{value}} belirteç",
       "tokens_other": "{{value}} belirteç"
@@ -308,7 +342,6 @@
       "title": "Araçlar",
       "group_status": "{{enabled}} / {{total}} açık",
       "app_connections": "Uygulama Bağlantıları",
-      "group_files_note": "{{description}} Dosyalar ayarlarında geçici dosyaları temizleyene kadar bu cihazda tutulur.",
       "needs_cloud_model": "{{description}} Bulut modeli gereklidir.",
       "unavailable_on_device": "Gri araçlar cihazda çalışan modellerle kullanılamaz. Bunları kullanmak için bir bulut sağlayıcısına geçin."
     },
@@ -479,7 +512,13 @@
     "groups": {
       "create_files": {
         "name": "Dosya Oluştur",
-        "description": "Asistan'ın indirebilir ve paylaşabileceğiniz belgeler yazmasına izin verin."
+        "description": "Asistan'ın indirebilir ve paylaşabileceğiniz belgeler yazmasına izin verin.",
+        "note": null
+      },
+      "calendar": {
+        "name": null,
+        "description": null,
+        "note": null
       }
     },
     "reranker": {
@@ -496,6 +535,7 @@
     "calendar_event_reading": {
       "name": "Takvimi Oku",
       "description": "Asistan'ı kullanarak takvim etkinliklerinizi okuyun.",
+      "permission_denied": null,
       "status_date": "{{date}} için takvim okuyor",
       "status_today": "Bugün için takvim okuyor",
       "status_tomorrow": "Yarın için takvim okuyor",

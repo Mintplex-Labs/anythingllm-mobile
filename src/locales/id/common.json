@@ -174,7 +174,10 @@
     "citations": {
       "title": "Kutipan",
       "score": "Skor: {{score}}",
-      "sources": "Sumber"
+      "sources": "Sumber",
+      "calendar_untitled": null,
+      "calendar_open_label": null,
+      "calendar_open_failed": null
     },
     "message_actions": {
       "copied": "Disalin ke papan klip",
@@ -252,6 +255,32 @@
       "share_title": null,
       "open_failed": null
     },
+    "calendar_event": {
+      "add": null,
+      "open_label": null,
+      "all_day": null,
+      "open_failed": null,
+      "saved": null,
+      "permission_denied": null,
+      "add_with": null,
+      "save_ics": null,
+      "save_failed": null,
+      "no_app_hint": null,
+      "reminders_hint": null,
+      "invitees": null,
+      "reminders": null,
+      "reminder_before": null,
+      "reminder_at_start": null,
+      "repeat": {
+        "daily_other": null,
+        "weekly_other": null,
+        "monthly_other": null,
+        "yearly_other": null,
+        "on_days": null,
+        "until": null,
+        "times_other": null
+      }
+    },
     "metrics": {
       "tokens_other": "{{value}} token"
     },
@@ -303,7 +332,6 @@
       "title": "Alat",
       "group_status": "{{enabled}} dari {{total}} aktif",
       "app_connections": "Koneksi Aplikasi",
-      "group_files_note": "{{description}} File disimpan di perangkat ini sampai Anda menghapus file sementara di pengaturan.",
       "needs_cloud_model": "{{description}} Membutuhkan model cloud.",
       "unavailable_on_device": "Alat yang diarsir tidak tersedia dengan model on-device. Beralih ke penyedia cloud untuk menggunakannya."
     },
@@ -466,7 +494,13 @@
     "groups": {
       "create_files": {
         "name": "Buat File",
-        "description": "Biarkan asisten menulis dokumen yang dapat Anda unduh dan bagikan."
+        "description": "Biarkan asisten menulis dokumen yang dapat Anda unduh dan bagikan.",
+        "note": null
+      },
+      "calendar": {
+        "name": null,
+        "description": null,
+        "note": null
       }
     },
     "reranker": {
@@ -483,6 +517,7 @@
     "calendar_event_reading": {
       "name": "Baca Kalender",
       "description": "Gunakan asisten untuk membaca acara kalender Anda.",
+      "permission_denied": null,
       "status_date": "Membaca kalender Anda untuk {{date}}",
       "status_today": "Membaca kalender Anda untuk hari ini",
       "status_tomorrow": "Membaca kalender Anda untuk besok",

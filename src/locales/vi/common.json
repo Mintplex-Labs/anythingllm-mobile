@@ -174,7 +174,10 @@
     "citations": {
       "title": "Trích dẫn",
       "score": "Điểm: {{score}}",
-      "sources": "Nguồn"
+      "sources": "Nguồn",
+      "calendar_untitled": null,
+      "calendar_open_label": null,
+      "calendar_open_failed": null
     },
     "message_actions": {
       "copied": "Đã sao chép vào bộ nhớ tạm",
@@ -252,6 +255,32 @@
       "share_title": null,
       "open_failed": null
     },
+    "calendar_event": {
+      "add": null,
+      "open_label": null,
+      "all_day": null,
+      "open_failed": null,
+      "saved": null,
+      "permission_denied": null,
+      "add_with": null,
+      "save_ics": null,
+      "save_failed": null,
+      "no_app_hint": null,
+      "reminders_hint": null,
+      "invitees": null,
+      "reminders": null,
+      "reminder_before": null,
+      "reminder_at_start": null,
+      "repeat": {
+        "daily_other": null,
+        "weekly_other": null,
+        "monthly_other": null,
+        "yearly_other": null,
+        "on_days": null,
+        "until": null,
+        "times_other": null
+      }
+    },
     "metrics": {
       "tokens_other": "{{value}} token"
     },
@@ -303,7 +332,6 @@
       "title": "Công cụ",
       "group_status": "{{enabled}} trong {{total}} bật",
       "app_connections": "Kết nối ứng dụng",
-      "group_files_note": "{{description}} Các tệp được giữ trên thiết bị này cho đến khi bạn xóa tệp tạm thời trong cài đặt.",
       "needs_cloud_model": "{{description}} Cần một mô hình đám mây.",
       "unavailable_on_device": "Các công cụ bị tắt không khả dụng với mô hình trên thiết bị. Chuyển sang nhà cung cấp đám mây để sử dụng chúng."
     },
@@ -466,7 +494,13 @@
     "groups": {
       "create_files": {
         "name": "Tạo tệp",
-        "description": "Để trợ lý viết các tài liệu bạn có thể tải xuống và chia sẻ."
+        "description": "Để trợ lý viết các tài liệu bạn có thể tải xuống và chia sẻ.",
+        "note": null
+      },
+      "calendar": {
+        "name": null,
+        "description": null,
+        "note": null
       }
     },
     "reranker": {
@@ -483,6 +517,7 @@
     "calendar_event_reading": {
       "name": "Đọc lịch",
       "description": "Sử dụng trợ lý để đọc các sự kiện lịch của bạn.",
+      "permission_denied": null,
       "status_date": "Đang đọc lịch của bạn cho {{date}}",
       "status_today": "Đang đọc lịch của bạn cho hôm nay",
       "status_tomorrow": "Đang đọc lịch của bạn cho ngày mai",

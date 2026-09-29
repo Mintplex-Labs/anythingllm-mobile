@@ -177,7 +177,10 @@
     "citations": {
       "title": "उद्धरण",
       "score": "स्कोर: {{score}}",
-      "sources": "स्रोत"
+      "sources": "स्रोत",
+      "calendar_untitled": null,
+      "calendar_open_label": null,
+      "calendar_open_failed": null
     },
     "message_actions": {
       "copied": "क्लिपबोर्ड में कॉपी किया गया",
@@ -255,6 +258,37 @@
       "share_title": null,
       "open_failed": null
     },
+    "calendar_event": {
+      "add": null,
+      "open_label": null,
+      "all_day": null,
+      "open_failed": null,
+      "saved": null,
+      "permission_denied": null,
+      "add_with": null,
+      "save_ics": null,
+      "save_failed": null,
+      "no_app_hint": null,
+      "reminders_hint": null,
+      "invitees": null,
+      "reminders": null,
+      "reminder_before": null,
+      "reminder_at_start": null,
+      "repeat": {
+        "daily_one": null,
+        "daily_other": null,
+        "weekly_one": null,
+        "weekly_other": null,
+        "monthly_one": null,
+        "monthly_other": null,
+        "yearly_one": null,
+        "yearly_other": null,
+        "on_days": null,
+        "until": null,
+        "times_one": null,
+        "times_other": null
+      }
+    },
     "metrics": {
       "tokens_one": "{{value}} टोकन",
       "tokens_other": "{{value}} टोकन"
@@ -308,7 +342,6 @@
       "title": "उपकरण",
       "group_status": "{{enabled}} का {{total}} चालू है",
       "app_connections": "ऐप कनेक्शन",
-      "group_files_note": "{{description}} फ़ाइलें इस डिवाइस पर रहती हैं जब तक आप सेटिंग्स में अस्थायी फ़ाइलें साफ न करें।",
       "needs_cloud_model": "{{description}} क्लाउड मॉडल की आवश्यकता है।",
       "unavailable_on_device": "धूसर उपकरण ऑन-डिवाइस मॉडल के साथ उपलब्ध नहीं हैं। उन्हें उपयोग करने के लिए क्लाउड प्रदाता पर स्विच करें।"
     },
@@ -479,7 +512,13 @@
     "groups": {
       "create_files": {
         "name": "फ़ाइलें बनाएँ",
-        "description": "सहायक को दस्तावेज़ लिखने दें जिसे आप डाउनलोड और साझा कर सकते हैं।"
+        "description": "सहायक को दस्तावेज़ लिखने दें जिसे आप डाउनलोड और साझा कर सकते हैं।",
+        "note": null
+      },
+      "calendar": {
+        "name": null,
+        "description": null,
+        "note": null
       }
     },
     "reranker": {
@@ -496,6 +535,7 @@
     "calendar_event_reading": {
       "name": "कैलेंडर पढ़ें",
       "description": "सहायक को अपने कैलेंडर इवेंट्स पढ़ने के लिए उपयोग करें।",
+      "permission_denied": null,
       "status_date": "{{date}} के लिए अपना कैलेंडर पढ़ रहे हैं",
       "status_today": "आज के लिए अपना कैलेंडर पढ़ रहे हैं",
       "status_tomorrow": "कल के लिए अपना कैलेंडर पढ़ रहे हैं",

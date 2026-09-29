@@ -159,12 +159,12 @@
     "unknown_error": "Nieznany błąd",
     "loading_history": "Ładowanie historii czatu...",
     "greetings": {
-      "working_on": null,
-      "noodle": null,
-      "on_your_mind": null,
-      "where_to_start": null,
-      "ready": null,
-      "think_it_through": null
+      "working_on": "W czym pracujemy?",
+      "noodle": "Porozmawiajmy o czymś.",
+      "on_your_mind": "Co masz na myśli?",
+      "where_to_start": "Od czego zacząć?",
+      "ready": "Gotowe, gdy tylko chcesz.",
+      "think_it_through": "Spróbujmy to przemyśleć."
     },
     "suggestions": {
       "hello": "Cześć, w czym mi możesz pomóc?",
@@ -548,8 +548,8 @@
       "temperature_range": "Temperatura musi być między {{min}} a {{max}}",
       "context_length_not_number": "Długość kontekstu musi być liczbą",
       "context_length_min": "Długość kontekstu musi być większa niż {{min}}",
-      "max_tool_calls_not_integer": null,
-      "max_tool_calls_min": null
+      "max_tool_calls_not_integer": "Limit wywołań narzędzi musi być liczbą całkowitą.",
+      "max_tool_calls_min": "Limit wywołań narzędzi nie może być ujemny"
     }
   },
   "tools": {
@@ -724,16 +724,16 @@
       "list_failed_description": "Ten dostawca nie zwrócił żadnych modeli. Sprawdź, czy punkt końcowy jest osiągalny i obsługuje listę modeli, lub ustaw model ręcznie w Ustawieniach.",
       "try_again": "Spróbuj ponownie",
       "search_provider_models": "Szukaj {{provider}} modeli",
-      "switch_provider": null,
-      "choose_provider": null,
-      "search_providers": null,
-      "configured": null,
-      "edit_connection": null,
-      "connect_title": null,
-      "connect": null,
-      "connecting": null,
-      "connect_failed": null,
-      "model": null
+      "switch_provider": "Przełącz",
+      "choose_provider": "Wybierz dostawcę",
+      "search_providers": "Źródła wyszukiwania",
+      "configured": "Skonfigurowane",
+      "edit_connection": "Edytuj połączenie",
+      "connect_title": "Połącz {{provider}}",
+      "connect": "Połącz",
+      "connecting": "Połączenie...",
+      "connect_failed": "Nie udało się załadować modeli z {{provider}}. Sprawdź szczegóły powyżej, lub wpisz nazwę modelu, aby go użyć.",
+      "model": "Model"
     },
     "dev_shortcut_hint_few": "Naciśnij {{count}} razy więcej, aby otworzyć narzędzia programistyczne",
     "dev_shortcut_hint_many": "Naciśnij {{count}} razy więcej, aby otworzyć narzędzia programistyczne",
@@ -938,10 +938,10 @@
       "using_summary_other": "Używanie streszczenia {{count}} wcześniejszych wiadomości",
       "loading_model": "Ładowanie modelu do pamięci",
       "reply_truncated": "Odpowiedź została przycięta - okno kontekstu jest pełne",
-      "tool_call_limit_reached_few": null,
-      "tool_call_limit_reached_many": null,
-      "tool_call_limit_reached_one": null,
-      "tool_call_limit_reached_other": null,
+      "tool_call_limit_reached_few": "Osiągnięto limit {{count}} wywołań narzędzi - odpowiada, korzystając z dostępnych informacji",
+      "tool_call_limit_reached_many": "Osiągnięto limit {{count}} wywołań narzędzi - odpowiada, korzystając z dostępnych informacji",
+      "tool_call_limit_reached_one": "Osiągnięto limit {{count}} wywołania narzędzia - odpowiada, korzystając z dostępnych informacji",
+      "tool_call_limit_reached_other": "Osiągnięto limit {{count}} zapytań - odpowiada, korzystając z dostępnych informacji.",
       "searching_documents": "Wyszukiwanie Twoich dokumentów",
       "reranking": "Przeklasyfikowanie wyników",
       "reading_documents_few": "Czytanie {{count}} dołączonych dokumentów",
@@ -1007,11 +1007,11 @@
     "download_model_message": "Spowoduje to pobranie modelu na Twoje urządzenie. Ma wielkość {{size}}.",
     "notification_downloading_title": "Pobieranie modelu",
     "notification_downloading_body": "Pobieranie {{model}}",
-    "keep_app_open": null,
-    "cancel_download_title": null,
-    "cancel_download_message": null,
-    "keep_downloading": null,
-    "cancel_download": null,
+    "keep_app_open": "Pozostań na tym ekranie i trzymaj telefon odblokowany, aż pobieranie się zakończy.",
+    "cancel_download_title": "Anuluj pobieranie?",
+    "cancel_download_message": "{{model}} zatrzyma pobieranie i niekompletny plik zostanie usunięty.",
+    "keep_downloading": "Kontynuuj pobieranie",
+    "cancel_download": "Anuluj pobieranie",
     "notification_complete_title": "Pobieranie ukończone",
     "notification_complete_body": "Pobrano {{model}}",
     "download_failed_title": "Pobieranie nie powiodło się",
@@ -1110,19 +1110,19 @@
       "save_error": "Błąd zapisywania długości kontekstu",
       "hint": "Pamiętaj, że długość kontekstu zależy również od modelu, którego używasz, i ma implikacje pamięci dla Twojego urządzenia.",
       "description": "Długość kontekstu to maksymalna liczba tokenów, które AI może użyć podczas generowania odpowiedzi.",
-      "provider_managed": null,
-      "disabled_description": null
+      "provider_managed": "Ustalone przez dostawcę",
+      "disabled_description": "Długość kontekstu dotyczy tylko modeli działających na urządzeniu. Twój obecny dostawca zarządza własnym oknem kontekstu."
     },
     "max_tool_calls": {
-      "title": null,
-      "label": null,
-      "current": null,
-      "suggested": null,
-      "placeholder": null,
-      "save_error": null,
-      "no_limit": null,
-      "hint": null,
-      "description": null
+      "title": "Maksymalna liczba zapytań",
+      "label": "Limit użycia narzędzi",
+      "current": "Limit użycia narzędzi",
+      "suggested": "Sugestie dotyczące limitów",
+      "placeholder": "Brak ograniczeń",
+      "save_error": "Błąd: przekroczono limit połączeń",
+      "no_limit": "Brak ograniczeń",
+      "hint": "Najwięcej narzędzi, które agent może użyć w jednej odpowiedzi. Po osiągnięciu limitu, agent przestaje używać narzędzi i odpowiada, mając to, co ma.\n\nPozostaw puste, aby nie było limitu. Naciśnij \"Reset\", aby użyć domyślnych ustawień: {{cloud}} dla dostawców w chmurze, {{onDevice}} dla modeli lokalnych.",
+      "description": "Ogranicza liczbę narzędzi, które agent może użyć w jednej odpowiedzi, aby zapobiec niekończonemu używaniu narzędzi. Zwiększ limit dla długich, wieloetapowych zadań."
     },
     "vectors": {
       "section": "Magazyn wektorowy",
@@ -1168,12 +1168,12 @@
       "synced": "Zsynchronizowano",
       "sync_failed": "Niepowodzenie",
       "sync_workspace_failed": "Nie powiodła się synchronizacja obszaru roboczego {{name}}",
-      "workspaces": null,
-      "platform_desktop": null,
-      "platform_server": null,
-      "empty_title": null,
-      "empty_body": null,
-      "sync_explainer": null
+      "workspaces": "Przestrzenie robocze",
+      "platform_desktop": "AnythingLLM Desktop",
+      "platform_server": "AnythingLLM Server",
+      "empty_title": "Brak znalezionych przestrzeni roboczych",
+      "empty_body": "Utwórz przestrzeń roboczą w AnythingLLM, a następnie przewiń w dół, aby odświeżyć.",
+      "sync_explainer": "Synchronizacja kopiuje wątki i czaty z przestrzeni roboczej na to urządzenie. Ponowna synchronizacja zastępuje tę kopię. Czaty w domyślnym wątku nie są synchronizowane."
     }
   },
   "scheduled_jobs": {

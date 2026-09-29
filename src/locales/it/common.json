@@ -159,12 +159,12 @@
     "unknown_error": "Errore sconosciuto",
     "loading_history": "Caricamento della cronologia della chat in corso...",
     "greetings": {
-      "working_on": null,
-      "noodle": null,
-      "on_your_mind": null,
-      "where_to_start": null,
-      "ready": null,
-      "think_it_through": null
+      "working_on": "Su cosa stiamo lavorando?",
+      "noodle": "Proviamo a parlare di qualcosa.",
+      "on_your_mind": "Cosa ti interessa?",
+      "where_to_start": "Da dove cominciamo?",
+      "ready": "Pronto quando lo sei tu.",
+      "think_it_through": "Analizziamo la situazione."
     },
     "suggestions": {
       "hello": "Ciao, come posso aiutarti?",
@@ -530,8 +530,8 @@
       "temperature_range": "La temperatura deve essere tra {{min}} e {{max}}",
       "context_length_not_number": "La lunghezza del contesto deve essere un numero",
       "context_length_min": "La lunghezza del contesto deve essere maggiore di {{min}}",
-      "max_tool_calls_not_integer": null,
-      "max_tool_calls_min": null
+      "max_tool_calls_not_integer": "Il limite di chiamate deve essere un numero intero.",
+      "max_tool_calls_min": "Il limite di chiamate non può essere negativo."
     }
   },
   "tools": {
@@ -696,16 +696,16 @@
       "list_failed_description": "Questo provider non ha restituito alcun modello. Verifica che l'endpoint sia raggiungibile e supporti l'elenco dei modelli, o imposta il modello manualmente in Impostazioni.",
       "try_again": "Riprova",
       "search_provider_models": "Cerca i modelli {{provider}}",
-      "switch_provider": null,
-      "choose_provider": null,
-      "search_providers": null,
-      "configured": null,
-      "edit_connection": null,
-      "connect_title": null,
-      "connect": null,
-      "connecting": null,
-      "connect_failed": null,
-      "model": null
+      "switch_provider": "Passa",
+      "choose_provider": "Seleziona un fornitore",
+      "search_providers": "Fornitori di ricerca",
+      "configured": "Configurato",
+      "edit_connection": "Modifica connessione",
+      "connect_title": "Connetti {{provider}}",
+      "connect": "Connetti",
+      "connecting": "In attesa di connessione...",
+      "connect_failed": "Impossibile caricare i modelli da {{provider}}. Controlla i dettagli precedenti, oppure inserisci il nome del modello per utilizzarlo comunque.",
+      "model": "Modello"
     },
     "dev_shortcut_hint_many": "Premi {{count}} altre volte per aprire gli strumenti di sviluppo",
     "dev_shortcut_hint_one": "Premi {{count}} altra volta per aprire gli strumenti di sviluppo",
@@ -902,9 +902,9 @@
       "using_summary_other": "Utilizzo di un riepilogo di {{count}} messaggi precedenti",
       "loading_model": "Caricamento del modello in memoria",
       "reply_truncated": "La risposta è stata interrotta - la finestra del contesto è piena",
-      "tool_call_limit_reached_many": null,
-      "tool_call_limit_reached_one": null,
-      "tool_call_limit_reached_other": null,
+      "tool_call_limit_reached_many": "Raggiunto il limite di {{count}} chiamate. Risposta con le informazioni disponibili.",
+      "tool_call_limit_reached_one": "Raggiunto il limite di {{count}} chiamate – risposta con le informazioni disponibili",
+      "tool_call_limit_reached_other": "Raggiunto il limite di {{count}} chiamate. Risposta con le informazioni disponibili.",
       "searching_documents": "Ricerca dei tuoi documenti",
       "reranking": "Riclassificazione dei risultati",
       "reading_documents_many": "Lettura di {{count}} documenti allegati",
@@ -969,11 +969,11 @@
     "download_model_message": "Questo scaricherà il modello sul tuo dispositivo. È {{size}} di dimensioni.",
     "notification_downloading_title": "Scaricamento del modello",
     "notification_downloading_body": "Scaricamento di {{model}}",
-    "keep_app_open": null,
-    "cancel_download_title": null,
-    "cancel_download_message": null,
-    "keep_downloading": null,
-    "cancel_download": null,
+    "keep_app_open": "Rimani su questa schermata e mantieni il telefono sbloccato fino al completamento del download.",
+    "cancel_download_title": "Annullare il download?",
+    "cancel_download_message": "{{model}} interromperà il download e la parte scaricata verrà eliminata.",
+    "keep_downloading": "Continua il download",
+    "cancel_download": "Annulla il download",
     "notification_complete_title": "Download completato",
     "notification_complete_body": "Scaricato {{model}}",
     "download_failed_title": "Download non riuscito",
@@ -1072,19 +1072,19 @@
       "save_error": "Errore nel salvataggio della lunghezza del contesto",
       "hint": "Tieni presente che la lunghezza del contesto dipende anche dal modello che stai utilizzando e ha implicazioni di memoria per il tuo dispositivo.",
       "description": "La lunghezza del contesto è il numero massimo di token che l'AI può utilizzare durante la generazione di una risposta.",
-      "provider_managed": null,
-      "disabled_description": null
+      "provider_managed": "Impostato dal fornitore",
+      "disabled_description": "La lunghezza del contesto si applica solo ai modelli installati sul dispositivo. Il tuo fornitore attuale gestisce la propria finestra di contesto."
     },
     "max_tool_calls": {
-      "title": null,
-      "label": null,
-      "current": null,
-      "suggested": null,
-      "placeholder": null,
-      "save_error": null,
-      "no_limit": null,
-      "hint": null,
-      "description": null
+      "title": "Numero massimo di richieste",
+      "label": "Limite chiamate",
+      "current": "Limite attuale chiamate",
+      "suggested": "Limiti suggeriti",
+      "placeholder": "Senza limiti",
+      "save_error": "Errore durante il salvataggio del limite di chiamate",
+      "no_limit": "Senza limiti",
+      "hint": "Il numero massimo di strumenti che l'agente può chiamare in una singola risposta. Quando il limite viene raggiunto, l'agente smette di chiamare gli strumenti e risponde con ciò che ha.\n\nLascia vuoto per nessun limite. Tocca \"Ripristina\" per utilizzare le impostazioni predefinite: {{cloud}} per i fornitori di servizi cloud, {{onDevice}} per i modelli locali.",
+      "description": "Limita il numero di strumenti che l'agente può utilizzare in una singola risposta, evitando che continui a richiamarli indefinitamente. Aumenta questo limite per attività complesse e di più passaggi."
     },
     "vectors": {
       "section": "Archiviazione vettoriale",
@@ -1128,12 +1128,12 @@
       "synced": "Sincronizzato",
       "sync_failed": "Non riuscito",
       "sync_workspace_failed": "Impossibile sincronizzare il workspace {{name}}",
-      "workspaces": null,
-      "platform_desktop": null,
-      "platform_server": null,
-      "empty_title": null,
-      "empty_body": null,
-      "sync_explainer": null
+      "workspaces": "Spazi di lavoro",
+      "platform_desktop": "AnythingLLM Desktop",
+      "platform_server": "AnythingLLM Server",
+      "empty_title": "Nessun spazio di lavoro trovato",
+      "empty_body": "Crea uno spazio di lavoro in AnythingLLM, quindi scorri verso il basso per aggiornare.",
+      "sync_explainer": "La sincronizzazione copia i thread e le conversazioni dello spazio di lavoro su questo dispositivo. Una nuova sincronizzazione sovrascrive la copia. Le conversazioni nel thread predefinito non vengono sincronizzate."
     }
   },
   "scheduled_jobs": {

@@ -159,12 +159,12 @@
     "unknown_error": "अज्ञात त्रुटि",
     "loading_history": "चैट इतिहास लोड हो रहा है...",
     "greetings": {
-      "working_on": null,
-      "noodle": null,
-      "on_your_mind": null,
-      "where_to_start": null,
-      "ready": null,
-      "think_it_through": null
+      "working_on": "हम क्या कर रहे हैं?",
+      "noodle": "चलो किसी विषय पर चर्चा करते हैं।",
+      "on_your_mind": "आप क्या सोच रहे हैं?",
+      "where_to_start": "हम कहाँ से शुरू करें?",
+      "ready": "जब आप तैयार हों, तब हम तैयार।",
+      "think_it_through": "आइए, इसे विस्तार से सोचें।"
     },
     "suggestions": {
       "hello": "नमस्ते, आप मेरी क्या मदद कर सकते हैं?",
@@ -512,8 +512,8 @@
       "temperature_range": "तापमान {{min}} और {{max}} के बीच होना चाहिए",
       "context_length_not_number": "संदर्भ लंबाई एक संख्या होनी चाहिए",
       "context_length_min": "संदर्भ लंबाई {{min}} से अधिक होनी चाहिए",
-      "max_tool_calls_not_integer": null,
-      "max_tool_calls_min": null
+      "max_tool_calls_not_integer": "उपकरण कॉल की सीमा एक पूर्ण संख्या होनी चाहिए।",
+      "max_tool_calls_min": "टूल कॉल की सीमा नकारात्मक नहीं हो सकती।"
     }
   },
   "tools": {
@@ -668,16 +668,16 @@
       "list_failed_description": "इस प्रदाता ने कोई मॉडल नहीं लौटाया। जाँचें कि एंडपॉइंट तक पहुँचा जा सकता है और मॉडल सूची का समर्थन करता है, या सेटिंग्स में मॉडल को मैन्युअल रूप से सेट करें।",
       "try_again": "फिर से कोशिश करें",
       "search_provider_models": "{{provider}} मॉडल खोजें",
-      "switch_provider": null,
-      "choose_provider": null,
-      "search_providers": null,
-      "configured": null,
-      "edit_connection": null,
-      "connect_title": null,
-      "connect": null,
-      "connecting": null,
-      "connect_failed": null,
-      "model": null
+      "switch_provider": "बदलें",
+      "choose_provider": "एक प्रदाता चुनें",
+      "search_providers": "खोज प्रदाता",
+      "configured": "स्थापित",
+      "edit_connection": "कनेक्शन संपादित करें",
+      "connect_title": "जुड़ें {{provider}}",
+      "connect": "जुड़ें",
+      "connecting": "जुड़ रहा है...",
+      "connect_failed": "{{provider}} से मॉडल लोड नहीं हो पाए। ऊपर दिए गए विवरण की जांच करें, या फिर मॉडल का नाम दर्ज करके इसका उपयोग करें।",
+      "model": "मॉडल"
     },
     "dev_shortcut_hint_one": "डेवलपर उपकरण खोलने के लिए {{count}} अधिक बार दबाएँ",
     "dev_shortcut_hint_other": "डेवलपर उपकरण खोलने के लिए {{count}} अधिक बार दबाएँ",
@@ -866,8 +866,8 @@
       "using_summary_other": "{{count}} पिछले संदेशों का सारांश उपयोग कर रहे हैं",
       "loading_model": "मॉडल को स्मृति में लोड कर रहे हैं",
       "reply_truncated": "उत्तर को काटा गया - संदर्भ विंडो भरी हुई है",
-      "tool_call_limit_reached_one": null,
-      "tool_call_limit_reached_other": null,
+      "tool_call_limit_reached_one": "{{count}} टूल कॉल की सीमा तक पहुँच गया - उपलब्ध जानकारी के साथ जवाब देना",
+      "tool_call_limit_reached_other": "{{count}} टूल के कॉल की सीमा तक पहुँच गया - उपलब्ध जानकारी के साथ जवाब देना",
       "searching_documents": "अपने दस्तावेज़ों को खोज रहे हैं",
       "reranking": "परिणामों को फिर से क्रमित कर रहे हैं",
       "reading_documents_one": "{{count}} संलग्न दस्तावेज़ को पढ़ रहे हैं",
@@ -931,11 +931,11 @@
     "download_model_message": "यह मॉडल को आपके डिवाइस पर डाउनलोड करेगा। यह {{size}} आकार का है।",
     "notification_downloading_title": "मॉडल डाउनलोड हो रहा है",
     "notification_downloading_body": "{{model}} डाउनलोड किया जा रहा है",
-    "keep_app_open": null,
-    "cancel_download_title": null,
-    "cancel_download_message": null,
-    "keep_downloading": null,
-    "cancel_download": null,
+    "keep_app_open": "इस स्क्रीन पर बने रहें और डाउनलोड पूरा होने तक अपना फोन अनलॉक रखें।",
+    "cancel_download_title": "डाउनलोड रद्द करें?",
+    "cancel_download_message": "{{model}} के बाद डाउनलोड बंद हो जाएगा और आंशिक डाउनलोड हटा दिया जाएगा।",
+    "keep_downloading": "जारी रखें",
+    "cancel_download": "डाउनलोड रद्द करें",
     "notification_complete_title": "डाउनलोड पूर्ण",
     "notification_complete_body": "{{model}} डाउनलोड किया गया",
     "download_failed_title": "डाउनलोड विफल",
@@ -1034,19 +1034,19 @@
       "save_error": "संदर्भ लंबाई सहेजने में त्रुटि",
       "hint": "ध्यान रखें कि संदर्भ लंबाई आपके द्वारा उपयोग किए जा रहे मॉडल पर भी निर्भर है और आपके डिवाइस के लिए स्मृति निहितार्थ है।",
       "description": "संदर्भ लंबाई अधिकतम संख्या है जो AI प्रतिक्रिया उत्पन्न करते समय उपयोग कर सकता है।",
-      "provider_managed": null,
-      "disabled_description": null
+      "provider_managed": "प्रदाता द्वारा निर्धारित",
+      "disabled_description": "यह सुविधा केवल डिवाइस पर चलने वाले मॉडलों के लिए है। आपका वर्तमान प्रदाता अपनी स्वयं की संदर्भ विंडो का प्रबंधन करता है।"
     },
     "max_tool_calls": {
-      "title": null,
-      "label": null,
-      "current": null,
-      "suggested": null,
-      "placeholder": null,
-      "save_error": null,
-      "no_limit": null,
-      "hint": null,
-      "description": null
+      "title": "अधिकतम उपकरण कॉल",
+      "label": "उपकरण कॉल की सीमा",
+      "current": "वर्तमान में उपयोग किए जा सकने वाले टूल की संख्या",
+      "suggested": "सुझावित सीमाएँ",
+      "placeholder": "कोई सीमा नहीं",
+      "save_error": "उपकरण कॉल की सीमा को सहेजने में त्रुटि",
+      "no_limit": "कोई सीमा नहीं",
+      "hint": "एजेंट एक ही उत्तर में उपयोग कर सकने वाले सबसे अधिक उपकरण। जब सीमा तक पहुँच जाती है, तो एजेंट उपकरण का उपयोग करना बंद कर देता है और जो उपलब्ध है, उसका उत्तर देता है।\n\nयदि कोई सीमा नहीं है, तो खाली छोड़ दें। डिफ़ॉल्ट उपयोग करने के लिए रीसेट पर टैप करें: क्लाउड प्रदाताओं के लिए {{cloud}}, डिवाइस पर मॉडलों के लिए {{onDevice}}.",
+      "description": "यह निर्धारित करता है कि एजेंट एक उत्तर में कितने टूल का उपयोग कर सकता है, ताकि यह अनिश्चित काल तक टूल का उपयोग न करे। लंबी, कई-चरणीय कार्यों के लिए इसे बढ़ाएं।"
     },
     "vectors": {
       "section": "वेक्टर स्टोरेज",
@@ -1088,12 +1088,12 @@
       "synced": "सिंक किया गया",
       "sync_failed": "विफल",
       "sync_workspace_failed": "कार्यक्षेत्र {{name}} को सिंक करने में विफल",
-      "workspaces": null,
-      "platform_desktop": null,
-      "platform_server": null,
-      "empty_title": null,
-      "empty_body": null,
-      "sync_explainer": null
+      "workspaces": "कार्यक्षेत्र",
+      "platform_desktop": "AnythingLLM Desktop",
+      "platform_server": "AnythingLLM Server",
+      "empty_title": "कोई कार्यक्षेत्र नहीं मिला।",
+      "empty_body": "AnythingLLM में एक कार्यक्षेत्र बनाएँ, फिर ताज़ा करने के लिए नीचे की ओर स्वाइप करें।",
+      "sync_explainer": "सिंक करने से इस डिवाइस पर वर्कस्पेस के थ्रेड और चैट कॉपी हो जाते हैं। फिर से सिंक करने से, यह कॉपी बदल जाती है। डिफ़ॉल्ट थ्रेड में मौजूद चैट सिंक नहीं होते।"
     }
   },
   "scheduled_jobs": {

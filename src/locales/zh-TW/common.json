@@ -159,12 +159,12 @@
     "unknown_error": "未知錯誤",
     "loading_history": "正在載入聊天記錄...",
     "greetings": {
-      "working_on": null,
-      "noodle": null,
-      "on_your_mind": null,
-      "where_to_start": null,
-      "ready": null,
-      "think_it_through": null
+      "working_on": "我們目前在進行哪些項目？",
+      "noodle": "讓我們聊聊吧。",
+      "on_your_mind": "您想聊些什麼？",
+      "where_to_start": "我們從哪裡開始呢？",
+      "ready": "隨時準備好。",
+      "think_it_through": "讓我們一起思考一下。"
     },
     "suggestions": {
       "hello": "哈囉，您需要什麼幫助？",
@@ -494,8 +494,8 @@
       "temperature_range": "溫度必須介於 {{min}} 和 {{max}} 之間",
       "context_length_not_number": "內容長度必須是數字",
       "context_length_min": "內容長度必須大於 {{min}}",
-      "max_tool_calls_not_integer": null,
-      "max_tool_calls_min": null
+      "max_tool_calls_not_integer": "工具呼叫限制必須是整數",
+      "max_tool_calls_min": "工具呼叫限制不能為負數"
     }
   },
   "tools": {
@@ -640,16 +640,16 @@
       "list_failed_description": "此提供者未傳回任何模型。檢查端點是否可連接並支援模型清單，或在 [設定] 中手動設定模型。",
       "try_again": "重試",
       "search_provider_models": "搜尋 {{provider}} 模型",
-      "switch_provider": null,
-      "choose_provider": null,
-      "search_providers": null,
-      "configured": null,
-      "edit_connection": null,
-      "connect_title": null,
-      "connect": null,
-      "connecting": null,
-      "connect_failed": null,
-      "model": null
+      "switch_provider": "切換",
+      "choose_provider": "選擇供應商",
+      "search_providers": "搜尋引擎",
+      "configured": "設定",
+      "edit_connection": "編輯連線",
+      "connect_title": "連接 {{provider}}",
+      "connect": "連接",
+      "connecting": "正在連接...",
+      "connect_failed": "無法從 {{provider}} 載入模型。請查看上方詳細資訊，或輸入模型名稱以便使用。",
+      "model": "模型"
     },
     "dev_shortcut_hint_other": "再按 {{count}} 次以開啟開發者工具",
     "thread_menu": {
@@ -830,7 +830,7 @@
       "using_summary_other": "使用 {{count}} 條較早訊息的摘要",
       "loading_model": "正在將模型載入記憶",
       "reply_truncated": "回覆被切短 - 內容視窗已滿",
-      "tool_call_limit_reached_other": null,
+      "tool_call_limit_reached_other": "已達到 {{count}} 呼叫限制 - 根據現有資訊回答",
       "searching_documents": "正在搜尋您的文件",
       "reranking": "重新排列結果",
       "reading_documents_other": "正在讀取 {{count}} 個附加文件"
@@ -893,11 +893,11 @@
     "download_model_message": "這會將模型下載到您的裝置。大小為 {{size}}。",
     "notification_downloading_title": "正在下載模型",
     "notification_downloading_body": "正在下載 {{model}}",
-    "keep_app_open": null,
-    "cancel_download_title": null,
-    "cancel_download_message": null,
-    "keep_downloading": null,
-    "cancel_download": null,
+    "keep_app_open": "請保持在該頁面，並在下載完成時保持手機開啟狀態。",
+    "cancel_download_title": "取消下載？",
+    "cancel_download_message": "{{model}} 將停止下載，並刪除已下載的部分。",
+    "keep_downloading": "繼續下載",
+    "cancel_download": "取消下載",
     "notification_complete_title": "下載完成",
     "notification_complete_body": "已下載 {{model}}",
     "download_failed_title": "下載失敗",
@@ -996,19 +996,19 @@
       "save_error": "儲存內容長度時出錯",
       "hint": "請記住，內容長度也取決於您使用的模型，並對您的裝置有記憶體影響。",
       "description": "內容長度是 AI 在產生回應時可以使用的最大標記數。",
-      "provider_managed": null,
-      "disabled_description": null
+      "provider_managed": "由提供方設定",
+      "disabled_description": "「情境長度」僅適用於本地模型。您的目前供應商會管理其自身的「情境窗口」。"
     },
     "max_tool_calls": {
-      "title": null,
-      "label": null,
-      "current": null,
-      "suggested": null,
-      "placeholder": null,
-      "save_error": null,
-      "no_limit": null,
-      "hint": null,
-      "description": null
+      "title": "最大呼叫次數",
+      "label": "工具使用限制",
+      "current": "目前使用的工具數量限制",
+      "suggested": "建議限制",
+      "placeholder": "無限制",
+      "save_error": "儲存工具呼叫次數已達上限",
+      "no_limit": "無限制",
+      "hint": "這個工具數量上限，Agent 可以在單一回覆中呼叫。 當上限達到時，Agent 會停止呼叫工具，並使用已有的資訊回答。\n\n若要取消限制，請留空。 點擊「重置」以使用預設值：{{cloud}} 用於雲端供應商，{{onDevice}} 用於本地模型。",
+      "description": "限制每次回覆中可以使用的工具數量，避免無限循環使用工具。 提高此限制，適用於需要多步驟處理的任務。"
     },
     "vectors": {
       "section": "向量儲存",
@@ -1048,12 +1048,12 @@
       "synced": "已同步",
       "sync_failed": "失敗",
       "sync_workspace_failed": "無法同步工作區 {{name}}",
-      "workspaces": null,
-      "platform_desktop": null,
-      "platform_server": null,
-      "empty_title": null,
-      "empty_body": null,
-      "sync_explainer": null
+      "workspaces": "工作空間",
+      "platform_desktop": "AnythingLLM Desktop",
+      "platform_server": "AnythingLLM Server",
+      "empty_title": "未找到任何工作空間",
+      "empty_body": "在「AnythingLLM」中建立工作區，然後下拉以刷新。",
+      "sync_explainer": "同步會將工作區的對話和聊天記錄複製到此裝置。再次同步會覆蓋之前的複製。預設對話區的聊天記錄不會被同步。"
     }
   },
   "scheduled_jobs": {

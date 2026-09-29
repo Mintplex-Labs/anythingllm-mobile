@@ -159,12 +159,12 @@
     "unknown_error": "Unbekannter Fehler",
     "loading_history": "Chat-Verlauf wird geladen...",
     "greetings": {
-      "working_on": null,
-      "noodle": null,
-      "on_your_mind": null,
-      "where_to_start": null,
-      "ready": null,
-      "think_it_through": null
+      "working_on": "Woran arbeiten wir gerade?",
+      "noodle": "Lass uns darüber sprechen.",
+      "on_your_mind": "Worüber möchtest du sprechen?",
+      "where_to_start": "Wo sollen wir anfangen?",
+      "ready": "Bereit, wenn Sie es sind.",
+      "think_it_through": "Lasst uns das gemeinsam durchdenken."
     },
     "suggestions": {
       "hello": "Hallo, womit kann ich dir helfen?",
@@ -512,8 +512,8 @@
       "temperature_range": "Temperatur muss zwischen {{min}} und {{max}} liegen",
       "context_length_not_number": "Kontextlänge muss eine Zahl sein",
       "context_length_min": "Kontextlänge muss größer als {{min}} sein",
-      "max_tool_calls_not_integer": null,
-      "max_tool_calls_min": null
+      "max_tool_calls_not_integer": "Maximale Anzahl an Tool-Aufrufen muss eine ganze Zahl sein",
+      "max_tool_calls_min": "Maximale Anzahl der Tool-Aufrufe darf nicht negativ sein."
     }
   },
   "tools": {
@@ -668,16 +668,16 @@
       "list_failed_description": "Dieser Anbieter hat keine Modelle zurückgegeben. Überprüfen Sie, dass der Endpunkt erreichbar ist und das Auflisten von Modellen unterstützt, oder legen Sie das Modell manuell in den Einstellungen fest.",
       "try_again": "Erneut versuchen",
       "search_provider_models": "{{provider}}-Modelle durchsuchen",
-      "switch_provider": null,
-      "choose_provider": null,
-      "search_providers": null,
-      "configured": null,
-      "edit_connection": null,
-      "connect_title": null,
-      "connect": null,
-      "connecting": null,
-      "connect_failed": null,
-      "model": null
+      "switch_provider": "Umschalten",
+      "choose_provider": "Wähle einen Anbieter",
+      "search_providers": "Suchanbieter",
+      "configured": "Konfiguriert",
+      "edit_connection": "Verbindung bearbeiten",
+      "connect_title": "Verbinden {{provider}}",
+      "connect": "Verbinden",
+      "connecting": "Verbinde...",
+      "connect_failed": "Fehler beim Laden der Modelle von {{provider}}. Bitte überprüfen Sie die Details oben oder geben Sie einen Modellnamen ein, um es trotzdem zu verwenden.",
+      "model": "Modell"
     },
     "dev_shortcut_hint_one": "Drücken Sie {{count}} Mal mehr, um Entwicklertools zu öffnen",
     "dev_shortcut_hint_other": "Drücken Sie {{count}} Mal mehr, um Entwicklertools zu öffnen",
@@ -866,8 +866,8 @@
       "using_summary_other": "Verwendung einer Zusammenfassung von {{count}} früheren Nachrichten",
       "loading_model": "Modell wird in den Speicher geladen",
       "reply_truncated": "Antwort war abgeschnitten - das Kontextfenster ist voll",
-      "tool_call_limit_reached_one": null,
-      "tool_call_limit_reached_other": null,
+      "tool_call_limit_reached_one": "Limit von {{count}} Tool-Aufruf erreicht - Antwort mit den verfügbaren Informationen",
+      "tool_call_limit_reached_other": "Limit von {{count}} Tool-Aufrufen erreicht - Antwort mit den verfügbaren Informationen",
       "searching_documents": "Ihre Dokumente werden durchsucht",
       "reranking": "Ergebnisse werden neu geordnet",
       "reading_documents_one": "{{count}} angehängtes Dokument wird gelesen",
@@ -931,11 +931,11 @@
     "download_model_message": "Dies lädt das Modell auf Ihr Gerät herunter. Es ist {{size}} groß.",
     "notification_downloading_title": "Modell wird heruntergeladen",
     "notification_downloading_body": "{{model}} wird heruntergeladen",
-    "keep_app_open": null,
-    "cancel_download_title": null,
-    "cancel_download_message": null,
-    "keep_downloading": null,
-    "cancel_download": null,
+    "keep_app_open": "Bleiben Sie auf diesem Bildschirm und lassen Sie Ihr Telefon entsperrt, bis der Download abgeschlossen ist.",
+    "cancel_download_title": "Download abbrechen?",
+    "cancel_download_message": "{{model}} wird das Herunterladen abbrechen und der teilweise heruntergeladene Inhalt wird gelöscht.",
+    "keep_downloading": "Herunterladen",
+    "cancel_download": "Download abbrechen",
     "notification_complete_title": "Download abgeschlossen",
     "notification_complete_body": "{{model}} heruntergeladen",
     "download_failed_title": "Download fehlgeschlagen",
@@ -1034,19 +1034,19 @@
       "save_error": "Fehler beim Speichern der Kontextlänge",
       "hint": "Beachten Sie, dass die Kontextlänge auch vom verwendeten Modell abhängt und Speicherauswirkungen auf Ihrem Gerät hat.",
       "description": "Die Kontextlänge ist die maximale Anzahl von Tokens, die die KI beim Generieren einer Antwort verwenden kann.",
-      "provider_managed": null,
-      "disabled_description": null
+      "provider_managed": "Von dem Anbieter festgelegt",
+      "disabled_description": "Die Kontextlänge gilt nur für Modelle, die auf dem Gerät ausgeführt werden. Ihr aktueller Anbieter verwaltet sein eigenes Kontextfenster."
     },
     "max_tool_calls": {
-      "title": null,
-      "label": null,
-      "current": null,
-      "suggested": null,
-      "placeholder": null,
-      "save_error": null,
-      "no_limit": null,
-      "hint": null,
-      "description": null
+      "title": "Maximale Anzahl an Tool-Aufrufen",
+      "label": "Max. Anzahl der Tool-Aufrufe",
+      "current": "Aktuelle Anzahl der gleichzeitig aktiven Tools",
+      "suggested": "Empfohlene Grenzen",
+      "placeholder": "Keine Beschränkung",
+      "save_error": "Fehler beim Speichern der Anzahl der Tool-Aufrufe",
+      "no_limit": "Keine Beschränkung",
+      "hint": "Die maximale Anzahl an Tools, die der Agent in einer Antwort verwenden kann. Wenn die Grenze erreicht ist, stoppt der Agent die Verwendung von Tools und antwortet mit dem, was er hat.\n\nLeer lassen, um keine Grenze festzulegen. Auf \"Zurücksetzen\" tippen, um die Standardeinstellungen zu verwenden: {{cloud}} für Cloud-Anbieter, {{onDevice}} für lokale Modelle.",
+      "description": "Begrenzt die Anzahl der aufzurufenden Tools pro Antwort, um eine unendliche Wiederholung zu verhindern. Erhöhen Sie diesen Wert für komplexe, mehrstufige Aufgaben."
     },
     "vectors": {
       "section": "Vektor-Speicher",
@@ -1088,12 +1088,12 @@
       "synced": "Synchronisiert",
       "sync_failed": "Fehlgeschlagen",
       "sync_workspace_failed": "Fehler beim Synchronisieren des Workspace {{name}}",
-      "workspaces": null,
-      "platform_desktop": null,
-      "platform_server": null,
-      "empty_title": null,
-      "empty_body": null,
-      "sync_explainer": null
+      "workspaces": "Arbeitsbereiche",
+      "platform_desktop": "AnythingLLM Desktop",
+      "platform_server": "AnythingLLM Server",
+      "empty_title": "Keine Arbeitsbereiche gefunden",
+      "empty_body": "Erstelle einen Arbeitsbereich in AnythingLLM, und ziehe dann nach unten, um zu aktualisieren.",
+      "sync_explainer": "Synchronisieren kopiert die Threads und Chats des Arbeitsbereichs auf dieses Gerät. Eine erneute Synchronisierung ersetzt diese Kopie. Chats im Standard-Thread werden nicht synchronisiert."
     }
   },
   "scheduled_jobs": {

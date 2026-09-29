@@ -159,12 +159,12 @@
     "unknown_error": "Error tidak diketahui",
     "loading_history": "Memuat riwayat obrolan...",
     "greetings": {
-      "working_on": null,
-      "noodle": null,
-      "on_your_mind": null,
-      "where_to_start": null,
-      "ready": null,
-      "think_it_through": null
+      "working_on": "Apa yang sedang kami kerjakan?",
+      "noodle": "Mari kita diskusikan sesuatu.",
+      "on_your_mind": "Ada yang ingin Anda tanyakan?",
+      "where_to_start": "Di mana sebaiknya kita mulai?",
+      "ready": "Siap saat Anda membutuhkannya.",
+      "think_it_through": "Mari kita pikirkan bersama."
     },
     "suggestions": {
       "hello": "Halo, apa yang dapat Anda bantu?",
@@ -494,8 +494,8 @@
       "temperature_range": "Suhu harus antara {{min}} dan {{max}}",
       "context_length_not_number": "Panjang konteks harus berupa angka",
       "context_length_min": "Panjang konteks harus lebih besar dari {{min}}",
-      "max_tool_calls_not_integer": null,
-      "max_tool_calls_min": null
+      "max_tool_calls_not_integer": "Batas panggilan alat harus berupa bilangan bulat.",
+      "max_tool_calls_min": "Batas panggilan alat tidak boleh negatif"
     }
   },
   "tools": {
@@ -640,16 +640,16 @@
       "list_failed_description": "Penyedia ini tidak mengembalikan model apa pun. Periksa bahwa titik akhir dapat dijangkau dan mendukung daftar model, atau atur model secara manual di Pengaturan.",
       "try_again": "Coba lagi",
       "search_provider_models": "Cari model {{provider}}",
-      "switch_provider": null,
-      "choose_provider": null,
-      "search_providers": null,
-      "configured": null,
-      "edit_connection": null,
-      "connect_title": null,
-      "connect": null,
-      "connecting": null,
-      "connect_failed": null,
-      "model": null
+      "switch_provider": "Ubah",
+      "choose_provider": "Pilih penyedia",
+      "search_providers": "Penyedia pencarian",
+      "configured": "Dikonfigurasi",
+      "edit_connection": "Ubah koneksi",
+      "connect_title": "Hubungkan {{provider}}",
+      "connect": "Terhubung",
+      "connecting": "Menghubungkan...",
+      "connect_failed": "Tidak dapat memuat model dari {{provider}}. Periksa detail di atas, atau masukkan nama model untuk menggunakannya.",
+      "model": "Model"
     },
     "dev_shortcut_hint_other": "Tekan {{count}} kali lagi untuk membuka alat pengembang",
     "thread_menu": {
@@ -830,7 +830,7 @@
       "using_summary_other": "Menggunakan ringkasan {{count}} pesan sebelumnya",
       "loading_model": "Memuat model ke dalam memori",
       "reply_truncated": "Balasan dipotong pendek - jendela konteks penuh",
-      "tool_call_limit_reached_other": null,
+      "tool_call_limit_reached_other": "Mencapai batas panggilan alat {{count}} - menjawab dengan informasi yang tersedia",
       "searching_documents": "Mencari dokumen Anda",
       "reranking": "Mengubah urutan hasil",
       "reading_documents_other": "Membaca {{count}} dokumen terlampir"
@@ -893,11 +893,11 @@
     "download_model_message": "Ini akan mengunduh model ke perangkat Anda. Berukuran {{size}}.",
     "notification_downloading_title": "Mengunduh model",
     "notification_downloading_body": "Mengunduh {{model}}",
-    "keep_app_open": null,
-    "cancel_download_title": null,
-    "cancel_download_message": null,
-    "keep_downloading": null,
-    "cancel_download": null,
+    "keep_app_open": "Tetap di layar ini dan pastikan ponsel Anda tidak terkunci sampai proses unduhan selesai.",
+    "cancel_download_title": "Batalkan unduhan?",
+    "cancel_download_message": "{{model}} akan menghentikan proses unduhan dan unduhan parsial akan dihapus.",
+    "keep_downloading": "Terus unduh",
+    "cancel_download": "Batalkan unduhan",
     "notification_complete_title": "Unduhan selesai",
     "notification_complete_body": "Mengunduh {{model}}",
     "download_failed_title": "Unduhan gagal",
@@ -996,19 +996,19 @@
       "save_error": "Error menyimpan panjang konteks",
       "hint": "Ingat bahwa panjang konteks juga tergantung pada model yang Anda gunakan dan memiliki implikasi memori untuk perangkat Anda.",
       "description": "Panjang konteks adalah jumlah maksimum token yang dapat digunakan AI saat membuat respons.",
-      "provider_managed": null,
-      "disabled_description": null
+      "provider_managed": "Ditetapkan oleh penyedia",
+      "disabled_description": "Panjang konteks hanya berlaku untuk model yang berjalan di perangkat. Penyedia Anda saat ini mengelola jendela konteksnya sendiri."
     },
     "max_tool_calls": {
-      "title": null,
-      "label": null,
-      "current": null,
-      "suggested": null,
-      "placeholder": null,
-      "save_error": null,
-      "no_limit": null,
-      "hint": null,
-      "description": null
+      "title": "Jumlah Panggilan Maksimal",
+      "label": "Batasan panggilan alat",
+      "current": "Batas Panggilan Alat Saat Ini",
+      "suggested": "Batas yang Disarankan",
+      "placeholder": "Tanpa batas",
+      "save_error": "Kesalahan saat menyimpan batas panggilan alat",
+      "no_limit": "Tanpa batas",
+      "hint": "Jumlah alat yang dapat dipanggil oleh agen dalam satu jawaban. Ketika batas tercapai, agen berhenti memanggil alat dan menjawab dengan apa yang dimilikinya.\n\nKosongkan untuk tidak ada batasan. Ketuk \"Reset\" untuk menggunakan pengaturan default: {{cloud}} untuk penyedia cloud, {{onDevice}} untuk model lokal.",
+      "description": "Membatasi jumlah alat yang dapat dipanggil dalam satu jawaban, sehingga tidak dapat terus-menerus memanggil alat. Tingkatkan batas ini untuk tugas yang panjang dan kompleks."
     },
     "vectors": {
       "section": "Penyimpanan Vektor",
@@ -1048,12 +1048,12 @@
       "synced": "Tersinkronkan",
       "sync_failed": "Gagal",
       "sync_workspace_failed": "Gagal menyinkronkan ruang kerja {{name}}",
-      "workspaces": null,
-      "platform_desktop": null,
-      "platform_server": null,
-      "empty_title": null,
-      "empty_body": null,
-      "sync_explainer": null
+      "workspaces": "Ruang Kerja",
+      "platform_desktop": "AnythingLLM Desktop",
+      "platform_server": "AnythingLLM Server",
+      "empty_title": "Tidak ada ruang kerja yang ditemukan",
+      "empty_body": "Buat ruang kerja di AnythingLLM, lalu tarik ke bawah untuk memperbarui.",
+      "sync_explainer": "Sinkronisasi menyalin semua percakapan dan obrolan dari ruang kerja ke perangkat ini. Sinkronisasi ulang akan mengganti salinan tersebut. Percakapan di thread default tidak disinkronkan."
     }
   },
   "scheduled_jobs": {

@@ -159,12 +159,12 @@
     "unknown_error": "Bilinmeyen hata",
     "loading_history": "Sohbet geçmişi yükleniyor...",
     "greetings": {
-      "working_on": null,
-      "noodle": null,
-      "on_your_mind": null,
-      "where_to_start": null,
-      "ready": null,
-      "think_it_through": null
+      "working_on": "Şu anda ne üzerinde çalışıyoruz?",
+      "noodle": "Konuşalım mı?",
+      "on_your_mind": "Ne hakkında konuşmak istersin?",
+      "where_to_start": "Nereden başlayalım?",
+      "ready": "Hazırda.",
+      "think_it_through": "Düşünelim."
     },
     "suggestions": {
       "hello": "Merhaba, ne konusunda yardımcı olabilirim?",
@@ -512,8 +512,8 @@
       "temperature_range": "Sıcaklık {{min}} ile {{max}} arasında olmalıdır",
       "context_length_not_number": "Bağlam uzunluğu bir sayı olmalıdır",
       "context_length_min": "Bağlam uzunluğu {{min}}'ten büyük olmalıdır",
-      "max_tool_calls_not_integer": null,
-      "max_tool_calls_min": null
+      "max_tool_calls_not_integer": "Ara çağrı limiti, tam sayı olmalıdır",
+      "max_tool_calls_min": "Ara çağrı limiti negatif olamaz."
     }
   },
   "tools": {
@@ -668,16 +668,16 @@
       "list_failed_description": "Bu sağlayıcı herhangi bir model döndürmedi. Uç noktaya erişilebildiğini ve model listelemeyi desteklediğini kontrol edin, ya da modeli Ayarlar'da manuel olarak ayarlayın.",
       "try_again": "Yeniden Dene",
       "search_provider_models": "{{provider}} modellerini ara",
-      "switch_provider": null,
-      "choose_provider": null,
-      "search_providers": null,
-      "configured": null,
-      "edit_connection": null,
-      "connect_title": null,
-      "connect": null,
-      "connecting": null,
-      "connect_failed": null,
-      "model": null
+      "switch_provider": "Değiştir",
+      "choose_provider": "Bir sağlayıcı seçin",
+      "search_providers": "Arama sağlayıcıları",
+      "configured": "Yapılandırılmış",
+      "edit_connection": "Bağlantıyı düzenle",
+      "connect_title": "Bağlan {{provider}}",
+      "connect": "Bağlan",
+      "connecting": "Bağlanılıyor...",
+      "connect_failed": "{{provider}} adresinden modeller yüklenemedi. Yukarıdaki bilgileri kontrol edin veya yine de kullanmak için bir model adı girin.",
+      "model": "Model"
     },
     "dev_shortcut_hint_one": "Geliştirici araçlarını açmak için {{count}} kez daha basın",
     "dev_shortcut_hint_other": "Geliştirici araçlarını açmak için {{count}} kez daha basın",
@@ -866,8 +866,8 @@
       "using_summary_other": "{{count}} önceki mesajın bir özeti kullanılıyor",
       "loading_model": "Model belleğe yükleniyor",
       "reply_truncated": "Yanıt kısaldı – bağlam penceresi dolu",
-      "tool_call_limit_reached_one": null,
-      "tool_call_limit_reached_other": null,
+      "tool_call_limit_reached_one": "{{count}} araç kullanım limiti aşıldı - mevcut bilgilerle yanıt veriliyor",
+      "tool_call_limit_reached_other": "{{count}} araç çağrısı limiti aşıldı - mevcut bilgilerle yanıt veriliyor",
       "searching_documents": "Belge arama",
       "reranking": "Sonuçları yeniden sırala",
       "reading_documents_one": "{{count}} ekli belgeyi okuyun",
@@ -931,11 +931,11 @@
     "download_model_message": "Bu, modeli cihazınıza indirecektir. Boyutu {{size}}'dır.",
     "notification_downloading_title": "Model indirme",
     "notification_downloading_body": "İndirme {{model}}",
-    "keep_app_open": null,
-    "cancel_download_title": null,
-    "cancel_download_message": null,
-    "keep_downloading": null,
-    "cancel_download": null,
+    "keep_app_open": "Bu sayfada kalın ve indirme işlemi tamamlanana kadar telefonunuzu açık tutun.",
+    "cancel_download_title": "İndirmeyi iptal et?",
+    "cancel_download_message": "{{model}} işlemi duracak ve kısmi indirme silinecektir.",
+    "keep_downloading": "Devam et",
+    "cancel_download": "İndirmeyi iptal et",
     "notification_complete_title": "İndirme tamamlandı",
     "notification_complete_body": "{{model}} indirildi",
     "download_failed_title": "İndirme başarısız oldu",
@@ -1034,19 +1034,19 @@
       "save_error": "Bağlam uzunluğunu kaydetmede hata",
       "hint": "Açıklayın ki, bağlam uzunluğu kullandığınız modele ve cihazınızın belleği için de bir etkiye sahiptir.",
       "description": "Bağlam uzunluğu, yapay zekanın bir yanıt oluştururken kullanabileceği maksimum token sayısını ifade eder.",
-      "provider_managed": null,
-      "disabled_description": null
+      "provider_managed": "Sağlayıcı tarafından belirlenmiş",
+      "disabled_description": "Konum uzunluğu yalnızca cihaz üzerinde çalışan modeller için geçerlidir. Mevcut sağlayıcınız kendi konum penceresini yönetmektedir."
     },
     "max_tool_calls": {
-      "title": null,
-      "label": null,
-      "current": null,
-      "suggested": null,
-      "placeholder": null,
-      "save_error": null,
-      "no_limit": null,
-      "hint": null,
-      "description": null
+      "title": "Maksimum Talep",
+      "label": "Çağrı limiti",
+      "current": "Mevcut Araç Çağrı Sınırı",
+      "suggested": "Önerilen Sınırlar",
+      "placeholder": "Sınırlama yok",
+      "save_error": "Araç çağrı limiti kaydedilirken hata oluştu",
+      "no_limit": "Sınırlama yok",
+      "hint": "Tek yanıt içinde kullanabileceği araç sayısı en fazla. Sınırına ulaşıldığında, araçları çağırmayı durdurur ve mevcut bilgileriyle yanıt verir.\n\nSınır olmaması için boş bırakın. Varsayılan ayarları kullanmak için \"Yenile\"ye tıklayın: Bulut sağlayıcılar için {{cloud}}, yerel modeller için {{onDevice}}.",
+      "description": "Tek bir yanıt içinde kullanabileceği araç sayısını sınırlar, böylece araçları sonsuza kadar çağıramaz. Uzun, çok adımlı görevler için bu değeri artırın."
     },
     "vectors": {
       "section": "Vektör Depolama",
@@ -1088,12 +1088,12 @@
       "synced": "Senkronize",
       "sync_failed": "Başarısız",
       "sync_workspace_failed": "Çalışma alanı senkronizasyonu başarısız {{name}}",
-      "workspaces": null,
-      "platform_desktop": null,
-      "platform_server": null,
-      "empty_title": null,
-      "empty_body": null,
-      "sync_explainer": null
+      "workspaces": "Çalışma Alanları",
+      "platform_desktop": "AnythingLLM Desktop",
+      "platform_server": "AnythingLLM Sunucu",
+      "empty_title": "Hiçbir çalışma alanı bulunamadı",
+      "empty_body": "AnythingLLM'de bir çalışma alanı oluşturun, ardından yenilemek için aşağı çekin.",
+      "sync_explainer": "Senkronlama, bu cihazdaki çalışma alanının tüm sohbetlerini ve mesajlarını kopyalar. Tekrar senkronlama, bu kopyayı günceller. Varsayılan sohbetler senkronlanmaz."
     }
   },
   "scheduled_jobs": {

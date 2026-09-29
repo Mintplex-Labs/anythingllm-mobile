@@ -159,12 +159,12 @@
     "unknown_error": "Error desconocido",
     "loading_history": "Cargando historial de chat...",
     "greetings": {
-      "working_on": null,
-      "noodle": null,
-      "on_your_mind": null,
-      "where_to_start": null,
-      "ready": null,
-      "think_it_through": null
+      "working_on": "¿En qué estamos trabajando?",
+      "noodle": "Hagamos algo interesante.",
+      "on_your_mind": "¿Qué te preocupa?",
+      "where_to_start": "¿Por dónde empezamos?",
+      "ready": "Listo cuando tú lo estés.",
+      "think_it_through": "Analicemos la situación."
     },
     "suggestions": {
       "hello": "Hola, ¿en qué puedo ayudarte?",
@@ -530,8 +530,8 @@
       "temperature_range": "La temperatura debe estar entre {{min}} y {{max}}",
       "context_length_not_number": "La longitud del contexto debe ser un número",
       "context_length_min": "La longitud del contexto debe ser mayor que {{min}}",
-      "max_tool_calls_not_integer": null,
-      "max_tool_calls_min": null
+      "max_tool_calls_not_integer": "El límite de llamadas debe ser un número entero.",
+      "max_tool_calls_min": "El límite de llamadas a herramientas no puede ser negativo."
     }
   },
   "tools": {
@@ -696,16 +696,16 @@
       "list_failed_description": "Este proveedor no devolvió ningún modelo. Verifique que el punto final sea accesible y admita listado de modelos, o establezca el modelo manualmente en Configuración.",
       "try_again": "Intente de nuevo",
       "search_provider_models": "Buscar modelos de {{provider}}",
-      "switch_provider": null,
-      "choose_provider": null,
-      "search_providers": null,
-      "configured": null,
-      "edit_connection": null,
-      "connect_title": null,
-      "connect": null,
-      "connecting": null,
-      "connect_failed": null,
-      "model": null
+      "switch_provider": "Cambiar",
+      "choose_provider": "Seleccionar proveedor",
+      "search_providers": "Proveedores de búsqueda",
+      "configured": "Configurado",
+      "edit_connection": "Editar conexión",
+      "connect_title": "Conectar {{provider}}",
+      "connect": "Conectar",
+      "connecting": "Conectando...",
+      "connect_failed": "No se pudieron cargar los modelos de {{provider}}. Verifique los detalles anteriores, o ingrese un nombre de modelo para usarlo de todas formas.",
+      "model": "Modelo"
     },
     "dev_shortcut_hint_many": "Presione {{count}} veces más para abrir herramientas de desarrollador",
     "dev_shortcut_hint_one": "Presione {{count}} vez más para abrir herramientas de desarrollador",
@@ -902,9 +902,9 @@
       "using_summary_other": "Usando un resumen de {{count}} mensajes anteriores",
       "loading_model": "Cargando modelo en memoria",
       "reply_truncated": "La respuesta se cortó - la ventana de contexto está llena",
-      "tool_call_limit_reached_many": null,
-      "tool_call_limit_reached_one": null,
-      "tool_call_limit_reached_other": null,
+      "tool_call_limit_reached_many": "Se ha alcanzado el límite de {{count}} llamadas a la herramienta - respondiendo con la información disponible.",
+      "tool_call_limit_reached_one": "Se ha alcanzado el límite de {{count}}. Responderé con la información disponible.",
+      "tool_call_limit_reached_other": "Se ha alcanzado el límite de {{count}} llamadas a la herramienta - respondiendo con la información disponible.",
       "searching_documents": "Buscando sus documentos",
       "reranking": "Reordenando resultados",
       "reading_documents_many": "Leyendo {{count}} documentos adjuntos",
@@ -969,11 +969,11 @@
     "download_model_message": "Esto descargará el modelo en su dispositivo. Es {{size}} de tamaño.",
     "notification_downloading_title": "Descargando modelo",
     "notification_downloading_body": "Descargando {{model}}",
-    "keep_app_open": null,
-    "cancel_download_title": null,
-    "cancel_download_message": null,
-    "keep_downloading": null,
-    "cancel_download": null,
+    "keep_app_open": "Mantén la pantalla y deja el teléfono desbloqueado hasta que la descarga finalice.",
+    "cancel_download_title": "Cancelar descarga?",
+    "cancel_download_message": "{{model}} detendrá la descarga y se eliminará la parte descargada.",
+    "keep_downloading": "Continuar descargando",
+    "cancel_download": "Cancelar descarga",
     "notification_complete_title": "Descarga completa",
     "notification_complete_body": "Descargado {{model}}",
     "download_failed_title": "Descarga fallida",
@@ -1072,19 +1072,19 @@
       "save_error": "Error al guardar longitud del contexto",
       "hint": "Tenga en cuenta que la longitud del contexto también depende del modelo que está utilizando y tiene implicaciones de memoria para su dispositivo.",
       "description": "La longitud del contexto es el número máximo de tokens que la IA puede usar mientras genera una respuesta.",
-      "provider_managed": null,
-      "disabled_description": null
+      "provider_managed": "Configurado por el proveedor",
+      "disabled_description": "La longitud del contexto solo se aplica a los modelos que se ejecutan en el dispositivo. Tu proveedor actual gestiona su propia ventana de contexto."
     },
     "max_tool_calls": {
-      "title": null,
-      "label": null,
-      "current": null,
-      "suggested": null,
-      "placeholder": null,
-      "save_error": null,
-      "no_limit": null,
-      "hint": null,
-      "description": null
+      "title": "Número máximo de llamadas",
+      "label": "Límite de llamadas",
+      "current": "Límite actual de llamadas",
+      "suggested": "Límites sugeridos",
+      "placeholder": "Sin límite",
+      "save_error": "Error al guardar el límite de llamadas.",
+      "no_limit": "Sin límite",
+      "hint": "La mayor cantidad de herramientas que el agente puede utilizar en una sola respuesta. Cuando se alcanza el límite, el agente deja de utilizar las herramientas y responde con lo que tiene.\n\nDejar en blanco para no tener límite. Toque \"Restablecer\" para utilizar la configuración predeterminada: {{cloud}} para proveedores en la nube, {{onDevice}} para modelos locales.",
+      "description": "Establece el número máximo de herramientas que puede utilizar en una respuesta, evitando que las utilice indefinidamente. Aumenta este valor para tareas largas y complejas."
     },
     "vectors": {
       "section": "Almacenamiento de vectores",
@@ -1128,12 +1128,12 @@
       "synced": "Sincronizado",
       "sync_failed": "Error",
       "sync_workspace_failed": "Error al sincronizar espacio de trabajo {{name}}",
-      "workspaces": null,
-      "platform_desktop": null,
-      "platform_server": null,
-      "empty_title": null,
-      "empty_body": null,
-      "sync_explainer": null
+      "workspaces": "Espacios de trabajo",
+      "platform_desktop": "AnythingLLM Desktop",
+      "platform_server": "AnythingLLM Server",
+      "empty_title": "No se encontraron espacios de trabajo.",
+      "empty_body": "Crea un espacio de trabajo en AnythingLLM, luego desplázate hacia abajo para actualizar.",
+      "sync_explainer": "Sincronizar copia los hilos y chats de un espacio de trabajo en este dispositivo. Sincronizar de nuevo reemplaza esa copia. Los chats en el hilo predeterminado no se sincronizan."
     }
   },
   "scheduled_jobs": {

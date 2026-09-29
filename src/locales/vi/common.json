@@ -159,12 +159,12 @@
     "unknown_error": "Lỗi không xác định",
     "loading_history": "Đang tải lịch sử trò chuyện...",
     "greetings": {
-      "working_on": null,
-      "noodle": null,
-      "on_your_mind": null,
-      "where_to_start": null,
-      "ready": null,
-      "think_it_through": null
+      "working_on": "Chúng tôi đang làm gì?",
+      "noodle": "Hãy cùng thảo luận về một chủ đề nào đó.",
+      "on_your_mind": "Bạn đang nghĩ gì?",
+      "where_to_start": "Chúng ta nên bắt đầu từ đâu?",
+      "ready": "Sẵn sàng khi bạn cần.",
+      "think_it_through": "Hãy suy nghĩ kỹ."
     },
     "suggestions": {
       "hello": "Xin chào, bạn có thể giúp tôi điều gì?",
@@ -494,8 +494,8 @@
       "temperature_range": "Nhiệt độ phải nằm trong khoảng {{min}} và {{max}}",
       "context_length_not_number": "Độ dài bối cảnh phải là một số",
       "context_length_min": "Độ dài bối cảnh phải lớn hơn {{min}}",
-      "max_tool_calls_not_integer": null,
-      "max_tool_calls_min": null
+      "max_tool_calls_not_integer": "Giới hạn số lượng cuộc gọi phải là số nguyên",
+      "max_tool_calls_min": "Giới hạn số lượng cuộc gọi không được âm."
     }
   },
   "tools": {
@@ -640,16 +640,16 @@
       "list_failed_description": "Nhà cung cấp này không trả về bất kỳ mô hình nào. Kiểm tra xem điểm cuối có thể truy cập được và hỗ trợ liệt kê mô hình, hoặc đặt mô hình theo cách thủ công trong Cài đặt.",
       "try_again": "Thử lại",
       "search_provider_models": "Tìm kiếm mô hình {{provider}}",
-      "switch_provider": null,
-      "choose_provider": null,
-      "search_providers": null,
-      "configured": null,
-      "edit_connection": null,
-      "connect_title": null,
-      "connect": null,
-      "connecting": null,
-      "connect_failed": null,
-      "model": null
+      "switch_provider": "Chuyển đổi",
+      "choose_provider": "Chọn nhà cung cấp",
+      "search_providers": "Nhà cung cấp",
+      "configured": "Cài đặt",
+      "edit_connection": "Chỉnh sửa kết nối",
+      "connect_title": "Kết nối {{provider}}",
+      "connect": "Kết nối",
+      "connecting": "Đang kết nối...",
+      "connect_failed": "Không thể tải mô hình từ {{provider}}. Vui lòng kiểm tra thông tin trên, hoặc nhập tên mô hình để sử dụng.",
+      "model": "Mô hình"
     },
     "dev_shortcut_hint_other": "Nhấn {{count}} lần nữa để mở công cụ nhà phát triển",
     "thread_menu": {
@@ -830,7 +830,7 @@
       "using_summary_other": "Sử dụng bản tóm tắt {{count}} tin nhắn trước đó",
       "loading_model": "Đang tải mô hình vào bộ nhớ",
       "reply_truncated": "Câu trả lời bị cắt ngắn - cửa sổ bối cảnh đã đầy",
-      "tool_call_limit_reached_other": null,
+      "tool_call_limit_reached_other": "Đã đạt giới hạn số lượng lệnh {{count}} - trả lời bằng những gì có",
       "searching_documents": "Đang tìm kiếm tài liệu của bạn",
       "reranking": "Đang xếp hạng lại kết quả",
       "reading_documents_other": "Đang đọc {{count}} tài liệu được đính kèm"
@@ -893,11 +893,11 @@
     "download_model_message": "Điều này sẽ tải xuống mô hình vào thiết bị của bạn. Nó có kích thước {{size}}.",
     "notification_downloading_title": "Đang tải xuống mô hình",
     "notification_downloading_body": "Đang tải xuống {{model}}",
-    "keep_app_open": null,
-    "cancel_download_title": null,
-    "cancel_download_message": null,
-    "keep_downloading": null,
-    "cancel_download": null,
+    "keep_app_open": "Vui lòng giữ nguyên màn hình và để điện thoại mở khóa cho đến khi quá trình tải xuống hoàn tất.",
+    "cancel_download_title": "Hủy tải xuống?",
+    "cancel_download_message": "{{model}} sẽ dừng việc tải xuống và phần tải xuống đã hoàn thành sẽ bị xóa.",
+    "keep_downloading": "Tiếp tục tải xuống",
+    "cancel_download": "Hủy tải",
     "notification_complete_title": "Tải xuống hoàn thành",
     "notification_complete_body": "Đã tải xuống {{model}}",
     "download_failed_title": "Tải xuống không thành công",
@@ -996,19 +996,19 @@
       "save_error": "Lỗi lưu độ dài bối cảnh",
       "hint": "Hãy nhớ rằng độ dài bối cảnh cũng phụ thuộc vào mô hình bạn đang sử dụng và có ý nghĩa bộ nhớ cho thiết bị của bạn.",
       "description": "Độ dài bối cảnh là số token tối đa mà AI có thể sử dụng khi tạo phản hồi.",
-      "provider_managed": null,
-      "disabled_description": null
+      "provider_managed": "Đã thiết lập bởi nhà cung cấp",
+      "disabled_description": "Độ dài ngữ cảnh chỉ áp dụng cho các mô hình trên thiết bị. Nhà cung cấp hiện tại của bạn quản lý cửa sổ ngữ cảnh của riêng mình."
     },
     "max_tool_calls": {
-      "title": null,
-      "label": null,
-      "current": null,
-      "suggested": null,
-      "placeholder": null,
-      "save_error": null,
-      "no_limit": null,
-      "hint": null,
-      "description": null
+      "title": "Số lượng lệnh gọi tối đa",
+      "label": "Giới hạn số lượng cuộc gọi",
+      "current": "Giới hạn số lượng công cụ hiện tại",
+      "suggested": "Giới hạn đề xuất",
+      "placeholder": "Không giới hạn",
+      "save_error": "Lỗi khi lưu giới hạn số lượng cuộc gọi",
+      "no_limit": "Không giới hạn",
+      "hint": "Số lượng công cụ mà đại lý có thể gọi trong một phản hồi duy nhất. Khi đạt đến giới hạn, đại lý sẽ ngừng gọi công cụ và trả lời bằng những gì có.\n\nĐể không giới hạn, để trống. Nhấn \"Đặt lại\" để sử dụng mặc định: {{cloud}} cho nhà cung cấp đám mây, {{onDevice}} cho mô hình trên thiết bị.",
+      "description": "Giới hạn số lượng công cụ mà agent có thể sử dụng trong một phản hồi, để tránh việc agent liên tục sử dụng công cụ. Tăng số lượng này cho các tác vụ dài, nhiều bước."
     },
     "vectors": {
       "section": "Lưu trữ vectơ",
@@ -1048,12 +1048,12 @@
       "synced": "Đã đồng bộ",
       "sync_failed": "Thất bại",
       "sync_workspace_failed": "Không thể đồng bộ không gian làm việc {{name}}",
-      "workspaces": null,
-      "platform_desktop": null,
-      "platform_server": null,
-      "empty_title": null,
-      "empty_body": null,
-      "sync_explainer": null
+      "workspaces": "Không gian làm việc",
+      "platform_desktop": "AnythingLLM Desktop",
+      "platform_server": "AnythingLLM Server",
+      "empty_title": "Không tìm thấy không gian làm việc",
+      "empty_body": "Tạo không gian làm việc trong AnythingLLM, sau đó kéo xuống để tải lại.",
+      "sync_explainer": "Sao chép đồng bộ hóa các cuộc trò chuyện và chủ đề trong không gian làm việc này. Đồng bộ hóa lại sẽ thay thế bản sao. Các cuộc trò chuyện trong chủ đề mặc định không được đồng bộ hóa."
     }
   },
   "scheduled_jobs": {

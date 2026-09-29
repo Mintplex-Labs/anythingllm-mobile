@@ -159,12 +159,12 @@
     "unknown_error": "Неизвестная ошибка",
     "loading_history": "Загрузка истории чата…",
     "greetings": {
-      "working_on": null,
-      "noodle": null,
-      "on_your_mind": null,
-      "where_to_start": null,
-      "ready": null,
-      "think_it_through": null
+      "working_on": "Чем мы занимаемся?",
+      "noodle": "Давайте обсудим что-нибудь интересное.",
+      "on_your_mind": "Что вас интересует?",
+      "where_to_start": "С чего начнем?",
+      "ready": "Готов, когда вам удобно.",
+      "think_it_through": "Давайте подумаем об этом."
     },
     "suggestions": {
       "hello": "Привет, чем вы можете мне помочь?",
@@ -548,8 +548,8 @@
       "temperature_range": "Температура должна быть между {{min}} и {{max}}",
       "context_length_not_number": "Длина контекста должна быть числом",
       "context_length_min": "Длина контекста должна быть больше {{min}}",
-      "max_tool_calls_not_integer": null,
-      "max_tool_calls_min": null
+      "max_tool_calls_not_integer": "Максимальное количество вызовов инструментов должно быть целым числом.",
+      "max_tool_calls_min": "Предел количества вызовов инструмента не может быть отрицательным."
     }
   },
   "tools": {
@@ -724,16 +724,16 @@
       "list_failed_description": "Этот поставщик не вернул никаких моделей. Проверьте, что конечная точка доступна и поддерживает листинг моделей, или установите модель вручную в параметрах.",
       "try_again": "Попробовать снова",
       "search_provider_models": "Поиск моделей {{provider}}",
-      "switch_provider": null,
-      "choose_provider": null,
-      "search_providers": null,
-      "configured": null,
-      "edit_connection": null,
-      "connect_title": null,
-      "connect": null,
-      "connecting": null,
-      "connect_failed": null,
-      "model": null
+      "switch_provider": "Переключить",
+      "choose_provider": "Выберите провайдера",
+      "search_providers": "Поисковые системы",
+      "configured": "Настроено",
+      "edit_connection": "Изменить соединение",
+      "connect_title": "Подключиться {{provider}}",
+      "connect": "Подключиться",
+      "connecting": "Подключение...",
+      "connect_failed": "Не удалось загрузить модели из {{provider}}. Проверьте информацию выше, или введите название модели, чтобы использовать её.",
+      "model": "Модель"
     },
     "dev_shortcut_hint_few": "Нажмите ещё {{count}} раза, чтобы открыть инструменты разработчика",
     "dev_shortcut_hint_many": "Нажмите ещё {{count}} раз, чтобы открыть инструменты разработчика",
@@ -938,10 +938,10 @@
       "using_summary_other": "Использование резюме {{count}} более ранних сообщений",
       "loading_model": "Загрузка модели в память",
       "reply_truncated": "Ответ был обрезан — окно контекста заполнено",
-      "tool_call_limit_reached_few": null,
-      "tool_call_limit_reached_many": null,
-      "tool_call_limit_reached_one": null,
-      "tool_call_limit_reached_other": null,
+      "tool_call_limit_reached_few": "Достигнут лимит запросов к инструменту {{count}} - отвечаю, используя имеющиеся данные.",
+      "tool_call_limit_reached_many": "Достигнут лимит запросов к инструменту {{count}} - отвечаю, используя имеющиеся данные.",
+      "tool_call_limit_reached_one": "Достигнут лимит использования {{count}} - отвечаю, используя имеющиеся данные.",
+      "tool_call_limit_reached_other": "Достигнут лимит запросов к инструменту {{count}} - отвечаю, используя имеющиеся данные.",
       "searching_documents": "Поиск в ваших документах",
       "reranking": "Переранжирование результатов",
       "reading_documents_few": "Чтение {{count}} прикреплённых документов",
@@ -1007,11 +1007,11 @@
     "download_model_message": "Это загрузит модель на ваше устройство. Это {{size}} в размере.",
     "notification_downloading_title": "Загрузка модели",
     "notification_downloading_body": "Загрузка {{model}}",
-    "keep_app_open": null,
-    "cancel_download_title": null,
-    "cancel_download_message": null,
-    "keep_downloading": null,
-    "cancel_download": null,
+    "keep_app_open": "Оставайтесь на этой странице и держите телефон включенным, пока не завершится загрузка.",
+    "cancel_download_title": "Отменить загрузку?",
+    "cancel_download_message": "{{model}} прервёт загрузку, и частично загруженные файлы будут удалены.",
+    "keep_downloading": "Продолжить загрузку",
+    "cancel_download": "Отменить загрузку",
     "notification_complete_title": "Загрузка завершена",
     "notification_complete_body": "Загружена {{model}}",
     "download_failed_title": "Загрузка не удалась",
@@ -1110,19 +1110,19 @@
       "save_error": "Ошибка при сохранении длины контекста",
       "hint": "Имейте в виду, что длина контекста также зависит от используемой модели и имеет последствия для памяти вашего устройства.",
       "description": "Длина контекста — это максимальное количество токенов, которые AI может использовать при генерации ответа.",
-      "provider_managed": null,
-      "disabled_description": null
+      "provider_managed": "Установлено провайдером",
+      "disabled_description": "Длина контекста относится только к моделям, работающим на устройстве. Ваш текущий провайдер самостоятельно управляет размером контекстного окна."
     },
     "max_tool_calls": {
-      "title": null,
-      "label": null,
-      "current": null,
-      "suggested": null,
-      "placeholder": null,
-      "save_error": null,
-      "no_limit": null,
-      "hint": null,
-      "description": null
+      "title": "Максимальное количество запросов",
+      "label": "Ограничение на количество вызовов",
+      "current": "Текущий лимит вызовов",
+      "suggested": "Рекомендуемые лимиты",
+      "placeholder": "Без ограничений",
+      "save_error": "Ошибка при сохранении лимита вызовов",
+      "no_limit": "Без ограничений",
+      "hint": "Максимальное количество инструментов, которые агент может использовать в одном ответе. Когда лимит достигнут, агент перестает использовать инструменты и отвечает, используя имеющиеся данные.\n\nОставьте пустым, чтобы не было ограничений. Нажмите \"Сброс\", чтобы использовать значения по умолчанию: {{cloud}} для облачных провайдеров, {{onDevice}} для моделей, работающих на устройстве.",
+      "description": "Ограничивает количество инструментов, которые агент может использовать в одном ответе, чтобы он не мог бесконечно их вызывать. Увеличьте значение для длительных, многоэтапных задач."
     },
     "vectors": {
       "section": "Хранилище векторов",
@@ -1168,12 +1168,12 @@
       "synced": "Синхронизировано",
       "sync_failed": "Ошибка",
       "sync_workspace_failed": "Не удалось синхронизировать рабочее пространство {{name}}",
-      "workspaces": null,
-      "platform_desktop": null,
-      "platform_server": null,
-      "empty_title": null,
-      "empty_body": null,
-      "sync_explainer": null
+      "workspaces": "Рабочие пространства",
+      "platform_desktop": "AnythingLLM Desktop",
+      "platform_server": "AnythingLLM Server",
+      "empty_title": "Не найдено рабочих пространств",
+      "empty_body": "Создайте рабочее пространство в AnythingLLM, затем прокрутите вниз для обновления.",
+      "sync_explainer": "Синхронизация копирует все темы и чаты рабочего пространства на это устройство. Повторная синхронизация заменяет эту копию. Чаты в основной теме не синхронизируются."
     }
   },
   "scheduled_jobs": {

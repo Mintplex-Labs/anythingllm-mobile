@@ -159,12 +159,12 @@
     "unknown_error": "不明なエラー",
     "loading_history": "チャット履歴を読み込み中...",
     "greetings": {
-      "working_on": null,
-      "noodle": null,
-      "on_your_mind": null,
-      "where_to_start": null,
-      "ready": null,
-      "think_it_through": null
+      "working_on": "現在、どのようなプロジェクトに取り組んでいますか？",
+      "noodle": "何か面白い話題で話しましょう。",
+      "on_your_mind": "何かご質問はありますか？",
+      "where_to_start": "どこから始めましょうか？",
+      "ready": "いつでもご利用いただけます。",
+      "think_it_through": "じっくり考えてみましょう。"
     },
     "suggestions": {
       "hello": "こんにちは、何かお手伝いできることはありますか？",
@@ -494,8 +494,8 @@
       "temperature_range": "温度は{{min}}から{{max}}の間である必要があります",
       "context_length_not_number": "コンテキスト長は数値である必要があります",
       "context_length_min": "コンテキスト長は{{min}}より大きい必要があります",
-      "max_tool_calls_not_integer": null,
-      "max_tool_calls_min": null
+      "max_tool_calls_not_integer": "ツールの使用回数制限は、整数である必要があります。",
+      "max_tool_calls_min": "ツールの使用回数には、マイナス値は設定できません"
     }
   },
   "tools": {
@@ -640,16 +640,16 @@
       "list_failed_description": "このプロバイダーはモデルを返しませんでした。エンドポイントが到達可能でモデルリストをサポートしているか確認するか、設定でモデルを手動で設定してください。",
       "try_again": "もう一度やり直してください",
       "search_provider_models": "{{provider}}モデルを検索",
-      "switch_provider": null,
-      "choose_provider": null,
-      "search_providers": null,
-      "configured": null,
-      "edit_connection": null,
-      "connect_title": null,
-      "connect": null,
-      "connecting": null,
-      "connect_failed": null,
-      "model": null
+      "switch_provider": "切り替え",
+      "choose_provider": "サービスプロバイダーを選択する",
+      "search_providers": "検索エンジン",
+      "configured": "設定済み",
+      "edit_connection": "接続を編集する",
+      "connect_title": "接続 {{provider}}",
+      "connect": "接続",
+      "connecting": "接続中...",
+      "connect_failed": "{{provider}} からモデルの読み込みに失敗しました。 上記の詳細をご確認いただくか、モデル名を指定して使用してください。",
+      "model": "モデル"
     },
     "dev_shortcut_hint_other": "開発者ツールを開くには、{{count}}回さらに押してください",
     "thread_menu": {
@@ -830,7 +830,7 @@
       "using_summary_other": "{{count}}個の前のメッセージの要約を使用",
       "loading_model": "メモリにモデルを読み込み",
       "reply_truncated": "返信は短縮されました-コンテキストウィンドウがいっぱいです",
-      "tool_call_limit_reached_other": null,
+      "tool_call_limit_reached_other": "{{count}} 回のツール呼び出し制限に達しました - 可能な範囲で回答",
       "searching_documents": "ドキュメントを検索",
       "reranking": "結果を再ランク付け",
       "reading_documents_other": "{{count}}個の添付ドキュメントを読み中"
@@ -893,11 +893,11 @@
     "download_model_message": "これはモデルをデバイスにダウンロードします。サイズは{{size}}です。",
     "notification_downloading_title": "モデルをダウンロード中",
     "notification_downloading_body": "{{model}}をダウンロード中",
-    "keep_app_open": null,
-    "cancel_download_title": null,
-    "cancel_download_message": null,
-    "keep_downloading": null,
-    "cancel_download": null,
+    "keep_app_open": "この画面で待機し、ダウンロードが完了するまで、スマートフォンの電源を切らないでください。",
+    "cancel_download_title": "ダウンロードを中止しますか？",
+    "cancel_download_message": "{{model}} でダウンロードが停止され、部分的なダウンロードは削除されます。",
+    "keep_downloading": "ダウンロードを続けます",
+    "cancel_download": "ダウンロードを中止",
     "notification_complete_title": "ダウンロード完了",
     "notification_complete_body": "{{model}}をダウンロード",
     "download_failed_title": "ダウンロード失敗",
@@ -996,19 +996,19 @@
       "save_error": "コンテキスト長の保存エラー",
       "hint": "コンテキスト長はまた、使用しているモデルに依存し、デバイスのメモリへの影響があることに注意してください。",
       "description": "コンテキスト長は、AIが応答を生成する際に使用できるトークンの最大数です。",
-      "provider_managed": null,
-      "disabled_description": null
+      "provider_managed": "設定: プロバイダ",
+      "disabled_description": "「コンテキスト長」は、オンデバイスのモデルにのみ適用されます。現在のプロバイダーが、自身のコンテキストウィンドウを管理します。"
     },
     "max_tool_calls": {
-      "title": null,
-      "label": null,
-      "current": null,
-      "suggested": null,
-      "placeholder": null,
-      "save_error": null,
-      "no_limit": null,
-      "hint": null,
-      "description": null
+      "title": "最大利用回数",
+      "label": "同時利用可能なツール数",
+      "current": "現在、同時利用可能なツール数",
+      "suggested": "推奨される制限",
+      "placeholder": "制限なし",
+      "save_error": "ツールの使用回数制限エラー",
+      "no_limit": "制限なし",
+      "hint": "エージェントが1つの返信で呼び出せるツールが最も多い。制限に達したら、エージェントはツールを呼び出すのを停止し、利用可能な情報のみで回答します。\n\n制限なしの場合は空白にします。リセットをタップすると、デフォルト設定（クラウドプロバイダー用：{{cloud}}、オンデバイスモデル用：{{onDevice}}）を使用します。",
+      "description": "1回の回答で利用できるツール数を制限します。これにより、ツールを無限に呼び出すことができなくなります。長期間にわたる、複数のステップを含むタスクには、この制限を解除します。"
     },
     "vectors": {
       "section": "ベクトルストレージ",
@@ -1048,12 +1048,12 @@
       "synced": "同期されました",
       "sync_failed": "失敗",
       "sync_workspace_failed": "ワークスペース{{name}}の同期に失敗しました",
-      "workspaces": null,
-      "platform_desktop": null,
-      "platform_server": null,
-      "empty_title": null,
-      "empty_body": null,
-      "sync_explainer": null
+      "workspaces": "ワークスペース",
+      "platform_desktop": "AnythingLLM Desktop",
+      "platform_server": "AnythingLLM サーバー",
+      "empty_title": "ワークスペースが見つかりませんでした",
+      "empty_body": "AnythingLLM でワークスペースを作成し、下にスクロールして更新する。",
+      "sync_explainer": "同期：ワークスペースのトピックとチャットをこのデバイスにコピーします。再度同期すると、そのコピーが更新されます。デフォルトのトピック内のチャットは同期されません。"
     }
   },
   "scheduled_jobs": {

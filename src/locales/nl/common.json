@@ -159,12 +159,12 @@
     "unknown_error": "Onbekende fout",
     "loading_history": "Chatgeschiedenis laden...",
     "greetings": {
-      "working_on": null,
-      "noodle": null,
-      "on_your_mind": null,
-      "where_to_start": null,
-      "ready": null,
-      "think_it_through": null
+      "working_on": "Waar werken we aan?",
+      "noodle": "Laten we het eens verder bespreken.",
+      "on_your_mind": "Wat staat er op je te?",
+      "where_to_start": "Waar moeten we beginnen?",
+      "ready": "Direct beschikbaar.",
+      "think_it_through": "Laten we het even doordenken."
     },
     "suggestions": {
       "hello": "Hallo, wat kan ik je helpen?",
@@ -512,8 +512,8 @@
       "temperature_range": "Temperatuur moet tussen {{min}} en {{max}} liggen",
       "context_length_not_number": "Contextlengte moet een getal zijn",
       "context_length_min": "Contextlengte moet groter zijn dan {{min}}",
-      "max_tool_calls_not_integer": null,
-      "max_tool_calls_min": null
+      "max_tool_calls_not_integer": "Het maximum aantal oproepen per tool moet een geheel getal zijn.",
+      "max_tool_calls_min": "Aantal oproepen per tool mag niet negatief zijn."
     }
   },
   "tools": {
@@ -668,16 +668,16 @@
       "list_failed_description": "Deze provider gaf geen modellen terug. Controleer of het eindpunt bereikbaar is en modelweergave ondersteunt, of stel het model handmatig in onder Instellingen.",
       "try_again": "Probeer opnieuw",
       "search_provider_models": "{{provider}} modellen zoeken",
-      "switch_provider": null,
-      "choose_provider": null,
-      "search_providers": null,
-      "configured": null,
-      "edit_connection": null,
-      "connect_title": null,
-      "connect": null,
-      "connecting": null,
-      "connect_failed": null,
-      "model": null
+      "switch_provider": "Overstappen",
+      "choose_provider": "Kies een provider",
+      "search_providers": "Zoekproviders",
+      "configured": "Geconfigureerd",
+      "edit_connection": "Verbinding bewerken",
+      "connect_title": "Verbind {{provider}}",
+      "connect": "Verbinden",
+      "connecting": "Verbinding wordt gemaakt...",
+      "connect_failed": "Kon modellen niet laden vanuit {{provider}}. Controleer de details hierboven, of voer een modelnaam in om het toch te gebruiken.",
+      "model": "Model"
     },
     "dev_shortcut_hint_one": "Druk {{count}} meer keer om ontwikkelaarshulpmiddelen te openen",
     "dev_shortcut_hint_other": "Druk {{count}} meer keren om ontwikkelaarshulpmiddelen te openen",
@@ -866,8 +866,8 @@
       "using_summary_other": "Een samenvatting van {{count}} eerdere berichten gebruiken",
       "loading_model": "Model in geheugen laden",
       "reply_truncated": "Antwoord was afgekort - het contextvenster is vol",
-      "tool_call_limit_reached_one": null,
-      "tool_call_limit_reached_other": null,
+      "tool_call_limit_reached_one": "Aantal vragen met {{count}} is bereikt - antwoord met de beschikbare informatie.",
+      "tool_call_limit_reached_other": "Limiet van {{count}} toolaanroepen bereikt - antwoord met de beschikbare informatie",
       "searching_documents": "Je documenten doorzoeken",
       "reranking": "Resultaten opnieuw rangschikken",
       "reading_documents_one": "{{count}} bijgevoegd document lezen",
@@ -931,11 +931,11 @@
     "download_model_message": "Dit zal het model naar je apparaat downloaden. Het is {{size}} groot.",
     "notification_downloading_title": "Model downloaden",
     "notification_downloading_body": "{{model}} aan het downloaden",
-    "keep_app_open": null,
-    "cancel_download_title": null,
-    "cancel_download_message": null,
-    "keep_downloading": null,
-    "cancel_download": null,
+    "keep_app_open": "Blijf op deze pagina en houd uw telefoon ontgrendeld totdat de download voltooid is.",
+    "cancel_download_title": "Download annuleren?",
+    "cancel_download_message": "{{model}} stopt met het downloaden en het gedeeltelijk gedownloade bestand wordt verwijderd.",
+    "keep_downloading": "Doorgaan met downloaden",
+    "cancel_download": "Download annuleren",
     "notification_complete_title": "Download voltooid",
     "notification_complete_body": "{{model}} gedownload",
     "download_failed_title": "Download mislukt",
@@ -1034,19 +1034,19 @@
       "save_error": "Fout bij opslaan van contextlengte",
       "hint": "Houd in gedachte dat de contextlengte ook afhankelijk is van het model dat je gebruikt en geheugenimplicaties voor je apparaat heeft.",
       "description": "Contextlengte is het maximale aantal tokens dat de AI kan gebruiken bij het genereren van een antwoord.",
-      "provider_managed": null,
-      "disabled_description": null
+      "provider_managed": "Gegeven door de aanbieder",
+      "disabled_description": "De contextlengte is alleen van toepassing op modellen die op het apparaat draaien. Uw huidige provider beheert zelf de context."
     },
     "max_tool_calls": {
-      "title": null,
-      "label": null,
-      "current": null,
-      "suggested": null,
-      "placeholder": null,
-      "save_error": null,
-      "no_limit": null,
-      "hint": null,
-      "description": null
+      "title": "Maximaal aantal oproepen",
+      "label": "Aantal oproepen per tool",
+      "current": "Huidige limiet voor het gebruik van tools",
+      "suggested": "Aanbevolen limieten",
+      "placeholder": "Geen limiet",
+      "save_error": "Fout bij het opslaan van het aantal tool-aanroepen",
+      "no_limit": "Geen limiet",
+      "hint": "Het aantal tools dat de agent in één antwoord kan gebruiken is het grootst. Wanneer het maximum bereikt is, stopt de agent met het aanroepen van tools en antwoordt het met wat het heeft.\n\nLaat dit veld leeg voor geen limiet. Tik op \"Reset\" om de standaardwaarden te gebruiken: {{cloud}} voor cloudproviders, {{onDevice}} voor modellen op het apparaat.",
+      "description": "Beperkt het aantal tools dat de agent in één antwoord kan gebruiken, zodat het niet oneindig tools kan blijven aanroepen. Verhoog dit voor langdurige, complexe taken."
     },
     "vectors": {
       "section": "Vectoropslag",
@@ -1088,12 +1088,12 @@
       "synced": "Gesynchroniseerd",
       "sync_failed": "Mislukt",
       "sync_workspace_failed": "Kon werkruimte {{name}} niet synchroniseren",
-      "workspaces": null,
-      "platform_desktop": null,
-      "platform_server": null,
-      "empty_title": null,
-      "empty_body": null,
-      "sync_explainer": null
+      "workspaces": "Werkruimtes",
+      "platform_desktop": "AnythingLLM Desktop",
+      "platform_server": "AnythingLLM Server",
+      "empty_title": "Geen werkruimtes gevonden",
+      "empty_body": "Maak een werkruimte aan in AnythingLLM, en veeg omlaag om te vernieuwen.",
+      "sync_explainer": "Synchroniseren kopieert de threads en chats van een werkruimte naar dit apparaat. Het opnieuw synchroniseren vervangt die kopie. Chats in de standaard thread worden niet gesynchroniseerd."
     }
   },
   "scheduled_jobs": {

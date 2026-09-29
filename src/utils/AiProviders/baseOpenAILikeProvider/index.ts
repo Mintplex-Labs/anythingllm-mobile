@@ -641,6 +641,7 @@ export default abstract class BaseOpenAILikeProvider {
       signal: this.abortSignal,
       toolset,
       executionContext: { autoApproveTools },
+      maxToolCalls: Workspace.maxToolCallsFor(this.workspace, 'cloud'),
     });
 
     throwIfAborted(this.abortSignal);

@@ -511,7 +511,9 @@
       "temperature_not_number": "तापमान एक संख्या होना चाहिए",
       "temperature_range": "तापमान {{min}} और {{max}} के बीच होना चाहिए",
       "context_length_not_number": "संदर्भ लंबाई एक संख्या होनी चाहिए",
-      "context_length_min": "संदर्भ लंबाई {{min}} से अधिक होनी चाहिए"
+      "context_length_min": "संदर्भ लंबाई {{min}} से अधिक होनी चाहिए",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -864,6 +866,8 @@
       "using_summary_other": "{{count}} पिछले संदेशों का सारांश उपयोग कर रहे हैं",
       "loading_model": "मॉडल को स्मृति में लोड कर रहे हैं",
       "reply_truncated": "उत्तर को काटा गया - संदर्भ विंडो भरी हुई है",
+      "tool_call_limit_reached_one": null,
+      "tool_call_limit_reached_other": null,
       "searching_documents": "अपने दस्तावेज़ों को खोज रहे हैं",
       "reranking": "परिणामों को फिर से क्रमित कर रहे हैं",
       "reading_documents_one": "{{count}} संलग्न दस्तावेज़ को पढ़ रहे हैं",
@@ -1030,6 +1034,17 @@
       "save_error": "संदर्भ लंबाई सहेजने में त्रुटि",
       "hint": "ध्यान रखें कि संदर्भ लंबाई आपके द्वारा उपयोग किए जा रहे मॉडल पर भी निर्भर है और आपके डिवाइस के लिए स्मृति निहितार्थ है।",
       "description": "संदर्भ लंबाई अधिकतम संख्या है जो AI प्रतिक्रिया उत्पन्न करते समय उपयोग कर सकता है।"
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "वेक्टर स्टोरेज",

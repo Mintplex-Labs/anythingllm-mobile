@@ -529,7 +529,9 @@
       "temperature_not_number": "La temperatura debe ser un número",
       "temperature_range": "La temperatura debe estar entre {{min}} y {{max}}",
       "context_length_not_number": "La longitud del contexto debe ser un número",
-      "context_length_min": "La longitud del contexto debe ser mayor que {{min}}"
+      "context_length_min": "La longitud del contexto debe ser mayor que {{min}}",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -900,6 +902,9 @@
       "using_summary_other": "Usando un resumen de {{count}} mensajes anteriores",
       "loading_model": "Cargando modelo en memoria",
       "reply_truncated": "La respuesta se cortó - la ventana de contexto está llena",
+      "tool_call_limit_reached_many": null,
+      "tool_call_limit_reached_one": null,
+      "tool_call_limit_reached_other": null,
       "searching_documents": "Buscando sus documentos",
       "reranking": "Reordenando resultados",
       "reading_documents_many": "Leyendo {{count}} documentos adjuntos",
@@ -1067,6 +1072,17 @@
       "save_error": "Error al guardar longitud del contexto",
       "hint": "Tenga en cuenta que la longitud del contexto también depende del modelo que está utilizando y tiene implicaciones de memoria para su dispositivo.",
       "description": "La longitud del contexto es el número máximo de tokens que la IA puede usar mientras genera una respuesta."
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "Almacenamiento de vectores",

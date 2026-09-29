@@ -2,6 +2,16 @@ import { schemaMigrations, addColumns, createTable } from '@nozbe/watermelondb/S
 
 export default schemaMigrations({
   migrations: [
+    // v5 -> v6: per-workspace agent tool call cap (null = provider type default, 0 = no limit)
+    {
+      toVersion: 6,
+      steps: [
+        addColumns({
+          table: 'workspaces',
+          columns: [{ name: 'max_tool_calls', type: 'number', isOptional: true }],
+        }),
+      ],
+    },
     // v4 -> v5: full-context documents are scoped to the thread they were attached in (see utils/documents/fullContext)
     {
       toVersion: 5,

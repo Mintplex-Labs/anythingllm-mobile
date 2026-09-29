@@ -529,7 +529,9 @@
       "temperature_not_number": "A temperatura deve ser um número",
       "temperature_range": "A temperatura deve estar entre {{min}} e {{max}}",
       "context_length_not_number": "O comprimento do contexto deve ser um número",
-      "context_length_min": "O comprimento do contexto deve ser maior que {{min}}"
+      "context_length_min": "O comprimento do contexto deve ser maior que {{min}}",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -900,6 +902,9 @@
       "using_summary_other": "Usando um resumo de {{count}} mensagens anteriores",
       "loading_model": "Carregando modelo na memória",
       "reply_truncated": "A resposta foi cortada - a janela de contexto está cheia",
+      "tool_call_limit_reached_many": null,
+      "tool_call_limit_reached_one": null,
+      "tool_call_limit_reached_other": null,
       "searching_documents": "Pesquisando seus documentos",
       "reranking": "Reclassificando resultados",
       "reading_documents_many": "Lendo {{count}} documentos anexados",
@@ -1067,6 +1072,17 @@
       "save_error": "Erro ao salvar o tamanho do contexto",
       "hint": "Tenha em mente que o tamanho do contexto também depende do modelo que você está usando e pode ter implicações de memória para o seu dispositivo.",
       "description": "O tamanho do contexto é o número máximo de tokens que a IA pode utilizar ao gerar uma resposta."
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "Armazenamento Vetorial",

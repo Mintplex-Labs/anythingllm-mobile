@@ -511,7 +511,9 @@
       "temperature_not_number": "Temperature must be a number",
       "temperature_range": "Temperature must be between {{min}} and {{max}}",
       "context_length_not_number": "Context length must be a number",
-      "context_length_min": "Context length must be greater than {{min}}"
+      "context_length_min": "Context length must be greater than {{min}}",
+      "max_tool_calls_not_integer": "Tool call limit must be a whole number",
+      "max_tool_calls_min": "Tool call limit cannot be negative"
     }
   },
   "tools": {
@@ -864,6 +866,8 @@
       "using_summary_other": "Using a summary of {{count}} earlier messages",
       "loading_model": "Loading model into memory",
       "reply_truncated": "Reply was cut short - the context window is full",
+      "tool_call_limit_reached_one": "Reached the limit of {{count}} tool call - answering with what it has",
+      "tool_call_limit_reached_other": "Reached the limit of {{count}} tool calls - answering with what it has",
       "searching_documents": "Searching your documents",
       "reranking": "Reranking results",
       "reading_documents_one": "Reading {{count}} attached document",
@@ -1030,6 +1034,17 @@
       "save_error": "Error saving context length",
       "hint": "Keep in mind that the context length is also dependent on the model you are using and has memory implications for your device.",
       "description": "The context length is the maximum number of tokens that the AI can use while generating a response."
+    },
+    "max_tool_calls": {
+      "title": "Max Tool Calls",
+      "label": "Tool call limit",
+      "current": "Current Tool Call Limit",
+      "suggested": "Suggested Limits",
+      "placeholder": "No limit",
+      "save_error": "Error saving tool call limit",
+      "no_limit": "No limit",
+      "hint": "The most tools the agent can call in a single reply. When the limit is reached, the agent stops calling tools and answers with what it has.\n\nLeave empty for no limit. Tap Reset to use the default: {{cloud}} for cloud providers, {{onDevice}} for on-device models.",
+      "description": "Limits how many tools the agent can call in one reply, so it cannot keep calling tools forever. Raise it for long, multi-step tasks."
     },
     "vectors": {
       "section": "Vector Storage",

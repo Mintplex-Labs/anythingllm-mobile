@@ -493,7 +493,9 @@
       "temperature_not_number": "Nhiệt độ phải là một số",
       "temperature_range": "Nhiệt độ phải nằm trong khoảng {{min}} và {{max}}",
       "context_length_not_number": "Độ dài bối cảnh phải là một số",
-      "context_length_min": "Độ dài bối cảnh phải lớn hơn {{min}}"
+      "context_length_min": "Độ dài bối cảnh phải lớn hơn {{min}}",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -828,6 +830,7 @@
       "using_summary_other": "Sử dụng bản tóm tắt {{count}} tin nhắn trước đó",
       "loading_model": "Đang tải mô hình vào bộ nhớ",
       "reply_truncated": "Câu trả lời bị cắt ngắn - cửa sổ bối cảnh đã đầy",
+      "tool_call_limit_reached_other": null,
       "searching_documents": "Đang tìm kiếm tài liệu của bạn",
       "reranking": "Đang xếp hạng lại kết quả",
       "reading_documents_other": "Đang đọc {{count}} tài liệu được đính kèm"
@@ -993,6 +996,17 @@
       "save_error": "Lỗi lưu độ dài bối cảnh",
       "hint": "Hãy nhớ rằng độ dài bối cảnh cũng phụ thuộc vào mô hình bạn đang sử dụng và có ý nghĩa bộ nhớ cho thiết bị của bạn.",
       "description": "Độ dài bối cảnh là số token tối đa mà AI có thể sử dụng khi tạo phản hồi."
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "Lưu trữ vectơ",

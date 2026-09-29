@@ -10,6 +10,33 @@ import { tKey } from "@/i18n";
 import { LoadingView, ErrorView, MainView } from "./Main";
 import { NumericInputView } from "./NumericInput";
 import { TextInputView } from "./TextInput";
+import useLLMProvider from "@/hooks/useLLMPreference";
+import { isOnDeviceProviderName } from "@/utils/ToolsManager/providerGuards";
+
+/** The input shows the default of the provider the user chats with while no explicit cap is set */
+function MaxToolCallsView(props: any) {
+  const { llmPreferences } = useLLMProvider();
+  const providerDefault = isOnDeviceProviderName(llmPreferences?.provider)
+    ? Workspace.defaultMaxToolCalls.onDevice
+    : Workspace.defaultMaxToolCalls.cloud;
+  return (
+    <NumericInputView
+      {...props}
+      field="maxToolCalls"
+      title={tKey('workspace_settings.max_tool_calls.title')}
+      currentLabel={tKey('workspace_settings.max_tool_calls.current')}
+      suggestionsLabel={tKey('workspace_settings.max_tool_calls.suggested')}
+      placeholder={tKey('workspace_settings.max_tool_calls.placeholder')}
+      saveErrorMessage={tKey('workspace_settings.max_tool_calls.save_error')}
+      resetValue={null}
+      emptyValue={0}
+      nullDisplayValue={providerDefault}
+      hint={tKey('workspace_settings.max_tool_calls.hint')}
+      hintParams={{ cloud: Workspace.defaultMaxToolCalls.cloud, onDevice: Workspace.defaultMaxToolCalls.onDevice }}
+      suggestions={[5, 10, 25, 50]}
+    />
+  );
+}
 
 // title/placeholder/hint/label props are translation keys - the input views resolve them with t()
 const PAGES = {
@@ -66,6 +93,7 @@ const PAGES = {
       suggestions={[512, 1024, 2048, 4096, 8192]}
     />
   ),
+  max_tool_calls: (props: any) => <MaxToolCallsView {...props} />,
 };
 export type IWorkspacePageKey = keyof typeof PAGES;
 

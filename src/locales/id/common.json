@@ -493,7 +493,9 @@
       "temperature_not_number": "Suhu harus berupa angka",
       "temperature_range": "Suhu harus antara {{min}} dan {{max}}",
       "context_length_not_number": "Panjang konteks harus berupa angka",
-      "context_length_min": "Panjang konteks harus lebih besar dari {{min}}"
+      "context_length_min": "Panjang konteks harus lebih besar dari {{min}}",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -828,6 +830,7 @@
       "using_summary_other": "Menggunakan ringkasan {{count}} pesan sebelumnya",
       "loading_model": "Memuat model ke dalam memori",
       "reply_truncated": "Balasan dipotong pendek - jendela konteks penuh",
+      "tool_call_limit_reached_other": null,
       "searching_documents": "Mencari dokumen Anda",
       "reranking": "Mengubah urutan hasil",
       "reading_documents_other": "Membaca {{count}} dokumen terlampir"
@@ -993,6 +996,17 @@
       "save_error": "Error menyimpan panjang konteks",
       "hint": "Ingat bahwa panjang konteks juga tergantung pada model yang Anda gunakan dan memiliki implikasi memori untuk perangkat Anda.",
       "description": "Panjang konteks adalah jumlah maksimum token yang dapat digunakan AI saat membuat respons."
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "Penyimpanan Vektor",

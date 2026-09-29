@@ -511,7 +511,9 @@
       "temperature_not_number": "Temperatuur moet een getal zijn",
       "temperature_range": "Temperatuur moet tussen {{min}} en {{max}} liggen",
       "context_length_not_number": "Contextlengte moet een getal zijn",
-      "context_length_min": "Contextlengte moet groter zijn dan {{min}}"
+      "context_length_min": "Contextlengte moet groter zijn dan {{min}}",
+      "max_tool_calls_not_integer": null,
+      "max_tool_calls_min": null
     }
   },
   "tools": {
@@ -864,6 +866,8 @@
       "using_summary_other": "Een samenvatting van {{count}} eerdere berichten gebruiken",
       "loading_model": "Model in geheugen laden",
       "reply_truncated": "Antwoord was afgekort - het contextvenster is vol",
+      "tool_call_limit_reached_one": null,
+      "tool_call_limit_reached_other": null,
       "searching_documents": "Je documenten doorzoeken",
       "reranking": "Resultaten opnieuw rangschikken",
       "reading_documents_one": "{{count}} bijgevoegd document lezen",
@@ -1030,6 +1034,17 @@
       "save_error": "Fout bij opslaan van contextlengte",
       "hint": "Houd in gedachte dat de contextlengte ook afhankelijk is van het model dat je gebruikt en geheugenimplicaties voor je apparaat heeft.",
       "description": "Contextlengte is het maximale aantal tokens dat de AI kan gebruiken bij het genereren van een antwoord."
+    },
+    "max_tool_calls": {
+      "title": null,
+      "label": null,
+      "current": null,
+      "suggested": null,
+      "placeholder": null,
+      "save_error": null,
+      "no_limit": null,
+      "hint": null,
+      "description": null
     },
     "vectors": {
       "section": "Vectoropslag",

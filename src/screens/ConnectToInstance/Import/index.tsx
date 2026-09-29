@@ -1,7 +1,7 @@
-import { ScrollView, Text, TouchableOpacity, View, RefreshControl } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View, RefreshControl } from "react-native";
 import SafeView from "@/components/SafeView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ArrowLeft } from "phosphor-react-native";
+import { Cloud, Laptop, SquaresFour } from "phosphor-react-native";
 import useHighjackBackButtonPress from "@/hooks/useHighjackBackButtonPress";
 import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -13,11 +13,19 @@ import uiStore from "@/store/UIStore";
 import { showToast } from "@/utils/Notification";
 import { unregisterConnection } from "../index";
 import { useTranslation } from "react-i18next";
+import { ActionButton, Card, JOB_COLORS, ScreenHeader, SectionLabel } from "@/screens/ScheduledJobs/components";
 
 interface ImportViewProps {
     params: { connectionUrl: string, deviceToken: string };
 }
 
+function hostnameOf(connectionUrl?: string): string {
+    try {
+        return connectionUrl ? new URL(connectionUrl).hostname : '';
+    } catch {
+        return connectionUrl ?? '';
+    }
+}
 
 export function ImportView({ params }: ImportViewProps) {
     const { t } = useTranslation();
@@ -26,6 +34,7 @@ export function ImportView({ params }: ImportViewProps) {
 
     const [module, setModule] = useState<AnythingLLMExternal | null>(null);
     const [workspaces, setWorkspaces] = useState<CommandResponses['workspaces']['workspaces']>([]);
+    const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
     const goBack = () => {
@@ -38,6 +47,16 @@ export function ImportView({ params }: ImportViewProps) {
         return true;
     }
     useHighjackBackButtonPress(goBack);
+
+    const goHome = async () => {
+        await uiStore.removeFromStorage('current_anythingllm_external_connection');
+        uiStore.emitter.emit(uiStore.globalEvents.REFRESH_WORKSPACES);
+        navigation.reset({
+            index: 0,
+            // @ts-ignore
+            routes: [{ name: PATHS.home }],
+        });
+    };
 
     async function getWorkspaces() {
         if (!params?.connectionUrl || !params?.deviceToken) return;
@@ -72,27 +91,28 @@ export function ImportView({ params }: ImportViewProps) {
     };
 
     useEffect(() => {
-        getWorkspaces();
-    }, [params?.connectionUrl, params?.deviceToken]);
+        setLoading(true);
+        getWorkspaces()
+            .catch(() => showToast(t('connect.import.refresh_failed'), 'short'))
+            .finally(() => setLoading(false));
+    }, [params?.connectionUrl, params?.deviceToken]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Every workspace from one connection reports the same platform
+    const platform = workspaces[0]?.platform;
+    const PlatformIcon = platform === 'server' ? Cloud : Laptop;
 
     return (
         <SafeView
             scrollable={false}
             safeAreaClassNames="pt-[21px]"
             containerClassNames="flex-1 flex flex-col"
-            safeAreaStyle={{ backgroundColor: '#1B1B1E' }}
+            safeAreaStyle={{ backgroundColor: JOB_COLORS.page }}
         >
-            {/* Header */}
-            <View style={{ paddingHorizontal: 30, paddingTop: insets.top, paddingBottom: 76 }} className="w-full flex flex-row items-center justify-center relative">
-                <TouchableOpacity onPress={goBack} className="absolute top-8 left-0 flex flex-row items-center gap-2">
-                    <ArrowLeft size={24} color="#FFF" weight="bold" />
-                </TouchableOpacity>
-                <Text style={{ maxWidth: '80%' }} numberOfLines={1} ellipsizeMode="middle" className="text-white text-lg font-medium">{t('connect.title')}</Text>
-            </View>
+            <ScreenHeader title={t('connect.title')} onBack={goBack} />
             <ScrollView
                 style={{ flex: 1 }}
-                contentContainerStyle={{ gap: 33, paddingBottom: 100 }}
-                contentContainerClassName="w-full flex flex-col items-center justify-start"
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingHorizontal: 8, paddingBottom: 20, gap: 24, flexGrow: 1 }}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -102,24 +122,58 @@ export function ImportView({ params }: ImportViewProps) {
                     />
                 }
             >
-                {workspaces.map((workspace) => <WorkspaceItem key={workspace.id} module={module as AnythingLLMExternal} workspace={workspace} />)}
+                {/* Connection */}
+                <Card style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ backgroundColor: JOB_COLORS.chip, width: 44, height: 44 }} className="flex items-center justify-center rounded-full">
+                        <PlatformIcon size={22} color={JOB_COLORS.accent} weight="bold" />
+                    </View>
+                    <View className="flex-1 flex flex-col" style={{ gap: 2 }}>
+                        <Text numberOfLines={1} ellipsizeMode="middle" className="text-white text-lg font-medium">{hostnameOf(params?.connectionUrl)}</Text>
+                        {!!platform && (
+                            <Text numberOfLines={1} style={{ color: JOB_COLORS.muted }} className="text-sm">
+                                {platform === 'server' ? t('connect.import.platform_server') : t('connect.import.platform_desktop')}
+                            </Text>
+                        )}
+                    </View>
+                </Card>
+
+                {/* Workspaces */}
+                <View className="w-full flex flex-col" style={{ gap: 12 }}>
+                    <SectionLabel>{t('connect.import.workspaces')}</SectionLabel>
+                    {loading ? (
+                        <View className="w-full items-center" style={{ paddingVertical: 40 }}>
+                            <ActivityIndicator size="large" color="#FFF" />
+                        </View>
+                    ) : workspaces.length === 0 ? (
+                        <Card style={{ alignItems: 'center', paddingVertical: 32, gap: 16 }}>
+                            <View style={{ backgroundColor: JOB_COLORS.chip, width: 64, height: 64 }} className="flex items-center justify-center rounded-full">
+                                <SquaresFour size={32} color="#FFF" />
+                            </View>
+                            <View className="flex flex-col items-center" style={{ gap: 6 }}>
+                                <Text className="text-white text-lg font-medium">{t('connect.import.empty_title')}</Text>
+                                <Text style={{ color: JOB_COLORS.muted, textAlign: 'center', paddingHorizontal: 12 }} className="text-sm">
+                                    {t('connect.import.empty_body')}
+                                </Text>
+                            </View>
+                        </Card>
+                    ) : (
+                        <Card style={{ gap: 0, paddingVertical: 4 }}>
+                            {workspaces.map((workspace, index) => (
+                                <WorkspaceItem
+                                    key={workspace.id}
+                                    module={module as AnythingLLMExternal}
+                                    workspace={workspace}
+                                    last={index === workspaces.length - 1}
+                                />
+                            ))}
+                        </Card>
+                    )}
+                    <Text style={{ color: JOB_COLORS.muted }} className="text-sm">{t('connect.import.sync_explainer')}</Text>
+                </View>
             </ScrollView>
-            <View style={{ paddingBottom: insets.bottom - 8, paddingHorizontal: 30, paddingTop: 8 }} className="w-full flex flex-row items-center justify-center">
-                <TouchableOpacity
-                    onPress={async () => {
-                        await uiStore.removeFromStorage('current_anythingllm_external_connection');
-                        uiStore.emitter.emit(uiStore.globalEvents.REFRESH_WORKSPACES);
-                        navigation.reset({
-                            index: 0,
-                            // @ts-ignore
-                            routes: [{ name: PATHS.home }],
-                        });
-                    }}
-                    style={{ height: 40, backgroundColor: 'rgba(255, 255, 255, 0.1)', paddingHorizontal: 16, paddingVertical: 8 }}
-                    className="flex flex-row w-full items-center justify-center gap-2 rounded-lg">
-                    <Text className="text-white font-medium">{t('connect.import.go_home')}</Text>
-                </TouchableOpacity>
+            <View style={{ paddingHorizontal: 8, paddingBottom: insets.bottom + 12, paddingTop: 8 }}>
+                <ActionButton title={t('connect.import.go_home')} tone="secondary" onPress={goHome} />
             </View>
-        </SafeView >
+        </SafeView>
     );
 }

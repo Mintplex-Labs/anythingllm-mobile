@@ -1126,7 +1126,13 @@
       "sync": "Синхронизировать",
       "synced": "Синхронизировано",
       "sync_failed": "Ошибка",
-      "sync_workspace_failed": "Не удалось синхронизировать рабочее пространство {{name}}"
+      "sync_workspace_failed": "Не удалось синхронизировать рабочее пространство {{name}}",
+      "workspaces": null,
+      "platform_desktop": null,
+      "platform_server": null,
+      "empty_title": null,
+      "empty_body": null,
+      "sync_explainer": null
     }
   },
   "scheduled_jobs": {

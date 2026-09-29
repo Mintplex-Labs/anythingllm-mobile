@@ -1009,7 +1009,13 @@
       "sync": "Đồng bộ",
       "synced": "Đã đồng bộ",
       "sync_failed": "Thất bại",
-      "sync_workspace_failed": "Không thể đồng bộ không gian làm việc {{name}}"
+      "sync_workspace_failed": "Không thể đồng bộ không gian làm việc {{name}}",
+      "workspaces": null,
+      "platform_desktop": null,
+      "platform_server": null,
+      "empty_title": null,
+      "empty_body": null,
+      "sync_explainer": null
     }
   },
   "scheduled_jobs": {

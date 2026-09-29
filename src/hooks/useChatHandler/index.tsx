@@ -138,6 +138,18 @@ function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: I
         chatsMapRef.current = chatsMap;
     }, [chatsMap]);
 
+    // Remote slug of this thread - filled in by `linkRemote` for legacy default-thread mirrors so
+    // the `thread` prop (which is not refreshed) does not link a second remote thread.
+    const remoteThreadSlugRef = useRef<string | null>(thread?.remoteConfig?.slug ?? null);
+    useEffect(() => {
+        remoteThreadSlugRef.current = thread?.remoteConfig?.slug ?? null;
+    }, [thread?.slug]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const remoteThreadSlug = useCallback(async (): Promise<string> => {
+        if (!remoteThreadSlugRef.current) remoteThreadSlugRef.current = await WorkspaceThread.linkRemote(thread);
+        return remoteThreadSlugRef.current;
+    }, [thread]);
+
     const upsertChat = useCallback((chat: DynamicChatMessage) => {
         setChatsMap((prevMap) => {
             const newMap = new Map(prevMap);
@@ -222,13 +234,20 @@ function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: I
             setChatsMap(new Map());
             if (ephemeral) return;
             await WorkspaceChat.delete([{ field: 'workspace_thread_slug', value: thread.slug }]);
-            if (isRemote) await DelegatedProvider.sendCommand(workspace.remoteConfig, 'reset-chat', { workspaceSlug: workspace.remoteConfig.slug, threadSlug: thread.remoteConfig.slug });
+            if (!isRemote) return;
+            if (remoteThreadSlugRef.current) {
+                await DelegatedProvider.sendCommand(workspace.remoteConfig, 'reset-chat', { workspaceSlug: workspace.remoteConfig.slug, threadSlug: remoteThreadSlugRef.current });
+            } else {
+                // Legacy default-thread mirror - move it onto a new (empty) remote thread rather
+                // than resetting the remote default thread.
+                await remoteThreadSlug();
+            }
         } catch (err) {
             debug('Error resetting chat history', err);
         } finally {
             setIsLoadingChats(false);
         }
-    }, [thread, workspace, isRemote, ephemeral]);
+    }, [thread, workspace, isRemote, ephemeral, remoteThreadSlug]);
 
     const chatsArray = useMemo(() => {
         return Array.from(chatsMap.values());
@@ -344,7 +363,7 @@ function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: I
                     connectionUrl: workspace.remoteConfig.connectionUrl,
                     deviceToken: workspace.remoteConfig.deviceToken,
                     workspaceSlug: workspace.remoteConfig.slug,
-                    threadSlug: thread.remoteConfig.slug,
+                    threadSlug: remoteThreadSlugRef.current,
                     onStream: handleStreamEvent,
                     message: prompt,
                     signal,
@@ -352,7 +371,11 @@ function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: I
 
                 const validConfig = await DelegatedProvider.validateConfig(config);
                 if (signal.aborted) return discardAbortedChat(); // stopped while checking the remote
-                if (validConfig) caller = () => (new DelegatedProvider()).streamChat(config)
+                if (validConfig) {
+                    // Never stream into the remote default thread - a legacy mirror gets its own remote thread first.
+                    config.threadSlug = await remoteThreadSlug();
+                    caller = () => (new DelegatedProvider()).streamChat(config);
+                }
                 else {
                     const continueLocally = await AwaitableAlert(
                         i18n.t('chat.remote_unreachable.title'),
@@ -391,7 +414,7 @@ function useChatHandler({ workspace, thread, llmProvider, ephemeral = false }: I
             llmProvider.attachAbortSignal(null);
             deactivateKeepAwake();
         }
-    }, [thread, upsertChat, removeChat, llmProvider, concludeChat, isRemote, workspace, notifyIfLocked, ephemeral]);
+    }, [thread, upsertChat, removeChat, llmProvider, concludeChat, isRemote, workspace, notifyIfLocked, ephemeral, remoteThreadSlug]);
 
     const canScrollChatHistory = useMemo(() => {
         return !isLoadingChats && chatsArray.length > 0;

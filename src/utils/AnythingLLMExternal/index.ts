@@ -20,7 +20,7 @@ export type CommandBodies = {
     'workspaces': never;
     'workspace-content': { workspaceSlug: string };
     'model-tag': { workspaceSlug: string };
-    'reset-chat': { workspaceSlug: string, threadSlug: string | null };
+    'reset-chat': { workspaceSlug: string, threadSlug: string };
     'new-thread': { workspaceSlug: string };
     'unregister-device': never;
 };

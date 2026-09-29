@@ -40,7 +40,11 @@ export type WorkspaceThreadType = {
     wsSlug: string;
     connectionUrl: string;
     deviceToken: string;
-    slug: string | null; // fk slug in destination. Null is the default thread.
+    /**
+     * fk slug in destination. Null only on threads imported before the remote default thread was
+     * dropped - those are moved onto a real remote thread (`linkRemote`) before any remote command.
+     */
+    slug: string | null;
     platform: 'server' | 'desktop';
   };
   /** Check if the remote server is reachable */
@@ -192,6 +196,32 @@ export default class WorkspaceThread extends Model {
     this.log('WorkspaceThread created', { workspace: workspaceSlug, thread: newWorkspaceThread.slug });
     newWorkspaceThread = this.toWorkspaceThreadObject(newWorkspaceThread);
     return newWorkspaceThread;
+  }
+
+  /**
+   * Points a mirrored thread that has no remote slug (a legacy mirror of the remote "default thread")
+   * at a newly created remote thread. Remote commands never target the default thread: the server
+   * treats a missing or unknown slug as the default thread, so a reset would wipe its history.
+   * @returns the remote thread slug to send commands with
+   */
+  static async linkRemote(thread: WorkspaceThreadType): Promise<string> {
+    if (thread.remoteConfig.slug) return thread.remoteConfig.slug;
+
+    const external = new AnythingLLMExternal(thread.remoteConfig.connectionUrl, thread.remoteConfig.deviceToken);
+    const { thread: fkThread } = await external.sendCommand('new-thread', { workspaceSlug: thread.remoteConfig.wsSlug });
+    if (!fkThread?.slug) throw new Error(i18n.t('misc.remote_thread_create_failed'));
+
+    const record = (await this.get([{ field: 'slug', value: thread.slug }]))?.[0];
+    if (!record) throw new Error('Thread not found');
+    const remoteConfig = { ...thread.remoteConfig, slug: fkThread.slug };
+    await database.write(async () => {
+      await record.update((workspaceThread: any) => {
+        workspaceThread.remoteConfig = remoteConfig;
+      });
+    });
+
+    this.log('Linked thread to new remote thread', { thread: thread.slug, fkThread: fkThread.slug });
+    return fkThread.slug;
   }
 
   static async update(where: { field: string, value: string }[] = [], updates: Partial<WorkspaceThreadType>): Promise<WorkspaceThreadType | null> {

@@ -1009,7 +1009,13 @@
       "sync": "동기화",
       "synced": "동기화됨",
       "sync_failed": "실패",
-      "sync_workspace_failed": "워크스페이스 {{name}} 동기화 실패"
+      "sync_workspace_failed": "워크스페이스 {{name}} 동기화 실패",
+      "workspaces": null,
+      "platform_desktop": null,
+      "platform_server": null,
+      "empty_title": null,
+      "empty_body": null,
+      "sync_explainer": null
     }
   },
   "scheduled_jobs": {

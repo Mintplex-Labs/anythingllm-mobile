@@ -1048,7 +1048,13 @@
       "sync": "सिंक करें",
       "synced": "सिंक किया गया",
       "sync_failed": "विफल",
-      "sync_workspace_failed": "कार्यक्षेत्र {{name}} को सिंक करने में विफल"
+      "sync_workspace_failed": "कार्यक्षेत्र {{name}} को सिंक करने में विफल",
+      "workspaces": null,
+      "platform_desktop": null,
+      "platform_server": null,
+      "empty_title": null,
+      "empty_body": null,
+      "sync_explainer": null
     }
   },
   "scheduled_jobs": {

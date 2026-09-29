@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { Camera, DownloadSimple, Images, Paperclip, X } from "phosphor-react-native";
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
 import { WorkspaceType } from '@/database/models/Workspace';
 import { WorkspaceThreadType } from '@/database/models/WorkspaceThread';
@@ -29,6 +30,7 @@ import { tKey } from '@/i18n';
  */
 export default function AttachmentsActionSheet({ workspace, thread, attachmentHandler }: { workspace: WorkspaceType, thread: WorkspaceThreadType, attachmentHandler: AttachmentInterface }) {
     const { t } = useTranslation();
+    const insets = useSafeAreaInsets();
     const sheetRef = useRef<BottomSheetModal>(null);
     const { registerSheet, presentSheet, activeSheet, isSheetActive } = useBottomSheet();
     const { llmPreferences } = useLlmPreference();
@@ -60,21 +62,19 @@ export default function AttachmentsActionSheet({ workspace, thread, attachmentHa
 
     const filesDisabled = isRemote || attachmentHandler.isMaxAttachments;
     const imagesDisabled = !supportsVision || attachmentHandler.isMaxAttachments;
-    const snapPoints = useMemo(() => [vision.needsProjectorDownload ? '29%' : '25%'], [vision.needsProjectorDownload]);
 
     return (
         <BottomSheetModal
             ref={sheetRef}
             index={0}
-            snapPoints={snapPoints}
-            enableDynamicSizing={false}
+            enableDynamicSizing
             enablePanDownToClose={true}
             backgroundStyle={{ backgroundColor: '#1B1B1E' }}
             handleIndicatorStyle={{ backgroundColor: '#9F9FA0', width: 45, margin: 10 }}
             // If this sheet is dismissed AND was the current focused, present the primary prompt input sheet
             onDismiss={() => isSheetActive(BOTTOM_SHEET_NAMES.ATTACHMENTS) && presentSheet(BOTTOM_SHEET_NAMES.PRIMARY_PROMPT_INPUT, true)}
         >
-            <View style={{ paddingHorizontal: 30 }} className='flex flex-col'>
+            <BottomSheetView style={{ paddingHorizontal: 30, paddingBottom: Math.max(insets.bottom, 16) + 8 }} className='flex flex-col'>
                 <View className='flex flex-row items-start justify-between'>
                     <GenericSettingsItem
                         disabled={filesDisabled}
@@ -101,7 +101,7 @@ export default function AttachmentsActionSheet({ workspace, thread, attachmentHa
                     documentMode={attachmentHandler.documentMode}
                     vision={vision}
                 />
-            </View>
+            </BottomSheetView>
         </BottomSheetModal>
     );
 }

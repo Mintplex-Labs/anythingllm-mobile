@@ -311,8 +311,7 @@
       "cancel_download": "Download annuleren",
       "download_image_support": "Download afbeeldingsondersteuning",
       "needs_download_tap": "Dit model kan afbeeldingen zien, maar heeft een aanvullende download nodig. Tik om te downloaden ({{size}}).",
-      "download_failed": "De download is mislukt. Tik om het opnieuw te proberen.",
-      "download_cancelled": "Download geannuleerd."
+      "download_failed": "De download is mislukt. Tik om het opnieuw te proberen."
     },
     "prompt_input": {
       "placeholder": "Voer je prompt in",
@@ -920,6 +919,11 @@
     "download_model_message": "Dit zal het model naar je apparaat downloaden. Het is {{size}} groot.",
     "notification_downloading_title": "Model downloaden",
     "notification_downloading_body": "{{model}} aan het downloaden",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "Download voltooid",
     "notification_complete_body": "{{model}} gedownload",
     "download_failed_title": "Download mislukt",

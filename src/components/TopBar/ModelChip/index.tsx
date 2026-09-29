@@ -305,6 +305,7 @@ function AvailableModels({
     downloadedModels,
     selectedModel,
     downloadModel,
+    cancelDownload,
     uninstallModel,
     selectModel,
     runPreDownloadConfirmations,
@@ -471,6 +472,7 @@ function AvailableModels({
                   else return selectModel({ modelId: model.id }); // Generic OpenAI /models results
                 }}
                 onUninstall={() => uninstallModel(model)}
+                onCancelDownload={cancelDownload}
               />
             );
           }}

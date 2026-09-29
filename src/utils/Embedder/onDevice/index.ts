@@ -1,6 +1,7 @@
 import { EMBEDDING_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
 import TextSplitter, { TextSplitterConfig } from "@/utils/TextSplitter";
 import * as RNFS from '@dr.pogodin/react-native-fs';
+import { downloadFileAtomic } from "@/utils/fs/atomicDownload";
 import { initLlama, LlamaContext, NativeEmbeddingResult } from "llama.rn";
 
 type EmbedderPrefixType = 'query' | 'embed_document';
@@ -86,14 +87,14 @@ export default class OnDeviceEmbedderProvider {
                 await RNFS.mkdir(directory);
             }
 
-            return RNFS.downloadFile({
+            return downloadFileAtomic({
                 fromUrl: EMBEDDING_MODEL.tag,
                 toFile: this.modelPath,
                 progress: (res) => {
                     const progress = (res.bytesWritten / res.contentLength) * 100;
                     this.log('progress', progress);
                 }
-            }).promise.then(() => true).catch(() => false);
+            }).then(() => true).catch(() => false);
         } catch (error) {
             this.log('downloadEmbeddingModel:error', error)
             return false;

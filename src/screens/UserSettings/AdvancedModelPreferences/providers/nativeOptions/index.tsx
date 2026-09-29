@@ -36,6 +36,7 @@ export default function NativeOptions({
     downloadProgress,
     selectedModel,
     downloadModel,
+    cancelDownload,
     uninstallModel,
     runPreDownloadConfirmations,
   } = useModelManager({ llmPreferences, fetchLLMPreference, LLMProvider });
@@ -135,6 +136,7 @@ export default function NativeOptions({
               isRecommended={model.id === recommendedId}
               onSelect={() => downloadModel(model)}
               onUninstall={() => handleUninstall(model)}
+              onCancelDownload={cancelDownload}
             />
           ))}
         </Fragment>

@@ -302,8 +302,7 @@
       "cancel_download": "Hủy tải xuống",
       "download_image_support": "Tải xuống hỗ trợ hình ảnh",
       "needs_download_tap": "Mô hình này có thể nhìn thấy hình ảnh, nhưng cần một lần tải xuống bổ sung. Nhấn để tải xuống ({{size}}).",
-      "download_failed": "Tải xuống không thành công. Nhấn để thử lại.",
-      "download_cancelled": "Đã hủy tải xuống."
+      "download_failed": "Tải xuống không thành công. Nhấn để thử lại."
     },
     "prompt_input": {
       "placeholder": "Nhập lời nhắc của bạn",
@@ -883,6 +882,11 @@
     "download_model_message": "Điều này sẽ tải xuống mô hình vào thiết bị của bạn. Nó có kích thước {{size}}.",
     "notification_downloading_title": "Đang tải xuống mô hình",
     "notification_downloading_body": "Đang tải xuống {{model}}",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "Tải xuống hoàn thành",
     "notification_complete_body": "Đã tải xuống {{model}}",
     "download_failed_title": "Tải xuống không thành công",

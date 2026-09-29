@@ -17,6 +17,8 @@ interface ModelCardProps {
   downloadProgress: number;
   onSelect: () => void;
   onUninstall: () => void;
+  /** Tapping a card that is downloading cancels it (the handler confirms first). */
+  onCancelDownload?: () => void;
   /** Device-memory verdict for this model's weights, see `useModelFit`. null/undefined shows no badge. */
   memoryFit?: MemoryFit | null;
   /** Marks the row as the best pick for this phone. */
@@ -31,6 +33,7 @@ export default function ModelCard({
   downloadProgress,
   onSelect,
   onUninstall,
+  onCancelDownload,
   memoryFit = null,
   isRecommended = false,
 }: ModelCardProps) {
@@ -89,7 +92,7 @@ export default function ModelCard({
   return (
     <TouchableOpacity
       disabled={!!modelDownloadUrl && modelDownloadUrl !== model.downloadUrl}
-      onPress={onSelect}
+      onPress={isDownloading && onCancelDownload ? onCancelDownload : onSelect}
       style={{
         // Selection wins; otherwise the recommended row gets a thin accent border so it
         // stands out in the list even before the user reads the badge.

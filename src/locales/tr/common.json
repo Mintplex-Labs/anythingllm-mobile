@@ -311,8 +311,7 @@
       "cancel_download": "İndirmeyi iptal et",
       "download_image_support": "Görüntü desteğini indir",
       "needs_download_tap": "Bu model görüntüleri görebiliyor, ancak ek bir indirime ihtiyaç duyuyor. İndirmek için dokunun ({{size}}).",
-      "download_failed": "İndirme başarısız oldu. Tekrar denemek için dokunun.",
-      "download_cancelled": "İndirme iptal edildi."
+      "download_failed": "İndirme başarısız oldu. Tekrar denemek için dokunun."
     },
     "prompt_input": {
       "placeholder": "İsteminizi girin",
@@ -920,6 +919,11 @@
     "download_model_message": "Bu, modeli cihazınıza indirecektir. Boyutu {{size}}'dır.",
     "notification_downloading_title": "Model indirme",
     "notification_downloading_body": "İndirme {{model}}",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "İndirme tamamlandı",
     "notification_complete_body": "{{model}} indirildi",
     "download_failed_title": "İndirme başarısız oldu",

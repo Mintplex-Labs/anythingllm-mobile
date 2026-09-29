@@ -2,6 +2,8 @@ import { Text, View, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
+import { downloadFileAtomic } from "@/utils/fs/atomicDownload";
+import { showToast } from "@/utils/Notification";
 import { useTranslation } from "react-i18next";
 import i18n from "@/i18n";
 
@@ -51,16 +53,21 @@ function useDownloadModelFromUrl() {
                 localStorageDestination,
             });
 
-            RNFS.downloadFile({
+            // Android drops the connection once the app is backgrounded or the phone locks.
+            showToast(i18n.t('downloads.keep_app_open'), 'long');
+            downloadFileAtomic({
                 fromUrl: url,
                 toFile: localStorageDestination,
                 progress: (res) => {
                     const progress = (res.bytesWritten / res.contentLength) * 100;
                     setProgress(Math.round(progress));
                 }
-            }).promise.then(() => {
+            }).then(() => {
                 setProgress(100);
                 setCompleted(true);
+            }).catch((error) => {
+                Alert.alert(i18n.t('onboarding.download.error_title'), i18n.t('onboarding.download.error_message', { error: error instanceof Error ? error.message : i18n.t('common.unknown_error') }));
+                setCompleted(false);
             }).finally(() => {
                 setDownloading(false);
                 setProgress(0);

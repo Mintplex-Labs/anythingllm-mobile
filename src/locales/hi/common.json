@@ -311,8 +311,7 @@
       "cancel_download": "डाउनलोड रद्द करें",
       "download_image_support": "छवि समर्थन डाउनलोड करें",
       "needs_download_tap": "यह मॉडल छवियों को देख सकता है, लेकिन अतिरिक्त डाउनलोड की आवश्यकता है। डाउनलोड करने के लिए टैप करें ({{size}})।",
-      "download_failed": "डाउनलोड विफल हुआ। फिर से कोशिश करने के लिए टैप करें।",
-      "download_cancelled": "डाउनलोड रद्द किया गया।"
+      "download_failed": "डाउनलोड विफल हुआ। फिर से कोशिश करने के लिए टैप करें।"
     },
     "prompt_input": {
       "placeholder": "अपना प्रॉम्प्ट दर्ज करें",
@@ -920,6 +919,11 @@
     "download_model_message": "यह मॉडल को आपके डिवाइस पर डाउनलोड करेगा। यह {{size}} आकार का है।",
     "notification_downloading_title": "मॉडल डाउनलोड हो रहा है",
     "notification_downloading_body": "{{model}} डाउनलोड किया जा रहा है",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "डाउनलोड पूर्ण",
     "notification_complete_body": "{{model}} डाउनलोड किया गया",
     "download_failed_title": "डाउनलोड विफल",

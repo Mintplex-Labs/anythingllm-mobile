@@ -302,8 +302,7 @@
       "cancel_download": "ダウンロードをキャンセル",
       "download_image_support": "画像サポートをダウンロード",
       "needs_download_tap": "このモデルは画像を見ることができますが、追加ダウンロードが必要です。タップしてダウンロード（{{size}}）。",
-      "download_failed": "ダウンロードに失敗しました。タップして再試行してください。",
-      "download_cancelled": "ダウンロードがキャンセルされました。"
+      "download_failed": "ダウンロードに失敗しました。タップして再試行してください。"
     },
     "prompt_input": {
       "placeholder": "プロンプトを入力",
@@ -883,6 +882,11 @@
     "download_model_message": "これはモデルをデバイスにダウンロードします。サイズは{{size}}です。",
     "notification_downloading_title": "モデルをダウンロード中",
     "notification_downloading_body": "{{model}}をダウンロード中",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "ダウンロード完了",
     "notification_complete_body": "{{model}}をダウンロード",
     "download_failed_title": "ダウンロード失敗",

@@ -164,7 +164,6 @@ function SheetHint({ isRemote, isMaxAttachments, documentMode, vision }: { isRem
                     </Text>
                 </TouchableOpacity>
                 {download.status === 'failed' && <HintText>{download.error || t('chat.attachments.download_failed')}</HintText>}
-                {download.status === 'cancelled' && <HintText>{t('chat.attachments.download_cancelled')}</HintText>}
             </View>
         );
     }

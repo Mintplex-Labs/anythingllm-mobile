@@ -10,6 +10,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import useLLMPreference from "@/hooks/useLLMPreference";
 import ToolsManager, { TOOL_GROUPS, toolSupportsProvider, type ToolGroup, type ToolGroupId, type ToolManagerTool } from "@/utils/ToolsManager";
 import { showToast } from "@/utils/Notification";
+import Telemetry from "@/utils/Telemetry";
 import { useTranslation } from "react-i18next";
 
 type ToolsPage = 'menu' | ToolGroupId;
@@ -45,6 +46,7 @@ export default function ToolsActionSheet() {
         const newToolSettings = { ...toolSettings, [tool.id]: turningOn };
         setToolSettings(newToolSettings);
         await uiStore.setToStorage('tools', newToolSettings);
+        if (turningOn) Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.TOOL_ENABLED, { tool: tool.id, provider: llmPreferences?.provider ?? 'unknown' });
         ToolsManager.resetTools();
         await loadTools();
     };

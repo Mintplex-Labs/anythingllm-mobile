@@ -5,6 +5,19 @@ type ChangelogEntry = {
 
 const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.3.0',
+    content: [
+      '- **Draft texts, emails and events** — drafts show as a card you tap to open in the messaging, mail or calendar app of your choice. Your last used app is remembered',
+      '- **Calendar tools** — create events (with repeats, reminders and invitees) or read your calendar, and tap any event the assistant finds to open it. No calendar app? Share or save the event as a .ics file',
+      '- **Switch providers from the model chip** — change between On-Device and cloud providers, or connect a new one, without leaving the chat',
+      '- **New chat greeting** — empty chats open with a friendly greeting and suggested prompts, and load faster',
+      '- **Max tool calls** — set how many tools the assistant can use per reply in workspace settings, so it always ends with an answer',
+      '- **Safer model downloads** — an interrupted download is no longer shown as installed, and you can now cancel a download',
+      '- **Accurate speed stats** for cloud providers like Gemini and DeepSeek',
+      '- **Fixed** DeepSeek errors after tool calls, a crash when backgrounding the app after a large paste, onboarding screens cut off on small screens, and more',
+    ].join('\n'),
+  },
+  {
     version: '1.2.3',
     content: [
       '- **Choose your language** — the app is now available in 17 languages and follows your phone\'s language by default. Change it under Settings > App language',

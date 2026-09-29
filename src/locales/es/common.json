@@ -320,8 +320,7 @@
       "cancel_download": "Cancelar descarga",
       "download_image_support": "Descargar compatibilidad de imagen",
       "needs_download_tap": "Este modelo puede ver imágenes, pero necesita una descarga adicional. Toque para descargar ({{size}}).",
-      "download_failed": "La descarga falló. Toque para intentar de nuevo.",
-      "download_cancelled": "Descarga cancelada."
+      "download_failed": "La descarga falló. Toque para intentar de nuevo."
     },
     "prompt_input": {
       "placeholder": "Ingrese su mensaje",
@@ -957,6 +956,11 @@
     "download_model_message": "Esto descargará el modelo en su dispositivo. Es {{size}} de tamaño.",
     "notification_downloading_title": "Descargando modelo",
     "notification_downloading_body": "Descargando {{model}}",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "Descarga completa",
     "notification_complete_body": "Descargado {{model}}",
     "download_failed_title": "Descarga fallida",

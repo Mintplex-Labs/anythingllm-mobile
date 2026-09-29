@@ -302,8 +302,7 @@
       "cancel_download": "取消下載",
       "download_image_support": "下載影像支援",
       "needs_download_tap": "此模型可以查看映像，但需要額外下載。點按以下載 ({{size}})。",
-      "download_failed": "下載失敗。點按以重試。",
-      "download_cancelled": "下載已取消。"
+      "download_failed": "下載失敗。點按以重試。"
     },
     "prompt_input": {
       "placeholder": "輸入您的提示",
@@ -883,6 +882,11 @@
     "download_model_message": "這會將模型下載到您的裝置。大小為 {{size}}。",
     "notification_downloading_title": "正在下載模型",
     "notification_downloading_body": "正在下載 {{model}}",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "下載完成",
     "notification_complete_body": "已下載 {{model}}",
     "download_failed_title": "下載失敗",

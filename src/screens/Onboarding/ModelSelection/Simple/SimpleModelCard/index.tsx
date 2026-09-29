@@ -13,6 +13,8 @@ interface ModelCardProps {
   modelDownloadUrl: string | null;
   downloadProgress: number;
   onSelect: () => void;
+  /** Tapping a card that is downloading cancels it (the handler confirms first). */
+  onCancelDownload?: () => void;
   containerStyle?: StyleProp<ViewStyle>;
   /** Device-memory verdict for this preset, see `useModelFit`. null/undefined shows no badge. */
   memoryFit?: MemoryFit | null;
@@ -27,6 +29,7 @@ export default function ModelCard({
   modelDownloadUrl,
   downloadProgress,
   onSelect,
+  onCancelDownload,
   containerStyle = {},
   memoryFit = null,
   isRecommended = false,
@@ -70,7 +73,7 @@ export default function ModelCard({
       }}
       className={`flex flex-row rounded-lg gap-x-4 items-center ${!!downloadProgress ? 'disabled:opacity-50' : ''}`}
       disabled={!!modelDownloadUrl && modelDownloadUrl !== model.downloadUrl}
-      onPress={onSelect}
+      onPress={isDownloading && onCancelDownload ? onCancelDownload : onSelect}
     >
       <DownloadSurface active={isDownloading} progress={downloadProgress} borderRadius={8} />
       <View className="flex flex-row gap-x-4 items-center flex-1">

@@ -329,8 +329,7 @@
       "cancel_download": "Отменить загрузку",
       "download_image_support": "Загрузить поддержку изображений",
       "needs_download_tap": "Эта модель может видеть изображения, но требует дополнительной загрузки. Нажмите для загрузки ({{size}}).",
-      "download_failed": "Загрузка не удалась. Нажмите, чтобы попробовать снова.",
-      "download_cancelled": "Загрузка отменена."
+      "download_failed": "Загрузка не удалась. Нажмите, чтобы попробовать снова."
     },
     "prompt_input": {
       "placeholder": "Введите вашу подсказку",
@@ -994,6 +993,11 @@
     "download_model_message": "Это загрузит модель на ваше устройство. Это {{size}} в размере.",
     "notification_downloading_title": "Загрузка модели",
     "notification_downloading_body": "Загрузка {{model}}",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "Загрузка завершена",
     "notification_complete_body": "Загружена {{model}}",
     "download_failed_title": "Загрузка не удалась",

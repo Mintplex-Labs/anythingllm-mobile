@@ -311,8 +311,7 @@
       "cancel_download": "Download abbrechen",
       "download_image_support": "Bildunterstützung herunterladen",
       "needs_download_tap": "Dieses Modell kann Bilder sehen, benötigt aber einen zusätzlichen Download. Tippen Sie zum Herunterladen ({{size}}).",
-      "download_failed": "Der Download ist fehlgeschlagen. Tippen Sie, um es erneut zu versuchen.",
-      "download_cancelled": "Download abgebrochen."
+      "download_failed": "Der Download ist fehlgeschlagen. Tippen Sie, um es erneut zu versuchen."
     },
     "prompt_input": {
       "placeholder": "Geben Sie Ihre Eingabeaufforderung ein",
@@ -920,6 +919,11 @@
     "download_model_message": "Dies lädt das Modell auf Ihr Gerät herunter. Es ist {{size}} groß.",
     "notification_downloading_title": "Modell wird heruntergeladen",
     "notification_downloading_body": "{{model}} wird heruntergeladen",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "Download abgeschlossen",
     "notification_complete_body": "{{model}} heruntergeladen",
     "download_failed_title": "Download fehlgeschlagen",

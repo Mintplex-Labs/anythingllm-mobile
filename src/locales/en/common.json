@@ -311,8 +311,7 @@
       "cancel_download": "Cancel download",
       "download_image_support": "Download image support",
       "needs_download_tap": "This model can see images, but needs an additional download. Tap to download ({{size}}).",
-      "download_failed": "The download failed. Tap to try again.",
-      "download_cancelled": "Download cancelled."
+      "download_failed": "The download failed. Tap to try again."
     },
     "prompt_input": {
       "placeholder": "Enter your prompt",
@@ -920,6 +919,11 @@
     "download_model_message": "This will download the model to your device. It is {{size}} in size.",
     "notification_downloading_title": "Downloading model",
     "notification_downloading_body": "Downloading {{model}}",
+    "keep_app_open": "Stay on this screen and keep your phone unlocked until the download finishes.",
+    "cancel_download_title": "Cancel download?",
+    "cancel_download_message": "{{model}} will stop downloading and the partial download will be deleted.",
+    "keep_downloading": "Keep downloading",
+    "cancel_download": "Cancel download",
     "notification_complete_title": "Download complete",
     "notification_complete_body": "Downloaded {{model}}",
     "download_failed_title": "Download failed",

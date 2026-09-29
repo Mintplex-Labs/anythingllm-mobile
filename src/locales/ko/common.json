@@ -302,8 +302,7 @@
       "cancel_download": "다운로드 취소",
       "download_image_support": "이미지 지원 다운로드",
       "needs_download_tap": "이 모델은 이미지를 볼 수 있지만 추가 다운로드가 필요합니다. 탭하여 다운로드하세요 ({{size}}).",
-      "download_failed": "다운로드가 실패했습니다. 탭하여 다시 시도하세요.",
-      "download_cancelled": "다운로드가 취소됨."
+      "download_failed": "다운로드가 실패했습니다. 탭하여 다시 시도하세요."
     },
     "prompt_input": {
       "placeholder": "프롬프트를 입력하세요",
@@ -883,6 +882,11 @@
     "download_model_message": "이것은 모델을 기기에 다운로드합니다. {{size}} 크기입니다.",
     "notification_downloading_title": "모델 다운로드 중",
     "notification_downloading_body": "{{model}} 다운로드 중",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "다운로드 완료",
     "notification_complete_body": "{{model}} 다운로드됨",
     "download_failed_title": "다운로드 실패",

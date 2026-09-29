@@ -320,8 +320,7 @@
       "cancel_download": "Annuler le téléchargement",
       "download_image_support": "Télécharger le support d'image",
       "needs_download_tap": "Ce modèle peut voir les images, mais a besoin d'un téléchargement supplémentaire. Appuyez pour télécharger ({{size}}).",
-      "download_failed": "Le téléchargement a échoué. Appuyez pour réessayer.",
-      "download_cancelled": "Téléchargement annulé."
+      "download_failed": "Le téléchargement a échoué. Appuyez pour réessayer."
     },
     "prompt_input": {
       "placeholder": "Entrez votre invite",
@@ -957,6 +956,11 @@
     "download_model_message": "Cela téléchargera le modèle sur votre appareil. Sa taille est {{size}}.",
     "notification_downloading_title": "Téléchargement du modèle",
     "notification_downloading_body": "Téléchargement de {{model}}",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "Téléchargement terminé",
     "notification_complete_body": "Téléchargé {{model}}",
     "download_failed_title": "Téléchargement échoué",

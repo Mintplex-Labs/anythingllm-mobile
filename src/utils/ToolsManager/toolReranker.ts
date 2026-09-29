@@ -1,5 +1,6 @@
 import { RERANKER_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
 import * as RNFS from '@dr.pogodin/react-native-fs';
+import { downloadFileAtomic } from "@/utils/fs/atomicDownload";
 import { initLlama, LlamaContext } from "llama.rn";
 import NetInfo from "@react-native-community/netinfo";
 import { Alert } from "react-native";
@@ -103,14 +104,14 @@ export default class ToolReranker {
             const directory = this.modelPath.split('/').slice(0, -1).join('/');
             await RNFS.mkdir(directory);
             this.log(`Downloading reranker model (${RERANKER_MODEL.size})...`);
-            await RNFS.downloadFile({
+            await downloadFileAtomic({
                 fromUrl: RERANKER_MODEL.tag,
                 toFile: this.modelPath,
                 progress: (res) => {
                     const pct = ((res.bytesWritten / res.contentLength) * 100).toFixed(0);
                     this.log(`Download progress: ${pct}%`);
                 },
-            }).promise;
+            });
             this.log('Reranker model downloaded');
             return true;
         } catch (error) {

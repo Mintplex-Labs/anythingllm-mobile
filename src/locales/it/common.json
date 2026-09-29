@@ -320,8 +320,7 @@
       "cancel_download": "Annulla il download",
       "download_image_support": "Scarica il supporto per le immagini",
       "needs_download_tap": "Questo modello può vedere immagini, ma ha bisogno di un download aggiuntivo. Tocca per scaricare ({{size}}).",
-      "download_failed": "Il download non è riuscito. Tocca per riprovare.",
-      "download_cancelled": "Download annullato."
+      "download_failed": "Il download non è riuscito. Tocca per riprovare."
     },
     "prompt_input": {
       "placeholder": "Inserisci il tuo prompt",
@@ -957,6 +956,11 @@
     "download_model_message": "Questo scaricherà il modello sul tuo dispositivo. È {{size}} di dimensioni.",
     "notification_downloading_title": "Scaricamento del modello",
     "notification_downloading_body": "Scaricamento di {{model}}",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "Download completato",
     "notification_complete_body": "Scaricato {{model}}",
     "download_failed_title": "Download non riuscito",

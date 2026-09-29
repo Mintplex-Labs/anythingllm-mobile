@@ -29,6 +29,7 @@ export default function SimpleModelSelection({ setMode }: SelectionModeProps) {
     downloadedModels,
     selectedModel,
     downloadModel,
+    cancelDownload,
     runPreDownloadConfirmations,
   } = useModelManager({ llmPreferences, fetchLLMPreference, LLMProvider });
   // Badge each preset with how it fits this phone's RAM and call out the best one.
@@ -72,6 +73,7 @@ export default function SimpleModelSelection({ setMode }: SelectionModeProps) {
             downloadProgress={downloadProgress}
             memoryFit={fitFor(card)}
             isRecommended={recommended?.id === card.id}
+            onCancelDownload={cancelDownload}
             onSelect={async () => {
               // If the user has not granted permissions to receive notifications we cannot download models in the background
               // so we need to await the entire download process

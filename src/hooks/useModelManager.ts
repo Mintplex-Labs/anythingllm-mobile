@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { Alert } from 'react-native';
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { resolveDestinationPathFromGGUFUrl } from '@/utils/models/defaults';
 import { useNetInfo } from '@react-native-community/netinfo';
@@ -8,6 +9,8 @@ import uiStore from '@/store/UIStore';
 import PushNotifications from '@/utils/PushNotifications';
 import { activateKeepAwake, deactivateKeepAwake } from '@/utils/keepAwake';
 import ImportedModels from '@/utils/models/imported';
+import { downloadFileAtomic } from '@/utils/fs/atomicDownload';
+import { showToast } from '@/utils/Notification';
 import i18n from '@/i18n';
 
 const UI_PROGRESS_INTERVAL_MS = 250;
@@ -25,6 +28,8 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [downloadedModels, setDownloadedModels] = useState<{ [key: string]: boolean }>({});
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  // The in-flight model download, so the card can cancel it. `jobId` is null until RNFS has started the job.
+  const activeDownload = useRef<{ modelName: string; jobId: number | null; cancelled: boolean } | null>(null);
 
   // Check which models are downloaded and set initial selection
   useEffect(() => {
@@ -116,7 +121,7 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
       // The in-app card animates every tick, so poll often. The system notification
       // is rate-limited by Android, so only push to it every few seconds.
       let lastNotifiedAt = 0;
-      await RNFS.downloadFile({
+      await downloadFileAtomic({
         fromUrl,
         toFile,
         progress: res => {
@@ -140,7 +145,12 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
         background: true,
         discretionary: true,
         progressInterval: UI_PROGRESS_INTERVAL_MS,
-      }).promise;
+      }, jobId => {
+        const job = activeDownload.current;
+        if (!job) return;
+        job.jobId = jobId;
+        if (job.cancelled) RNFS.stopDownload(jobId); // cancelled before RNFS handed us the job
+      });
 
       // The progress callback only fires every `progressInterval` ms, so the last
       // reported value is usually short of 100. Snap to done before flipping state.
@@ -170,8 +180,11 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     setModelDownloadUrl(model.downloadUrl);
     const storageLocation = resolveDestinationPathFromGGUFUrl(model.downloadUrl);
 
+    activeDownload.current = { modelName: model.name || model.modelId, jobId: null, cancelled: false };
     try {
       activateKeepAwake();
+      // Android drops the connection once the app is backgrounded or the phone locks.
+      showToast(i18n.t('downloads.keep_app_open'), 'long');
       uiStore.setSessionKey('@downloadInProgress', true, uiStore.globalEvents.MODEL_DOWNLOAD_STARTED);
       await downloadToStorage({
         fromUrl: model.downloadUrl,
@@ -186,21 +199,27 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
       });
       return await selectModel(model);
     } catch (error) {
+      if (activeDownload.current?.cancelled) {
+        console.log('Download cancelled by the user');
+        return false;
+      }
       console.error('Download failed:', error);
       PushNotifications.send('primary', {
         title: i18n.t('downloads.download_failed_title'),
         body: i18n.t('downloads.download_failed_message'),
       });
-      await AwaitableAlert(
+      // Don't await the alert - a failure that lands while the phone is locked raises it while the activity
+      // is paused, it never shows, and awaiting it held the `finally` cleanup (stuck progress bar).
+      Alert.alert(
         i18n.t('downloads.download_failed_title'),
         i18n.t('downloads.download_failed_message'),
-        { text: i18n.t('common.dismiss'), style: 'default' },
-        { text: i18n.t('common.ok'), style: 'default' }
+        [{ text: i18n.t('common.ok'), style: 'default' }]
       );
       return false;
     } finally {
       // Always clear the active download so cards leave the progress state on
       // success as well as failure - previously this only happened in the catch.
+      activeDownload.current = null;
       setModelDownloadUrl(null);
       setDownloadProgress(0);
       deactivateKeepAwake();
@@ -208,6 +227,27 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     }
   };
 
+
+  /**
+   * Ask to confirm, then stop the in-flight model download. The partial `.part` file is removed by
+   * `downloadFileAtomic` and `downloadModel` resolves false without the failure alert.
+   * @returns True if the download was cancelled
+   */
+  const cancelDownload = async () => {
+    const job = activeDownload.current;
+    if (!job) return false;
+    const confirmed = await AwaitableAlert(
+      i18n.t('downloads.cancel_download_title'),
+      i18n.t('downloads.cancel_download_message', { model: job.modelName }),
+      { text: i18n.t('downloads.keep_downloading'), style: 'cancel' },
+      { text: i18n.t('downloads.cancel_download'), style: 'destructive' },
+    );
+    // The download may have finished (or failed) while the dialog was up.
+    if (!confirmed || activeDownload.current !== job) return false;
+    job.cancelled = true;
+    if (job.jobId !== null) RNFS.stopDownload(job.jobId);
+    return true;
+  };
 
   const uninstallModel = async (model: any) => {
     const shouldUninstall = await AwaitableAlert(
@@ -301,6 +341,7 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     downloadedModels,
     selectedModel,
     downloadModel,
+    cancelDownload,
     uninstallModel,
     selectModel,
     runPreDownloadConfirmations,

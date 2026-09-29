@@ -329,8 +329,7 @@
       "cancel_download": "Anuluj pobieranie",
       "download_image_support": "Pobierz obsługę obrazu",
       "needs_download_tap": "Ten model potrafi widzieć obrazy, ale potrzebuje dodatkowego pobrania. Dotknij, aby pobrać ({{size}}).",
-      "download_failed": "Pobieranie nie powiodło się. Dotknij, aby spróbować ponownie.",
-      "download_cancelled": "Pobieranie anulowane."
+      "download_failed": "Pobieranie nie powiodło się. Dotknij, aby spróbować ponownie."
     },
     "prompt_input": {
       "placeholder": "Wpisz swoją podpowiedź",
@@ -994,6 +993,11 @@
     "download_model_message": "Spowoduje to pobranie modelu na Twoje urządzenie. Ma wielkość {{size}}.",
     "notification_downloading_title": "Pobieranie modelu",
     "notification_downloading_body": "Pobieranie {{model}}",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "Pobieranie ukończone",
     "notification_complete_body": "Pobrano {{model}}",
     "download_failed_title": "Pobieranie nie powiodło się",

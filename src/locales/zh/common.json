@@ -302,8 +302,7 @@
       "cancel_download": "取消下载",
       "download_image_support": "下载图像支持",
       "needs_download_tap": "此模型可以看到图像，但需要额外的下载。点击以下载（{{size}}）。",
-      "download_failed": "下载失败。点击重试。",
-      "download_cancelled": "下载已取消。"
+      "download_failed": "下载失败。点击重试。"
     },
     "prompt_input": {
       "placeholder": "输入您的提示",
@@ -883,6 +882,11 @@
     "download_model_message": "这将把模型下载到您的设备。其大小为 {{size}}。",
     "notification_downloading_title": "正在下载模型",
     "notification_downloading_body": "正在下载 {{model}}",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "下载完成",
     "notification_complete_body": "已下载 {{model}}",
     "download_failed_title": "下载失败",

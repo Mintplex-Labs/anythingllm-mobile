@@ -302,8 +302,7 @@
       "cancel_download": "Batalkan unduhan",
       "download_image_support": "Unduh dukungan gambar",
       "needs_download_tap": "Model ini dapat melihat gambar, tetapi memerlukan unduhan tambahan. Ketuk untuk mengunduh ({{size}}).",
-      "download_failed": "Unduhan gagal. Ketuk untuk mencoba lagi.",
-      "download_cancelled": "Unduhan dibatalkan."
+      "download_failed": "Unduhan gagal. Ketuk untuk mencoba lagi."
     },
     "prompt_input": {
       "placeholder": "Masukkan prompt Anda",
@@ -883,6 +882,11 @@
     "download_model_message": "Ini akan mengunduh model ke perangkat Anda. Berukuran {{size}}.",
     "notification_downloading_title": "Mengunduh model",
     "notification_downloading_body": "Mengunduh {{model}}",
+    "keep_app_open": null,
+    "cancel_download_title": null,
+    "cancel_download_message": null,
+    "keep_downloading": null,
+    "cancel_download": null,
     "notification_complete_title": "Unduhan selesai",
     "notification_complete_body": "Mengunduh {{model}}",
     "download_failed_title": "Unduhan gagal",

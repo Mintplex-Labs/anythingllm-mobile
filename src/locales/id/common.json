@@ -995,7 +995,9 @@
       "placeholder": "Masukkan panjang konteks Anda di sini...",
       "save_error": "Error menyimpan panjang konteks",
       "hint": "Ingat bahwa panjang konteks juga tergantung pada model yang Anda gunakan dan memiliki implikasi memori untuk perangkat Anda.",
-      "description": "Panjang konteks adalah jumlah maksimum token yang dapat digunakan AI saat membuat respons."
+      "description": "Panjang konteks adalah jumlah maksimum token yang dapat digunakan AI saat membuat respons.",
+      "provider_managed": null,
+      "disabled_description": null
     },
     "max_tool_calls": {
       "title": null,

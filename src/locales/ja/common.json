@@ -995,7 +995,9 @@
       "placeholder": "ここにコンテキスト長を入力してください...",
       "save_error": "コンテキスト長の保存エラー",
       "hint": "コンテキスト長はまた、使用しているモデルに依存し、デバイスのメモリへの影響があることに注意してください。",
-      "description": "コンテキスト長は、AIが応答を生成する際に使用できるトークンの最大数です。"
+      "description": "コンテキスト長は、AIが応答を生成する際に使用できるトークンの最大数です。",
+      "provider_managed": null,
+      "disabled_description": null
     },
     "max_tool_calls": {
       "title": null,

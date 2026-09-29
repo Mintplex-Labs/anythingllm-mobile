@@ -995,7 +995,9 @@
       "placeholder": "在這裡輸入您的內容長度...",
       "save_error": "儲存內容長度時出錯",
       "hint": "請記住，內容長度也取決於您使用的模型，並對您的裝置有記憶體影響。",
-      "description": "內容長度是 AI 在產生回應時可以使用的最大標記數。"
+      "description": "內容長度是 AI 在產生回應時可以使用的最大標記數。",
+      "provider_managed": null,
+      "disabled_description": null
     },
     "max_tool_calls": {
       "title": null,

@@ -1071,7 +1071,9 @@
       "placeholder": "Defina o tamanho do contexto...",
       "save_error": "Erro ao salvar o tamanho do contexto",
       "hint": "Tenha em mente que o tamanho do contexto também depende do modelo que você está usando e pode ter implicações de memória para o seu dispositivo.",
-      "description": "O tamanho do contexto é o número máximo de tokens que a IA pode utilizar ao gerar uma resposta."
+      "description": "O tamanho do contexto é o número máximo de tokens que a IA pode utilizar ao gerar uma resposta.",
+      "provider_managed": null,
+      "disabled_description": null
     },
     "max_tool_calls": {
       "title": null,

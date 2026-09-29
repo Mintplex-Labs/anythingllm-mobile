@@ -1071,7 +1071,9 @@
       "placeholder": "Entrez votre longueur de contexte ici...",
       "save_error": "Erreur lors de l'enregistrement de la longueur du contexte",
       "hint": "Gardez à l'esprit que la longueur du contexte dépend également du modèle que vous utilisez et a des implications en mémoire pour votre appareil.",
-      "description": "La longueur du contexte est le nombre maximum de jetons que l'IA peut utiliser lors de la génération d'une réponse."
+      "description": "La longueur du contexte est le nombre maximum de jetons que l'IA peut utiliser lors de la génération d'une réponse.",
+      "provider_managed": null,
+      "disabled_description": null
     },
     "max_tool_calls": {
       "title": null,

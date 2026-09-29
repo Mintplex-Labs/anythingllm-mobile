@@ -1109,7 +1109,9 @@
       "placeholder": "Wpisz tutaj swoją długość kontekstu...",
       "save_error": "Błąd zapisywania długości kontekstu",
       "hint": "Pamiętaj, że długość kontekstu zależy również od modelu, którego używasz, i ma implikacje pamięci dla Twojego urządzenia.",
-      "description": "Długość kontekstu to maksymalna liczba tokenów, które AI może użyć podczas generowania odpowiedzi."
+      "description": "Długość kontekstu to maksymalna liczba tokenów, które AI może użyć podczas generowania odpowiedzi.",
+      "provider_managed": null,
+      "disabled_description": null
     },
     "max_tool_calls": {
       "title": null,

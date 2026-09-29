@@ -995,7 +995,9 @@
       "placeholder": "컨텍스트 길이를 여기에 입력하세요...",
       "save_error": "컨텍스트 길이 저장 중 오류",
       "hint": "컨텍스트 길이는 또한 사용 중인 모델에 따라 다르며 기기에 메모리 영향이 있습니다.",
-      "description": "컨텍스트 길이는 AI가 응답을 생성할 때 사용할 수 있는 최대 토큰 수입니다."
+      "description": "컨텍스트 길이는 AI가 응답을 생성할 때 사용할 수 있는 최대 토큰 수입니다.",
+      "provider_managed": null,
+      "disabled_description": null
     },
     "max_tool_calls": {
       "title": null,

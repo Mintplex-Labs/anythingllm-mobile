@@ -1071,7 +1071,9 @@
       "placeholder": "Inserisci la lunghezza del contesto qui...",
       "save_error": "Errore nel salvataggio della lunghezza del contesto",
       "hint": "Tieni presente che la lunghezza del contesto dipende anche dal modello che stai utilizzando e ha implicazioni di memoria per il tuo dispositivo.",
-      "description": "La lunghezza del contesto è il numero massimo di token che l'AI può utilizzare durante la generazione di una risposta."
+      "description": "La lunghezza del contesto è il numero massimo di token che l'AI può utilizzare durante la generazione di una risposta.",
+      "provider_managed": null,
+      "disabled_description": null
     },
     "max_tool_calls": {
       "title": null,

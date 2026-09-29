@@ -1033,7 +1033,9 @@
       "placeholder": "Geben Sie Ihre Kontextlänge hier ein...",
       "save_error": "Fehler beim Speichern der Kontextlänge",
       "hint": "Beachten Sie, dass die Kontextlänge auch vom verwendeten Modell abhängt und Speicherauswirkungen auf Ihrem Gerät hat.",
-      "description": "Die Kontextlänge ist die maximale Anzahl von Tokens, die die KI beim Generieren einer Antwort verwenden kann."
+      "description": "Die Kontextlänge ist die maximale Anzahl von Tokens, die die KI beim Generieren einer Antwort verwenden kann.",
+      "provider_managed": null,
+      "disabled_description": null
     },
     "max_tool_calls": {
       "title": null,

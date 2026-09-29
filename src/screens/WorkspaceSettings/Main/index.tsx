@@ -12,6 +12,8 @@ import AwaitableAlert from "@/components/AwaitableAlert";
 import { useEffect, useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
+import useLLMProvider from "@/hooks/useLLMPreference";
+import { isOnDeviceProviderName } from "@/utils/ToolsManager/providerGuards";
 
 interface MainViewProps {
     workspace: WorkspaceType;
@@ -25,6 +27,9 @@ export function MainView({ workspace, goToPage, initialThreadSlug }: MainViewPro
     const insets = useSafeAreaInsets();
     const scrollViewRef = useRef<ScrollView>(null);
     const { vectorCount, askToResetVectorsForWorkspace, getVectorCount } = useVectorCount(workspace.slug);
+    // Only the on-device runtime sizes its window from this - external providers manage their own
+    const { llmPreferences } = useLLMProvider();
+    const contextLengthApplies = isOnDeviceProviderName(llmPreferences?.provider);
     function goBackToWorkspaceChat() {
         navigation.reset({
             index: 0,
@@ -151,20 +156,29 @@ export function MainView({ workspace, goToPage, initialThreadSlug }: MainViewPro
                 {/* Context Length */}
                 <View className="w-full flex flex-col" style={{ gap: 12 }}>
                     <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">{t('workspace_settings.context_length.title')}</Text>
-                    <TouchableOpacity style={{ backgroundColor: '#27282A', padding: 14, gap: 20 }} className="w-full flex flex-row items-center rounded-lg" onPress={() => goToPage('context_length')}>
+                    <TouchableOpacity
+                        disabled={!contextLengthApplies}
+                        style={{ backgroundColor: '#27282A', padding: 14, gap: 20, opacity: contextLengthApplies ? 1 : 0.5 }}
+                        className="w-full flex flex-row items-center rounded-lg"
+                        onPress={() => goToPage('context_length')}
+                    >
                         <View className="flex flex-row gap-2 items-center">
                             <Note size={18} color="#FFF" />
                             <Text className="text-white text-lg">{t('workspace_settings.context_length.title')}</Text>
                         </View>
                         <View className="flex flex-1 flex-row gap-2 items-center justify-between">
                             <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: '#9F9FA0' }} className="text-lg flex-1 text-right">
-                                {workspace?.contextLength || Workspace.defaultContextLength}
+                                {contextLengthApplies
+                                    ? workspace?.contextLength || Workspace.defaultContextLength
+                                    : t('workspace_settings.context_length.provider_managed')}
                             </Text>
-                            <CaretRight size={18} color="#FFF" />
+                            {contextLengthApplies && <CaretRight size={18} color="#FFF" />}
                         </View>
                     </TouchableOpacity>
                     <Text style={{ color: '#9F9FA0' }} className="text-xs">
-                        {t('workspace_settings.context_length.description')}
+                        {contextLengthApplies
+                            ? t('workspace_settings.context_length.description')
+                            : t('workspace_settings.context_length.disabled_description')}
                     </Text>
                 </View>
 

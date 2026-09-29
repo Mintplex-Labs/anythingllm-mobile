@@ -198,7 +198,7 @@ export default function ModelChip({ workspace }: { workspace: WorkspaceType }) {
  * Clearing it early lets the prompt input re-present while this sheet is still closing - the two
  * collide in the modal stack and the chip sheet can never be opened again.
  */
-function closeModelSheet(bottomSheetRef: React.RefObject<BottomSheetModal>) {
+function closeModelSheet(bottomSheetRef: React.RefObject<BottomSheetModal | null>) {
   bottomSheetRef.current?.dismiss();
 }
 
@@ -209,7 +209,7 @@ type SheetView ={ name: 'models' } | { name: 'providers' } | { name: 'connect'; 
  * provider picker and connection form so switching providers never has to leave the chat.
  * The sheet unmounts its content on dismiss, so it always reopens on the model list.
  */
-function ModelSheetContent({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheetModal> }) {
+function ModelSheetContent({ bottomSheetRef }: { bottomSheetRef: React.RefObject<BottomSheetModal | null> }) {
   const { llmPreferences, LLMProvider } = useLlmPreference();
   const { configuredProviders, switchProvider } = useProviderSwitcher();
   const [view, setView] = useState<SheetView>({ name: 'models' });
@@ -287,7 +287,7 @@ function AvailableModels({
   bottomSheetRef,
   header,
 }: {
-  bottomSheetRef: React.RefObject<BottomSheetModal>;
+  bottomSheetRef: React.RefObject<BottomSheetModal | null>;
   header: React.ReactNode;
 }) {
   const { t } = useTranslation();
@@ -493,7 +493,7 @@ function ExternalProviderModels({
   header,
   onEditConnection,
 }: {
-  bottomSheetRef: React.RefObject<BottomSheetModal>;
+  bottomSheetRef: React.RefObject<BottomSheetModal | null>;
   header: React.ReactNode;
   onEditConnection: () => void;
 }) {

@@ -12,7 +12,6 @@ import {
 import { Model } from '@/utils/types';
 import { hasEnoughSpace } from '@/utils/device';
 import { formatBytes } from '@/utils/formatters';
-import uiStore from '@/store/UIStore';
 
 const { DownloadModule } = NativeModules;
 const TAG = 'DownloadManager';
@@ -270,7 +269,7 @@ export class DownloadManager {
       const downloadResult = RNFS.downloadFile({
         fromUrl: model.downloadUrl!,
         toFile: destinationPath,
-        background: uiStore.iOSBackgroundDownloading,
+        background: false,
         discretionary: false,
         progressInterval: 800,
         headers: {

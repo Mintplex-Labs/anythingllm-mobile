@@ -658,7 +658,17 @@
       "list_failed_title": "{{provider}} के लिए मॉडल की सूची नहीं बना सके",
       "list_failed_description": "इस प्रदाता ने कोई मॉडल नहीं लौटाया। जाँचें कि एंडपॉइंट तक पहुँचा जा सकता है और मॉडल सूची का समर्थन करता है, या सेटिंग्स में मॉडल को मैन्युअल रूप से सेट करें।",
       "try_again": "फिर से कोशिश करें",
-      "search_provider_models": "{{provider}} मॉडल खोजें"
+      "search_provider_models": "{{provider}} मॉडल खोजें",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_one": "डेवलपर उपकरण खोलने के लिए {{count}} अधिक बार दबाएँ",
     "dev_shortcut_hint_other": "डेवलपर उपकरण खोलने के लिए {{count}} अधिक बार दबाएँ",

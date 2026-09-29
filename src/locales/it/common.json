@@ -686,7 +686,17 @@
       "list_failed_title": "Impossibile elencare i modelli per {{provider}}",
       "list_failed_description": "Questo provider non ha restituito alcun modello. Verifica che l'endpoint sia raggiungibile e supporti l'elenco dei modelli, o imposta il modello manualmente in Impostazioni.",
       "try_again": "Riprova",
-      "search_provider_models": "Cerca i modelli {{provider}}"
+      "search_provider_models": "Cerca i modelli {{provider}}",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_many": "Premi {{count}} altre volte per aprire gli strumenti di sviluppo",
     "dev_shortcut_hint_one": "Premi {{count}} altra volta per aprire gli strumenti di sviluppo",

@@ -686,7 +686,17 @@
       "list_failed_title": "No se pudieron listar los modelos de {{provider}}",
       "list_failed_description": "Este proveedor no devolvió ningún modelo. Verifique que el punto final sea accesible y admita listado de modelos, o establezca el modelo manualmente en Configuración.",
       "try_again": "Intente de nuevo",
-      "search_provider_models": "Buscar modelos de {{provider}}"
+      "search_provider_models": "Buscar modelos de {{provider}}",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_many": "Presione {{count}} veces más para abrir herramientas de desarrollador",
     "dev_shortcut_hint_one": "Presione {{count}} vez más para abrir herramientas de desarrollador",

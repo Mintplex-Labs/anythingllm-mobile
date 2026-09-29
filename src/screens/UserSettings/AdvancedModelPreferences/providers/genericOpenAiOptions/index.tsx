@@ -7,24 +7,12 @@ import { BottomSheetModal, BottomSheetBackdrop, BottomSheetScrollView } from '@g
 import { X, MagnifyingGlass, CaretDown } from 'phosphor-react-native';
 import getLLM from '@/utils/AiProviders';
 import { IAvailableModel } from '@/utils/AiProviders/baseOpenAILikeProvider';
-import { findProviderDefinition, type ProviderConfig } from '@/utils/llmproviders';
+import { baseUrlCandidates, findProviderDefinition, type ProviderConfig } from '@/utils/llmproviders';
 import { BEDROCK_REGIONS } from '@/utils/AiProviders/BedrockProvider';
 import debounce from 'lodash/debounce';
 import { useTranslation } from 'react-i18next';
 
 type ProviderSettings = ProviderConfig;
-
-/**
- * Base URLs to try when discovering models. Many OpenAI-compatible servers
- * (LM Studio, vLLM, llama.cpp, ...) mount their routes under /v1, and users
- * frequently omit it, so we retry with /v1 appended when the URL lacks it.
- */
-function baseUrlCandidates(baseUrl: string, requiresBaseUrl: boolean): string[] {
-  if (!requiresBaseUrl) return [baseUrl];
-  const trimmed = baseUrl.replace(/\/+$/, '');
-  if (/\/v\d+$/i.test(trimmed)) return [trimmed];
-  return [trimmed, `${trimmed}/v1`];
-}
 
 const inputStyle = (maxHeight: number) => ({
   maxHeight,

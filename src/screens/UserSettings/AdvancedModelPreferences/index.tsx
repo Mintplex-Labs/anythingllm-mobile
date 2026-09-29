@@ -2,7 +2,7 @@ import { Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import SafeView from '@/components/SafeView';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'phosphor-react-native';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IWorkspacePageKey } from '../index';
 import useLLMPreference from '@/hooks/useLLMPreference';
@@ -12,6 +12,7 @@ import ProviderSelection from '@/components/LLMSelection/ProviderSelection';
 import Telemetry from '@/utils/Telemetry';
 import { findProviderDefinition, type ProviderConfig } from '@/utils/llmproviders';
 import useProviderConfigCache from '@/hooks/useProviderConfigCache';
+import useProviderSwitcher from '@/hooks/useProviderSwitcher';
 import { peekPendingHfPull } from '@/utils/DeepLinks';
 
 import NativeOptions from './providers/nativeOptions';
@@ -35,15 +36,11 @@ export default function AdvancedModelPreferences({
     updateLLMPreference,
   } = useLLMPreference();
   const configCache = useProviderConfigCache();
-  const [cachedProviderKeys, setCachedProviderKeys] = useState<string[]>([]);
-
-  useEffect(() => {
-    configCache.cachedProviders().then(setCachedProviderKeys);
-  }, []);
-
-  async function refreshCachedKeys() {
-    setCachedProviderKeys(await configCache.cachedProviders());
-  }
+  const {
+    configuredProviders: cachedProviderKeys,
+    refreshConfiguredProviders: refreshCachedKeys,
+    switchProvider: handleProviderSelection,
+  } = useProviderSwitcher();
 
   async function updateProviderSettings(provider: string, settings: ProviderConfig) {
     const merged = { ...llmPreferences.config, ...settings };
@@ -52,20 +49,6 @@ export default function AdvancedModelPreferences({
     Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.LLM_SETTINGS_UPDATED, { provider, model: settings?.model ?? '' });
     await configCache.save(provider, merged);
     await refreshCachedKeys();
-  }
-
-  async function handleProviderSelection(provider: string) {
-    await configCache.save(llmPreferences.provider, llmPreferences.config);
-    await refreshCachedKeys();
-
-    if (provider === 'native') {
-      await updateLLMPreference('native', { model: llmPreferences.config.model });
-      return;
-    }
-
-    const definition = findProviderDefinition(provider);
-    const cached = await configCache.restore(provider);
-    await updateLLMPreference(provider, cached ?? { ...(definition?.defaultConfig ?? {}) });
   }
 
   // An anythingllm://pull-hf link (Hugging Face "Use this model") brought us here: the model has to run
@@ -166,7 +149,7 @@ export default function AdvancedModelPreferences({
             provider: llmPreferences.provider,
             config: llmPreferences.config,
           }}
-          onChange={handleProviderSelection}
+          onChange={provider => handleProviderSelection(provider)}
           cachedProviders={cachedProviderKeys}
         />
       </View>

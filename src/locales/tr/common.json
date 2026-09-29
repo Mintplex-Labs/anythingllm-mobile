@@ -658,7 +658,17 @@
       "list_failed_title": "{{provider}} için modeller listelenemiyor",
       "list_failed_description": "Bu sağlayıcı herhangi bir model döndürmedi. Uç noktaya erişilebildiğini ve model listelemeyi desteklediğini kontrol edin, ya da modeli Ayarlar'da manuel olarak ayarlayın.",
       "try_again": "Yeniden Dene",
-      "search_provider_models": "{{provider}} modellerini ara"
+      "search_provider_models": "{{provider}} modellerini ara",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_one": "Geliştirici araçlarını açmak için {{count}} kez daha basın",
     "dev_shortcut_hint_other": "Geliştirici araçlarını açmak için {{count}} kez daha basın",

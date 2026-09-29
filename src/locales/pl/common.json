@@ -714,7 +714,17 @@
       "list_failed_title": "Nie można wymienić modeli dla {{provider}}",
       "list_failed_description": "Ten dostawca nie zwrócił żadnych modeli. Sprawdź, czy punkt końcowy jest osiągalny i obsługuje listę modeli, lub ustaw model ręcznie w Ustawieniach.",
       "try_again": "Spróbuj ponownie",
-      "search_provider_models": "Szukaj {{provider}} modeli"
+      "search_provider_models": "Szukaj {{provider}} modeli",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_few": "Naciśnij {{count}} razy więcej, aby otworzyć narzędzia programistyczne",
     "dev_shortcut_hint_many": "Naciśnij {{count}} razy więcej, aby otworzyć narzędzia programistyczne",

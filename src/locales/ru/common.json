@@ -714,7 +714,17 @@
       "list_failed_title": "Не удалось получить список моделей для {{provider}}",
       "list_failed_description": "Этот поставщик не вернул никаких моделей. Проверьте, что конечная точка доступна и поддерживает листинг моделей, или установите модель вручную в параметрах.",
       "try_again": "Попробовать снова",
-      "search_provider_models": "Поиск моделей {{provider}}"
+      "search_provider_models": "Поиск моделей {{provider}}",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_few": "Нажмите ещё {{count}} раза, чтобы открыть инструменты разработчика",
     "dev_shortcut_hint_many": "Нажмите ещё {{count}} раз, чтобы открыть инструменты разработчика",

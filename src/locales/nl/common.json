@@ -658,7 +658,17 @@
       "list_failed_title": "Kon modellen voor {{provider}} niet weergeven",
       "list_failed_description": "Deze provider gaf geen modellen terug. Controleer of het eindpunt bereikbaar is en modelweergave ondersteunt, of stel het model handmatig in onder Instellingen.",
       "try_again": "Probeer opnieuw",
-      "search_provider_models": "{{provider}} modellen zoeken"
+      "search_provider_models": "{{provider}} modellen zoeken",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_one": "Druk {{count}} meer keer om ontwikkelaarshulpmiddelen te openen",
     "dev_shortcut_hint_other": "Druk {{count}} meer keren om ontwikkelaarshulpmiddelen te openen",

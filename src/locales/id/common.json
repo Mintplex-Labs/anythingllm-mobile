@@ -630,7 +630,17 @@
       "list_failed_title": "Tidak dapat membuat daftar model untuk {{provider}}",
       "list_failed_description": "Penyedia ini tidak mengembalikan model apa pun. Periksa bahwa titik akhir dapat dijangkau dan mendukung daftar model, atau atur model secara manual di Pengaturan.",
       "try_again": "Coba lagi",
-      "search_provider_models": "Cari model {{provider}}"
+      "search_provider_models": "Cari model {{provider}}",
+      "switch_provider": null,
+      "choose_provider": null,
+      "search_providers": null,
+      "configured": null,
+      "edit_connection": null,
+      "connect_title": null,
+      "connect": null,
+      "connecting": null,
+      "connect_failed": null,
+      "model": null
     },
     "dev_shortcut_hint_other": "Tekan {{count}} kali lagi untuk membuka alat pengembang",
     "thread_menu": {

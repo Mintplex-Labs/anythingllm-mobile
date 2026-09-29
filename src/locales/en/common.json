@@ -658,7 +658,17 @@
       "list_failed_title": "Could not list models for {{provider}}",
       "list_failed_description": "This provider did not return any models. Check that the endpoint is reachable and supports model listing, or set the model manually in Settings.",
       "try_again": "Try again",
-      "search_provider_models": "Search {{provider}} models"
+      "search_provider_models": "Search {{provider}} models",
+      "switch_provider": "Switch",
+      "choose_provider": "Choose a provider",
+      "search_providers": "Search providers",
+      "configured": "Configured",
+      "edit_connection": "Edit connection",
+      "connect_title": "Connect {{provider}}",
+      "connect": "Connect",
+      "connecting": "Connecting...",
+      "connect_failed": "Could not load models from {{provider}}. Check the details above, or enter a model name to use it anyway.",
+      "model": "Model"
     },
     "dev_shortcut_hint_one": "Press {{count}} more time to open developer tools",
     "dev_shortcut_hint_other": "Press {{count}} more times to open developer tools",

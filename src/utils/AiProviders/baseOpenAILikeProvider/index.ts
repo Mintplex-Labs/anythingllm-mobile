@@ -644,8 +644,8 @@ export default abstract class BaseOpenAILikeProvider {
     });
 
     throwIfAborted(this.abortSignal);
-    if (!!fullResult.metrics) onStream('report_metrics', fullResult.metrics);
-    if (!!citations) onStream('report_citations', citations);
+    if (fullResult.metrics) onStream('report_metrics', fullResult.metrics);
+    if (citations) onStream('report_citations', citations);
     onStream('complete', '');
   }
 

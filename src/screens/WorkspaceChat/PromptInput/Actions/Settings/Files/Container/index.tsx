@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import Document, { DocumentType } from "@/database/models/Document";
 import Loading from "./loading";
@@ -20,7 +19,7 @@ interface FilesListContainerProps {
     disabled: boolean;
 }
 
-export default function FilesListContainer({ selectedFileUuids, setSelectedFileUuids, files, currentThreadSlug = null, error, isLoading, optionsActive, disabled }: FilesListContainerProps) {
+export default function FilesListContainer({ selectedFileUuids, setSelectedFileUuids, files, currentThreadSlug = null, error, isLoading, disabled }: FilesListContainerProps) {
     if (isLoading) return <Loading />;
     if (error) return <Error error={error} />;
     if (files.length === 0) return <Empty />;

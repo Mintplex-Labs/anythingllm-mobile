@@ -51,7 +51,7 @@ export default function ScheduleBuilder({ value, mode, onChange, onModeChange }:
         const parsed = cronToBuilderState(value);
         setState(parsed.state);
         if (!parsed.matched) onChange(builderStateToCron(parsed.state));
-    }, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [mode]);
 
     const update = (patch: Partial<BuilderState>) => {
         const next = { ...state, ...patch };
@@ -202,7 +202,7 @@ function ScrollChipRow<T extends number>({ items, selectedKey, onSelect }: { ite
         if (index < 0) return;
         const timer = setTimeout(() => scrollRef.current?.scrollTo({ x: Math.max(0, (index - 1) * CHIP_WIDTH), animated: false }), 0);
         return () => clearTimeout(timer);
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, []);
     return (
         <ScrollView ref={scrollRef} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }} style={{ marginHorizontal: -4 }}>
             {items.map((item) => (

@@ -95,7 +95,7 @@ export function ImportView({ params }: ImportViewProps) {
         getWorkspaces()
             .catch(() => showToast(t('connect.import.refresh_failed'), 'short'))
             .finally(() => setLoading(false));
-    }, [params?.connectionUrl, params?.deviceToken]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [params?.connectionUrl, params?.deviceToken]);
 
     // Every workspace from one connection reports the same platform
     const platform = workspaces[0]?.platform;

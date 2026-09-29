@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { Gear, Paperclip, SlidersHorizontal } from "phosphor-react-native";
+import { Gear, SlidersHorizontal } from "phosphor-react-native";
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
 import { ToolsActionButton } from './Tools';

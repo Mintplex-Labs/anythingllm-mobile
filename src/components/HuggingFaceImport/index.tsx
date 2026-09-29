@@ -122,7 +122,6 @@ export default function HuggingFaceImport({
   // Auto-run when opened with a query already typed in the model search box.
   useEffect(() => {
     if (initialQuery.trim()) lookup(initialQuery);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Which quant a deep link asked for (if any) and where it sits in the list, so we can scroll to it.

@@ -16,5 +16,5 @@ export default function useTableChanges(tables: string[], onChange: () => void) 
             error: (error) => console.log('[useTableChanges] observe failed', error),
         });
         return () => subscription.unsubscribe();
-    }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [key]);
 }

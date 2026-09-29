@@ -159,7 +159,7 @@ function RandomSuggestions({ height }: { height: number }) {
             const randomKey = keys[Math.floor(Math.random() * keys.length)];
             const message = availableMessages[randomKey as keyof typeof availableMessages]
             const text = typeof message.text === 'function' ? await (message.text as (slug?: string) => any)(wsSlug) : message.text;
-            if (!!text) messages.push({ text, onClick: message.onClick } as never);
+            if (text) messages.push({ text, onClick: message.onClick } as never);
             delete availableMessages[randomKey];
             if (messages.length >= limit) break;
         }

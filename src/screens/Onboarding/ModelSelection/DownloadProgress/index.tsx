@@ -92,7 +92,7 @@ export default function DownloadProgress({ downloadUrl, onComplete }: { download
     const { progress, downloading, startDownload, completed } = useDownloadModelFromUrl();
 
     useEffect(() => {
-        if (!!downloadUrl) startDownload(downloadUrl);
+        if (downloadUrl) startDownload(downloadUrl);
     }, [downloadUrl]);
 
     useEffect(() => {

@@ -37,8 +37,8 @@ export default function WorkspaceChat() {
   }, [wsSlug, threadSlug]);
 
   if (isLoadingProvider || loadingWorkspaceThread) return <LoadingView />;
-  if (!!error) return <ErrorView title={t('chat.error_loading_provider')} error={error} />;
-  if (!!errorWorkspaceThread) return <ErrorView title={t('chat.error_loading_thread')} error={errorWorkspaceThread} />;
+  if (error) return <ErrorView title={t('chat.error_loading_provider')} error={error} />;
+  if (errorWorkspaceThread) return <ErrorView title={t('chat.error_loading_thread')} error={errorWorkspaceThread} />;
   return (
     <SafeView scrollable={false} safeAreaClassNames="pt-[21px]" containerClassNames="flex-1 flex flex-col" applyGradient safeAreaStyle={{ backgroundColor: '#000' }}>
       <TopBar workspace={workspace} thread={thread} />

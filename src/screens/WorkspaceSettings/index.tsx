@@ -91,7 +91,7 @@ export default function WorkspaceSettings() {
   }, []);
 
   if (loadingWorkspace) return <LoadingView />;
-  if (!!errorWorkspace) return <ErrorView title={t('workspace_settings.load_error')} error={errorWorkspace} />;
+  if (errorWorkspace) return <ErrorView title={t('workspace_settings.load_error')} error={errorWorkspace} />;
   const Page = PAGES[page as keyof typeof PAGES];
   return <Page goToPage={navigateToPage} workspace={workspace} initialThreadSlug={threadSlug} />;
 }

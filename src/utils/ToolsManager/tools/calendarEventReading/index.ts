@@ -173,6 +173,6 @@ export default {
             if (parts?.[0]) descriptionContent = parts[0]?.trim();
         }
 
-        return !!descriptionContent ? `Event Description: ${descriptionContent}.` : '';
+        return descriptionContent ? `Event Description: ${descriptionContent}.` : '';
     }
 } as const;

@@ -1,7 +1,7 @@
 import OnDeviceEmbedderProvider from "./onDevice";
 
 export type EmbedderProvider = OnDeviceEmbedderProvider;
-function getEmbedder(provider: string, config: { [key: string]: any } = {}): EmbedderProvider {
+function getEmbedder(provider: string, _config: { [key: string]: any } = {}): EmbedderProvider {
   switch (provider) {
     case 'native':
       return new OnDeviceEmbedderProvider()

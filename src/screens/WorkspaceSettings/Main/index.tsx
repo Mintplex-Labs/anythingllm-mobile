@@ -1,7 +1,7 @@
 import { ActivityIndicator, Text, TouchableOpacity, View, ScrollView } from "react-native";
 import SafeView from "@/components/SafeView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ArrowLeft, Binary, CaretRight, ChatCentered, Cube, File, Note, Thermometer } from "phosphor-react-native";
+import { ArrowLeft, Binary, CaretRight, ChatCentered, Cube, Note, Thermometer } from "phosphor-react-native";
 import Workspace, { WorkspaceType } from "@/database/models/Workspace";
 import { IWorkspacePageKey } from "../index";
 import uiStore from "@/store/UIStore";

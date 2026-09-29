@@ -111,7 +111,7 @@ class ScheduledJobRunner {
     }
 
     log = (text: string, ...args: any[]) => {
-        console.log(`\x1b[36m[ScheduledJobs] ${text}\x1b[0m`, ...args); // eslint-disable-line no-console
+        console.log(`\x1b[36m[ScheduledJobs] ${text}\x1b[0m`, ...args);
     };
 
     /** The saved LLM preference, or the reason jobs cannot run with it. */

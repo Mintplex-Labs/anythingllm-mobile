@@ -68,7 +68,6 @@ export const KeyboardAccessoryView = React.memo(
       <>
         <Animated.View
           style={[
-            // eslint-disable-next-line react-native/no-inline-styles
             {
               flex: 1,
               paddingBottom: Animated.subtract(offset, deltaY),
@@ -96,7 +95,6 @@ export const KeyboardAccessoryView = React.memo(
             onLayout={onLayout}
             style={[
               styles.contentContainer,
-              // eslint-disable-next-line react-native/no-inline-styles
               {
                 marginBottom: keyboardHeight > 0 ? 0 : bottom,
                 marginLeft: left,

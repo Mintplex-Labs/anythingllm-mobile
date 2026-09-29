@@ -49,7 +49,7 @@ export default function JobForm({ jobUuid, onDone, onCancel }: { jobUuid?: strin
             setScheduleMode(cronToBuilderState(job.schedule).matched ? 'builder' : 'cron');
             setLoading(false);
         });
-    }, [jobUuid]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [jobUuid]);
 
     const patch = (updates: Partial<ScheduledJobWritable>) => setForm((current) => ({ ...current, ...updates }));
     const validation = ScheduledJob.validate(form);

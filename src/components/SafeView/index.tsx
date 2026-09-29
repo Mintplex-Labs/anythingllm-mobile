@@ -1,6 +1,5 @@
 import { Edge, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScrollView, StyleProp, View, ViewStyle } from "react-native";
-import { Fragment } from "react";
 import LinearGradient from "react-native-linear-gradient";
 
 interface SafeViewProps {

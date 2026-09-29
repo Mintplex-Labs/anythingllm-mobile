@@ -3,7 +3,7 @@ import { IOnDeviceStreamCallback } from "../onDevice";
 import EventSource from "react-native-sse";
 import { getOrigin, safeJsonParse } from "@/utils/formatters";
 import AnythingLLMExternal, { CommandBodies, CommandResponses, Commands } from "@/utils/AnythingLLMExternal";
-import { IAgentCitation, IAgentWebSearchCitation, IChatCitation, IDocumentCitation } from "@/database/models/WorkspaceChat";
+import { IChatCitation } from "@/database/models/WorkspaceChat";
 import { ChatAbortedError, throwIfAborted } from "@/utils/chat/abort";
 
 type DelegatedProviderConfig = {

@@ -1,5 +1,5 @@
-import { useEffect, useImperativeHandle, useRef, useState } from "react";
-import { Paperclip, DotsThreeCircleVertical, X, FolderSimple } from "phosphor-react-native";
+import { useEffect, useRef, useState } from "react";
+import { Paperclip, DotsThreeCircleVertical, X } from "phosphor-react-native";
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useBottomSheet, BOTTOM_SHEET_NAMES } from '@/contexts/BottomSheetContext';
 import { View, Text, TouchableOpacity } from "react-native";

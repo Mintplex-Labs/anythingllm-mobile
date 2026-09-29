@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { getApp } from '@react-native-firebase/app'
 import { observer } from 'mobx-react';
 import { NavigationContainer } from '@react-navigation/native';
 import { ActivityIndicator, Provider as PaperProvider } from 'react-native-paper';
@@ -116,9 +115,6 @@ const App = observer(() => {
                               options={{
                                 headerShown: false,
                                 swipeEnabled: false,
-                                gestureHandlerProps: {
-                                  enabled: false,
-                                }
                               }}
                             />
                             <Drawer.Screen
@@ -129,9 +125,6 @@ const App = observer(() => {
                               options={{
                                 headerShown: false,
                                 swipeEnabled: false,
-                                gestureHandlerProps: {
-                                  enabled: false,
-                                }
                               }}
                             />
                             <Drawer.Screen
@@ -142,9 +135,6 @@ const App = observer(() => {
                               options={{
                                 headerShown: false,
                                 swipeEnabled: false,
-                                gestureHandlerProps: {
-                                  enabled: false,
-                                }
                               }}
                             />
                             <Drawer.Screen
@@ -155,9 +145,6 @@ const App = observer(() => {
                               options={{
                                 headerShown: false,
                                 swipeEnabled: false,
-                                gestureHandlerProps: {
-                                  enabled: false,
-                                }
                               }}
                             />
                           </>

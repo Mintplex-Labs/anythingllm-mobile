@@ -6,7 +6,6 @@ import { generateUUID } from '@/utils/constants';
 import WorkspaceThread, { WorkspaceThreadType } from './WorkspaceThread';
 import Document from './Document';
 import uiStore from '@/store/UIStore';
-import WorkspaceChat from './WorkspaceChat';
 import Memory from './Memory';
 import AnythingLLMExternal from '@/utils/AnythingLLMExternal';
 import Telemetry from '@/utils/Telemetry';

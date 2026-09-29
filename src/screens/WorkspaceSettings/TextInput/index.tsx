@@ -1,7 +1,7 @@
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ArrowLeft, CheckCircle, CircleNotch } from "phosphor-react-native";
+import { ArrowLeft, CheckCircle } from "phosphor-react-native";
 import { WorkspaceType } from "@/database/models/Workspace";
 import { IWorkspacePageKey } from "../index";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -42,7 +42,7 @@ export function TextInputView({ workspace, goToPage, field, title, currentLabel,
     const keyboardHeight = useKeyboardHeight();
     const { LLMProvider } = useLLMProvider();
     // @ts-ignore
-    const [value, setValue] = useState(workspace[field] ?? resetValue);
+    const [value, setValue] = useState<string | number>(workspace[field] ?? resetValue);
     const [saveStatus, setSaveStatus] = useState(DEFAULT_SAVE_STATUS);
 
     const debouncedSave = useRef(

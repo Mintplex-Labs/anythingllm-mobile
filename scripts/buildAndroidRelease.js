@@ -147,29 +147,22 @@ try {
 
     // Generate release
     // - AAB in root for Google Play
-    // - APK in mobile/latest/** for CDN latest
-    // - APK in mobile/legacy/{version}/** for CDN
+    // - APK + version.txt in cdn/** for the CDN
     // Create release folder
     const releaseFolder = `release/v${version}`;
     if (!fs.existsSync(releaseFolder)) fs.mkdirSync(releaseFolder, { recursive: true });
     fs.copyFileSync(aabPath, path.join(releaseFolder, `anythingllm-v${version}.aab`));
 
-    // Copy APK to mobile/latest/**
-    const latestFolder = path.join(releaseFolder, `mobile/latest`);
-    if (!fs.existsSync(latestFolder)) fs.mkdirSync(latestFolder, { recursive: true });
-    fs.copyFileSync(path.join(outputDir, `anythingllm-universal.apk`), path.join(latestFolder, `anythingllm-universal.apk`));
-    fs.writeFileSync(path.join(latestFolder, `version.txt`), version);
-
-    // Copy APK to mobile/legacy/{version}/**
-    const legacyFolder = path.join(releaseFolder, `mobile/legacy/${version}`);
-    if (!fs.existsSync(legacyFolder)) fs.mkdirSync(legacyFolder, { recursive: true });
-    fs.copyFileSync(path.join(outputDir, `anythingllm-universal.apk`), path.join(legacyFolder, `anythingllm-universal.apk`));
-    fs.writeFileSync(path.join(legacyFolder, `version.txt`), version);
+    // Copy APK to cdn/**
+    const cdnFolder = path.join(releaseFolder, `cdn`);
+    if (!fs.existsSync(cdnFolder)) fs.mkdirSync(cdnFolder, { recursive: true });
+    fs.copyFileSync(path.join(outputDir, `anythingllm-universal.apk`), path.join(cdnFolder, `anythingllm-universal.apk`));
+    fs.writeFileSync(path.join(cdnFolder, `version.txt`), version);
 
     console.log(`✅ Android release build completed successfully!`);
     console.log(`📱 Universal APK extracted to: ${releaseFolder}`);
     console.log(`📦 AAB bundle: ${path.join(releaseFolder, `anythingllm-v${version}.aab`)}`);
-    console.log(`🎯 Final APK: ${path.join(releaseFolder, `anythingllm-universal.apk`)}`);
+    console.log(`🎯 Final APK: ${path.join(cdnFolder, `anythingllm-universal.apk`)}`);
 } catch (error) {
     console.error('❌ Build failed:', error);
     process.exit(1);

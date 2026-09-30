@@ -1165,7 +1165,11 @@
       "not_scheduled": "Não agendado",
       "empty_title": "Nenhum trabalho agendado ainda",
       "empty_body": "Peça ao assistente para verificar um site todas as manhãs, redigir um resumo semanal ou construir um relatório no primeiro do mês - tudo sem abrir um chat.",
-      "create_first": "Criar seu primeiro trabalho"
+      "create_first": "Criar seu primeiro trabalho",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "Este trabalho já está em execução",

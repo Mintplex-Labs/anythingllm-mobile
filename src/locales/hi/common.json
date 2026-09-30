@@ -1125,7 +1125,11 @@
       "not_scheduled": "अनुसूचित नहीं",
       "empty_title": "अभी तक कोई निर्धारित नौकरी नहीं",
       "empty_body": "सहायक से हर सुबह एक वेबसाइट जाँचने, साप्ताहिक सारांश का मसौदा तैयार करने, या महीने की पहली तारीख को एक रिपोर्ट बनाने के लिए कहें - सब कुछ चैट खोले बिना।",
-      "create_first": "अपनी पहली नौकरी बनाएँ"
+      "create_first": "अपनी पहली नौकरी बनाएँ",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "यह नौकरी पहले से ही चल रही है",

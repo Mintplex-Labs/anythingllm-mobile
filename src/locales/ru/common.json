@@ -1205,7 +1205,11 @@
       "not_scheduled": "Не запланировано",
       "empty_title": "Пока нет запланированных задач",
       "empty_body": "Попросите помощника проверить веб-сайт каждое утро, составить еженедельное резюме или создать отчёт на первое число месяца — всё без открытия чата.",
-      "create_first": "Создайте вашу первую задачу"
+      "create_first": "Создайте вашу первую задачу",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "Эта задача уже запущена",

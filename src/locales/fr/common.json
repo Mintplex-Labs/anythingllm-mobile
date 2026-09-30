@@ -1165,7 +1165,11 @@
       "not_scheduled": "Non programmée",
       "empty_title": "Aucune tâche programmée pour le moment",
       "empty_body": "Demandez à l'assistant de vérifier un site web chaque matin, de rédiger un résumé hebdomadaire ou de créer un rapport le premier du mois - tout sans ouvrir une conversation.",
-      "create_first": "Créer votre première tâche"
+      "create_first": "Créer votre première tâche",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "Cette tâche est déjà en cours d'exécution",

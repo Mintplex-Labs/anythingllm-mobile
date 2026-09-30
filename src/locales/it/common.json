@@ -1165,7 +1165,11 @@
       "not_scheduled": "Non pianificato",
       "empty_title": "Nessun lavoro pianificato ancora",
       "empty_body": "Fai controllare all'assistente un sito web ogni mattina, redigi un riepilogo settimanale o costruisci un rapporto il primo del mese - tutto senza aprire una chat.",
-      "create_first": "Crea il tuo primo lavoro"
+      "create_first": "Crea il tuo primo lavoro",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "Questo lavoro è già in esecuzione",

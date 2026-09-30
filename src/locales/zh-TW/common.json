@@ -1085,7 +1085,11 @@
       "not_scheduled": "未排程",
       "empty_title": "還沒有排定的工作",
       "empty_body": "讓助手每天早上檢查網站、製作每週摘要或每月初日期建立報告 - 無需開啟聊天。",
-      "create_first": "建立您的第一個工作"
+      "create_first": "建立您的第一個工作",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "此工作已在執行",

@@ -1125,7 +1125,11 @@
       "not_scheduled": "Nicht geplant",
       "empty_title": "Noch keine geplanten Jobs",
       "empty_body": "Lassen Sie den Assistenten jeden Morgen eine Website überprüfen, schreiben Sie eine wöchentliche Zusammenfassung oder erstellen Sie einen Bericht am ersten des Monats - alles ohne einen Chat zu öffnen.",
-      "create_first": "Erstellen Sie Ihren ersten Job"
+      "create_first": "Erstellen Sie Ihren ersten Job",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "Dieser Job wird bereits ausgeführt",

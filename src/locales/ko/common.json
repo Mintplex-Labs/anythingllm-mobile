@@ -1085,7 +1085,11 @@
       "not_scheduled": "예약되지 않음",
       "empty_title": "예약된 작업이 없음",
       "empty_body": "어시스턴트가 매일 아침 웹사이트를 확인하거나, 주간 요약을 작성하거나, 매월 첫 날에 보고서를 작성하도록 하세요 - 모두 채팅을 열지 않고.",
-      "create_first": "첫 작업 만들기"
+      "create_first": "첫 작업 만들기",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "이 작업은 이미 실행 중입니다",

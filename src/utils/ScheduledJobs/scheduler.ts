@@ -31,6 +31,10 @@ type ScheduledJobsNativeModule = {
     cancelScheduledRun(): Promise<boolean>;
     /** Tells the WorkManager worker the background pass is over so it can release its slot */
     notifyBackgroundPassFinished(): void;
+    /** True when the app's battery setting is "Unrestricted" */
+    isIgnoringBatteryOptimizations(): Promise<boolean>;
+    /** Opens the app's system App info page (Battery lives there) */
+    openBatterySettings(): Promise<boolean>;
 };
 
 const native: ScheduledJobsNativeModule | null =
@@ -43,6 +47,27 @@ function log(text: string, ...args: any[]) {
 /** Whether this platform can run jobs while the app is closed. */
 export function supportsBackgroundRuns(): boolean {
     return native !== null;
+}
+
+/**
+ * Whether background runs can be cut short by battery optimization. With the app's battery setting on
+ * "Optimized" (the default), Doze blocks the app's network while the phone is locked, so a job that is
+ * still talking to its LLM when the maintenance window closes fails. "Unrestricted" avoids that.
+ * Resolves false where there are no background runs, or when the state cannot be read.
+ */
+export async function isBatteryOptimized(): Promise<boolean> {
+    if (!native) return false;
+    try {
+        return !(await native.isIgnoringBatteryOptimizations());
+    } catch (error) {
+        log('Failed to read battery optimization state', error);
+        return false;
+    }
+}
+
+/** Opens the system screen where the user can set the app's battery usage to "Unrestricted". */
+export async function openBatterySettings(): Promise<void> {
+    await native?.openBatterySettings();
 }
 
 /**

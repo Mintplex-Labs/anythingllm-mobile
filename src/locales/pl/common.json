@@ -1205,7 +1205,11 @@
       "not_scheduled": "Nie zaplanowany",
       "empty_title": "Brak zaplanowanych zadań jeszcze",
       "empty_body": "Niech asystent każdego ranka sprawdza stronę internetową, redaguje tygodniowe streszczenie lub buduje raport na pierwszego dnia miesiąca - wszystko bez otwierania czatu.",
-      "create_first": "Utwórz swoje pierwsze zadanie"
+      "create_first": "Utwórz swoje pierwsze zadanie",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "To zadanie już się uruchomia",

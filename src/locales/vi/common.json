@@ -1085,7 +1085,11 @@
       "not_scheduled": "Không được lên lịch",
       "empty_title": "Chưa có công việc được lên lịch",
       "empty_body": "Cho phép trợ lý kiểm tra một trang web mỗi sáng, soạn thảo bản tóm tắt hàng tuần hoặc xây dựng một báo cáo vào ngày đầu tiên của tháng - tất cả mà không cần mở trò chuyện.",
-      "create_first": "Tạo công việc đầu tiên của bạn"
+      "create_first": "Tạo công việc đầu tiên của bạn",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "Công việc này đã được chạy",

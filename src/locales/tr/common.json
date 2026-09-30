@@ -1125,7 +1125,11 @@
       "not_scheduled": "Planlanmamış",
       "empty_title": "Şimdilik planlanan görev yok.",
       "empty_body": "Yardımcı, her sabah bir web sitesini kontrol etsin, haftalık bir özet hazırlasın veya ayın başında bir rapor oluştursun – tüm bunlar sohbet penceresini açmadan.",
-      "create_first": "İlk işinizi oluşturun"
+      "create_first": "İlk işinizi oluşturun",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "Bu işlem zaten çalışıyor",

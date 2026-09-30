@@ -179,7 +179,9 @@ function AssistantOverlay() {
                 style={[{
                     backgroundColor: CARD_BACKGROUND,
                     borderRadius: 28,
-                    marginHorizontal: CARD_MARGIN,
+                    // Side insets too: in landscape the navigation bar (and camera cutout) sit on the sides.
+                    marginLeft: insets.left + CARD_MARGIN,
+                    marginRight: insets.right + CARD_MARGIN,
                     marginBottom: bottom,
                     maxHeight: (height - bottom - insets.top) * CARD_MAX_HEIGHT_RATIO,
                     paddingBottom: 12,

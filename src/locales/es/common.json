@@ -1165,7 +1165,11 @@
       "not_scheduled": "No programado",
       "empty_title": "Sin trabajos programados aún",
       "empty_body": "Haga que el asistente revise un sitio web cada mañana, redacte un resumen semanal o compile un informe el primer día del mes, todo sin abrir un chat.",
-      "create_first": "Crear su primer trabajo"
+      "create_first": "Crear su primer trabajo",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "Este trabajo ya se está ejecutando",

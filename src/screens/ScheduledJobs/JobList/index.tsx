@@ -11,12 +11,13 @@ import useTableChanges from '@/hooks/useTableChanges';
 import ScheduledJob, { type ScheduledJobType } from '@/database/models/ScheduledJob';
 import ScheduledJobRun, { type ScheduledJobRunType } from '@/database/models/ScheduledJobRun';
 import { describeCron } from '@/utils/ScheduledJobs/cron';
-import { syncNativeSchedule, supportsBackgroundRuns } from '@/utils/ScheduledJobs/scheduler';
+import { syncNativeSchedule, supportsBackgroundRuns, openBatterySettings } from '@/utils/ScheduledJobs/scheduler';
 import { showToast } from '@/utils/Notification';
 import uiStore from '@/store/UIStore';
 import { PATHS } from '@/utils/paths';
 import { ActionButton, Card, JOB_COLORS, NoticeBanner, RunStatusLabel, ScreenHeader, SectionLabel, UnreadDot, formatRelativeTime } from '../components';
 import useJobsBlockedReason, { BLOCKED_COPY } from '../useJobsBlockedReason';
+import useBatteryOptimized from '../useBatteryOptimized';
 
 type JobRow = ScheduledJobType & { latestRun: ScheduledJobRunType | null; unread: number };
 
@@ -25,6 +26,7 @@ export default function JobList({ onBack, onCreate, onOpenJob }: { onBack: () =>
     const insets = useSafeAreaInsets();
     const navigation = useNavigation();
     const { blocked } = useJobsBlockedReason();
+    const batteryOptimized = useBatteryOptimized();
     const [jobs, setJobs] = useState<JobRow[]>([]);
     const [loading, setLoading] = useState(true);
     useHighjackBackButtonPress(() => { onBack(); return true; });
@@ -60,6 +62,10 @@ export default function JobList({ onBack, onCreate, onOpenJob }: { onBack: () =>
         }
     };
 
+    const openAppBatterySettings = () => {
+        openBatterySettings().catch((error: any) => showToast(error?.message || t('scheduled_jobs.list.open_battery_settings_failed')));
+    };
+
     const goToSettings = () => {
         uiStore.emitter.emit(uiStore.globalEvents.REDIRECT, { path: PATHS.user_settings });
         navigation.reset({
@@ -80,6 +86,13 @@ export default function JobList({ onBack, onCreate, onOpenJob }: { onBack: () =>
                         title={t(BLOCKED_COPY[blocked].title)}
                         body={t(BLOCKED_COPY[blocked].body)}
                         action={{ label: t('scheduled_jobs.list.open_llm_settings'), onPress: goToSettings }}
+                    />
+                )}
+                {!blocked && batteryOptimized && (
+                    <NoticeBanner
+                        title={t('scheduled_jobs.list.battery_optimized_title')}
+                        body={t('scheduled_jobs.list.battery_optimized_body')}
+                        action={{ label: t('scheduled_jobs.list.open_battery_settings'), onPress: openAppBatterySettings }}
                     />
                 )}
 

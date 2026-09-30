@@ -1125,7 +1125,11 @@
       "not_scheduled": "Not scheduled",
       "empty_title": "No scheduled jobs yet",
       "empty_body": "Have the assistant check a website every morning, draft a weekly summary, or build a report on the first of the month - all without opening a chat.",
-      "create_first": "Create your first job"
+      "create_first": "Create your first job",
+      "battery_optimized_title": "Jobs may fail while your phone is locked",
+      "battery_optimized_body": "Battery optimization can cut off the network while a job is running in the background. For reliable runs, open App info, tap Battery and choose Unrestricted.",
+      "open_battery_settings": "Open battery settings",
+      "open_battery_settings_failed": "Could not open settings"
     },
     "runs": {
       "already_running": "This job is already running",

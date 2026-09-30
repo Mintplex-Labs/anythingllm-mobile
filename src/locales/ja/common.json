@@ -1085,7 +1085,11 @@
       "not_scheduled": "スケジュール されていません",
       "empty_title": "スケジュール済みジョブはまだありません",
       "empty_body": "毎朝ウェブサイトを確認し、週次要約をドラフトするか、月初にレポートを構築してください-すべてチャットを開かずに。",
-      "create_first": "最初のジョブを作成"
+      "create_first": "最初のジョブを作成",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "このジョブは既に実行中です",

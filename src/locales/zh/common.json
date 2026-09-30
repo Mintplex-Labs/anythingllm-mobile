@@ -1085,7 +1085,11 @@
       "not_scheduled": "未计划",
       "empty_title": "还没有计划的任务",
       "empty_body": "让助手每天早上检查一个网站、起草一份周总结，或在每月的第一天构建一份报告 - 无需打开聊天。",
-      "create_first": "创建您的第一个任务"
+      "create_first": "创建您的第一个任务",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "此任务已在运行",

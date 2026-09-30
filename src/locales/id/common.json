@@ -1085,7 +1085,11 @@
       "not_scheduled": "Tidak terjadwal",
       "empty_title": "Tidak ada pekerjaan terjadwal belum",
       "empty_body": "Biarkan asisten memeriksa situs web setiap pagi, buat konsep ringkasan mingguan, atau buat laporan di awal bulan - semuanya tanpa membuka obrolan.",
-      "create_first": "Buat pekerjaan pertama Anda"
+      "create_first": "Buat pekerjaan pertama Anda",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "Pekerjaan ini sudah berjalan",

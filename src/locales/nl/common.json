@@ -1125,7 +1125,11 @@
       "not_scheduled": "Niet ingepland",
       "empty_title": "Nog geen geplande taken",
       "empty_body": "Laat de assistent elke ochtend een website controleren, schrijf een wekelijkse samenvatting op, of bouw een rapport op de eerste van de maand - allemaal zonder een chat te openen.",
-      "create_first": "Maak je eerste taak"
+      "create_first": "Maak je eerste taak",
+      "battery_optimized_title": null,
+      "battery_optimized_body": null,
+      "open_battery_settings": null,
+      "open_battery_settings_failed": null
     },
     "runs": {
       "already_running": "Deze taak wordt al uitgevoerd",

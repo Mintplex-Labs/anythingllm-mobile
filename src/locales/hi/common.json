@@ -493,7 +493,8 @@
     "tour_title": "AnythingLLM क्या कर सकता है",
     "device_assistant": {
       "title": null,
-      "body": null
+      "body": null,
+      "cta": null
     },
     "quick_actions": {
       "title": "कहीं भी AnythingLLM के साथ पूछें",

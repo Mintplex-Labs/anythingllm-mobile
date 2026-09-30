@@ -521,7 +521,8 @@
     "tour_title": "Что может делать AnythingLLM",
     "device_assistant": {
       "title": null,
-      "body": null
+      "body": null,
+      "cta": null
     },
     "quick_actions": {
       "title": "Спросить AnythingLLM где угодно",

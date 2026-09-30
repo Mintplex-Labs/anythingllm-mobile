@@ -2,6 +2,7 @@ import semver from 'semver';
 import { Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { tKey } from '@/i18n';
+import { PATHS } from '@/utils/paths';
 
 /**
  * Feature highlights: short media-led cards that show off what the app can do. Two audiences see
@@ -71,6 +72,8 @@ const HIGHLIGHTS: HighlightCard[] = [
     title: tKey('highlights.device_assistant.title'),
     body: tKey('highlights.device_assistant.body'),
     media: { type: 'video', src: asset('1.3.1', 'Assistant_invocation_alert.mp4'), poster: asset('1.3.1', 'Assistant_invocation_alert.jpg'), aspectRatio: PHONE_PORTRAIT },
+    // Straight to Settings > Device Assistant
+    cta: { label: tKey('highlights.device_assistant.cta'), route: PATHS.user_settings, params: { page: 'assistant' } },
   },
   {
     id: 'quick-actions',
@@ -109,12 +112,12 @@ function onPlatform(card: HighlightCard, platform: string = Platform.OS): boolea
   return !card.platforms || (card.platforms as string[]).includes(platform);
 }
 
-/** Ascending by `since`, manifest order within a version */
+/** Newest `since` first - the latest release leads - manifest order within a version */
 function byVersion(a: HighlightCard, b: HighlightCard): number {
   const va = normalize(a.since);
   const vb = normalize(b.since);
   if (!va || !vb) return 0;
-  return semver.compare(va, vb);
+  return semver.rcompare(va, vb);
 }
 
 /**
@@ -136,7 +139,7 @@ export function cardsSince(lastSeen: string | null, current: string = DeviceInfo
     .sort(byVersion);
 }
 
-/** The evergreen tour for fresh installs */
+/** The evergreen tour for fresh installs, in manifest order - put the card to lead with first */
 export function tourCards(): HighlightCard[] {
   return HIGHLIGHTS.filter((card) => card.tour && onPlatform(card));
 }

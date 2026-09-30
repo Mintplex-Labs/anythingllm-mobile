@@ -493,7 +493,8 @@
     "tour_title": "Wat AnythingLLM kan doen",
     "device_assistant": {
       "title": null,
-      "body": null
+      "body": null,
+      "cta": null
     },
     "quick_actions": {
       "title": "Vragen aan AnythingLLM overal",

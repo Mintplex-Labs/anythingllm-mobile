@@ -479,7 +479,8 @@
     "tour_title": "AnythingLLM이 할 수 있는 것",
     "device_assistant": {
       "title": null,
-      "body": null
+      "body": null,
+      "cta": null
     },
     "quick_actions": {
       "title": "어디서나 AnythingLLM으로 묻기",

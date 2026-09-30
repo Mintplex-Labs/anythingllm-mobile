@@ -507,7 +507,8 @@
     "tour_title": "O que AnythingLLM pode fazer",
     "device_assistant": {
       "title": null,
-      "body": null
+      "body": null,
+      "cta": null
     },
     "quick_actions": {
       "title": "Pergunte com AnythingLLM em qualquer lugar",

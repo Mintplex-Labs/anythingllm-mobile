@@ -479,7 +479,8 @@
     "tour_title": "AnythingLLM có thể làm gì",
     "device_assistant": {
       "title": null,
-      "body": null
+      "body": null,
+      "cta": null
     },
     "quick_actions": {
       "title": "Hỏi với AnythingLLM ở bất cứ nơi nào",

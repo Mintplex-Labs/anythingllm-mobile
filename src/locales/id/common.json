@@ -479,7 +479,8 @@
     "tour_title": "Apa yang dapat dilakukan AnythingLLM",
     "device_assistant": {
       "title": null,
-      "body": null
+      "body": null,
+      "cta": null
     },
     "quick_actions": {
       "title": "Tanya dengan AnythingLLM di mana saja",

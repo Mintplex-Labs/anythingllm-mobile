@@ -519,6 +519,11 @@
     "pause_video": "Wstrzymaj wideo",
     "whats_new": "Co nowego",
     "tour_title": "Co AnythingLLM potrafi robić",
+    "device_assistant": {
+      "title": null,
+      "body": null,
+      "cta": null
+    },
     "quick_actions": {
       "title": "Zapytaj za pomocą AnythingLLM wszędzie",
       "body": "Wybierz tekst w dowolnej aplikacji i dotknij \"Zapytaj za pomocą AnythingLLM\", aby dopracować, skrócić, podsumować lub wyjaśnić za pomocą Twojego modelu. Wyłącz go w dowolnym momencie w Ustawieniach > Narzędzia specjalne."

@@ -477,6 +477,11 @@
     "pause_video": "비디오 일시 중지",
     "whats_new": "새로운 기능",
     "tour_title": "AnythingLLM이 할 수 있는 것",
+    "device_assistant": {
+      "title": null,
+      "body": null,
+      "cta": null
+    },
     "quick_actions": {
       "title": "어디서나 AnythingLLM으로 묻기",
       "body": "모든 앱에서 텍스트를 선택하고 \"AnythingLLM으로 묻기\"를 탭하여 모델로 다듬거나, 단축하거나, 요약하거나, 설명하세요. 설정 > 특수 도구 에서 언제든지 끌 수 있습니다."

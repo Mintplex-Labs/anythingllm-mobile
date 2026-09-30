@@ -491,6 +491,11 @@
     "pause_video": "Video pausieren",
     "whats_new": "Was ist neu",
     "tour_title": "Was AnythingLLM kann",
+    "device_assistant": {
+      "title": null,
+      "body": null,
+      "cta": null
+    },
     "quick_actions": {
       "title": "Fragen Sie AnythingLLM überall",
       "body": "Wählen Sie Text in einer App aus und tippen Sie auf \"Mit AnythingLLM fragen\", um mit Ihrem Modell zu verfeinern, zu verkürzen, zusammenzufassen oder zu erklären. Sie können es jederzeit unter Einstellungen > Spezielle Tools ausschalten."

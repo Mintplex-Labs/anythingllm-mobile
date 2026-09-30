@@ -491,17 +491,22 @@
     "pause_video": "Pause video",
     "whats_new": "What's new",
     "tour_title": "What AnythingLLM can do",
+    "device_assistant": {
+      "title": "Replace Gemini with your own AI",
+      "body": "Make AnythingLLM your phone's assistant and open it from any app with the same gesture you use for Gemini. Ask about what's on screen - answered by the model you picked.",
+      "cta": "Set up Device Assistant"
+    },
     "quick_actions": {
       "title": "Ask with AnythingLLM anywhere",
-      "body": "Select text in any app and tap \"Ask with AnythingLLM\" to polish, shorten, summarize or explain it with your model. Turn it off any time under Settings > Special tools."
+      "body": "Select text in any app and tap \"Ask with AnythingLLM\" to polish, shorten, summarize or explain it with your model."
     },
     "share_sheet": {
       "title": "Share anything into a chat",
-      "body": "Send photos, documents and links from any app straight to AnythingLLM. They land in a new thread, attached and ready to ask about."
+      "body": "Send photos, documents and links from any app straight to AnythingLLM as a new thread, attached and ready to ask about."
     },
     "scheduled_jobs": {
       "title": "Scheduled jobs",
-      "body": "Ask for a recurring task - a morning news digest, a weekly check-in - and it runs on schedule, even when the app is closed. Results wait for you with a notification."
+      "body": "Ask for a recurring task - a morning news digest, a weekly check-in - and it runs on schedule, even when the app is closed."
     }
   },
   "new_workspace": {

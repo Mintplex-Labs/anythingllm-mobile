@@ -505,6 +505,11 @@
     "pause_video": "Mettre en pause la vidéo",
     "whats_new": "Quoi de neuf",
     "tour_title": "Ce qu'AnythingLLM peut faire",
+    "device_assistant": {
+      "title": null,
+      "body": null,
+      "cta": null
+    },
     "quick_actions": {
       "title": "Demander à AnythingLLM n'importe où",
       "body": "Sélectionnez du texte dans n'importe quelle application et appuyez sur \"Demander à AnythingLLM\" pour l'affiner, le raccourcir, le résumer ou l'expliquer avec votre modèle. Désactivez-le à tout moment dans Paramètres > Outils spéciaux."

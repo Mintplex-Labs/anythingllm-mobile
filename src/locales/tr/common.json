@@ -491,6 +491,11 @@
     "pause_video": "Videoyu Duraklat",
     "whats_new": "Yeni Neler Var",
     "tour_title": "AnythingLLM'in neler yapabileceği",
+    "device_assistant": {
+      "title": null,
+      "body": null,
+      "cta": null
+    },
     "quick_actions": {
       "title": "Herhangi bir yerden AnythingLLM ile sor",
       "body": "Herhangi bir uygulamada metni seçin ve modelinizle cilalaması, kısaltması, özetlemesi veya açıklaması için \"AnythingLLM ile Sor\" tuşuna dokunun. Ayarlar > Özel araçlar'dan istediğiniz zaman kapatabilirsiniz."

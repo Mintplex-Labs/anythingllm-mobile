@@ -267,12 +267,8 @@
       "view": "表示"
     },
     "reminder_card": {
-      "kind_alarm": null,
-      "kind_timer": null,
-      "kind_calendar": null,
       "today": null,
       "tomorrow": null,
-      "timer_detail": null,
       "passed": null,
       "view": null,
       "open_label": null,

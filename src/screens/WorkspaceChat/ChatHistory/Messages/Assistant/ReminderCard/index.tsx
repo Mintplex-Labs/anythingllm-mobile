@@ -1,15 +1,15 @@
 import { memo } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { Alarm, CalendarCheck, CaretRight, Timer } from "phosphor-react-native";
+import { CalendarBlank, CaretRight, Clock } from "phosphor-react-native";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { type IAgentAction, type IReminderAction } from "@/database/models/WorkspaceChat";
-import { formatDuration, formatReminderWhen, openReminder } from "@/utils/reminders";
+import { formatReminderWhen, openReminder } from "@/utils/reminders";
 import { showToast } from "@/utils/Notification";
 
 /**
  * One card per reminder the user approved in this turn (persisted as a `reminder_set` action):
- * what it is for, when it fires and where it lives. Tapping opens the clock app's alarms or
+ * what it is for and when it fires. Until it goes off, tapping opens the clock app's alarms or
  * timers, or the event in the calendar app - where it can be changed or deleted, since we
  * cannot see what happens to it there.
  */
@@ -31,25 +31,39 @@ const COLORS = {
     iconChip: '#3F3F46',
     text: '#FFFFFF',
     muted: '#A1A1AA',
-    /** amber-300 */
-    accent: '#FCD34D',
+    /** Same blue as the other chat cards */
+    accent: '#84CAFF',
     /** zinc-500 - the reminder has gone off */
     spent: '#71717A',
-    link: '#84CAFF',
 } as const;
 
-const ICONS = { alarm: Alarm, timer: Timer, calendar: CalendarCheck } as const;
-
+/** Just the title and when it fires - whether the clock app holds it as an alarm or a timer does not matter to the user. */
 function ReminderCard({ action }: { action: IReminderAction }) {
     const { t } = useTranslation();
-    const { kind, label, fireAt, durationSeconds } = action.action;
-    const Icon = ICONS[kind] ?? Alarm;
+    const { kind, label, fireAt } = action.action;
+    const Icon = kind === 'calendar' ? CalendarBlank : Clock;
     const passed = fireAt <= Date.now();
-    const kindLabel = t(`chat.reminder_card.kind_${kind}`);
-    const detail = kind === 'timer' && durationSeconds
-        ? t('chat.reminder_card.timer_detail', { duration: formatDuration(durationSeconds), time: moment(fireAt).format('LT') })
-        : formatReminderWhen(fireAt);
+    const when = formatReminderWhen(fireAt);
     const status = passed ? t('chat.reminder_card.passed') : moment(fireAt).fromNow();
+
+    const content = (
+        <>
+            <View style={{ backgroundColor: COLORS.iconChip, width: 40, height: 40 }} className="flex items-center justify-center rounded-lg">
+                <Icon size={22} color={passed ? COLORS.spent : COLORS.accent} />
+            </View>
+            <View className="flex-1 flex flex-col" style={{ gap: 2 }}>
+                <Text numberOfLines={1} ellipsizeMode="tail" style={{ color: COLORS.text }} className="text-base font-medium">{label}</Text>
+                <Text numberOfLines={1} style={{ color: COLORS.muted }} className="text-sm">{when}</Text>
+                <Text numberOfLines={1} style={{ color: passed ? COLORS.spent : COLORS.accent }} className="text-xs font-medium">{status}</Text>
+            </View>
+        </>
+    );
+    const style = { backgroundColor: COLORS.card, borderRadius: 12, padding: 12, gap: 12, width: '100%' } as const;
+
+    // A reminder that has gone off has nothing left to open.
+    if (passed) {
+        return <View style={style} className="flex flex-row items-center">{content}</View>;
+    }
 
     const open = () => openReminder(action.action).catch(() => showToast(t(kind === 'calendar' ? 'chat.reminder_card.open_calendar_failed' : 'chat.reminder_card.open_clock_failed')));
     return (
@@ -57,20 +71,13 @@ function ReminderCard({ action }: { action: IReminderAction }) {
             onPress={open}
             activeOpacity={0.8}
             accessibilityRole="button"
-            accessibilityLabel={t('chat.reminder_card.open_label', { kind: kindLabel, label, when: detail })}
-            style={{ backgroundColor: COLORS.card, borderRadius: 12, padding: 12, gap: 12, width: '100%' }}
+            accessibilityLabel={t('chat.reminder_card.open_label', { label, when })}
+            style={style}
             className="flex flex-row items-center">
-            <View style={{ backgroundColor: COLORS.iconChip, width: 40, height: 40 }} className="flex items-center justify-center rounded-lg">
-                <Icon size={22} color={passed ? COLORS.spent : COLORS.accent} weight={passed ? 'regular' : 'fill'} />
-            </View>
-            <View className="flex-1 flex flex-col" style={{ gap: 2 }}>
-                <Text numberOfLines={2} style={{ color: COLORS.text }} className="text-base font-medium">{label}</Text>
-                <Text numberOfLines={1} style={{ color: COLORS.muted }} className="text-sm">{`${kindLabel} · ${detail}`}</Text>
-                <Text numberOfLines={1} style={{ color: passed ? COLORS.spent : COLORS.accent }} className="text-xs font-medium">{status}</Text>
-            </View>
+            {content}
             <View className="flex flex-row items-center" style={{ gap: 2 }}>
-                <Text style={{ color: COLORS.link }} className="text-sm font-medium">{t('chat.reminder_card.view')}</Text>
-                <CaretRight size={14} color={COLORS.link} />
+                <Text style={{ color: COLORS.accent }} className="text-sm font-medium">{t('chat.reminder_card.view')}</Text>
+                <CaretRight size={14} color={COLORS.accent} />
             </View>
         </TouchableOpacity>
     );

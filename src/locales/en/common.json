@@ -270,15 +270,11 @@
       "view": "View"
     },
     "reminder_card": {
-      "kind_alarm": "Alarm",
-      "kind_timer": "Timer",
-      "kind_calendar": "Calendar reminder",
       "today": "Today",
       "tomorrow": "Tomorrow",
-      "timer_detail": "{{duration}} · ends {{time}}",
       "passed": "Passed",
       "view": "View",
-      "open_label": "Open {{kind}} {{label}}, {{when}}",
+      "open_label": "Open {{label}}, {{when}}",
       "open_clock_failed": "Could not open the clock app",
       "open_calendar_failed": "Could not open the event in your calendar",
       "duration": {

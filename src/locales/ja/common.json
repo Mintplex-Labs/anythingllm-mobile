@@ -477,6 +477,10 @@
     "pause_video": "ビデオを一時停止",
     "whats_new": "新機能",
     "tour_title": "AnythingLLMができること",
+    "device_assistant": {
+      "title": null,
+      "body": null
+    },
     "quick_actions": {
       "title": "AnythingLLMで質問どこでも",
       "body": "任意のアプリでテキストを選択し、「AnythingLLMで質問」をタップして、モデルを使用して磨く、短くする、要約、または説明します。設定 > 特別なツールで常にオフにできます。"

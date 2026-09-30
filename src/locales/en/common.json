@@ -491,6 +491,10 @@
     "pause_video": "Pause video",
     "whats_new": "What's new",
     "tour_title": "What AnythingLLM can do",
+    "device_assistant": {
+      "title": "Your assistant, one gesture away",
+      "body": "Make AnythingLLM your phone's default assistant, then long-press home in any app to ask about what's on screen - typed or spoken. Set it up under Settings > Special tools > Device Assistant."
+    },
     "quick_actions": {
       "title": "Ask with AnythingLLM anywhere",
       "body": "Select text in any app and tap \"Ask with AnythingLLM\" to polish, shorten, summarize or explain it with your model. Turn it off any time under Settings > Special tools."

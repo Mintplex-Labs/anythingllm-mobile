@@ -477,6 +477,10 @@
     "pause_video": "Tạm dừng video",
     "whats_new": "Có gì mới",
     "tour_title": "AnythingLLM có thể làm gì",
+    "device_assistant": {
+      "title": null,
+      "body": null
+    },
     "quick_actions": {
       "title": "Hỏi với AnythingLLM ở bất cứ nơi nào",
       "body": "Chọn văn bản trong bất kỳ ứng dụng nào và nhấn \"Hỏi với AnythingLLM\" để đánh bóng, rút ngắn, tóm tắt hoặc giải thích nó bằng mô hình của bạn. Tắt nó bất cứ lúc nào trong Cài đặt > Công cụ đặc biệt."

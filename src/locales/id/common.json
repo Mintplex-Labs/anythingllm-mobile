@@ -477,6 +477,10 @@
     "pause_video": "Jeda video",
     "whats_new": "Apa yang baru",
     "tour_title": "Apa yang dapat dilakukan AnythingLLM",
+    "device_assistant": {
+      "title": null,
+      "body": null
+    },
     "quick_actions": {
       "title": "Tanya dengan AnythingLLM di mana saja",
       "body": "Pilih teks di aplikasi apa pun dan ketuk \"Tanya dengan AnythingLLM\" untuk menyempurnakan, memendekkan, merangkum, atau menjelaskannya dengan model Anda. Matikan kapan saja di Pengaturan > Alat Khusus."

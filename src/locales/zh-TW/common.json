@@ -477,6 +477,10 @@
     "pause_video": "暫停影片",
     "whats_new": "新增功能",
     "tour_title": "AnythingLLM 可以做什麼",
+    "device_assistant": {
+      "title": null,
+      "body": null
+    },
     "quick_actions": {
       "title": "在任何地方使用 AnythingLLM 提問",
       "body": "在任何應用程式中選取文字並點按「使用 AnythingLLM 提問」以使用您的模型潤飾、縮短、摘要或說明。隨時可以在 [設定] > [特殊工具] 中將其關閉。"

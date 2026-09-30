@@ -1,4 +1,5 @@
 import semver from 'semver';
+import { Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { tKey } from '@/i18n';
 
@@ -37,6 +38,8 @@ export type HighlightCard = {
   since: string;
   /** Part of the evergreen tour shown to fresh installs */
   tour?: boolean;
+  /** Only shown on these platforms, for platform-only features; all platforms when unset */
+  platforms?: (typeof Platform.OS)[];
   /** Translation key - resolved with t() when rendered */
   title: string;
   /** Translation key - resolved with t() when rendered */
@@ -60,6 +63,15 @@ const asset = (version: string, name: string) => `${HIGHLIGHTS_CDN_BASE}/${versi
 
 /** Group by version, newest release first, to keep the manifest readable; `cardsSince` sorts for display. */
 const HIGHLIGHTS: HighlightCard[] = [
+  {
+    id: 'device-assistant',
+    since: '1.3.1',
+    tour: true,
+    platforms: ['android'],
+    title: tKey('highlights.device_assistant.title'),
+    body: tKey('highlights.device_assistant.body'),
+    media: { type: 'video', src: asset('1.3.1', 'Assistant_invocation_alert.mp4'), poster: asset('1.3.1', 'Assistant_invocation_alert.jpg'), aspectRatio: PHONE_PORTRAIT },
+  },
   {
     id: 'quick-actions',
     since: '1.2.0',
@@ -92,6 +104,11 @@ function normalize(v: string | null | undefined): string | null {
   return semver.coerce(v)?.version ?? null;
 }
 
+/** Whether a card applies to this platform */
+function onPlatform(card: HighlightCard, platform: string = Platform.OS): boolean {
+  return !card.platforms || (card.platforms as string[]).includes(platform);
+}
+
 /** Ascending by `since`, manifest order within a version */
 function byVersion(a: HighlightCard, b: HighlightCard): number {
   const va = normalize(a.since);
@@ -111,6 +128,7 @@ export function cardsSince(lastSeen: string | null, current: string = DeviceInfo
   const lower = normalize(lastSeen);
   return HIGHLIGHTS
     .filter((card) => {
+      if (!onPlatform(card)) return false;
       const since = normalize(card.since);
       if (!since || semver.gt(since, upper)) return false;
       return lower ? semver.gt(since, lower) : true;
@@ -120,7 +138,7 @@ export function cardsSince(lastSeen: string | null, current: string = DeviceInfo
 
 /** The evergreen tour for fresh installs */
 export function tourCards(): HighlightCard[] {
-  return HIGHLIGHTS.filter((card) => card.tour);
+  return HIGHLIGHTS.filter((card) => card.tour && onPlatform(card));
 }
 
 /** Upgrade deck: everything since `lastSeen`, or null when there is nothing to show */

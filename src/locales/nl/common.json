@@ -491,6 +491,10 @@
     "pause_video": "Video onderbreken",
     "whats_new": "Wat is nieuw",
     "tour_title": "Wat AnythingLLM kan doen",
+    "device_assistant": {
+      "title": null,
+      "body": null
+    },
     "quick_actions": {
       "title": "Vragen aan AnythingLLM overal",
       "body": "Selecteer tekst in een app en tik op \"Vragen aan AnythingLLM\" om het met je model op te polijsten, in te korten, samen te vatten of uit te leggen. Zet het op elk moment uit onder Instellingen > Speciale hulpmiddelen."

@@ -505,6 +505,10 @@
     "pause_video": "Pausa video",
     "whats_new": "Cosa c'è di nuovo",
     "tour_title": "Cosa AnythingLLM può fare",
+    "device_assistant": {
+      "title": null,
+      "body": null
+    },
     "quick_actions": {
       "title": "Chiedi con AnythingLLM ovunque",
       "body": "Seleziona il testo in qualsiasi app e tocca \"Chiedi con AnythingLLM\" per lucidare, accorciare, riassumere o spiegare con il tuo modello. Puoi disattivarla in qualsiasi momento in Impostazioni > Strumenti speciali."

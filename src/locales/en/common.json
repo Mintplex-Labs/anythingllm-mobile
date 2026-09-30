@@ -493,7 +493,7 @@
     "tour_title": "What AnythingLLM can do",
     "device_assistant": {
       "title": "Replace Gemini with your own AI",
-      "body": "Make AnythingLLM your phone's assistant and open it from any app with the same gesture you use for Gemini. Ask about what's on screen, typed or spoken, answered by the model you picked.",
+      "body": "Make AnythingLLM your phone's assistant and open it from any app with the same gesture you use for Gemini. Ask about what's on screen - answered by the model you picked.",
       "cta": "Set up Device Assistant"
     },
     "quick_actions": {

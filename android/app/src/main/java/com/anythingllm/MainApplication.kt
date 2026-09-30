@@ -17,6 +17,7 @@ import com.anythingllm.pdfparser.PdfParserPackage
 import com.anythingllm.scheduledjobs.ScheduledJobsPackage
 import com.anythingllm.sharedcontent.SharedContentPackage
 import com.anythingllm.quickcontext.QuickContextPackage
+import com.anythingllm.assistant.AssistantPackage
 import com.anythingllm.messaging.MessagingPackage
 
 class MainApplication : Application(), ReactApplication {
@@ -36,6 +37,7 @@ class MainApplication : Application(), ReactApplication {
               add(ScheduledJobsPackage())
               add(SharedContentPackage())
               add(QuickContextPackage())
+              add(AssistantPackage())
               add(MessagingPackage())
             }
 

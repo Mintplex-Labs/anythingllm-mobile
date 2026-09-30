@@ -85,7 +85,27 @@
       "ask_with_anythingllm_toggle": "Hỏi với AnythingLLM",
       "android_only": "Chỉ Android",
       "description_available": "Thêm \"Hỏi với AnythingLLM\" vào menu xuất hiện khi bạn chọn văn bản trong bất kỳ ứng dụng nào. Sử dụng nó để hoàn thiện, rút ngắn hoặc sửa những gì bạn đang viết, hoặc để tóm tắt, giải thích và nghiên cứu những gì bạn đang đọc - với bất kỳ mô hình nào bạn đã chọn ở đây.",
-      "description_unavailable": "Trên Android, AnythingLLM có thể xuất hiện trong menu hiển thị khi bạn chọn văn bản trong bất kỳ ứng dụng nào, để chỉnh sửa hoặc tóm tắt nó bằng mô hình bạn chọn. iOS không cung cấp hook này cho các ứng dụng."
+      "description_unavailable": "Trên Android, AnythingLLM có thể xuất hiện trong menu hiển thị khi bạn chọn văn bản trong bất kỳ ứng dụng nào, để chỉnh sửa hoặc tóm tắt nó bằng mô hình bạn chọn. iOS không cung cấp hook này cho các ứng dụng.",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null
     },
     "about": {
       "release_notes": "Ghi chú phát hành cho v{{version}}",
@@ -386,6 +406,21 @@
       "summarize_new": "Hỏi bất cứ điều gì về văn bản này...",
       "summarize_started": "Hỏi thêm câu hỏi..."
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "Đang xử lý...",

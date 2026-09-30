@@ -22,4 +22,23 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
+    <!--
+      Assistant overlay (AssistantActivity): transparent like the Quick Context card, but fades in and out
+      instead of sliding like a dialog, so the color wash appears over the app in place.
+    -->
+    <style name="AssistantTheme" parent="QuickContextTheme">
+        <item name="android:windowAnimationStyle">@style/AssistantAnimation</item>
+    </style>
+
+    <style name="AssistantAnimation" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:activityOpenExitAnimation">@android:anim/fade_out</item>
+        <item name="android:activityCloseEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:activityCloseExitAnimation">@android:anim/fade_out</item>
+        <item name="android:taskOpenEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:taskOpenExitAnimation">@android:anim/fade_out</item>
+        <item name="android:taskCloseEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:taskCloseExitAnimation">@android:anim/fade_out</item>
+    </style>
+
 </resources>

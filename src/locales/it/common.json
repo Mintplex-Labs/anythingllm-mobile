@@ -85,7 +85,27 @@
       "ask_with_anythingllm_toggle": "Chiedi con AnythingLLM",
       "android_only": "Solo Android",
       "description_available": "Aggiunge \"Chiedi con AnythingLLM\" al menu che appare quando selezioni il testo in qualsiasi app. Usalo per perfezionare, accorciare o correggere ciò che stai scrivendo, oppure per riassumere, spiegare e ricercare ciò che stai leggendo - con il modello che hai scelto qui.",
-      "description_unavailable": "Su Android, AnythingLLM può apparire nel menu che si mostra quando selezioni il testo in qualsiasi app, per modificarlo o riassumerlo con il tuo modello scelto. iOS non offre alle app questo gancio."
+      "description_unavailable": "Su Android, AnythingLLM può apparire nel menu che si mostra quando selezioni il testo in qualsiasi app, per modificarlo o riassumerlo con il tuo modello scelto. iOS non offre alle app questo gancio.",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null
     },
     "about": {
       "release_notes": "Note di rilascio per v{{version}}",
@@ -406,6 +426,21 @@
       "summarize_new": "Chiedi qualcosa di questo testo...",
       "summarize_started": "Fai altre domande..."
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "Elaborazione in corso...",

@@ -5,6 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { MainView } from './Main';
 import AdvancedModelPreferences from './AdvancedModelPreferences';
 import SpecialTools from './SpecialTools';
+import AssistantSettings from './Assistant';
 import AnonymousTelemetry from './AnonymousTelemetry';
 import LanguageSettings from './Language';
 
@@ -14,6 +15,7 @@ const PAGES = {
     <AdvancedModelPreferences {...props} />
   ),
   special_tools: (props: any) => <SpecialTools {...props} />,
+  assistant: (props: any) => <AssistantSettings {...props} />,
   anonymous_telemetry: (props: any) => <AnonymousTelemetry {...props} />,
   language: (props: any) => <LanguageSettings {...props} />,
 };

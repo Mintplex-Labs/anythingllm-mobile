@@ -55,18 +55,34 @@ export function isPersistentMode(mode: QuickMode): boolean {
     return mode === 'summarize';
 }
 
+/** What an ephemeral session's workspace is called and told - the assistant overlay brings its own. */
+export type EphemeralSessionOptions = {
+    name: string;
+    slug: string;
+    systemPrompt: string;
+    /** Start of the throwaway thread slug, followed by a UUID */
+    threadSlugPrefix: string;
+};
+
+const QUICK_CONTEXT_EPHEMERAL: EphemeralSessionOptions = {
+    name: QUICK_CONTEXTS_WORKSPACE.name,
+    slug: QUICK_CONTEXTS_WORKSPACE.slug,
+    systemPrompt: QUICK_CONTEXT_SYSTEM_PROMPT,
+    threadSlugPrefix: 'quick-action',
+};
+
 /**
  * An Edit session: plain objects, not database rows. The workspace carries the settings the
  * providers read (system prompt, temperature, context length); the thread slug is unique so
  * per-thread provider state can never collide with a real thread.
  */
-export function createEphemeralSession(): QuickContextSession {
+export function createEphemeralSession(options: EphemeralSessionOptions = QUICK_CONTEXT_EPHEMERAL): QuickContextSession {
     const unreachable = async () => false;
     const workspace: WorkspaceType = {
-        name: QUICK_CONTEXTS_WORKSPACE.name,
-        slug: QUICK_CONTEXTS_WORKSPACE.slug,
+        name: options.name,
+        slug: options.slug,
         createdAt: Date.now(),
-        systemPrompt: QUICK_CONTEXT_SYSTEM_PROMPT,
+        systemPrompt: options.systemPrompt,
         temperature: Workspace.defaultTemperature,
         contextLength: Workspace.defaultContextLength,
         maxToolCalls: null,
@@ -77,9 +93,9 @@ export function createEphemeralSession(): QuickContextSession {
     };
     const thread: WorkspaceThreadType = {
         // Not the default thread name, so the chat handler's auto-rename never considers it.
-        name: QUICK_CONTEXTS_WORKSPACE.name,
+        name: options.name,
         workspaceSlug: workspace.slug,
-        slug: `quick-action-${generateUUID()}`,
+        slug: `${options.threadSlugPrefix}-${generateUUID()}`,
         createdAt: Date.now(),
         isRemote: false,
         remoteConfig: null as unknown as WorkspaceThreadType['remoteConfig'],

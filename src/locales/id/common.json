@@ -85,7 +85,27 @@
       "ask_with_anythingllm_toggle": "Tanya dengan AnythingLLM",
       "android_only": "Hanya Android",
       "description_available": "Menambahkan \"Tanya dengan AnythingLLM\" ke menu yang muncul saat Anda memilih teks di aplikasi apa pun. Gunakan untuk menyempurnakan, memendekkan, atau memperbaiki apa yang Anda tulis, atau untuk merangkum, menjelaskan, dan meneliti apa yang Anda baca - dengan model apa pun yang Anda pilih di sini.",
-      "description_unavailable": "Di Android, AnythingLLM dapat muncul di menu yang ditampilkan saat Anda memilih teks di aplikasi apa pun, untuk mengedit atau merangkumnya dengan model pilihan Anda. iOS tidak menawarkan aplikasi hook ini."
+      "description_unavailable": "Di Android, AnythingLLM dapat muncul di menu yang ditampilkan saat Anda memilih teks di aplikasi apa pun, untuk mengedit atau merangkumnya dengan model pilihan Anda. iOS tidak menawarkan aplikasi hook ini.",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null
     },
     "about": {
       "release_notes": "Catatan rilis untuk v{{version}}",
@@ -386,6 +406,21 @@
       "summarize_new": "Tanyakan apa pun tentang teks ini…",
       "summarize_started": "Tanyakan lebih banyak pertanyaan…"
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "Memproses…",

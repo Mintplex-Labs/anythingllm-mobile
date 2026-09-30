@@ -85,7 +85,27 @@
       "ask_with_anythingllm_toggle": "使用 AnythingLLM 询问",
       "android_only": "仅 Android",
       "description_available": "在任何应用程序中选择文本时，将\"使用 AnythingLLM 询问\"添加到显示的菜单中。使用它来完善、缩短或修复您正在写的内容，或者用您选择的模型来总结、解释和研究您正在读的内容。",
-      "description_unavailable": "在 Android 上，当您在任何应用程序中选择文本时，AnythingLLM 可以出现在显示的菜单中，以使用您选择的模型编辑或总结它。iOS 不为应用程序提供此钩子。"
+      "description_unavailable": "在 Android 上，当您在任何应用程序中选择文本时，AnythingLLM 可以出现在显示的菜单中，以使用您选择的模型编辑或总结它。iOS 不为应用程序提供此钩子。",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null
     },
     "about": {
       "release_notes": "v{{version}} 的发布说明",
@@ -386,6 +406,21 @@
       "summarize_new": "提出任何有关此文本的问题…",
       "summarize_started": "提出更多问题…"
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "处理中…",

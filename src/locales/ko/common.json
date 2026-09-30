@@ -85,7 +85,27 @@
       "ask_with_anythingllm_toggle": "AnythingLLM으로 묻기",
       "android_only": "Android만 지원",
       "description_available": "모든 앱에서 텍스트를 선택할 때 나타나는 메뉴에 \"AnythingLLM으로 묻기\"를 추가합니다. 이를 사용하여 작성 중인 내용을 다듬거나 단축하거나 수정하거나, 읽고 있는 내용을 요약하거나 설명하거나 조사할 수 있습니다 - 선택한 모델을 사용하여.",
-      "description_unavailable": "Android에서는 AnythingLLM이 모든 앱에서 텍스트를 선택할 때 나타나는 메뉴에 표시되어 선택한 모델로 편집하거나 요약할 수 있습니다. iOS는 앱에 이 후크를 제공하지 않습니다."
+      "description_unavailable": "Android에서는 AnythingLLM이 모든 앱에서 텍스트를 선택할 때 나타나는 메뉴에 표시되어 선택한 모델로 편집하거나 요약할 수 있습니다. iOS는 앱에 이 후크를 제공하지 않습니다.",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null
     },
     "about": {
       "release_notes": "v{{version}} 릴리스 노트",
@@ -386,6 +406,21 @@
       "summarize_new": "이 텍스트에 대해 무엇이든 물어보세요…",
       "summarize_started": "더 많은 질문을 해보세요…"
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "처리 중…",

@@ -85,7 +85,27 @@
       "ask_with_anythingllm_toggle": "AnythingLLM के साथ पूछें",
       "android_only": "केवल Android के लिए",
       "description_available": "आपके द्वारा किसी भी ऐप में टेक्स्ट का चयन करते समय दिखाई देने वाले मेनू में AnythingLLM के साथ पूछें जोड़ता है। इसे आपके द्वारा यहां चुने गए किसी भी मॉडल के साथ जो आप लिख रहे हैं उसे पॉलिश करने, छोटा करने या ठीक करने के लिए, या जो आप पढ़ रहे हैं उसे सारांशित करने, समझाने और शोध करने के लिए उपयोग करें।",
-      "description_unavailable": "Android पर, AnythingLLM किसी भी ऐप में टेक्स्ट का चयन करते समय दिखाई देने वाले मेनू में दिखाई दे सकता है, इसे आपके चुने हुए मॉडल के साथ संपादित या सारांशित करने के लिए। iOS एप्लिकेशन को यह सुविधा नहीं प्रदान करता है।"
+      "description_unavailable": "Android पर, AnythingLLM किसी भी ऐप में टेक्स्ट का चयन करते समय दिखाई देने वाले मेनू में दिखाई दे सकता है, इसे आपके चुने हुए मॉडल के साथ संपादित या सारांशित करने के लिए। iOS एप्लिकेशन को यह सुविधा नहीं प्रदान करता है।",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null
     },
     "about": {
       "release_notes": "v{{version}} के लिए रिलीज़ नोट्स",
@@ -396,6 +416,21 @@
       "summarize_new": "इस टेक्स्ट के बारे में कुछ भी पूछें…",
       "summarize_started": "अधिक प्रश्न पूछें…"
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "प्रसंस्करण…",

@@ -50,6 +50,10 @@ class Telemetry {
             QUICK_CONTEXT_USED: 'quick_context_used',
             /** The selection-toolbar entry was switched on or off in Settings > Special tools (payload: enabled) */
             QUICK_CONTEXT_TOGGLED: 'quick_context_toggled',
+            /** A prompt was sent from the digital assistant overlay (payload: screenshot, voice) */
+            ASSISTANT_USED: 'assistant_used',
+            /** An assistant behavior was switched in Settings > Assistant (payload: preference, enabled) */
+            ASSISTANT_PREFERENCE_TOGGLED: 'assistant_preference_toggled',
             TOOL_CALLED: 'tool_called',
             /** The user switched a tool on from the tools sheet (payload: tool, provider) - disabling and suggestion-chip toggles are not tracked */
             TOOL_ENABLED: 'tool_enabled',

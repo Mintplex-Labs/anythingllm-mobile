@@ -69,7 +69,7 @@ export const IMAGE_MAX_DIMENSION = {
     external: 1024,
 } as const;
 /** JPEG quality applied by the picker after scaling (0-1). */
-const IMAGE_QUALITY = 0.8;
+export const IMAGE_QUALITY = 0.8;
 
 export type ImageSource = 'gallery' | 'camera';
 

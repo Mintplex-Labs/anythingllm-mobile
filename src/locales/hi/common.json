@@ -269,6 +269,23 @@
       "subtitle": "निर्धारित नौकरी · {{schedule}}",
       "view": "देखें"
     },
+    "reminder_card": {
+      "today": null,
+      "tomorrow": null,
+      "passed": null,
+      "view": null,
+      "open_label": null,
+      "open_clock_failed": null,
+      "open_calendar_failed": null,
+      "duration": {
+        "hours_one": null,
+        "hours_other": null,
+        "minutes_one": null,
+        "minutes_other": null,
+        "seconds_one": null,
+        "seconds_other": null
+      }
+    },
     "draft": {
       "open": "खोलें",
       "send_with": "भेजें",
@@ -643,6 +660,19 @@
       "approval_no_tools_notify": "निर्धारित नौकरी \"{{name}}\" बनाएँ? यह {{when}} कोई उपकरण के बिना चलेगी और यह समाप्त होने पर आपको सूचित करेगी।",
       "status_not_approved": "निर्धारित नौकरी को मंजूरी नहीं दी गई",
       "status_scheduled": "\"{{name}}\" को अनुसूचित किया गया"
+    },
+    "set_reminder": {
+      "name": null,
+      "description": null,
+      "default_label": null,
+      "calendar_notes": null,
+      "status_asking": null,
+      "approval_alarm": null,
+      "approval_timer": null,
+      "approval_calendar": null,
+      "status_not_approved": null,
+      "status_expired": null,
+      "status_set": null
     },
     "draft_email": {
       "name": "ईमेल का मसौदा",

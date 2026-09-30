@@ -8,6 +8,7 @@ import CitationsContainer from "./Citations";
 import ActionsContainer from "./Actions";
 import FileDownloadCards from "./FileDownloadCard";
 import ScheduledJobCreatedCards from "./ScheduledJobCreatedCard";
+import ReminderCards from "./ReminderCard";
 import { CalendarEventCards, EmailDraftCards, TextDraftCards } from "./DraftCards";
 import TextResponseContainer from "./TextResponse";
 import ToolApprovalRequest from "./ToolApprovalRequest";
@@ -47,6 +48,7 @@ export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessa
             )}
             <FileDownloadCards actions={response?.actions} isLoading={chat.isLoading} />
             <ScheduledJobCreatedCards actions={response?.actions} isLoading={chat.isLoading} />
+            <ReminderCards actions={response?.actions} isLoading={chat.isLoading} />
             <TextDraftCards actions={response?.actions} isLoading={chat.isLoading} />
             <EmailDraftCards actions={response?.actions} isLoading={chat.isLoading} />
             <CalendarEventCards actions={response?.actions} isLoading={chat.isLoading} />

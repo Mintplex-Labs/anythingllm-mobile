@@ -217,6 +217,26 @@ export type IScheduledJobCreatedAction = {
   }
 }
 
+/**
+ * A reminder the user approved in chat (see the set-reminder tool). Within a day it was handed to
+ * the clock app as an alarm or timer; further out it was added to their calendar as an event with
+ * an alert. Rendered as a card in the chat history - we cannot tell if it was later changed or
+ * deleted in the clock or calendar app.
+ */
+export type IReminderAction = {
+  type: 'reminder_set';
+  action: {
+    kind: 'alarm' | 'timer' | 'calendar';
+    label: string;
+    /** Epoch millis it fires at */
+    fireAt: number;
+    /** Timers only: the countdown length */
+    durationSeconds: number | null;
+    /** Calendar only: the event id, to open it */
+    eventId: string | null;
+  }
+}
+
 export type IAgentCitation = IAgentWebSearchCitation | IAgentCalendarEventCitation;
 export type IChatCitation = IDocumentCitation | IAgentCitation;
 /**
@@ -236,7 +256,7 @@ export type IEmailDraftAction = {
   }
 }
 
-export type IAgentAction = IEmailAction | IEmailDraftAction | ITextAction | ITextDraftAction |ICalendarEventAction | IFileDownloadAction | IScheduledJobCreatedAction;
+export type IAgentAction = IEmailAction | IEmailDraftAction | ITextAction | ITextDraftAction |ICalendarEventAction | IFileDownloadAction | IScheduledJobCreatedAction | IReminderAction;
 export type WorkspaceChatResponseType = {
   textResponse: string;
   thoughts: string[];

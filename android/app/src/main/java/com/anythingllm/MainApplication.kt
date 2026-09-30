@@ -19,6 +19,7 @@ import com.anythingllm.sharedcontent.SharedContentPackage
 import com.anythingllm.quickcontext.QuickContextPackage
 import com.anythingllm.assistant.AssistantPackage
 import com.anythingllm.messaging.MessagingPackage
+import com.anythingllm.alarms.AlarmPackage
 
 class MainApplication : Application(), ReactApplication {
 
@@ -39,6 +40,7 @@ class MainApplication : Application(), ReactApplication {
               add(QuickContextPackage())
               add(AssistantPackage())
               add(MessagingPackage())
+              add(AlarmPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

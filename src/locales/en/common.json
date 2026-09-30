@@ -269,6 +269,23 @@
       "subtitle": "Scheduled job · {{schedule}}",
       "view": "View"
     },
+    "reminder_card": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "passed": "Passed",
+      "view": "View",
+      "open_label": "Open {{label}}, {{when}}",
+      "open_clock_failed": "Could not open the clock app",
+      "open_calendar_failed": "Could not open the event in your calendar",
+      "duration": {
+        "hours_one": "{{count}} hour",
+        "hours_other": "{{count}} hours",
+        "minutes_one": "{{count}} minute",
+        "minutes_other": "{{count}} minutes",
+        "seconds_one": "{{count}} second",
+        "seconds_other": "{{count}} seconds"
+      }
+    },
     "draft": {
       "open": "Open",
       "send_with": "Send with",
@@ -643,6 +660,19 @@
       "approval_no_tools_notify": "Create the scheduled job \"{{name}}\"? It will run {{when}} with no tools and notify you when it finishes.",
       "status_not_approved": "Scheduled job was not approved",
       "status_scheduled": "Scheduled \"{{name}}\""
+    },
+    "set_reminder": {
+      "name": "Alarms & Reminders",
+      "description": "Set alarms and timers in your clock app, after you approve them. Reminders more than a day away are added to your calendar.",
+      "default_label": "Reminder",
+      "calendar_notes": "Reminder set from AnythingLLM",
+      "status_asking": "Asking to set reminder \"{{label}}\"",
+      "approval_alarm": "Set an alarm \"{{label}}\" for {{when}}?",
+      "approval_timer": "Start a {{duration}} timer \"{{label}}\"? It ends {{when}}.",
+      "approval_calendar": "Add \"{{label}}\" to your calendar for {{when}} with an alert? It is more than a day away, so it cannot be set in the clock app.",
+      "status_not_approved": "Reminder was not approved",
+      "status_expired": "Reminder time passed before it was approved",
+      "status_set": "Set reminder \"{{label}}\""
     },
     "draft_email": {
       "name": "Draft Email",

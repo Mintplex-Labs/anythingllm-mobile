@@ -266,6 +266,24 @@
       "subtitle": "예약된 작업 · {{schedule}}",
       "view": "보기"
     },
+    "reminder_card": {
+      "kind_alarm": null,
+      "kind_timer": null,
+      "kind_calendar": null,
+      "today": null,
+      "tomorrow": null,
+      "timer_detail": null,
+      "passed": null,
+      "view": null,
+      "open_label": null,
+      "open_clock_failed": null,
+      "open_calendar_failed": null,
+      "duration": {
+        "hours_other": null,
+        "minutes_other": null,
+        "seconds_other": null
+      }
+    },
     "draft": {
       "open": "열기",
       "send_with": "보내기",
@@ -618,6 +636,19 @@
       "approval_no_tools_notify": "예약된 작업 \"{{name}}\"을(를) 만드시겠습니까? 도구 없이 {{when}}에 실행되고 완료 시 알려줍니다.",
       "status_not_approved": "예약된 작업이 승인되지 않음",
       "status_scheduled": "\"{{name}}\" 예약됨"
+    },
+    "set_reminder": {
+      "name": null,
+      "description": null,
+      "default_label": null,
+      "calendar_notes": null,
+      "status_asking": null,
+      "approval_alarm": null,
+      "approval_timer": null,
+      "approval_calendar": null,
+      "status_not_approved": null,
+      "status_expired": null,
+      "status_set": null
     },
     "draft_email": {
       "name": "이메일 초안",

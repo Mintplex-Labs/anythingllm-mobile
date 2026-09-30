@@ -9,6 +9,7 @@ import calendarEventReading from './calendarEventReading';
 import summarize from './summarize';
 import createFiles from './createFiles';
 import createScheduledJob from './createScheduledJob';
+import setReminder from './setReminder';
 
 export default {
     default: {
@@ -25,5 +26,6 @@ export default {
         draftText,
         calendarEventCreation,
         calendarEventReading,
+        setReminder,
     }
 } as const;

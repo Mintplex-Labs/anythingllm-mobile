@@ -79,6 +79,8 @@ class Telemetry {
             /** A scheduled job was created (payload: tools count, notify) */
             SCHEDULED_JOB_CREATED: 'scheduled_job_created',
             SCHEDULED_JOB_RAN: 'scheduled_job_ran',
+            /** The user approved a reminder from chat (payload: kind alarm|timer|calendar) */
+            REMINDER_SET: 'reminder_set',
             /** The feature highlights carousel was dismissed (payload: audience new_user|upgrade, cards) */
             HIGHLIGHTS_VIEWED: 'highlights_viewed',
 

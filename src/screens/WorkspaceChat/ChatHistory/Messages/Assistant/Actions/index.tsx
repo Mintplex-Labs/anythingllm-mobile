@@ -3,7 +3,7 @@ import { memo } from "react";
 import { IAgentAction } from "@/database/models/WorkspaceChat";
 
 /** Action types that render as their own full-width card instead of a chip (`sms` / `email` are the old text and email drafts) */
-export const CARD_ACTION_TYPES: string[] = ['file_download', 'scheduled_job_created', 'text_draft', 'sms', 'email_draft', 'email', 'calendar_event_creation'];
+export const CARD_ACTION_TYPES: string[] = ['file_download', 'scheduled_job_created', 'text_draft', 'sms', 'email_draft', 'email', 'calendar_event_creation', 'reminder_set'];
 
 /** Link-style chips for actions that open another app. Generated files, created jobs, drafts and calendar events render as their own cards instead. */
 export default memo(function ActionsContainer({ actions: allActions = [] }: { actions?: IAgentAction[] }) {

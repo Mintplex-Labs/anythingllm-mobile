@@ -105,7 +105,15 @@
       "auto_listen": "Start listening",
       "auto_listen_description": "The microphone turns on right away so you can just start talking. Your words appear in the prompt as you speak.",
       "auto_screenshot": "Attach screenshot",
-      "auto_screenshot_description": "Attach a screenshot of the app you were using to your first message. Needs a model that can see images, and \"Use screenshot\" turned on in the Android digital assistant settings."
+      "auto_screenshot_description": "Attach a screenshot of the app you were using to your first message. Needs a model that can see images, and \"Use screenshot\" turned on in the Android digital assistant settings.",
+      "theme_title": "Theme",
+      "theme_description": "The animated background behind the assistant while it is open.",
+      "themes": {
+        "rainbow": "Rainbow",
+        "halftone": "Halftone",
+        "terrain": "Terrain",
+        "painterly": "Painterly"
+      }
     },
     "about": {
       "release_notes": "Release notes for v{{version}}",

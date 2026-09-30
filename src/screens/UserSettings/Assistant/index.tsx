@@ -8,15 +8,29 @@ import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';
 import { showToast } from '@/utils/Notification';
 import Telemetry from '@/utils/Telemetry';
 import {
+  DEFAULT_ASSISTANT_THEME,
   getAssistantPreferences,
+  getAssistantTheme,
+  getAvailableAssistantThemes,
   isAssistantAvailable,
   isDefaultAssistant,
   openAssistantSettings,
   setAssistantPreference,
+  setAssistantTheme,
   type AssistantPreferences,
+  type AssistantThemeId,
 } from '@/assistant';
+import { tKey } from '@/i18n';
 import { IWorkspacePageKey } from '../index';
 import { useTranslation } from 'react-i18next';
+
+/** How each background theme is labelled and hinted at in the picker (the themes themselves are native). */
+const THEME_OPTIONS: Record<AssistantThemeId, { label: string; swatch: string[] }> = {
+  rainbow: { label: tKey('settings.assistant.themes.rainbow'), swatch: ['#4285F4', '#EA4335', '#FBBC04', '#34A853'] },
+  halftone: { label: tKey('settings.assistant.themes.halftone'), swatch: ['#2C2C2E', '#636366', '#AEAEB2', '#E5E5EA'] },
+  terrain: { label: tKey('settings.assistant.themes.terrain'), swatch: ['#1C1C1E', '#48484A', '#8E8E93', '#FFFFFF'] },
+  painterly: { label: tKey('settings.assistant.themes.painterly'), swatch: ['#5B7A8C', '#2F6BC6', '#B8C7D1', '#EEF2F5'] },
+};
 
 interface AssistantSettingsProps {
   goToPage: (page: IWorkspacePageKey) => void;
@@ -133,6 +147,7 @@ export default function AssistantSettings({ goToPage }: AssistantSettingsProps) 
         </View>
 
         {available && isDefault && <AssistantBehavior />}
+        {available && isDefault && <AssistantThemePicker />}
       </ScrollView>
     </SafeView>
   );
@@ -180,6 +195,67 @@ function AssistantBehavior() {
           onToggle={() => toggle('autoScreenshot')}
         />
       </View>
+    </View>
+  );
+}
+
+/** The animated background behind the overlay. Saved natively; applies from the next invocation (or right away). */
+function AssistantThemePicker() {
+  const { t } = useTranslation();
+  const [theme, setTheme] = useState<AssistantThemeId | null>(null);
+  const [themes, setThemes] = useState<AssistantThemeId[]>([DEFAULT_ASSISTANT_THEME]);
+
+  useEffect(() => {
+    getAssistantTheme().then(setTheme).catch(() => setTheme(DEFAULT_ASSISTANT_THEME));
+    getAvailableAssistantThemes().then(setThemes).catch(() => null);
+  }, []);
+
+  async function pick(next: AssistantThemeId) {
+    if (next === theme) return;
+    const previous = theme;
+    setTheme(next);
+    try {
+      setTheme(await setAssistantTheme(next));
+      Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.ASSISTANT_THEME_CHANGED, { theme: next });
+    } catch (e) {
+      console.error('[AssistantSettings] could not save theme', e);
+      setTheme(previous);
+      showToast(t('settings.update_failed'));
+    }
+  }
+
+  return (
+    <View className="w-full flex flex-col" style={{ gap: 12 }}>
+      <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">{t('settings.assistant.theme_title')}</Text>
+      {/* Two per row */}
+      <View className="flex flex-row flex-wrap" style={{ rowGap: 8, justifyContent: 'space-between' }}>
+        {themes.map((id) => {
+          const option = THEME_OPTIONS[id];
+          const selected = id === theme;
+          return (
+            <TouchableOpacity
+              key={id}
+              onPress={() => pick(id)}
+              activeOpacity={0.7}
+              accessibilityRole="radio"
+              accessibilityState={{ checked: selected }}
+              className="flex flex-col items-center rounded-lg"
+              // The border is always there (transparent when unselected) so selecting never shifts the layout.
+              style={{ width: '49%', backgroundColor: '#1B1B1E', paddingVertical: 14, gap: 10, borderWidth: 1.5, borderColor: selected ? '#FFF' : 'transparent' }}>
+              <View className="flex flex-row">
+                {option.swatch.map((color, index) => (
+                  <View
+                    key={color + index}
+                    style={{ width: 18, height: 18, borderRadius: 9, backgroundColor: color, marginLeft: index === 0 ? 0 : -6, borderWidth: 1.5, borderColor: '#1B1B1E' }}
+                  />
+                ))}
+              </View>
+              <Text className="text-white text-sm">{t(option.label)}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+      <Text style={{ color: '#9F9FA0' }} className="text-sm">{t('settings.assistant.theme_description')}</Text>
     </View>
   );
 }

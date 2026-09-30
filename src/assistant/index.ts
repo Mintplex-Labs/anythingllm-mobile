@@ -51,8 +51,23 @@ const PREFERENCE_KEYS = {
 export type ScreenshotUnavailableReason = 'disabled' | 'blocked' | 'timeout' | 'none';
 export type InvocationScreenshot = { uri: string; reason?: undefined } | { uri: null; reason: ScreenshotUnavailableReason };
 
-/** The color wash's look - see AssistantGlowView.kt. */
+/** The background's state - see AssistantGlowView.kt. */
 export type GlowState = 'idle' | 'listening' | 'thinking' | 'hidden';
+
+/**
+ * Background themes for the overlay, drawn natively (android/.../assistant/themes - keep the ids in
+ * sync with AssistantThemes.kt). The choice is stored natively so the overlay opens with it straight
+ * away; an unknown value anywhere falls back to the default.
+ */
+export const ASSISTANT_THEMES = ['rainbow', 'halftone', 'terrain', 'painterly'] as const;
+export type AssistantThemeId = (typeof ASSISTANT_THEMES)[number];
+export const DEFAULT_ASSISTANT_THEME: AssistantThemeId = 'rainbow';
+
+export function resolveAssistantTheme(value: unknown): AssistantThemeId {
+    return typeof value === 'string' && (ASSISTANT_THEMES as readonly string[]).includes(value)
+        ? (value as AssistantThemeId)
+        : DEFAULT_ASSISTANT_THEME;
+}
 
 const { AssistantModule } = NativeModules;
 
@@ -92,6 +107,25 @@ export async function setAssistantPreference(preference: keyof AssistantPreferen
 export async function getInvocationScreenshot(): Promise<InvocationScreenshot> {
     if (!isAssistantAvailable()) return { uri: null, reason: 'none' };
     return AssistantModule.getScreenshot();
+}
+
+/** The themes this device can draw - the textured ones need Android 13 - in picker order. */
+export async function getAvailableAssistantThemes(): Promise<AssistantThemeId[]> {
+    if (!isAssistantAvailable()) return [DEFAULT_ASSISTANT_THEME];
+    const ids: unknown = await AssistantModule.getAvailableThemes().catch(() => null);
+    const known = Array.isArray(ids) ? ASSISTANT_THEMES.filter((id) => ids.includes(id)) : [];
+    return known.length > 0 ? known : [DEFAULT_ASSISTANT_THEME];
+}
+
+export async function getAssistantTheme(): Promise<AssistantThemeId> {
+    if (!isAssistantAvailable()) return DEFAULT_ASSISTANT_THEME;
+    return resolveAssistantTheme(await AssistantModule.getTheme().catch(() => null));
+}
+
+/** Save the theme (applied to an open overlay too); resolves to the theme actually saved. */
+export async function setAssistantTheme(theme: AssistantThemeId): Promise<AssistantThemeId> {
+    if (!isAssistantAvailable()) return DEFAULT_ASSISTANT_THEME;
+    return resolveAssistantTheme(await AssistantModule.setTheme(resolveAssistantTheme(theme)));
 }
 
 export function setGlowState(state: GlowState): void {

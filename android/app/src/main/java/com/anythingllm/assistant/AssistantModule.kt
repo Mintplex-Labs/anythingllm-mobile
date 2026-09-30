@@ -9,6 +9,7 @@ import android.os.Build
 import android.provider.Settings
 import android.service.voice.VoiceInteractionService
 import com.anythingllm.MainActivity
+import com.anythingllm.assistant.themes.AssistantThemes
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -82,6 +83,33 @@ class AssistantModule(private val reactContext: ReactApplicationContext) : React
                 map.putString("reason", result.reason)
             }
             promise.resolve(map)
+        }
+    }
+
+    /** The theme ids this device can draw (shader themes need Android 13), in picker order. */
+    @ReactMethod
+    fun getAvailableThemes(promise: Promise) {
+        promise.resolve(Arguments.fromList(AssistantThemes.available()))
+    }
+
+    /** The background theme the overlay uses - always a known id (see AssistantThemes). */
+    @ReactMethod
+    fun getTheme(promise: Promise) {
+        promise.resolve(AssistantThemes.stored(reactContext))
+    }
+
+    /**
+     * Save the background theme and apply it to an overlay that is open right now. An unknown id saves
+     * the default instead; resolves to the id actually saved.
+     */
+    @ReactMethod
+    fun setTheme(id: String?, promise: Promise) {
+        try {
+            val saved = AssistantThemes.store(reactContext, id)
+            overlay()?.let { activity -> activity.runOnUiThread { activity.glow?.setTheme(saved) } }
+            promise.resolve(saved)
+        } catch (e: Exception) {
+            promise.reject("ASSISTANT_THEME_FAILED", e)
         }
     }
 

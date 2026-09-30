@@ -105,7 +105,15 @@
       "auto_listen": null,
       "auto_listen_description": null,
       "auto_screenshot": null,
-      "auto_screenshot_description": null
+      "auto_screenshot_description": null,
+      "theme_title": null,
+      "theme_description": null,
+      "themes": {
+        "rainbow": null,
+        "halftone": null,
+        "terrain": null,
+        "painterly": null
+      }
     },
     "about": {
       "release_notes": "v{{version}} के लिए रिलीज़ नोट्स",

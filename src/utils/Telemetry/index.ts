@@ -54,6 +54,8 @@ class Telemetry {
             ASSISTANT_USED: 'assistant_used',
             /** An assistant behavior was switched in Settings > Assistant (payload: preference, enabled) */
             ASSISTANT_PREFERENCE_TOGGLED: 'assistant_preference_toggled',
+            /** A background theme was picked in Settings > Assistant (payload: theme) */
+            ASSISTANT_THEME_CHANGED: 'assistant_theme_changed',
             TOOL_CALLED: 'tool_called',
             /** The user switched a tool on from the tools sheet (payload: tool, provider) - disabling and suggestion-chip toggles are not tracked */
             TOOL_ENABLED: 'tool_enabled',

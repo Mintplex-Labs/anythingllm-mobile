@@ -1,6 +1,6 @@
 import { NativeModules, Platform } from 'react-native';
 import uiStore from '@/store/UIStore';
-import { createEphemeralSession, type QuickContextSession } from '@/quickContext';
+import { createPersistentSession, discardEmptyQuickContextThread, type FeatureWorkspace, type QuickContextSession } from '@/quickContext';
 
 /**
  * Assistant: AnythingLLM as the device's default assistant app, in the slot Gemini holds out
@@ -10,20 +10,23 @@ import { createEphemeralSession, type QuickContextSession } from '@/quickContext
  * Circle to Search's. The overlay can attach a screenshot of that app to the prompt (vision models only)
  * and takes typed or dictated prompts, answered by the model selected in the app.
  *
- * Conversations are ephemeral - the same in-memory workspace and thread as Quick Actions' Edit mode -
- * and every invocation starts a new one. The overlay runs in the main app's JS runtime.
+ * Every invocation starts a new conversation, saved as a thread in the "Device Assistant Chats"
+ * workspace (found or created on first use) so it can be picked up in the app later; a thread nothing
+ * was sent in is dropped again when the overlay closes. The overlay runs in the main app's JS runtime.
  */
-
-export const ASSISTANT_WORKSPACE = {
-    name: 'Assistant',
-    slug: 'assistant',
-} as const;
 
 export const ASSISTANT_SYSTEM_PROMPT = [
     'You are AnythingLLM, a helpful assistant the user opened from their phone while using another app.',
     'Answer briefly and directly in plain language; short lists are fine where they help.',
     'When a screenshot is attached it shows the screen the user was looking at when they opened you - use it to understand what they are asking about, and refer to what is on it when relevant.',
 ].join(' ');
+
+/** Where assistant conversations are saved; the slug is what Workspace.create derives from the name. */
+export const ASSISTANT_WORKSPACE: FeatureWorkspace = {
+    name: 'Device Assistant Chats',
+    slug: 'device-assistant-chats',
+    systemPrompt: ASSISTANT_SYSTEM_PROMPT,
+};
 
 /**
  * Longest edge (px) a screenshot is scaled down to. Screenshots are about twice as tall as they are
@@ -128,6 +131,17 @@ export async function setAssistantTheme(theme: AssistantThemeId): Promise<Assist
     return resolveAssistantTheme(await AssistantModule.setTheme(resolveAssistantTheme(theme)));
 }
 
+/** Whether the background moves (default) or is drawn as a still picture, which saves battery and heat. */
+export async function getAssistantAnimated(): Promise<boolean> {
+    if (!isAssistantAvailable()) return true;
+    return (await AssistantModule.getAnimated().catch(() => true)) !== false;
+}
+
+export async function setAssistantAnimated(animated: boolean): Promise<boolean> {
+    if (!isAssistantAvailable()) return true;
+    return (await AssistantModule.setAnimated(animated)) !== false;
+}
+
 export function setGlowState(state: GlowState): void {
     AssistantModule?.setGlowState(state);
 }
@@ -142,12 +156,15 @@ export function openMainAppFromAssistant(): void {
     AssistantModule?.openInApp();
 }
 
-/** A fresh in-memory conversation for one invocation - nothing is stored. */
-export function createAssistantSession(): QuickContextSession {
-    return createEphemeralSession({
-        name: ASSISTANT_WORKSPACE.name,
-        slug: ASSISTANT_WORKSPACE.slug,
-        systemPrompt: ASSISTANT_SYSTEM_PROMPT,
-        threadSlugPrefix: 'assistant',
-    });
+/**
+ * A new thread in the Device Assistant Chats workspace for one invocation. It keeps the default thread
+ * name, so the chat handler names it after the first prompt like any other thread.
+ */
+export function createAssistantSession(): Promise<QuickContextSession> {
+    return createPersistentSession(ASSISTANT_WORKSPACE);
+}
+
+/** Drop the invocation's thread when nothing was sent in it, so empty threads never pile up. */
+export function discardEmptyAssistantThread(session: QuickContextSession): Promise<void> {
+    return discardEmptyQuickContextThread(session);
 }

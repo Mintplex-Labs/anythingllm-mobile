@@ -108,6 +108,8 @@
       "auto_screenshot_description": "Attach a screenshot of the screen on invocation. Needs a model that can see images, and \"Use screenshot\" turned on in the Android digital assistant settings.",
       "theme_title": "Theme",
       "theme_description": "The animated background behind the assistant while it is open.",
+      "animated": "Animate background",
+      "animated_description": "Turn off to show the background as a still picture. This uses less battery and keeps your phone cooler.",
       "themes": {
         "rainbow": "Rainbow",
         "halftone": "Halftone",

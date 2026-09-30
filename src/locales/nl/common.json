@@ -108,6 +108,8 @@
       "auto_screenshot_description": null,
       "theme_title": null,
       "theme_description": null,
+      "animated": null,
+      "animated_description": null,
       "themes": {
         "rainbow": null,
         "halftone": null,

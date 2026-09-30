@@ -13,14 +13,14 @@ import android.util.Log
  * registering it in [AssistantThemes].
  *
  * Draw with the frame's intensity as an overall opacity so state changes fade every theme the same way,
- * and allocate in [onSizeChanged] rather than per frame - it runs at the display's refresh rate.
+ * and allocate in [onSizeChanged] rather than per frame - it runs 30 times a second.
  */
 interface AssistantTheme {
     /**
-     * Minimum time between frames. The motion is slow on purpose, so no theme needs the display's full
-     * refresh rate (up to 120 Hz) - capping it is most of the battery and heat saving.
+     * Minimum time between frames: 30 fps for every theme. The motion is slow on purpose, so none needs
+     * the display's full refresh rate (up to 120 Hz) - capping it is most of the battery and heat saving.
      */
-    val frameIntervalMs: Long get() = 16L
+    val frameIntervalMs: Long get() = 33L
 
     /** The view's size (px) and display density; build size-dependent shaders and caches here. */
     fun onSizeChanged(width: Int, height: Int, density: Float)
@@ -65,6 +65,7 @@ object AssistantThemes {
     private const val TAG = "AssistantThemes"
     private const val PREFS = "assistant"
     private const val KEY_THEME = "theme"
+    private const val KEY_ANIMATED = "animated"
 
     fun isSupported(id: String): Boolean =
         id in IDS && (id !in SHADER_THEMES || Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -105,5 +106,17 @@ object AssistantThemes {
         val theme = resolve(id)
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putString(KEY_THEME, theme).apply()
         return theme
+    }
+
+    /** Whether the background moves (the default) or is drawn once as a still picture, to save battery and heat. */
+    fun animated(context: Context): Boolean = try {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean(KEY_ANIMATED, true)
+    } catch (e: Exception) {
+        Log.w(TAG, "Could not read the assistant animation setting", e)
+        true
+    }
+
+    fun storeAnimated(context: Context, animated: Boolean) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit().putBoolean(KEY_ANIMATED, animated).apply()
     }
 }

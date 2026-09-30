@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { AppState, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ArrowLeft, CaretDown, CaretRight, CheckCircle, Microphone, Screencast, Sparkle } from 'phosphor-react-native';
+import { ArrowLeft, CaretDown, CaretRight, CheckCircle, FilmStrip, Microphone, Screencast, Sparkle } from 'phosphor-react-native';
 import SafeView from '@/components/SafeView';
 import ToggleSwitch from '@/components/ToggleSwitch';
 import useHighjackBackButtonPress from '@/hooks/useHighjackBackButtonPress';
@@ -9,12 +9,14 @@ import { showToast } from '@/utils/Notification';
 import Telemetry from '@/utils/Telemetry';
 import {
   DEFAULT_ASSISTANT_THEME,
+  getAssistantAnimated,
   getAssistantPreferences,
   getAssistantTheme,
   getAvailableAssistantThemes,
   isAssistantAvailable,
   isDefaultAssistant,
   openAssistantSettings,
+  setAssistantAnimated,
   setAssistantPreference,
   setAssistantTheme,
   type AssistantPreferences,
@@ -214,11 +216,26 @@ function AssistantThemePicker() {
   const { t } = useTranslation();
   const [theme, setTheme] = useState<AssistantThemeId | null>(null);
   const [themes, setThemes] = useState<AssistantThemeId[]>([DEFAULT_ASSISTANT_THEME]);
+  const [animated, setAnimated] = useState(true);
 
   useEffect(() => {
     getAssistantTheme().then(setTheme).catch(() => setTheme(DEFAULT_ASSISTANT_THEME));
     getAvailableAssistantThemes().then(setThemes).catch(() => null);
+    getAssistantAnimated().then(setAnimated).catch(() => null);
   }, []);
+
+  async function toggleAnimated() {
+    const next = !animated;
+    setAnimated(next);
+    try {
+      await setAssistantAnimated(next);
+      Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.ASSISTANT_PREFERENCE_TOGGLED, { preference: 'animated', enabled: next });
+    } catch (e) {
+      console.error('[AssistantSettings] could not save animation setting', e);
+      setAnimated(!next);
+      showToast(t('settings.update_failed'));
+    }
+  }
 
   async function pick(next: AssistantThemeId) {
     if (next === theme) return;
@@ -266,6 +283,15 @@ function AssistantThemePicker() {
         })}
       </View>
       <Text style={{ color: '#9F9FA0' }} className="text-sm">{t('settings.assistant.theme_description')}</Text>
+      <View className="flex flex-col rounded-lg" style={{ backgroundColor: '#1B1B1E', padding: 14 }}>
+        <BehaviorRow
+          icon={<FilmStrip size={20} color="#FFF" />}
+          label={t('settings.assistant.animated')}
+          description={t('settings.assistant.animated_description')}
+          isOn={animated}
+          onToggle={toggleAnimated}
+        />
+      </View>
     </View>
   );
 }

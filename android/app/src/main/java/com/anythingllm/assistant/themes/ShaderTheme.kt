@@ -19,9 +19,6 @@ import kotlin.math.ceil
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 abstract class ShaderTheme(body: String, private val renderScale: Float = 1f) : AssistantTheme {
 
-    // Textured themes move slowly - 30 fps looks the same and halves the work on a 60 Hz screen (quarters it at 120 Hz).
-    override val frameIntervalMs = 33L
-
     private val program = ShaderProgram(body)
     private val paint = Paint().apply { shader = program.shader }
     private val layer = RenderNode("AssistantShaderTheme").apply { setUseCompositingLayer(true, null) }

@@ -47,6 +47,7 @@ import {
     SCREENSHOT_MAX_DIMENSION,
     closeAssistant,
     createAssistantSession,
+    discardEmptyAssistantThread,
     getAssistantPreferences,
     getInvocationScreenshot,
     openMainAppFromAssistant,
@@ -119,6 +120,15 @@ function AssistantOverlay() {
     // Whether the conversation has started - the pull handle only shows (and works) from then on.
     const [started, setStarted] = useState(false);
     const dismissRef = useRef<() => void>(closeAssistant);
+    // For the unmount cleanup, which sees neither state: this invocation's thread and how many exchanges
+    // were saved to it. However the overlay goes away (dismissed, replaced by a new invocation, killed
+    // in the background), a thread nothing was saved to is dropped.
+    const sessionRef = useRef<QuickContextSession | null>(null);
+    const savedRef = useRef(0);
+    useEffect(() => () => {
+        const created = sessionRef.current;
+        if (created && savedRef.current === 0) discardEmptyAssistantThread(created).catch(() => null);
+    }, []);
 
     // One per invocation - each opens a fresh overlay (see AssistantSession).
     useEffect(() => { Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.ASSISTANT_INVOKED); }, []);
@@ -128,10 +138,11 @@ function AssistantOverlay() {
         (async () => {
             const onboarded = await uiStore.getFromStorage('onboarding_data_handling_completed', false);
             if (!onboarded) return setSetupNeeded(true);
-            const prefs = await getAssistantPreferences();
+            const [prefs, created] = await Promise.all([getAssistantPreferences(), createAssistantSession()]);
+            sessionRef.current = created;
             if (cancelled) return;
             setPreferences(prefs);
-            setSession(createAssistantSession());
+            setSession(created);
         })().catch((e) => {
             console.error('[Assistant] could not start session', e);
             if (!cancelled) setError((e as Error).message || i18n.t('assistant.could_not_start'));
@@ -203,9 +214,9 @@ function AssistantOverlay() {
                         workspace={session.workspace}
                         thread={session.thread}
                         llmProvider={LLMProvider!}
-                        ephemeral>
+                        ephemeral={session.ephemeral}>
                         <ActivityExpansionProvider>
-                            <AssistantBody session={session} preferences={preferences!} dismissRef={dismissRef} onStartedChange={setStarted} />
+                            <AssistantBody session={session} preferences={preferences!} dismissRef={dismissRef} onStartedChange={setStarted} savedRef={savedRef} />
                         </ActivityExpansionProvider>
                     </ChatHandlerWrapper>
                 ) : (
@@ -268,12 +279,14 @@ function OverlayPlaceholder({ session, error, setupNeeded, needsModel }: {
 }
 
 /** The working overlay: conversation, screen chip and prompt pill. */
-function AssistantBody({ session, preferences, dismissRef, onStartedChange }: {
+function AssistantBody({ session, preferences, dismissRef, onStartedChange, savedRef }: {
     session: QuickContextSession;
     preferences: AssistantPreferences;
     dismissRef: React.MutableRefObject<() => void>;
     /** Tells the overlay when the first prompt went out (and so the pull handle should show). */
     onStartedChange: (started: boolean) => void;
+    /** Kept at the number of exchanges saved to the thread (finished replies - an aborted one is not saved). */
+    savedRef: React.MutableRefObject<number>;
 }) {
     const { t } = useTranslation();
     const chatHandler = useChatHandlerContext();
@@ -301,6 +314,7 @@ function AssistantBody({ session, preferences, dismissRef, onStartedChange }: {
 
     const started = chats.length > 0;
     useEffect(() => { onStartedChange(started); }, [started, onStartedChange]);
+    savedRef.current = chats.filter((chat) => !chat.isLoading).length;
     const disabled = chatHandler.promptDisabled || sending;
 
     useEffect(() => {
@@ -487,7 +501,8 @@ function PromptPill({ value, onChange, disabled, working, onSend, onStop, onList
                 <Stop size={24} color="#FFF" weight="fill" />
             </TouchableOpacity>
         );
-    } else if (speechToText.isListening && !hasDraft) {
+    } else if (speechToText.isListening) {
+        // Recording stays visible for as long as dictation runs; tapping it stops, then Send takes over.
         control = (
             <TouchableOpacity onPress={speechToText.stopListening} accessibilityLabel={t('chat.prompt_input.stop_recording')}>
                 <VoiceRecordingIndicator volume={speechToText.volume} />
@@ -500,7 +515,6 @@ function PromptPill({ value, onChange, disabled, working, onSend, onStop, onList
             </TouchableOpacity>
         );
     } else {
-        // Send stays reachable while dictating so the user can fire off what they said without waiting.
         control = (
             <TouchableOpacity onPress={onSend} disabled={!canSend} accessibilityLabel={t('chat.prompt_input.send_prompt')} style={{ opacity: canSend ? 1 : 0.4 }}>
                 <PaperPlaneRight size={24} color="#FFF" weight="fill" />

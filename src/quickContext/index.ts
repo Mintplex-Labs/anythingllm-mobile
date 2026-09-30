@@ -55,34 +55,18 @@ export function isPersistentMode(mode: QuickMode): boolean {
     return mode === 'summarize';
 }
 
-/** What an ephemeral session's workspace is called and told - the assistant overlay brings its own. */
-export type EphemeralSessionOptions = {
-    name: string;
-    slug: string;
-    systemPrompt: string;
-    /** Start of the throwaway thread slug, followed by a UUID */
-    threadSlugPrefix: string;
-};
-
-const QUICK_CONTEXT_EPHEMERAL: EphemeralSessionOptions = {
-    name: QUICK_CONTEXTS_WORKSPACE.name,
-    slug: QUICK_CONTEXTS_WORKSPACE.slug,
-    systemPrompt: QUICK_CONTEXT_SYSTEM_PROMPT,
-    threadSlugPrefix: 'quick-action',
-};
-
 /**
  * An Edit session: plain objects, not database rows. The workspace carries the settings the
  * providers read (system prompt, temperature, context length); the thread slug is unique so
  * per-thread provider state can never collide with a real thread.
  */
-export function createEphemeralSession(options: EphemeralSessionOptions = QUICK_CONTEXT_EPHEMERAL): QuickContextSession {
+export function createEphemeralSession(): QuickContextSession {
     const unreachable = async () => false;
     const workspace: WorkspaceType = {
-        name: options.name,
-        slug: options.slug,
+        name: QUICK_CONTEXTS_WORKSPACE.name,
+        slug: QUICK_CONTEXTS_WORKSPACE.slug,
         createdAt: Date.now(),
-        systemPrompt: options.systemPrompt,
+        systemPrompt: QUICK_CONTEXT_SYSTEM_PROMPT,
         temperature: Workspace.defaultTemperature,
         contextLength: Workspace.defaultContextLength,
         maxToolCalls: null,
@@ -93,9 +77,9 @@ export function createEphemeralSession(options: EphemeralSessionOptions = QUICK_
     };
     const thread: WorkspaceThreadType = {
         // Not the default thread name, so the chat handler's auto-rename never considers it.
-        name: options.name,
+        name: QUICK_CONTEXTS_WORKSPACE.name,
         workspaceSlug: workspace.slug,
-        slug: `${options.threadSlugPrefix}-${generateUUID()}`,
+        slug: `quick-action-${generateUUID()}`,
         createdAt: Date.now(),
         isRemote: false,
         remoteConfig: null as unknown as WorkspaceThreadType['remoteConfig'],
@@ -104,24 +88,39 @@ export function createEphemeralSession(options: EphemeralSessionOptions = QUICK_
     return { workspace, thread, ephemeral: true };
 }
 
-/** The "Quick Actions" workspace, created on first use with a system prompt covering both modes. */
-async function ensureQuickContextsWorkspace(): Promise<{ workspace: WorkspaceType; createdThread: WorkspaceThreadType | null }> {
-    const existing = await Workspace.first([{ field: 'slug', value: QUICK_CONTEXTS_WORKSPACE.slug }]);
+/**
+ * A workspace that system-level features keep their saved threads in, found by slug and created on
+ * first use. `slug` must be what Workspace.create derives from `name` (slugify, lowercased).
+ */
+export type FeatureWorkspace = {
+    name: string;
+    slug: string;
+    /** Set once at creation - the user can still tune it from the workspace settings like any other. */
+    systemPrompt: string;
+};
+
+const QUICK_CONTEXTS_FEATURE_WORKSPACE: FeatureWorkspace = { ...QUICK_CONTEXTS_WORKSPACE, systemPrompt: QUICK_CONTEXT_SYSTEM_PROMPT };
+
+/** Find a feature's workspace, or create it (the "Quick Actions" workspace by default). */
+async function ensureFeatureWorkspace(feature: FeatureWorkspace): Promise<{ workspace: WorkspaceType; createdThread: WorkspaceThreadType | null }> {
+    const existing = await Workspace.first([{ field: 'slug', value: feature.slug }]);
     if (existing) return { workspace: existing, createdThread: null };
 
-    const created = await Workspace.create({ name: QUICK_CONTEXTS_WORKSPACE.name });
-    // The user can still tune this from the workspace settings like any other workspace.
-    const updated = await Workspace.update([{ field: 'slug', value: created.slug }], { systemPrompt: QUICK_CONTEXT_SYSTEM_PROMPT });
+    const created = await Workspace.create({ name: feature.name });
+    const updated = await Workspace.update([{ field: 'slug', value: created.slug }], { systemPrompt: feature.systemPrompt });
     const workspace = updated ?? created;
-    log('Created the Quick Actions workspace', workspace.slug);
+    log(`Created the ${feature.name} workspace`, workspace.slug);
     notifyWorkspacesChanged();
     // Workspace.create makes a first thread - use it for this session rather than leaving it empty.
     return { workspace, createdThread: created.threads?.[0] ?? null };
 }
 
-/** A Summarize session: a fresh thread in the Quick Actions workspace. */
-export async function createPersistentSession(): Promise<QuickContextSession> {
-    const { workspace, createdThread } = await ensureQuickContextsWorkspace();
+/**
+ * A fresh, saved thread in a feature's workspace - a Summarize session by default. Threads nothing was
+ * saved to should be dropped again with `discardEmptyQuickContextThread`.
+ */
+export async function createPersistentSession(feature: FeatureWorkspace = QUICK_CONTEXTS_FEATURE_WORKSPACE): Promise<QuickContextSession> {
+    const { workspace, createdThread } = await ensureFeatureWorkspace(feature);
     const thread = createdThread ?? await WorkspaceThread.create({ workspaceSlug: workspace.slug });
     if (!createdThread) notifyWorkspacesChanged();
     log('Started persistent session', { workspace: workspace.slug, thread: thread.slug });

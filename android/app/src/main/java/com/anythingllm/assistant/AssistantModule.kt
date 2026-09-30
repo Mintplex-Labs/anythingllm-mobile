@@ -113,6 +113,24 @@ class AssistantModule(private val reactContext: ReactApplicationContext) : React
         }
     }
 
+    /** Whether the overlay background moves or is a still picture (default: moves). */
+    @ReactMethod
+    fun getAnimated(promise: Promise) {
+        promise.resolve(AssistantThemes.animated(reactContext))
+    }
+
+    /** Save whether the background moves, and apply it to an overlay that is open right now. */
+    @ReactMethod
+    fun setAnimated(animated: Boolean, promise: Promise) {
+        try {
+            AssistantThemes.storeAnimated(reactContext, animated)
+            overlay()?.let { activity -> activity.runOnUiThread { activity.glow?.setAnimated(animated) } }
+            promise.resolve(animated)
+        } catch (e: Exception) {
+            promise.reject("ASSISTANT_ANIMATED_FAILED", e)
+        }
+    }
+
     /** One of AssistantGlowView's states: idle, listening, thinking, hidden. */
     @ReactMethod
     fun setGlowState(state: String) {

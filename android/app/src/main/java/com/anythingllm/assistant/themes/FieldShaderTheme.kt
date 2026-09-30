@@ -28,8 +28,6 @@ import kotlin.math.ceil
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 abstract class FieldShaderTheme(fieldBody: String, compositeBody: String) : AssistantTheme {
 
-    override val frameIntervalMs = 33L
-
     /** Width and height (px) of one grid cell - one field texel. */
     protected abstract fun cellSize(density: Float): Pair<Float, Float>
 

@@ -42,11 +42,15 @@ class AssistantGlowView(context: Context) : View(context) {
         private const val BREATHE_PERIOD_MS = 1_800.0
         /** Width the backdrop thumbnail is decoded down to - enough to tell light areas from dark ones. */
         private const val BACKDROP_WIDTH = 64
+        /** Where the theme clock starts - a point where every theme already shows some shape, for the still picture. */
+        private const val STILL_CLOCK = 20.0
         private const val TAG = "AssistantGlowView"
     }
 
     private var theme: AssistantTheme = AssistantThemes.create(AssistantThemes.stored(context))
-    private val frame = AssistantThemeFrame()
+    private val frame = AssistantThemeFrame().apply { clock = STILL_CLOCK }
+    /** Off: one still frame per state change instead of a loop (Settings > Device Assistant). */
+    private var animated = true
     private val density = resources.displayMetrics.density
 
     private var style = STYLES.getValue("idle")
@@ -56,15 +60,29 @@ class AssistantGlowView(context: Context) : View(context) {
     private var lastFrame = 0L
     /** Thumbnail of the invocation screenshot, for themes that adapt to the screen under them. */
     private var backdrop: Bitmap? = null
+    /** The next animation frame; see the end of onDraw. */
+    private val nextFrame = Runnable { invalidate() }
 
     init {
         isClickable = false
         isFocusable = false
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO
+        setAnimated(AssistantThemes.animated(context))
     }
 
     fun setState(state: String) {
         style = STYLES[state] ?: return
+        lastFrame = 0L
+        postInvalidateOnAnimation()
+    }
+
+    /**
+     * Still mode keeps the picture in a hardware layer, so the overlay redrawing over it (eg: a streaming
+     * reply) reuses that texture instead of running the theme again. Animated, a layer would only add a copy.
+     */
+    fun setAnimated(animated: Boolean) {
+        this.animated = animated
+        setLayerType(if (animated) LAYER_TYPE_NONE else LAYER_TYPE_HARDWARE, null)
         lastFrame = 0L
         postInvalidateOnAnimation()
     }
@@ -88,6 +106,7 @@ class AssistantGlowView(context: Context) : View(context) {
                     if (!isAttachedToWindow) return@post
                     backdrop = thumbnail
                     theme.onBackdrop(thumbnail)
+                    invalidate() // the still picture has no loop to pick it up
                 }
             }.start()
         }
@@ -113,6 +132,17 @@ class AssistantGlowView(context: Context) : View(context) {
     }
 
     override fun onDraw(canvas: Canvas) {
+        if (!animated) {
+            // Straight to the state's look, drawn once; the next state change or theme switch redraws it.
+            removeCallbacks(nextFrame)
+            intensity = style.intensity
+            energy = style.energy
+            frame.intensity = intensity
+            frame.energy = energy
+            if (intensity > 0.01f) theme.draw(canvas, frame)
+            return
+        }
+
         val now = SystemClock.uptimeMillis()
         val dt = if (lastFrame == 0L) 16f else (now - lastFrame).toFloat().coerceAtMost(64f)
         lastFrame = now
@@ -132,6 +162,15 @@ class AssistantGlowView(context: Context) : View(context) {
 
         // Keep animating while visible, at the theme's frame rate; settle once faded out. The few ms off
         // the interval leave room for the next vsync, so eg: 33 ms lands on every 2nd frame at 60 Hz.
-        if (style.intensity > 0f || intensity > 0.01f) postInvalidateDelayed((theme.frameIntervalMs - 4L).coerceAtLeast(0L))
+        // One pending frame at a time: a state change draws right away, and chaining another delayed frame
+        // on top of the running one would leave two loops offset by a vsync - on a 120 Hz screen, a few state
+        // changes had it drawing every frame.
+        removeCallbacks(nextFrame)
+        if (style.intensity > 0f || intensity > 0.01f) postDelayed(nextFrame, (theme.frameIntervalMs - 4L).coerceAtLeast(0L))
+    }
+
+    override fun onDetachedFromWindow() {
+        removeCallbacks(nextFrame)
+        super.onDetachedFromWindow()
     }
 }

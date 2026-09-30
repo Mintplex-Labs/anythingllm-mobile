@@ -246,19 +246,20 @@ export function MainView({ goToPage }: MainViewProps) {
                   gap: 12,
                   borderRadius: 8,
                 }}>
-                {isQuickContextAvailable() && (
-                  <SupportItem
-                    title={t('settings.special_tools.ask_with_anythingllm')}
-                    icon={<TextAa size={18} color="#FFF" />}
-                    onPress={() => goToPage('special_tools')}
-                    borderBottom={isAssistantAvailable()}
-                  />
-                )}
                 {isAssistantAvailable() && (
                   <SupportItem
                     title={t('settings.special_tools.assistant')}
                     icon={<Sparkle size={18} color="#FFF" />}
                     onPress={() => goToPage('assistant')}
+                    borderBottom={isQuickContextAvailable()}
+
+                  />
+                )}
+                {isQuickContextAvailable() && (
+                  <SupportItem
+                    title={t('settings.special_tools.ask_with_anythingllm')}
+                    icon={<TextAa size={18} color="#FFF" />}
+                    onPress={() => goToPage('special_tools')}
                     borderBottom={false}
                   />
                 )}

@@ -66,6 +66,7 @@ export default function AssistantSettings({ goToPage }: AssistantSettingsProps) 
   }, [refresh]);
 
   async function openSettings() {
+    Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.ASSISTANT_SETUP_OPENED, { alreadyDefault: !!isDefault });
     const opened = await openAssistantSettings().catch(() => false);
     if (!opened) showToast(t('settings.assistant.open_settings_failed'));
   }
@@ -103,22 +104,31 @@ export default function AssistantSettings({ goToPage }: AssistantSettingsProps) 
                       : t('settings.assistant.status_off')}
                 </Text>
               </View>
-              {available ? (
+              {/* Already set up: a small "Change" in the row. Not yet: a full-width "Set up" below the steps. */}
+              {available && isDefault && (
                 <TouchableOpacity
                   onPress={openSettings}
                   activeOpacity={0.7}
-                  className={`rounded-full ${isDefault ? 'bg-white/10' : 'bg-white'}`}
+                  className="rounded-full bg-white/10"
                   style={{ paddingHorizontal: 14, paddingVertical: 7 }}>
-                  <Text className={`text-sm font-medium ${isDefault ? 'text-white' : 'text-black'}`}>
-                    {isDefault ? t('settings.assistant.change') : t('settings.assistant.set_up')}
-                  </Text>
+                  <Text className="text-sm font-medium text-white">{t('settings.assistant.change')}</Text>
                 </TouchableOpacity>
-              ) : (
+              )}
+              {!available && (
                 <Text style={{ color: '#9F9FA0' }} className="text-sm">{t('settings.special_tools.android_only')}</Text>
               )}
             </View>
             {available && isDefault === false && (
-              <Text style={{ color: '#9F9FA0' }} className="text-sm">{t('settings.assistant.setup_steps')}</Text>
+              <>
+                <Text style={{ color: '#9F9FA0' }} className="text-sm">{t('settings.assistant.setup_steps')}</Text>
+                <TouchableOpacity
+                  onPress={openSettings}
+                  activeOpacity={0.7}
+                  className="w-full items-center rounded-lg bg-white"
+                  style={{ paddingVertical: 10 }}>
+                  <Text className="text-base font-medium text-black">{t('settings.assistant.set_up')}</Text>
+                </TouchableOpacity>
+              </>
             )}
           </View>
           {available ? (

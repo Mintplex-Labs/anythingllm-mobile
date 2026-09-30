@@ -120,6 +120,9 @@ function AssistantOverlay() {
     const [started, setStarted] = useState(false);
     const dismissRef = useRef<() => void>(closeAssistant);
 
+    // One per invocation - each opens a fresh overlay (see AssistantSession).
+    useEffect(() => { Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.ASSISTANT_INVOKED); }, []);
+
     useEffect(() => {
         let cancelled = false;
         (async () => {
@@ -138,7 +141,9 @@ function AssistantOverlay() {
 
     // The on-device provider is shared with the main app: once the overlay is gone, a chat screen still
     // mounted behind it must attach its own workspace again.
-    useEffect(() => () => { uiStore.emitter.emit(uiStore.globalEvents.WORKSPACE_REATTACH_REQUESTED); }, []);
+    // Deferred a tick: React runs this (parent) cleanup before the overlay's own chat handler unsubscribes, so an
+    // immediate emit would have that handler re-attach its workspace last and win.
+    useEffect(() => () => { setTimeout(() => uiStore.emitter.emit(uiStore.globalEvents.WORKSPACE_REATTACH_REQUESTED), 0); }, []);
 
     useEffect(() => {
         const subscription = BackHandler.addEventListener('hardwareBackPress', () => { dismissRef.current(); return true; });
@@ -346,9 +351,11 @@ function AssistantBody({ session, preferences, dismissRef, onStartedChange }: {
                     showToast(t('assistant.screen_unavailable'));
                 }
             }
-            if (!started) {
-                Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.ASSISTANT_USED, { screenshot: attachments.length > 0, voice: usedVoice.current });
-            }
+            Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.ASSISTANT_CHAT_SENT, {
+                screenshot: attachments.length > 0,
+                voice: usedVoice.current,
+                followUp: started,
+            });
             setDraft('');
             usedVoice.current = false;
             // The screen goes with one prompt; the user can attach it again for a follow-up.

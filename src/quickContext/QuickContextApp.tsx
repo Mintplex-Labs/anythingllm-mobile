@@ -158,7 +158,9 @@ function QuickContextCard({ selectedText }: Required<QuickContextProps>) {
 
     // The on-device provider is a singleton shared with the main app: once the card is gone, any chat
     // screen still mounted behind it must attach its own workspace again.
-    useEffect(() => () => { uiStore.emitter.emit(uiStore.globalEvents.WORKSPACE_REATTACH_REQUESTED); }, []);
+    // Deferred a tick: React runs this (parent) cleanup before the card's own chat handler unsubscribes, so an
+    // immediate emit would have that handler re-attach its workspace last and win.
+    useEffect(() => () => { setTimeout(() => uiStore.emitter.emit(uiStore.globalEvents.WORKSPACE_REATTACH_REQUESTED), 0); }, []);
 
     /**
      * Leave the card. A Summarize thread nothing was saved to is dropped again, as is one the user

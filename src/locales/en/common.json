@@ -86,10 +86,10 @@
       "android_only": "Android only",
       "description_available": "Adds \"Ask with AnythingLLM\" to the menu that appears when you select text in any app. Use it to polish, shorten or fix what you are writing, or to summarize, explain and research what you are reading - with whichever model you have selected here.",
       "description_unavailable": "On Android, AnythingLLM can appear in the menu that shows when you select text in any app, to edit or summarize it with your chosen model. iOS does not offer apps this hook.",
-      "assistant": "Assistant"
+      "assistant": "Device Assistant"
     },
     "assistant": {
-      "page_title": "Assistant",
+      "page_title": "Device Assistant",
       "status_title": "Default assistant",
       "status_on": "AnythingLLM is your default assistant",
       "status_off": "AnythingLLM is not your default assistant",
@@ -103,9 +103,9 @@
       "open_settings_failed": "Could not open Android settings",
       "behavior_title": "When the assistant opens",
       "auto_listen": "Start listening",
-      "auto_listen_description": "The microphone turns on right away so you can just start talking. Your words appear in the prompt as you speak.",
+      "auto_listen_description": "Start the microphone as soon as you invoke the assistant.",
       "auto_screenshot": "Attach screenshot",
-      "auto_screenshot_description": "Attach a screenshot of the app you were using to your first message. Needs a model that can see images, and \"Use screenshot\" turned on in the Android digital assistant settings.",
+      "auto_screenshot_description": "Attach a screenshot of the screen on invocation. Needs a model that can see images, and \"Use screenshot\" turned on in the Android digital assistant settings.",
       "theme_title": "Theme",
       "theme_description": "The animated background behind the assistant while it is open.",
       "themes": {

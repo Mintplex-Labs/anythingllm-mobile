@@ -50,8 +50,12 @@ class Telemetry {
             QUICK_CONTEXT_USED: 'quick_context_used',
             /** The selection-toolbar entry was switched on or off in Settings > Special tools (payload: enabled) */
             QUICK_CONTEXT_TOGGLED: 'quick_context_toggled',
-            /** A prompt was sent from the digital assistant overlay (payload: screenshot, voice) */
-            ASSISTANT_USED: 'assistant_used',
+            /** "Set up" / "Change" in Settings > Device Assistant, which opens Android's assistant settings (payload: alreadyDefault) */
+            ASSISTANT_SETUP_OPENED: 'assistant_setup_opened',
+            /** The assist gesture opened the assistant overlay */
+            ASSISTANT_INVOKED: 'assistant_invoked',
+            /** A prompt was sent from the assistant overlay (payload: screenshot, voice, followUp) */
+            ASSISTANT_CHAT_SENT: 'assistant_chat_sent',
             /** An assistant behavior was switched in Settings > Assistant (payload: preference, enabled) */
             ASSISTANT_PREFERENCE_TOGGLED: 'assistant_preference_toggled',
             /** A background theme was picked in Settings > Assistant (payload: theme) */

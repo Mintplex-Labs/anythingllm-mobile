@@ -85,7 +85,37 @@
       "ask_with_anythingllm_toggle": "AnythingLLMで質問",
       "android_only": "Androidのみ",
       "description_available": "任意のアプリでテキストを選択したときに表示されるメニューに「AnythingLLMで質問」を追加します。選択したモデルを使用して、書いている内容を磨く、短縮、修正したり、読んでいる内容を要約、説明、調査したりするために使用できます。",
-      "description_unavailable": "Androidでは、任意のアプリでテキストを選択したときに表示されるメニューにAnythingLLMが表示され、選択したモデルで編集または要約できます。iOSはアプリにこのフックを提供しません。"
+      "description_unavailable": "Androidでは、任意のアプリでテキストを選択したときに表示されるメニューにAnythingLLMが表示され、選択したモデルで編集または要約できます。iOSはアプリにこのフックを提供しません。",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null,
+      "theme_title": null,
+      "theme_description": null,
+      "animated": null,
+      "animated_description": null,
+      "themes": {
+        "rainbow": null,
+        "halftone": null,
+        "terrain": null,
+        "painterly": null
+      }
     },
     "about": {
       "release_notes": "v{{version}}のリリースノート",
@@ -386,6 +416,21 @@
       "summarize_new": "このテキストについて何か質問してください…",
       "summarize_started": "さらに質問してください…"
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "処理中…",

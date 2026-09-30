@@ -85,7 +85,37 @@
       "ask_with_anythingllm_toggle": "AnythingLLM ile Sor",
       "android_only": "Yalnızca Android",
       "description_available": "Herhangi bir uygulamada metni seçtiğinizde görünen menüye \"AnythingLLM ile Sor\" öğesini ekler. Yazdığınız şeyi cilalayabilir, kısaltabilir veya düzeltebilir, ya da buraya seçtiğiniz modeldi kullanarak okuduğunuz şeyi özetleyebilir, açıklayabilir ve araştırabilirsiniz.",
-      "description_unavailable": "Android'de AnythingLLM, herhangi bir uygulamada metin seçtiğinizde gösterilen menüde görünebilir ve seçtiğiniz modeldi onu düzenlemek veya özetlemek için kullanabilirsiniz. iOS uygulamalar için bu hook sunmuyor."
+      "description_unavailable": "Android'de AnythingLLM, herhangi bir uygulamada metin seçtiğinizde gösterilen menüde görünebilir ve seçtiğiniz modeldi onu düzenlemek veya özetlemek için kullanabilirsiniz. iOS uygulamalar için bu hook sunmuyor.",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null,
+      "theme_title": null,
+      "theme_description": null,
+      "animated": null,
+      "animated_description": null,
+      "themes": {
+        "rainbow": null,
+        "halftone": null,
+        "terrain": null,
+        "painterly": null
+      }
     },
     "about": {
       "release_notes": "v{{version}} için Sürüm Notları",
@@ -396,6 +426,21 @@
       "summarize_new": "Bu metin hakkında herhangi bir şey sorun…",
       "summarize_started": "Daha fazla soru sorun…"
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "İşleniyor…",

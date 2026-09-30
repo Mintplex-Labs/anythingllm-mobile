@@ -11,12 +11,14 @@ import {
   ChartBar,
   GithubLogo,
   Scroll,
+  Sparkle,
   TextAa,
   Translate,
 } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
 import i18n, { LANGUAGES, currentLanguage, tKey } from '@/i18n';
 import { isQuickContextAvailable } from '@/quickContext';
+import { isAssistantAvailable } from '@/assistant';
 import { IWorkspacePageKey } from '../index';
 import uiStore from '@/store/UIStore';
 import { PATHS } from '@/utils/paths';
@@ -231,19 +233,37 @@ export function MainView({ goToPage }: MainViewProps) {
           </View>
 
           {/* System-level integrations (Android only for now) - each can be switched off on its own page */}
-          {isQuickContextAvailable() && (
+          {(isQuickContextAvailable() || isAssistantAvailable()) && (
             <View className="w-full flex flex-col" style={{ gap: 12 }}>
               <Text style={{ color: '#9F9FA0' }} className="text-sm uppercase">
                 {t('settings.special_tools.title')}
               </Text>
-              <TouchableOpacity
-                style={{ backgroundColor: '#1B1B1E', padding: 14, gap: 12 }}
-                className="w-full flex flex-row items-center rounded-lg"
-                onPress={() => goToPage('special_tools')}>
-                <TextAa size={18} color="#FFF" />
-                <Text className="text-white text-lg flex-1">{t('settings.special_tools.ask_with_anythingllm')}</Text>
-                <CaretRight size={18} color="#FFF" />
-              </TouchableOpacity>
+              <View
+                className="flex flex-col"
+                style={{
+                  backgroundColor: '#1B1B1E',
+                  padding: 14,
+                  gap: 12,
+                  borderRadius: 8,
+                }}>
+                {isAssistantAvailable() && (
+                  <SupportItem
+                    title={t('settings.special_tools.assistant')}
+                    icon={<Sparkle size={18} color="#FFF" />}
+                    onPress={() => goToPage('assistant')}
+                    borderBottom={isQuickContextAvailable()}
+
+                  />
+                )}
+                {isQuickContextAvailable() && (
+                  <SupportItem
+                    title={t('settings.special_tools.ask_with_anythingllm')}
+                    icon={<TextAa size={18} color="#FFF" />}
+                    onPress={() => goToPage('special_tools')}
+                    borderBottom={false}
+                  />
+                )}
+              </View>
             </View>
           )}
 

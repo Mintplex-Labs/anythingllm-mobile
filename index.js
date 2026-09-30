@@ -33,3 +33,7 @@ AppRegistry.registerComponent(appName, () => require('./App').default);
 // Quick Actions card (Android): the "Ask with AnythingLLM" entry in the text-selection toolbar of other apps.
 // Rendered by quickcontext/QuickContextActivity.kt in the same JS runtime as the main app.
 AppRegistry.registerComponent('AnythingLLMQuickContext', () => require('./src/quickContext/QuickContextApp').default);
+
+// Digital assistant overlay (Android): opened by the assist gesture once AnythingLLM is the default assistant app.
+// Rendered by assistant/AssistantActivity.kt in the same JS runtime as the main app.
+AppRegistry.registerComponent('AnythingLLMAssistant', () => require('./src/assistant/AssistantApp').default);

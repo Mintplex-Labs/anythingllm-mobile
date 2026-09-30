@@ -85,7 +85,37 @@
       "ask_with_anythingllm_toggle": "Preguntar con AnythingLLM",
       "android_only": "Solo Android",
       "description_available": "Agrega \"Preguntar con AnythingLLM\" al menú que aparece cuando selecciona texto en cualquier aplicación. Úselo para pulir, acortar o corregir lo que está escribiendo, o para resumir, explicar e investigar lo que está leyendo, con el modelo que haya seleccionado aquí.",
-      "description_unavailable": "En Android, AnythingLLM puede aparecer en el menú que se muestra cuando selecciona texto en cualquier aplicación, para editarlo o resumirlo con su modelo elegido. iOS no ofrece este gancho a las aplicaciones."
+      "description_unavailable": "En Android, AnythingLLM puede aparecer en el menú que se muestra cuando selecciona texto en cualquier aplicación, para editarlo o resumirlo con su modelo elegido. iOS no ofrece este gancho a las aplicaciones.",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null,
+      "theme_title": null,
+      "theme_description": null,
+      "animated": null,
+      "animated_description": null,
+      "themes": {
+        "rainbow": null,
+        "halftone": null,
+        "terrain": null,
+        "painterly": null
+      }
     },
     "about": {
       "release_notes": "Notas de la versión para v{{version}}",
@@ -406,6 +436,21 @@
       "summarize_new": "Pregunte cualquier cosa sobre este texto...",
       "summarize_started": "Haga más preguntas..."
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "Procesando...",

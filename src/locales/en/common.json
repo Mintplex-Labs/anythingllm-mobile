@@ -85,7 +85,37 @@
       "ask_with_anythingllm_toggle": "Ask with AnythingLLM",
       "android_only": "Android only",
       "description_available": "Adds \"Ask with AnythingLLM\" to the menu that appears when you select text in any app. Use it to polish, shorten or fix what you are writing, or to summarize, explain and research what you are reading - with whichever model you have selected here.",
-      "description_unavailable": "On Android, AnythingLLM can appear in the menu that shows when you select text in any app, to edit or summarize it with your chosen model. iOS does not offer apps this hook."
+      "description_unavailable": "On Android, AnythingLLM can appear in the menu that shows when you select text in any app, to edit or summarize it with your chosen model. iOS does not offer apps this hook.",
+      "assistant": "Device Assistant"
+    },
+    "assistant": {
+      "page_title": "Device Assistant",
+      "status_title": "Default assistant",
+      "status_on": "AnythingLLM is your default assistant",
+      "status_off": "AnythingLLM is not your default assistant",
+      "set_up": "Set up",
+      "change": "Change",
+      "setup_steps": "In the Android settings that open, tap \"Default digital assistant app\" and choose AnythingLLM. The page is sometimes under Apps > Default apps. Come back here when you are done.",
+      "description": "Open AnythingLLM over any app with your phone's assistant gesture - usually a long press on the home button or navigation bar - and ask with whichever model you have selected, on-device or on your own server. It takes the place of Gemini; you can switch back at any time in the same Android setting.",
+      "description_unavailable": "On Android, AnythingLLM can be your phone's assistant in place of Gemini, opened over any app with the assistant gesture. iOS does not let apps replace Siri.",
+      "need_help": "Need help setting up?",
+      "circle_to_search_note": "If a long press on the home button opens Circle to Search instead, turn off Circle to Search in Android Settings > Display > Navigation bar. While it is on, Android always gives that gesture to Google, whichever assistant you choose.",
+      "open_settings_failed": "Could not open Android settings",
+      "behavior_title": "When the assistant opens",
+      "auto_listen": "Start listening",
+      "auto_listen_description": "Start the microphone as soon as you invoke the assistant.",
+      "auto_screenshot": "Attach screenshot",
+      "auto_screenshot_description": "Attach a screenshot of the screen on invocation. Needs a model that can see images, and \"Use screenshot\" turned on in the Android digital assistant settings.",
+      "theme_title": "Theme",
+      "theme_description": "The animated background behind the assistant while it is open.",
+      "animated": "Animate background",
+      "animated_description": "Turn off to show the background as a still picture. This uses less battery and keeps your phone cooler.",
+      "themes": {
+        "rainbow": "Rainbow",
+        "halftone": "Halftone",
+        "terrain": "Terrain",
+        "painterly": "Painterly"
+      }
     },
     "about": {
       "release_notes": "Release notes for v{{version}}",
@@ -396,6 +426,21 @@
       "summarize_new": "Ask anything about this text…",
       "summarize_started": "Ask more questions…"
     }
+  },
+  "assistant": {
+    "could_not_start": "Could not start the assistant",
+    "dismiss": "Dismiss",
+    "setup_needed": "Finish setting up AnythingLLM to use it as your assistant.",
+    "open_anythingllm": "Open AnythingLLM",
+    "select_model": "Select a model above to get started.",
+    "placeholder": "Ask AnythingLLM",
+    "placeholder_followup": "Ask a follow-up…",
+    "listening": "Listening…",
+    "share_screen": "Share screen",
+    "screen_disabled": "Turn on \"Use screenshot\" in the Android digital assistant settings to share your screen.",
+    "screen_blocked": "This app does not allow screenshots.",
+    "screen_unavailable": "Could not capture the screen.",
+    "needs_vision": "Sharing your screen needs a model that can see images. {{reason}}"
   },
   "attachments": {
     "processing": "Processing…",

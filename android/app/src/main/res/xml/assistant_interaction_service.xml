@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Digital assistant (assistant/AssistantService.kt). supportsAssist lists us as a default assistant app. -->
+<voice-interaction-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:sessionService="com.anythingllm.assistant.AssistantSessionService"
+    android:recognitionService="com.anythingllm.assistant.AssistantRecognitionService"
+    android:supportsAssist="true"
+    android:supportsLaunchVoiceAssistFromKeyguard="false"
+    android:supportsLocalInteraction="false" />

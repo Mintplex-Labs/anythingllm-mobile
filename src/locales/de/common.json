@@ -85,7 +85,37 @@
       "ask_with_anythingllm_toggle": "Mit AnythingLLM fragen",
       "android_only": "Nur Android",
       "description_available": "Fügt \"Mit AnythingLLM fragen\" zu dem Menü hinzu, das angezeigt wird, wenn Sie Text in einer App auswählen. Verwenden Sie es, um das zu verfeinern, zu verkürzen oder zu korrigieren, was Sie schreiben, oder um das zusammenzufassen, zu erklären und zu recherchieren, was Sie lesen - mit dem Modell Ihrer Wahl.",
-      "description_unavailable": "Auf Android kann AnythingLLM im Menü angezeigt werden, das angezeigt wird, wenn Sie Text in einer App auswählen, um es mit Ihrem ausgewählten Modell zu bearbeiten oder zusammenzufassen. iOS bietet Apps diesen Hook nicht."
+      "description_unavailable": "Auf Android kann AnythingLLM im Menü angezeigt werden, das angezeigt wird, wenn Sie Text in einer App auswählen, um es mit Ihrem ausgewählten Modell zu bearbeiten oder zusammenzufassen. iOS bietet Apps diesen Hook nicht.",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null,
+      "theme_title": null,
+      "theme_description": null,
+      "animated": null,
+      "animated_description": null,
+      "themes": {
+        "rainbow": null,
+        "halftone": null,
+        "terrain": null,
+        "painterly": null
+      }
     },
     "about": {
       "release_notes": "Versionshinweise für v{{version}}",
@@ -396,6 +426,21 @@
       "summarize_new": "Fragen Sie etwas zu diesem Text…",
       "summarize_started": "Stellen Sie weitere Fragen…"
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "Wird verarbeitet…",

@@ -18,7 +18,9 @@ export type StorageKeys =
   'native_config_cache' |
   'memories' |
   'fs_cleanup_last_run' |
-  'highlights_last_seen_version';
+  'highlights_last_seen_version' |
+  'assistant_auto_listen' |
+  'assistant_auto_screenshot';
 
 export const GLOBAL_EVENTS = {
   REDIRECT: 'REDIRECT',
@@ -64,6 +66,8 @@ export class UIStore {
     'memories',
     'fs_cleanup_last_run',
     'highlights_last_seen_version',
+    'assistant_auto_listen',
+    'assistant_auto_screenshot',
   ] as const;
 
   pageStates = {

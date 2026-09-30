@@ -85,7 +85,37 @@
       "ask_with_anythingllm_toggle": "Спросить AnythingLLM",
       "android_only": "Только Android",
       "description_available": "Добавляет \"Спросить AnythingLLM\" в меню, которое появляется при выборе текста в любом приложении. Используйте его, чтобы улучшить, сократить или исправить то, что вы пишете, или чтобы подвести итог, объяснить и исследовать то, что вы читаете — с помощью выбранной здесь модели.",
-      "description_unavailable": "На Android AnythingLLM может появиться в меню, которое показывается при выборе текста в любом приложении, чтобы отредактировать или подвести итог с выбранной моделью. iOS не предоставляет приложениям такой доступ."
+      "description_unavailable": "На Android AnythingLLM может появиться в меню, которое показывается при выборе текста в любом приложении, чтобы отредактировать или подвести итог с выбранной моделью. iOS не предоставляет приложениям такой доступ.",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null,
+      "theme_title": null,
+      "theme_description": null,
+      "animated": null,
+      "animated_description": null,
+      "themes": {
+        "rainbow": null,
+        "halftone": null,
+        "terrain": null,
+        "painterly": null
+      }
     },
     "about": {
       "release_notes": "Примечания к выпуску для v{{version}}",
@@ -416,6 +446,21 @@
       "summarize_new": "Спросите что-нибудь об этом тексте…",
       "summarize_started": "Задайте ещё вопросы…"
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "Обработка…",

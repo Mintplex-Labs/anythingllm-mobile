@@ -85,7 +85,37 @@
       "ask_with_anythingllm_toggle": "使用 AnythingLLM 提問",
       "android_only": "僅限 Android",
       "description_available": "將「使用 AnythingLLM 提問」新增到任何應用程式中選取文字時出現的功能表。用它來潤飾、縮短或修正您正在撰寫的內容，或摘要、說明及研究您正在閱讀的內容 - 使用您在此選取的模型。",
-      "description_unavailable": "在 Android 上，AnythingLLM 可以出現在任何應用程式中選取文字時顯示的功能表中，以使用您選擇的模型編輯或摘要。iOS 不為應用程式提供此掛鉤。"
+      "description_unavailable": "在 Android 上，AnythingLLM 可以出現在任何應用程式中選取文字時顯示的功能表中，以使用您選擇的模型編輯或摘要。iOS 不為應用程式提供此掛鉤。",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null,
+      "theme_title": null,
+      "theme_description": null,
+      "animated": null,
+      "animated_description": null,
+      "themes": {
+        "rainbow": null,
+        "halftone": null,
+        "terrain": null,
+        "painterly": null
+      }
     },
     "about": {
       "release_notes": "v{{version}} 版本資訊",
@@ -386,6 +416,21 @@
       "summarize_new": "詢問此文字的任何問題…",
       "summarize_started": "提出更多問題…"
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "正在處理…",

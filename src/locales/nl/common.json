@@ -85,7 +85,37 @@
       "ask_with_anythingllm_toggle": "Vragen aan AnythingLLM",
       "android_only": "Alleen Android",
       "description_available": "Voegt \"Vragen aan AnythingLLM\" toe aan het menu dat verschijnt wanneer je tekst selecteert in een app. Gebruik het om wat je schrijft op te polijsten, in te korten of te corrigeren, of om wat je leest samen te vatten, uit te leggen en te onderzoeken - met welk model je hier hebt geselecteerd.",
-      "description_unavailable": "Op Android kan AnythingLLM verschijnen in het menu dat wordt weergegeven wanneer je tekst selecteert in een app, om het met je gekozen model te bewerken of samen te vatten. iOS biedt apps deze hook niet."
+      "description_unavailable": "Op Android kan AnythingLLM verschijnen in het menu dat wordt weergegeven wanneer je tekst selecteert in een app, om het met je gekozen model te bewerken of samen te vatten. iOS biedt apps deze hook niet.",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null,
+      "theme_title": null,
+      "theme_description": null,
+      "animated": null,
+      "animated_description": null,
+      "themes": {
+        "rainbow": null,
+        "halftone": null,
+        "terrain": null,
+        "painterly": null
+      }
     },
     "about": {
       "release_notes": "Releaseopmerkingen voor v{{version}}",
@@ -396,6 +426,21 @@
       "summarize_new": "Vraag iets over deze tekst…",
       "summarize_started": "Stel meer vragen…"
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "Bezig met verwerken…",

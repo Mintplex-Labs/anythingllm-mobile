@@ -85,7 +85,37 @@
       "ask_with_anythingllm_toggle": "Zapytaj za pomocą AnythingLLM",
       "android_only": "Tylko na Androidzie",
       "description_available": "Dodaje \"Zapytaj za pomocą AnythingLLM\" do menu, które pojawia się po wybraniu tekstu w dowolnej aplikacji. Użyj go, aby dopracować, skrócić lub naprawić to, co piszesz, lub aby podsumować, wyjaśnić i zbadać to, co czytasz - z wybranym tutaj modelem.",
-      "description_unavailable": "Na Androidzie AnythingLLM może pojawić się w menu, które pojawia się po wybraniu tekstu w dowolnej aplikacji, aby edytować lub podsumować go wybranym modelem. iOS nie udostępnia aplikacjom tego punktu zaczepienia."
+      "description_unavailable": "Na Androidzie AnythingLLM może pojawić się w menu, które pojawia się po wybraniu tekstu w dowolnej aplikacji, aby edytować lub podsumować go wybranym modelem. iOS nie udostępnia aplikacjom tego punktu zaczepienia.",
+      "assistant": null
+    },
+    "assistant": {
+      "page_title": null,
+      "status_title": null,
+      "status_on": null,
+      "status_off": null,
+      "set_up": null,
+      "change": null,
+      "setup_steps": null,
+      "description": null,
+      "description_unavailable": null,
+      "need_help": null,
+      "circle_to_search_note": null,
+      "open_settings_failed": null,
+      "behavior_title": null,
+      "auto_listen": null,
+      "auto_listen_description": null,
+      "auto_screenshot": null,
+      "auto_screenshot_description": null,
+      "theme_title": null,
+      "theme_description": null,
+      "animated": null,
+      "animated_description": null,
+      "themes": {
+        "rainbow": null,
+        "halftone": null,
+        "terrain": null,
+        "painterly": null
+      }
     },
     "about": {
       "release_notes": "Uwagi do wydania dla wersji {{version}}",
@@ -416,6 +446,21 @@
       "summarize_new": "Zapytaj cokolwiek o ten tekst…",
       "summarize_started": "Zadaj więcej pytań…"
     }
+  },
+  "assistant": {
+    "could_not_start": null,
+    "dismiss": null,
+    "setup_needed": null,
+    "open_anythingllm": null,
+    "select_model": null,
+    "placeholder": null,
+    "placeholder_followup": null,
+    "listening": null,
+    "share_screen": null,
+    "screen_disabled": null,
+    "screen_blocked": null,
+    "screen_unavailable": null,
+    "needs_vision": null
   },
   "attachments": {
     "processing": "Przetwarzanie…",

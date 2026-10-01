@@ -72,6 +72,11 @@ Basically imagine Openclaw or Heremes agent, but fully on-device first, with all
       <sub>Recurring tasks that run on schedule, even with the app closed, and notify you when done.</sub>
     </td>
     <td width="25%" align="center" valign="top">
+      <video src="https://github.com/user-attachments/assets/958cf733-611e-4180-9f73-e1587dc53fd5" width="100%" muted loop playsinline></video>
+      <br /><b>Default Assistant</b><br />
+      <sub>Set AnythingLLM as your phone's assistant and ask about whatever is on screen, by voice or text.</sub>
+    </td>
+    <td width="25%" align="center" valign="top">
       <video src="https://github.com/user-attachments/assets/2529a9ea-1be6-4ef4-9195-6f8bfffeddf2" width="100%" muted loop playsinline></video>
       <br /><b>Ask with AnythingLLM</b><br />
       <sub>Select text in any app and polish, summarize or explain it from the selection toolbar.</sub>
@@ -81,6 +86,8 @@ Basically imagine Openclaw or Heremes agent, but fully on-device first, with all
       <br /><b>Hugging Face model browser</b><br />
       <sub>Find, download and manage GGUF models, with a fit badge for your phone.</sub>
     </td>
+  </tr>
+  <tr>
     <td width="25%" align="center" valign="top">
       <img src="images/demos/export-chats.png" width="100%" alt="Export Chats" />
       <br /><b>Export chats</b><br />
@@ -102,6 +109,7 @@ Basically imagine Openclaw or Heremes agent, but fully on-device first, with all
 
 **Everywhere on your phone**
 
+- 🤖 **Default Assistant** - Make AnythingLLM your phone's default digital assistant and invoke it from any app. A translucent overlay opens over what you're doing so you can talk or type, optionally share a screenshot of the screen with vision models, and save the conversation as a thread. Set it up under Settings › Special tools › Device Assistant.
 - 📝 **Ask with AnythingLLM** - Select text in any app and it appears in the selection toolbar. Polish, shorten, fix grammar or make it formal, or summarize, pull key points, explain and research what you're reading - with the model you chose, not the OEM assistant. Edits are ephemeral; summaries are saved as threads. Switch it off under Settings › Special tools.
 - 📤 **Share to AnythingLLM** - Send photos, documents and links from any app straight into a chat. Links are scraped, documents are parsed, and the empty thread suggests what to do with them.
 - ⏰ **Scheduled jobs** - Ask for a recurring task (a morning news digest, a weekly check-in) and the assistant runs it on schedule, even in the background.

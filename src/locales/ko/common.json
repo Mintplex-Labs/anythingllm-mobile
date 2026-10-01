@@ -690,6 +690,7 @@
       "description": "특정 웹사이트에서 정보를 스크래핑합니다.",
       "status_reading": "{{host}}를 읽는 중",
       "status_reading_document": "문서 {{name}}를 읽는 중",
+      "status_reading_youtube": null,
       "cellular_title": "셀룰러에서 다운로드?",
       "cellular_message": "\"{{name}}\"을(를) 읽으려면 {{size}} 크기의 문서를 다운로드해야 합니다. 셀룰러 데이터를 사용하고 있습니다. 계속하시겠습니까?",
       "cellular_message_unknown_size": "\"{{name}}\"을(를) 읽으려면 알 수 없는 크기의 문서를 다운로드해야 합니다. 셀룰러 데이터를 사용하고 있습니다. 계속하시겠습니까?"

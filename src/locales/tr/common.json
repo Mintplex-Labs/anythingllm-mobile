@@ -720,6 +720,7 @@
       "description": "Bilgi için tek bir özel web sitesini kazıyın.",
       "status_reading": "{{host}} okunuyor",
       "status_reading_document": "{{name}} belgesi okunuyor",
+      "status_reading_youtube": null,
       "cellular_title": "Hücresel veri üzerinde indirilsin mi?",
       "cellular_message": "\"{{name}}\" okuma, {{size}} belgesi indirmeyi gerektirir. Hücresel veri üzerinde olmuşsunuz. Devam edilsin mi?",
       "cellular_message_unknown_size": "\"{{name}}\" okuma, bilinmeyen boyutta bir belge indirmeyi gerektirir. Hücresel veri üzerinde olmuşsunuz. Devam edilsin mi?"

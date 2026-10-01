@@ -750,6 +750,7 @@
       "description": "Raschia un singolo sito web specifico per informazioni.",
       "status_reading": "Lettura di {{host}}",
       "status_reading_document": "Lettura del documento {{name}}",
+      "status_reading_youtube": null,
       "cellular_title": "Scaricare con dati mobili?",
       "cellular_message": "La lettura di \"{{name}}\" richiede il download di un documento di {{size}}. Stai usando dati mobili. Continuare?",
       "cellular_message_unknown_size": "La lettura di \"{{name}}\" richiede il download di un documento di dimensioni sconosciute. Stai usando dati mobili. Continuare?"

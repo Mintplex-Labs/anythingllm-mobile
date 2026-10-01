@@ -3,6 +3,7 @@ import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { getOrigin, safeJsonParse } from "@/utils/formatters";
 import webscraper from "./webscraper";
 import { DownloadDeclinedError, getContentTypeFromURL, processLinkAsFile, resolveLinkAsFile } from "./linkAsFile";
+import { YoutubeTranscriptError, buildTranscriptContent, fetchYoutubeTranscript, isYoutubeVideoUrl } from "./youtubeTranscript";
 import i18n from "@/i18n";
 
 export type UrlDocument = {
@@ -31,6 +32,14 @@ export async function readUrlAsDocument(url: string, onStatus?: (status: string)
     else if (normalised.match(/^http:\/\//i)) normalised = normalised.replace(/^http:\/\//i, 'https://');
 
     const validUrl = new URL(normalised);
+    // YouTube videos are read from their transcript - the watch page itself has no useful text.
+    // Checked before the HEAD probe since we already know what the link is.
+    if (isYoutubeVideoUrl(validUrl.toString())) {
+        onStatus?.(i18n.t('tools.web_scraping.status_reading_youtube'));
+        const video = await fetchYoutubeTranscript(validUrl.toString(), i18n.language ? [i18n.language.split('-')[0]] : []);
+        return { title: video.metadata.title || hostname, content: buildTranscriptContent(video), url: validUrl.toString() };
+    }
+
     onStatus?.(i18n.t('tools.web_scraping.status_reading', { host: validUrl.hostname }));
 
     // If the link is really a document we can parse (by Content-Type only), download it,
@@ -58,7 +67,7 @@ export default {
         type: 'function',
         function: {
             name: 'web_scraper',
-            description: 'Scrape a single specific website for information. Returns the content of the websites page as text. If the URL points directly to a document (PDF, Word, Excel, PowerPoint) its text content is returned instead.',
+            description: 'Scrape a single specific website for information. Returns the content of the websites page as text. If the URL points directly to a document (PDF, Word, Excel, PowerPoint) its text content is returned instead. For a YouTube video URL the video transcript and details (title, author, description, view count) are returned.',
             parameters: {
                 type: 'object',
                 properties: {
@@ -91,6 +100,7 @@ export default {
             return content;
         } catch (e) {
             if (e instanceof DownloadDeclinedError) return `The user declined to download the document at this URL over cellular data. Do not retry.`;
+            if (e instanceof YoutubeTranscriptError) return `Could not read the transcript for this YouTube video: ${e.message.replace('[YoutubeTranscript] ', '')}`;
             console.error(`Web Scraping Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
             return `There was an error scraping the website. No content was found.`;
         }

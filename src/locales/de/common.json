@@ -720,6 +720,7 @@
       "description": "Kratzen Sie eine einzelne bestimmte Website nach Informationen.",
       "status_reading": "{{host}} wird gelesen",
       "status_reading_document": "Dokument {{name}} wird gelesen",
+      "status_reading_youtube": null,
       "cellular_title": "Auf Mobilfunk herunterladen?",
       "cellular_message": "Das Lesen von \"{{name}}\" erfordert das Herunterladen eines Dokuments von {{size}}. Sie sind mit Mobilfunkdaten verbunden. Fortfahren?",
       "cellular_message_unknown_size": "Das Lesen von \"{{name}}\" erfordert das Herunterladen eines Dokuments mit unbekannter Größe. Sie sind mit Mobilfunkdaten verbunden. Fortfahren?"

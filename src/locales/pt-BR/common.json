@@ -750,6 +750,7 @@
       "description": "Raspe um site específico para obter informações.",
       "status_reading": "Lendo {{host}}",
       "status_reading_document": "Lendo documento {{name}}",
+      "status_reading_youtube": null,
       "cellular_title": "Baixar em dados celulares?",
       "cellular_message": "Ler \"{{name}}\" requer baixar um documento de {{size}}. Você está em dados celulares. Continuar?",
       "cellular_message_unknown_size": "Ler \"{{name}}\" requer baixar um documento de tamanho desconhecido. Você está em dados celulares. Continuar?"

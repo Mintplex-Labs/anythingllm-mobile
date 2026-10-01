@@ -690,6 +690,7 @@
       "description": "從單一特定網站抓取資訊。",
       "status_reading": "正在讀取 {{host}}",
       "status_reading_document": "正在讀取文件 {{name}}",
+      "status_reading_youtube": null,
       "cellular_title": "在行動數據上下載？",
       "cellular_message": "讀取「{{name}}」需要下載 {{size}} 的文件。您在行動數據上。繼續？",
       "cellular_message_unknown_size": "讀取「{{name}}」需要下載大小不明的文件。您在行動數據上。繼續？"

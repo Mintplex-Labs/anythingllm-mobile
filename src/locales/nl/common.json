@@ -720,6 +720,7 @@
       "description": "Scrape een enkele specifieke website voor informatie.",
       "status_reading": "{{host}} lezen",
       "status_reading_document": "Document {{name}} lezen",
+      "status_reading_youtube": null,
       "cellular_title": "Downloaden op mobiele data?",
       "cellular_message": "\"{{name}}\" lezen vereist het downloaden van een document van {{size}}. Je bent op mobiele data. Doorgaan?",
       "cellular_message_unknown_size": "\"{{name}}\" lezen vereist het downloaden van een document van onbekende grootte. Je bent op mobiele data. Doorgaan?"

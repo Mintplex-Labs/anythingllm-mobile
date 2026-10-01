@@ -86,35 +86,35 @@
       "android_only": "Yalnızca Android",
       "description_available": "Herhangi bir uygulamada metni seçtiğinizde görünen menüye \"AnythingLLM ile Sor\" öğesini ekler. Yazdığınız şeyi cilalayabilir, kısaltabilir veya düzeltebilir, ya da buraya seçtiğiniz modeldi kullanarak okuduğunuz şeyi özetleyebilir, açıklayabilir ve araştırabilirsiniz.",
       "description_unavailable": "Android'de AnythingLLM, herhangi bir uygulamada metin seçtiğinizde gösterilen menüde görünebilir ve seçtiğiniz modeldi onu düzenlemek veya özetlemek için kullanabilirsiniz. iOS uygulamalar için bu hook sunmuyor.",
-      "assistant": null
+      "assistant": "Cihaz Yardımcı"
     },
     "assistant": {
-      "page_title": null,
-      "status_title": null,
-      "status_on": null,
-      "status_off": null,
-      "set_up": null,
-      "change": null,
-      "setup_steps": null,
-      "description": null,
-      "description_unavailable": null,
-      "need_help": null,
-      "circle_to_search_note": null,
-      "open_settings_failed": null,
-      "behavior_title": null,
-      "auto_listen": null,
-      "auto_listen_description": null,
-      "auto_screenshot": null,
-      "auto_screenshot_description": null,
-      "theme_title": null,
-      "theme_description": null,
-      "animated": null,
-      "animated_description": null,
+      "page_title": "Cihaz Yardımcı",
+      "status_title": "Varsayılan asistan",
+      "status_on": "AnythingLLM, varsayılan asistanınız",
+      "status_off": "AnythingLLM, varsayılan asistanınız değil",
+      "set_up": "Kurulum",
+      "change": "Değiştir",
+      "setup_steps": "Açılan Android ayarlarında, \"Varsayılan dijital asistan uygulaması\" seçeneğine dokunun ve AnythingLLM'ı seçin. Bu sayfa bazen \"Uygulamalar > Varsayılan uygulamalar\" altında bulunabilir. Tamamladığınızda buraya geri dönün.",
+      "description": "AnythingLLM'ı telefonunuzdaki asistan özelliğiyle (genellikle ana ekran düğmesine veya navigasyon çubuğuna uzun basma) herhangi bir uygulamada açın ve seçtiğiniz modelle (cihaz üzerinde veya kendi sunucunuzda) sorgulayın. Bu, Gemini'nin yerini alır; aynı Android' ayarında istediğiniz zaman geri dönebilirsiniz.",
+      "description_unavailable": "Android, AnythingLLM, telefonunuzun Gemini'si yerine, herhangi bir uygulama üzerinden kolayca erişebileceğiniz bir asistan olarak kullanılabilir. iOS, uygulamaların Siri'yi değiştirmesine izin vermez.",
+      "need_help": "Yardıma mı ihtiyacınız var?",
+      "circle_to_search_note": "Ana ekran düğmesine uzun basmak bunun yerine Seçerek Ara'yı açıyorsa, Android Ayarları > Ekran > Gezinme çubuğu bölümünden Seçerek Ara'yı kapatın. Bu özellik açık olduğu sürece, hangi asistanı seçerseniz seçin Android bu hareketi her zaman Google'a verir.",
+      "open_settings_failed": "Android ayarlarını açamadım",
+      "behavior_title": "Asistan açıldığında",
+      "auto_listen": "Dinlemeye başla",
+      "auto_listen_description": "Yardımcıyı çağırdığınızda mikrofonu hemen etkinleştirin.",
+      "auto_screenshot": "Ekran görüntüsünü yükle",
+      "auto_screenshot_description": "Çağrıldığında ekranın ekran görüntüsünü ekleyin. Görüntüleri algılayabilen ve \"Android\" dijital asistan ayarlarında \"Ekran görüntüsünü kullan\" seçeneğinin etkinleştirilmiş olması gerekir.",
+      "theme_title": "Tema",
+      "theme_description": "Asistan açıkken arka plan üzerinde hareketli görsel.",
+      "animated": "Arka planı canlandır",
+      "animated_description": "Arkaplanı statik bir görüntü olarak göstermek için kapatın. Bu, daha az pil tüketir ve telefonunuzu daha serin tutar.",
       "themes": {
-        "rainbow": null,
-        "halftone": null,
-        "terrain": null,
-        "painterly": null
+        "rainbow": "Arkafta",
+        "halftone": "Kesikli",
+        "terrain": "Arazi",
+        "painterly": "Resimsel"
       }
     },
     "about": {
@@ -270,20 +270,20 @@
       "view": "Görüntüle"
     },
     "reminder_card": {
-      "today": null,
-      "tomorrow": null,
-      "passed": null,
-      "view": null,
-      "open_label": null,
-      "open_clock_failed": null,
-      "open_calendar_failed": null,
+      "today": "Bugün",
+      "tomorrow": "Yarın",
+      "passed": "Tamamlandı",
+      "view": "Görüntüleme",
+      "open_label": "{{label}} aç, {{when}}",
+      "open_clock_failed": "Saat uygulamasını açamadım",
+      "open_calendar_failed": "Etkinliği takviminize ekleyemedim",
       "duration": {
-        "hours_one": null,
-        "hours_other": null,
-        "minutes_one": null,
-        "minutes_other": null,
-        "seconds_one": null,
-        "seconds_other": null
+        "hours_one": "{{count}} saat",
+        "hours_other": "{{count}} saat",
+        "minutes_one": "{{count}} dakika",
+        "minutes_other": "{{count}} dakika",
+        "seconds_one": "{{count}} ikinci",
+        "seconds_other": "{{count}} saniye"
       }
     },
     "draft": {
@@ -445,19 +445,19 @@
     }
   },
   "assistant": {
-    "could_not_start": null,
-    "dismiss": null,
-    "setup_needed": null,
-    "open_anythingllm": null,
-    "select_model": null,
-    "placeholder": null,
-    "placeholder_followup": null,
-    "listening": null,
-    "share_screen": null,
-    "screen_disabled": null,
-    "screen_blocked": null,
-    "screen_unavailable": null,
-    "needs_vision": null
+    "could_not_start": "Yardımcı başlatılamadı",
+    "dismiss": "İptal et",
+    "setup_needed": "AnythingLLM'ı ayarlama işlemini tamamlayın ve onu asistanınız olarak kullanın.",
+    "open_anythingllm": "AnythingLLM'i aç",
+    "select_model": "Başlamak için yukarıdaki bir modeli seçin.",
+    "placeholder": "Soruyu gönderin AnythingLLM",
+    "placeholder_followup": "Daha fazla bilgi için…",
+    "listening": "Dinleniyor…",
+    "share_screen": "Ekranı paylaş",
+    "screen_disabled": "Ekranınızı paylaşmak için Android dijital asistan ayarlarında \"Ekran görüntüsünü kullan\" seçeneğini açın.",
+    "screen_blocked": "Bu uygulama ekran görüntüsü çekmeyi engelliyor.",
+    "screen_unavailable": "Ekranı yakalamada sorun.",
+    "needs_vision": "Ekranınızı paylaşmak için, görüntüleri görüntüleyebilen bir model gereklidir. {{reason}}"
   },
   "attachments": {
     "processing": "İşleniyor…",
@@ -492,9 +492,9 @@
     "whats_new": "Yeni Neler Var",
     "tour_title": "AnythingLLM'in neler yapabileceği",
     "device_assistant": {
-      "title": null,
-      "body": null,
-      "cta": null
+      "title": "Gemini alanına kendi yapay zeka uygulamanızı ekleyin",
+      "body": "AnythingLLM'yi telefonunuzun asistanı yapın ve Gemini'de kullandığınız aynı hareketiyle herhangi bir uygulamadan açın. Ekrandaki içeri hakkında bilgi alın - seçtiğiniz model tarafından yanıtlanacaktır.",
+      "cta": "Cihaz Yardımcısını Ayarla"
     },
     "quick_actions": {
       "title": "Herhangi bir yerden AnythingLLM ile sor",
@@ -667,17 +667,17 @@
       "status_scheduled": "\"{{name}}\" zamanlandı"
     },
     "set_reminder": {
-      "name": null,
-      "description": null,
-      "default_label": null,
-      "calendar_notes": null,
-      "status_asking": null,
-      "approval_alarm": null,
-      "approval_timer": null,
-      "approval_calendar": null,
-      "status_not_approved": null,
-      "status_expired": null,
-      "status_set": null
+      "name": "Uyarılar ve Hatırlatıcılar",
+      "description": "Saat uygulamanızda alarm ve zamanlayıcıları ayarlayın ve onayladıktan sonra. Bir günden daha uzun süre sonra gelen hatırlatıcılar takviminizde yer alır.",
+      "default_label": "Hatırlatıcı",
+      "calendar_notes": "Hatırlatıcı AnythingLLM'dan ayarlandı",
+      "status_asking": "Hatırlatıcı ayarlama isteği \"{{label}}\"",
+      "approval_alarm": "{{when}} için \"{{label}}\" alarmı kurulsun mu?",
+      "approval_timer": "{{duration}} süreli \"{{label}}\" zamanlayıcısı başlatılsın mı? {{when}} sona erecek.",
+      "approval_calendar": "\"{{label}}\" uyarıyla birlikte {{when}} için takviminize eklensin mi? Bir günden daha uzak olduğu için saat uygulamasında ayarlanamaz.",
+      "status_not_approved": "Hatırlatma reddedildi",
+      "status_expired": "Hatırlatma süresi doldu, onaylanmadı.",
+      "status_set": "Hatırlatıcı ayarla: {{label}}"
     },
     "draft_email": {
       "name": "E-posta Taslağı",
@@ -1206,10 +1206,10 @@
       "empty_title": "Şimdilik planlanan görev yok.",
       "empty_body": "Yardımcı, her sabah bir web sitesini kontrol etsin, haftalık bir özet hazırlasın veya ayın başında bir rapor oluştursun – tüm bunlar sohbet penceresini açmadan.",
       "create_first": "İlk işinizi oluşturun",
-      "battery_optimized_title": null,
-      "battery_optimized_body": null,
-      "open_battery_settings": null,
-      "open_battery_settings_failed": null
+      "battery_optimized_title": "Telefonunuz kilitliyken işler tamamlanamayabilir",
+      "battery_optimized_body": "Pil optimizasyonu, arka planda çalışan bir işlem sırasında ağ bağlantısını kesebilir. Güvenilir bir kullanım için, \"Uygulama Bilgileri\"ni açın, \"Pil\" seçeneğini seçin ve \"Sınırlama Yok\" seçeneğini belirleyin.",
+      "open_battery_settings": "Pil ayarlarını aç",
+      "open_battery_settings_failed": "Ayarlar açılmadı"
     },
     "runs": {
       "already_running": "Bu işlem zaten çalışıyor",

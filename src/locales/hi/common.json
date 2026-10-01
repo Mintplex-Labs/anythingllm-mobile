@@ -86,35 +86,35 @@
       "android_only": "केवल Android के लिए",
       "description_available": "आपके द्वारा किसी भी ऐप में टेक्स्ट का चयन करते समय दिखाई देने वाले मेनू में AnythingLLM के साथ पूछें जोड़ता है। इसे आपके द्वारा यहां चुने गए किसी भी मॉडल के साथ जो आप लिख रहे हैं उसे पॉलिश करने, छोटा करने या ठीक करने के लिए, या जो आप पढ़ रहे हैं उसे सारांशित करने, समझाने और शोध करने के लिए उपयोग करें।",
       "description_unavailable": "Android पर, AnythingLLM किसी भी ऐप में टेक्स्ट का चयन करते समय दिखाई देने वाले मेनू में दिखाई दे सकता है, इसे आपके चुने हुए मॉडल के साथ संपादित या सारांशित करने के लिए। iOS एप्लिकेशन को यह सुविधा नहीं प्रदान करता है।",
-      "assistant": null
+      "assistant": "डिवाइस सहायक"
     },
     "assistant": {
-      "page_title": null,
-      "status_title": null,
-      "status_on": null,
-      "status_off": null,
-      "set_up": null,
-      "change": null,
-      "setup_steps": null,
-      "description": null,
-      "description_unavailable": null,
-      "need_help": null,
-      "circle_to_search_note": null,
-      "open_settings_failed": null,
-      "behavior_title": null,
-      "auto_listen": null,
-      "auto_listen_description": null,
-      "auto_screenshot": null,
-      "auto_screenshot_description": null,
-      "theme_title": null,
-      "theme_description": null,
-      "animated": null,
-      "animated_description": null,
+      "page_title": "डिवाइस सहायक",
+      "status_title": "डिफ़ॉल्ट सहायक",
+      "status_on": "AnythingLLM आपका डिफ़ॉल्ट सहायक है",
+      "status_off": "AnythingLLM आपका डिफ़ॉल्ट सहायक नहीं है",
+      "set_up": "सेटिंग करें",
+      "change": "बदलें",
+      "setup_steps": "खुलने वाले Android सेटिंग्स में, \"डिफ़ॉल्ट डिजिटल असिस्टेंट ऐप\" पर टैप करें और AnythingLLM चुनें। पेज कभी-कभी Apps > डिफ़ॉल्ट ऐप्स के अंतर्गत होता है। जब आप काम पूरा कर लें तो वापस आएं।",
+      "description": "अपने फ़ोन के सहायक इशारा (आमतौर पर होम बटन पर लंबी दबाना या नेविगेशन बार पर) का उपयोग करके किसी भी ऐप में AnythingLLM खोलें, और जिस मॉडल को आपने चुना है, उसके साथ पूछें - चाहे वह आपके डिवाइस पर हो या आपके अपने सर्वर पर। यह Gemini की जगह लेता है; आप उसी Android सेटिंग में कभी भी वापस स्विच कर सकते हैं।",
+      "description_unavailable": "Android पर, AnythingLLM Gemini की जगह आपके फ़ोन का असिस्टेंट बन सकता है, जिसे असिस्टेंट जेस्चर से किसी भी ऐप के ऊपर खोला जा सकता है। iOS ऐप्स को Siri की जगह लेने की अनुमति नहीं देता।",
+      "need_help": "सहायता चाहिए?",
+      "circle_to_search_note": "अगर होम बटन को देर तक दबाने पर इसके बजाय सर्कल टू सर्च खुलता है, तो Android सेटिंग्स > डिस्प्ले > नेविगेशन बार में सर्कल टू सर्च बंद करें। जब तक यह चालू है, Android वह जेस्चर हमेशा Google को देता है, चाहे आप कोई भी असिस्टेंट चुनें।",
+      "open_settings_failed": "Android सेटिंग्स खोलने में असमर्थ",
+      "behavior_title": "जब सहायक खुलता है",
+      "auto_listen": "शुरू करें",
+      "auto_listen_description": "जैसे ही आप सहायक को सक्रिय करें, तुरंत माइक्रोफ़ोन चालू करें।",
+      "auto_screenshot": "स्क्रीनशॉट संलग्न करें",
+      "auto_screenshot_description": "कॉल करने पर स्क्रीन का स्क्रीनशॉट संलग्न करें। इसके लिए, एक मॉडल की आवश्यकता है जो छवियों को देख सके, और \"Android\" डिजिटल असिस्टेंट सेटिंग्स में \"स्क्रीनशॉट का उपयोग करें\" विकल्प को चालू किया जाना चाहिए।",
+      "theme_title": "थीम",
+      "theme_description": "जब सहायक खुला होता है, तो उसके पीछे का एनिमेटेड पृष्ठभूमि।",
+      "animated": "गतिशील पृष्ठभूमि",
+      "animated_description": "पृष्ठभूमि को स्थिर चित्र के रूप में दिखाने के लिए बंद करें। इससे बैटरी कम खर्च होती है और आपका फोन ठंडा रहता है।",
       "themes": {
-        "rainbow": null,
-        "halftone": null,
-        "terrain": null,
-        "painterly": null
+        "rainbow": "इंद्रधनुष",
+        "halftone": "हाल्फ्टोन",
+        "terrain": "भूभाग",
+        "painterly": "चित्रमय"
       }
     },
     "about": {
@@ -270,20 +270,20 @@
       "view": "देखें"
     },
     "reminder_card": {
-      "today": null,
-      "tomorrow": null,
-      "passed": null,
-      "view": null,
-      "open_label": null,
-      "open_clock_failed": null,
-      "open_calendar_failed": null,
+      "today": "आज",
+      "tomorrow": "कल",
+      "passed": "सफलता",
+      "view": "देखें",
+      "open_label": "खोलें {{label}}, {{when}}",
+      "open_clock_failed": "घड़ी ऐप खोलने में असमर्थ",
+      "open_calendar_failed": "इस कार्यक्रम को आपके कैलेंडर में खोलने में असमर्थ",
       "duration": {
-        "hours_one": null,
-        "hours_other": null,
-        "minutes_one": null,
-        "minutes_other": null,
-        "seconds_one": null,
-        "seconds_other": null
+        "hours_one": "{{count}} घंटा",
+        "hours_other": "{{count}} घंटे",
+        "minutes_one": "{{count}} मिनट",
+        "minutes_other": "{{count}} मिनट",
+        "seconds_one": "{{count}} दूसरा",
+        "seconds_other": "{{count}} सेकंड"
       }
     },
     "draft": {
@@ -445,19 +445,19 @@
     }
   },
   "assistant": {
-    "could_not_start": null,
-    "dismiss": null,
-    "setup_needed": null,
-    "open_anythingllm": null,
-    "select_model": null,
-    "placeholder": null,
-    "placeholder_followup": null,
-    "listening": null,
-    "share_screen": null,
-    "screen_disabled": null,
-    "screen_blocked": null,
-    "screen_unavailable": null,
-    "needs_vision": null
+    "could_not_start": "सहायक शुरू नहीं हो सका",
+    "dismiss": "रद्द करें",
+    "setup_needed": "AnythingLLM को सेट अप करना पूरा करें ताकि आप इसका उपयोग अपने सहायक के रूप में कर सकें।",
+    "open_anythingllm": "खोलें AnythingLLM",
+    "select_model": "ऊपर दिए गए मॉडल में से कोई एक चुनें और शुरू करें।",
+    "placeholder": "पूछें AnythingLLM",
+    "placeholder_followup": "और जानकारी प्राप्त करें...",
+    "listening": "सुन रहे हैं…",
+    "share_screen": "स्क्रीन साझा करें",
+    "screen_disabled": "अपनी स्क्रीन शेयर करने के लिए Android डिजिटल असिस्टेंट सेटिंग्स में \"स्क्रीनशॉट का उपयोग करें\" चालू करें।",
+    "screen_blocked": "यह ऐप स्क्रीनशॉट लेने की अनुमति नहीं देता।",
+    "screen_unavailable": "स्क्रीन कैप्चर नहीं कर सका।",
+    "needs_vision": "अपनी स्क्रीन साझा करने के लिए, एक मॉडल की आवश्यकता होती है जो छवियों को देख सके। {{reason}}"
   },
   "attachments": {
     "processing": "प्रसंस्करण…",
@@ -492,9 +492,9 @@
     "whats_new": "नया क्या है",
     "tour_title": "AnythingLLM क्या कर सकता है",
     "device_assistant": {
-      "title": null,
-      "body": null,
-      "cta": null
+      "title": "Gemini को अपने AI से बदलें",
+      "body": "अपने फ़ोन को AnythingLLM सहायक बनाएं और उसी इशारे का उपयोग करके किसी भी ऐप से खोलें जिसका उपयोग आप Gemini के लिए करते हैं। स्क्रीन पर क्या है, इसके बारे में पूछें - जिसका उत्तर आपके द्वारा चुने गए मॉडल द्वारा दिया जाएगा।",
+      "cta": "डिवाइस सहायक सेट करें"
     },
     "quick_actions": {
       "title": "कहीं भी AnythingLLM के साथ पूछें",
@@ -667,17 +667,17 @@
       "status_scheduled": "\"{{name}}\" को अनुसूचित किया गया"
     },
     "set_reminder": {
-      "name": null,
-      "description": null,
-      "default_label": null,
-      "calendar_notes": null,
-      "status_asking": null,
-      "approval_alarm": null,
-      "approval_timer": null,
-      "approval_calendar": null,
-      "status_not_approved": null,
-      "status_expired": null,
-      "status_set": null
+      "name": "अलार्म और अनुस्मारक",
+      "description": "अपने घड़ी ऐप में अलार्म और टाइमर सेट करें, और जब आप उन्हें स्वीकृत कर लें। एक दिन से अधिक समय बाद के रिमाइंडर आपके कैलेंडर में जुड़ जाएंगे।",
+      "default_label": "याद दिला",
+      "calendar_notes": "AnythingLLM से रिमाइंडर सेट करें",
+      "status_asking": "रिमाइंडर \"{{label}}\" सेट करने की अनुमति मांगी जा रही है",
+      "approval_alarm": "अलार्म सेट करें \"{{label}}\" के लिए {{when}}?",
+      "approval_timer": "{{duration}} टाइमर शुरू करें \"{{label}}\"? यह {{when}} पर समाप्त होता है।",
+      "approval_calendar": "क्या आप \"{{label}}\" को अपने कैलेंडर में {{when}} के लिए जोड़ना चाहते हैं, जिसमें अलर्ट भी हो? यह तारीख अभी दूर है, इसलिए इसे घड़ी ऐप में सेट नहीं किया जा सकता।",
+      "status_not_approved": "यह रिमाइंडर स्वीकृत नहीं हुआ।",
+      "status_expired": "अलार्म का समय निर्धारित होने से पहले, इसे स्वीकृत नहीं किया गया।",
+      "status_set": "अलार्म सेट करें \"{{label}}\""
     },
     "draft_email": {
       "name": "ईमेल का मसौदा",
@@ -1206,10 +1206,10 @@
       "empty_title": "अभी तक कोई निर्धारित नौकरी नहीं",
       "empty_body": "सहायक से हर सुबह एक वेबसाइट जाँचने, साप्ताहिक सारांश का मसौदा तैयार करने, या महीने की पहली तारीख को एक रिपोर्ट बनाने के लिए कहें - सब कुछ चैट खोले बिना।",
       "create_first": "अपनी पहली नौकरी बनाएँ",
-      "battery_optimized_title": null,
-      "battery_optimized_body": null,
-      "open_battery_settings": null,
-      "open_battery_settings_failed": null
+      "battery_optimized_title": "जब आपका फ़ोन लॉक हो, तो काम में रुकावट आ सकती है।",
+      "battery_optimized_body": "बैटरी अनुकूलन के कारण, जब कोई कार्य पृष्ठभूमि में चल रहा होता है, तो नेटवर्क बंद हो सकता है। विश्वसनीय प्रदर्शन के लिए, \"ऐप जानकारी\" खोलें, \"बैटरी\" पर टैप करें और \"गैर-सीमित\" विकल्प चुनें।",
+      "open_battery_settings": "बैटरी सेटिंग्स खोलें",
+      "open_battery_settings_failed": "सेटिंग्स खोलने में असमर्थ"
     },
     "runs": {
       "already_running": "यह नौकरी पहले से ही चल रही है",

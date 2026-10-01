@@ -86,35 +86,35 @@
       "android_only": "仅 Android",
       "description_available": "在任何应用程序中选择文本时，将\"使用 AnythingLLM 询问\"添加到显示的菜单中。使用它来完善、缩短或修复您正在写的内容，或者用您选择的模型来总结、解释和研究您正在读的内容。",
       "description_unavailable": "在 Android 上，当您在任何应用程序中选择文本时，AnythingLLM 可以出现在显示的菜单中，以使用您选择的模型编辑或总结它。iOS 不为应用程序提供此钩子。",
-      "assistant": null
+      "assistant": "设备助手"
     },
     "assistant": {
-      "page_title": null,
-      "status_title": null,
-      "status_on": null,
-      "status_off": null,
-      "set_up": null,
-      "change": null,
-      "setup_steps": null,
-      "description": null,
-      "description_unavailable": null,
-      "need_help": null,
-      "circle_to_search_note": null,
-      "open_settings_failed": null,
-      "behavior_title": null,
-      "auto_listen": null,
-      "auto_listen_description": null,
-      "auto_screenshot": null,
-      "auto_screenshot_description": null,
-      "theme_title": null,
-      "theme_description": null,
-      "animated": null,
-      "animated_description": null,
+      "page_title": "设备助手",
+      "status_title": "默认助手",
+      "status_on": "AnythingLLM 是您的默认助手",
+      "status_off": "AnythingLLM 不是你的默认助手",
+      "set_up": "设置",
+      "change": "修改",
+      "setup_steps": "在打开的Android设置中，点击“默认数字助手应用”，然后选择AnythingLLM。 此页面有时位于“应用”>“默认应用”中。 完成后，请返回此处。",
+      "description": "使用手机的助手手势（通常是长按主屏幕按钮或导航栏）在任何应用上打开 AnythingLLM，并使用您选择的模型提问，无论是设备端还是您自己的服务器。它将取代 Gemini；您可以随时在同一 Android 设置中切换回来。",
+      "description_unavailable": "在 Android 上，AnythingLLM 可以作为你的手机助手，代替 Gemini，通过任何应用中的助手手势进行操作。iOS 不允许应用取代 Siri。",
+      "need_help": "需要帮助设置？",
+      "circle_to_search_note": "如果长按主屏幕按钮打开的是“圈定即搜”，请在 Android 设置 > 显示 > 导航栏中关闭“圈定即搜”。只要该功能处于开启状态，无论您选择哪个助手，Android 都会将该手势交给 Google。",
+      "open_settings_failed": "无法打开 Android 设置",
+      "behavior_title": "助手启动时",
+      "auto_listen": "开始收听",
+      "auto_listen_description": "在启动语音助手后，立即开启麦克风。",
+      "auto_screenshot": "添加截图",
+      "auto_screenshot_description": "调用时附加屏幕截图。需要能够识别图像的模型，并在 Android 数字助理设置中开启“使用屏幕截图”。",
+      "theme_title": "主题",
+      "theme_description": "当助手处于打开状态时，背景中的动画效果。",
+      "animated": "动画背景",
+      "animated_description": "关闭后，背景会显示为静止图片。这样可以节省电量，并使手机更凉快。",
       "themes": {
-        "rainbow": null,
-        "halftone": null,
-        "terrain": null,
-        "painterly": null
+        "rainbow": "彩虹",
+        "halftone": "半色调",
+        "terrain": "地形",
+        "painterly": "绘画风格"
       }
     },
     "about": {
@@ -267,17 +267,17 @@
       "view": "查看"
     },
     "reminder_card": {
-      "today": null,
-      "tomorrow": null,
-      "passed": null,
-      "view": null,
-      "open_label": null,
-      "open_clock_failed": null,
-      "open_calendar_failed": null,
+      "today": "今天",
+      "tomorrow": "明天",
+      "passed": "已通过",
+      "view": "查看",
+      "open_label": "打开 {{label}}, {{when}}",
+      "open_clock_failed": "无法打开时钟应用",
+      "open_calendar_failed": "无法打开日历中的活动",
       "duration": {
-        "hours_other": null,
-        "minutes_other": null,
-        "seconds_other": null
+        "hours_other": "{{count}} 小时",
+        "minutes_other": "{{count}} 分钟",
+        "seconds_other": "{{count}} 秒"
       }
     },
     "draft": {
@@ -432,19 +432,19 @@
     }
   },
   "assistant": {
-    "could_not_start": null,
-    "dismiss": null,
-    "setup_needed": null,
-    "open_anythingllm": null,
-    "select_model": null,
-    "placeholder": null,
-    "placeholder_followup": null,
-    "listening": null,
-    "share_screen": null,
-    "screen_disabled": null,
-    "screen_blocked": null,
-    "screen_unavailable": null,
-    "needs_vision": null
+    "could_not_start": "无法启动助手",
+    "dismiss": "取消",
+    "setup_needed": "完成设置 AnythingLLM，以便您使用它作为您的助手。",
+    "open_anythingllm": "打开 AnythingLLM",
+    "select_model": "选择一个模型开始使用。",
+    "placeholder": "提问 AnythingLLM",
+    "placeholder_followup": "提出后续问题…",
+    "listening": "正在播放…",
+    "share_screen": "共享屏幕",
+    "screen_disabled": "在 Android 数字助理设置中开启“使用屏幕截图”以共享您的屏幕。",
+    "screen_blocked": "此应用不支持截屏功能。",
+    "screen_unavailable": "无法捕获屏幕。",
+    "needs_vision": "需要一个能够查看图像的模型才能共享屏幕。 {{reason}}"
   },
   "attachments": {
     "processing": "处理中…",
@@ -478,9 +478,9 @@
     "whats_new": "新增功能",
     "tour_title": "AnythingLLM 可以做什么",
     "device_assistant": {
-      "title": null,
-      "body": null,
-      "cta": null
+      "title": "用你自己的 AI 替换 Gemini",
+      "body": "让AnythingLLM成为你的手机助手，并使用与Gemini相同的手势从任何应用中打开它。 询问屏幕上的内容，答案将来自你选择的模型。",
+      "cta": "设置设备助手"
     },
     "quick_actions": {
       "title": "在任何地方使用 AnythingLLM 询问",
@@ -639,17 +639,17 @@
       "status_scheduled": "已计划\"{{name}}\""
     },
     "set_reminder": {
-      "name": null,
-      "description": null,
-      "default_label": null,
-      "calendar_notes": null,
-      "status_asking": null,
-      "approval_alarm": null,
-      "approval_timer": null,
-      "approval_calendar": null,
-      "status_not_approved": null,
-      "status_expired": null,
-      "status_set": null
+      "name": "闹钟和提醒",
+      "description": "在你的时钟应用中设置闹钟和计时器，确认后。超过一天的提醒会添加到你的日历中。",
+      "default_label": "提醒",
+      "calendar_notes": "设置提醒：AnythingLLM",
+      "status_asking": "设置提醒 \"{{label}}\"",
+      "approval_alarm": "设置闹钟 \"{{label}}\" 在 {{when}}？",
+      "approval_timer": "开始{{duration}}计时器{{label}}？ 计时结束于{{when}}。",
+      "approval_calendar": "将 \"{{label}}\" 添加到您的日历，并设置提醒？ 这需要提前 {{when}} 天，因此无法在时钟应用中设置。",
+      "status_not_approved": "提醒已取消",
+      "status_expired": "提醒时间已过，尚未批准",
+      "status_set": "设置提醒 \"{{label}}\""
     },
     "draft_email": {
       "name": "起草电子邮件",
@@ -1163,10 +1163,10 @@
       "empty_title": "还没有计划的任务",
       "empty_body": "让助手每天早上检查一个网站、起草一份周总结，或在每月的第一天构建一份报告 - 无需打开聊天。",
       "create_first": "创建您的第一个任务",
-      "battery_optimized_title": null,
-      "battery_optimized_body": null,
-      "open_battery_settings": null,
-      "open_battery_settings_failed": null
+      "battery_optimized_title": "在手机锁屏状态下，某些任务可能会失败",
+      "battery_optimized_body": "为了获得更稳定的运行效果，请在后台运行任务时，在“应用信息”中，选择“电池”，然后选择“不限制”。",
+      "open_battery_settings": "打开电池设置",
+      "open_battery_settings_failed": "无法打开设置"
     },
     "runs": {
       "already_running": "此任务已在运行",

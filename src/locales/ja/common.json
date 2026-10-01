@@ -86,35 +86,35 @@
       "android_only": "Androidのみ",
       "description_available": "任意のアプリでテキストを選択したときに表示されるメニューに「AnythingLLMで質問」を追加します。選択したモデルを使用して、書いている内容を磨く、短縮、修正したり、読んでいる内容を要約、説明、調査したりするために使用できます。",
       "description_unavailable": "Androidでは、任意のアプリでテキストを選択したときに表示されるメニューにAnythingLLMが表示され、選択したモデルで編集または要約できます。iOSはアプリにこのフックを提供しません。",
-      "assistant": null
+      "assistant": "デバイスアシスタント"
     },
     "assistant": {
-      "page_title": null,
-      "status_title": null,
-      "status_on": null,
-      "status_off": null,
-      "set_up": null,
-      "change": null,
-      "setup_steps": null,
-      "description": null,
-      "description_unavailable": null,
-      "need_help": null,
-      "circle_to_search_note": null,
-      "open_settings_failed": null,
-      "behavior_title": null,
-      "auto_listen": null,
-      "auto_listen_description": null,
-      "auto_screenshot": null,
-      "auto_screenshot_description": null,
-      "theme_title": null,
-      "theme_description": null,
-      "animated": null,
-      "animated_description": null,
+      "page_title": "デバイスアシスタント",
+      "status_title": "デフォルトアシスタント",
+      "status_on": "AnythingLLM は、デフォルトのアシスタント",
+      "status_off": "AnythingLLM は、あなたの標準的なアシスタントではありません",
+      "set_up": "設定",
+      "change": "変更",
+      "setup_steps": "開いた Android の設定で「デフォルトのデジタル アシスタント アプリ」をタップし、AnythingLLM を選択してください。このページは「アプリ」>「デフォルトのアプリ」にある場合もあります。完了したらここに戻ってください。",
+      "description": "スマートフォンのアシスタント ジェスチャー（通常はホームボタンまたはナビゲーション バーの長押し）で、どのアプリの上からでも AnythingLLM を開き、選択中のモデル（デバイス上またはご自身のサーバー）に質問できます。Gemini の代わりになりますが、同じ Android の設定でいつでも元に戻せます。",
+      "description_unavailable": "Android、AnythingLLMは、Geminiの代わりに、任意のアプリからジェスチャーで起動できる、スマートフォンのアシスタントとして機能します。ただし、iOSは、Siriを他のアプリで置き換えることはできません。",
+      "need_help": "設定方法がわからない場合は",
+      "circle_to_search_note": "ホームボタンを長押しすると「かこって検索」が開いてしまう場合は、Android の設定 >「ディスプレイ」>「ナビゲーション バー」で「かこって検索」をオフにしてください。オンの間は、どのアシスタントを選んでも、Android はこのジェスチャーを常に Google に割り当てます。",
+      "open_settings_failed": "Androidの設定を開けませんでした",
+      "behavior_title": "アシスタントが起動したとき",
+      "auto_listen": "再生を開始する",
+      "auto_listen_description": "アシスタントを起動したら、すぐにマイクをオンにしてください。",
+      "auto_screenshot": "スクリーンショットを添付",
+      "auto_screenshot_description": "起動時に画面のスクリーンショットを添付します。画像を認識できるモデルと、Android のデジタル アシスタント設定で「スクリーンショットを使用」がオンになっている必要があります。",
+      "theme_title": "テーマ",
+      "theme_description": "アシスタントが開いている際の背景アニメーション。",
+      "animated": "背景アニメーション",
+      "animated_description": "オフにすると、背景を静止画として表示します。これにより、バッテリーの消費を抑え、携帯電話の温度上昇を軽減できます。",
       "themes": {
-        "rainbow": null,
-        "halftone": null,
-        "terrain": null,
-        "painterly": null
+        "rainbow": "虹",
+        "halftone": "半トーン",
+        "terrain": "地形",
+        "painterly": "絵画風"
       }
     },
     "about": {
@@ -267,17 +267,17 @@
       "view": "表示"
     },
     "reminder_card": {
-      "today": null,
-      "tomorrow": null,
-      "passed": null,
-      "view": null,
-      "open_label": null,
-      "open_clock_failed": null,
-      "open_calendar_failed": null,
+      "today": "本日",
+      "tomorrow": "明日",
+      "passed": "完了",
+      "view": "表示",
+      "open_label": "開く {{label}}, {{when}}",
+      "open_clock_failed": "時計アプリを開けられませんでした",
+      "open_calendar_failed": "カレンダーに登録されたイベントを開けませんでした",
       "duration": {
-        "hours_other": null,
-        "minutes_other": null,
-        "seconds_other": null
+        "hours_other": "{{count}} 時間",
+        "minutes_other": "{{count}} 分",
+        "seconds_other": "{{count}} 秒"
       }
     },
     "draft": {
@@ -432,19 +432,19 @@
     }
   },
   "assistant": {
-    "could_not_start": null,
-    "dismiss": null,
-    "setup_needed": null,
-    "open_anythingllm": null,
-    "select_model": null,
-    "placeholder": null,
-    "placeholder_followup": null,
-    "listening": null,
-    "share_screen": null,
-    "screen_disabled": null,
-    "screen_blocked": null,
-    "screen_unavailable": null,
-    "needs_vision": null
+    "could_not_start": "アシスタントの起動に失敗",
+    "dismiss": "閉じる",
+    "setup_needed": "AnythingLLM を設定して、アシスタントとして使用を開始してください。",
+    "open_anythingllm": "開く AnythingLLM",
+    "select_model": "上記からモデルを選択して、開始してください。",
+    "placeholder": "質問する AnythingLLM",
+    "placeholder_followup": "詳細を尋ねる…",
+    "listening": "再生中…",
+    "share_screen": "画面共有",
+    "screen_disabled": "画面を共有するには、Android のデジタル アシスタント設定で「スクリーンショットを使用」をオンにしてください。",
+    "screen_blocked": "このアプリでは、スクリーンショットの取得はできません。",
+    "screen_unavailable": "画面をキャプチャできません。",
+    "needs_vision": "画面を共有するには、画像を表示できるモデルが必要です。 {{reason}}"
   },
   "attachments": {
     "processing": "処理中…",
@@ -478,9 +478,9 @@
     "whats_new": "新機能",
     "tour_title": "AnythingLLMができること",
     "device_assistant": {
-      "title": null,
-      "body": null,
-      "cta": null
+      "title": "Gemini を、ご自身のAIに置き換えてください",
+      "body": "AnythingLLM を、スマートフォンのアシスタントとして設定し、Gemini で使用している同じジェスチャーで、任意のアプリから起動します。画面に表示されている内容について質問してください。回答は、選択したモデルが提供します。",
+      "cta": "デバイスアシスタントの設定"
     },
     "quick_actions": {
       "title": "AnythingLLMで質問どこでも",
@@ -639,17 +639,17 @@
       "status_scheduled": "「{{name}}」がスケジュール"
     },
     "set_reminder": {
-      "name": null,
-      "description": null,
-      "default_label": null,
-      "calendar_notes": null,
-      "status_asking": null,
-      "approval_alarm": null,
-      "approval_timer": null,
-      "approval_calendar": null,
-      "status_not_approved": null,
-      "status_expired": null,
-      "status_set": null
+      "name": "アラームとリマインダー",
+      "description": "時計アプリでアラームやタイマーを設定し、承認後、リマインダーをカレンダーに追加します（1日以上先）。",
+      "default_label": "リマインダー",
+      "calendar_notes": "AnythingLLM に設定",
+      "status_asking": "リマインダーを設定する{{label}}",
+      "approval_alarm": "{{when}} にアラーム「{{label}}」を設定しますか？",
+      "approval_timer": "{{duration}} のタイマー「{{label}}」を開始しますか？ {{when}} に終了します。",
+      "approval_calendar": "{{when}} に「{{label}}」を通知付きでカレンダーに追加しますか？ 1 日以上先のため、時計アプリでは設定できません。",
+      "status_not_approved": "リマインダーは承認されませんでした",
+      "status_expired": "リマインダーの期限が過ぎたが、まだ承認されていません",
+      "status_set": "リマインダーを設定: {{label}}"
     },
     "draft_email": {
       "name": "メールをドラフト",
@@ -1163,10 +1163,10 @@
       "empty_title": "スケジュール済みジョブはまだありません",
       "empty_body": "毎朝ウェブサイトを確認し、週次要約をドラフトするか、月初にレポートを構築してください-すべてチャットを開かずに。",
       "create_first": "最初のジョブを作成",
-      "battery_optimized_title": null,
-      "battery_optimized_body": null,
-      "open_battery_settings": null,
-      "open_battery_settings_failed": null
+      "battery_optimized_title": "ロックされた状態で、作業が中断される可能性があります。",
+      "battery_optimized_body": "バッテリー最適化により、バックグラウンドで処理を実行中にネットワーク接続が切断されることがあります。安定した動作のため、「アプリ情報」を開き、「バッテリー」を選択し、「制限なし」を選択してください。",
+      "open_battery_settings": "バッテリー設定を開く",
+      "open_battery_settings_failed": "設定を開けません"
     },
     "runs": {
       "already_running": "このジョブは既に実行中です",

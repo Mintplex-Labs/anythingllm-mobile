@@ -86,35 +86,35 @@
       "android_only": "Solo Android",
       "description_available": "Agrega \"Preguntar con AnythingLLM\" al menú que aparece cuando selecciona texto en cualquier aplicación. Úselo para pulir, acortar o corregir lo que está escribiendo, o para resumir, explicar e investigar lo que está leyendo, con el modelo que haya seleccionado aquí.",
       "description_unavailable": "En Android, AnythingLLM puede aparecer en el menú que se muestra cuando selecciona texto en cualquier aplicación, para editarlo o resumirlo con su modelo elegido. iOS no ofrece este gancho a las aplicaciones.",
-      "assistant": null
+      "assistant": "Asistente del dispositivo"
     },
     "assistant": {
-      "page_title": null,
-      "status_title": null,
-      "status_on": null,
-      "status_off": null,
-      "set_up": null,
-      "change": null,
-      "setup_steps": null,
-      "description": null,
-      "description_unavailable": null,
-      "need_help": null,
-      "circle_to_search_note": null,
-      "open_settings_failed": null,
-      "behavior_title": null,
-      "auto_listen": null,
-      "auto_listen_description": null,
-      "auto_screenshot": null,
-      "auto_screenshot_description": null,
-      "theme_title": null,
-      "theme_description": null,
-      "animated": null,
-      "animated_description": null,
+      "page_title": "Asistente del dispositivo",
+      "status_title": "Asistente predeterminado",
+      "status_on": "AnythingLLM es tu asistente predeterminado",
+      "status_off": "AnythingLLM no es tu asistente predeterminado.",
+      "set_up": "Configurar",
+      "change": "Cambiar",
+      "setup_steps": "En la configuración Android, toque \"Aplicación de asistente digital predeterminada\" y seleccione AnythingLLM. La página puede estar en la sección \"Aplicaciones\" > \"Aplicaciones predeterminadas\". Regrese aquí cuando haya terminado.",
+      "description": "Inicie AnythingLLM desde cualquier aplicación utilizando el gesto de su asistente en el teléfono (normalmente, mantener pulsado el botón de inicio o la barra de navegación) y pregunte con el modelo que haya seleccionado, ya sea en el dispositivo o en su propio servidor. Esto reemplaza a Gemini: puede volver a configurarlo en cualquier momento, dentro de la misma Android.",
+      "description_unavailable": "En Android, AnythingLLM puede ser el asistente de tu teléfono en lugar de Gemini, que se abre con cualquier gesto en cualquier aplicación. iOS no permite que las aplicaciones reemplacen a Siri.",
+      "need_help": "¿Necesitas ayuda para configurarlo?",
+      "circle_to_search_note": "Si al mantener pulsado el botón de inicio se abre Rodea para buscar, desactívalo en Ajustes de Android > Pantalla > Barra de navegación. Mientras esté activado, Android siempre asigna ese gesto a Google, independientemente del asistente que elijas.",
+      "open_settings_failed": "No se pudo abrir la configuración de Android",
+      "behavior_title": "Cuando el asistente se abre",
+      "auto_listen": "Comienza a escuchar",
+      "auto_listen_description": "Activa el micrófono tan pronto como actives el asistente.",
+      "auto_screenshot": "Adjuntar captura de pantalla",
+      "auto_screenshot_description": "Adjuntar una captura de pantalla de la pantalla al iniciar. Necesita un modelo que pueda ver imágenes, y que la opción \"Usar captura de pantalla\" esté activada en la configuración del asistente digital Android.",
+      "theme_title": "Tema",
+      "theme_description": "El fondo animado que aparece detrás del asistente cuando está abierto.",
+      "animated": "Animar fondo",
+      "animated_description": "Desactiva para mostrar el fondo como una imagen estática. Esto reduce el consumo de batería y mantiene tu teléfono más fresco.",
       "themes": {
-        "rainbow": null,
-        "halftone": null,
-        "terrain": null,
-        "painterly": null
+        "rainbow": "Arcoíris",
+        "halftone": "Tono medio",
+        "terrain": "Terreno",
+        "painterly": "Estilo pictórico"
       }
     },
     "about": {
@@ -273,23 +273,23 @@
       "view": "Ver"
     },
     "reminder_card": {
-      "today": null,
-      "tomorrow": null,
-      "passed": null,
-      "view": null,
-      "open_label": null,
-      "open_clock_failed": null,
-      "open_calendar_failed": null,
+      "today": "Hoy",
+      "tomorrow": "Mañana",
+      "passed": "Completado",
+      "view": "Ver",
+      "open_label": "Abrir {{label}}, {{when}}",
+      "open_clock_failed": "No se pudo abrir la aplicación del reloj.",
+      "open_calendar_failed": "No se pudo abrir el evento en tu calendario.",
       "duration": {
-        "hours_many": null,
-        "hours_one": null,
-        "hours_other": null,
-        "minutes_many": null,
-        "minutes_one": null,
-        "minutes_other": null,
-        "seconds_many": null,
-        "seconds_one": null,
-        "seconds_other": null
+        "hours_many": "{{count}} horas",
+        "hours_one": "{{count}} hora",
+        "hours_other": "{{count}} horas",
+        "minutes_many": "{{count}} minutos",
+        "minutes_one": "{{count}} minuto",
+        "minutes_other": "{{count}} minutos",
+        "seconds_many": "{{count}} segundos",
+        "seconds_one": "{{count}} segundo",
+        "seconds_other": "{{count}} segundos"
       }
     },
     "draft": {
@@ -458,19 +458,19 @@
     }
   },
   "assistant": {
-    "could_not_start": null,
-    "dismiss": null,
-    "setup_needed": null,
-    "open_anythingllm": null,
-    "select_model": null,
-    "placeholder": null,
-    "placeholder_followup": null,
-    "listening": null,
-    "share_screen": null,
-    "screen_disabled": null,
-    "screen_blocked": null,
-    "screen_unavailable": null,
-    "needs_vision": null
+    "could_not_start": "No se pudo iniciar el asistente.",
+    "dismiss": "Cancelar",
+    "setup_needed": "Termina de configurar AnythingLLM para usarlo como tu asistente.",
+    "open_anythingllm": "Abrir AnythingLLM",
+    "select_model": "Seleccione un modelo para comenzar.",
+    "placeholder": "Haz tu pregunta AnythingLLM",
+    "placeholder_followup": "Haz una pregunta adicional…",
+    "listening": "Escuchando…",
+    "share_screen": "Compartir pantalla",
+    "screen_disabled": "Activa \"Usar captura de pantalla\" en la configuración del asistente digital de Android para compartir tu pantalla.",
+    "screen_blocked": "Esta aplicación no permite tomar capturas de pantalla.",
+    "screen_unavailable": "No se pudo capturar la pantalla.",
+    "needs_vision": "Para compartir la pantalla, se necesita un modelo que pueda reconocer imágenes. {{reason}}"
   },
   "attachments": {
     "processing": "Procesando...",
@@ -506,9 +506,9 @@
     "whats_new": "Novedades",
     "tour_title": "Lo que AnythingLLM puede hacer",
     "device_assistant": {
-      "title": null,
-      "body": null,
-      "cta": null
+      "title": "Reemplaza Gemini con tu propio modelo de IA",
+      "body": "Haz de AnythingLLM tu asistente personal y ábrelo desde cualquier aplicación con el mismo gesto que utilizas para Gemini. Pregunta sobre lo que aparece en la pantalla, y la respuesta la dará el modelo que hayas seleccionado.",
+      "cta": "Configurar asistente de dispositivo"
     },
     "quick_actions": {
       "title": "Pregunte con AnythingLLM en cualquier lugar",
@@ -695,17 +695,17 @@
       "status_scheduled": "Programado \"{{name}}\""
     },
     "set_reminder": {
-      "name": null,
-      "description": null,
-      "default_label": null,
-      "calendar_notes": null,
-      "status_asking": null,
-      "approval_alarm": null,
-      "approval_timer": null,
-      "approval_calendar": null,
-      "status_not_approved": null,
-      "status_expired": null,
-      "status_set": null
+      "name": "Alarmas y recordatorios",
+      "description": "Establece alarmas y temporizadores en tu aplicación de reloj, una vez que las hayas aprobado. Las notificaciones con más de un día de antelación se añaden a tu calendario.",
+      "default_label": "Recordatorio",
+      "calendar_notes": "Recordatorio programado para AnythingLLM",
+      "status_asking": "Solicitar la creación de una alarma \"{{label}}\"",
+      "approval_alarm": "Establecer alarma para {{label}} a las {{when}}?",
+      "approval_timer": "Iniciar un temporizador {{duration}} para {{label}}? Termina en {{when}}.",
+      "approval_calendar": "¿Añadir \"{{label}}\" a tu calendario para {{when}} con una notificación? Es demasiado tarde para añadirlo en la aplicación de reloj.",
+      "status_not_approved": "La notificación no fue aprobada.",
+      "status_expired": "El tiempo de recordatorio ha expirado antes de la aprobación.",
+      "status_set": "Establecer recordatorio {{label}}"
     },
     "draft_email": {
       "name": "Borrador de correo",
@@ -1249,10 +1249,10 @@
       "empty_title": "Sin trabajos programados aún",
       "empty_body": "Haga que el asistente revise un sitio web cada mañana, redacte un resumen semanal o compile un informe el primer día del mes, todo sin abrir un chat.",
       "create_first": "Crear su primer trabajo",
-      "battery_optimized_title": null,
-      "battery_optimized_body": null,
-      "open_battery_settings": null,
-      "open_battery_settings_failed": null
+      "battery_optimized_title": "Las tareas pueden fallar mientras tu teléfono está bloqueado.",
+      "battery_optimized_body": "La optimización de la batería puede desconectar la red mientras se ejecuta una tarea en segundo plano. Para un funcionamiento fiable, abra la información de la aplicación, toque \"Batería\" y seleccione \"Sin restricciones\".",
+      "open_battery_settings": "Abrir configuración de batería",
+      "open_battery_settings_failed": "No se pudo abrir la configuración"
     },
     "runs": {
       "already_running": "Este trabajo ya se está ejecutando",

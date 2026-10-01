@@ -86,35 +86,35 @@
       "android_only": "Chỉ Android",
       "description_available": "Thêm \"Hỏi với AnythingLLM\" vào menu xuất hiện khi bạn chọn văn bản trong bất kỳ ứng dụng nào. Sử dụng nó để hoàn thiện, rút ngắn hoặc sửa những gì bạn đang viết, hoặc để tóm tắt, giải thích và nghiên cứu những gì bạn đang đọc - với bất kỳ mô hình nào bạn đã chọn ở đây.",
       "description_unavailable": "Trên Android, AnythingLLM có thể xuất hiện trong menu hiển thị khi bạn chọn văn bản trong bất kỳ ứng dụng nào, để chỉnh sửa hoặc tóm tắt nó bằng mô hình bạn chọn. iOS không cung cấp hook này cho các ứng dụng.",
-      "assistant": null
+      "assistant": "Trợ lý thiết bị"
     },
     "assistant": {
-      "page_title": null,
-      "status_title": null,
-      "status_on": null,
-      "status_off": null,
-      "set_up": null,
-      "change": null,
-      "setup_steps": null,
-      "description": null,
-      "description_unavailable": null,
-      "need_help": null,
-      "circle_to_search_note": null,
-      "open_settings_failed": null,
-      "behavior_title": null,
-      "auto_listen": null,
-      "auto_listen_description": null,
-      "auto_screenshot": null,
-      "auto_screenshot_description": null,
-      "theme_title": null,
-      "theme_description": null,
-      "animated": null,
-      "animated_description": null,
+      "page_title": "Trợ lý thiết bị",
+      "status_title": "Trợ lý mặc định",
+      "status_on": "AnythingLLM là trợ lý mặc định của bạn",
+      "status_off": "AnythingLLM không phải là trợ lý mặc định của bạn",
+      "set_up": "Thiết lập",
+      "change": "Thay đổi",
+      "setup_steps": "Trong cài đặt Android, hãy chọn \"Ứng dụng trợ lý số mặc định\" và chọn AnythingLLM. Trang này có thể nằm trong mục \"Ứng dụng\" > \"Ứng dụng mặc định\". Quay lại đây khi bạn đã hoàn thành.",
+      "description": "Mở AnythingLLM trên bất kỳ ứng dụng nào bằng cử chỉ trợ lý của điện thoại – thường là nhấn giữ nút \"Trang chủ\" hoặc thanh điều hướng – và hỏi với mô hình bạn đã chọn, trên thiết bị hoặc trên máy chủ của bạn. Nó thay thế Gemini; bạn có thể chuyển lại bất kỳ lúc nào trong cùng một cài đặt Android.",
+      "description_unavailable": "Trên Android, AnythingLLM có thể là trợ lý của điện thoại, thay thế cho Gemini, có thể mở bằng cử chỉ trên bất kỳ ứng dụng nào. iOS không cho phép các ứng dụng thay thế Siri.",
+      "need_help": "Cần hỗ trợ?",
+      "circle_to_search_note": "Nếu nhấn giữ nút Trang chủ lại mở Khoanh tròn để tìm kiếm, hãy tắt Khoanh tròn để tìm kiếm trong Cài đặt Android > Màn hình > Thanh điều hướng. Khi tính năng này đang bật, Android luôn dành cử chỉ đó cho Google, bất kể bạn chọn trợ lý nào.",
+      "open_settings_failed": "Không thể mở Android",
+      "behavior_title": "Khi trợ lý mở",
+      "auto_listen": "Bắt đầu nghe",
+      "auto_listen_description": "Bật micro ngay khi bạn gọi trợ lý.",
+      "auto_screenshot": "Đính kèm ảnh chụp màn hình",
+      "auto_screenshot_description": "Đính kèm ảnh chụp màn hình khi kích hoạt. Cần một mô hình có khả năng nhận diện hình ảnh, và tùy chọn \"Sử dụng ảnh chụp màn hình\" được bật trong cài đặt trợ lý ảo Android.",
+      "theme_title": "Chủ đề",
+      "theme_description": "Hình nền hoạt hình phía sau trợ lý khi đang mở.",
+      "animated": "Hiệu ứng nền",
+      "animated_description": "Tắt để hiển thị nền như một hình ảnh tĩnh. Tính năng này giúp tiết kiệm pin và giữ cho điện thoại mát hơn.",
       "themes": {
-        "rainbow": null,
-        "halftone": null,
-        "terrain": null,
-        "painterly": null
+        "rainbow": "Màu cầu vồng",
+        "halftone": "In쇄 nửa màu",
+        "terrain": "Địa hình",
+        "painterly": "Phong cách hội họa"
       }
     },
     "about": {
@@ -267,17 +267,17 @@
       "view": "Xem"
     },
     "reminder_card": {
-      "today": null,
-      "tomorrow": null,
-      "passed": null,
-      "view": null,
-      "open_label": null,
-      "open_clock_failed": null,
-      "open_calendar_failed": null,
+      "today": "Hôm nay",
+      "tomorrow": "Ngày mai",
+      "passed": "Đã hoàn thành",
+      "view": "Xem",
+      "open_label": "Mở {{label}}, {{when}}",
+      "open_clock_failed": "Không thể mở ứng dụng đồng hồ",
+      "open_calendar_failed": "Không thể mở sự kiện trong lịch của bạn",
       "duration": {
-        "hours_other": null,
-        "minutes_other": null,
-        "seconds_other": null
+        "hours_other": "{{count}} giờ",
+        "minutes_other": "{{count}} phút",
+        "seconds_other": "{{count}} giây"
       }
     },
     "draft": {
@@ -432,19 +432,19 @@
     }
   },
   "assistant": {
-    "could_not_start": null,
-    "dismiss": null,
-    "setup_needed": null,
-    "open_anythingllm": null,
-    "select_model": null,
-    "placeholder": null,
-    "placeholder_followup": null,
-    "listening": null,
-    "share_screen": null,
-    "screen_disabled": null,
-    "screen_blocked": null,
-    "screen_unavailable": null,
-    "needs_vision": null
+    "could_not_start": "Không thể khởi động trợ lý",
+    "dismiss": "Bỏ qua",
+    "setup_needed": "Hoàn thành việc thiết lập AnythingLLM để sử dụng nó như trợ lý của bạn.",
+    "open_anythingllm": "Mở AnythingLLM",
+    "select_model": "Chọn một mô hình để bắt đầu.",
+    "placeholder": "Hỏi AnythingLLM",
+    "placeholder_followup": "Hỏi thêm...",
+    "listening": "Đang nghe…",
+    "share_screen": "Chia sẻ màn hình",
+    "screen_disabled": "Bật \"Sử dụng ảnh chụp màn hình\" trong cài đặt trợ lý kỹ thuật số của Android để chia sẻ màn hình của bạn.",
+    "screen_blocked": "Ứng dụng này không cho phép chụp ảnh màn hình.",
+    "screen_unavailable": "Không thể chụp màn hình.",
+    "needs_vision": "Để chia sẻ màn hình, cần một mô hình có khả năng nhận diện hình ảnh. {{reason}}"
   },
   "attachments": {
     "processing": "Đang xử lý...",
@@ -478,9 +478,9 @@
     "whats_new": "Có gì mới",
     "tour_title": "AnythingLLM có thể làm gì",
     "device_assistant": {
-      "title": null,
-      "body": null,
-      "cta": null
+      "title": "Thay thế Gemini bằng AI của bạn",
+      "body": "Biến AnythingLLM thành trợ lý cho điện thoại của bạn và mở nó từ bất kỳ ứng dụng nào bằng cử chỉ giống như bạn sử dụng cho Gemini. Hỏi về nội dung trên màn hình - được trả lời bởi mô hình bạn đã chọn.",
+      "cta": "Cài đặt trợ lý thiết bị"
     },
     "quick_actions": {
       "title": "Hỏi với AnythingLLM ở bất cứ nơi nào",
@@ -639,17 +639,17 @@
       "status_scheduled": "Đã lên lịch \"{{name}}\""
     },
     "set_reminder": {
-      "name": null,
-      "description": null,
-      "default_label": null,
-      "calendar_notes": null,
-      "status_asking": null,
-      "approval_alarm": null,
-      "approval_timer": null,
-      "approval_calendar": null,
-      "status_not_approved": null,
-      "status_expired": null,
-      "status_set": null
+      "name": "Cảnh báo và nhắc nhở",
+      "description": "Thiết lập báo thức và hẹn giờ trong ứng dụng đồng hồ của bạn, sau khi bạn đã xác nhận. Các thông báo với thời gian hơn một ngày sẽ được thêm vào lịch của bạn.",
+      "default_label": "Nhắc nhở",
+      "calendar_notes": "Đặt nhắc nhở từ AnythingLLM",
+      "status_asking": "Yêu cầu đặt lời nhắc {{label}}",
+      "approval_alarm": "Đặt báo thức lúc {{label}} cho {{when}}?",
+      "approval_timer": "Bắt đầu hẹn giờ {{duration}} \"{{label}}\"? Hẹn giờ kết thúc {{when}}.",
+      "approval_calendar": "Thêm \"{{label}}\" vào lịch của bạn với thông báo? Nó còn cách {{when}} một khoảng thời gian, nên không thể đặt trong ứng dụng đồng hồ.",
+      "status_not_approved": "Không được chấp nhận",
+      "status_expired": "Thời gian nhắc nhở đã hết, nhưng vẫn chưa được phê duyệt",
+      "status_set": "Đặt lời nhắc {{label}}"
     },
     "draft_email": {
       "name": "Soạn thảo email",
@@ -1163,10 +1163,10 @@
       "empty_title": "Chưa có công việc được lên lịch",
       "empty_body": "Cho phép trợ lý kiểm tra một trang web mỗi sáng, soạn thảo bản tóm tắt hàng tuần hoặc xây dựng một báo cáo vào ngày đầu tiên của tháng - tất cả mà không cần mở trò chuyện.",
       "create_first": "Tạo công việc đầu tiên của bạn",
-      "battery_optimized_title": null,
-      "battery_optimized_body": null,
-      "open_battery_settings": null,
-      "open_battery_settings_failed": null
+      "battery_optimized_title": "Các tác vụ có thể bị hủy khi điện thoại của bạn đang khóa",
+      "battery_optimized_body": "Tối ưu hóa pin có thể ngắt kết nối khi một tác vụ đang chạy ngầm. Để đảm bảo hoạt động ổn định, hãy mở \"Thông tin ứng dụng\", chọn \"Pin\" và chọn \"Không giới hạn\".",
+      "open_battery_settings": "Mở cài đặt pin",
+      "open_battery_settings_failed": "Không mở được cài đặt"
     },
     "runs": {
       "already_running": "Công việc này đã được chạy",

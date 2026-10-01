@@ -86,35 +86,35 @@
       "android_only": "Hanya Android",
       "description_available": "Menambahkan \"Tanya dengan AnythingLLM\" ke menu yang muncul saat Anda memilih teks di aplikasi apa pun. Gunakan untuk menyempurnakan, memendekkan, atau memperbaiki apa yang Anda tulis, atau untuk merangkum, menjelaskan, dan meneliti apa yang Anda baca - dengan model apa pun yang Anda pilih di sini.",
       "description_unavailable": "Di Android, AnythingLLM dapat muncul di menu yang ditampilkan saat Anda memilih teks di aplikasi apa pun, untuk mengedit atau merangkumnya dengan model pilihan Anda. iOS tidak menawarkan aplikasi hook ini.",
-      "assistant": null
+      "assistant": "Bantuan Perangkat"
     },
     "assistant": {
-      "page_title": null,
-      "status_title": null,
-      "status_on": null,
-      "status_off": null,
-      "set_up": null,
-      "change": null,
-      "setup_steps": null,
-      "description": null,
-      "description_unavailable": null,
-      "need_help": null,
-      "circle_to_search_note": null,
-      "open_settings_failed": null,
-      "behavior_title": null,
-      "auto_listen": null,
-      "auto_listen_description": null,
-      "auto_screenshot": null,
-      "auto_screenshot_description": null,
-      "theme_title": null,
-      "theme_description": null,
-      "animated": null,
-      "animated_description": null,
+      "page_title": "Bantuan Perangkat",
+      "status_title": "Asisten bawaan",
+      "status_on": "AnythingLLM adalah asisten Anda secara default",
+      "status_off": "AnythingLLM bukanlah asisten utama Anda",
+      "set_up": "Konfigurasi",
+      "change": "Ubah",
+      "setup_steps": "Di pengaturan Android yang terbuka, ketuk \"Aplikasi asisten digital default\" dan pilih AnythingLLM. Halaman ini terkadang berada di > Aplikasi > Aplikasi default. Kembali ke sini setelah selesai.",
+      "description": "Buka AnythingLLM melalui aplikasi apa pun dengan gerakan asisten di ponsel Anda – biasanya dengan menekan lama tombol beranda atau bilah navigasi – dan tanyakan dengan model yang Anda pilih, baik di perangkat atau di server Anda sendiri. Ini menggantikan Gemini; Anda dapat kembali ke pengaturan yang sama di Android kapan saja.",
+      "description_unavailable": "Pada Android, AnythingLLM dapat menjadi asisten ponsel Anda, menggantikan Gemini, yang dapat diakses melalui gestur apa pun di dalam aplikasi. iOS tidak memungkinkan aplikasi menggantikan Siri.",
+      "need_help": "Butuh bantuan untuk memulai?",
+      "circle_to_search_note": "Jika menekan lama tombol beranda malah membuka Circle to Search, nonaktifkan Circle to Search di Setelan Android > Tampilan > Menu navigasi. Selama fitur ini aktif, Android selalu memberikan gerakan tersebut ke Google, apa pun asisten yang Anda pilih.",
+      "open_settings_failed": "Tidak dapat membuka pengaturan Android",
+      "behavior_title": "Saat asisten terbuka",
+      "auto_listen": "Mulai mendengarkan",
+      "auto_listen_description": "Aktifkan mikrofon segera setelah Anda memanggil asisten.",
+      "auto_screenshot": "Lampirkan tangkapan layar",
+      "auto_screenshot_description": "Lampirkan tangkapan layar saat dipicu. Membutuhkan model yang dapat melihat gambar, dan opsi \"Gunakan tangkapan layar\" harus diaktifkan dalam pengaturan asisten digital Android.",
+      "theme_title": "Tema",
+      "theme_description": "Latar belakang animasi di belakang asisten saat sedang terbuka.",
+      "animated": "Animasi latar belakang",
+      "animated_description": "Matikan untuk menampilkan latar belakang sebagai gambar statis. Ini menghemat baterai dan menjaga ponsel Anda tetap dingin.",
       "themes": {
-        "rainbow": null,
-        "halftone": null,
-        "terrain": null,
-        "painterly": null
+        "rainbow": "Pelangi",
+        "halftone": "Gradasi",
+        "terrain": "Jenis medan",
+        "painterly": "Gaya lukis"
       }
     },
     "about": {
@@ -267,17 +267,17 @@
       "view": "Lihat"
     },
     "reminder_card": {
-      "today": null,
-      "tomorrow": null,
-      "passed": null,
-      "view": null,
-      "open_label": null,
-      "open_clock_failed": null,
-      "open_calendar_failed": null,
+      "today": "Hari ini",
+      "tomorrow": "Besok",
+      "passed": "Selesai",
+      "view": "Lihat",
+      "open_label": "Buka {{label}}, {{when}}",
+      "open_clock_failed": "Tidak dapat membuka aplikasi jam",
+      "open_calendar_failed": "Tidak dapat membuka acara di kalender Anda",
       "duration": {
-        "hours_other": null,
-        "minutes_other": null,
-        "seconds_other": null
+        "hours_other": "{{count}} jam",
+        "minutes_other": "{{count}} menit",
+        "seconds_other": "{{count}} detik"
       }
     },
     "draft": {
@@ -432,19 +432,19 @@
     }
   },
   "assistant": {
-    "could_not_start": null,
-    "dismiss": null,
-    "setup_needed": null,
-    "open_anythingllm": null,
-    "select_model": null,
-    "placeholder": null,
-    "placeholder_followup": null,
-    "listening": null,
-    "share_screen": null,
-    "screen_disabled": null,
-    "screen_blocked": null,
-    "screen_unavailable": null,
-    "needs_vision": null
+    "could_not_start": "Tidak dapat memulai asisten",
+    "dismiss": "Tutup",
+    "setup_needed": "Selesaikan pengaturan AnythingLLM agar dapat menggunakannya sebagai asisten Anda.",
+    "open_anythingllm": "Buka AnythingLLM",
+    "select_model": "Pilih model di atas untuk memulai.",
+    "placeholder": "Ajukan pertanyaan AnythingLLM",
+    "placeholder_followup": "Ajukan pertanyaan lanjutan…",
+    "listening": "Sedang mendengarkan…",
+    "share_screen": "Bagikan layar",
+    "screen_disabled": "Aktifkan \"Gunakan tangkapan layar\" di pengaturan asisten digital Android untuk membagikan layar Anda.",
+    "screen_blocked": "Aplikasi ini tidak mengizinkan pembuatan tangkapan layar.",
+    "screen_unavailable": "Tidak dapat mengambil tangkapan layar.",
+    "needs_vision": "Berbagi layar membutuhkan model yang dapat melihat gambar. {{reason}}"
   },
   "attachments": {
     "processing": "Memproses…",
@@ -478,9 +478,9 @@
     "whats_new": "Apa yang baru",
     "tour_title": "Apa yang dapat dilakukan AnythingLLM",
     "device_assistant": {
-      "title": null,
-      "body": null,
-      "cta": null
+      "title": "Ganti Gemini dengan AI Anda sendiri",
+      "body": "Jadikan AnythingLLM sebagai asisten ponsel Anda dan buka dari aplikasi apa pun dengan gerakan yang sama seperti yang Anda gunakan untuk Gemini. Tanyakan tentang apa yang ada di layar – dijawab oleh model yang Anda pilih.",
+      "cta": "Siapkan Asisten Perangkat"
     },
     "quick_actions": {
       "title": "Tanya dengan AnythingLLM di mana saja",
@@ -639,17 +639,17 @@
       "status_scheduled": "Dijadwalkan \"{{name}}\""
     },
     "set_reminder": {
-      "name": null,
-      "description": null,
-      "default_label": null,
-      "calendar_notes": null,
-      "status_asking": null,
-      "approval_alarm": null,
-      "approval_timer": null,
-      "approval_calendar": null,
-      "status_not_approved": null,
-      "status_expired": null,
-      "status_set": null
+      "name": "Pengingat & Alarm",
+      "description": "Atur alarm dan timer di aplikasi jam Anda setelah Anda menyetujuinya. Pengingat yang lebih dari satu hari di masa mendatang akan ditambahkan ke kalender Anda.",
+      "default_label": "Pengingat",
+      "calendar_notes": "Pengingat diatur dari AnythingLLM",
+      "status_asking": "Meminta untuk mengatur pengingat {{label}}",
+      "approval_alarm": "Atur alarm pada {{label}} untuk {{when}}?",
+      "approval_timer": "Mulai timer {{duration}} \"{{label}}\"? Timer ini berakhir pada {{when}}.",
+      "approval_calendar": "Tambahkan \"{{label}}\" ke kalender Anda untuk {{when}} dengan notifikasi? Ini masih beberapa hari lagi, jadi tidak bisa diatur di aplikasi jam.",
+      "status_not_approved": "Pengingat tidak disetujui",
+      "status_expired": "Waktu pengingat telah habis sebelum disetujui.",
+      "status_set": "Atur pengingat {{label}}"
     },
     "draft_email": {
       "name": "Konsep Email",
@@ -1163,10 +1163,10 @@
       "empty_title": "Tidak ada pekerjaan terjadwal belum",
       "empty_body": "Biarkan asisten memeriksa situs web setiap pagi, buat konsep ringkasan mingguan, atau buat laporan di awal bulan - semuanya tanpa membuka obrolan.",
       "create_first": "Buat pekerjaan pertama Anda",
-      "battery_optimized_title": null,
-      "battery_optimized_body": null,
-      "open_battery_settings": null,
-      "open_battery_settings_failed": null
+      "battery_optimized_title": "Aplikasi mungkin tidak berfungsi saat ponsel Anda terkunci.",
+      "battery_optimized_body": "Optimasi baterai dapat mematikan jaringan saat aplikasi berjalan di latar belakang. Untuk penggunaan yang stabil, buka Informasi Aplikasi, ketuk Baterai, dan pilih \"Tidak Terbatas\".",
+      "open_battery_settings": "Buka pengaturan baterai",
+      "open_battery_settings_failed": "Tidak dapat membuka pengaturan"
     },
     "runs": {
       "already_running": "Pekerjaan ini sudah berjalan",

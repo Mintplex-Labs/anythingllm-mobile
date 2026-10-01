@@ -86,35 +86,35 @@
       "android_only": "Android uniquement",
       "description_available": "Ajoute \"Demander à AnythingLLM\" au menu qui s'affiche lorsque vous sélectionnez du texte dans une application. Utilisez-le pour affiner, raccourcir ou corriger ce que vous écrivez, ou pour résumer, expliquer et rechercher ce que vous lisez - avec le modèle que vous avez sélectionné ici.",
       "description_unavailable": "Sur Android, AnythingLLM peut apparaître dans le menu qui s'affiche lorsque vous sélectionnez du texte dans une application, pour l'éditer ou le résumer avec votre modèle choisi. iOS n'offre pas aux applications ce hook.",
-      "assistant": null
+      "assistant": "Assistant appareil"
     },
     "assistant": {
-      "page_title": null,
-      "status_title": null,
-      "status_on": null,
-      "status_off": null,
-      "set_up": null,
-      "change": null,
-      "setup_steps": null,
-      "description": null,
-      "description_unavailable": null,
-      "need_help": null,
-      "circle_to_search_note": null,
-      "open_settings_failed": null,
-      "behavior_title": null,
-      "auto_listen": null,
-      "auto_listen_description": null,
-      "auto_screenshot": null,
-      "auto_screenshot_description": null,
-      "theme_title": null,
-      "theme_description": null,
-      "animated": null,
-      "animated_description": null,
+      "page_title": "Assistant appareil",
+      "status_title": "Assistant par défaut",
+      "status_on": "AnythingLLM est votre assistant par défaut",
+      "status_off": "AnythingLLM n'est pas votre assistant par défaut.",
+      "set_up": "Configurer",
+      "change": "Modifier",
+      "setup_steps": "Dans les paramètres Android, sélectionnez « Application d'assistant numérique par défaut » et choisissez AnythingLLM. Vous trouverez parfois cette page dans « Applications > Applications par défaut ». Revenez ici lorsque vous aurez terminé.",
+      "description": "Ouvrez AnythingLLM depuis n'importe quelle application en utilisant la fonction d'assistance de votre téléphone (généralement un long appui sur le bouton d'accueil ou la barre de navigation) et demandez à votre modèle, que ce soit sur l'appareil ou sur votre propre serveur. Cela remplace Gemini. Vous pouvez revenir à cette configuration à tout moment dans le même Android.",
+      "description_unavailable": "Sur Android, AnythingLLM peut être l'assistant de votre téléphone à la place de Gemini, accessible via une action spécifique dans n'importe quelle application. iOS ne permet pas aux applications de remplacer Siri.",
+      "need_help": "Besoin d'aide pour la configuration ?",
+      "circle_to_search_note": "Si un appui long sur le bouton d'accueil ouvre plutôt Entourer pour chercher, désactivez Entourer pour chercher dans Paramètres Android > Affichage > Barre de navigation. Tant que cette option est activée, Android attribue toujours ce geste à Google, quel que soit l'assistant choisi.",
+      "open_settings_failed": "Impossible d'ouvrir les paramètres Android",
+      "behavior_title": "Lorsque l'assistant est lancé",
+      "auto_listen": "Commencer l'écoute",
+      "auto_listen_description": "Activez le microphone dès que vous lancez l'assistant.",
+      "auto_screenshot": "Joindre une capture d'écran",
+      "auto_screenshot_description": "Joignez une capture d'écran de l'écran lors de l'appel. Nécessite un modèle capable de visualiser des images, ainsi que l'option \"Utiliser la capture d'écran\" activée dans les paramètres de l'assistant numérique Android.",
+      "theme_title": "Thème",
+      "theme_description": "L'arrière-plan animé qui apparaît derrière l'assistant lorsqu'il est ouvert.",
+      "animated": "Animation de fond",
+      "animated_description": "Désactiver pour afficher l'arrière-plan sous forme d'image statique. Cela permet d'économiser la batterie et de maintenir votre téléphone plus frais.",
       "themes": {
-        "rainbow": null,
-        "halftone": null,
-        "terrain": null,
-        "painterly": null
+        "rainbow": "Arc-en-ciel",
+        "halftone": "Nuance",
+        "terrain": "Terrain",
+        "painterly": "Style pictural"
       }
     },
     "about": {
@@ -273,23 +273,23 @@
       "view": "Afficher"
     },
     "reminder_card": {
-      "today": null,
-      "tomorrow": null,
-      "passed": null,
-      "view": null,
-      "open_label": null,
-      "open_clock_failed": null,
-      "open_calendar_failed": null,
+      "today": "Aujourd'hui",
+      "tomorrow": "Demain",
+      "passed": "Réussi",
+      "view": "Afficher",
+      "open_label": "Ouvrir {{label}}, {{when}}",
+      "open_clock_failed": "Impossible d'ouvrir l'application de l'horloge.",
+      "open_calendar_failed": "Impossible d'ouvrir l'événement dans votre calendrier",
       "duration": {
-        "hours_many": null,
-        "hours_one": null,
-        "hours_other": null,
-        "minutes_many": null,
-        "minutes_one": null,
-        "minutes_other": null,
-        "seconds_many": null,
-        "seconds_one": null,
-        "seconds_other": null
+        "hours_many": "{{count}} heures",
+        "hours_one": "{{count}} heure",
+        "hours_other": "{{count}} heures",
+        "minutes_many": "{{count}} minutes",
+        "minutes_one": "{{count}} minute",
+        "minutes_other": "{{count}} minutes",
+        "seconds_many": "{{count}} secondes",
+        "seconds_one": "{{count}} seconde",
+        "seconds_other": "{{count}} secondes"
       }
     },
     "draft": {
@@ -458,19 +458,19 @@
     }
   },
   "assistant": {
-    "could_not_start": null,
-    "dismiss": null,
-    "setup_needed": null,
-    "open_anythingllm": null,
-    "select_model": null,
-    "placeholder": null,
-    "placeholder_followup": null,
-    "listening": null,
-    "share_screen": null,
-    "screen_disabled": null,
-    "screen_blocked": null,
-    "screen_unavailable": null,
-    "needs_vision": null
+    "could_not_start": "Impossible de démarrer l'assistant",
+    "dismiss": "Annuler",
+    "setup_needed": "Terminez la configuration de AnythingLLM pour l'utiliser comme votre assistant.",
+    "open_anythingllm": "Ouvrir AnythingLLM",
+    "select_model": "Sélectionnez un modèle ci-dessus pour commencer.",
+    "placeholder": "Poser la question AnythingLLM",
+    "placeholder_followup": "Poser une question de suivi…",
+    "listening": "En écoute…",
+    "share_screen": "Partager l'écran",
+    "screen_disabled": "Activez \"Utiliser la capture d'écran\" dans les paramètres de l'assistant numérique Android pour partager votre écran.",
+    "screen_blocked": "Cette application ne permet pas de prendre des captures d'écran.",
+    "screen_unavailable": "Impossible de capturer l'écran.",
+    "needs_vision": "Pour partager votre écran, il faut un modèle capable de reconnaître les images. {{reason}}"
   },
   "attachments": {
     "processing": "Traitement…",
@@ -506,9 +506,9 @@
     "whats_new": "Quoi de neuf",
     "tour_title": "Ce qu'AnythingLLM peut faire",
     "device_assistant": {
-      "title": null,
-      "body": null,
-      "cta": null
+      "title": "Remplacez Gemini par votre propre IA",
+      "body": "Rendez AnythingLLM votre assistant téléphonique et ouvrez-le depuis n'importe quelle application en utilisant la même action que vous utilisez pour Gemini. Posez des questions sur ce qui est affiché - la réponse sera fournie par le modèle que vous avez choisi.",
+      "cta": "Configurer l'assistant de l'appareil"
     },
     "quick_actions": {
       "title": "Demander à AnythingLLM n'importe où",
@@ -695,17 +695,17 @@
       "status_scheduled": "Programmé \"{{name}}\""
     },
     "set_reminder": {
-      "name": null,
-      "description": null,
-      "default_label": null,
-      "calendar_notes": null,
-      "status_asking": null,
-      "approval_alarm": null,
-      "approval_timer": null,
-      "approval_calendar": null,
-      "status_not_approved": null,
-      "status_expired": null,
-      "status_set": null
+      "name": "Alarmes et rappels",
+      "description": "Définissez des alarmes et des minuteries dans votre application d'horloge, une fois qu'elles sont approuvées. Les rappels prévus plus d'un jour à l'avance sont ajoutés à votre calendrier.",
+      "default_label": "Rappel",
+      "calendar_notes": "Rappel programmé à AnythingLLM",
+      "status_asking": "Demander de définir un rappel \"{{label}}\"",
+      "approval_alarm": "Définir une alarme pour {{label}} à {{when}} ?",
+      "approval_timer": "Lancer un minuteur de {{duration}} \"{{label}}\" ? Il se termine {{when}}.",
+      "approval_calendar": "Ajoutez \"{{label}}\" à votre calendrier pour {{when}} avec une alerte ? Cela se passe bien après, donc cela ne peut pas être configuré dans l'application d'horloge.",
+      "status_not_approved": "La notification n'a pas été enregistrée.",
+      "status_expired": "La date de rappel est passée avant l'approbation.",
+      "status_set": "Définir une alerte \"{{label}}\""
     },
     "draft_email": {
       "name": "Rédiger un e-mail",
@@ -1249,10 +1249,10 @@
       "empty_title": "Aucune tâche programmée pour le moment",
       "empty_body": "Demandez à l'assistant de vérifier un site web chaque matin, de rédiger un résumé hebdomadaire ou de créer un rapport le premier du mois - tout sans ouvrir une conversation.",
       "create_first": "Créer votre première tâche",
-      "battery_optimized_title": null,
-      "battery_optimized_body": null,
-      "open_battery_settings": null,
-      "open_battery_settings_failed": null
+      "battery_optimized_title": "Les tâches peuvent échouer lorsque votre téléphone est verrouillé.",
+      "battery_optimized_body": "L'optimisation de la batterie peut interrompre la connexion réseau pendant l'exécution d'une tâche en arrière-plan. Pour des performances optimales, ouvrez les « Informations de l'application », sélectionnez « Batterie » et choisissez « Sans restriction ».",
+      "open_battery_settings": "Ouvrir les paramètres de la batterie",
+      "open_battery_settings_failed": "Impossible d'ouvrir les paramètres"
     },
     "runs": {
       "already_running": "Cette tâche est déjà en cours d'exécution",

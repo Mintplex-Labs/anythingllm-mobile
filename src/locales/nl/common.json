@@ -86,35 +86,35 @@
       "android_only": "Alleen Android",
       "description_available": "Voegt \"Vragen aan AnythingLLM\" toe aan het menu dat verschijnt wanneer je tekst selecteert in een app. Gebruik het om wat je schrijft op te polijsten, in te korten of te corrigeren, of om wat je leest samen te vatten, uit te leggen en te onderzoeken - met welk model je hier hebt geselecteerd.",
       "description_unavailable": "Op Android kan AnythingLLM verschijnen in het menu dat wordt weergegeven wanneer je tekst selecteert in een app, om het met je gekozen model te bewerken of samen te vatten. iOS biedt apps deze hook niet.",
-      "assistant": null
+      "assistant": "Apparaatassistent"
     },
     "assistant": {
-      "page_title": null,
-      "status_title": null,
-      "status_on": null,
-      "status_off": null,
-      "set_up": null,
-      "change": null,
-      "setup_steps": null,
-      "description": null,
-      "description_unavailable": null,
-      "need_help": null,
-      "circle_to_search_note": null,
-      "open_settings_failed": null,
-      "behavior_title": null,
-      "auto_listen": null,
-      "auto_listen_description": null,
-      "auto_screenshot": null,
-      "auto_screenshot_description": null,
-      "theme_title": null,
-      "theme_description": null,
-      "animated": null,
-      "animated_description": null,
+      "page_title": "Assistent",
+      "status_title": "Standaardassistent",
+      "status_on": "AnythingLLM is uw standaard assistent",
+      "status_off": "AnythingLLM is geen standaardassistent",
+      "set_up": "Instellen",
+      "change": "Wijzigen",
+      "setup_steps": "In de Android instellingen, tik op \"Standaard digitale assistent app\" en kies AnythingLLM. De pagina bevindt zich soms onder Apps > Standaard apps. Ga terug wanneer je klaar bent.",
+      "description": "Open AnythingLLM met de assistentfunctie van je telefoon (meestal door lang op de startknop of de navigatiebalk te drukken) en vraag met het model dat je hebt geselecteerd, of het op je apparaat of op je eigen server draait. Dit vervangt Gemini. Je kunt op elk moment terugkeren naar dezelfde instelling in Android.",
+      "description_unavailable": "Op Android kan AnythingLLM je telefoonassistent zijn, in plaats van Gemini, die via elke app geopend kan worden met een specifieke handeling. iOS zorgt ervoor dat apps Siri niet kunnen vervangen.",
+      "need_help": "Heb je hulp nodig bij de installatie?",
+      "circle_to_search_note": "Als lang drukken op de startknop in plaats daarvan Circle to Search opent, zet Circle to Search dan uit via Android-instellingen > Display > Navigatiebalk. Zolang het aan staat, geeft Android dat gebaar altijd aan Google, welke assistent je ook kiest.",
+      "open_settings_failed": "Kon Android instellingen niet openen",
+      "behavior_title": "Wanneer de assistent opent",
+      "auto_listen": "Begin met luisteren",
+      "auto_listen_description": "Start de microfoon zodra je de assistent activeert.",
+      "auto_screenshot": "Voeg screenshot toe",
+      "auto_screenshot_description": "Voeg een screenshot van het scherm toe bij het activeren. Er is een model nodig dat afbeeldingen kan zien, en \"Screenshot gebruiken\" moet ingeschakeld zijn in de instellingen van de digitale assistent (Android).",
+      "theme_title": "Thema",
+      "theme_description": "De animatie op de achtergrond wanneer de assistent open staat.",
+      "animated": "Achtergrond animeren",
+      "animated_description": "Schakel uit om het achtergrondafbeelding te tonen. Dit bespaart energie en houdt je telefoon koeler.",
       "themes": {
-        "rainbow": null,
-        "halftone": null,
-        "terrain": null,
-        "painterly": null
+        "rainbow": "Regenboog",
+        "halftone": "Halfton",
+        "terrain": "Omgeving",
+        "painterly": "Schilderachtig"
       }
     },
     "about": {
@@ -270,20 +270,20 @@
       "view": "Bekijken"
     },
     "reminder_card": {
-      "today": null,
-      "tomorrow": null,
-      "passed": null,
-      "view": null,
-      "open_label": null,
-      "open_clock_failed": null,
-      "open_calendar_failed": null,
+      "today": "Vandaag",
+      "tomorrow": "Overmorgen",
+      "passed": "Voltooid",
+      "view": "Bekijken",
+      "open_label": "Open {{label}}, {{when}}",
+      "open_clock_failed": "Kon de klok-app niet openen",
+      "open_calendar_failed": "Kon het evenement niet openen in je agenda",
       "duration": {
-        "hours_one": null,
-        "hours_other": null,
-        "minutes_one": null,
-        "minutes_other": null,
-        "seconds_one": null,
-        "seconds_other": null
+        "hours_one": "{{count}} uur",
+        "hours_other": "{{count}} uur(s)",
+        "minutes_one": "{{count}} minuut",
+        "minutes_other": "{{count}} minuten",
+        "seconds_one": "{{count}} tweede",
+        "seconds_other": "{{count}} seconden"
       }
     },
     "draft": {
@@ -445,19 +445,19 @@
     }
   },
   "assistant": {
-    "could_not_start": null,
-    "dismiss": null,
-    "setup_needed": null,
-    "open_anythingllm": null,
-    "select_model": null,
-    "placeholder": null,
-    "placeholder_followup": null,
-    "listening": null,
-    "share_screen": null,
-    "screen_disabled": null,
-    "screen_blocked": null,
-    "screen_unavailable": null,
-    "needs_vision": null
+    "could_not_start": "Kon de assistent niet starten",
+    "dismiss": "Sluiten",
+    "setup_needed": "Voltooi het instellen van AnythingLLM zodat je het kunt gebruiken als assistent.",
+    "open_anythingllm": "Open AnythingLLM",
+    "select_model": "Kies een model hierboven om te beginnen.",
+    "placeholder": "Vraag AnythingLLM",
+    "placeholder_followup": "Stel een vervolgvraag…",
+    "listening": "Luisteren…",
+    "share_screen": "Scherm delen",
+    "screen_disabled": "Zet \"Screenshot gebruiken\" aan in de instellingen van de digitale assistent van Android om je scherm te delen.",
+    "screen_blocked": "Deze app maakt geen screenshots mogelijk.",
+    "screen_unavailable": "Kon het scherm niet vastleggen.",
+    "needs_vision": "Om je scherm te delen, is een model nodig dat afbeeldingen kan herkennen. {{reason}}"
   },
   "attachments": {
     "processing": "Bezig met verwerken…",
@@ -492,9 +492,9 @@
     "whats_new": "Wat is nieuw",
     "tour_title": "Wat AnythingLLM kan doen",
     "device_assistant": {
-      "title": null,
-      "body": null,
-      "cta": null
+      "title": "Vervang Gemini met jouw eigen AI",
+      "body": "Maak AnythingLLM je persoonlijke assistent en open het vanuit elke app met dezelfde beweging als je gebruikt voor Gemini. Stel vragen over wat er op het scherm staat – het antwoord komt van het model dat je hebt gekozen.",
+      "cta": "Apparaatassistent instellen"
     },
     "quick_actions": {
       "title": "Vragen aan AnythingLLM overal",
@@ -667,17 +667,17 @@
       "status_scheduled": "\"{{name}}\" ingepland"
     },
     "set_reminder": {
-      "name": null,
-      "description": null,
-      "default_label": null,
-      "calendar_notes": null,
-      "status_asking": null,
-      "approval_alarm": null,
-      "approval_timer": null,
-      "approval_calendar": null,
-      "status_not_approved": null,
-      "status_expired": null,
-      "status_set": null
+      "name": "Waarschuwingen en herinneringen",
+      "description": "Stel alarmen en timers in je klok-app in, nadat je ze hebt goedgekeurd. Herinneringen die meer dan een dag vooruit liggen, worden aan je agenda toegevoegd.",
+      "default_label": "Herinnering",
+      "calendar_notes": "Herinnering ingesteld vanaf AnythingLLM",
+      "status_asking": "Vraag om een herinnering \"{{label}}\"",
+      "approval_alarm": "Stel een herinnering in op {{label}} voor {{when}}?",
+      "approval_timer": "Start een {{duration}} timer {{label}}? Het eindt op {{when}}.",
+      "approval_calendar": "Voeg {{label}} toe aan uw agenda voor {{when}} met een herinnering? Dit is meer dan een dag van tevoren, dus het kan niet in de klok-app worden ingesteld.",
+      "status_not_approved": "Herinnering is niet goedgekeurd",
+      "status_expired": "Herinnering is verlopen voordat deze was goedgekeurd",
+      "status_set": "Stel herinnering in: {{label}}"
     },
     "draft_email": {
       "name": "E-mail concepten",
@@ -1206,10 +1206,10 @@
       "empty_title": "Nog geen geplande taken",
       "empty_body": "Laat de assistent elke ochtend een website controleren, schrijf een wekelijkse samenvatting op, of bouw een rapport op de eerste van de maand - allemaal zonder een chat te openen.",
       "create_first": "Maak je eerste taak",
-      "battery_optimized_title": null,
-      "battery_optimized_body": null,
-      "open_battery_settings": null,
-      "open_battery_settings_failed": null
+      "battery_optimized_title": "Taken kunnen mislukken terwijl je telefoon vergrendeld is.",
+      "battery_optimized_body": "Het optimaliseren van de batterij kan de verbinding tijdelijk verbreken tijdens het uitvoeren van een achtergrondtaak. Voor een stabiele werking: open de app-informatie, tik op \"Batterij\" en kies \"Onbeperkt\".",
+      "open_battery_settings": "Batterijinstellingen openen",
+      "open_battery_settings_failed": "Kon instellingen niet openen"
     },
     "runs": {
       "already_running": "Deze taak wordt al uitgevoerd",

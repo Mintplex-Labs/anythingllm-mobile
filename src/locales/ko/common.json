@@ -86,35 +86,35 @@
       "android_only": "Android만 지원",
       "description_available": "모든 앱에서 텍스트를 선택할 때 나타나는 메뉴에 \"AnythingLLM으로 묻기\"를 추가합니다. 이를 사용하여 작성 중인 내용을 다듬거나 단축하거나 수정하거나, 읽고 있는 내용을 요약하거나 설명하거나 조사할 수 있습니다 - 선택한 모델을 사용하여.",
       "description_unavailable": "Android에서는 AnythingLLM이 모든 앱에서 텍스트를 선택할 때 나타나는 메뉴에 표시되어 선택한 모델로 편집하거나 요약할 수 있습니다. iOS는 앱에 이 후크를 제공하지 않습니다.",
-      "assistant": null
+      "assistant": "기기 지원"
     },
     "assistant": {
-      "page_title": null,
-      "status_title": null,
-      "status_on": null,
-      "status_off": null,
-      "set_up": null,
-      "change": null,
-      "setup_steps": null,
-      "description": null,
-      "description_unavailable": null,
-      "need_help": null,
-      "circle_to_search_note": null,
-      "open_settings_failed": null,
-      "behavior_title": null,
-      "auto_listen": null,
-      "auto_listen_description": null,
-      "auto_screenshot": null,
-      "auto_screenshot_description": null,
-      "theme_title": null,
-      "theme_description": null,
-      "animated": null,
-      "animated_description": null,
+      "page_title": "기기 지원",
+      "status_title": "기본 어시스턴트",
+      "status_on": "AnythingLLM는 기본 어시스턴트",
+      "status_off": "AnythingLLM는 기본 어시스턴트가 아닙니다",
+      "set_up": "설정",
+      "change": "변경",
+      "setup_steps": "열리는 Android 설정에서 \"기본 디지털 어시스턴트 앱\"을 탭하고 AnythingLLM을 선택하세요. 이 페이지는 앱 > 기본 앱 아래에 있는 경우도 있습니다. 완료되면 여기로 돌아오세요.",
+      "description": "휴대폰의 어시스턴트 제스처(보통 홈 버튼이나 탐색 메뉴 길게 누르기)로 어떤 앱 위에서든 AnythingLLM을 열고, 선택한 모델(기기 내 또는 자체 서버)로 질문하세요. Gemini를 대신하며, 같은 Android 설정에서 언제든지 다시 전환할 수 있습니다.",
+      "description_unavailable": "Android에서, AnythingLLM는 Gemini와 유사하게, 앱 내에서 어시스턴트 기능을 사용할 수 있습니다. iOS는 Siri를 대체하는 앱 사용을 제한합니다.",
+      "need_help": "설정에 어려움을 겪고 계신가요?",
+      "circle_to_search_note": "홈 버튼을 길게 눌렀을 때 서클 투 서치가 대신 열린다면, Android 설정 > 디스플레이 > 탐색 메뉴에서 서클 투 서치를 끄세요. 이 기능이 켜져 있는 동안에는 어떤 어시스턴트를 선택하든 Android가 항상 해당 제스처를 Google에 할당합니다.",
+      "open_settings_failed": "Android 설정 열기 실패",
+      "behavior_title": "어시스턴트가 실행될 때",
+      "auto_listen": "시작하기",
+      "auto_listen_description": "보이스 기능을 즉시 활성화하세요.",
+      "auto_screenshot": "스크린샷 첨부",
+      "auto_screenshot_description": "호출 시 화면의 스크린샷을 첨부합니다. 이미지를 인식할 수 있는 모델이 필요하며, Android 디지털 어시스턴트 설정에서 \"스크린샷 사용\"이 켜져 있어야 합니다.",
+      "theme_title": "테마",
+      "theme_description": "어시스턴트가 열려 있을 때 배경에 표시되는 애니메이션.",
+      "animated": "배경 애니메이션",
+      "animated_description": "끄면 배경 이미지를 정적인 이미지로 표시합니다. 배터리 소모를 줄이고, 휴대폰 온도를 낮추는 데 도움이 됩니다.",
       "themes": {
-        "rainbow": null,
-        "halftone": null,
-        "terrain": null,
-        "painterly": null
+        "rainbow": "무지개",
+        "halftone": "반투톤",
+        "terrain": "지형",
+        "painterly": "회화 스타일"
       }
     },
     "about": {
@@ -267,17 +267,17 @@
       "view": "보기"
     },
     "reminder_card": {
-      "today": null,
-      "tomorrow": null,
-      "passed": null,
-      "view": null,
-      "open_label": null,
-      "open_clock_failed": null,
-      "open_calendar_failed": null,
+      "today": "오늘",
+      "tomorrow": "내일",
+      "passed": "완료",
+      "view": "보기",
+      "open_label": "{{label}} 열기, {{when}}",
+      "open_clock_failed": "시계 앱을 열 수 없습니다.",
+      "open_calendar_failed": "이벤트가 캘린더에 열리지 않습니다.",
       "duration": {
-        "hours_other": null,
-        "minutes_other": null,
-        "seconds_other": null
+        "hours_other": "{{count}} 시간",
+        "minutes_other": "{{count}} 분",
+        "seconds_other": "{{count}} 초"
       }
     },
     "draft": {
@@ -432,19 +432,19 @@
     }
   },
   "assistant": {
-    "could_not_start": null,
-    "dismiss": null,
-    "setup_needed": null,
-    "open_anythingllm": null,
-    "select_model": null,
-    "placeholder": null,
-    "placeholder_followup": null,
-    "listening": null,
-    "share_screen": null,
-    "screen_disabled": null,
-    "screen_blocked": null,
-    "screen_unavailable": null,
-    "needs_vision": null
+    "could_not_start": "어시스턴트 시작 실패",
+    "dismiss": "닫기",
+    "setup_needed": "AnythingLLM를 설정하여 보조 기능을 사용하도록 완료하세요.",
+    "open_anythingllm": "열기 AnythingLLM",
+    "select_model": "위에 있는 모델을 선택하여 시작하세요.",
+    "placeholder": "질문 AnythingLLM",
+    "placeholder_followup": "추가 질문하기…",
+    "listening": "음성 듣기…",
+    "share_screen": "화면 공유",
+    "screen_disabled": "화면을 공유하려면 Android 디지털 어시스턴트 설정에서 \"스크린샷 사용\"을 켜세요.",
+    "screen_blocked": "이 앱에서는 스크린샷을 찍을 수 없습니다.",
+    "screen_unavailable": "화면 캡처 실패.",
+    "needs_vision": "화면 공유 기능은 이미지를 인식할 수 있는 모델이 필요합니다. {{reason}}"
   },
   "attachments": {
     "processing": "처리 중…",
@@ -478,9 +478,9 @@
     "whats_new": "새로운 기능",
     "tour_title": "AnythingLLM이 할 수 있는 것",
     "device_assistant": {
-      "title": null,
-      "body": null,
-      "cta": null
+      "title": "Gemini를 개인 AI로 변경",
+      "body": "AnythingLLM를 휴대폰의 비서로 설정하고, Gemini에서 사용하는 동일한 제스처로 모든 앱에서 실행하세요. 화면에 표시된 내용을 질문하면, 선택한 모델이 답변해 줍니다.",
+      "cta": "기기 설정"
     },
     "quick_actions": {
       "title": "어디서나 AnythingLLM으로 묻기",
@@ -639,17 +639,17 @@
       "status_scheduled": "\"{{name}}\" 예약됨"
     },
     "set_reminder": {
-      "name": null,
-      "description": null,
-      "default_label": null,
-      "calendar_notes": null,
-      "status_asking": null,
-      "approval_alarm": null,
-      "approval_timer": null,
-      "approval_calendar": null,
-      "status_not_approved": null,
-      "status_expired": null,
-      "status_set": null
+      "name": "알림 및 예약",
+      "description": "클록 앱에서 알람 및 타이머를 설정한 후, 승인합니다. 1일 이상 뒤의 알림은 캘린더에 추가됩니다.",
+      "default_label": "알림",
+      "calendar_notes": "AnythingLLM에 설정된 알림",
+      "status_asking": "알림 설정 요청 \"{{label}}\"",
+      "approval_alarm": "{{when}}에 \"{{label}}\" 알람을 설정할까요?",
+      "approval_timer": "{{duration}} 타이머 시작하기 {{label}}? 종료 시점은 {{when}}입니다.",
+      "approval_calendar": "{{when}}에 \"{{label}}\"을(를) 알림과 함께 캘린더에 추가할까요? 하루 이상 남아 있어 시계 앱에서는 설정할 수 없습니다.",
+      "status_not_approved": "알림이 승인되지 않았습니다.",
+      "status_expired": "알림 시간 만료 전에 승인",
+      "status_set": "알림 설정: {{label}}"
     },
     "draft_email": {
       "name": "이메일 초안",
@@ -1163,10 +1163,10 @@
       "empty_title": "예약된 작업이 없음",
       "empty_body": "어시스턴트가 매일 아침 웹사이트를 확인하거나, 주간 요약을 작성하거나, 매월 첫 날에 보고서를 작성하도록 하세요 - 모두 채팅을 열지 않고.",
       "create_first": "첫 작업 만들기",
-      "battery_optimized_title": null,
-      "battery_optimized_body": null,
-      "open_battery_settings": null,
-      "open_battery_settings_failed": null
+      "battery_optimized_title": "전화가 잠겨 있을 때 작업이 중단될 수 있습니다.",
+      "battery_optimized_body": "배터리 최적화 기능은 백그라운드에서 작업이 실행되는 동안 네트워크 연결을 끊을 수 있습니다. 안정적인 작동을 위해, \"앱 정보\"를 열고 \"배터리\"를 선택한 후 \"제한 없음\"을 선택하세요.",
+      "open_battery_settings": "배터리 설정 열기",
+      "open_battery_settings_failed": "설정 열 수 없음"
     },
     "runs": {
       "already_running": "이 작업은 이미 실행 중입니다",

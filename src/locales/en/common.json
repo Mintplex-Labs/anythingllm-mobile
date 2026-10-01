@@ -720,6 +720,7 @@
       "description": "Scrape a single specific website for information.",
       "status_reading": "Reading {{host}}",
       "status_reading_document": "Reading document {{name}}",
+      "status_reading_youtube": "Reading YouTube transcript",
       "cellular_title": "Download on cellular?",
       "cellular_message": "Reading \"{{name}}\" requires downloading a document of {{size}}. You are on cellular data. Continue?",
       "cellular_message_unknown_size": "Reading \"{{name}}\" requires downloading a document of an unknown size. You are on cellular data. Continue?"

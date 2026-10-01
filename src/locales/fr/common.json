@@ -750,6 +750,7 @@
       "description": "Extraire des informations d'un site web spécifique.",
       "status_reading": "Lecture de {{host}}",
       "status_reading_document": "Lecture du document {{name}}",
+      "status_reading_youtube": null,
       "cellular_title": "Télécharger sur cellulaire ?",
       "cellular_message": "La lecture de \"{{name}}\" nécessite le téléchargement d'un document de {{size}}. Vous êtes sur données cellulaires. Continuer ?",
       "cellular_message_unknown_size": "La lecture de \"{{name}}\" nécessite le téléchargement d'un document de taille inconnue. Vous êtes sur données cellulaires. Continuer ?"

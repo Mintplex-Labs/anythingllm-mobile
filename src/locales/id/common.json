@@ -690,6 +690,7 @@
       "description": "Scarpe situs web tertentu untuk informasi.",
       "status_reading": "Membaca {{host}}",
       "status_reading_document": "Membaca dokumen {{name}}",
+      "status_reading_youtube": null,
       "cellular_title": "Unduh pada seluler?",
       "cellular_message": "Membaca \"{{name}}\" memerlukan pengunduhan dokumen sebesar {{size}}. Anda berada di data seluler. Lanjutkan?",
       "cellular_message_unknown_size": "Membaca \"{{name}}\" memerlukan pengunduhan dokumen berukuran tidak diketahui. Anda berada di data seluler. Lanjutkan?"

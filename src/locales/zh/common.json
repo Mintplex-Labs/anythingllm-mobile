@@ -690,6 +690,7 @@
       "description": "抓取单个特定网站以获取信息。",
       "status_reading": "正在读取 {{host}}",
       "status_reading_document": "正在读取文档 {{name}}",
+      "status_reading_youtube": null,
       "cellular_title": "在蜂窝数据上下载？",
       "cellular_message": "读取\"{{name}}\"需要下载 {{size}} 大小的文档。您正在使用蜂窝数据。继续？",
       "cellular_message_unknown_size": "读取\"{{name}}\"需要下载大小未知的文档。您正在使用蜂窝数据。继续？"

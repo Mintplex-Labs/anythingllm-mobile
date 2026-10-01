@@ -690,6 +690,7 @@
       "description": "情報を求めて単一の特定のウェブサイトをスクレイプします。",
       "status_reading": "{{host}}を読み中",
       "status_reading_document": "ドキュメント{{name}}を読み中",
+      "status_reading_youtube": null,
       "cellular_title": "セルラーでダウンロード？",
       "cellular_message": "「{{name}}」を読む場合は{{size}}のドキュメントをダウンロードする必要があります。セルラーデータを使用しています。続行しますか？",
       "cellular_message_unknown_size": "「{{name}}」を読む場合は、不明なサイズのドキュメントをダウンロードする必要があります。セルラーデータを使用しています。続行しますか？"

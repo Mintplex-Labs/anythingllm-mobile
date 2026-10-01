@@ -45,23 +45,6 @@ Basically imagine Openclaw or Heremes agent, but fully on-device first, with all
 <table>
   <tr>
     <td width="33%" align="center" valign="top">
-      <video src="https://github.com/user-attachments/assets/a8cdb6fa-bcc5-4b5b-8223-d28c2f5d865b" width="100%" muted loop playsinline></video>
-      <br /><b>Chat with your documents</b><br />
-      <sub>On-device RAG over PDFs, Word, Excel and more. Embedding, vector db, and reranking all fully on device.</sub>
-    </td>
-    <td width="33%" align="center" valign="top">
-      <video src="https://github.com/user-attachments/assets/d8fb22c9-3fe8-40e8-ba3c-43bcd06e98af" width="100%" muted loop playsinline></video>
-      <br /><b>Agentic web search</b><br />
-      <sub>Search, open and read pages, then answer with citations.</sub>
-    </td>
-    <td width="33%" align="center" valign="top">
-      <video src="https://github.com/user-attachments/assets/ffd523eb-5954-4414-881e-b6b6e1f91e1d" width="100%" muted loop playsinline></video>
-      <br /><b>Document generation</b><br />
-      <sub>Turn a conversation into a Word, PDF, PowerPoint or text file.</sub>
-    </td>
-  </tr>
-  <tr>
-    <td width="33%" align="center" valign="top">
       <video src="https://github.com/user-attachments/assets/8ce6794f-0d4e-4bba-b854-83f10159dfc8" width="100%" muted loop playsinline></video>
       <br /><b>Default Assistant</b><br />
       <sub>Set AnythingLLM as your phone's assistant and ask about whatever is on screen, by voice or text.</sub>
@@ -75,6 +58,23 @@ Basically imagine Openclaw or Heremes agent, but fully on-device first, with all
       <video src="https://github.com/user-attachments/assets/025ef147-083d-4d05-9737-80b2d968065e" width="100%" muted loop playsinline></video>
       <br /><b>Background jobs</b><br />
       <sub>Recurring tasks that run on schedule, even with the app closed, and notify you when done.</sub>
+    </td>
+  </tr>
+  <tr>
+    <td width="33%" align="center" valign="top">
+      <video src="https://github.com/user-attachments/assets/a8cdb6fa-bcc5-4b5b-8223-d28c2f5d865b" width="100%" muted loop playsinline></video>
+      <br /><b>Chat with your documents</b><br />
+      <sub>On-device RAG over PDFs, Word, Excel and more. Embedding, vector db, and reranking all fully on device.</sub>
+    </td>
+    <td width="33%" align="center" valign="top">
+      <video src="https://github.com/user-attachments/assets/d8fb22c9-3fe8-40e8-ba3c-43bcd06e98af" width="100%" muted loop playsinline></video>
+      <br /><b>Agentic web search</b><br />
+      <sub>Search, open and read pages, then answer with citations.</sub>
+    </td>
+    <td width="33%" align="center" valign="top">
+      <video src="https://github.com/user-attachments/assets/ffd523eb-5954-4414-881e-b6b6e1f91e1d" width="100%" muted loop playsinline></video>
+      <br /><b>Document generation</b><br />
+      <sub>Turn a conversation into a Word, PDF, PowerPoint or text file.</sub>
     </td>
   </tr>
   <tr>

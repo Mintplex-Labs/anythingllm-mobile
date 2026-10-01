@@ -125,18 +125,18 @@
     "utility": {
       "title": "ユーティリティ",
       "anonymous_telemetry": "匿名テレメトリ",
-      "tool_auto_approvals": null,
+      "tool_auto_approvals": "ツールの自動承認",
       "clear_temp_files": "一時ファイルをクリア",
       "temp_files_cleared": "一時ファイルがクリアされました"
     },
     "tool_auto_approvals": {
-      "description": null,
-      "empty_title": null,
-      "empty_description": null,
-      "approved_since": null,
-      "remove": null,
-      "remove_label": null,
-      "removed_toast": null
+      "description": "これらのツールは承認を求めずに実行されます。スワイプするかゴミ箱ボタンをタップすると、次回から再び確認されます。",
+      "empty_title": "自動承認されたツールはありません",
+      "empty_description": "チャットでツールが承認を求めたときに「このツールを常に承認する」にチェックを入れると、ここに表示されます。",
+      "approved_since": "{{when}}に自動承認",
+      "remove": "削除",
+      "remove_label": "{{tool}}の自動承認を停止",
+      "removed_toast": "{{tool}}は再び承認を求めます"
     },
     "legal": {
       "title": "法務とプライバシー",
@@ -346,8 +346,8 @@
       "tokens_other": "{{value}}トークン"
     },
     "tool_approval": {
-      "needs_approval": null,
-      "always_approve": null,
+      "needs_approval": "承認が必要です",
+      "always_approve": "このツールを常に承認する",
       "show_details": "詳細を表示",
       "hide_details": "詳細を非表示",
       "approve": "承認",
@@ -701,7 +701,7 @@
       "description": "情報を求めて単一の特定のウェブサイトをスクレイプします。",
       "status_reading": "{{host}}を読み中",
       "status_reading_document": "ドキュメント{{name}}を読み中",
-      "status_reading_youtube": null,
+      "status_reading_youtube": "YouTubeの文字起こしを読み込み中",
       "cellular_title": "セルラーでダウンロード？",
       "cellular_message": "「{{name}}」を読む場合は{{size}}のドキュメントをダウンロードする必要があります。セルラーデータを使用しています。続行しますか？",
       "cellular_message_unknown_size": "「{{name}}」を読む場合は、不明なサイズのドキュメントをダウンロードする必要があります。セルラーデータを使用しています。続行しますか？"

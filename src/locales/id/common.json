@@ -125,18 +125,18 @@
     "utility": {
       "title": "Utilitas",
       "anonymous_telemetry": "Telemetri anonim",
-      "tool_auto_approvals": null,
+      "tool_auto_approvals": "Persetujuan otomatis alat",
       "clear_temp_files": "Bersihkan file sementara",
       "temp_files_cleared": "File sementara dihapus"
     },
     "tool_auto_approvals": {
-      "description": null,
-      "empty_title": null,
-      "empty_description": null,
-      "approved_since": null,
-      "remove": null,
-      "remove_label": null,
-      "removed_toast": null
+      "description": "Alat-alat ini berjalan tanpa meminta persetujuan Anda. Geser salah satunya atau ketuk tombol tempat sampah agar ditanya lagi lain kali.",
+      "empty_title": "Tidak ada alat yang disetujui otomatis",
+      "empty_description": "Centang \"Selalu setujui alat ini\" saat alat meminta persetujuan di chat dan alat itu akan muncul di sini.",
+      "approved_since": "Disetujui otomatis {{when}}",
+      "remove": "Hapus",
+      "remove_label": "Berhenti menyetujui {{tool}} secara otomatis",
+      "removed_toast": "{{tool}} akan meminta persetujuan lagi"
     },
     "legal": {
       "title": "Hukum & Privasi",
@@ -346,8 +346,8 @@
       "tokens_other": "{{value}} token"
     },
     "tool_approval": {
-      "needs_approval": null,
-      "always_approve": null,
+      "needs_approval": "Memerlukan persetujuan Anda",
+      "always_approve": "Selalu setujui alat ini",
       "show_details": "Tampilkan detail",
       "hide_details": "Sembunyikan detail",
       "approve": "Setujui",
@@ -701,7 +701,7 @@
       "description": "Scarpe situs web tertentu untuk informasi.",
       "status_reading": "Membaca {{host}}",
       "status_reading_document": "Membaca dokumen {{name}}",
-      "status_reading_youtube": null,
+      "status_reading_youtube": "Membaca transkrip YouTube",
       "cellular_title": "Unduh pada seluler?",
       "cellular_message": "Membaca \"{{name}}\" memerlukan pengunduhan dokumen sebesar {{size}}. Anda berada di data seluler. Lanjutkan?",
       "cellular_message_unknown_size": "Membaca \"{{name}}\" memerlukan pengunduhan dokumen berukuran tidak diketahui. Anda berada di data seluler. Lanjutkan?"

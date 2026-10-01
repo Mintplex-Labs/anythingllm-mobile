@@ -125,18 +125,18 @@
     "utility": {
       "title": "Yardımcı Program",
       "anonymous_telemetry": "Anonim Telemetri",
-      "tool_auto_approvals": null,
+      "tool_auto_approvals": "Araç otomatik onayları",
       "clear_temp_files": "Geçici dosyaları temizle",
       "temp_files_cleared": "Geçici dosyalar temizlendi"
     },
     "tool_auto_approvals": {
-      "description": null,
-      "empty_title": null,
-      "empty_description": null,
-      "approved_since": null,
-      "remove": null,
-      "remove_label": null,
-      "removed_toast": null
+      "description": "Bu araçlar onayınızı istemeden çalışır. Bir dahaki sefere yeniden sorulması için birini kaydırarak kaldırın veya çöp kutusu düğmesine dokunun.",
+      "empty_title": "Otomatik onaylanan araç yok",
+      "empty_description": "Bir araç sohbette onay istediğinde \"Bu aracı her zaman onayla\" seçeneğini işaretleyin, burada görünecektir.",
+      "approved_since": "{{when}} otomatik onaylandı",
+      "remove": "Kaldır",
+      "remove_label": "{{tool}} için otomatik onayı durdur",
+      "removed_toast": "{{tool}} yeniden onay isteyecek"
     },
     "legal": {
       "title": "Yasal & Gizlilik",
@@ -358,8 +358,8 @@
       "tokens_other": "{{value}} belirteç"
     },
     "tool_approval": {
-      "needs_approval": null,
-      "always_approve": null,
+      "needs_approval": "Onayınız gerekiyor",
+      "always_approve": "Bu aracı her zaman onayla",
       "show_details": "Ayrıntıları göster",
       "hide_details": "Ayrıntıları gizle",
       "approve": "Onayla",
@@ -731,7 +731,7 @@
       "description": "Bilgi için tek bir özel web sitesini kazıyın.",
       "status_reading": "{{host}} okunuyor",
       "status_reading_document": "{{name}} belgesi okunuyor",
-      "status_reading_youtube": null,
+      "status_reading_youtube": "YouTube transkripti okunuyor",
       "cellular_title": "Hücresel veri üzerinde indirilsin mi?",
       "cellular_message": "\"{{name}}\" okuma, {{size}} belgesi indirmeyi gerektirir. Hücresel veri üzerinde olmuşsunuz. Devam edilsin mi?",
       "cellular_message_unknown_size": "\"{{name}}\" okuma, bilinmeyen boyutta bir belge indirmeyi gerektirir. Hücresel veri üzerinde olmuşsunuz. Devam edilsin mi?"

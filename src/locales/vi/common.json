@@ -125,18 +125,18 @@
     "utility": {
       "title": "Tiện ích",
       "anonymous_telemetry": "Dữ liệu viễn cảm ẩn danh",
-      "tool_auto_approvals": null,
+      "tool_auto_approvals": "Tự động phê duyệt công cụ",
       "clear_temp_files": "Xóa tệp tạm thời",
       "temp_files_cleared": "Đã xóa tệp tạm thời"
     },
     "tool_auto_approvals": {
-      "description": null,
-      "empty_title": null,
-      "empty_description": null,
-      "approved_since": null,
-      "remove": null,
-      "remove_label": null,
-      "removed_toast": null
+      "description": "Các công cụ này chạy mà không cần hỏi bạn phê duyệt. Vuốt một công cụ đi hoặc nhấn nút thùng rác để được hỏi lại vào lần sau.",
+      "empty_title": "Không có công cụ nào được tự động phê duyệt",
+      "empty_description": "Đánh dấu \"Luôn phê duyệt công cụ này\" khi một công cụ yêu cầu phê duyệt trong cuộc trò chuyện và công cụ đó sẽ xuất hiện ở đây.",
+      "approved_since": "Được tự động phê duyệt {{when}}",
+      "remove": "Xóa",
+      "remove_label": "Ngừng tự động phê duyệt {{tool}}",
+      "removed_toast": "{{tool}} sẽ yêu cầu phê duyệt lại"
     },
     "legal": {
       "title": "Pháp lý & Quyền riêng tư",
@@ -346,8 +346,8 @@
       "tokens_other": "{{value}} token"
     },
     "tool_approval": {
-      "needs_approval": null,
-      "always_approve": null,
+      "needs_approval": "Cần bạn phê duyệt",
+      "always_approve": "Luôn phê duyệt công cụ này",
       "show_details": "Hiển thị chi tiết",
       "hide_details": "Ẩn chi tiết",
       "approve": "Phê duyệt",
@@ -701,7 +701,7 @@
       "description": "Scrape một trang web cụ thể để lấy thông tin.",
       "status_reading": "Đang đọc {{host}}",
       "status_reading_document": "Đang đọc tài liệu {{name}}",
-      "status_reading_youtube": null,
+      "status_reading_youtube": "Đang đọc bản chép lời YouTube",
       "cellular_title": "Tải xuống trên di động?",
       "cellular_message": "Đọc \"{{name}}\" yêu cầu tải xuống một tài liệu có kích thước {{size}}. Bạn đang sử dụng dữ liệu di động. Tiếp tục?",
       "cellular_message_unknown_size": "Đọc \"{{name}}\" yêu cầu tải xuống một tài liệu có kích thước không xác định. Bạn đang sử dụng dữ liệu di động. Tiếp tục?"

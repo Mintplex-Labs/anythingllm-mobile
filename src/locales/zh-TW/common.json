@@ -125,18 +125,18 @@
     "utility": {
       "title": "實用程式",
       "anonymous_telemetry": "匿名遙測",
-      "tool_auto_approvals": null,
+      "tool_auto_approvals": "工具自動核准",
       "clear_temp_files": "清除暫存檔案",
       "temp_files_cleared": "暫存檔案已清除"
     },
     "tool_auto_approvals": {
-      "description": null,
-      "empty_title": null,
-      "empty_description": null,
-      "approved_since": null,
-      "remove": null,
-      "remove_label": null,
-      "removed_toast": null
+      "description": "這些工具執行時不會請求你的核准。滑動移除或點選垃圾桶按鈕，下次將再次詢問。",
+      "empty_title": "沒有自動核准的工具",
+      "empty_description": "當工具在聊天中請求核准時，勾選「一律核准此工具」，它就會顯示在這裡。",
+      "approved_since": "{{when}}自動核准",
+      "remove": "移除",
+      "remove_label": "停止自動核准 {{tool}}",
+      "removed_toast": "{{tool}} 將再次請求核准"
     },
     "legal": {
       "title": "法律與隱私",
@@ -346,8 +346,8 @@
       "tokens_other": "{{value}} 個標記"
     },
     "tool_approval": {
-      "needs_approval": null,
-      "always_approve": null,
+      "needs_approval": "需要你的核准",
+      "always_approve": "一律核准此工具",
       "show_details": "顯示詳細資訊",
       "hide_details": "隱藏詳細資訊",
       "approve": "批准",
@@ -701,7 +701,7 @@
       "description": "從單一特定網站抓取資訊。",
       "status_reading": "正在讀取 {{host}}",
       "status_reading_document": "正在讀取文件 {{name}}",
-      "status_reading_youtube": null,
+      "status_reading_youtube": "正在讀取 YouTube 字幕",
       "cellular_title": "在行動數據上下載？",
       "cellular_message": "讀取「{{name}}」需要下載 {{size}} 的文件。您在行動數據上。繼續？",
       "cellular_message_unknown_size": "讀取「{{name}}」需要下載大小不明的文件。您在行動數據上。繼續？"

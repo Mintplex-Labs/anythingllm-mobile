@@ -125,18 +125,18 @@
     "utility": {
       "title": "Hulpprogramma",
       "anonymous_telemetry": "Anonieme telemetrie",
-      "tool_auto_approvals": null,
+      "tool_auto_approvals": "Automatische toolgoedkeuringen",
       "clear_temp_files": "Tijdelijke bestanden wissen",
       "temp_files_cleared": "Tijdelijke bestanden gewist"
     },
     "tool_auto_approvals": {
-      "description": null,
-      "empty_title": null,
-      "empty_description": null,
-      "approved_since": null,
-      "remove": null,
-      "remove_label": null,
-      "removed_toast": null
+      "description": "Deze tools worden uitgevoerd zonder om je goedkeuring te vragen. Veeg er een weg of tik op de prullenbak om het de volgende keer weer gevraagd te krijgen.",
+      "empty_title": "Geen automatisch goedgekeurde tools",
+      "empty_description": "Vink \"Deze tool altijd goedkeuren\" aan wanneer een tool in de chat om goedkeuring vraagt, dan verschijnt hij hier.",
+      "approved_since": "Automatisch goedgekeurd {{when}}",
+      "remove": "Verwijderen",
+      "remove_label": "Stoppen met automatisch goedkeuren van {{tool}}",
+      "removed_toast": "{{tool}} vraagt weer om goedkeuring"
     },
     "legal": {
       "title": "Juridisch & Privacybeleid",
@@ -358,8 +358,8 @@
       "tokens_other": "{{value}} tokens"
     },
     "tool_approval": {
-      "needs_approval": null,
-      "always_approve": null,
+      "needs_approval": "Vereist je goedkeuring",
+      "always_approve": "Deze tool altijd goedkeuren",
       "show_details": "Toon details",
       "hide_details": "Verberg details",
       "approve": "Goedkeuren",
@@ -731,7 +731,7 @@
       "description": "Scrape een enkele specifieke website voor informatie.",
       "status_reading": "{{host}} lezen",
       "status_reading_document": "Document {{name}} lezen",
-      "status_reading_youtube": null,
+      "status_reading_youtube": "YouTube-transcript lezen",
       "cellular_title": "Downloaden op mobiele data?",
       "cellular_message": "\"{{name}}\" lezen vereist het downloaden van een document van {{size}}. Je bent op mobiele data. Doorgaan?",
       "cellular_message_unknown_size": "\"{{name}}\" lezen vereist het downloaden van een document van onbekende grootte. Je bent op mobiele data. Doorgaan?"

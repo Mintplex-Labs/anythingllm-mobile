@@ -125,18 +125,18 @@
     "utility": {
       "title": "Утилиты",
       "anonymous_telemetry": "Анонимная телеметрия",
-      "tool_auto_approvals": null,
+      "tool_auto_approvals": "Автоодобрение инструментов",
       "clear_temp_files": "Очистить временные файлы",
       "temp_files_cleared": "Временные файлы очищены"
     },
     "tool_auto_approvals": {
-      "description": null,
-      "empty_title": null,
-      "empty_description": null,
-      "approved_since": null,
-      "remove": null,
-      "remove_label": null,
-      "removed_toast": null
+      "description": "Эти инструменты запускаются без запроса вашего одобрения. Смахните один из них или нажмите кнопку корзины, чтобы в следующий раз снова получить запрос.",
+      "empty_title": "Нет автоматически одобренных инструментов",
+      "empty_description": "Отметьте «Всегда одобрять этот инструмент», когда инструмент запросит одобрение в чате, и он появится здесь.",
+      "approved_since": "Автоматически одобрено {{when}}",
+      "remove": "Удалить",
+      "remove_label": "Отключить автоодобрение для {{tool}}",
+      "removed_toast": "{{tool}} снова будет запрашивать одобрение"
     },
     "legal": {
       "title": "Юридическая информация и конфиденциальность",
@@ -382,8 +382,8 @@
       "tokens_other": "{{value}} токенов"
     },
     "tool_approval": {
-      "needs_approval": null,
-      "always_approve": null,
+      "needs_approval": "Требуется ваше одобрение",
+      "always_approve": "Всегда одобрять этот инструмент",
       "show_details": "Показать детали",
       "hide_details": "Скрыть детали",
       "approve": "Одобрить",
@@ -791,7 +791,7 @@
       "description": "Парсинг одного конкретного веб-сайта для получения информации.",
       "status_reading": "Чтение {{host}}",
       "status_reading_document": "Чтение документа {{name}}",
-      "status_reading_youtube": null,
+      "status_reading_youtube": "Чтение расшифровки YouTube",
       "cellular_title": "Загрузить по мобильной сети?",
       "cellular_message": "Чтение \"{{name}}\" требует загрузки документа {{size}}. Вы используете мобильные данные. Продолжить?",
       "cellular_message_unknown_size": "Чтение \"{{name}}\" требует загрузки документа неизвестного размера. Вы используете мобильные данные. Продолжить?"

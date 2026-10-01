@@ -125,18 +125,18 @@
     "utility": {
       "title": "Utilidad",
       "anonymous_telemetry": "Telemetría anónima",
-      "tool_auto_approvals": null,
+      "tool_auto_approvals": "Aprobaciones automáticas de herramientas",
       "clear_temp_files": "Limpiar archivos temporales",
       "temp_files_cleared": "Archivos temporales eliminados"
     },
     "tool_auto_approvals": {
-      "description": null,
-      "empty_title": null,
-      "empty_description": null,
-      "approved_since": null,
-      "remove": null,
-      "remove_label": null,
-      "removed_toast": null
+      "description": "Estas herramientas se ejecutan sin pedir tu aprobación. Desliza una para quitarla o toca el botón de la papelera para que se te vuelva a preguntar la próxima vez.",
+      "empty_title": "No hay herramientas aprobadas automáticamente",
+      "empty_description": "Marca «Aprobar siempre esta herramienta» cuando una herramienta pida aprobación en el chat y aparecerá aquí.",
+      "approved_since": "Aprobada automáticamente {{when}}",
+      "remove": "Quitar",
+      "remove_label": "Dejar de aprobar automáticamente {{tool}}",
+      "removed_toast": "{{tool}} volverá a pedir aprobación"
     },
     "legal": {
       "title": "Legal y privacidad",
@@ -370,8 +370,8 @@
       "tokens_other": "{{value}} tokens"
     },
     "tool_approval": {
-      "needs_approval": null,
-      "always_approve": null,
+      "needs_approval": "Necesita tu aprobación",
+      "always_approve": "Aprobar siempre esta herramienta",
       "show_details": "Mostrar detalles",
       "hide_details": "Ocultar detalles",
       "approve": "Aprobar",
@@ -761,7 +761,7 @@
       "description": "Raspe un sitio web específico para obtener información.",
       "status_reading": "Leyendo {{host}}",
       "status_reading_document": "Leyendo documento {{name}}",
-      "status_reading_youtube": null,
+      "status_reading_youtube": "Leyendo la transcripción de YouTube",
       "cellular_title": "¿Descargar en datos móviles?",
       "cellular_message": "Leer \"{{name}}\" requiere descargar un documento de {{size}}. Está en datos móviles. ¿Continuar?",
       "cellular_message_unknown_size": "Leer \"{{name}}\" requiere descargar un documento de tamaño desconocido. Está en datos móviles. ¿Continuar?"

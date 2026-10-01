@@ -125,18 +125,18 @@
     "utility": {
       "title": "Utilitaire",
       "anonymous_telemetry": "Télémétrie anonyme",
-      "tool_auto_approvals": null,
+      "tool_auto_approvals": "Approbations automatiques des outils",
       "clear_temp_files": "Effacer les fichiers temporaires",
       "temp_files_cleared": "Fichiers temporaires effacés"
     },
     "tool_auto_approvals": {
-      "description": null,
-      "empty_title": null,
-      "empty_description": null,
-      "approved_since": null,
-      "remove": null,
-      "remove_label": null,
-      "removed_toast": null
+      "description": "Ces outils s’exécutent sans demander votre approbation. Balayez-en un ou appuyez sur la corbeille pour que la question vous soit de nouveau posée la prochaine fois.",
+      "empty_title": "Aucun outil approuvé automatiquement",
+      "empty_description": "Cochez « Toujours approuver cet outil » lorsqu’un outil demande une approbation dans le chat et il apparaîtra ici.",
+      "approved_since": "Approuvé automatiquement {{when}}",
+      "remove": "Retirer",
+      "remove_label": "Ne plus approuver automatiquement {{tool}}",
+      "removed_toast": "{{tool}} demandera de nouveau une approbation"
     },
     "legal": {
       "title": "Légal et confidentialité",
@@ -370,8 +370,8 @@
       "tokens_other": "{{value}} jetons"
     },
     "tool_approval": {
-      "needs_approval": null,
-      "always_approve": null,
+      "needs_approval": "Nécessite votre approbation",
+      "always_approve": "Toujours approuver cet outil",
       "show_details": "Afficher les détails",
       "hide_details": "Masquer les détails",
       "approve": "Approuver",
@@ -761,7 +761,7 @@
       "description": "Extraire des informations d'un site web spécifique.",
       "status_reading": "Lecture de {{host}}",
       "status_reading_document": "Lecture du document {{name}}",
-      "status_reading_youtube": null,
+      "status_reading_youtube": "Lecture de la transcription YouTube",
       "cellular_title": "Télécharger sur cellulaire ?",
       "cellular_message": "La lecture de \"{{name}}\" nécessite le téléchargement d'un document de {{size}}. Vous êtes sur données cellulaires. Continuer ?",
       "cellular_message_unknown_size": "La lecture de \"{{name}}\" nécessite le téléchargement d'un document de taille inconnue. Vous êtes sur données cellulaires. Continuer ?"

@@ -125,18 +125,18 @@
     "utility": {
       "title": "实用工具",
       "anonymous_telemetry": "匿名遥测",
-      "tool_auto_approvals": null,
+      "tool_auto_approvals": "工具自动批准",
       "clear_temp_files": "清除临时文件",
       "temp_files_cleared": "临时文件已清除"
     },
     "tool_auto_approvals": {
-      "description": null,
-      "empty_title": null,
-      "empty_description": null,
-      "approved_since": null,
-      "remove": null,
-      "remove_label": null,
-      "removed_toast": null
+      "description": "这些工具运行时不会请求你的批准。滑动移除或点击垃圾桶按钮，下次将再次询问。",
+      "empty_title": "没有自动批准的工具",
+      "empty_description": "当工具在聊天中请求批准时，勾选“始终批准此工具”，它就会显示在这里。",
+      "approved_since": "{{when}}自动批准",
+      "remove": "移除",
+      "remove_label": "停止自动批准 {{tool}}",
+      "removed_toast": "{{tool}} 将再次请求批准"
     },
     "legal": {
       "title": "法律和隐私",
@@ -346,8 +346,8 @@
       "tokens_other": "{{value}} 个令牌"
     },
     "tool_approval": {
-      "needs_approval": null,
-      "always_approve": null,
+      "needs_approval": "需要你的批准",
+      "always_approve": "始终批准此工具",
       "show_details": "显示详情",
       "hide_details": "隐藏详情",
       "approve": "批准",
@@ -701,7 +701,7 @@
       "description": "抓取单个特定网站以获取信息。",
       "status_reading": "正在读取 {{host}}",
       "status_reading_document": "正在读取文档 {{name}}",
-      "status_reading_youtube": null,
+      "status_reading_youtube": "正在读取 YouTube 字幕",
       "cellular_title": "在蜂窝数据上下载？",
       "cellular_message": "读取\"{{name}}\"需要下载 {{size}} 大小的文档。您正在使用蜂窝数据。继续？",
       "cellular_message_unknown_size": "读取\"{{name}}\"需要下载大小未知的文档。您正在使用蜂窝数据。继续？"

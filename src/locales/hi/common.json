@@ -125,18 +125,18 @@
     "utility": {
       "title": "उपयोगिता",
       "anonymous_telemetry": "अनामित टेलीमेट्री",
-      "tool_auto_approvals": null,
+      "tool_auto_approvals": "टूल ऑटो-अनुमोदन",
       "clear_temp_files": "अस्थायी फ़ाइलें साफ करें",
       "temp_files_cleared": "अस्थायी फ़ाइलें साफ कर दी गईं"
     },
     "tool_auto_approvals": {
-      "description": null,
-      "empty_title": null,
-      "empty_description": null,
-      "approved_since": null,
-      "remove": null,
-      "remove_label": null,
-      "removed_toast": null
+      "description": "ये टूल आपकी अनुमति माँगे बिना चलते हैं। अगली बार फिर से पूछे जाने के लिए किसी एक को स्वाइप करके हटाएँ या ट्रैश बटन पर टैप करें।",
+      "empty_title": "कोई ऑटो-अनुमोदित टूल नहीं",
+      "empty_description": "जब कोई टूल चैट में अनुमति माँगे, तब \"इस टूल को हमेशा अनुमति दें\" चुनें और वह यहाँ दिखाई देगा।",
+      "approved_since": "{{when}} ऑटो-अनुमोदित",
+      "remove": "हटाएँ",
+      "remove_label": "{{tool}} का ऑटो-अनुमोदन बंद करें",
+      "removed_toast": "{{tool}} फिर से अनुमति माँगेगा"
     },
     "legal": {
       "title": "कानूनी और गोपनीयता",
@@ -358,8 +358,8 @@
       "tokens_other": "{{value}} टोकन"
     },
     "tool_approval": {
-      "needs_approval": null,
-      "always_approve": null,
+      "needs_approval": "आपकी अनुमति चाहिए",
+      "always_approve": "इस टूल को हमेशा अनुमति दें",
       "show_details": "विवरण दिखाएँ",
       "hide_details": "विवरण छुपाएँ",
       "approve": "मंजूरी दें",
@@ -731,7 +731,7 @@
       "description": "जानकारी के लिए एक एकल विशिष्ट वेबसाइट को स्क्रैप करें।",
       "status_reading": "{{host}} पढ़ रहे हैं",
       "status_reading_document": "दस्तावेज़ {{name}} पढ़ रहे हैं",
-      "status_reading_youtube": null,
+      "status_reading_youtube": "YouTube ट्रांसक्रिप्ट पढ़ा जा रहा है",
       "cellular_title": "सेलुलर पर डाउनलोड करें?",
       "cellular_message": "\"{{name}}\" पढ़ने के लिए {{size}} का एक दस्तावेज़ डाउनलोड करने की आवश्यकता है। आप सेलुलर डेटा पर हैं। जारी रखें?",
       "cellular_message_unknown_size": "\"{{name}}\" पढ़ने के लिए अज्ञात आकार के एक दस्तावेज़ को डाउनलोड करने की आवश्यकता है। आप सेलुलर डेटा पर हैं। जारी रखें?"

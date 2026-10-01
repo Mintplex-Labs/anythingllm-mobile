@@ -125,18 +125,18 @@
     "utility": {
       "title": "Narzędzia",
       "anonymous_telemetry": "Anonimowa telemetria",
-      "tool_auto_approvals": null,
+      "tool_auto_approvals": "Automatyczne zatwierdzanie narzędzi",
       "clear_temp_files": "Wyczyść pliki tymczasowe",
       "temp_files_cleared": "Pliki tymczasowe wyczyszczone"
     },
     "tool_auto_approvals": {
-      "description": null,
-      "empty_title": null,
-      "empty_description": null,
-      "approved_since": null,
-      "remove": null,
-      "remove_label": null,
-      "removed_toast": null
+      "description": "Te narzędzia działają bez pytania o Twoją zgodę. Przesuń jedno lub dotknij przycisku kosza, aby następnym razem znów pojawiło się pytanie.",
+      "empty_title": "Brak automatycznie zatwierdzonych narzędzi",
+      "empty_description": "Zaznacz „Zawsze zatwierdzaj to narzędzie”, gdy narzędzie poprosi o zgodę na czacie, a pojawi się tutaj.",
+      "approved_since": "Zatwierdzone automatycznie {{when}}",
+      "remove": "Usuń",
+      "remove_label": "Przestań automatycznie zatwierdzać {{tool}}",
+      "removed_toast": "{{tool}} znów będzie prosić o zgodę"
     },
     "legal": {
       "title": "Warunki i prywatność",
@@ -382,8 +382,8 @@
       "tokens_other": "{{value}} tokenów"
     },
     "tool_approval": {
-      "needs_approval": null,
-      "always_approve": null,
+      "needs_approval": "Wymaga Twojej zgody",
+      "always_approve": "Zawsze zatwierdzaj to narzędzie",
       "show_details": "Pokaż szczegóły",
       "hide_details": "Ukryj szczegóły",
       "approve": "Zatwierdź",
@@ -791,7 +791,7 @@
       "description": "Analizuj jedną konkretną stronę internetową dla informacji.",
       "status_reading": "Czytanie {{host}}",
       "status_reading_document": "Czytanie dokumentu {{name}}",
-      "status_reading_youtube": null,
+      "status_reading_youtube": "Odczytywanie transkrypcji YouTube",
       "cellular_title": "Pobrać na danych komórkowych?",
       "cellular_message": "Czytanie \"{{name}}\" wymaga pobrania dokumentu o wymiarach {{size}}. Korzystasz z danych komórkowych. Kontynuować?",
       "cellular_message_unknown_size": "Czytanie \"{{name}}\" wymaga pobrania dokumentu o nieznanym rozmiarze. Korzystasz z danych komórkowych. Kontynuować?"

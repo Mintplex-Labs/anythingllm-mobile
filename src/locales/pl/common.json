@@ -125,8 +125,18 @@
     "utility": {
       "title": "Narzędzia",
       "anonymous_telemetry": "Anonimowa telemetria",
+      "tool_auto_approvals": null,
       "clear_temp_files": "Wyczyść pliki tymczasowe",
       "temp_files_cleared": "Pliki tymczasowe wyczyszczone"
+    },
+    "tool_auto_approvals": {
+      "description": null,
+      "empty_title": null,
+      "empty_description": null,
+      "approved_since": null,
+      "remove": null,
+      "remove_label": null,
+      "removed_toast": null
     },
     "legal": {
       "title": "Warunki i prywatność",
@@ -372,7 +382,8 @@
       "tokens_other": "{{value}} tokenów"
     },
     "tool_approval": {
-      "wants_to_call": "Model chce wywołać <skill>{{skill}}</skill>",
+      "needs_approval": null,
+      "always_approve": null,
       "show_details": "Pokaż szczegóły",
       "hide_details": "Ukryj szczegóły",
       "approve": "Zatwierdź",

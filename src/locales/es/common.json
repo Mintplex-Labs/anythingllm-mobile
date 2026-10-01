@@ -125,8 +125,18 @@
     "utility": {
       "title": "Utilidad",
       "anonymous_telemetry": "Telemetría anónima",
+      "tool_auto_approvals": null,
       "clear_temp_files": "Limpiar archivos temporales",
       "temp_files_cleared": "Archivos temporales eliminados"
+    },
+    "tool_auto_approvals": {
+      "description": null,
+      "empty_title": null,
+      "empty_description": null,
+      "approved_since": null,
+      "remove": null,
+      "remove_label": null,
+      "removed_toast": null
     },
     "legal": {
       "title": "Legal y privacidad",
@@ -360,7 +370,8 @@
       "tokens_other": "{{value}} tokens"
     },
     "tool_approval": {
-      "wants_to_call": "El modelo quiere llamar <skill>{{skill}}</skill>",
+      "needs_approval": null,
+      "always_approve": null,
       "show_details": "Mostrar detalles",
       "hide_details": "Ocultar detalles",
       "approve": "Aprobar",

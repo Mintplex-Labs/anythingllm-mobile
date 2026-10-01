@@ -125,8 +125,18 @@
     "utility": {
       "title": "Utilitas",
       "anonymous_telemetry": "Telemetri anonim",
+      "tool_auto_approvals": null,
       "clear_temp_files": "Bersihkan file sementara",
       "temp_files_cleared": "File sementara dihapus"
+    },
+    "tool_auto_approvals": {
+      "description": null,
+      "empty_title": null,
+      "empty_description": null,
+      "approved_since": null,
+      "remove": null,
+      "remove_label": null,
+      "removed_toast": null
     },
     "legal": {
       "title": "Hukum & Privasi",
@@ -336,7 +346,8 @@
       "tokens_other": "{{value}} token"
     },
     "tool_approval": {
-      "wants_to_call": "Model ingin memanggil <skill>{{skill}}</skill>",
+      "needs_approval": null,
+      "always_approve": null,
       "show_details": "Tampilkan detail",
       "hide_details": "Sembunyikan detail",
       "approve": "Setujui",

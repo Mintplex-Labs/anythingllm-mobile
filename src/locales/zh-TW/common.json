@@ -125,8 +125,18 @@
     "utility": {
       "title": "實用程式",
       "anonymous_telemetry": "匿名遙測",
+      "tool_auto_approvals": null,
       "clear_temp_files": "清除暫存檔案",
       "temp_files_cleared": "暫存檔案已清除"
+    },
+    "tool_auto_approvals": {
+      "description": null,
+      "empty_title": null,
+      "empty_description": null,
+      "approved_since": null,
+      "remove": null,
+      "remove_label": null,
+      "removed_toast": null
     },
     "legal": {
       "title": "法律與隱私",
@@ -336,7 +346,8 @@
       "tokens_other": "{{value}} 個標記"
     },
     "tool_approval": {
-      "wants_to_call": "模型想呼叫 <skill>{{skill}}</skill>",
+      "needs_approval": null,
+      "always_approve": null,
       "show_details": "顯示詳細資訊",
       "hide_details": "隱藏詳細資訊",
       "approve": "批准",

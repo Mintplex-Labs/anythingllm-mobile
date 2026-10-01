@@ -8,6 +8,7 @@ import SpecialTools from './SpecialTools';
 import AssistantSettings from './Assistant';
 import AnonymousTelemetry from './AnonymousTelemetry';
 import LanguageSettings from './Language';
+import ToolAutoApprovals from './ToolAutoApprovals';
 
 const PAGES = {
   main: (props: any) => <MainView {...props} />,
@@ -18,6 +19,7 @@ const PAGES = {
   assistant: (props: any) => <AssistantSettings {...props} />,
   anonymous_telemetry: (props: any) => <AnonymousTelemetry {...props} />,
   language: (props: any) => <LanguageSettings {...props} />,
+  tool_auto_approvals: (props: any) => <ToolAutoApprovals {...props} />,
 };
 export type IWorkspacePageKey = keyof typeof PAGES;
 

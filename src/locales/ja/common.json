@@ -125,8 +125,18 @@
     "utility": {
       "title": "ユーティリティ",
       "anonymous_telemetry": "匿名テレメトリ",
+      "tool_auto_approvals": null,
       "clear_temp_files": "一時ファイルをクリア",
       "temp_files_cleared": "一時ファイルがクリアされました"
+    },
+    "tool_auto_approvals": {
+      "description": null,
+      "empty_title": null,
+      "empty_description": null,
+      "approved_since": null,
+      "remove": null,
+      "remove_label": null,
+      "removed_toast": null
     },
     "legal": {
       "title": "法務とプライバシー",
@@ -336,7 +346,8 @@
       "tokens_other": "{{value}}トークン"
     },
     "tool_approval": {
-      "wants_to_call": "モデルが<skill>{{skill}}</skill>を呼び出したいと考えています",
+      "needs_approval": null,
+      "always_approve": null,
       "show_details": "詳細を表示",
       "hide_details": "詳細を非表示",
       "approve": "承認",

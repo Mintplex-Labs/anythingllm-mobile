@@ -125,8 +125,18 @@
     "utility": {
       "title": "Tiện ích",
       "anonymous_telemetry": "Dữ liệu viễn cảm ẩn danh",
+      "tool_auto_approvals": null,
       "clear_temp_files": "Xóa tệp tạm thời",
       "temp_files_cleared": "Đã xóa tệp tạm thời"
+    },
+    "tool_auto_approvals": {
+      "description": null,
+      "empty_title": null,
+      "empty_description": null,
+      "approved_since": null,
+      "remove": null,
+      "remove_label": null,
+      "removed_toast": null
     },
     "legal": {
       "title": "Pháp lý & Quyền riêng tư",
@@ -336,7 +346,8 @@
       "tokens_other": "{{value}} token"
     },
     "tool_approval": {
-      "wants_to_call": "Mô hình muốn gọi <skill>{{skill}}</skill>",
+      "needs_approval": null,
+      "always_approve": null,
       "show_details": "Hiển thị chi tiết",
       "hide_details": "Ẩn chi tiết",
       "approve": "Phê duyệt",

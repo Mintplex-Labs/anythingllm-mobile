@@ -72,7 +72,7 @@ Basically imagine Openclaw or Heremes agent, but fully on-device first, with all
       <sub>Recurring tasks that run on schedule, even with the app closed, and notify you when done.</sub>
     </td>
     <td width="25%" align="center" valign="top">
-      <video src="https://github.com/user-attachments/assets/958cf733-611e-4180-9f73-e1587dc53fd5" width="170" muted loop playsinline></video>
+      <video src="https://github.com/user-attachments/assets/8ce6794f-0d4e-4bba-b854-83f10159dfc8" width="100%" muted loop playsinline></video>
       <br /><b>Default Assistant</b><br />
       <sub>Set AnythingLLM as your phone's assistant and ask about whatever is on screen, by voice or text.</sub>
     </td>

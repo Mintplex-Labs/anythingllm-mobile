@@ -125,8 +125,18 @@
     "utility": {
       "title": "उपयोगिता",
       "anonymous_telemetry": "अनामित टेलीमेट्री",
+      "tool_auto_approvals": null,
       "clear_temp_files": "अस्थायी फ़ाइलें साफ करें",
       "temp_files_cleared": "अस्थायी फ़ाइलें साफ कर दी गईं"
+    },
+    "tool_auto_approvals": {
+      "description": null,
+      "empty_title": null,
+      "empty_description": null,
+      "approved_since": null,
+      "remove": null,
+      "remove_label": null,
+      "removed_toast": null
     },
     "legal": {
       "title": "कानूनी और गोपनीयता",
@@ -348,7 +358,8 @@
       "tokens_other": "{{value}} टोकन"
     },
     "tool_approval": {
-      "wants_to_call": "मॉडल <skill>{{skill}}</skill> को कॉल करना चाहता है",
+      "needs_approval": null,
+      "always_approve": null,
       "show_details": "विवरण दिखाएँ",
       "hide_details": "विवरण छुपाएँ",
       "approve": "मंजूरी दें",

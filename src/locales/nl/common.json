@@ -125,8 +125,18 @@
     "utility": {
       "title": "Hulpprogramma",
       "anonymous_telemetry": "Anonieme telemetrie",
+      "tool_auto_approvals": null,
       "clear_temp_files": "Tijdelijke bestanden wissen",
       "temp_files_cleared": "Tijdelijke bestanden gewist"
+    },
+    "tool_auto_approvals": {
+      "description": null,
+      "empty_title": null,
+      "empty_description": null,
+      "approved_since": null,
+      "remove": null,
+      "remove_label": null,
+      "removed_toast": null
     },
     "legal": {
       "title": "Juridisch & Privacybeleid",
@@ -348,7 +358,8 @@
       "tokens_other": "{{value}} tokens"
     },
     "tool_approval": {
-      "wants_to_call": "Model wil <skill>{{skill}}</skill> bellen",
+      "needs_approval": null,
+      "always_approve": null,
       "show_details": "Toon details",
       "hide_details": "Verberg details",
       "approve": "Goedkeuren",

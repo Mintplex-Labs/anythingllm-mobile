@@ -211,6 +211,11 @@ class ToolsManager {
         return this.configurableTools.filter(tool => wanted.has(tool.id));
     }
 
+    /** The translated name of the tool behind a function name (eg: an approval request's `skillName`) - falls back to the function name */
+    displayNameFor(functionName: string): string {
+        return this.configurableTools.find(tool => tool.definition.function.name === functionName)?.name ?? functionName;
+    }
+
     /** Tools a scheduled job may be given - everything not flagged `hiddenFromScheduledJobs` */
     get scheduledJobEligibleTools(): ToolManagerTool[] {
         return this.configurableTools.filter(tool => !tool.hiddenFromScheduledJobs);

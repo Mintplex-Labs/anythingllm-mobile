@@ -20,7 +20,8 @@ export type StorageKeys =
   'fs_cleanup_last_run' |
   'highlights_last_seen_version' |
   'assistant_auto_listen' |
-  'assistant_auto_screenshot';
+  'assistant_auto_screenshot' |
+  'tool_auto_approvals';
 
 export const GLOBAL_EVENTS = {
   REDIRECT: 'REDIRECT',
@@ -68,6 +69,7 @@ export class UIStore {
     'highlights_last_seen_version',
     'assistant_auto_listen',
     'assistant_auto_screenshot',
+    'tool_auto_approvals',
   ] as const;
 
   pageStates = {

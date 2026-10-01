@@ -125,8 +125,18 @@
     "utility": {
       "title": "Dienstprogramm",
       "anonymous_telemetry": "Anonyme Telemetrie",
+      "tool_auto_approvals": null,
       "clear_temp_files": "Temporäre Dateien löschen",
       "temp_files_cleared": "Temporäre Dateien gelöscht"
+    },
+    "tool_auto_approvals": {
+      "description": null,
+      "empty_title": null,
+      "empty_description": null,
+      "approved_since": null,
+      "remove": null,
+      "remove_label": null,
+      "removed_toast": null
     },
     "legal": {
       "title": "Rechtliches & Datenschutz",
@@ -348,7 +358,8 @@
       "tokens_other": "{{value}} Token"
     },
     "tool_approval": {
-      "wants_to_call": "Modell möchte <skill>{{skill}}</skill> aufrufen",
+      "needs_approval": null,
+      "always_approve": null,
       "show_details": "Details anzeigen",
       "hide_details": "Details ausblenden",
       "approve": "Genehmigen",

@@ -11,6 +11,7 @@ import {
   ChartBar,
   GithubLogo,
   Scroll,
+  ShieldCheck,
   Sparkle,
   TextAa,
   Translate,
@@ -321,6 +322,11 @@ export function MainView({ goToPage }: MainViewProps) {
                 icon={<Translate size={18} color="#FFF" />}
                 value={activeLanguage?.nativeName}
                 onPress={() => goToPage('language')}
+              />
+              <SupportItem
+                title={t('settings.utility.tool_auto_approvals')}
+                icon={<ShieldCheck size={18} color="#FFF" />}
+                onPress={() => goToPage('tool_auto_approvals')}
               />
               <SupportItem
                 title={t('settings.utility.anonymous_telemetry')}

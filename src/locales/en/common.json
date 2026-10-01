@@ -125,8 +125,18 @@
     "utility": {
       "title": "Utility",
       "anonymous_telemetry": "Anonymous telemetry",
+      "tool_auto_approvals": "Tool auto-approvals",
       "clear_temp_files": "Clear temporary files",
       "temp_files_cleared": "Temporary files cleared"
+    },
+    "tool_auto_approvals": {
+      "description": "These tools run without asking for your approval. Swipe one away or tap the trash button to be asked again next time.",
+      "empty_title": "No auto-approved tools",
+      "empty_description": "Tick \"Always approve this tool\" when a tool asks for approval in chat and it will show up here.",
+      "approved_since": "Auto-approved {{when}}",
+      "remove": "Remove",
+      "remove_label": "Stop auto-approving {{tool}}",
+      "removed_toast": "{{tool}} will ask for approval again"
     },
     "legal": {
       "title": "Legal & Privacy",
@@ -348,7 +358,8 @@
       "tokens_other": "{{value}} tokens"
     },
     "tool_approval": {
-      "wants_to_call": "Model wants to call <skill>{{skill}}</skill>",
+      "needs_approval": "Needs your approval",
+      "always_approve": "Always approve this tool",
       "show_details": "Show details",
       "hide_details": "Hide details",
       "approve": "Approve",

@@ -125,8 +125,18 @@
     "utility": {
       "title": "유틸리티",
       "anonymous_telemetry": "익명 원격 분석",
+      "tool_auto_approvals": null,
       "clear_temp_files": "임시 파일 지우기",
       "temp_files_cleared": "임시 파일이 지워짐"
+    },
+    "tool_auto_approvals": {
+      "description": null,
+      "empty_title": null,
+      "empty_description": null,
+      "approved_since": null,
+      "remove": null,
+      "remove_label": null,
+      "removed_toast": null
     },
     "legal": {
       "title": "법적 및 개인정보 보호",
@@ -336,7 +346,8 @@
       "tokens_other": "{{value}}개 토큰"
     },
     "tool_approval": {
-      "wants_to_call": "모델이 <skill>{{skill}}</skill>를 호출하려고 함",
+      "needs_approval": null,
+      "always_approve": null,
       "show_details": "세부 정보 표시",
       "hide_details": "세부 정보 숨기기",
       "approve": "승인",

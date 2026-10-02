@@ -50,24 +50,12 @@ class OpenAICompatible extends BaseOpenAILikeProvider {
   }
 
   /**
-   * gpt-5 models default `reasoning_effort` to a non-`none` level and then refuse function tools on
-   * `/v1/chat/completions` ("Function tools with reasoning_effort are not supported ... set
-   * reasoning_effort to 'none'"). Older models reject the parameter entirely, so it is only sent for
-   * gpt-5 models, only when tools are in the request, and only against OpenAI itself - a generic
-   * OpenAI-compatible server may not know the field.
-   */
-  protected override extraRequestParams(hasTools: boolean = false): Record<string, any> {
-    if (!hasTools || this.connectionProvider !== 'openai') return {};
-    if (!/^gpt-5/i.test(this.model)) return {};
-    return { reasoning_effort: 'none' };
-  }
-
-  /**
    * Arbitrary OpenAI-compatible servers can reject `stream_options` (desktop gates it behind
-   * GENERIC_OPEN_AI_REPORT_USAGE for the same reason) - only ask OpenAI itself for stream usage.
+   * GENERIC_OPEN_AI_REPORT_USAGE for the same reason) - never ask for stream usage.
+   * OpenAI itself uses `OpenAIProvider` (Responses API), which always reports usage.
    */
   protected override supportsStreamUsage(): boolean {
-    return this.connectionProvider === 'openai';
+    return false;
   }
 
   protected log = (text: string, ...args: any[]) => {

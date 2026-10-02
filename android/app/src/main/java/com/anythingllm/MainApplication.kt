@@ -20,6 +20,7 @@ import com.anythingllm.quickcontext.QuickContextPackage
 import com.anythingllm.assistant.AssistantPackage
 import com.anythingllm.messaging.MessagingPackage
 import com.anythingllm.alarms.AlarmPackage
+import com.anythingllm.loopbackauth.LoopbackAuthPackage
 
 class MainApplication : Application(), ReactApplication {
 
@@ -41,6 +42,7 @@ class MainApplication : Application(), ReactApplication {
               add(AssistantPackage())
               add(MessagingPackage())
               add(AlarmPackage())
+              add(LoopbackAuthPackage())
             }
 
         override fun getJSMainModuleName(): String = "index"

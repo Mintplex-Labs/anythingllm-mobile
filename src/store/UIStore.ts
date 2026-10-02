@@ -21,7 +21,10 @@ export type StorageKeys =
   'highlights_last_seen_version' |
   'assistant_auto_listen' |
   'assistant_auto_screenshot' |
-  'tool_auto_approvals';
+  'tool_auto_approvals' |
+  'chatgpt_host_id' |
+  'chatgpt_client_id' |
+  'chatgpt_plan_notice_seen';
 
 export const GLOBAL_EVENTS = {
   REDIRECT: 'REDIRECT',
@@ -70,6 +73,9 @@ export class UIStore {
     'assistant_auto_listen',
     'assistant_auto_screenshot',
     'tool_auto_approvals',
+    'chatgpt_host_id',
+    'chatgpt_client_id',
+    'chatgpt_plan_notice_seen',
   ] as const;
 
   pageStates = {

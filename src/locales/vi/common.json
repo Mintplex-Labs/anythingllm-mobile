@@ -930,6 +930,7 @@
       "native": "Cài đặt và chạy mô hình trên điện thoại của bạn.",
       "ollama": "Chạy LLM cục bộ trên máy của bạn với Ollama.",
       "lmstudio": "Khám phá, tải xuống và chạy hàng nghìn LLM tiên tiến chỉ trong vài cú nhấp chuột.",
+      "chatgpt": null,
       "openai": "Tận dụng các mô hình mạnh mẽ của OpenAI.",
       "anthropic": "Một trợ lý AI thân thiện được lưu trữ bởi Anthropic.",
       "gemini": "Mô hình AI lớn nhất và có khả năng nhất của Google",
@@ -948,6 +949,7 @@
       "llmman": "Chạy LLM cục bộ bằng cách sử dụng llmman.",
       "generic_openai": "Kết nối với bất kỳ dịch vụ tương thích OpenAI nào thông qua cấu hình tùy chỉnh"
     },
+    "experimental": null,
     "sections": {
       "local": "Nhà cung cấp cục bộ",
       "cloud": "Nhà cung cấp đám mây"
@@ -957,7 +959,33 @@
       "api_key_required": "Vui lòng nhập khóa API cho nhà cung cấp này.",
       "base_url_required": "Vui lòng nhập URL cơ sở của nhà cung cấp của bạn.",
       "region_required": "Vui lòng chọn vùng AWS của triển khai Bedrock của bạn.",
-      "model_required": "Vui lòng chọn một mô hình để sử dụng."
+      "model_required": "Vui lòng chọn một mô hình để sử dụng.",
+      "sign_in_required": null
+    },
+    "errors": {
+      "stream_interrupted": null
+    },
+    "chatgpt": {
+      "continue": null,
+      "plan_hint": null,
+      "experimental_note": null,
+      "notice_title": null,
+      "notice_body": null,
+      "notice_confirm": null,
+      "signed_in_as": null,
+      "your_account": null,
+      "using_plan": null,
+      "manage_usage": null,
+      "sign_out": null,
+      "sign_in_failed": null,
+      "plan_usage_not_granted": null,
+      "denied": null,
+      "errors": {
+        "not_eligible": null,
+        "usage_limit": null,
+        "usage_unavailable": null,
+        "unsupported": null
+      }
     }
   },
   "llm_selection": {

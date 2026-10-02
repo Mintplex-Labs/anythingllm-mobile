@@ -1,6 +1,13 @@
 import i18n, { tKey } from '@/i18n';
 
-export type ProviderConfig = { apiKey?: string; baseUrl?: string; model?: string; region?: string };
+export type ProviderConfig = {
+  apiKey?: string;
+  baseUrl?: string;
+  model?: string;
+  region?: string;
+  /** Signed-in account (email) for OAuth providers. The tokens themselves live in the keychain. */
+  account?: string;
+};
 
 export type LLMProviderDefinition = {
   name: string;
@@ -16,11 +23,13 @@ export type LLMProviderDefinition = {
    * - `apiKey`: 'required' (hosted APIs), 'optional' (self-hosted servers that may sit behind auth) or `false`
    * - `baseUrl`: `true` when the user must supply the server URL (self-hosted)
    * - `region`: `true` for AWS Bedrock
+   * - `oauth`: the provider is connected by signing in instead of an API key (`config.account`)
    */
   fields: {
     apiKey: 'required' | 'optional' | false;
     baseUrl: boolean;
     region?: boolean;
+    oauth?: 'chatgpt';
   };
   /** Config saved when the provider is first selected. */
   defaultConfig: ProviderConfig;
@@ -28,6 +37,8 @@ export type LLMProviderDefinition = {
   baseUrlPlaceholder?: string;
   /** Hint shown in the manual model input when models cannot be listed. */
   modelPlaceholder?: string;
+  /** Shows an "Experimental" badge in the provider pickers. */
+  experimental?: boolean;
 };
 
 export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
@@ -59,6 +70,17 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
     fields: { apiKey: false, baseUrl: true },
     defaultConfig: { baseUrl: '', model: '' },
     baseUrlPlaceholder: "http://192.168.1.10:1234/v1",
+  },
+  {
+    name: "ChatGPT",
+    value: "chatgpt",
+    category: "cloud",
+    logo: require('@/assets/llmprovider/openai.png'),
+    description: tKey('providers.descriptions.chatgpt'),
+    fields: { apiKey: false, baseUrl: false, oauth: 'chatgpt' },
+    defaultConfig: { model: '' },
+    // OpenAI's plan usage for third-party apps is still a preview.
+    experimental: true,
   },
   {
     name: "OpenAI",
@@ -235,13 +257,17 @@ export const AVAILABLE_LLM_PROVIDERS: LLMProviderDefinition[] = [
 /** Display order of the local section - on-device first, Ollama last. */
 const LOCAL_PROVIDER_ORDER = ['native', 'lmstudio', 'localai', 'lemonade', 'llmman', 'litellm', 'ollama'];
 
+/** Cloud providers pinned to the top of the cloud section, in this order. The rest follow alphabetically. */
+const PINNED_CLOUD_PROVIDER_ORDER = ['chatgpt', 'openai', 'anthropic', 'gemini', 'openrouter'];
+
 /** `title` is a translation key - resolve with t() when rendering. */
 export type LLMProviderSection = { title: string; providers: LLMProviderDefinition[] };
 
 /**
  * Providers grouped for the picker:
  *  - Local Providers in a fixed order (see `LOCAL_PROVIDER_ORDER`)
- *  - Cloud Providers alphabetically, with Generic OpenAI forced to the very end
+ *  - Cloud Providers with the big names pinned first (see `PINNED_CLOUD_PROVIDER_ORDER`), the rest
+ *    alphabetically, and Generic OpenAI forced to the very end
  * Sections with no providers left after `exclude` are dropped.
  */
 export function groupProvidersForPicker(providers: LLMProviderDefinition[] = AVAILABLE_LLM_PROVIDERS): LLMProviderSection[] {
@@ -258,6 +284,9 @@ export function groupProvidersForPicker(providers: LLMProviderDefinition[] = AVA
     .sort((a, b) => {
       if (a.value === 'generic-openai') return 1;
       if (b.value === 'generic-openai') return -1;
+      const ai = PINNED_CLOUD_PROVIDER_ORDER.indexOf(a.value);
+      const bi = PINNED_CLOUD_PROVIDER_ORDER.indexOf(b.value);
+      if (ai !== -1 || bi !== -1) return (ai === -1 ? Number.MAX_SAFE_INTEGER : ai) - (bi === -1 ? Number.MAX_SAFE_INTEGER : bi);
       return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
     });
 
@@ -294,6 +323,7 @@ export function validateProviderConfig(provider: string, config: ProviderConfig)
 export function validateProviderConnection(provider: string, config: ProviderConfig): string | null {
   const definition = findProviderDefinition(provider);
   if (!definition) return i18n.t('providers.validation.unknown_provider');
+  if (definition.fields.oauth && !config.account?.trim()) return i18n.t('providers.validation.sign_in_required');
   if (definition.fields.apiKey === 'required' && !config.apiKey?.trim()) return i18n.t('providers.validation.api_key_required');
   if (definition.fields.baseUrl && !config.baseUrl?.trim()) return i18n.t('providers.validation.base_url_required');
   if (definition.fields.region && !config.region?.trim()) return i18n.t('providers.validation.region_required');

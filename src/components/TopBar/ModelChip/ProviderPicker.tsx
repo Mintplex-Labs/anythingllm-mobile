@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { BottomSheetScrollView, BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { ArrowLeft, CaretDown, Check, MagnifyingGlass, PencilSimple, X } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
+import ExperimentalBadge from '@/components/LLMSelection/ExperimentalBadge';
 import {
   AVAILABLE_LLM_PROVIDERS,
   findProviderDefinition,
@@ -88,7 +89,10 @@ export default function ProviderPicker({
         }}>
         <Image source={provider.logo} style={{ width: 32, height: 32 }} className="rounded-lg" resizeMode="contain" />
         <View className="flex-1">
-          <Text className="text-white text-base" numberOfLines={1}>{providerDisplayName(provider.value)}</Text>
+          <View className="flex flex-row items-center" style={{ gap: 6 }}>
+            <Text className="text-white text-base flex-shrink" numberOfLines={1}>{providerDisplayName(provider.value)}</Text>
+            {provider.experimental && <ExperimentalBadge />}
+          </View>
           {!pinned && (
             <Text className="text-[#9F9FA0] text-xs" numberOfLines={1}>{t(provider.description)}</Text>
           )}

@@ -1053,6 +1053,7 @@
       "native": "Устанавливайте и запускайте модели на своем телефоне.",
       "ollama": "Запускайте LLM локально на вашей машине с Ollama.",
       "lmstudio": "Обнаруживайте, загружайте и запускайте тысячи передовых LLM за несколько кликов.",
+      "chatgpt": null,
       "openai": "Используйте мощные модели OpenAI.",
       "anthropic": "Дружелюбный AI помощник, размещённый Anthropic.",
       "gemini": "Крупнейшая и самая способная AI модель Google",
@@ -1071,6 +1072,7 @@
       "llmman": "Запускайте LLM локально, используя llmman.",
       "generic_openai": "Подключитесь к любому сервису, совместимому с OpenAi, через пользовательскую конфигурацию"
     },
+    "experimental": null,
     "sections": {
       "local": "Локальные поставщики",
       "cloud": "Облачные поставщики"
@@ -1080,7 +1082,33 @@
       "api_key_required": "Пожалуйста, введите API ключ для этого поставщика.",
       "base_url_required": "Пожалуйста, введите базовый URL вашего поставщика.",
       "region_required": "Пожалуйста, выберите регион AWS вашего развёртывания Bedrock.",
-      "model_required": "Пожалуйста, выберите модель для использования."
+      "model_required": "Пожалуйста, выберите модель для использования.",
+      "sign_in_required": null
+    },
+    "errors": {
+      "stream_interrupted": null
+    },
+    "chatgpt": {
+      "continue": null,
+      "plan_hint": null,
+      "experimental_note": null,
+      "notice_title": null,
+      "notice_body": null,
+      "notice_confirm": null,
+      "signed_in_as": null,
+      "your_account": null,
+      "using_plan": null,
+      "manage_usage": null,
+      "sign_out": null,
+      "sign_in_failed": null,
+      "plan_usage_not_granted": null,
+      "denied": null,
+      "errors": {
+        "not_eligible": null,
+        "usage_limit": null,
+        "usage_unavailable": null,
+        "unsupported": null
+      }
     }
   },
   "llm_selection": {

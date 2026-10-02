@@ -930,6 +930,7 @@
       "native": "在手機上安裝並執行模型。",
       "ollama": "使用 Ollama 在您自己的機器上本機執行 LLM。",
       "lmstudio": "在幾次點擊中發現、下載和執行數千個尖端 LLM。",
+      "chatgpt": null,
       "openai": "利用 OpenAI 的強大模型。",
       "anthropic": "由 Anthropic 主持的友善 AI 助手。",
       "gemini": "Google 最大且功能最強大的 AI 模型",
@@ -948,6 +949,7 @@
       "llmman": "使用 llmman 本機執行 LLM。",
       "generic_openai": "透過自訂設定連線到任何 OpenAi 相容服務"
     },
+    "experimental": null,
     "sections": {
       "local": "本機提供者",
       "cloud": "雲端提供者"
@@ -957,7 +959,33 @@
       "api_key_required": "請輸入此提供者的 API 金鑰。",
       "base_url_required": "請輸入您的提供者的基本 URL。",
       "region_required": "請選擇您的 Bedrock 部署的 AWS 區域。",
-      "model_required": "請選擇要使用的模型。"
+      "model_required": "請選擇要使用的模型。",
+      "sign_in_required": null
+    },
+    "errors": {
+      "stream_interrupted": null
+    },
+    "chatgpt": {
+      "continue": null,
+      "plan_hint": null,
+      "experimental_note": null,
+      "notice_title": null,
+      "notice_body": null,
+      "notice_confirm": null,
+      "signed_in_as": null,
+      "your_account": null,
+      "using_plan": null,
+      "manage_usage": null,
+      "sign_out": null,
+      "sign_in_failed": null,
+      "plan_usage_not_granted": null,
+      "denied": null,
+      "errors": {
+        "not_eligible": null,
+        "usage_limit": null,
+        "usage_unavailable": null,
+        "unsupported": null
+      }
     }
   },
   "llm_selection": {

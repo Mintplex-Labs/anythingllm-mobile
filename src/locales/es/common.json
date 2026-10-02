@@ -1012,6 +1012,7 @@
       "native": "Instale y ejecute modelos en su teléfono.",
       "ollama": "Ejecute LLMs localmente en su propia máquina con Ollama.",
       "lmstudio": "Descubra, descargue y ejecute miles de LLMs de vanguardia en pocos clics.",
+      "chatgpt": null,
       "openai": "Aproveche los potentes modelos de OpenAI.",
       "anthropic": "Un asistente de IA amigable alojado por Anthropic.",
       "gemini": "El modelo de IA más grande y capaz de Google",
@@ -1030,6 +1031,7 @@
       "llmman": "Ejecute LLMs localmente usando llmman.",
       "generic_openai": "Conéctese a cualquier servicio compatible con OpenAi mediante una configuración personalizada"
     },
+    "experimental": null,
     "sections": {
       "local": "Proveedores locales",
       "cloud": "Proveedores en la nube"
@@ -1039,7 +1041,33 @@
       "api_key_required": "Por favor ingrese una clave API para este proveedor.",
       "base_url_required": "Por favor ingrese la URL base de su proveedor.",
       "region_required": "Por favor seleccione la región de AWS de su implementación de Bedrock.",
-      "model_required": "Por favor seleccione un modelo a usar."
+      "model_required": "Por favor seleccione un modelo a usar.",
+      "sign_in_required": null
+    },
+    "errors": {
+      "stream_interrupted": null
+    },
+    "chatgpt": {
+      "continue": null,
+      "plan_hint": null,
+      "experimental_note": null,
+      "notice_title": null,
+      "notice_body": null,
+      "notice_confirm": null,
+      "signed_in_as": null,
+      "your_account": null,
+      "using_plan": null,
+      "manage_usage": null,
+      "sign_out": null,
+      "sign_in_failed": null,
+      "plan_usage_not_granted": null,
+      "denied": null,
+      "errors": {
+        "not_eligible": null,
+        "usage_limit": null,
+        "usage_unavailable": null,
+        "unsupported": null
+      }
     }
   },
   "llm_selection": {

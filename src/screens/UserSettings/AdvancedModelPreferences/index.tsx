@@ -105,10 +105,12 @@ export default function AdvancedModelPreferences({
             baseUrl={llmPreferences.config.baseUrl || ''}
             region={llmPreferences.config.region || ''}
             model={llmPreferences.config.model || ''}
+            account={llmPreferences.config.account || ''}
             onApiKeyChange={updateProviderSettings}
             onBaseUrlChange={updateProviderSettings}
             onRegionChange={updateProviderSettings}
             onModelChange={updateProviderSettings}
+            onAccountChange={updateProviderSettings}
           />
         );
       }

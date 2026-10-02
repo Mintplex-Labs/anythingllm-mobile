@@ -87,10 +87,12 @@ export default function ExternalProviderSelection({ setMode }: SelectionModeProp
           baseUrl={config.baseUrl || ''}
           region={config.region || ''}
           model={config.model || ''}
+          account={config.account || ''}
           onApiKeyChange={updateProviderSettings}
           onBaseUrlChange={updateProviderSettings}
           onRegionChange={updateProviderSettings}
           onModelChange={updateProviderSettings}
+          onAccountChange={updateProviderSettings}
         />
     }
   };

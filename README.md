@@ -138,6 +138,7 @@ Basically imagine Openclaw or Heremes agent, but fully on-device first, with all
 | [Lemonade](https://github.com/lemonade-sdk/lemonade) | Local/remote |
 | [llmman](https://github.com/llmmanorg/llmman) | Local/remote |
 | [LiteLLM](https://github.com/BerriAI/litellm) | Local/remote |
+| ChatGPT ([Sign in with ChatGPT](https://learn.chatgpt.com/docs/sign-in-with-chatgpt)) | Subscription - uses your ChatGPT Plus or Pro plan (experimental) |
 | Anthropic | Cloud |
 | AWS Bedrock | Cloud |
 | DeepSeek | Cloud |

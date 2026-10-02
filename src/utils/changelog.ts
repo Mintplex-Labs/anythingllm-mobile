@@ -5,6 +5,12 @@ type ChangelogEntry = {
 
 const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.3.2',
+    content: [
+      '- **Onboarding fix** — if setup was interrupted, the app now picks up where you left off instead of skipping the last step',
+    ].join('\n'),
+  },
+  {
     version: '1.3.1',
     content: [
       '- **Device Assistant (Android)** — replace Gemini with your own AI. Open AnythingLLM over any app with the same gesture, talk or type, and share your screen with vision models. Set it up under Settings > Special tools > Device Assistant',

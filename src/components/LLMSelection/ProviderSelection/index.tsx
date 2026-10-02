@@ -80,15 +80,16 @@ export default function ProviderSelection({
           style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', height: 68, width: '100%' }}
           className="flex-row items-center justify-between px-4 py-[14px] rounded-lg"
           onPress={() => bottomSheetRef.current?.present()}>
-          <View className="flex-row items-center">
+          <View className="flex-row items-center flex-1" style={{ gap: 8 }}>
             <Image
               source={selectedProviderObject.logo}
               style={{ width: 38, height: 38 }}
-              className="rounded-lg mr-3"
+              className="rounded-lg mr-1"
             />
-            <Text className="text-white text-lg">
+            <Text className="text-white text-lg flex-shrink" numberOfLines={1}>
               {selectedProviderObject.name}
             </Text>
+            {selectedProviderObject.experimental && <ExperimentalBadge />}
           </View>
           <CaretDown size={18} color="#FFF" weight="bold" />
         </TouchableOpacity>

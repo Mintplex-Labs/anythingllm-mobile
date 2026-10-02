@@ -2,6 +2,7 @@ import { PATHS } from "@/utils/paths";
 import uiStore from "@/store/UIStore";
 import { useState, useEffect } from "react";
 import { resolveDefaultChatRoute } from "@/utils/defaultChatRoute";
+import { repairPartialOnboarding } from "@/hooks/useOnboardingHook";
 
 const DEFAULT_INITIAL_ROUTE = PATHS.home;
 
@@ -11,6 +12,7 @@ type InitialRoute = {
 };
 
 async function determineInitialRoute() {
+  await repairPartialOnboarding();
   const welcomeCompleted = await uiStore.getFromStorage('onboarding_welcome_completed', false);
   const modelSelectionCompleted = await uiStore.getFromStorage('onboarding_model_selection_completed', false);
   const surveyCompleted = await uiStore.getFromStorage('onboarding_survey_completed', false);

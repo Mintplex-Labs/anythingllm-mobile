@@ -15,6 +15,8 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A85081982D6255F000BDE4BC /* KeepAwakeModule.h in Sources */ = {isa = PBXBuildFile; fileRef = A85081962D6255F000BDE4BC /* KeepAwakeModule.h */; };
 		A85081992D6255F000BDE4BC /* KeepAwakeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A85081972D6255F000BDE4BC /* KeepAwakeModule.m */; };
+		C4A1D0032E9B000100A1B2C3 /* LoopbackAuthModule.h in Sources */ = {isa = PBXBuildFile; fileRef = C4A1D0012E9B000100A1B2C3 /* LoopbackAuthModule.h */; };
+		C4A1D0042E9B000100A1B2C3 /* LoopbackAuthModule.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A1D0022E9B000100A1B2C3 /* LoopbackAuthModule.m */; };
 		5C10CA112EF3A00100AB12C3 /* ScreenLockModule.h in Sources */ = {isa = PBXBuildFile; fileRef = 5C10CA0F2EF3A00100AB12C1 /* ScreenLockModule.h */; };
 		5C10CA122EF3A00100AB12C4 /* ScreenLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C10CA102EF3A00100AB12C2 /* ScreenLockModule.m */; };
 		7A5C0DE12F1B400100AB12D3 /* SharedContentModule.h in Sources */ = {isa = PBXBuildFile; fileRef = 7A5C0DE02F1B400100AB12D1 /* SharedContentModule.h */; };
@@ -55,6 +57,8 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AnythingLLM/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A85081962D6255F000BDE4BC /* KeepAwakeModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = KeepAwakeModule.h; path = AnythingLLM/KeepAwakeModule.h; sourceTree = "<group>"; };
 		A85081972D6255F000BDE4BC /* KeepAwakeModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = KeepAwakeModule.m; path = AnythingLLM/KeepAwakeModule.m; sourceTree = "<group>"; };
+		C4A1D0012E9B000100A1B2C3 /* LoopbackAuthModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LoopbackAuthModule.h; path = AnythingLLM/LoopbackAuthModule.h; sourceTree = "<group>"; };
+		C4A1D0022E9B000100A1B2C3 /* LoopbackAuthModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = LoopbackAuthModule.m; path = AnythingLLM/LoopbackAuthModule.m; sourceTree = "<group>"; };
 		5C10CA0F2EF3A00100AB12C1 /* ScreenLockModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ScreenLockModule.h; path = AnythingLLM/ScreenLockModule.h; sourceTree = "<group>"; };
 		5C10CA102EF3A00100AB12C2 /* ScreenLockModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ScreenLockModule.m; path = AnythingLLM/ScreenLockModule.m; sourceTree = "<group>"; };
 		7A5C0DE02F1B400100AB12D1 /* SharedContentModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SharedContentModule.h; path = AnythingLLM/SharedContentModule.h; sourceTree = "<group>"; };
@@ -147,6 +151,8 @@
 			children = (
 				A85081962D6255F000BDE4BC /* KeepAwakeModule.h */,
 				A85081972D6255F000BDE4BC /* KeepAwakeModule.m */,
+				C4A1D0012E9B000100A1B2C3 /* LoopbackAuthModule.h */,
+				C4A1D0022E9B000100A1B2C3 /* LoopbackAuthModule.m */,
 				5C10CA0F2EF3A00100AB12C1 /* ScreenLockModule.h */,
 				5C10CA102EF3A00100AB12C2 /* ScreenLockModule.m */,
 				7A5C0DE02F1B400100AB12D1 /* SharedContentModule.h */,
@@ -456,6 +462,8 @@
 			files = (
 				A85081982D6255F000BDE4BC /* KeepAwakeModule.h in Sources */,
 				A85081992D6255F000BDE4BC /* KeepAwakeModule.m in Sources */,
+				C4A1D0032E9B000100A1B2C3 /* LoopbackAuthModule.h in Sources */,
+				C4A1D0042E9B000100A1B2C3 /* LoopbackAuthModule.m in Sources */,
 				5C10CA112EF3A00100AB12C3 /* ScreenLockModule.h in Sources */,
 				5C10CA122EF3A00100AB12C4 /* ScreenLockModule.m in Sources */,
 				7A5C0DE12F1B400100AB12D3 /* SharedContentModule.h in Sources */,

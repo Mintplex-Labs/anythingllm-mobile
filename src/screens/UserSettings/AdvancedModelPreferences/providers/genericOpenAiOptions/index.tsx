@@ -11,6 +11,7 @@ import { baseUrlCandidates, findProviderDefinition, type ProviderConfig } from '
 import { BEDROCK_REGIONS } from '@/utils/AiProviders/BedrockProvider';
 import debounce from 'lodash/debounce';
 import { useTranslation } from 'react-i18next';
+import ChatGPTSignIn from '@/components/ChatGPTSignIn';
 
 type ProviderSettings = ProviderConfig;
 
@@ -25,7 +26,8 @@ const inputStyle = (maxHeight: number) => ({
  * Connection form shared by every external provider that speaks an OpenAI-shaped API
  * (OpenAI, Anthropic, Gemini, OpenRouter, Bedrock, DeepSeek, ... and self-hosted servers).
  * Which inputs are shown (API key, base URL, AWS region) comes from the provider's
- * `fields` in `AVAILABLE_LLM_PROVIDERS`; the model is discovered from the provider's
+ * `fields` in `AVAILABLE_LLM_PROVIDERS` (OAuth providers get their sign-in button instead of a key);
+ * the model is discovered from the provider's
  * model listing and falls back to a manual text input when listing fails.
  */
 export default function GenericOpenAiOptions({
@@ -34,20 +36,25 @@ export default function GenericOpenAiOptions({
   baseUrl,
   region,
   model,
+  account,
   onApiKeyChange,
   onBaseUrlChange,
   onRegionChange,
   onModelChange,
+  onAccountChange,
 }: {
   provider: string;
   apiKey: string;
   baseUrl: string;
   region?: string;
   model: string;
+  /** Signed-in account for OAuth providers (`fields.oauth`). */
+  account?: string;
   onApiKeyChange: (provider: string, settings: ProviderSettings) => Promise<void>;
   onBaseUrlChange: (provider: string, settings: ProviderSettings) => Promise<void>;
   onRegionChange?: (provider: string, settings: ProviderSettings) => Promise<void>;
   onModelChange: (provider: string, settings: ProviderSettings) => Promise<void>;
+  onAccountChange?: (provider: string, settings: ProviderSettings) => Promise<void>;
 }) {
   const { t } = useTranslation();
   const definition = findProviderDefinition(provider);
@@ -55,6 +62,7 @@ export default function GenericOpenAiOptions({
   const requiresApiKey = definition?.fields.apiKey === 'required';
   const requiresBaseUrl = definition ? definition.fields.baseUrl : provider !== 'openai';
   const showRegion = !!definition?.fields.region;
+  const isOAuth = !!definition?.fields.oauth;
 
   const insets = useSafeAreaInsets();
   const keyboardHeight = useKeyboardHeight();
@@ -62,6 +70,7 @@ export default function GenericOpenAiOptions({
   const [currentBaseUrl, setCurrentBaseUrl] = useState(baseUrl || '');
   const [currentRegion, setCurrentRegion] = useState(region || definition?.defaultConfig.region || '');
   const [currentModel, setCurrentModel] = useState(model || '');
+  const [currentAccount, setCurrentAccount] = useState(account || '');
   const [searchQuery, setSearchQuery] = useState('');
   const [regionQuery, setRegionQuery] = useState('');
   const [availableModels, setAvailableModels] = useState<IAvailableModel[]>([]);
@@ -120,12 +129,13 @@ export default function GenericOpenAiOptions({
    * empty list, which makes the UI fall back to a plain text model input.
    */
   const debouncedFetchModels = useRef(
-    debounce(async ({ baseUrl, apiKey, region }: { baseUrl: string, apiKey: string, region: string }) => {
+    debounce(async ({ baseUrl, apiKey, region, account }: { baseUrl: string, apiKey: string, region: string, account: string }) => {
       const requestId = ++fetchRequestId.current;
       const missingBaseUrl = requiresBaseUrl && !baseUrl;
       const missingApiKey = requiresApiKey && !apiKey;
       const missingRegion = showRegion && !region;
-      if (missingBaseUrl || missingApiKey || missingRegion) {
+      const missingAccount = isOAuth && !account;
+      if (missingBaseUrl || missingApiKey || missingRegion || missingAccount) {
         setAvailableModels([]);
         setHasAttemptedFetch(false);
         setIsFetchingModels(false);
@@ -173,8 +183,8 @@ export default function GenericOpenAiOptions({
   ).current;
 
   useEffect(() => {
-    debouncedFetchModels({ baseUrl: currentBaseUrl, apiKey: currentApiKey, region: currentRegion });
-  }, [currentBaseUrl, currentApiKey, currentRegion, debouncedFetchModels]);
+    debouncedFetchModels({ baseUrl: currentBaseUrl, apiKey: currentApiKey, region: currentRegion, account: currentAccount });
+  }, [currentBaseUrl, currentApiKey, currentRegion, currentAccount, debouncedFetchModels]);
 
   useEffect(() => {
     return () => {
@@ -234,6 +244,20 @@ export default function GenericOpenAiOptions({
           </View>
         )}
 
+        {isOAuth && (
+          <ChatGPTSignIn
+            onSignedIn={async (email) => {
+              setCurrentAccount(email);
+              await onAccountChange?.(provider, { account: email });
+            }}
+            onSignedOut={async () => {
+              setCurrentAccount('');
+              setCurrentModel('');
+              await onAccountChange?.(provider, { account: '', model: '' });
+            }}
+          />
+        )}
+
         {showRegion && (
           <View className="w-full flex flex-col" style={{ gap: 12 }}>
             <View className="flex flex-row items-center justify-between">
@@ -261,7 +285,8 @@ export default function GenericOpenAiOptions({
           </View>
         )}
 
-        <View className="w-full flex flex-col" style={{ gap: 12 }}>
+        {/* OAuth providers list their models once signed in - nothing to pick or type before that. */}
+        {(!isOAuth || !!currentAccount) && <View className="w-full flex flex-col" style={{ gap: 12 }}>
           <View className="flex flex-row items-center justify-between">
             <Text style={{ color: '#9F9FA0' }} className="text-lg uppercase">{t('settings.provider_options.model_selection')}</Text>
             {isFetchingModels && (
@@ -312,7 +337,7 @@ export default function GenericOpenAiOptions({
               {t('settings.provider_options.models_load_failed')}
             </Text>
           )}
-        </View>
+        </View>}
       </KeyboardAvoidingView>
 
       {/* Model picker */}

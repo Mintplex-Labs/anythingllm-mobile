@@ -930,6 +930,7 @@
       "native": "휴대폰에 모델을 설치하고 실행합니다.",
       "ollama": "Ollama를 사용하여 자신의 머신에서 로컬로 LLM을 실행합니다.",
       "lmstudio": "최신 LLM 수천 개를 발견하고 다운로드하며 몇 번의 클릭으로 실행합니다.",
+      "chatgpt": null,
       "openai": "OpenAI의 강력한 모델을 활용하세요.",
       "anthropic": "Anthropic에서 호스팅하는 친화적인 AI 어시스턴트입니다.",
       "gemini": "Google의 가장 크고 가장 기능이 풍부한 AI 모델",
@@ -948,6 +949,7 @@
       "llmman": "llmman을 사용하여 로컬로 LLM을 실행합니다.",
       "generic_openai": "사용자 정의 구성을 통해 OpenAI 호환 서비스에 연결"
     },
+    "experimental": null,
     "sections": {
       "local": "로컬 제공자",
       "cloud": "클라우드 제공자"
@@ -957,7 +959,33 @@
       "api_key_required": "이 제공자의 API 키를 입력하세요.",
       "base_url_required": "제공자의 기본 URL을 입력하세요.",
       "region_required": "Bedrock 배포의 AWS 지역을 선택하세요.",
-      "model_required": "사용할 모델을 선택하세요."
+      "model_required": "사용할 모델을 선택하세요.",
+      "sign_in_required": null
+    },
+    "errors": {
+      "stream_interrupted": null
+    },
+    "chatgpt": {
+      "continue": null,
+      "plan_hint": null,
+      "experimental_note": null,
+      "notice_title": null,
+      "notice_body": null,
+      "notice_confirm": null,
+      "signed_in_as": null,
+      "your_account": null,
+      "using_plan": null,
+      "manage_usage": null,
+      "sign_out": null,
+      "sign_in_failed": null,
+      "plan_usage_not_granted": null,
+      "denied": null,
+      "errors": {
+        "not_eligible": null,
+        "usage_limit": null,
+        "usage_unavailable": null,
+        "unsupported": null
+      }
     }
   },
   "llm_selection": {

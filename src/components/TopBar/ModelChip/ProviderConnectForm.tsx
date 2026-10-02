@@ -8,6 +8,8 @@ import { IAvailableModel } from '@/utils/AiProviders/baseOpenAILikeProvider';
 import useLLMPreference from '@/hooks/useLLMPreference';
 import useProviderConfigCache from '@/hooks/useProviderConfigCache';
 import Telemetry from '@/utils/Telemetry';
+import ChatGPTSignIn from '@/components/ChatGPTSignIn';
+import chatgptAuth from '@/utils/chatgpt/auth';
 import {
   baseUrlCandidates,
   findProviderDefinition,
@@ -79,7 +81,9 @@ export default function ProviderConnectForm({
   useEffect(() => {
     (async () => {
       const saved = provider === llmPreferences.provider ? llmPreferences.config : await restore(provider);
-      setConfig({ ...(definition?.defaultConfig ?? {}), ...(saved ?? {}) });
+      // OAuth sessions live in the keychain - a saved account whose session has since ended does not count.
+      const account = definition?.fields.oauth === 'chatgpt' ? { account: (await chatgptAuth.getAccount())?.email ?? '' } : {};
+      setConfig({ ...(definition?.defaultConfig ?? {}), ...(saved ?? {}), ...account });
     })();
   }, [provider]);
 
@@ -91,12 +95,14 @@ export default function ProviderConnectForm({
     if (field !== 'model') setStatus('idle');
   };
 
-  const connect = async () => {
+  /** `override` - the config to connect with when it was just changed and state has not caught up (sign in). */
+  const connect = async (override?: ProviderConfig) => {
+    const base = override ?? config;
     const draft: ProviderConfig = {
-      ...config,
-      ...(definition.fields.apiKey !== false ? { apiKey: config.apiKey?.trim() ?? '' } : {}),
-      ...(definition.fields.baseUrl ? { baseUrl: config.baseUrl?.trim() ?? '' } : {}),
-      ...(definition.fields.region ? { region: config.region?.trim().toLowerCase() ?? '' } : {}),
+      ...base,
+      ...(definition.fields.apiKey !== false ? { apiKey: base.apiKey?.trim() ?? '' } : {}),
+      ...(definition.fields.baseUrl ? { baseUrl: base.baseUrl?.trim() ?? '' } : {}),
+      ...(definition.fields.region ? { region: base.region?.trim().toLowerCase() ?? '' } : {}),
     };
     const invalid = validateProviderConnection(provider, draft);
     if (invalid) return setError(invalid);
@@ -124,6 +130,9 @@ export default function ProviderConnectForm({
   };
 
   const isConnecting = status === 'connecting';
+  const isOAuth = !!definition.fields.oauth;
+  // OAuth providers connect through their sign-in button; the Connect button only re-lists models after.
+  const showConnectButton = !isOAuth || !!config.account;
   const buttonLabel = status === 'failed' && config.model?.trim()
     ? t('common.save')
     : t('top_bar.model_chip.connect');
@@ -170,6 +179,20 @@ export default function ProviderConnectForm({
             />
           </Field>
         )}
+        {isOAuth && (
+          <ChatGPTSignIn
+            onSignedIn={email => {
+              const next = { ...config, account: email };
+              setConfig(next);
+              connect(next);
+            }}
+            onSignedOut={() => {
+              setConfig(prev => ({ ...(prev ?? {}), account: '', model: '' }));
+              setStatus('idle');
+              setError(null);
+            }}
+          />
+        )}
         {definition.fields.region && (
           <Field label={t('settings.provider_options.aws_region')}>
             <BottomSheetTextInput
@@ -202,16 +225,16 @@ export default function ProviderConnectForm({
           </View>
         )}
         {!!error && <Text className="text-[#f87171] text-sm">{error}</Text>}
-        <TouchableOpacity
+        {showConnectButton && <TouchableOpacity
           disabled={isConnecting}
-          onPress={connect}
+          onPress={() => connect()}
           className="flex flex-row items-center justify-center rounded-lg bg-white"
           style={{ height: 44, gap: 8, opacity: isConnecting ? 0.7 : 1 }}>
           {isConnecting && <ActivityIndicator size="small" color="#0E0F0F" />}
           <Text className="text-[#0E0F0F] text-base font-semibold">
             {isConnecting ? t('top_bar.model_chip.connecting') : buttonLabel}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </BottomSheetScrollView>
     </View>
   );

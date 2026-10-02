@@ -1,9 +1,11 @@
 import OpenAICompatible from "./openAICompatible";
+import OpenAIProvider from "./OpenAIProvider";
 import OnDeviceProvider from "./onDevice";
 import LMStudioProvider from "./LMStudioProvider";
 import OllamaProvider from "./OllamaProvider";
 import OpenRouterProvider from "./OpenRouterProvider";
 import AnthropicProvider from "./AnthropicProvider";
+import ChatGPTProvider from "./ChatGPTProvider";
 import GeminiProvider from "./GeminiProvider";
 import LiteLLMProvider from "./LiteLLMProvider";
 import BedrockProvider from "./BedrockProvider";
@@ -19,11 +21,13 @@ import TogetherAIProvider from "./TogetherAIProvider";
 import XAIProvider from "./XAIProvider";
 
 export type LLMProvider = OpenAICompatible |
+  OpenAIProvider |
   OnDeviceProvider |
   LMStudioProvider |
   OllamaProvider |
   OpenRouterProvider |
   AnthropicProvider |
+  ChatGPTProvider |
   GeminiProvider |
   LiteLLMProvider |
   BedrockProvider |
@@ -49,9 +53,11 @@ function getLLM(provider: string, config: { [key: string]: any } = {}): LLMProvi
 
   switch (provider) {
     case 'openai':
-      return new OpenAICompatible({ provider: 'openai', config: hosted });
+      return new OpenAIProvider({ provider: 'openai', config: hosted });
     case 'openrouter':
       return new OpenRouterProvider({ provider: 'openrouter', config: hosted });
+    case 'chatgpt':
+      return new ChatGPTProvider({ provider: 'chatgpt', config: { model: config.model } });
     case 'anthropic':
       return new AnthropicProvider({ provider: 'anthropic', config: hosted });
     case 'gemini':

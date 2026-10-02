@@ -971,7 +971,8 @@
       "native": "Install and run models on your phone.",
       "ollama": "Run LLMs locally on your own machine with Ollama.",
       "lmstudio": "Discover, download, and run thousands of cutting edge LLMs in a few clicks.",
-      "openai": "Leverage OpenAI's powerful models.",
+      "chatgpt": "Use your ChatGPT Plus or Pro plan",
+      "openai": "Leverage OpenAI's powerful models via API key.",
       "anthropic": "A friendly AI Assistant hosted by Anthropic.",
       "gemini": "Google's largest and most capable AI model",
       "openrouter": "A unified API of AI services from leading providers",
@@ -989,6 +990,7 @@
       "llmman": "Run LLMs locally using llmman.",
       "generic_openai": "Connect to any OpenAi-compatible service via a custom configuration"
     },
+    "experimental": "Experimental",
     "sections": {
       "local": "Local Providers",
       "cloud": "Cloud Providers"
@@ -998,7 +1000,33 @@
       "api_key_required": "Please enter an API key for this provider.",
       "base_url_required": "Please enter the base URL of your provider.",
       "region_required": "Please select the AWS region of your Bedrock deployment.",
-      "model_required": "Please select a model to use."
+      "model_required": "Please select a model to use.",
+      "sign_in_required": "Please sign in to use this provider."
+    },
+    "errors": {
+      "stream_interrupted": "The response ended before it was complete. Please try again."
+    },
+    "chatgpt": {
+      "continue": "Continue with ChatGPT",
+      "plan_hint": "Requires a ChatGPT Plus or Pro plan. Usage counts toward your plan's limits.",
+      "experimental_note": "Experimental: OpenAI's support for using your ChatGPT plan in other apps is still in preview and may change or stop working.",
+      "notice_title": "Use your ChatGPT plan",
+      "notice_body": "Eligible AI requests in AnythingLLM will use your ChatGPT plan. You can manage usage anytime in your ChatGPT settings.",
+      "notice_confirm": "Got it",
+      "signed_in_as": "Signed in as {{email}}",
+      "your_account": "your ChatGPT account",
+      "using_plan": "Using ChatGPT plan",
+      "manage_usage": "Manage usage",
+      "sign_out": "Sign out",
+      "sign_in_failed": "Could not sign in with ChatGPT: {{error}}",
+      "plan_usage_not_granted": "Using your ChatGPT plan was not allowed during sign in. Sign in again and allow plan usage to chat with ChatGPT.",
+      "denied": "The connection to ChatGPT was not allowed. If ChatGPT said a required permission is unavailable, your plan cannot be used here - Sign in with ChatGPT needs a Plus or Pro plan.",
+      "errors": {
+        "not_eligible": "Your ChatGPT account cannot be used here. Sign in with ChatGPT requires a Plus or Pro plan.",
+        "usage_limit": "You have reached the usage limit for AnythingLLM on your ChatGPT plan. Manage usage at {{url}}",
+        "usage_unavailable": "ChatGPT plan usage is temporarily unavailable. Please try again in a moment.",
+        "unsupported": "This request uses a feature that is not available with your ChatGPT plan."
+      }
     }
   },
   "llm_selection": {

@@ -15,6 +15,7 @@ import {
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 import { useTranslation } from 'react-i18next';
+import ExperimentalBadge from '@/components/LLMSelection/ExperimentalBadge';
 
 export default function ProviderSelection({
   selection,
@@ -157,6 +158,7 @@ export default function ProviderSelection({
                             <Text className="text-white text-lg">
                               {provider.name}
                             </Text>
+                            {provider.experimental && <ExperimentalBadge />}
                             {cachedProviders.includes(provider.value) && (
                               <CheckCircle size={16} color="#22C55E" />
                             )}

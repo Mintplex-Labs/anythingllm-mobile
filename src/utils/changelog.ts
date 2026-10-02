@@ -5,6 +5,18 @@ type ChangelogEntry = {
 
 const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.3.1',
+    content: [
+      '- **Device Assistant (Android)** — replace Gemini with your own AI. Open AnythingLLM over any app with the same gesture, talk or type, and share your screen with vision models. Set it up under Settings > Special tools > Device Assistant',
+      '- **Sign in with ChatGPT (experimental)** — use your ChatGPT Plus or Pro plan as a provider, no API key needed',
+      '- **Alarms, timers and reminders (Android)** — ask in chat and the assistant sets a timer, an alarm or a calendar reminder for you',
+      '- **Always approve tools** — tick "Always approve this tool" to skip the prompt next time. Manage them under Settings > Utility > Tool auto-approvals',
+      '- **YouTube transcripts** — share or paste a YouTube link and the assistant reads the video\'s transcript',
+      '- **Newer OpenAI models** — tool calling now works with the latest OpenAI models',
+      '- **Scheduled jobs** — a heads-up when battery optimization could stop jobs from running in the background',
+    ].join('\n'),
+  },
+  {
     version: '1.3.0',
     content: [
       '- **Draft texts, emails and events** — drafts show as a card you tap to open in the messaging, mail or calendar app of your choice. Your last used app is remembered',

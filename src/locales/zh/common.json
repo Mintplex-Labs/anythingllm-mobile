@@ -930,7 +930,7 @@
       "native": "在您的手机上安装和运行模型。",
       "ollama": "使用 Ollama 在您自己的机器上本地运行 LLM。",
       "lmstudio": "在几次点击中发现、下载并运行数千个最先进的 LLM。",
-      "chatgpt": null,
+      "chatgpt": "使用你的 ChatGPT Plus 或 Pro 套餐",
       "openai": "利用 OpenAI 的强大模型。",
       "anthropic": "由 Anthropic 托管的友好 AI 助手。",
       "gemini": "Google 最大、最强大的 AI 模型",
@@ -949,7 +949,7 @@
       "llmman": "使用 llmman 本地运行 LLM。",
       "generic_openai": "通过自定义配置连接到任何 OpenAI 兼容服务"
     },
-    "experimental": null,
+    "experimental": "实验性",
     "sections": {
       "local": "本地提供商",
       "cloud": "云提供商"
@@ -960,31 +960,31 @@
       "base_url_required": "请输入您的提供商的基础 URL。",
       "region_required": "请选择您的 Bedrock 部署的 AWS 区域。",
       "model_required": "请选择要使用的模型。",
-      "sign_in_required": null
+      "sign_in_required": "请登录以使用此提供商。"
     },
     "errors": {
-      "stream_interrupted": null
+      "stream_interrupted": "响应在完成前已结束。请重试。"
     },
     "chatgpt": {
-      "continue": null,
-      "plan_hint": null,
-      "experimental_note": null,
-      "notice_title": null,
-      "notice_body": null,
-      "notice_confirm": null,
-      "signed_in_as": null,
-      "your_account": null,
-      "using_plan": null,
-      "manage_usage": null,
-      "sign_out": null,
-      "sign_in_failed": null,
-      "plan_usage_not_granted": null,
-      "denied": null,
+      "continue": "使用 ChatGPT 继续",
+      "plan_hint": "需要 ChatGPT Plus 或 Pro 套餐。使用量计入你的套餐限额。",
+      "experimental_note": "实验性：OpenAI 对在其他应用中使用 ChatGPT 套餐的支持仍处于预览阶段，可能会发生变化或停止工作。",
+      "notice_title": "使用你的 ChatGPT 套餐",
+      "notice_body": "AnythingLLM 中符合条件的 AI 请求将使用你的 ChatGPT 套餐。你可以随时在 ChatGPT 设置中管理使用量。",
+      "notice_confirm": "知道了",
+      "signed_in_as": "已登录为 {{email}}",
+      "your_account": "你的 ChatGPT 账户",
+      "using_plan": "正在使用 ChatGPT 套餐",
+      "manage_usage": "管理使用量",
+      "sign_out": "退出登录",
+      "sign_in_failed": "无法使用 ChatGPT 登录：{{error}}",
+      "plan_usage_not_granted": "登录时未允许使用你的 ChatGPT 套餐。请重新登录并允许使用套餐，以便与 ChatGPT 聊天。",
+      "denied": "未允许连接到 ChatGPT。如果 ChatGPT 提示所需权限不可用，则无法在此使用你的套餐 - 使用 ChatGPT 登录需要 Plus 或 Pro 套餐。",
       "errors": {
-        "not_eligible": null,
-        "usage_limit": null,
-        "usage_unavailable": null,
-        "unsupported": null
+        "not_eligible": "你的 ChatGPT 账户无法在此使用。使用 ChatGPT 登录需要 Plus 或 Pro 套餐。",
+        "usage_limit": "你的 ChatGPT 套餐已达到 AnythingLLM 的使用限额。请在 {{url}} 管理使用量",
+        "usage_unavailable": "ChatGPT 套餐使用暂时不可用。请稍后重试。",
+        "unsupported": "此请求使用了你的 ChatGPT 套餐不支持的功能。"
       }
     }
   },

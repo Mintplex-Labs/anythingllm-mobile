@@ -971,7 +971,7 @@
       "native": "अपने फ़ोन पर मॉडल स्थापित और चलाएँ।",
       "ollama": "Ollama के साथ अपनी मशीन पर स्थानीय रूप से LLMs चलाएँ।",
       "lmstudio": "कुछ क्लिक में हजारों अत्याधुनिक LLMs की खोज, डाउनलोड और चलाएँ।",
-      "chatgpt": null,
+      "chatgpt": "अपने ChatGPT Plus या Pro प्लान का उपयोग करें",
       "openai": "OpenAI के शक्तिशाली मॉडलों का लाभ उठाएँ।",
       "anthropic": "Anthropic द्वारा होस्ट किया गया एक मित्रवत AI सहायक।",
       "gemini": "Google का सबसे बड़ा और सबसे सक्षम AI मॉडल",
@@ -990,7 +990,7 @@
       "llmman": "llmman का उपयोग करके स्थानीय रूप से LLMs चलाएँ।",
       "generic_openai": "कस्टम कॉन्फ़िगरेशन के माध्यम से किसी भी OpenAi-संगत सेवा से कनेक्ट करें"
     },
-    "experimental": null,
+    "experimental": "प्रायोगिक",
     "sections": {
       "local": "स्थानीय प्रदाता",
       "cloud": "क्लाउड प्रदाता"
@@ -1001,31 +1001,31 @@
       "base_url_required": "कृपया अपने प्रदाता का आधार URL दर्ज करें।",
       "region_required": "कृपया अपने Bedrock तैनाती का AWS क्षेत्र चुनें।",
       "model_required": "कृपया उपयोग करने के लिए एक मॉडल चुनें।",
-      "sign_in_required": null
+      "sign_in_required": "इस प्रदाता का उपयोग करने के लिए कृपया साइन इन करें।"
     },
     "errors": {
-      "stream_interrupted": null
+      "stream_interrupted": "जवाब पूरा होने से पहले ही समाप्त हो गया। कृपया फिर से प्रयास करें।"
     },
     "chatgpt": {
-      "continue": null,
-      "plan_hint": null,
-      "experimental_note": null,
-      "notice_title": null,
-      "notice_body": null,
-      "notice_confirm": null,
-      "signed_in_as": null,
-      "your_account": null,
-      "using_plan": null,
-      "manage_usage": null,
-      "sign_out": null,
-      "sign_in_failed": null,
-      "plan_usage_not_granted": null,
-      "denied": null,
+      "continue": "ChatGPT के साथ जारी रखें",
+      "plan_hint": "ChatGPT Plus या Pro प्लान आवश्यक है। उपयोग आपके प्लान की सीमाओं में गिना जाता है।",
+      "experimental_note": "प्रायोगिक: अन्य ऐप्स में आपके ChatGPT प्लान के उपयोग के लिए OpenAI का समर्थन अभी प्रीव्यू में है और बदल सकता है या काम करना बंद कर सकता है।",
+      "notice_title": "अपने ChatGPT प्लान का उपयोग करें",
+      "notice_body": "AnythingLLM में योग्य AI अनुरोध आपके ChatGPT प्लान का उपयोग करेंगे। आप कभी भी अपनी ChatGPT सेटिंग्स में उपयोग प्रबंधित कर सकते हैं।",
+      "notice_confirm": "समझ गया",
+      "signed_in_as": "{{email}} के रूप में साइन इन किया गया",
+      "your_account": "आपका ChatGPT खाता",
+      "using_plan": "ChatGPT प्लान का उपयोग हो रहा है",
+      "manage_usage": "उपयोग प्रबंधित करें",
+      "sign_out": "साइन आउट करें",
+      "sign_in_failed": "ChatGPT से साइन इन नहीं हो सका: {{error}}",
+      "plan_usage_not_granted": "साइन इन के दौरान आपके ChatGPT प्लान के उपयोग की अनुमति नहीं दी गई। ChatGPT से चैट करने के लिए फिर से साइन इन करें और प्लान उपयोग की अनुमति दें।",
+      "denied": "ChatGPT से कनेक्शन की अनुमति नहीं दी गई। यदि ChatGPT ने बताया कि कोई आवश्यक अनुमति उपलब्ध नहीं है, तो आपका प्लान यहाँ उपयोग नहीं किया जा सकता - ChatGPT से साइन इन के लिए Plus या Pro प्लान आवश्यक है।",
       "errors": {
-        "not_eligible": null,
-        "usage_limit": null,
-        "usage_unavailable": null,
-        "unsupported": null
+        "not_eligible": "आपका ChatGPT खाता यहाँ उपयोग नहीं किया जा सकता। ChatGPT से साइन इन के लिए Plus या Pro प्लान आवश्यक है।",
+        "usage_limit": "आप अपने ChatGPT प्लान पर AnythingLLM की उपयोग सीमा तक पहुँच गए हैं। {{url}} पर उपयोग प्रबंधित करें",
+        "usage_unavailable": "ChatGPT प्लान का उपयोग अस्थायी रूप से उपलब्ध नहीं है। कृपया थोड़ी देर में फिर से प्रयास करें।",
+        "unsupported": "यह अनुरोध एक ऐसी सुविधा का उपयोग करता है जो आपके ChatGPT प्लान के साथ उपलब्ध नहीं है।"
       }
     }
   },

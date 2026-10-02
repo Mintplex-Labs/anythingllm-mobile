@@ -930,7 +930,7 @@
       "native": "スマートフォンにモデルをインストールして実行します。",
       "ollama": "Ollamaを使用してローカルマシンでLLMを実行します。",
       "lmstudio": "数回のクリックで数千の最先端のLLMを発見、ダウンロード、実行します。",
-      "chatgpt": null,
+      "chatgpt": "ChatGPT Plus または Pro プランを使用",
       "openai": "OpenAIの強力なモデルを活用します。",
       "anthropic": "AnthropicでホストされているフレンドリーなAIアシスタント。",
       "gemini": "Googleの最大かつ最も有能なAIモデル",
@@ -949,7 +949,7 @@
       "llmman": "llmmanを使用してローカルでLLMを実行します。",
       "generic_openai": "カスタム構成を使用してOpenAi互換サービスに接続します"
     },
-    "experimental": null,
+    "experimental": "試験運用",
     "sections": {
       "local": "ローカルプロバイダー",
       "cloud": "クラウドプロバイダー"
@@ -960,31 +960,31 @@
       "base_url_required": "プロバイダーのベースURLを入力してください。",
       "region_required": "BedrockデプロイメントのAWSリージョンを選択してください。",
       "model_required": "使用するモデルを選択してください。",
-      "sign_in_required": null
+      "sign_in_required": "このプロバイダーを使用するにはサインインしてください。"
     },
     "errors": {
-      "stream_interrupted": null
+      "stream_interrupted": "応答が完了する前に終了しました。もう一度お試しください。"
     },
     "chatgpt": {
-      "continue": null,
-      "plan_hint": null,
-      "experimental_note": null,
-      "notice_title": null,
-      "notice_body": null,
-      "notice_confirm": null,
-      "signed_in_as": null,
-      "your_account": null,
-      "using_plan": null,
-      "manage_usage": null,
-      "sign_out": null,
-      "sign_in_failed": null,
-      "plan_usage_not_granted": null,
-      "denied": null,
+      "continue": "ChatGPT で続行",
+      "plan_hint": "ChatGPT Plus または Pro プランが必要です。使用量はプランの上限にカウントされます。",
+      "experimental_note": "試験運用: 他のアプリで ChatGPT プランを使用するための OpenAI のサポートはまだプレビュー段階のため、変更されたり動作しなくなったりする可能性があります。",
+      "notice_title": "ChatGPT プランを使用",
+      "notice_body": "AnythingLLM の対象となる AI リクエストには ChatGPT プランが使用されます。使用量は ChatGPT の設定からいつでも管理できます。",
+      "notice_confirm": "OK",
+      "signed_in_as": "{{email}} としてサインイン中",
+      "your_account": "ChatGPT アカウント",
+      "using_plan": "ChatGPT プランを使用中",
+      "manage_usage": "使用量を管理",
+      "sign_out": "サインアウト",
+      "sign_in_failed": "ChatGPT でサインインできませんでした: {{error}}",
+      "plan_usage_not_granted": "サインイン時に ChatGPT プランの使用が許可されませんでした。ChatGPT とチャットするには、もう一度サインインしてプランの使用を許可してください。",
+      "denied": "ChatGPT への接続が許可されませんでした。必要な権限が利用できないと ChatGPT に表示された場合、お使いのプランはここでは使用できません - ChatGPT でのサインインには Plus または Pro プランが必要です。",
       "errors": {
-        "not_eligible": null,
-        "usage_limit": null,
-        "usage_unavailable": null,
-        "unsupported": null
+        "not_eligible": "お使いの ChatGPT アカウントはここでは使用できません。ChatGPT でのサインインには Plus または Pro プランが必要です。",
+        "usage_limit": "ChatGPT プランでの AnythingLLM の使用上限に達しました。{{url}} で使用量を管理してください",
+        "usage_unavailable": "ChatGPT プランの使用は一時的に利用できません。しばらくしてからもう一度お試しください。",
+        "unsupported": "このリクエストは、お使いの ChatGPT プランでは利用できない機能を使用しています。"
       }
     }
   },

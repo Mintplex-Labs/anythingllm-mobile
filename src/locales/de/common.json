@@ -971,7 +971,7 @@
       "native": "Installieren und führen Sie Modelle auf Ihrem Telefon aus.",
       "ollama": "Führen Sie LLMs lokal auf Ihrem eigenen Computer mit Ollama aus.",
       "lmstudio": "Entdecken Sie, laden Sie und führen Sie Tausende von hochmodernen LLMs mit wenigen Klicks aus.",
-      "chatgpt": null,
+      "chatgpt": "Nutze dein ChatGPT Plus- oder Pro-Abo",
       "openai": "Nutzen Sie die leistungsstarken Modelle von OpenAI.",
       "anthropic": "Ein freundlicher KI-Assistent von Anthropic.",
       "gemini": "Googles größtes und fähigstes KI-Modell",
@@ -990,7 +990,7 @@
       "llmman": "Führen Sie LLMs lokal mit llmman aus.",
       "generic_openai": "Verbinden Sie sich mit jedem OpenAI-kompatiblen Service über eine benutzerdefinierte Konfiguration"
     },
-    "experimental": null,
+    "experimental": "Experimentell",
     "sections": {
       "local": "Lokale Anbieter",
       "cloud": "Cloud-Anbieter"
@@ -1001,31 +1001,31 @@
       "base_url_required": "Bitte geben Sie die Basis-URL Ihres Anbieters ein.",
       "region_required": "Bitte wählen Sie die AWS-Region Ihrer Bedrock-Bereitstellung.",
       "model_required": "Bitte wählen Sie ein zu verwendendes Modell aus.",
-      "sign_in_required": null
+      "sign_in_required": "Bitte melde dich an, um diesen Anbieter zu nutzen."
     },
     "errors": {
-      "stream_interrupted": null
+      "stream_interrupted": "Die Antwort wurde vorzeitig beendet. Bitte versuche es erneut."
     },
     "chatgpt": {
-      "continue": null,
-      "plan_hint": null,
-      "experimental_note": null,
-      "notice_title": null,
-      "notice_body": null,
-      "notice_confirm": null,
-      "signed_in_as": null,
-      "your_account": null,
-      "using_plan": null,
-      "manage_usage": null,
-      "sign_out": null,
-      "sign_in_failed": null,
-      "plan_usage_not_granted": null,
-      "denied": null,
+      "continue": "Weiter mit ChatGPT",
+      "plan_hint": "Erfordert ein ChatGPT Plus- oder Pro-Abo. Die Nutzung wird auf die Limits deines Abos angerechnet.",
+      "experimental_note": "Experimentell: Die Unterstützung von OpenAI für die Nutzung deines ChatGPT-Abos in anderen Apps befindet sich noch in der Vorschau und kann sich ändern oder nicht mehr funktionieren.",
+      "notice_title": "Dein ChatGPT-Abo nutzen",
+      "notice_body": "Berechtigte KI-Anfragen in AnythingLLM nutzen dein ChatGPT-Abo. Du kannst die Nutzung jederzeit in deinen ChatGPT-Einstellungen verwalten.",
+      "notice_confirm": "Verstanden",
+      "signed_in_as": "Angemeldet als {{email}}",
+      "your_account": "dein ChatGPT-Konto",
+      "using_plan": "ChatGPT-Abo wird genutzt",
+      "manage_usage": "Nutzung verwalten",
+      "sign_out": "Abmelden",
+      "sign_in_failed": "Anmeldung mit ChatGPT fehlgeschlagen: {{error}}",
+      "plan_usage_not_granted": "Die Nutzung deines ChatGPT-Abos wurde bei der Anmeldung nicht erlaubt. Melde dich erneut an und erlaube die Abo-Nutzung, um mit ChatGPT zu chatten.",
+      "denied": "Die Verbindung zu ChatGPT wurde nicht erlaubt. Wenn ChatGPT gemeldet hat, dass eine erforderliche Berechtigung nicht verfügbar ist, kann dein Abo hier nicht genutzt werden - die Anmeldung mit ChatGPT erfordert ein Plus- oder Pro-Abo.",
       "errors": {
-        "not_eligible": null,
-        "usage_limit": null,
-        "usage_unavailable": null,
-        "unsupported": null
+        "not_eligible": "Dein ChatGPT-Konto kann hier nicht genutzt werden. Die Anmeldung mit ChatGPT erfordert ein Plus- oder Pro-Abo.",
+        "usage_limit": "Du hast das Nutzungslimit für AnythingLLM in deinem ChatGPT-Abo erreicht. Verwalte die Nutzung unter {{url}}",
+        "usage_unavailable": "Die Nutzung des ChatGPT-Abos ist vorübergehend nicht verfügbar. Bitte versuche es gleich noch einmal.",
+        "unsupported": "Diese Anfrage verwendet eine Funktion, die mit deinem ChatGPT-Abo nicht verfügbar ist."
       }
     }
   },

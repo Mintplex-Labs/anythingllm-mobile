@@ -930,7 +930,7 @@
       "native": "휴대폰에 모델을 설치하고 실행합니다.",
       "ollama": "Ollama를 사용하여 자신의 머신에서 로컬로 LLM을 실행합니다.",
       "lmstudio": "최신 LLM 수천 개를 발견하고 다운로드하며 몇 번의 클릭으로 실행합니다.",
-      "chatgpt": null,
+      "chatgpt": "ChatGPT Plus 또는 Pro 요금제 사용",
       "openai": "OpenAI의 강력한 모델을 활용하세요.",
       "anthropic": "Anthropic에서 호스팅하는 친화적인 AI 어시스턴트입니다.",
       "gemini": "Google의 가장 크고 가장 기능이 풍부한 AI 모델",
@@ -949,7 +949,7 @@
       "llmman": "llmman을 사용하여 로컬로 LLM을 실행합니다.",
       "generic_openai": "사용자 정의 구성을 통해 OpenAI 호환 서비스에 연결"
     },
-    "experimental": null,
+    "experimental": "실험적",
     "sections": {
       "local": "로컬 제공자",
       "cloud": "클라우드 제공자"
@@ -960,31 +960,31 @@
       "base_url_required": "제공자의 기본 URL을 입력하세요.",
       "region_required": "Bedrock 배포의 AWS 지역을 선택하세요.",
       "model_required": "사용할 모델을 선택하세요.",
-      "sign_in_required": null
+      "sign_in_required": "이 공급자를 사용하려면 로그인하세요."
     },
     "errors": {
-      "stream_interrupted": null
+      "stream_interrupted": "응답이 완료되기 전에 종료되었습니다. 다시 시도하세요."
     },
     "chatgpt": {
-      "continue": null,
-      "plan_hint": null,
-      "experimental_note": null,
-      "notice_title": null,
-      "notice_body": null,
-      "notice_confirm": null,
-      "signed_in_as": null,
-      "your_account": null,
-      "using_plan": null,
-      "manage_usage": null,
-      "sign_out": null,
-      "sign_in_failed": null,
-      "plan_usage_not_granted": null,
-      "denied": null,
+      "continue": "ChatGPT로 계속하기",
+      "plan_hint": "ChatGPT Plus 또는 Pro 요금제가 필요합니다. 사용량은 요금제 한도에 포함됩니다.",
+      "experimental_note": "실험적: 다른 앱에서 ChatGPT 요금제를 사용하는 OpenAI의 지원은 아직 미리 보기 단계이며 변경되거나 작동이 중단될 수 있습니다.",
+      "notice_title": "ChatGPT 요금제 사용",
+      "notice_body": "AnythingLLM의 대상 AI 요청에는 ChatGPT 요금제가 사용됩니다. 사용량은 언제든지 ChatGPT 설정에서 관리할 수 있습니다.",
+      "notice_confirm": "확인",
+      "signed_in_as": "{{email}}(으)로 로그인됨",
+      "your_account": "내 ChatGPT 계정",
+      "using_plan": "ChatGPT 요금제 사용 중",
+      "manage_usage": "사용량 관리",
+      "sign_out": "로그아웃",
+      "sign_in_failed": "ChatGPT로 로그인할 수 없습니다: {{error}}",
+      "plan_usage_not_granted": "로그인 중 ChatGPT 요금제 사용이 허용되지 않았습니다. ChatGPT와 채팅하려면 다시 로그인하고 요금제 사용을 허용하세요.",
+      "denied": "ChatGPT 연결이 허용되지 않았습니다. 필요한 권한을 사용할 수 없다고 ChatGPT에 표시되었다면 여기에서 요금제를 사용할 수 없습니다 - ChatGPT로 로그인하려면 Plus 또는 Pro 요금제가 필요합니다.",
       "errors": {
-        "not_eligible": null,
-        "usage_limit": null,
-        "usage_unavailable": null,
-        "unsupported": null
+        "not_eligible": "ChatGPT 계정을 여기에서 사용할 수 없습니다. ChatGPT로 로그인하려면 Plus 또는 Pro 요금제가 필요합니다.",
+        "usage_limit": "ChatGPT 요금제에서 AnythingLLM 사용 한도에 도달했습니다. {{url}}에서 사용량을 관리하세요",
+        "usage_unavailable": "ChatGPT 요금제 사용을 일시적으로 이용할 수 없습니다. 잠시 후 다시 시도하세요.",
+        "unsupported": "이 요청은 ChatGPT 요금제에서 사용할 수 없는 기능을 사용합니다."
       }
     }
   },

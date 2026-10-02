@@ -930,7 +930,7 @@
       "native": "Instal dan jalankan model di ponsel Anda.",
       "ollama": "Jalankan LLM secara lokal di mesin Anda sendiri dengan Ollama.",
       "lmstudio": "Temukan, unduh, dan jalankan ribuan LLM terdepan dalam beberapa klik.",
-      "chatgpt": null,
+      "chatgpt": "Gunakan paket ChatGPT Plus atau Pro Anda",
       "openai": "Manfaatkan model OpenAI yang kuat.",
       "anthropic": "Asisten AI yang ramah yang dihosting oleh Anthropic.",
       "gemini": "Model AI terbesar dan paling capable Google",
@@ -949,7 +949,7 @@
       "llmman": "Jalankan LLM secara lokal menggunakan llmman.",
       "generic_openai": "Terhubung ke layanan kompatibel OpenAI apa pun melalui konfigurasi kustom"
     },
-    "experimental": null,
+    "experimental": "Eksperimental",
     "sections": {
       "local": "Penyedia Lokal",
       "cloud": "Penyedia Cloud"
@@ -960,31 +960,31 @@
       "base_url_required": "Silakan masukkan URL dasar penyedia Anda.",
       "region_required": "Silakan pilih wilayah AWS dari penyebaran Bedrock Anda.",
       "model_required": "Silakan pilih model untuk digunakan.",
-      "sign_in_required": null
+      "sign_in_required": "Silakan masuk untuk menggunakan penyedia ini."
     },
     "errors": {
-      "stream_interrupted": null
+      "stream_interrupted": "Respons berakhir sebelum selesai. Silakan coba lagi."
     },
     "chatgpt": {
-      "continue": null,
-      "plan_hint": null,
-      "experimental_note": null,
-      "notice_title": null,
-      "notice_body": null,
-      "notice_confirm": null,
-      "signed_in_as": null,
-      "your_account": null,
-      "using_plan": null,
-      "manage_usage": null,
-      "sign_out": null,
-      "sign_in_failed": null,
-      "plan_usage_not_granted": null,
-      "denied": null,
+      "continue": "Lanjutkan dengan ChatGPT",
+      "plan_hint": "Memerlukan paket ChatGPT Plus atau Pro. Penggunaan dihitung dalam batas paket Anda.",
+      "experimental_note": "Eksperimental: dukungan OpenAI untuk menggunakan paket ChatGPT Anda di aplikasi lain masih dalam pratinjau dan dapat berubah atau berhenti berfungsi.",
+      "notice_title": "Gunakan paket ChatGPT Anda",
+      "notice_body": "Permintaan AI yang memenuhi syarat di AnythingLLM akan menggunakan paket ChatGPT Anda. Anda dapat mengelola penggunaan kapan saja di pengaturan ChatGPT.",
+      "notice_confirm": "Mengerti",
+      "signed_in_as": "Masuk sebagai {{email}}",
+      "your_account": "akun ChatGPT Anda",
+      "using_plan": "Menggunakan paket ChatGPT",
+      "manage_usage": "Kelola penggunaan",
+      "sign_out": "Keluar",
+      "sign_in_failed": "Tidak dapat masuk dengan ChatGPT: {{error}}",
+      "plan_usage_not_granted": "Penggunaan paket ChatGPT Anda tidak diizinkan saat masuk. Masuk lagi dan izinkan penggunaan paket untuk mengobrol dengan ChatGPT.",
+      "denied": "Koneksi ke ChatGPT tidak diizinkan. Jika ChatGPT menyatakan izin yang diperlukan tidak tersedia, paket Anda tidak dapat digunakan di sini - masuk dengan ChatGPT memerlukan paket Plus atau Pro.",
       "errors": {
-        "not_eligible": null,
-        "usage_limit": null,
-        "usage_unavailable": null,
-        "unsupported": null
+        "not_eligible": "Akun ChatGPT Anda tidak dapat digunakan di sini. Masuk dengan ChatGPT memerlukan paket Plus atau Pro.",
+        "usage_limit": "Anda telah mencapai batas penggunaan AnythingLLM pada paket ChatGPT Anda. Kelola penggunaan di {{url}}",
+        "usage_unavailable": "Penggunaan paket ChatGPT untuk sementara tidak tersedia. Silakan coba lagi sebentar lagi.",
+        "unsupported": "Permintaan ini menggunakan fitur yang tidak tersedia dengan paket ChatGPT Anda."
       }
     }
   },

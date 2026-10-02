@@ -971,7 +971,7 @@
       "native": "Installeer en voer modellen op je telefoon uit.",
       "ollama": "Voer LLM's lokaal uit op je eigen machine met Ollama.",
       "lmstudio": "Ontdek, download en voer duizenden geavanceerde LLM's in slechts een paar klikken uit.",
-      "chatgpt": null,
+      "chatgpt": "Gebruik je ChatGPT Plus- of Pro-abonnement",
       "openai": "Maak gebruik van OpenAI's krachtige modellen.",
       "anthropic": "Een vriendelijke AI-assistent van Anthropic.",
       "gemini": "Google's grootste en meest capabele AI-model",
@@ -990,7 +990,7 @@
       "llmman": "Voer LLM's lokaal uit met llmman.",
       "generic_openai": "Verbind met elke OpenAI-compatibele service via een aangepaste configuratie"
     },
-    "experimental": null,
+    "experimental": "Experimenteel",
     "sections": {
       "local": "Lokale providers",
       "cloud": "Cloudproviders"
@@ -1001,31 +1001,31 @@
       "base_url_required": "Voer alstublieft de basis-URL van je provider in.",
       "region_required": "Selecteer alstublieft de AWS-regio van je Bedrock-implementatie.",
       "model_required": "Selecteer alstublieft een model om te gebruiken.",
-      "sign_in_required": null
+      "sign_in_required": "Log in om deze provider te gebruiken."
     },
     "errors": {
-      "stream_interrupted": null
+      "stream_interrupted": "Het antwoord stopte voordat het compleet was. Probeer het opnieuw."
     },
     "chatgpt": {
-      "continue": null,
-      "plan_hint": null,
-      "experimental_note": null,
-      "notice_title": null,
-      "notice_body": null,
-      "notice_confirm": null,
-      "signed_in_as": null,
-      "your_account": null,
-      "using_plan": null,
-      "manage_usage": null,
-      "sign_out": null,
-      "sign_in_failed": null,
-      "plan_usage_not_granted": null,
-      "denied": null,
+      "continue": "Doorgaan met ChatGPT",
+      "plan_hint": "Vereist een ChatGPT Plus- of Pro-abonnement. Gebruik telt mee voor de limieten van je abonnement.",
+      "experimental_note": "Experimenteel: de ondersteuning van OpenAI voor het gebruik van je ChatGPT-abonnement in andere apps is nog in preview en kan veranderen of stoppen met werken.",
+      "notice_title": "Gebruik je ChatGPT-abonnement",
+      "notice_body": "In aanmerking komende AI-verzoeken in AnythingLLM gebruiken je ChatGPT-abonnement. Je kunt het gebruik altijd beheren in je ChatGPT-instellingen.",
+      "notice_confirm": "Begrepen",
+      "signed_in_as": "Ingelogd als {{email}}",
+      "your_account": "je ChatGPT-account",
+      "using_plan": "ChatGPT-abonnement in gebruik",
+      "manage_usage": "Gebruik beheren",
+      "sign_out": "Uitloggen",
+      "sign_in_failed": "Kan niet inloggen met ChatGPT: {{error}}",
+      "plan_usage_not_granted": "Het gebruik van je ChatGPT-abonnement werd niet toegestaan tijdens het inloggen. Log opnieuw in en sta abonnementsgebruik toe om met ChatGPT te chatten.",
+      "denied": "De verbinding met ChatGPT werd niet toegestaan. Als ChatGPT aangaf dat een vereiste machtiging niet beschikbaar is, kan je abonnement hier niet worden gebruikt - inloggen met ChatGPT vereist een Plus- of Pro-abonnement.",
       "errors": {
-        "not_eligible": null,
-        "usage_limit": null,
-        "usage_unavailable": null,
-        "unsupported": null
+        "not_eligible": "Je ChatGPT-account kan hier niet worden gebruikt. Inloggen met ChatGPT vereist een Plus- of Pro-abonnement.",
+        "usage_limit": "Je hebt de gebruikslimiet voor AnythingLLM op je ChatGPT-abonnement bereikt. Beheer het gebruik via {{url}}",
+        "usage_unavailable": "Gebruik van het ChatGPT-abonnement is tijdelijk niet beschikbaar. Probeer het zo opnieuw.",
+        "unsupported": "Dit verzoek gebruikt een functie die niet beschikbaar is met je ChatGPT-abonnement."
       }
     }
   },

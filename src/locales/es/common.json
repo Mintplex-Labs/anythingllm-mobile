@@ -1012,7 +1012,7 @@
       "native": "Instale y ejecute modelos en su teléfono.",
       "ollama": "Ejecute LLMs localmente en su propia máquina con Ollama.",
       "lmstudio": "Descubra, descargue y ejecute miles de LLMs de vanguardia en pocos clics.",
-      "chatgpt": null,
+      "chatgpt": "Usa tu plan ChatGPT Plus o Pro",
       "openai": "Aproveche los potentes modelos de OpenAI.",
       "anthropic": "Un asistente de IA amigable alojado por Anthropic.",
       "gemini": "El modelo de IA más grande y capaz de Google",
@@ -1031,7 +1031,7 @@
       "llmman": "Ejecute LLMs localmente usando llmman.",
       "generic_openai": "Conéctese a cualquier servicio compatible con OpenAi mediante una configuración personalizada"
     },
-    "experimental": null,
+    "experimental": "Experimental",
     "sections": {
       "local": "Proveedores locales",
       "cloud": "Proveedores en la nube"
@@ -1042,31 +1042,31 @@
       "base_url_required": "Por favor ingrese la URL base de su proveedor.",
       "region_required": "Por favor seleccione la región de AWS de su implementación de Bedrock.",
       "model_required": "Por favor seleccione un modelo a usar.",
-      "sign_in_required": null
+      "sign_in_required": "Inicia sesión para usar este proveedor."
     },
     "errors": {
-      "stream_interrupted": null
+      "stream_interrupted": "La respuesta terminó antes de completarse. Inténtalo de nuevo."
     },
     "chatgpt": {
-      "continue": null,
-      "plan_hint": null,
-      "experimental_note": null,
-      "notice_title": null,
-      "notice_body": null,
-      "notice_confirm": null,
-      "signed_in_as": null,
-      "your_account": null,
-      "using_plan": null,
-      "manage_usage": null,
-      "sign_out": null,
-      "sign_in_failed": null,
-      "plan_usage_not_granted": null,
-      "denied": null,
+      "continue": "Continuar con ChatGPT",
+      "plan_hint": "Requiere un plan ChatGPT Plus o Pro. El uso cuenta para los límites de tu plan.",
+      "experimental_note": "Experimental: la compatibilidad de OpenAI para usar tu plan de ChatGPT en otras apps aún está en vista previa y puede cambiar o dejar de funcionar.",
+      "notice_title": "Usa tu plan de ChatGPT",
+      "notice_body": "Las solicitudes de IA elegibles en AnythingLLM usarán tu plan de ChatGPT. Puedes gestionar el uso en cualquier momento en la configuración de ChatGPT.",
+      "notice_confirm": "Entendido",
+      "signed_in_as": "Sesión iniciada como {{email}}",
+      "your_account": "tu cuenta de ChatGPT",
+      "using_plan": "Usando el plan de ChatGPT",
+      "manage_usage": "Gestionar uso",
+      "sign_out": "Cerrar sesión",
+      "sign_in_failed": "No se pudo iniciar sesión con ChatGPT: {{error}}",
+      "plan_usage_not_granted": "No se permitió el uso de tu plan de ChatGPT al iniciar sesión. Vuelve a iniciar sesión y permite el uso del plan para chatear con ChatGPT.",
+      "denied": "No se permitió la conexión con ChatGPT. Si ChatGPT indicó que un permiso necesario no está disponible, tu plan no se puede usar aquí: iniciar sesión con ChatGPT requiere un plan Plus o Pro.",
       "errors": {
-        "not_eligible": null,
-        "usage_limit": null,
-        "usage_unavailable": null,
-        "unsupported": null
+        "not_eligible": "Tu cuenta de ChatGPT no se puede usar aquí. Iniciar sesión con ChatGPT requiere un plan Plus o Pro.",
+        "usage_limit": "Has alcanzado el límite de uso de AnythingLLM en tu plan de ChatGPT. Gestiona el uso en {{url}}",
+        "usage_unavailable": "El uso del plan de ChatGPT no está disponible temporalmente. Inténtalo de nuevo en un momento.",
+        "unsupported": "Esta solicitud usa una función que no está disponible con tu plan de ChatGPT."
       }
     }
   },

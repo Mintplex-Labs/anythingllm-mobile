@@ -971,7 +971,7 @@
       "native": "Uygula ve telefonunda modelleri çalıştır.",
       "ollama": "Ollama ile kendi makinenizde LLM'leri çalıştırın.",
       "lmstudio": "Binlerce gelişmiş LLM'yi keşfedin, indirin ve birkaç tıklamayla çalıştırın.",
-      "chatgpt": null,
+      "chatgpt": "ChatGPT Plus veya Pro planınızı kullanın",
       "openai": "OpenAI'nin güçlü modellerinden yararlanın.",
       "anthropic": "Anthropic tarafından sağlanan, arkadaş canlısı bir yapay zeka asistanı.",
       "gemini": "Google'nin en büyük ve en güçlü yapay zeka modeli",
@@ -990,7 +990,7 @@
       "llmman": "Yerel olarak LLM'leri çalıştırmak için llmman'ı kullanın.",
       "generic_openai": "Özel bir yapılandırma ile herhangi bir OpenAI uyumlu hizmete bağlanın"
     },
-    "experimental": null,
+    "experimental": "Deneysel",
     "sections": {
       "local": "Yerel Sağlayıcılar",
       "cloud": "Bulut Sağlayıcıları"
@@ -1001,31 +1001,31 @@
       "base_url_required": "Lütfen sağlayıcınızın temel URL numarasını girin.",
       "region_required": "Lütfen Bedrock dağıtımınız için AWS bölgesini seçin.",
       "model_required": "Lütfen kullanmak istediğiniz modeli seçin.",
-      "sign_in_required": null
+      "sign_in_required": "Bu sağlayıcıyı kullanmak için lütfen oturum açın."
     },
     "errors": {
-      "stream_interrupted": null
+      "stream_interrupted": "Yanıt tamamlanmadan sona erdi. Lütfen tekrar deneyin."
     },
     "chatgpt": {
-      "continue": null,
-      "plan_hint": null,
-      "experimental_note": null,
-      "notice_title": null,
-      "notice_body": null,
-      "notice_confirm": null,
-      "signed_in_as": null,
-      "your_account": null,
-      "using_plan": null,
-      "manage_usage": null,
-      "sign_out": null,
-      "sign_in_failed": null,
-      "plan_usage_not_granted": null,
-      "denied": null,
+      "continue": "ChatGPT ile devam et",
+      "plan_hint": "ChatGPT Plus veya Pro planı gerektirir. Kullanım, planınızın limitlerinden düşülür.",
+      "experimental_note": "Deneysel: ChatGPT planınızın diğer uygulamalarda kullanılmasına yönelik OpenAI desteği hâlâ önizleme aşamasındadır ve değişebilir veya çalışmayı durdurabilir.",
+      "notice_title": "ChatGPT planınızı kullanın",
+      "notice_body": "AnythingLLM'deki uygun yapay zekâ istekleri ChatGPT planınızı kullanacak. Kullanımı istediğiniz zaman ChatGPT ayarlarınızdan yönetebilirsiniz.",
+      "notice_confirm": "Anladım",
+      "signed_in_as": "{{email}} olarak oturum açıldı",
+      "your_account": "ChatGPT hesabınız",
+      "using_plan": "ChatGPT planı kullanılıyor",
+      "manage_usage": "Kullanımı yönet",
+      "sign_out": "Oturumu kapat",
+      "sign_in_failed": "ChatGPT ile oturum açılamadı: {{error}}",
+      "plan_usage_not_granted": "Oturum açma sırasında ChatGPT planınızın kullanımına izin verilmedi. ChatGPT ile sohbet etmek için tekrar oturum açın ve plan kullanımına izin verin.",
+      "denied": "ChatGPT bağlantısına izin verilmedi. ChatGPT gerekli bir iznin kullanılamadığını belirttiyse planınız burada kullanılamaz - ChatGPT ile oturum açmak için Plus veya Pro planı gerekir.",
       "errors": {
-        "not_eligible": null,
-        "usage_limit": null,
-        "usage_unavailable": null,
-        "unsupported": null
+        "not_eligible": "ChatGPT hesabınız burada kullanılamaz. ChatGPT ile oturum açmak için Plus veya Pro planı gerekir.",
+        "usage_limit": "ChatGPT planınızda AnythingLLM kullanım limitine ulaştınız. Kullanımı {{url}} adresinden yönetin",
+        "usage_unavailable": "ChatGPT planı kullanımı geçici olarak kullanılamıyor. Lütfen birazdan tekrar deneyin.",
+        "unsupported": "Bu istek, ChatGPT planınızda bulunmayan bir özelliği kullanıyor."
       }
     }
   },

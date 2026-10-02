@@ -930,7 +930,7 @@
       "native": "Cài đặt và chạy mô hình trên điện thoại của bạn.",
       "ollama": "Chạy LLM cục bộ trên máy của bạn với Ollama.",
       "lmstudio": "Khám phá, tải xuống và chạy hàng nghìn LLM tiên tiến chỉ trong vài cú nhấp chuột.",
-      "chatgpt": null,
+      "chatgpt": "Sử dụng gói ChatGPT Plus hoặc Pro của bạn",
       "openai": "Tận dụng các mô hình mạnh mẽ của OpenAI.",
       "anthropic": "Một trợ lý AI thân thiện được lưu trữ bởi Anthropic.",
       "gemini": "Mô hình AI lớn nhất và có khả năng nhất của Google",
@@ -949,7 +949,7 @@
       "llmman": "Chạy LLM cục bộ bằng cách sử dụng llmman.",
       "generic_openai": "Kết nối với bất kỳ dịch vụ tương thích OpenAI nào thông qua cấu hình tùy chỉnh"
     },
-    "experimental": null,
+    "experimental": "Thử nghiệm",
     "sections": {
       "local": "Nhà cung cấp cục bộ",
       "cloud": "Nhà cung cấp đám mây"
@@ -960,31 +960,31 @@
       "base_url_required": "Vui lòng nhập URL cơ sở của nhà cung cấp của bạn.",
       "region_required": "Vui lòng chọn vùng AWS của triển khai Bedrock của bạn.",
       "model_required": "Vui lòng chọn một mô hình để sử dụng.",
-      "sign_in_required": null
+      "sign_in_required": "Vui lòng đăng nhập để sử dụng nhà cung cấp này."
     },
     "errors": {
-      "stream_interrupted": null
+      "stream_interrupted": "Phản hồi đã kết thúc trước khi hoàn tất. Vui lòng thử lại."
     },
     "chatgpt": {
-      "continue": null,
-      "plan_hint": null,
-      "experimental_note": null,
-      "notice_title": null,
-      "notice_body": null,
-      "notice_confirm": null,
-      "signed_in_as": null,
-      "your_account": null,
-      "using_plan": null,
-      "manage_usage": null,
-      "sign_out": null,
-      "sign_in_failed": null,
-      "plan_usage_not_granted": null,
-      "denied": null,
+      "continue": "Tiếp tục với ChatGPT",
+      "plan_hint": "Yêu cầu gói ChatGPT Plus hoặc Pro. Mức sử dụng được tính vào giới hạn của gói.",
+      "experimental_note": "Thử nghiệm: hỗ trợ của OpenAI cho việc dùng gói ChatGPT trong các ứng dụng khác vẫn đang ở bản xem trước và có thể thay đổi hoặc ngừng hoạt động.",
+      "notice_title": "Sử dụng gói ChatGPT của bạn",
+      "notice_body": "Các yêu cầu AI đủ điều kiện trong AnythingLLM sẽ sử dụng gói ChatGPT của bạn. Bạn có thể quản lý mức sử dụng bất cứ lúc nào trong cài đặt ChatGPT.",
+      "notice_confirm": "Đã hiểu",
+      "signed_in_as": "Đã đăng nhập với {{email}}",
+      "your_account": "tài khoản ChatGPT của bạn",
+      "using_plan": "Đang dùng gói ChatGPT",
+      "manage_usage": "Quản lý mức sử dụng",
+      "sign_out": "Đăng xuất",
+      "sign_in_failed": "Không thể đăng nhập bằng ChatGPT: {{error}}",
+      "plan_usage_not_granted": "Việc sử dụng gói ChatGPT của bạn chưa được cho phép khi đăng nhập. Hãy đăng nhập lại và cho phép sử dụng gói để trò chuyện với ChatGPT.",
+      "denied": "Kết nối tới ChatGPT không được cho phép. Nếu ChatGPT báo rằng một quyền bắt buộc không khả dụng, gói của bạn không thể dùng ở đây - đăng nhập bằng ChatGPT cần gói Plus hoặc Pro.",
       "errors": {
-        "not_eligible": null,
-        "usage_limit": null,
-        "usage_unavailable": null,
-        "unsupported": null
+        "not_eligible": "Tài khoản ChatGPT của bạn không thể dùng ở đây. Đăng nhập bằng ChatGPT cần gói Plus hoặc Pro.",
+        "usage_limit": "Bạn đã đạt giới hạn sử dụng AnythingLLM trên gói ChatGPT của mình. Quản lý mức sử dụng tại {{url}}",
+        "usage_unavailable": "Tạm thời không thể sử dụng gói ChatGPT. Vui lòng thử lại sau giây lát.",
+        "unsupported": "Yêu cầu này dùng một tính năng không khả dụng với gói ChatGPT của bạn."
       }
     }
   },

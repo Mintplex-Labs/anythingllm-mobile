@@ -71,6 +71,10 @@
          not the Play-restricted exact-alarm access, the clock app does the scheduling. -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
+    <!-- Keeps long-running work (a browser agent session) going while the app is in the background (BackgroundWorkService) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
     <!-- Needed only for devices running Android 9 (API 28) or lower -->
     <!-- Currently it is used only for storing chat sessions (/Download)-->
     <uses-permission
@@ -208,6 +212,16 @@
         android:windowSoftInputMode="adjustNothing"
         android:excludeFromRecents="true"
         android:taskAffinity="com.anythingllm.assistant"
+        android:exported="false" />
+
+      <!--
+        Long-running work in JS (a browser agent session) keeps the process alive while the user is in
+        another app: requests to cloud providers and the agent's WebView would otherwise stall when Android
+        freezes the backgrounded app. Runs only while a task is registered. See background/BackgroundWorkService.kt.
+      -->
+      <service
+        android:name=".background.BackgroundWorkService"
+        android:foregroundServiceType="dataSync"
         android:exported="false" />
 
       <uses-native-library android:name="libadsprpc.so" android:required="false" />

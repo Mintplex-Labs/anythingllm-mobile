@@ -132,6 +132,8 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:4.12.0"
     // Custom Tabs for OAuth sign-in (LoopbackAuthModule - Sign in with ChatGPT)
     implementation "androidx.browser:browser:1.8.0"
+    // Browser agent WebViews (BrowserUseModule): per-profile cookie jars, document-start scripts
+    implementation "androidx.webkit:webkit:1.12.1"
     // Used only for text extraction from uploaded PDFs (PdfParserModule). BouncyCastle is
     // needed just for public-key encrypted / signed PDFs, which we reject anyway; dropping it
     // saves ~8MB of installed size.

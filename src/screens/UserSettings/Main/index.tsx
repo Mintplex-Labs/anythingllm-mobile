@@ -1,8 +1,9 @@
-import { Linking, Text, TouchableOpacity, View, ScrollView } from 'react-native';
+import { Linking, Platform, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import SafeView from '@/components/SafeView';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   ArrowLeft,
+  Browser,
   CaretRight,
   File,
   DiscordLogo,
@@ -328,6 +329,13 @@ export function MainView({ goToPage }: MainViewProps) {
                 icon={<ShieldCheck size={18} color="#FFF" />}
                 onPress={() => goToPage('tool_auto_approvals')}
               />
+              {Platform.OS === 'android' && (
+                <SupportItem
+                  title={t('settings.utility.browser_use')}
+                  icon={<Browser size={18} color="#FFF" />}
+                  onPress={() => goToPage('browser_use')}
+                />
+              )}
               <SupportItem
                 title={t('settings.utility.anonymous_telemetry')}
                 icon={<ChartBar size={18} color="#FFF" />}

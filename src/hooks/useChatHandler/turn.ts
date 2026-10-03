@@ -5,6 +5,7 @@ import {
     type IActivityNode,
     type IAgentAction,
     type IAgentToolCall,
+    type IBrowserUseSessionAction,
     type IChatCitation,
     type IThoughtActivity,
     type IToolApprovalActivity,
@@ -15,6 +16,7 @@ import {
 } from "@/database/models/WorkspaceChat";
 import { contentIsNotEmpty, parseJSONResponseType, parseThoughtContent } from "./parser";
 import i18n from "@/i18n";
+import type { BrowserSessionSnapshot } from "@/utils/BrowserUse/agent";
 
 export type ApplyEventResult = {
     /** Something visible changed and the UI should re-render */
@@ -180,6 +182,18 @@ export default class AssistantTurn {
                 if (!data) return { changed: false, immediate: false };
                 this.response.actions = [...(this.response.actions || []), data as IAgentAction];
                 return { changed: true, immediate: false };
+            }
+            case 'report_browser_session': {
+                // One card per browser session, updated in place as the agent works.
+                const snapshot = data as BrowserSessionSnapshot;
+                if (!snapshot?.sessionId) return { changed: false, immediate: false };
+                const actions = this.response.actions || [];
+                const index = actions.findIndex((action) => action.type === 'browser_use_session' && action.action.sessionId === snapshot.sessionId);
+                const action: IBrowserUseSessionAction = { type: 'browser_use_session', action: snapshot };
+                const previous = index === -1 ? null : (actions[index] as IBrowserUseSessionAction).action;
+                this.response.actions = index === -1 ? [...actions, action] : actions.map((item, i) => (i === index ? action : item));
+                // Status changes (needs help, finished) show right away; step/token updates ride the throttle.
+                return { changed: true, immediate: !previous || previous.status !== snapshot.status || previous.question !== snapshot.question };
             }
             case 'report_metrics': {
                 if (data) this.response.metrics = data as WorkspaceChatResponseType['metrics'];

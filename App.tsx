@@ -30,6 +30,7 @@ import { useScheduledJobsTicker } from '@/utils/ScheduledJobs/scheduler';
 import { useSharedContentNavigation } from '@/utils/SharedContent';
 import { useDeepLinkNavigation } from '@/utils/DeepLinks';
 import HighlightsHost from '@/components/Highlights/HighlightsHost';
+import BrowserUseViewerHost from '@/components/BrowserUseViewer';
 import ErrorBoundary, { RootErrorFallback } from '@/components/ErrorBoundary';
 import { hydrateLanguage } from '@/i18n';
 
@@ -209,6 +210,8 @@ const App = observer(() => {
                     </NavigationContainer>
                     {/* Shows what's new once after onboarding and once per update that ships highlights */}
                     <HighlightsHost />
+                    {/* The browser agent's page, full screen, while the user watches or takes over a session */}
+                    <BrowserUseViewerHost />
                   </BottomSheetModalProvider>
                 </LLMPreferenceProvider>
               </PaperProvider>

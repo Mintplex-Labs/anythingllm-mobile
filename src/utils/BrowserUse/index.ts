@@ -1,0 +1,201 @@
+import { useEffect, useState, useSyncExternalStore } from 'react';
+import { AppState } from 'react-native';
+import { generateUUID } from '@/utils/constants';
+import type BrowserAgent from './agent';
+import { BrowserNative, type BrowserCapabilities } from './native';
+import { normalizeUrl } from './session';
+
+/**
+ * In-app hub for the browser agent ("Browser Use"): the live agent sessions, their latest
+ * thumbnails and the full-screen viewer the user watches or takes over a session in.
+ *
+ * The agent itself runs inside the browser_use tool call (see ToolsManager/tools/browserUse); the
+ * chat card and viewer talk to it through here, the way the desktop frontend sends
+ * `browserUseControl` messages over the agent websocket.
+ */
+
+export type ViewerMode = 'watch' | 'takeover' | 'browse';
+export type ViewerState = { sessionId: string; mode: ViewerMode; profileName?: string } | null;
+
+type Listener = () => void;
+
+class BrowserUseManager {
+    private agents = new Map<string, BrowserAgent>();
+    private frames = new Map<string, string>();
+    private viewer: ViewerState = null;
+    private listeners = new Set<Listener>();
+    private version = 0;
+    private capabilities: BrowserCapabilities | null = null;
+    /** Sessions with a "needs your help" notification showing */
+    private helpNotified = new Set<string>();
+
+    constructor() {
+        AppState.addEventListener('change', (state) => {
+            // Back in the app: the session card shows the question, the notification is no longer needed.
+            if (state === 'active') {
+                for (const sessionId of [...this.helpNotified]) this.clearHelp(sessionId);
+                return;
+            }
+            // Locked or switched away with a question still open - remind them before the app is frozen.
+            if (state !== 'background') return;
+            for (const agent of this.agents.values()) {
+                if (agent.isWaitingForUser && agent.question && !this.helpNotified.has(agent.id)) this.notifyHelp(agent.id, agent.question);
+            }
+        });
+    }
+
+    log(text: string, ...args: any[]) {
+        console.log(`\x1b[36m[BrowserUse]\x1b[0m ${text}`, ...args);
+    }
+
+    private changed() {
+        this.version++;
+        for (const listener of this.listeners) {
+            try { listener(); } catch { }
+        }
+    }
+
+    subscribe = (listener: Listener) => {
+        this.listeners.add(listener);
+        return () => { this.listeners.delete(listener); };
+    };
+
+    getVersion = () => this.version;
+
+    async getCapabilities(refresh = false): Promise<BrowserCapabilities> {
+        if (!this.capabilities || refresh) this.capabilities = await BrowserNative.capabilities();
+        return this.capabilities;
+    }
+
+    /////////////////////////////
+    // Agent sessions
+    /////////////////////////////
+
+    register(agent: BrowserAgent) {
+        this.agents.set(agent.id, agent);
+        agent.onFrame = (thumbnail) => {
+            this.frames.set(agent.id, thumbnail);
+            this.changed();
+        };
+        agent.onNeedsHelp = (question) => {
+            this.changed();
+            // The user may have locked the phone or be in another app waiting for the agent - bring them back.
+            if (AppState.currentState !== 'active') this.notifyHelp(agent.id, question);
+        };
+        this.changed();
+    }
+
+    unregister(agent: BrowserAgent) {
+        this.clearHelp(agent.id);
+        this.agents.delete(agent.id);
+        this.frames.delete(agent.id);
+        if (this.viewer?.sessionId === agent.id) this.viewer = null;
+        this.changed();
+    }
+
+    agent(sessionId: string | null | undefined) {
+        return sessionId ? this.agents.get(sessionId) ?? null : null;
+    }
+
+    isLive(sessionId: string) {
+        return this.agents.has(sessionId);
+    }
+
+    frame(sessionId: string) {
+        return this.frames.get(sessionId) ?? null;
+    }
+
+    // PushNotifications is imported lazily: it pulls in the database and navigation, which the tool chain must not.
+    private notifyHelp(sessionId: string, question: string) {
+        this.helpNotified.add(sessionId);
+        import('@/utils/PushNotifications')
+            .then(({ default: notifications }) => notifications.notifyBrowserNeedsHelp(sessionId, question))
+            .catch(() => { });
+    }
+
+    private clearHelp(sessionId: string) {
+        if (!this.helpNotified.delete(sessionId)) return;
+        import('@/utils/PushNotifications')
+            .then(({ default: notifications }) => notifications.clearBrowserNeedsHelp(sessionId))
+            .catch(() => { });
+    }
+
+    stop(sessionId: string) {
+        this.agents.get(sessionId)?.stop('user');
+    }
+
+    /** Answers the agent's question. An empty reply means "I did it, carry on". */
+    reply(sessionId: string, text?: string | null) {
+        const agent = this.agents.get(sessionId);
+        if (!agent) return false;
+        if (this.viewer?.sessionId === sessionId) this.viewer = null;
+        this.clearHelp(sessionId);
+        const answered = agent.reply(text);
+        this.changed();
+        return answered;
+    }
+
+    /////////////////////////////
+    // Viewer
+    /////////////////////////////
+
+    get viewerState(): ViewerState {
+        return this.viewer;
+    }
+
+    /** Watch the agent work, or take over the page when it asked for help. */
+    openViewer(sessionId: string, mode: 'watch' | 'takeover') {
+        const agent = this.agents.get(sessionId);
+        if (!agent?.session) return;
+        if (mode === 'takeover') agent.session.takeOver();
+        this.viewer = { sessionId, mode, profileName: agent.session.profileName };
+        this.changed();
+    }
+
+    closeViewer() {
+        const viewer = this.viewer;
+        if (!viewer) return;
+        this.viewer = null;
+        if (viewer.mode === 'browse') BrowserNative.close(viewer.sessionId).catch(() => { });
+        this.changed();
+    }
+
+    /**
+     * Opens the in-app browser on a profile for the user to use themselves: signing in to a site
+     * before the agent needs it, or picking up where a finished session left off (the cart it
+     * filled, the form it drafted). Agent profiles have their own cookies, so this is the only
+     * browser that sees those sign-ins - Chrome does not. Not an agent session: nothing drives it
+     * and it closes with the viewer. `profile` is a profile id or, for sessions, its name.
+     */
+    async openBrowser({ profileId = null, profileName = null, url }: { profileId?: string | null; profileName?: string | null; url: string }) {
+        const target = normalizeUrl(url);
+        if (!target) throw new Error('invalid_url');
+        if (this.viewer?.mode === 'browse') this.closeViewer();
+        const sessionId = generateUUID();
+        const profile = await BrowserNative.start({ sessionId, profileId, profileName });
+        await BrowserNative.navigate(sessionId, target);
+        this.viewer = { sessionId, mode: 'browse', profileName: profile.profileName };
+        this.changed();
+    }
+}
+
+const BrowserUse = new BrowserUseManager();
+export default BrowserUse;
+
+/** Re-renders whenever a session, frame or the viewer changes */
+export function useBrowserUse() {
+    useSyncExternalStore(BrowserUse.subscribe, BrowserUse.getVersion);
+    return BrowserUse;
+}
+
+export function useBrowserCapabilities() {
+    const [capabilities, setCapabilities] = useState<BrowserCapabilities | null>(null);
+    useEffect(() => {
+        let cancelled = false;
+        BrowserUse.getCapabilities(true)
+            .then((value) => { if (!cancelled) setCapabilities(value); })
+            .catch(() => { if (!cancelled) setCapabilities({ multiProfile: false, documentStartScript: false, available: false }); });
+        return () => { cancelled = true; };
+    }, []);
+    return capabilities;
+}

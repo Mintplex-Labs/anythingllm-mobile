@@ -12,6 +12,7 @@ import ReminderCards from "./ReminderCard";
 import { CalendarEventCards, EmailDraftCards, TextDraftCards } from "./DraftCards";
 import TextResponseContainer from "./TextResponse";
 import ToolApprovalRequest from "./ToolApprovalRequest";
+import BrowserUseSessionCards from "./BrowserUseSessionCard";
 import { focusMessageActions } from "../focusMessageActions";
 import { CARD_ACTION_TYPES } from "./Actions";
 
@@ -34,12 +35,15 @@ export default memo(function AssistantMessage({ chat }: { chat: DynamicChatMessa
     // File download cards and citations wait for the reply to finish so streaming text does not keep pushing them down the page.
     const isCardAction = (type: string) => CARD_ACTION_TYPES.includes(type);
     const hasLinkChips = !!response?.actions?.some(action => !isCardAction(action.type));
-    const hasDeferredChips = !chat.isLoading && (!!response?.citations?.length || !!response?.actions?.some(action => isCardAction(action.type)));
+    // Browser session cards sit above the reply, not below it, so they need no trailing padding.
+    const hasDeferredChips = !chat.isLoading && (!!response?.citations?.length || !!response?.actions?.some(action => isCardAction(action.type) && action.type !== 'browser_use_session'));
     const hasTrailingChips = hasLinkChips || hasDeferredChips;
     return (
         <View className="flex flex-col items-start w-full justify-start" style={{ gap: 11, paddingBottom: hasTrailingChips ? TRAILING_CHIPS_BOTTOM_PADDING : 0 }}>
             <ActivityChain chat={chat} />
             <ToolApprovalRequest chat={chat} />
+            {/* Live while the browser agent works, so it shows mid-turn instead of waiting for the reply */}
+            <BrowserUseSessionCards actions={response?.actions} />
             {/* `type` only lives in memory - a thread reloaded from the database has just the persisted flag */}
             {chat.type === 'error' || response?.error ? (
                 <ErrorContainer message={response?.textResponse} onLongPress={handleLongPress} />

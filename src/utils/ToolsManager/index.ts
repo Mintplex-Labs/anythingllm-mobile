@@ -76,6 +76,11 @@ export type ToolManagerTool = {
      * scheduled job). They are left out of the per-job tool picker and never handed to a job run.
      */
     hiddenFromScheduledJobs?: boolean;
+    /**
+     * Checked every time tools are offered to the model, for tools that only work in some places
+     * (eg: the browser agent needs the main app, not the assistant overlay). Defaults to available.
+     */
+    isAvailable?: () => Promise<boolean>;
     definition: {
         type: 'function';
         function: {
@@ -106,6 +111,11 @@ export type ToolExecutionContext = {
      * consent before slow or costly work proceed as if approved instead of waiting for a tap.
      */
     autoApproveTools?: boolean;
+    /**
+     * The provider running this turn, for tools that run their own model loop with the user's
+     * chat model (the browser agent). Set by cloud providers only.
+     */
+    llm?: { completeWithTools: (messages: any[], tools: any[]) => Promise<ICompleteResponse>; name?: string };
 }
 
 type ToolCallLoopProps = {
@@ -152,6 +162,8 @@ class ToolsManager {
         Tools.default.getCurrentTime,
         Tools.default.summarize,
         Tools.default.createScheduledJob,
+        // Drives a native WebView, which only the Android app has
+        ...(Platform.OS === 'android' ? [Tools.default.browserUse] : []),
         Tools.createFiles.createTextFile,
         Tools.createFiles.createPdfFile,
         Tools.createFiles.createDocxFile,
@@ -229,7 +241,8 @@ class ToolsManager {
         try {
             // If the tools are not loaded, load them. Null is used to indicate that the tools are not loaded.
             if (this._tools === null) this._tools = await this.getTools();
-            return this._tools.map(tool => tool.definition);
+            const available = await Promise.all(this._tools.map(tool => tool.isAvailable ? tool.isAvailable().catch(() => false) : true));
+            return this._tools.filter((_, index) => available[index]).map(tool => tool.definition);
         } catch (error) {
             this.log('ToolsManager::injectAvailableTools: Error getting available tools', error);
             return [];

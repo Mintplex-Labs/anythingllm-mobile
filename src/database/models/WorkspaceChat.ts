@@ -5,6 +5,7 @@ import { Q, Model } from '@nozbe/watermelondb';
 import { generateUUID } from '@/utils/constants';
 import { DynamicChatMessage } from '@/screens/WorkspaceChat/ChatHistory';
 import { ICompleteResponse } from '@/utils/AiProviders/baseOpenAILikeProvider';
+import type { BrowserSessionSnapshot } from '@/utils/BrowserUse/agent';
 
 export type IDocumentCitation = {
   type: 'document';
@@ -256,7 +257,17 @@ export type IEmailDraftAction = {
   }
 }
 
-export type IAgentAction = IEmailAction | IEmailDraftAction | ITextAction | ITextDraftAction |ICalendarEventAction | IFileDownloadAction | IScheduledJobCreatedAction | IReminderAction;
+/**
+ * A browser agent session (see the browser-use tool). Upserted in place while it runs and saved
+ * with the chat in its final state; rendered as a card that is live while the agent runs and links
+ * to the session's step history afterwards. Thumbnails are never stored here - they live in the trace.
+ */
+export type IBrowserUseSessionAction = {
+  type: 'browser_use_session';
+  action: BrowserSessionSnapshot;
+}
+
+export type IAgentAction = IEmailAction | IEmailDraftAction | ITextAction | ITextDraftAction |ICalendarEventAction | IFileDownloadAction | IScheduledJobCreatedAction | IReminderAction | IBrowserUseSessionAction;
 export type WorkspaceChatResponseType = {
   textResponse: string;
   thoughts: string[];

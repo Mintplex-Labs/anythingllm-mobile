@@ -254,6 +254,34 @@ class PushNotifications {
     }
 
     /**
+     * The browser agent stopped to ask the user something (sign in, a verification code, a
+     * decision) while the app was locked or in the background. The session waits on the user, so
+     * this fires whether or not the phone is locked. Tapping brings the app back to the chat, where
+     * the session card has the question. One per session, cleared with `clearBrowserNeedsHelp`.
+     * Never throws.
+     */
+    public async notifyBrowserNeedsHelp(sessionId: string, question: string) {
+        if (!this.notificationsEnabled) return;
+        try {
+            await this.send('chat', {
+                id: browserHelpNotificationId(sessionId),
+                title: i18n.t('notifications.browser_use.needs_help_title'),
+                body: truncatePreview(question) || i18n.t('notifications.browser_use.needs_help_body'),
+                android: {
+                    pressAction: { id: 'default' },
+                },
+            });
+        } catch (error) {
+            this.log('Failed to send browser agent help notification', error);
+        }
+    }
+
+    /** The help request was answered, the session ended, or the user is back in the app. Never throws. */
+    public async clearBrowserNeedsHelp(sessionId: string) {
+        await notifee.cancelNotification(browserHelpNotificationId(sessionId)).catch(() => { });
+    }
+
+    /**
      * Tell the user a scheduled job finished. Unlike chat replies this fires whether or not the
      * phone is locked - the user opted in per job and is not looking at the result anywhere else.
      * Never throws.
@@ -281,6 +309,10 @@ class PushNotifications {
             this.log('Failed to send scheduled job notification', error);
         }
     }
+}
+
+function browserHelpNotificationId(sessionId: string) {
+    return `browser-use-help-${sessionId}`;
 }
 
 /** Drop any reasoning block a model left in its reply so the preview shows the answer. */

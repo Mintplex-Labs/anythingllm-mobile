@@ -16,6 +16,7 @@ import MemoryManager, { type PromptMemories } from "@/utils/Memories";
 import Document from "@/database/models/Document";
 import { estimateTokens, formatDocumentsBlock, type FullContextDocument } from "@/utils/documents/fullContext";
 import i18n from "@/i18n";
+import type { BrowserSessionSnapshot } from "@/utils/BrowserUse/agent";
 
 interface BaseLLMProviderConfig {
   provider: string;
@@ -75,8 +76,10 @@ export type IStreamEvent = 'chunk' |
   /** A tool is asking the user for consent before continuing - renders an approve/reject card (see ToolApprovalManager) */
   'request_tool_approval' |
   /** The approval request settled (user answer, timeout or abort) - collapses the card into the activity chain */
-  'report_tool_approval_result';
-export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[] | IAgentCitation[] | IAgentToolCall | IAgentAction | IToolApprovalRequest | IToolApprovalResult;
+  'report_tool_approval_result' |
+  /** Live state of a browser agent session - upserts its card in the turn (see BrowserUseSessionCard) */
+  'report_browser_session';
+export type IStreamResponse = string | ICompleteResponse['metrics'] | IDocumentCitation[] | IAgentCitation[] | IAgentToolCall | IAgentAction | IToolApprovalRequest | IToolApprovalResult | BrowserSessionSnapshot;
 export type IStreamCallback = (
   event: IStreamEvent,
   response: IStreamResponse
@@ -575,6 +578,18 @@ export default abstract class BaseOpenAILikeProvider {
     return this.getChatCompletion(messages);
   }
 
+  /**
+   * One tool-calling round outside the chat turn, for sub-agents that run their own loop (the
+   * browser agent). Streams under the hood - the non-streaming path rejects a reply that is only a
+   * tool call - but nothing is emitted to the chat. Honours the turn's abort signal.
+   */
+  async completeWithTools(messages: any[], tools: any[] = []): Promise<ICompleteResponse> {
+    const { stream, abortController } = await this.streamGetChatCompletion(messages, tools);
+    const result = await this.handleDefaultStreamResponse(stream, () => { }, abortController);
+    throwIfAborted(this.abortSignal);
+    return result;
+  }
+
   async chat({
     messages,
     streaming = false,
@@ -640,7 +655,7 @@ export default abstract class BaseOpenAILikeProvider {
       mergeToolCallResults: false,
       signal: this.abortSignal,
       toolset,
-      executionContext: { autoApproveTools },
+      executionContext: { autoApproveTools, llm: this },
       maxToolCalls: Workspace.maxToolCallsFor(this.workspace, 'cloud'),
     });
 

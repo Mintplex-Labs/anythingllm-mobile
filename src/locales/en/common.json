@@ -126,6 +126,7 @@
       "title": "Utility",
       "anonymous_telemetry": "Anonymous telemetry",
       "tool_auto_approvals": "Tool auto-approvals",
+      "browser_use": "Browser use",
       "clear_temp_files": "Clear temporary files",
       "temp_files_cleared": "Temporary files cleared"
     },
@@ -137,6 +138,50 @@
       "remove": "Remove",
       "remove_label": "Stop auto-approving {{tool}}",
       "removed_toast": "{{tool}} will ask for approval again"
+    },
+    "browser_use": {
+      "title": "Browser use",
+      "description": "The browser agent browses in its own profiles, separate from your other apps. Sign in to sites here so it can use your accounts, see which sites keep cookies, and review every session it ran.",
+      "unsupported": "The browser agent is only available on Android.",
+      "profiles": "Profiles",
+      "new_profile": "New profile",
+      "new_profile_placeholder": "Profile name, eg. Work",
+      "create": "Create",
+      "default_profile": "Default",
+      "site_count_one": "{{count}} site",
+      "site_count_other": "{{count}} sites",
+      "single_profile_note": "This phone's WebView supports one browser profile. Update Android System WebView to add more.",
+      "history": "Session history",
+      "clear_history": "Clear",
+      "clear_history_title": "Clear session history?",
+      "clear_history_message": "Every recorded browser session and its screenshots will be deleted. Sign-ins are kept.",
+      "clear_history_confirm": "Clear history",
+      "history_empty_title": "No sessions yet",
+      "history_empty_description": "Turn on Browser Use in the chat tools and ask for something that needs a browser.",
+      "sign_in": "Sign in to a site",
+      "sign_in_description": "Open a site in this profile and sign in. The browser agent can then use that account without stopping to ask.",
+      "sign_in_placeholder": "eg. x.com",
+      "open": "Open",
+      "invalid_url": "That is not a valid web address.",
+      "sites": "Sites with cookies",
+      "sites_empty": "No sites yet. Sites show up here once this profile has visited them.",
+      "cookie_count_one": "{{count}} cookie",
+      "cookie_count_other": "{{count}} cookies",
+      "last_visited": "visited {{when}}",
+      "forget": "Forget",
+      "forget_label": "Forget {{site}}",
+      "forget_title": "Forget {{site}}?",
+      "forget_message": "This signs the profile out of the site and deletes what it stored. A few cookies can survive - clear the whole profile to remove everything.",
+      "manage": "Manage",
+      "in_use": "A browser session is using this profile right now.",
+      "clear": "Clear all data",
+      "clear_description": "Sign out of every site and delete cookies, storage and cache",
+      "clear_title": "Clear {{name}}?",
+      "clear_message": "This signs the profile out of every site and deletes all cookies, site storage and cached pages.",
+      "cleared_toast": "{{name}} was cleared",
+      "delete": "Delete profile",
+      "delete_title": "Delete {{name}}?",
+      "delete_message": "The profile and everything it stored will be deleted."
     },
     "legal": {
       "title": "Legal & Privacy",
@@ -743,8 +788,90 @@
       "status_reviewing_one": "Reviewing {{count}} search result",
       "status_reviewing_other": "Reviewing {{count}} search results"
     },
+    "browser_use": {
+      "name": "Browser Use",
+      "description": "Let the assistant use a real browser on your phone - signed in to your accounts - to click, scroll and fill in forms. Needs a cloud model.",
+      "status_starting": "Starting the browser agent"
+    },
     "approval": {
       "auto_approved_status": "Approved {{tool}} automatically"
+    }
+  },
+  "browser_use": {
+    "notification": {
+      "title": "Browser agent is working",
+      "needs_help_title": "Browser agent needs your help"
+    },
+    "status": {
+      "running": "Working",
+      "needs_help": "Needs your help",
+      "done": "Finished",
+      "incomplete": "Could not finish",
+      "failed": "Failed",
+      "stopped": "Stopped",
+      "interrupted": "Interrupted"
+    },
+    "card": {
+      "title": "Browser agent",
+      "starting": "Opening the browser",
+      "watch": "Watch",
+      "stop": "Stop",
+      "needs_help": "The agent needs your help",
+      "open_browser": "Open browser",
+      "reply_placeholder": "Reply to the agent",
+      "continue": "Continue",
+      "view_steps": "View steps",
+      "open_in_browser": "Open in browser",
+      "sites": "Visited {{sites}}"
+    },
+    "viewer": {
+      "close": "Close browser",
+      "reload": "Reload",
+      "back": "Back",
+      "forward": "Forward",
+      "address_placeholder": "Search or type a web address",
+      "watch_hint": "The agent is using this browser.",
+      "takeover_hint": "You're in control. Tap Done when you're finished.",
+      "done_continue": "Done",
+      "done": "Done",
+      "crashed": "The page crashed because the phone ran low on memory."
+    },
+    "trace": {
+      "title": "Session steps",
+      "missing": "This session's history is no longer on this phone.",
+      "profile": "Profile: {{name}}",
+      "steps_one": "{{count}} step",
+      "steps_other": "{{count}} steps",
+      "tokens": "{{count}}k tokens"
+    },
+    "blockers": {
+      "login": "{{site}} is asking you to sign in. Tap \"Open browser\", sign in, then tap Done - or reply with how you would like me to proceed.",
+      "captcha": "{{site}} wants to check that you are human. Tap \"Open browser\", complete the check, then tap Done.",
+      "verification": "{{site}} is asking for a verification code. Enter it in the browser (\"Open browser\") or reply with the code, then continue."
+    },
+    "steps": {
+      "opening": "Opening {{site}}",
+      "clicking": "Clicking {{target}}",
+      "clicking_page": "Clicking on the page",
+      "typing": "Typing {{text}}",
+      "typing_into": "Typing {{text}} into {{target}}",
+      "entering_password": "Entering a password",
+      "entering_password_into": "Entering a password into {{target}}",
+      "choosing": "Choosing {{option}}",
+      "pressing": "Pressing {{key}}",
+      "scrolling_down": "Scrolling down",
+      "scrolling_up": "Scrolling up",
+      "going_back": "Going back",
+      "reading": "Reading the page",
+      "screenshot": "Double-checking the screen",
+      "waiting": "Waiting for the page",
+      "asking": "Asking you for help",
+      "checkpoint_finish": "Checking progress - it has what it needs",
+      "checkpoint_back": "Checking progress - going back to {{title}}",
+      "checkpoint_give_up": "Checking progress - no way forward",
+      "checkpoint_on_track": "Checking progress - on track",
+      "finished": "Finished",
+      "using": "Using {{tool}}"
     }
   },
   "top_bar": {
@@ -1428,6 +1555,14 @@
     "scheduled_job": {
       "finished_title": "{{name}} finished",
       "fallback_body": "Your scheduled job has a result for you."
+    },
+    "browser_use": {
+      "needs_help_title": "Your browser agent needs help",
+      "needs_help_body": "Open AnythingLLM to continue the browser session."
+    },
+    "background_work": {
+      "channel": "Background work",
+      "more_tasks": "+%d more"
     }
   },
   "home": {

@@ -126,6 +126,7 @@
       "title": "Utilidade",
       "anonymous_telemetry": "Telemetria anônima",
       "tool_auto_approvals": "Aprovações automáticas de ferramentas",
+      "browser_use": null,
       "clear_temp_files": "Limpar arquivos temporários",
       "temp_files_cleared": "Arquivos temporários limpos"
     },
@@ -137,6 +138,52 @@
       "remove": "Remover",
       "remove_label": "Parar de aprovar {{tool}} automaticamente",
       "removed_toast": "{{tool}} pedirá aprovação novamente"
+    },
+    "browser_use": {
+      "title": null,
+      "description": null,
+      "unsupported": null,
+      "profiles": null,
+      "new_profile": null,
+      "new_profile_placeholder": null,
+      "create": null,
+      "default_profile": null,
+      "site_count_many": null,
+      "site_count_one": null,
+      "site_count_other": null,
+      "single_profile_note": null,
+      "history": null,
+      "clear_history": null,
+      "clear_history_title": null,
+      "clear_history_message": null,
+      "clear_history_confirm": null,
+      "history_empty_title": null,
+      "history_empty_description": null,
+      "sign_in": null,
+      "sign_in_description": null,
+      "sign_in_placeholder": null,
+      "open": null,
+      "invalid_url": null,
+      "sites": null,
+      "sites_empty": null,
+      "cookie_count_many": null,
+      "cookie_count_one": null,
+      "cookie_count_other": null,
+      "last_visited": null,
+      "forget": null,
+      "forget_label": null,
+      "forget_title": null,
+      "forget_message": null,
+      "manage": null,
+      "in_use": null,
+      "clear": null,
+      "clear_description": null,
+      "clear_title": null,
+      "clear_message": null,
+      "cleared_toast": null,
+      "delete": null,
+      "delete_title": null,
+      "delete_message": null
     },
     "legal": {
       "title": "Legal e Privacidade",
@@ -774,8 +821,91 @@
       "status_reviewing_one": "Revisando {{count}} resultado de pesquisa",
       "status_reviewing_other": "Revisando {{count}} resultados de pesquisa"
     },
+    "browser_use": {
+      "name": null,
+      "description": null,
+      "status_starting": null
+    },
     "approval": {
       "auto_approved_status": "Aprovado {{tool}} automaticamente"
+    }
+  },
+  "browser_use": {
+    "notification": {
+      "title": null,
+      "needs_help_title": null
+    },
+    "status": {
+      "running": null,
+      "needs_help": null,
+      "done": null,
+      "incomplete": null,
+      "failed": null,
+      "stopped": null,
+      "interrupted": null
+    },
+    "card": {
+      "title": null,
+      "starting": null,
+      "watch": null,
+      "stop": null,
+      "needs_help": null,
+      "open_browser": null,
+      "reply_placeholder": null,
+      "continue": null,
+      "view_steps": null,
+      "open_in_browser": null,
+      "sites": null
+    },
+    "viewer": {
+      "close": null,
+      "reload": null,
+      "back": null,
+      "forward": null,
+      "address_placeholder": null,
+      "watch_hint": null,
+      "takeover_hint": null,
+      "done_continue": null,
+      "done": null,
+      "crashed": null
+    },
+    "trace": {
+      "title": null,
+      "missing": null,
+      "profile": null,
+      "steps_many": null,
+      "steps_one": null,
+      "steps_other": null,
+      "tokens": null
+    },
+    "blockers": {
+      "login": null,
+      "captcha": null,
+      "verification": null
+    },
+    "steps": {
+      "opening": null,
+      "clicking": null,
+      "clicking_page": null,
+      "typing": null,
+      "typing_into": null,
+      "entering_password": null,
+      "entering_password_into": null,
+      "choosing": null,
+      "pressing": null,
+      "scrolling_down": null,
+      "scrolling_up": null,
+      "going_back": null,
+      "reading": null,
+      "screenshot": null,
+      "waiting": null,
+      "asking": null,
+      "checkpoint_finish": null,
+      "checkpoint_back": null,
+      "checkpoint_give_up": null,
+      "checkpoint_on_track": null,
+      "finished": null,
+      "using": null
     }
   },
   "top_bar": {
@@ -1474,6 +1604,14 @@
     "scheduled_job": {
       "finished_title": "{{name}} concluído",
       "fallback_body": "Seu trabalho agendado tem um resultado para você."
+    },
+    "browser_use": {
+      "needs_help_title": null,
+      "needs_help_body": null
+    },
+    "background_work": {
+      "channel": null,
+      "more_tasks": null
     }
   },
   "home": {

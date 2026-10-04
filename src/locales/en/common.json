@@ -822,7 +822,8 @@
       "continue": "Continue",
       "view_steps": "View steps",
       "open_in_browser": "Open in browser",
-      "sites": "Visited {{sites}}"
+      "sites": "Visited {{sites}}",
+      "continued": "Continued from the last session"
     },
     "viewer": {
       "close": "Close browser",
@@ -870,6 +871,7 @@
       "checkpoint_back": "Checking progress - going back to {{title}}",
       "checkpoint_give_up": "Checking progress - no way forward",
       "checkpoint_on_track": "Checking progress - on track",
+      "resuming": "Picking up where the last session left off",
       "finished": "Finished",
       "using": "Using {{tool}}"
     }

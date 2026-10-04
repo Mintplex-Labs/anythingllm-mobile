@@ -6,6 +6,7 @@ jest.mock('@/utils/constants', () => {
 jest.mock('../traces', () => ({
     __esModule: true,
     default: { save: jest.fn(async () => { }), prune: jest.fn(async () => { }) },
+    resumeUrlOf: (trace: any) => trace.userPage?.url || trace.steps.filter((s: any) => s.url).at(-1)?.url || null,
     sitesOf: (steps: any[] = []) => [...new Set(steps.filter((s) => s.url).map((s) => new URL(s.url).host))].map((host) => ({ host, favicon: null })),
 }));
 
@@ -196,6 +197,94 @@ describe('BrowserAgent', () => {
         expect(mockSession.run).toHaveBeenCalledTimes(1);
         const toolResult = llm.requests[1].messages.find((m: any) => m.role === 'tool');
         expect(toolResult.content).toContain('probably made up');
+    });
+});
+
+describe('BrowserAgent continuing a session', () => {
+    const earlier = {
+        id: '11111111-1111-4111-8111-111111111111',
+        task: 'Add the blue widget to my cart on shop.example.com',
+        profile: 'Work',
+        profileId: 'work',
+        status: 'done' as const,
+        summary: 'Added the blue widget ($19.99) to the cart.',
+        notes: ['Blue widget is item 8812345'],
+        workspace: null,
+        model: null,
+        tokens: { prompt: 0, completion: 0, total: 0 },
+        startedAt: '2026-10-03T10:00:00.000Z',
+        endedAt: '2026-10-03T10:01:00.000Z',
+        steps: [
+            { at: '', action: 'navigate', label: 'Opening shop.example.com', ok: true, url: 'https://shop.example.com/', title: 'Shop', favicon: null, thumbnail: null, sent: null },
+            { at: '', action: 'click', label: 'Clicking Add to cart', ok: true, url: 'https://shop.example.com/product/8812345', title: 'Blue widget', favicon: null, thumbnail: null, sent: null },
+        ],
+    };
+
+    test('reopens the earlier profile on the page it ended on, knowing what the earlier task did', async () => {
+        const { default: BrowserSession } = jest.requireMock('../session');
+        BrowserSession.create.mockClear();
+        mockSession.close.mockClear();
+        mockSession.run.mockImplementation(async (tool: string) => {
+            if (tool === 'navigate') return page('https://shop.example.com/product/8812345', '[1] button "Remove"\n[T1] Blue widget\n[T2] In your cart');
+            throw new Error(`unexpected ${tool}`);
+        });
+        const llm = scriptedLLM([
+            call('done', { success: true, result: 'It is in the cart.' }),
+            text('COMPLETE\n\nThe blue widget is in your cart.'),
+        ]);
+        const { agent, updates } = makeAgent(llm, { task: 'Is it still in my cart?', startUrl: null, resume: { from: earlier } });
+
+        await agent.run();
+
+        expect(BrowserSession.create).toHaveBeenCalledWith(expect.objectContaining({ profileId: 'work', profile: 'Work' }));
+        expect(mockSession.run).toHaveBeenCalledWith('navigate', { url: 'https://shop.example.com/product/8812345' });
+        const intro = llm.requests[0].messages[1].content;
+        expect(intro).toContain('the browser was reopened on the page it ended on');
+        expect(intro).toContain('Add the blue widget to my cart');
+        expect(intro).toContain('Added the blue widget ($19.99) to the cart.');
+        expect(intro).toContain('Blue widget is item 8812345');
+        expect(intro).toContain('In your cart');
+        expect(updates.find((u) => u.step)?.step.label).toBe('browser_use.steps.resuming');
+        expect(updates.at(-1)).toMatchObject({ continuedFrom: earlier.id });
+        // No WebView outlives its session.
+        expect(mockSession.close).toHaveBeenCalled();
+    });
+
+    test('starts where the user left the browser after the last task, and says so', async () => {
+        mockSession.run.mockImplementation(async (tool: string, args: any) => {
+            if (tool === 'navigate') return page(args.url, '[1] button "Place your order"\n[T1] Checkout');
+            throw new Error(`unexpected ${tool}`);
+        });
+        const llm = scriptedLLM([
+            call('done', { success: true, result: 'On checkout.' }),
+            text('COMPLETE\n\nYou are on the checkout page.'),
+        ]);
+        const userPage = { url: 'https://shop.example.com/checkout', title: 'Checkout', at: '2026-10-03T10:05:00.000Z' };
+        const { agent } = makeAgent(llm, { task: 'Use my work address', startUrl: null, resume: { from: { ...earlier, userPage } } });
+
+        await agent.run();
+
+        expect(mockSession.run).toHaveBeenNthCalledWith(1, 'navigate', { url: 'https://shop.example.com/checkout' });
+        const intro = llm.requests[0].messages[1].content;
+        expect(intro).toContain('reopened where the user left it after the last task: "Checkout" (https://shop.example.com/checkout)');
+    });
+
+    test('a start URL wins over the earlier last page, and earlier pages are not "made up"', async () => {
+        mockSession.run.mockImplementation(async (tool: string, args: any) => {
+            if (tool === 'navigate') return page(args.url, '[T1] Cart');
+            throw new Error(`unexpected ${tool}`);
+        });
+        const llm = scriptedLLM([
+            call('navigate', { url: 'https://shop.example.com/product/8812345' }),
+            call('done', { success: true, result: 'Back on the product.' }),
+            text('COMPLETE\n\nBack on the product.'),
+        ]);
+        const { agent } = makeAgent(llm, { task: 'Open my cart, then the widget again', startUrl: 'https://shop.example.com/cart', resume: { from: earlier } });
+
+        await agent.run();
+
+        expect(mockSession.run).toHaveBeenNthCalledWith(1, 'navigate', { url: 'https://shop.example.com/cart' });
+        expect(mockSession.run).toHaveBeenNthCalledWith(2, 'navigate', { url: 'https://shop.example.com/product/8812345' });
     });
 });
 

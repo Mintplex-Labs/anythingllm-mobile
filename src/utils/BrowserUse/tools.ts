@@ -225,6 +225,8 @@ export function stepLabel(tool: string, args: Record<string, any> = {}, result: 
             if (args.verdict === 'BACK') return t('checkpoint_back', { title: `“${clip(args.title, 40)}”` });
             if (args.verdict === 'GIVE_UP') return t('checkpoint_give_up');
             return t('checkpoint_on_track');
+        case 'resume':
+            return t('resuming');
         case 'done':
             return t('finished');
         default:

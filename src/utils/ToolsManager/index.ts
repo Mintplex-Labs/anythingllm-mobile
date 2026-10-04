@@ -2,6 +2,7 @@ import uiStore from "@/store/UIStore";
 import { NativeCompletionResult } from "llama.rn";
 import { generateUUID } from "../constants";
 import { ICompleteResponse, IStreamCallback, IStreamEvent } from "../AiProviders/baseOpenAILikeProvider";
+import { type IAgentAction } from "@/database/models/WorkspaceChat";
 import Tools from './tools';
 import ToolReranker from './toolReranker';
 import { safeJsonParse } from "../formatters";
@@ -116,6 +117,11 @@ export type ToolExecutionContext = {
      * chat model (the browser agent). Set by cloud providers only.
      */
     llm?: { completeWithTools: (messages: any[], tools: any[]) => Promise<ICompleteResponse>; name?: string };
+    /**
+     * The chat this turn belongs to, oldest first - its saved responses, for tools that pick up
+     * something an earlier turn started (the browser agent continuing its last session).
+     */
+    history?: Array<{ response?: { actions?: IAgentAction[] } | null }>;
 }
 
 type ToolCallLoopProps = {

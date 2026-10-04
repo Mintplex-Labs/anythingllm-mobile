@@ -30,10 +30,28 @@ export type BrowserTraceStep = {
     sent: Array<{ label: string; method: string; status: number | null; ok: boolean | null }> | null;
 };
 
+/** A finished task of the same browser session, carried into the session that continues it */
+export type BrowserEarlierTask = {
+    id: string;
+    task: string;
+    status: BrowserTraceStatus;
+    summary: string | null;
+};
+
 export type BrowserTrace = {
     id: string;
     task: string;
     profile: string;
+    /** Missing on traces saved before sessions could be continued - fall back to `profile` (its name) */
+    profileId?: string | null;
+    /** The session this one picked up from (same browser, same tab) */
+    continuedFrom?: string | null;
+    /** The tasks this browser already did before this one, oldest first */
+    earlier?: BrowserEarlierTask[];
+    /** Facts the agent noted, kept for a session that continues this one */
+    notes?: string[];
+    /** Where the user left the browser after the session ended ("Open in browser") - a follow-up starts there */
+    userPage?: { url: string; title: string | null; at: string } | null;
     status: BrowserTraceStatus;
     summary: string | null;
     gaveUp?: string;
@@ -65,6 +83,16 @@ async function writeAtomically(path: string, contents: string) {
 function fileFor(id: string) {
     if (!UUID.test(String(id))) return null;
     return `${TRACES_FOLDER_PATH}/${id}.json`;
+}
+
+/** The page a session's agent ended on. */
+export function lastUrlOf(trace: Pick<BrowserTrace, 'steps'>) {
+    return trace.steps.filter((step) => step.url && /^https?:/i.test(step.url)).at(-1)?.url ?? null;
+}
+
+/** Where a follow-up picks up: where the user left the browser after the session, else where the agent ended. */
+export function resumeUrlOf(trace: Pick<BrowserTrace, 'steps' | 'userPage'>) {
+    return trace.userPage?.url || lastUrlOf(trace);
 }
 
 /** Distinct sites a session visited, in visit order. */
@@ -106,6 +134,14 @@ const BrowserTraces = {
         writeQueue.set(trace.id, next);
         await next;
         if (writeQueue.get(trace.id) === next) writeQueue.delete(trace.id);
+    },
+
+    /** Records where the user left the browser after looking at a finished session. */
+    async setUserPage(id: string, page: { url: string; title: string | null }) {
+        const trace = await this.get(id);
+        if (!trace?.endedAt) return;
+        trace.userPage = { url: page.url, title: page.title || null, at: new Date().toISOString() };
+        await this.save(trace);
     },
 
     async get(id: string): Promise<BrowserTrace | null> {

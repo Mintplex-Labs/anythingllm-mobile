@@ -888,7 +888,8 @@
       "continue": null,
       "view_steps": null,
       "open_in_browser": null,
-      "sites": null
+      "sites": null,
+      "continued": null
     },
     "viewer": {
       "close": null,
@@ -938,6 +939,7 @@
       "checkpoint_back": null,
       "checkpoint_give_up": null,
       "checkpoint_on_track": null,
+      "resuming": null,
       "finished": null,
       "using": null
     }

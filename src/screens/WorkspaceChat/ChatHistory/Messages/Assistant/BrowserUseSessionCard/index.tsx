@@ -1,6 +1,6 @@
 import { memo, useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { ArrowSquareOut, Browser, Eye, HandPointing, ListBullets, Stop } from "phosphor-react-native";
+import { ArrowBendDownRight, ArrowSquareOut, Browser, Eye, HandPointing, ListBullets, Stop } from "phosphor-react-native";
 import { useTranslation } from "react-i18next";
 import { type IAgentAction, type IBrowserUseSessionAction } from "@/database/models/WorkspaceChat";
 import { useBrowserUse } from "@/utils/BrowserUse";
@@ -16,8 +16,9 @@ import { showToast } from "@/utils/Notification";
  * the agent asks for help (sign in, a captcha, a verification code, a decision) it shows the
  * question with "Open browser" to take over the page and a reply box. Once the session ends the
  * card collapses to its outcome with a link to the step history and "Open in browser", which opens
- * the in-app browser on the session's profile at its last page - the only browser that has the
- * session's sign-ins, so a cart the agent filled can be checked out there. The snapshot is saved with the
+ * the in-app browser on the session's profile at its last page (or where the user last left it) -
+ * the only browser that has the session's sign-ins, so a cart the agent filled can be checked out
+ * there. A follow-up in the chat continues from where the user left it (see continue_session). The snapshot is saved with the
  * chat; whether the session is still live comes from the BrowserUse hub, so a chat reopened after
  * the app restarted shows a stale running session as interrupted.
  */
@@ -62,7 +63,7 @@ function BrowserUseSessionCard({ snapshot }: { snapshot: BrowserSessionSnapshot 
 
     const openInBrowser = () => {
         if (!lastUrl) return;
-        hub.openBrowser({ profileName: snapshot.profile, url: lastUrl })
+        hub.openBrowser({ profileName: snapshot.profile, url: lastUrl, fromSession: snapshot.sessionId })
             .catch((error) => showToast((error as Error)?.message || t('chat.errors.processing')));
     };
 
@@ -86,6 +87,12 @@ function BrowserUseSessionCard({ snapshot }: { snapshot: BrowserSessionSnapshot 
             </View>
 
             <Text numberOfLines={live ? 2 : 3} style={{ color: COLORS.muted, lineHeight: 20 }} className="text-sm">{snapshot.task}</Text>
+            {!!snapshot.continuedFrom && (
+                <View className="flex flex-row items-center" style={{ gap: 6, marginTop: -6 }}>
+                    <ArrowBendDownRight size={14} color={COLORS.muted} />
+                    <Text numberOfLines={1} style={{ color: COLORS.muted }} className="text-xs">{t('browser_use.card.continued')}</Text>
+                </View>
+            )}
 
             {live && !needsHelp && (
                 <TouchableOpacity

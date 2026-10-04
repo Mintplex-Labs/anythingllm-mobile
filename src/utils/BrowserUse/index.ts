@@ -4,6 +4,7 @@ import { generateUUID } from '@/utils/constants';
 import type BrowserAgent from './agent';
 import { BrowserNative, type BrowserCapabilities } from './native';
 import { normalizeUrl } from './session';
+import BrowserTraces from './traces';
 
 /**
  * In-app hub for the browser agent ("Browser Use"): the live agent sessions, their latest
@@ -15,7 +16,13 @@ import { normalizeUrl } from './session';
  */
 
 export type ViewerMode = 'watch' | 'takeover' | 'browse';
-export type ViewerState = { sessionId: string; mode: ViewerMode; profileName?: string } | null;
+export type ViewerState = {
+    sessionId: string;
+    mode: ViewerMode;
+    profileName?: string;
+    /** Browse opened from a finished session's card - where the user leaves it is saved for a follow-up */
+    fromSession?: string;
+} | null;
 
 type Listener = () => void;
 
@@ -156,7 +163,7 @@ class BrowserUseManager {
         const viewer = this.viewer;
         if (!viewer) return;
         this.viewer = null;
-        if (viewer.mode === 'browse') BrowserNative.close(viewer.sessionId).catch(() => { });
+        if (viewer.mode === 'browse') this.closeBrowse(viewer);
         this.changed();
     }
 
@@ -167,15 +174,34 @@ class BrowserUseManager {
      * browser that sees those sign-ins - Chrome does not. Not an agent session: nothing drives it
      * and it closes with the viewer. `profile` is a profile id or, for sessions, its name.
      */
-    async openBrowser({ profileId = null, profileName = null, url }: { profileId?: string | null; profileName?: string | null; url: string }) {
-        const target = normalizeUrl(url);
+    async openBrowser({ profileId = null, profileName = null, url, fromSession }: { profileId?: string | null; profileName?: string | null; url: string; fromSession?: string }) {
+        // A finished session opens where the user last left it, if they already looked at it.
+        const left = fromSession ? (await BrowserTraces.get(fromSession).catch(() => null))?.userPage?.url : null;
+        const target = normalizeUrl(left || url);
         if (!target) throw new Error('invalid_url');
         if (this.viewer?.mode === 'browse') this.closeViewer();
         const sessionId = generateUUID();
         const profile = await BrowserNative.start({ sessionId, profileId, profileName });
         await BrowserNative.navigate(sessionId, target);
-        this.viewer = { sessionId, mode: 'browse', profileName: profile.profileName };
+        this.viewer = { sessionId, mode: 'browse', profileName: profile.profileName, fromSession };
         this.changed();
+    }
+
+    /**
+     * Closes a browse viewer's WebView. Opened from a finished session, the page the user leaves
+     * it on is saved with that session first: a follow-up in the chat ("check out", "use the other
+     * size") is usually about what they were just looking at, so it starts there.
+     */
+    private async closeBrowse(viewer: NonNullable<ViewerState>) {
+        try {
+            if (viewer.fromSession) {
+                const status = await BrowserNative.status(viewer.sessionId).catch(() => null);
+                if (status?.url && /^https?:/i.test(status.url) && !status.crashed)
+                    await BrowserTraces.setUserPage(viewer.fromSession, { url: status.url, title: status.title });
+            }
+        } finally {
+            await BrowserNative.close(viewer.sessionId).catch(() => { });
+        }
     }
 }
 

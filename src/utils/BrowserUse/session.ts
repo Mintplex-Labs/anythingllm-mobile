@@ -83,9 +83,10 @@ export default class BrowserSession {
         this.maxChars = maxChars;
     }
 
-    static async create({ id, profile, maxChars = 8000 }: { id: string; profile: string | null; maxChars?: number }) {
-        const { profileId, profileName } = await BrowserNative.start({ sessionId: id, profileName: profile });
-        return new BrowserSession(id, profileId, profileName, maxChars);
+    /** `profileId` wins over `profile` (a name) when both are given */
+    static async create({ id, profileId = null, profile, maxChars = 8000 }: { id: string; profileId?: string | null; profile: string | null; maxChars?: number }) {
+        const started = await BrowserNative.start({ sessionId: id, profileId, profileName: profile });
+        return new BrowserSession(id, started.profileId, started.profileName, maxChars);
     }
 
     /** The user opened the WebView to drive it themselves (sign in, solve a captcha...). */

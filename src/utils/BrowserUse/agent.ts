@@ -5,7 +5,7 @@ import { safeJsonParse } from '@/utils/formatters';
 import { type ICompleteResponse } from '@/utils/AiProviders/baseOpenAILikeProvider';
 import i18n from '@/i18n';
 import BrowserSession, { type ActionResult, type Blocker } from './session';
-import BrowserTraces, { sitesOf, type BrowserTrace, type BrowserTraceStatus } from './traces';
+import BrowserTraces, { resumeUrlOf, sitesOf, type BrowserEarlierTask, type BrowserTrace, type BrowserTraceStatus } from './traces';
 import {
     BROWSER_TOOLS,
     BROWSER_TOOL_NAMES,
@@ -82,6 +82,8 @@ const MAX_DONE_CHECKS = 2;
 const MAX_SCREENSHOTS = 3;
 // Trace writes carry every thumbnail - batch them instead of writing after every step.
 const TRACE_SAVE_INTERVAL_MS = 3_000;
+// Continuing a session: how many earlier tasks of the same browser the agent is told about.
+const MAX_EARLIER_TASKS = 3;
 
 /** How a resolved blocker is described in the agent's progress notes after a context reset. */
 const BLOCKER_RESOLVED: Record<Blocker['kind'], string> = {
@@ -125,8 +127,20 @@ export type BrowserSessionSnapshot = {
     step: { label: string; ok: boolean; url: string | null; title: string | null; favicon: string | null } | null;
     recentSteps: Array<{ label: string; ok: boolean; favicon: string | null; url: string | null }>;
     sites: Array<{ host: string; favicon: string | null }>;
+    /** The session this one picked up from (missing on sessions saved before this existed) */
+    continuedFrom?: string | null;
     startedAt: string;
     endedAt: string | null;
+};
+
+/**
+ * Picking up where an earlier session of the same chat left off. Only its trace is needed - the
+ * profile keeps the cookies and storage, so reopening its last page brings back the sign-ins and
+ * cart (single-page app state that lives only in the tab is lost).
+ */
+export type BrowserAgentResume = {
+    /** The earlier session's trace - its profile, last page and results */
+    from: BrowserTrace;
 };
 
 export default class BrowserAgent {
@@ -186,8 +200,11 @@ export default class BrowserAgent {
     private functions: BrowserToolSchema[];
     private trace: BrowserTrace;
     private traceSaveTimer: ReturnType<typeof setTimeout> | null = null;
+    private resume: BrowserAgentResume | null;
+    /** What this browser already did in earlier sessions of the chat, oldest first */
+    private earlier: Array<BrowserEarlierTask & { notes?: string[]; userPage?: BrowserTrace['userPage'] }>;
 
-    constructor({ llm, task, profile, startUrl, workspace, model, contextLimit, vision, onUpdate }: {
+    constructor({ llm, task, profile, startUrl, workspace, model, contextLimit, vision, onUpdate, resume = null }: {
         llm: BrowserAgentLLM;
         task: string;
         profile: string | null;
@@ -199,13 +216,25 @@ export default class BrowserAgent {
         /** The model takes image input (screenshots are offered and disabled on the first image error) */
         vision: boolean;
         onUpdate: (snapshot: BrowserSessionSnapshot) => void;
+        /** Continue an earlier session instead of starting on a blank page */
+        resume?: BrowserAgentResume | null;
     }) {
         this.llm = llm;
         this.task = task;
         this.startUrl = startUrl || null;
         this.onUpdate = onUpdate;
+        this.resume = resume;
         this.taskTerms = taskTerms(task);
-        this.seenIds = new Set(`${task} ${startUrl || ''}`.match(ID_TOKEN) || []);
+        const from = resume?.from;
+        this.earlier = from
+            ? [
+                ...(from.earlier || []),
+                { id: from.id, task: from.task, status: from.status, summary: from.summary, notes: from.notes, userPage: from.userPage },
+            ].slice(-MAX_EARLIER_TASKS)
+            : [];
+        // Pages of the earlier session are fair game - going back to a product it opened is not a made-up URL.
+        const earlierText = from ? `${from.summary || ''} ${from.steps.map((s) => s.url || '').join(' ')} ${from.userPage?.url || ''}` : '';
+        this.seenIds = new Set(`${task} ${startUrl || ''} ${earlierText}`.match(ID_TOKEN) || []);
         this.stopped = new Promise((resolve) => (this.resolveStopped = resolve));
         this.contextLimit = contextLimit || 8_000;
         // ~15% of the context window per page state (4 chars/token), bounded for tiny and huge windows.
@@ -217,7 +246,13 @@ export default class BrowserAgent {
         this.trace = {
             id: this.id,
             task,
-            profile: profile || 'Default',
+            // A continued session stays on the earlier session's profile.
+            profile: from?.profile || profile || 'Default',
+            profileId: from?.profileId ?? null,
+            continuedFrom: from?.id ?? null,
+            // Stored without notes - the newest task's notes travel in its own trace.
+            earlier: this.earlier.map(({ id, task: earlierTask, status, summary }) => ({ id, task: earlierTask, status, summary: summary ? clip(summary, 1_500) : null })),
+            notes: [],
             status: 'running',
             summary: null,
             workspace,
@@ -276,21 +311,31 @@ export default class BrowserAgent {
         return !!this.pendingReply;
     }
 
+    /**
+     * Opens the browser. Continuing an earlier session opens its profile again - its cookies and
+     * storage carry the sign-ins and cart - on the page it ended on.
+     */
     async #startBrowser() {
         this.session = await BrowserSession.create({
             id: this.id,
+            profileId: this.trace.profileId,
             profile: this.trace.profile,
             maxChars: this.maxChars,
         });
         this.trace.profile = this.session.profileName;
+        this.trace.profileId = this.session.profileId;
         if (this.stopReason) return;
+
+        // Continuing without a start URL picks up where the earlier session ended.
+        const reopen = this.resume && !this.startUrl ? resumeUrlOf(this.resume.from) : null;
+        const url = this.startUrl || reopen;
         let result: ActionResult | null = null;
-        if (this.startUrl) result = await this.session.run('navigate', { url: this.startUrl });
+        if (url) result = await this.session.run('navigate', { url });
         if (result) {
             this.initialState = result.state;
             this.lastBlocker = result.blocker || null;
             this.#madeProgress(result);
-            this.#recordStep('navigate', { url: this.startUrl }, result);
+            this.#recordStep(reopen ? 'resume' : 'navigate', { url }, result);
         }
         this.#emit();
         if (result) await this.#pauseForBlocker(result, 0);
@@ -617,7 +662,7 @@ On the second line write one short sentence: for CONTINUE or BACK, the single ne
             },
             {
                 role: 'user',
-                content: `Task: ${this.task}\n\nAgent notes:\n${notes}${this.#visitedSummary({ includeCurrent: true })}${this.#sentSummary()}\n\nLast steps:\n${recent}\n\nCurrent page:\n${clip(this.records.at(-1)?.full || this.initialState, 2_000)}`,
+                content: `Task: ${this.task}${this.#earlierSummary(300)}\n\nAgent notes:\n${notes}${this.#visitedSummary({ includeCurrent: true })}${this.#sentSummary()}\n\nLast steps:\n${recent}\n\nCurrent page:\n${clip(this.records.at(-1)?.full || this.initialState, 2_000)}`,
             },
         ];
         let verdict = 'CONTINUE';
@@ -817,7 +862,7 @@ On the second line write one short sentence: for CONTINUE or BACK, the single ne
         // The date sits next to the task too - small models otherwise fall back to their training year.
         const sites = this.#visitedSummary();
         const plan = this.plan ? `\n\nNext step (from your last progress check): ${this.plan}` : '';
-        const task = `Task: ${this.task}\nToday is ${new Date().toDateString()}.${progress}${notes}${sites}${plan}`;
+        const task = `Task: ${this.task}\nToday is ${new Date().toDateString()}.${this.#earlierSummary()}${progress}${notes}${sites}${plan}`;
         const intro = this.records.length
             ? task
             : `${task}\n\nCurrent page state${progress ? ' (the page has changed - read it fresh and only use ids from here)' : ''}:\n${this.initialState}`;
@@ -938,7 +983,7 @@ On the second line write one short sentence: for CONTINUE or BACK, the single ne
             },
             {
                 role: 'user',
-                content: `Task: ${this.task}\n\nAgent notes:\n${notes}${this.#visitedSummary({ includeCurrent: true })}${this.#sentSummary()}\n\nLast page:\n${clip(latest, 3_000)}\n\nAgent's draft answer:\n${draft || '(none)'}\n\nReply in this format:\nFirst line: ${askMissing ? 'COMPLETE, or MISSING: <what part of the task has no information yet, in a few words>' : 'COMPLETE'}\nThen a blank line, then the final answer for the user.`,
+                content: `Task: ${this.task}${this.#earlierSummary()}\n\nAgent notes:\n${notes}${this.#visitedSummary({ includeCurrent: true })}${this.#sentSummary()}\n\nLast page:\n${clip(latest, 3_000)}\n\nAgent's draft answer:\n${draft || '(none)'}\n\nReply in this format:\nFirst line: ${askMissing ? 'COMPLETE, or MISSING: <what part of the task has no information yet, in a few words>' : 'COMPLETE'}\nThen a blank line, then the final answer for the user.`,
             },
         ];
         try {
@@ -962,6 +1007,29 @@ On the second line write one short sentence: for CONTINUE or BACK, the single ne
         }
     }
 
+    /**
+     * What this browser already did earlier in the chat, when this session continues one. The task
+     * often only makes sense with it ("now remove it from my cart"). Only the newest earlier task
+     * brings its notes - older ones are covered by its summary.
+     */
+    #earlierSummary(maxSummary = 600) {
+        if (!this.earlier.length) return '';
+        const lines = this.earlier.map(({ task, status, summary, notes }, i) => {
+            const outcome = status === 'done' ? 'Result' : status === 'incomplete' ? 'Partly done' : status === 'stopped' ? 'Stopped by the user' : 'Failed';
+            const noted = i === this.earlier.length - 1 && notes?.length ? `\n  Notes: ${notes.slice(-8).map((n) => clip(n, 160)).join(' | ')}` : '';
+            return `- Task: ${clip(task, 200)}\n  ${outcome}: ${summary ? clip(summary, maxSummary) : '(none)'}${noted}`;
+        });
+        // After the last task the user may have used the browser themselves - the page they left it on
+        // is where this session starts, and usually what their request is about.
+        const left = this.earlier.at(-1)?.userPage;
+        const where = this.startUrl
+            ? 'opened on the start address'
+            : left
+                ? `reopened where the user left it after the last task: "${clip(left.title || '', 80)}" (${clip(left.url, 160)}) - the user browsed there themselves, so this page may differ from what the last task saw`
+                : 'reopened on the page it ended on';
+        return `\n\nThis continues an earlier browser session - the browser was ${where}, with the same sign-ins and cart. Earlier tasks in it:\n${lines.join('\n')}`;
+    }
+
     /** Everything the page sent to sites this session - ground truth for "was it posted/sent". */
     #sentSummary() {
         const sent = this.trace.steps.flatMap((step) =>
@@ -979,6 +1047,7 @@ On the second line write one short sentence: for CONTINUE or BACK, the single ne
         if (this.notes.includes(text)) return false;
         this.notes.push(text);
         if (this.notes.length > 20) this.notes.shift();
+        this.trace.notes = [...this.notes];
         return true;
     }
 
@@ -1092,6 +1161,7 @@ On the second line write one short sentence: for CONTINUE or BACK, the single ne
             step: last ? { label: last.label, ok: last.ok, url: last.url, title: last.title, favicon: last.favicon } : null,
             recentSteps: this.trace.steps.slice(-6).map(({ label, ok, favicon, url }) => ({ label, ok, favicon, url })),
             sites: sitesOf(this.trace.steps),
+            continuedFrom: this.trace.continuedFrom ?? null,
             startedAt: this.trace.startedAt,
             endedAt: this.trace.endedAt,
         };

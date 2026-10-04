@@ -2,7 +2,7 @@ import useRedirect from "@/hooks/useRedirect";
 import useChatInfoEmit from "@/hooks/useChatInfoEmit";
 import useWorkspace from "@/hooks/useWorkspace";
 import { useEffect, useState } from "react";
-import { NativeEventEmitter } from "react-native";
+import { DeviceEventEmitter } from "react-native";
 import Workspace from "@/database/models/Workspace";
 import { useTranslation } from "react-i18next";
 import { tKey } from "@/i18n";
@@ -98,7 +98,7 @@ const PAGES = {
 export type IWorkspacePageKey = keyof typeof PAGES;
 
 // Local event emitter for Settings page navigation
-const eventEmitter = new NativeEventEmitter();
+const eventEmitter = DeviceEventEmitter;
 export default function WorkspaceSettings() {
   const { t } = useTranslation();
   useRedirect();

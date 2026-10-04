@@ -14,7 +14,6 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-ENV['RCT_NEW_ARCH_ENABLED'] = '0'
 
 target 'AnythingLLM' do
   config = use_native_modules!
@@ -39,6 +38,12 @@ target 'AnythingLLM' do
   
   # WatermelonDB dependency
   pod 'simdjson', path: '../node_modules/@nozbe/simdjson', modular_headers: true
+
+  # Firebase's Swift pods (Crashlytics, Sessions) import these as modules. Opting just these
+  # into modular headers avoids switching the whole app to use_frameworks!.
+  %w[GoogleUtilities FirebaseCore FirebaseCoreExtension FirebaseInstallations GoogleDataTransport nanopb].each do |name|
+    pod name, :modular_headers => true
+  end
 
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202

@@ -1,4 +1,17 @@
 import * as RNFS from '@dr.pogodin/react-native-fs';
+import { Platform } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
+
+/**
+ * Session options for large (model-sized) downloads. Android ignores both flags.
+ * iOS: a background URLSession keeps the transfer going while the app is suspended, but the
+ * simulator's transfer daemon fails with "remote session is unavailable", so it gets a regular
+ * session. Never discretionary - iOS would defer the download until the device is idle and charging.
+ */
+export const LARGE_DOWNLOAD_SESSION_OPTIONS: Pick<RNFS.DownloadFileOptionsT, 'background' | 'discretionary'> = {
+  background: Platform.OS === 'ios' && !DeviceInfo.isEmulatorSync(),
+  discretionary: false,
+};
 
 /**
  * Downloads to `${toFile}.part` and only moves the file into place once the transfer is verified

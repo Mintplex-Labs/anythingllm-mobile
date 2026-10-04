@@ -1,12 +1,12 @@
 import { useRoute } from "@react-navigation/native";
 import { useEffect } from "react";
-import { NativeEventEmitter } from "react-native";
+import { DeviceEventEmitter } from "react-native";
 import uiStore from "@/store/UIStore";
 
 /** Session key holding `{ wsSlug, threadSlug }` of the chat screen currently open */
 export const ACTIVE_CHAT_LOCATION_KEY = '@activeChatLocation';
 
-const eventEmitter = new NativeEventEmitter();
+const eventEmitter = DeviceEventEmitter;
 
 export default function useChatInfoEmit() {
   const route = useRoute();

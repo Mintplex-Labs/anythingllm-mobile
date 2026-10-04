@@ -9,7 +9,7 @@ import uiStore from '@/store/UIStore';
 import PushNotifications from '@/utils/PushNotifications';
 import { activateKeepAwake, deactivateKeepAwake } from '@/utils/keepAwake';
 import ImportedModels from '@/utils/models/imported';
-import { downloadFileAtomic } from '@/utils/fs/atomicDownload';
+import { downloadFileAtomic, LARGE_DOWNLOAD_SESSION_OPTIONS } from '@/utils/fs/atomicDownload';
 import { showToast } from '@/utils/Notification';
 import i18n from '@/i18n';
 
@@ -142,8 +142,7 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
             },
           });
         },
-        background: true,
-        discretionary: true,
+        ...LARGE_DOWNLOAD_SESSION_OPTIONS,
         progressInterval: UI_PROGRESS_INTERVAL_MS,
       }, jobId => {
         const job = activeDownload.current;

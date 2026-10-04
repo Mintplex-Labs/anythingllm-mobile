@@ -96,10 +96,17 @@ class Telemetry {
     constructor() {
         if (Telemetry.instance) return Telemetry.instance;
         Telemetry.instance = this;
-        this.analytics = getAnalytics(getApp());
-        // Creating the Crashlytics instance installs its global JS error handler, so fatal JS
-        // errors and native crashes are reported with their message and stack. Follows the same opt-out.
-        this.crashlytics = getCrashlytics();
+        try {
+            this.analytics = getAnalytics(getApp());
+            // Creating the Crashlytics instance installs its global JS error handler, so fatal JS
+            // errors and native crashes are reported with their message and stack. Follows the same opt-out.
+            this.crashlytics = getCrashlytics();
+        } catch (e) {
+            // No default Firebase app - local iOS builds without GoogleService-Info.plist. Stay silent.
+            console.warn('[Telemetry] Firebase is not configured, telemetry disabled', e);
+            this.enabled = false;
+            return;
+        }
         this.ready = AsyncStorage.getItem(TELEMETRY_ENABLED_KEY)
             .then(async (value) => {
                 this.enabled = value !== 'false';
@@ -150,7 +157,7 @@ class Telemetry {
      */
     async setEnabled(enabled: boolean): Promise<void> {
         await this.ready;
-        if (enabled === this.enabled) return;
+        if (!this.analytics || enabled === this.enabled) return;
         if (!enabled) this.logEvent(this.CUSTOM_EVENTS.DISABLED_TELEMETRY);
         this.enabled = enabled;
         await Promise.all([

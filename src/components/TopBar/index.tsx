@@ -3,7 +3,7 @@ import {
   View,
   Image,
   TouchableOpacity,
-  NativeEventEmitter,
+  DeviceEventEmitter,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
@@ -31,7 +31,7 @@ export default function TopBar({
   const canMakeThread = !!workspace && !!thread;
 
   function handleNewThread() {
-    const eventEmitter = new NativeEventEmitter();
+    const eventEmitter = DeviceEventEmitter;
     WorkspaceThread.create({ workspaceSlug: workspace.slug }).then(thread => {
       eventEmitter.emit('workspaceUpdate', {
         type: 'add-thread',

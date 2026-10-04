@@ -6,11 +6,8 @@ import android.content.MutableContextWrapper
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.net.Uri
-import android.net.http.SslError
 import android.os.Handler
 import android.os.Looper
-import android.os.Message
 import android.os.SystemClock
 import android.util.Base64
 import android.util.Log
@@ -18,19 +15,8 @@ import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.GeolocationPermissions
-import android.webkit.HttpAuthHandler
-import android.webkit.JsPromptResult
-import android.webkit.JsResult
-import android.webkit.PermissionRequest
-import android.webkit.RenderProcessGoneDetail
-import android.webkit.SslErrorHandler
-import android.webkit.ValueCallback
-import android.webkit.WebChromeClient
-import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewCompat
 import androidx.webkit.WebViewFeature
@@ -42,7 +28,7 @@ import java.io.ByteArrayOutputStream
  *
  * This class only provides primitives - load, read the page through the page script, tap, drag,
  * capture. The action logic (what "click [12]" means, settling, outcome text) lives in JS
- * (src/utils/BrowserUse/session.ts) so it stays a close port of the desktop code.
+ * (src/utils/BrowserUse/session) so it stays a close port of the desktop code.
  *
  * The WebView always sits in a window so it renders and runs timers like a visible tab: parked
  * behind the app's UI (see BrowserUseParking) or shown in a BrowserUseHostView when the user
@@ -126,103 +112,52 @@ class BrowserUseSession(
             notice("A download of \"$name\" was blocked. Files cannot be downloaded.")
         }
 
-        webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-                val scheme = request.url.scheme?.lowercase()
-                if (scheme == "http" || scheme == "https" || scheme == "about" || scheme == "data" || scheme == "blob") return false
-                if (request.isForMainFrame) notice("Blocked a link to \"${request.url.toString().take(80)}\" - only web pages can be opened.")
-                return true
-            }
-
-            override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
-                loading = true
-                // Without DOCUMENT_START_SCRIPT the init script goes in as early as we can get it.
-                if (!WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) view.evaluateJavascript(initScript(), null)
-                onStatus(this@BrowserUseSession)
-            }
-
-            override fun onPageFinished(view: WebView, url: String?) {
-                loading = false
-                profiles.recordVisit(profileId, url)
-                onStatus(this@BrowserUseSession)
-            }
-
-            override fun doUpdateVisitedHistory(view: WebView, url: String?, isReload: Boolean) {
-                profiles.recordVisit(profileId, url)
-                onStatus(this@BrowserUseSession)
-            }
-
-            override fun onReceivedHttpAuthRequest(view: WebView, handler: HttpAuthHandler, host: String?, realm: String?) {
-                handler.cancel()
-                notice("The site asked for a browser-level username/password, which is not supported.")
-            }
-
-            override fun onReceivedSslError(view: WebView, handler: SslErrorHandler, error: SslError) {
-                handler.cancel()
-                notice("The page's security certificate is not valid, so it was not opened.")
-            }
-
-            override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
-                // Returning true keeps the app alive; this WebView is unusable from here on.
-                Log.w(TAG, "Renderer gone for $id (crash=${detail.didCrash()})")
-                crashed = true
-                onStatus(this@BrowserUseSession)
-                destroyView()
-                return true
-            }
-        }
-
-        webView.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView, newProgress: Int) {
-                progress = newProgress
-                if (newProgress >= 100) loading = false
-                onStatus(this@BrowserUseSession)
-            }
-
-            override fun onReceivedTitle(view: WebView, title: String?) {
-                onStatus(this@BrowserUseSession)
-            }
-
-            override fun onJsAlert(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
-                notice("The page showed an alert: \"${clip(message)}\"")
-                result.confirm()
-                return true
-            }
-
-            override fun onJsConfirm(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
-                notice("The page asked \"${clip(message)}\" and it was automatically confirmed.")
-                result.confirm()
-                return true
-            }
-
-            override fun onJsPrompt(view: WebView, url: String?, message: String?, defaultValue: String?, result: JsPromptResult): Boolean {
-                notice("The page prompted \"${clip(message)}\" and it was dismissed.")
-                result.cancel()
-                return true
-            }
-
-            override fun onJsBeforeUnload(view: WebView, url: String?, message: String?, result: JsResult): Boolean {
-                result.confirm()
-                return true
-            }
-
-            override fun onShowFileChooser(view: WebView, callback: ValueCallback<Array<Uri>>, params: FileChooserParams): Boolean {
-                notice("The page opened a file upload picker. Uploading files is not supported, so it was ignored.")
-                callback.onReceiveValue(null)
-                return true
-            }
-
-            override fun onPermissionRequest(request: PermissionRequest) {
-                request.deny()
-            }
-
-            override fun onGeolocationPermissionsShowPrompt(origin: String?, callback: GeolocationPermissions.Callback) {
-                callback.invoke(origin, false, false)
-            }
-
-            override fun onCreateWindow(view: WebView, isDialog: Boolean, isUserGesture: Boolean, resultMsg: Message?): Boolean = false
-        }
+        // What pages may do, and how their events reach this session (see BrowserUseClients.kt).
+        webView.webViewClient = AgentWebViewClient(this)
+        webView.webChromeClient = AgentChromeClient(this)
     }
+
+    /////////////////////////////
+    // Page events (from BrowserUseClients)
+    /////////////////////////////
+
+    internal fun onPageStarted() {
+        loading = true
+        // Without DOCUMENT_START_SCRIPT the init script goes in as early as we can get it.
+        if (!WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) webView.evaluateJavascript(initScript(), null)
+        onStatus(this)
+    }
+
+    internal fun onPageFinished(url: String?) {
+        loading = false
+        profiles.recordVisit(profileId, url)
+        onStatus(this)
+    }
+
+    internal fun onVisited(url: String?) {
+        profiles.recordVisit(profileId, url)
+        onStatus(this)
+    }
+
+    internal fun onProgress(newProgress: Int) {
+        progress = newProgress
+        if (newProgress >= 100) loading = false
+        onStatus(this)
+    }
+
+    internal fun onStatusChanged() = onStatus(this)
+
+    /** The renderer died (usually out of memory). */
+    internal fun onRendererGone(didCrash: Boolean) {
+        Log.w(TAG, "Renderer gone for $id (crash=$didCrash)")
+        crashed = true
+        onStatus(this)
+        destroyView()
+    }
+
+    /////////////////////////////
+    // Notices: what the page did that the agent did not see (dialogs, blocked links...)
+    /////////////////////////////
 
     fun notice(text: String) {
         notices.add(text)
@@ -233,11 +168,6 @@ class BrowserUseSession(
         val out = ArrayList(notices)
         notices.clear()
         return out
-    }
-
-    private fun clip(text: String?, max: Int = 300): String {
-        val flat = (text ?: "").replace(Regex("\\s+"), " ").trim()
-        return if (flat.length > max) flat.take(max - 1) + "…" else flat
     }
 
     /** Chrome's UA without the WebView markers ("; wv", "Version/4.0") that get sites to block us. */

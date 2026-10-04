@@ -1,14 +1,15 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { AppState } from 'react-native';
 import { generateUUID } from '@/utils/constants';
 import type BrowserAgent from './agent';
+import HelpNotifications from './helpNotifications';
 import { BrowserNative, type BrowserCapabilities } from './native';
-import { normalizeUrl } from './session';
+import { normalizeUrl } from './urls';
 import BrowserTraces from './traces';
 
 /**
  * In-app hub for the browser agent ("Browser Use"): the live agent sessions, their latest
- * thumbnails and the full-screen viewer the user watches or takes over a session in.
+ * thumbnails, their "needs your help" notifications (./helpNotifications.ts) and the full-screen
+ * viewer the user watches, takes over or browses a session in.
  *
  * The agent itself runs inside the browser_use tool call (see ToolsManager/tools/browserUse); the
  * chat card and viewer talk to it through here, the way the desktop frontend sends
@@ -33,27 +34,11 @@ class BrowserUseManager {
     private listeners = new Set<Listener>();
     private version = 0;
     private capabilities: BrowserCapabilities | null = null;
-    /** Sessions with a "needs your help" notification showing */
-    private helpNotified = new Set<string>();
-
-    constructor() {
-        AppState.addEventListener('change', (state) => {
-            // Back in the app: the session card shows the question, the notification is no longer needed.
-            if (state === 'active') {
-                for (const sessionId of [...this.helpNotified]) this.clearHelp(sessionId);
-                return;
-            }
-            // Locked or switched away with a question still open - remind them before the app is frozen.
-            if (state !== 'background') return;
-            for (const agent of this.agents.values()) {
-                if (agent.isWaitingForUser && agent.question && !this.helpNotified.has(agent.id)) this.notifyHelp(agent.id, agent.question);
-            }
-        });
-    }
-
-    log(text: string, ...args: any[]) {
-        console.log(`\x1b[36m[BrowserUse]\x1b[0m ${text}`, ...args);
-    }
+    private help = new HelpNotifications(() =>
+        [...this.agents.values()]
+            .filter((agent) => agent.isWaitingForUser && agent.question)
+            .map((agent) => ({ sessionId: agent.id, question: agent.question! })),
+    );
 
     private changed() {
         this.version++;
@@ -87,13 +72,13 @@ class BrowserUseManager {
         agent.onNeedsHelp = (question) => {
             this.changed();
             // The user may have locked the phone or be in another app waiting for the agent - bring them back.
-            if (AppState.currentState !== 'active') this.notifyHelp(agent.id, question);
+            this.help.asked(agent.id, question);
         };
         this.changed();
     }
 
     unregister(agent: BrowserAgent) {
-        this.clearHelp(agent.id);
+        this.help.clear(agent.id);
         this.agents.delete(agent.id);
         this.frames.delete(agent.id);
         if (this.viewer?.sessionId === agent.id) this.viewer = null;
@@ -112,21 +97,6 @@ class BrowserUseManager {
         return this.frames.get(sessionId) ?? null;
     }
 
-    // PushNotifications is imported lazily: it pulls in the database and navigation, which the tool chain must not.
-    private notifyHelp(sessionId: string, question: string) {
-        this.helpNotified.add(sessionId);
-        import('@/utils/PushNotifications')
-            .then(({ default: notifications }) => notifications.notifyBrowserNeedsHelp(sessionId, question))
-            .catch(() => { });
-    }
-
-    private clearHelp(sessionId: string) {
-        if (!this.helpNotified.delete(sessionId)) return;
-        import('@/utils/PushNotifications')
-            .then(({ default: notifications }) => notifications.clearBrowserNeedsHelp(sessionId))
-            .catch(() => { });
-    }
-
     stop(sessionId: string) {
         this.agents.get(sessionId)?.stop('user');
     }
@@ -136,7 +106,7 @@ class BrowserUseManager {
         const agent = this.agents.get(sessionId);
         if (!agent) return false;
         if (this.viewer?.sessionId === sessionId) this.viewer = null;
-        this.clearHelp(sessionId);
+        this.help.clear(sessionId);
         const answered = agent.reply(text);
         this.changed();
         return answered;
@@ -172,7 +142,7 @@ class BrowserUseManager {
      * before the agent needs it, or picking up where a finished session left off (the cart it
      * filled, the form it drafted). Agent profiles have their own cookies, so this is the only
      * browser that sees those sign-ins - Chrome does not. Not an agent session: nothing drives it
-     * and it closes with the viewer. `profile` is a profile id or, for sessions, its name.
+     * and it closes with the viewer. Settings pass the profile's id; session cards its name.
      */
     async openBrowser({ profileId = null, profileName = null, url, fromSession }: { profileId?: string | null; profileName?: string | null; url: string; fromSession?: string }) {
         // A finished session opens where the user last left it, if they already looked at it.

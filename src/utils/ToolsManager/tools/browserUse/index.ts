@@ -2,13 +2,13 @@ import { type IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import { type ToolExecutionContext } from "@/utils/ToolsManager";
 import uiStore from "@/store/UIStore";
 import BrowserUse from "@/utils/BrowserUse";
-import BrowserAgent, { type BrowserAgentResume, type BrowserSessionSnapshot } from "@/utils/BrowserUse/agent";
-import BrowserTraces from "@/utils/BrowserUse/traces";
+import BrowserAgent from "@/utils/BrowserUse/agent";
 import BackgroundWork from "@/utils/BackgroundWork";
-import { clip } from "@/utils/BrowserUse/tools";
 import { hasNativeBrowser } from "@/utils/BrowserUse/native";
 import { parseToolArgs } from "../createFiles/shared";
 import i18n from "@/i18n";
+import { lastSessionOf, rememberSession, resumeFrom } from "./continuation";
+import { sessionNotification } from "./notification";
 
 /**
  * Browser Use - hands a task to a browser sub-agent that operates a real WebView on the phone,
@@ -30,13 +30,6 @@ import i18n from "@/i18n";
 
 /** Cloud providers do not report their context window - assume a modest one (page states are capped at ~6k chars anyway) */
 const ASSUMED_CONTEXT_TOKENS = 32_000;
-
-/**
- * Sessions started earlier in the same turn (keyed by the turn's history array - the one object
- * every tool call of a turn shares). They are not in the history yet, but a second call in the
- * same reply should continue them too.
- */
-const sessionsThisTurn = new WeakMap<object, string>();
 
 export default {
     id: 'browserUse',
@@ -91,6 +84,8 @@ export default {
         const resume = previousId ? await resumeFrom(previousId) : null;
 
         const preferences = await uiStore.getFromStorage('llmPreference', { provider: 'unknown', config: {} as { model?: string } });
+        // Keeps the session running while the user is in another app, with its current step in the notification.
+        const notification = sessionNotification(task);
         const agent = new BrowserAgent({
             llm: context.llm,
             task: task.trim(),
@@ -107,9 +102,7 @@ export default {
                 notification.show(snapshot);
             },
         });
-        if (context.history) sessionsThisTurn.set(context.history, agent.id);
-        // Keeps the session running while the user is in another app, with its current step in the notification.
-        const notification = sessionNotification(agent.id, task);
+        rememberSession(context, agent.id);
 
         // Stopping the chat reply stops the session too.
         const onAbort = () => agent.stop('aborted');
@@ -129,50 +122,3 @@ export default {
         }
     },
 } as const;
-
-/** The chat's latest browser session: one started earlier in this turn, else the newest saved with the chat. */
-function lastSessionOf(context: ToolExecutionContext): string | null {
-    const history = context.history;
-    if (!history) return null;
-    const thisTurn = sessionsThisTurn.get(history);
-    if (thisTurn) return thisTurn;
-    for (let i = history.length - 1; i >= 0; i--) {
-        const actions = history[i]?.response?.actions || [];
-        for (let j = actions.length - 1; j >= 0; j--) {
-            const action = actions[j];
-            if (action?.type === 'browser_use_session' && action.action?.sessionId) return action.action.sessionId;
-        }
-    }
-    return null;
-}
-
-/** What a continued session starts from: the earlier session's trace (its profile, last page and results). Null once its history was deleted. */
-async function resumeFrom(sessionId: string): Promise<BrowserAgentResume | null> {
-    const trace = await BrowserTraces.get(sessionId);
-    return trace ? { from: trace } : null;
-}
-
-/** The foreground service notification for a session: what the agent is doing right now, or what it needs. */
-function sessionNotification(sessionId: string, task: string) {
-    let shown = '';
-    const textFor = (snapshot: BrowserSessionSnapshot | null) => {
-        if (snapshot?.status === 'needs-help' && snapshot.question)
-            return { title: i18n.t('browser_use.notification.needs_help_title'), body: clip(snapshot.question, 240) };
-        return {
-            title: i18n.t('browser_use.notification.title'),
-            body: snapshot?.step?.label || clip(task, 240),
-        };
-    };
-    return {
-        textFor,
-        /** Only touches the notification when its text changes - token updates arrive far more often than steps. */
-        show(snapshot: BrowserSessionSnapshot) {
-            if (snapshot.endedAt) return;
-            const text = textFor(snapshot);
-            const key = `${text.title}\n${text.body}`;
-            if (key === shown) return;
-            shown = key;
-            BackgroundWork.update(sessionId, text);
-        },
-    };
-}

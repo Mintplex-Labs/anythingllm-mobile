@@ -5,7 +5,7 @@ import { ArrowClockwise, ArrowLeft, ArrowRight, Check, Eye, HandPointing, Stop, 
 import { useTranslation } from 'react-i18next';
 import BrowserUse, { useBrowserUse, type ViewerState } from '@/utils/BrowserUse';
 import { BrowserNative, BrowserUseHostView, type BrowserStatus } from '@/utils/BrowserUse/native';
-import { normalizeUrl } from '@/utils/BrowserUse/session';
+import { normalizeUrl } from '@/utils/BrowserUse/urls';
 
 /**
  * Full-screen browser over the app - the mobile counterpart of the desktop's "show the hidden

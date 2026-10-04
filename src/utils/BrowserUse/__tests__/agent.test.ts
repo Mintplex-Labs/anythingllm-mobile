@@ -6,6 +6,7 @@ jest.mock('@/utils/constants', () => {
 jest.mock('../traces', () => ({
     __esModule: true,
     default: { save: jest.fn(async () => { }), prune: jest.fn(async () => { }) },
+    lastPageOf: (trace: any) => ({ url: trace.steps.at(-1)?.url || '', title: trace.steps.at(-1)?.title || '', favicon: '' }),
     resumeUrlOf: (trace: any) => trace.userPage?.url || trace.steps.filter((s: any) => s.url).at(-1)?.url || null,
     sitesOf: (steps: any[] = []) => [...new Set(steps.filter((s) => s.url).map((s) => new URL(s.url).host))].map((host) => ({ host, favicon: null })),
 }));
@@ -24,7 +25,9 @@ jest.mock('../session', () => ({
 }));
 
 import { AppState } from 'react-native';
-import BrowserAgent, { parseJsonAction, taskTerms } from '../agent';
+import BrowserAgent from '../agent';
+import { parseJsonAction } from '../agent/calls';
+import { taskTerms } from '../agent/progress';
 
 const page = (url: string, state: string, extra: Record<string, any> = {}) => ({
     ok: true,
@@ -197,6 +200,99 @@ describe('BrowserAgent', () => {
         expect(mockSession.run).toHaveBeenCalledTimes(1);
         const toolResult = llm.requests[1].messages.find((m: any) => m.role === 'tool');
         expect(toolResult.content).toContain('probably made up');
+    });
+});
+
+describe('BrowserAgent giving up and checking itself', () => {
+    const toolResults = (llm: ReturnType<typeof scriptedLLM>, request: number) =>
+        llm.requests[request].messages.filter((m: any) => m.role === 'tool').map((m: any) => m.content);
+
+    test('warns about a loop, then gives up when it keeps looping', async () => {
+        mockSession.run.mockImplementation(async (tool: string) => {
+            if (tool === 'navigate') return page('https://example.com/', '[1] button "Next"\n[T1] Welcome');
+            return page('https://example.com/', '[1] button "Next"\n[T1] Welcome', { outcome: 'Clicked [1] button "Next"', target: 'Next' });
+        });
+        const llm = scriptedLLM([
+            call('click', { id: 1 }),
+            call('click', { id: 1 }),
+            call('click', { id: 1 }),
+            call('click', { id: 1 }),
+            text('COMPLETE\n\nNothing found.'),
+        ]);
+        const { agent } = makeAgent(llm);
+        const result = await agent.run();
+
+        expect(toolResults(llm, 3).at(-1)).toContain('STOP: you are repeating the same actions in a loop (click)');
+        expect(result).toContain('The browser agent gave up: I kept repeating the same actions (click) without getting anywhere');
+    });
+
+    test('warns after five steps without progress, checks in, and gives up at eight', async () => {
+        mockSession.run.mockImplementation(async () => page('https://example.com/', '[T1] Welcome'));
+        const llm = scriptedLLM([
+            ...[1, 2, 3, 4, 5].map((seconds) => call('wait', { seconds })),
+            text('CONTINUE\nKeep waiting for the page.'),
+            ...[6, 7, 8].map((seconds) => call('wait', { seconds })),
+            text('COMPLETE\n\nThe page never loaded.'),
+        ]);
+        const { agent, updates } = makeAgent(llm);
+        const result = await agent.run();
+
+        expect(llm.requests[5].messages[0].content).toContain('You check on a browser agent');
+        expect(toolResults(llm, 6).at(-1)).toContain('WARNING: your last 5 actions showed nothing new');
+        expect(llm.requests[6].messages[1].content).toContain('Next step (from your last progress check): Keep waiting for the page.');
+        expect(updates.some((u) => u.recentSteps.some((s: any) => s.label === 'browser_use.steps.checkpoint_on_track'))).toBe(true);
+        expect(result).toContain('The browser agent gave up: I made no progress in the last 8 steps');
+    });
+
+    test('a progress check sends a wandering agent back to the most useful page', async () => {
+        const start = page('https://example.com/', '[T1] Blue widget $19.99\n[T2] Blue widget specs');
+        const about = (n: number) => page('https://example.com/about', `[1] link "Team"\n[2] link "Jobs"\n[3] link "Press"\n[T1] About us`, { outcome: `Did ${n}` });
+        mockSession.run.mockImplementation(async (tool: string, args: any) => {
+            if (tool === 'navigate') return args.url.includes('about') ? about(0) : start;
+            return about(1);
+        });
+        const llm = scriptedLLM([
+            call('navigate', { url: 'https://example.com/about' }),
+            call('click', { id: 1 }),
+            call('click', { id: 2 }),
+            call('scroll', { direction: 'down' }),
+            call('click', { id: 3 }),
+            text('BACK\nRead the widget price.'),
+            call('done', { success: true, result: '$19.99' }),
+            text('COMPLETE\n\nThe blue widget costs $19.99.'),
+        ]);
+        const { agent } = makeAgent(llm);
+        const result = await agent.run();
+
+        expect(mockSession.run).toHaveBeenLastCalledWith('navigate', { url: 'https://example.com/' });
+        expect(toolResults(llm, 6).at(-1)).toContain('You had wandered away from the task, so you were taken back to the most useful page so far. Next: Read the widget price.');
+        expect(result).toContain('The blue widget costs $19.99.');
+    });
+
+    test('the final-answer pass sends the agent back when part of the task is missing', async () => {
+        mockSession.run.mockImplementation(async () => page('https://example.com/', '[T1] Blue widget'));
+        const llm = scriptedLLM([
+            call('done', { success: true, result: 'Found the widget.' }),
+            text('MISSING: the price\n\nFound the widget.'),
+            call('done', { success: true, result: 'It is $19.99.' }),
+            text('COMPLETE\n\nThe blue widget costs $19.99.'),
+        ]);
+        const { agent } = makeAgent(llm);
+        const result = await agent.run();
+
+        expect(llm.requests[1].messages[1].content).toContain('Agent\'s draft answer:\nFound the widget.');
+        expect(toolResults(llm, 2).at(-1)).toContain('Not finished yet - the price. Keep working on the task, then call done again.');
+        expect(result).toContain('The blue widget costs $19.99.');
+    });
+
+    test('reminds a model that answers in plain text to call a tool, then stops', async () => {
+        mockSession.run.mockImplementation(async () => page('https://example.com/', '[T1] Welcome'));
+        const llm = scriptedLLM([text('Hmm.'), text('Let me think.'), text('I am not sure.')]);
+        const { agent } = makeAgent(llm);
+        const result = await agent.run();
+
+        expect(llm.requests[1].messages.at(-1)).toEqual({ role: 'user', content: 'You must reply with a tool call. If the task is complete, call done.' });
+        expect(result).toContain('The browser agent could not fully complete the task.\n\nWhat it found:\nI am not sure.');
     });
 });
 

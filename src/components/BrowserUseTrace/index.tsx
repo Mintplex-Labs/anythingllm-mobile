@@ -21,10 +21,18 @@ export const BROWSER_STATUS_COLORS: Record<BrowserTraceStatus, string> = {
     stopped: '#A1A1AA',
 };
 
-/** Translated label for a session status */
+/** Translated label for a session status. Keys written out in full so the translation tooling sees them. */
 export function useBrowserStatusLabel() {
     const { t } = useTranslation();
-    return (status: BrowserTraceStatus) => t(`browser_use.status.${status.replace('-', '_')}`);
+    const labels: Record<BrowserTraceStatus, () => string> = {
+        running: () => t('browser_use.status.running'),
+        'needs-help': () => t('browser_use.status.needs_help'),
+        done: () => t('browser_use.status.done'),
+        incomplete: () => t('browser_use.status.incomplete'),
+        failed: () => t('browser_use.status.failed'),
+        stopped: () => t('browser_use.status.stopped'),
+    };
+    return (status: BrowserTraceStatus) => labels[status]();
 }
 
 export default function BrowserTraceModal({ traceId, onClose }: { traceId: string | null; onClose: () => void }) {

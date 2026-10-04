@@ -1,4 +1,5 @@
 import * as RNFS from '@dr.pogodin/react-native-fs';
+import { MAX_TRACES } from './constants';
 
 /**
  * On-device history of every browser session the agent ran, so the user can always review which
@@ -7,8 +8,6 @@ import * as RNFS from '@dr.pogodin/react-native-fs';
  */
 
 export const TRACES_FOLDER_PATH = `${RNFS.DocumentDirectoryPath}/browser-use/traces`;
-/** Step thumbnails make a trace up to ~1MB, so keep fewer than desktop's 200 */
-const MAX_TRACES = 50;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export type BrowserTraceStatus = 'running' | 'needs-help' | 'done' | 'incomplete' | 'failed' | 'stopped';
@@ -88,6 +87,12 @@ function fileFor(id: string) {
 /** The page a session's agent ended on. */
 export function lastUrlOf(trace: Pick<BrowserTrace, 'steps'>) {
     return trace.steps.filter((step) => step.url && /^https?:/i.test(step.url)).at(-1)?.url ?? null;
+}
+
+/** The page of the latest step, for steps that do not load one (ask_user, checkpoints). */
+export function lastPageOf(trace: Pick<BrowserTrace, 'steps'>) {
+    const last = trace.steps.at(-1);
+    return { url: last?.url || '', title: last?.title || '', favicon: last?.favicon || '' };
 }
 
 /** Where a follow-up picks up: where the user left the browser after the session, else where the agent ended. */

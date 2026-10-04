@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { resolveDestinationPathFromGGUFUrl } from '@/utils/models/defaults';
 import { useNetInfo } from '@react-native-community/netinfo';
@@ -127,6 +127,8 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
         progress: res => {
           const progress = Math.round((res.bytesWritten / res.contentLength) * 100);
           setDownloadProgress(progress);
+          // iOS notifications have no progress bar and re-alert on every update - just the start and end ones there.
+          if (Platform.OS !== 'android') return;
           const now = Date.now();
           if (now - lastNotifiedAt < NOTIFICATION_PROGRESS_INTERVAL_MS) return;
           lastNotifiedAt = now;

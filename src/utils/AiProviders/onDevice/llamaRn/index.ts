@@ -16,6 +16,7 @@ import { getDefaultContextLength } from '@/utils/contextLength';
 import ContextCompactor, { type CompactionChatMessage, truncateMiddle } from '@/utils/chat/contextCompaction';
 import { throwIfAborted } from '@/utils/chat/abort';
 import { ChatMemoryEstimate, enableAllocationLogging, estimateChatMemory, readGgufShape } from '@/utils/models/memoryEstimate';
+import Telemetry from '@/utils/Telemetry';
 
 export type NativeLlamaChatMessage = {
   role: string;
@@ -401,7 +402,8 @@ export default class LlamaRnWrapper {
   private async createContext({ multimodal }: { multimodal: boolean }) {
     const nCtx = this.contextLength;
     enableAllocationLogging(); // TODO: remove before release - see memoryEstimate.ts
-    return initLlama({
+    const details = { source: this.modelDefinition ? 'catalog' : 'imported', model_id: this.model, n_ctx: nCtx, multimodal };
+    return Telemetry.trackNativeModelLoad('chat', this.ggufFilePath!, details, () => initLlama({
       model: this.ggufFilePath!,
       n_ctx: nCtx,
       n_batch: Math.min(LlamaRnWrapper.N_BATCH, nCtx),
@@ -416,7 +418,7 @@ export default class LlamaRnWrapper {
       // than the CPU path on the phones we target, so we never offload layers.
       n_gpu_layers: 0,
       ...(this.modelDefinition?.chatTemplateString ? { chat_template: this.modelDefinition.chatTemplateString } : {}),
-    });
+    }));
   }
 
   /**

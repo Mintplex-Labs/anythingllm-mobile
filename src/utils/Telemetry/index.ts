@@ -1,7 +1,8 @@
 import { getApp } from '@react-native-firebase/app'
 import { getAnalytics, logEvent, setAnalyticsCollectionEnabled } from '@react-native-firebase/analytics'
-import { getCrashlytics, log as logCrashlytics, recordError, setCrashlyticsCollectionEnabled } from '@react-native-firebase/crashlytics'
+import { getCrashlytics, log as logCrashlytics, recordError, setAttributes, setCrashlyticsCollectionEnabled } from '@react-native-firebase/crashlytics'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as RNFS from '@dr.pogodin/react-native-fs';
 import { isDebugMode } from '@/utils/constants';
 
 /** AsyncStorage key holding "false" once the user opts out under Settings > Utility > Anonymous telemetry */
@@ -135,6 +136,52 @@ class Telemetry {
         if (!this.enabled || !this.crashlytics) return;
         if (context) logCrashlytics(this.crashlytics, context.slice(0, 2000));
         recordError(this.crashlytics, error);
+    }
+
+    /**
+     * Runs a llama.rn `initLlama` call and stamps Crashlytics custom keys around it. A SIGSEGV inside
+     * llama.cpp has no JS stack, so these keys are the only record of which GGUF was loading when it died.
+     * Keys are per `kind` (`llama_<kind>_*`) so a concurrent embedder load never overwrites the chat model's.
+     * `llama_<kind>_state` reads "loading" on a crash that happened during the load itself.
+     * @param kind - which runtime is loading, eg. "chat", "embedder", "reranker"
+     * @param path - absolute path of the GGUF being loaded
+     * @param details - extra context, eg. source (catalog/imported) or n_ctx
+     */
+    async trackNativeModelLoad<T>(
+        kind: string,
+        path: string,
+        details: Record<string, string | number | boolean>,
+        load: () => Promise<T>,
+    ): Promise<T> {
+        const file = path.split('/').pop() || path;
+        const sizeMb = await RNFS.stat(path).then((s) => Math.round(Number(s.size) / (1024 * 1024))).catch(() => -1);
+        const extra = Object.fromEntries(Object.entries(details).map(([key, value]) => [`llama_${kind}_${key}`, String(value)]));
+        // Awaited so the keys reach the native SDK before the load can crash the process.
+        await this.setCrashContext(`llama ${kind}: loading ${file} (${sizeMb}MB)`, {
+            [`llama_${kind}_state`]: 'loading',
+            [`llama_${kind}_model`]: file,
+            [`llama_${kind}_size_mb`]: String(sizeMb),
+            ...extra,
+        });
+        try {
+            const result = await load();
+            this.setCrashContext(`llama ${kind}: loaded ${file}`, { [`llama_${kind}_state`]: 'loaded' });
+            return result;
+        } catch (error) {
+            this.setCrashContext(`llama ${kind}: failed to load ${file}`, { [`llama_${kind}_state`]: 'failed' });
+            throw error;
+        }
+    }
+
+    /** Adds a breadcrumb and custom keys to any crash report from here on. Never throws. */
+    private async setCrashContext(breadcrumb: string, attributes: Record<string, string>) {
+        if (!this.enabled || !this.crashlytics) return;
+        try {
+            logCrashlytics(this.crashlytics, breadcrumb);
+            await setAttributes(this.crashlytics, attributes);
+        } catch (e) {
+            this.log('could not set crash context', e);
+        }
     }
 
     /** Whether anonymous telemetry is currently on. Resolves once the stored setting has been read. */

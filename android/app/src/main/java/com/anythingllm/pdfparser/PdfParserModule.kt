@@ -3,6 +3,7 @@ package com.anythingllm.pdfparser
 import com.facebook.react.bridge.*
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
+import com.tom_roush.pdfbox.io.MemoryUsageSetting
 import com.tom_roush.pdfbox.pdmodel.PDDocument
 import com.tom_roush.pdfbox.text.PDFTextStripper
 import java.io.File
@@ -42,7 +43,12 @@ class PdfParserModule(reactContext: ReactApplicationContext) : ReactContextBaseJ
             
             var document: PDDocument? = null
             try {
-                document = PDDocument.load(pdfFile)
+                // Default is main-memory-only scratch, which OOMs the Java heap on large/image-heavy PDFs.
+                // Keep up to 32MB in memory and spill the rest to the cache dir; close() deletes the file.
+                document = PDDocument.load(
+                    pdfFile,
+                    MemoryUsageSetting.setupMixed(32L * 1024 * 1024).setTempDir(reactApplicationContext.cacheDir)
+                )
                 if (document.isEncrypted) {
                     promise.reject("ENCRYPTED_PDF", "PDF is encrypted and cannot be processed")
                     return

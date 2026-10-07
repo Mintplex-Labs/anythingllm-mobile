@@ -690,6 +690,14 @@
       "status_expired": "Reminder time passed before it was approved",
       "status_set": "Set reminder \"{{label}}\""
     },
+    "open_app": {
+      "name": "Open App",
+      "description": "Launch another app on your phone, after you approve it.",
+      "status_asking": "Opening {{app}}…",
+      "status_opened": "Opened {{app}}.",
+      "status_not_approved": "App launch not approved.",
+      "approval": "Open {{app}} on this phone?"
+    },
     "draft_email": {
       "name": "Draft Email",
       "description": "Draft an email and open it in your mail app (Gmail, Outlook and more) to send.",

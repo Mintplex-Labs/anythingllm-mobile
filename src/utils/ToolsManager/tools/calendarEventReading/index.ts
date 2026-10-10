@@ -1,9 +1,16 @@
 import { IStreamEvent } from "@/utils/AiProviders/baseOpenAILikeProvider";
-import { safeJsonParse } from "@/utils/formatters";
 import RNCalendarEvents from "react-native-calendar-events";
 import { ensureCalendarPermission, toCalendarCitation, type CalendarEventCitation } from "@/utils/calendar";
-import moment from 'moment';
 import i18n, { tKey } from "@/i18n";
+import {
+    parseArgs,
+    getDateRange,
+    allDayEventsOverlap,
+    sortEventsByDate,
+    formatTimedEvent,
+    formatAllDayEvent,
+    type SearchType,
+} from './calendarFormat';
 
 /** Status line shown while reading, per `search` value */
 const READING_STATUS: Record<string, string> = {
@@ -29,18 +36,18 @@ export default {
         type: 'function',
         function: {
             name: 'read_calendar_events',
-            description: 'Read the calendar events for the given time range for the users',
+            description: 'Read the calendar events for the given time range. Returns events sorted chronologically. Each event includes: title, date, start and end time (or "all day"), duration, location (if set), attendees, and description.',
             parameters: {
                 type: 'object',
                 properties: {
                     search: {
                         type: 'string',
-                        description: 'The search query to filter the calendar events. Optional.',
+                        description: 'The search query to filter the calendar events. Optional. Allowed values: today, tomorrow, this week, next week, this month, next month, specific date.',
                         enum: ['today', 'tomorrow', 'this week', 'next week', 'this month', 'next month', 'specific date'],
                     },
                     specificDate: {
                         type: 'string',
-                        description: 'The specific date to search for in ISO 8601 format. Required if search is "specific date".',
+                        description: 'The specific date to search for in YYYY-MM-DD format. Required if search is "specific date"; if provided alone without search, it is used as the date.',
                     },
                 },
                 required: [],
@@ -48,56 +55,75 @@ export default {
         },
     },
     config: {},
-    execute: async function (args: { startDate: string, endDate: string }, streamEmitter: (event: IStreamEvent, data: any) => void) {
+    execute: async function (args: string | { search?: string; specificDate?: string }, streamEmitter: (event: IStreamEvent, data: any) => void) {
         try {
-            const parsedArgs = typeof args === 'string' ? safeJsonParse(args) : args;
-            const { search = 'today', specificDate = moment().format('YYYY-MM-DD') } = parsedArgs;
-            const { startDate, endDate } = this._searchTypeToDate(search, specificDate);
-            streamEmitter('report_status', search === 'specific date' || !READING_STATUS[search]
-                ? i18n.t('tools.calendar_event_reading.status_date', { date: search === 'specific date' ? specificDate : search })
-                : i18n.t(READING_STATUS[search]));
+            const parsedArgs = parseArgs(args);
+            if (parsedArgs.error) {
+                return parsedArgs.error;
+            }
+
+            const { startDate, endDate } = getDateRange(parsedArgs.search, parsedArgs.specificDate);
+            const searchType: SearchType = parsedArgs.search;
+            const label = searchType === 'specific date' ? parsedArgs.specificDate ?? searchType : searchType;
+
+            streamEmitter('report_status', searchType === 'specific date' || !READING_STATUS[searchType]
+                ? i18n.t('tools.calendar_event_reading.status_date', { date: label })
+                : i18n.t(READING_STATUS[searchType]));
 
             // Normally granted when the tool was switched on - access can be revoked in settings since.
             if (!(await ensureCalendarPermission(true))) return 'Calendar access is not granted, so the calendar could not be read. Tell the user to allow calendar access for AnythingLLM in their phone settings.';
 
-            const events = await RNCalendarEvents.fetchAllEvents(startDate, endDate);
-            if (!events?.length) return `There are no events in the user's calendar for ${search === 'specific date' ? specificDate : search}.`;
+            const allEvents = await RNCalendarEvents.fetchAllEvents(startDate, endDate);
+            if (!allEvents?.length) return `There are no events in the user's calendar for ${label}.`;
 
-            // Every event read is a source the user can open in their calendar app.
-            const citations = events.map(toCalendarCitation).filter((citation): citation is CalendarEventCitation => !!citation);
+            // Filter out all-day events whose date range doesn't overlap the requested range.
+            const filteredEvents = allEvents.filter(event => {
+                if (!event.allDay) return true;
+                return allDayEventsOverlap(event.startDate, event.endDate ?? event.startDate, startDate, endDate);
+            });
+
+            if (!filteredEvents.length) return `There are no events in the user's calendar for ${label}.`;
+
+            // Sort chronologically.
+            const sortedEvents = sortEventsByDate(filteredEvents);
+
+            // Build citations from the filtered list.
+            const citations = sortedEvents.map(toCalendarCitation).filter((citation): citation is CalendarEventCitation => !!citation);
             if (citations.length > 0) streamEmitter('report_citations', citations);
 
-            let eventText = `You have ${events.length} events in your calendar for ${search === 'specific date' ? specificDate : search}:\n\n`;
+            let eventText = `You have ${sortedEvents.length} events in your calendar for ${label}:\n\n`;
             const eventDescriptions: string[] = [];
-            for (const event of events) {
-                const startDate = moment(event.startDate).format('dddd, MMMM D, YYYY');
-                const endDate = moment(event.endDate ?? (moment(event.startDate).add(1, 'hour').toISOString())); // If no end date, assume it's for 1 hour
 
-                let prefix = '';
-                if (search === 'specific date') prefix = `On ${startDate.split(',')[0]} at ${startDate.split(',')[1]} you have `;
-                else prefix = '';
+            for (const event of sortedEvents) {
+                let eventDescription: string;
 
-                let eventDescription = `${prefix}${event.title}${event.location ? ` at ${event.location}` : ' online'}`;
-                if (event.allDay) eventDescription += ' that will go on for the whole day.';
-                else {
-                    const duration = endDate.diff(moment(event.startDate), 'minutes');
-                    const hours = Math.floor(duration / 60);
-                    const minutes = duration % 60;
-                    if (hours > 0) eventDescription += ` for ${hours} hours and ${minutes} minutes`;
-                    else eventDescription += ` for ${minutes} minutes`;
+                if (event.allDay) {
+                    eventDescription = formatAllDayEvent(event.title, event.startDate, event.endDate, event.location);
+                } else {
+                    eventDescription = formatTimedEvent(
+                        event.title,
+                        event.startDate,
+                        event.endDate,
+                        event.location,
+                    );
                 }
+
                 eventDescription += '.';
 
                 if (event.attendees?.length) {
+                    eventDescription += ' ';
                     const attendees: string[] = [];
                     for (const attendee of event.attendees) {
                         if (attendee.name) attendees.push(`${attendee.name} (${attendee.email})`);
                         else attendees.push(`${attendee.email}`);
                     }
-                    eventDescription += ` The attendees are ${attendees.join(', ')}.`;
+                    eventDescription += `The attendees are ${attendees.join(', ')}.`;
                 }
 
-                eventDescription += this._formatEventDescription(event.description as string);
+                const desc = this._formatEventDescription(event.description as string);
+                if (desc) {
+                    eventDescription += ' ' + desc;
+                }
                 eventDescriptions.push(eventDescription);
             }
 
@@ -106,45 +132,6 @@ export default {
         } catch (e) {
             console.error(`Calendar Event Reading Error: ${e instanceof Error ? e.message : 'Unknown error'}`);
             return `There was an error reading the calendar.`;
-        }
-    },
-    _searchTypeToDate: function (searchType: 'today' | 'tomorrow' | 'this week' | 'next week' | 'this month' | 'next month' | 'specific date', specificDate?: string) {
-        switch (searchType) {
-            case 'today':
-                return {
-                    startDate: moment().startOf('day').toISOString(),
-                    endDate: moment().endOf('day').toISOString()
-                };
-            case 'tomorrow':
-                return {
-                    startDate: moment().add(1, 'day').startOf('day').toISOString(),
-                    endDate: moment().add(1, 'day').endOf('day').toISOString()
-                };
-            case 'this week':
-                return {
-                    startDate: moment().startOf('week').toISOString(),
-                    endDate: moment().endOf('week').toISOString()
-                };
-            case 'next week':
-                return {
-                    startDate: moment().add(1, 'week').startOf('week').toISOString(),
-                    endDate: moment().add(1, 'week').endOf('week').toISOString()
-                };
-            case 'this month':
-                return {
-                    startDate: moment().startOf('month').toISOString(),
-                    endDate: moment().endOf('month').toISOString()
-                };
-            case 'next month':
-                return {
-                    startDate: moment().add(1, 'month').startOf('month').toISOString(),
-                    endDate: moment().add(1, 'month').endOf('month').toISOString()
-                };
-            case 'specific date':
-                return {
-                    startDate: moment(specificDate as string).startOf('day').toISOString(),
-                    endDate: moment(specificDate as string).endOf('day').toISOString()
-                };
         }
     },
     _formatEventDescription: function (descriptionContent: string): string {

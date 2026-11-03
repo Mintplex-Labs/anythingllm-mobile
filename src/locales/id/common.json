@@ -120,7 +120,7 @@
     "about": {
       "release_notes": "Catatan rilis untuk v{{version}}",
       "star_github": "Bintang di GitHub",
-      "join_discord": "Bergabung dengan Discord"
+      "join_community": "Ikuti diskusi"
     },
     "utility": {
       "title": "Utilitas",

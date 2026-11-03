@@ -5,7 +5,7 @@ import {
   ArrowLeft,
   CaretRight,
   File,
-  DiscordLogo,
+  ChatsCircle,
   FileText,
   FileLock,
   ChartBar,
@@ -75,9 +75,9 @@ const ABOUT_LINKS: SupportLink[] = [
     icon: <GithubLogo size={18} color="#FFF" />,
   },
   {
-    title: tKey('settings.about.join_discord'),
-    link: 'https://discord.gg/6UyHPeGZAC',
-    icon: <DiscordLogo size={18} color="#FFF" />,
+    title: tKey('settings.about.join_community'),
+    link: 'https://github.com/Mintplex-Labs/anything-llm/discussions',
+    icon: <ChatsCircle size={18} color="#FFF" />,
   },
 ]
 

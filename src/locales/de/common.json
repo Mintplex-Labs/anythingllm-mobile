@@ -120,7 +120,7 @@
     "about": {
       "release_notes": "Versionshinweise für v{{version}}",
       "star_github": "Auf GitHub mit Stern versehen",
-      "join_discord": "Discord beitreten"
+      "join_community": "An der Diskussion teilnehmen"
     },
     "utility": {
       "title": "Dienstprogramm",

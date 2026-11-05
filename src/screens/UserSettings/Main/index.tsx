@@ -5,7 +5,7 @@ import {
   ArrowLeft,
   CaretRight,
   File,
-  ChatsCircle,
+  RedditLogo,
   FileText,
   FileLock,
   ChartBar,
@@ -76,8 +76,8 @@ const ABOUT_LINKS: SupportLink[] = [
   },
   {
     title: tKey('settings.about.join_community'),
-    link: 'https://github.com/Mintplex-Labs/anything-llm/discussions',
-    icon: <ChatsCircle size={18} color="#FFF" />,
+    link: 'https://www.reddit.com/r/anythingllm/',
+    icon: <RedditLogo size={18} color="#FFF" />,
   },
 ]
 

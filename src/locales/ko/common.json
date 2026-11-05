@@ -120,7 +120,7 @@
     "about": {
       "release_notes": "v{{version}} 릴리스 노트",
       "star_github": "GitHub에서 별 추가",
-      "join_discord": "Discord에 참여"
+      "join_community": "토론에 참여"
     },
     "utility": {
       "title": "유틸리티",

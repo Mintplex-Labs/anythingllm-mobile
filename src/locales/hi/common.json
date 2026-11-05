@@ -120,7 +120,7 @@
     "about": {
       "release_notes": "v{{version}} के लिए रिलीज़ नोट्स",
       "star_github": "GitHub पर स्टार दें",
-      "join_discord": "Discord में शामिल हों"
+      "join_community": "चर्चा में शामिल हों"
     },
     "utility": {
       "title": "उपयोगिता",

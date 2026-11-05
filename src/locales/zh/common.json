@@ -120,7 +120,7 @@
     "about": {
       "release_notes": "v{{version}} 的发布说明",
       "star_github": "在 GitHub 上加星标",
-      "join_discord": "加入 Discord"
+      "join_community": "加入讨论"
     },
     "utility": {
       "title": "实用工具",

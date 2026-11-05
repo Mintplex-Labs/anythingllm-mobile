@@ -120,7 +120,7 @@
     "about": {
       "release_notes": "Note di rilascio per v{{version}}",
       "star_github": "Stella su GitHub",
-      "join_discord": "Unisciti a Discord"
+      "join_community": "Partecipa alla discussione"
     },
     "utility": {
       "title": "Utilità",

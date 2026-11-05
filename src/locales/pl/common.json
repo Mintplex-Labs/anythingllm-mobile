@@ -120,7 +120,7 @@
     "about": {
       "release_notes": "Uwagi do wydania dla wersji {{version}}",
       "star_github": "Gwiazdka na GitHubie",
-      "join_discord": "Dołącz do Discorda"
+      "join_community": "Dołącz do dyskusji"
     },
     "utility": {
       "title": "Narzędzia",

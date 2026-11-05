@@ -10,6 +10,7 @@ import summarize from './summarize';
 import createFiles from './createFiles';
 import createScheduledJob from './createScheduledJob';
 import setReminder from './setReminder';
+import openApp from './openApp';
 
 export default {
     default: {
@@ -27,5 +28,6 @@ export default {
         calendarEventCreation,
         calendarEventReading,
         setReminder,
+        openApp,
     }
 } as const;

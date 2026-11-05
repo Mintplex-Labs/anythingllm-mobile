@@ -162,7 +162,9 @@ class ToolsManager {
         Tools.appConnections.calendarEventReading,
         // Hands off to the clock app, which only Android has
         ...(Platform.OS === 'android' ? [Tools.appConnections.setReminder] : []),
-    ]
+        // Launching other apps is Android-only
+        ...(Platform.OS === 'android' ? [Tools.appConnections.openApp] : []),
+            ]
 
     log = (text: string, ...args: any[]) => {
         console.log(`\x1b[35m[ToolsManager] ${text}\x1b[0m`, ...args);

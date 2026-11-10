@@ -2,6 +2,7 @@ import { RERANKER_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/model
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { downloadFileAtomic } from "@/utils/fs/atomicDownload";
 import { initLlama, LlamaContext } from "llama.rn";
+import Telemetry from "@/utils/Telemetry";
 import NetInfo from "@react-native-community/netinfo";
 import { Alert } from "react-native";
 import i18n from "@/i18n";
@@ -166,7 +167,7 @@ export default class ToolReranker {
             const startTime = Date.now();
 
             // Load the cross-encoder into a temporary context
-            context = await initLlama({
+            context = await Telemetry.trackNativeModelLoad('tool_reranker', this.modelPath, { n_ctx: 512 }, () => initLlama({
                 model: this.modelPath,
                 embedding: true,
                 pooling_type: LLAMA_POOLING_TYPE_RANK,
@@ -176,7 +177,7 @@ export default class ToolReranker {
                 use_mlock: true,
                 use_mmap: true,
                 n_gpu_layers: 0,
-            });
+            }));
 
             // Build documents from tool definitions
             const documents = tools.map((tool) => this.toolToDocument(tool));

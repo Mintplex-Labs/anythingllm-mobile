@@ -3,6 +3,7 @@ import TextSplitter, { TextSplitterConfig } from "@/utils/TextSplitter";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { downloadFileAtomic } from "@/utils/fs/atomicDownload";
 import { initLlama, LlamaContext, NativeEmbeddingResult } from "llama.rn";
+import Telemetry from "@/utils/Telemetry";
 
 type EmbedderPrefixType = 'query' | 'embed_document';
 
@@ -112,7 +113,7 @@ export default class OnDeviceEmbedderProvider {
         this.initializing = (async () => {
             try {
                 if (!(await RNFS.exists(this.modelPath))) await this.downloadModel();
-                this.context = await initLlama({
+                this.context = await Telemetry.trackNativeModelLoad('embedder', this.modelPath, { n_ctx: this.CONTEXT_LENGTH }, () => initLlama({
                     model: this.modelPath,
                     embedding: true,
                     embd_normalize: this.EMBEDDING_NORMALIZATION,
@@ -122,7 +123,7 @@ export default class OnDeviceEmbedderProvider {
                     use_mlock: true,
                     use_mmap: true,
                     n_gpu_layers: 0, // CPU only
-                });
+                }));
                 this.log(`${this.model} loaded`);
                 return true;
             } catch (error) {

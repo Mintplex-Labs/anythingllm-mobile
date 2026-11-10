@@ -2,8 +2,6 @@ package com.anythingllm
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
-import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
-import com.facebook.react.defaults.DefaultReactActivityDelegate
 import android.os.Bundle  // Required for onCreate parameter
 
 
@@ -16,11 +14,11 @@ class MainActivity : ReactActivity() {
   override fun getMainComponentName(): String = "AnythingLLM"
 
   /**
-   * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
-   * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
+   * Returns the instance of the [ReactActivityDelegate]. [SharedHostReactActivityDelegate] is the
+   * default delegate plus a guard for the ReactHost this activity shares with the overlays.
    */
   override fun createReactActivityDelegate(): ReactActivityDelegate =
-      DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
+      SharedHostReactActivityDelegate(this, mainComponentName)
 
   override fun onCreate(savedInstanceState: Bundle?) {
       // Edge-to-edge is applied by ReactActivity via the edgeToEdgeEnabled gradle property.

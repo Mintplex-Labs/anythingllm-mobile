@@ -1,6 +1,7 @@
 import { RERANKER_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/models/defaults";
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { initLlama, LlamaContext } from "llama.rn";
+import Telemetry from "@/utils/Telemetry";
 import type { SemanticSearchResult } from "@/utils/VectorDB";
 
 const LLAMA_POOLING_TYPE_RANK = 'rank' as const;
@@ -62,7 +63,7 @@ export default class DocumentReranker {
       this.log(`Reranking ${results.length} chunks against query: "${query.slice(0, 80)}..."`);
       const startTime = Date.now();
 
-      context = await initLlama({
+      context = await Telemetry.trackNativeModelLoad('reranker', this.modelPath, { n_ctx: 512 }, () => initLlama({
         model: this.modelPath,
         embedding: true,
         pooling_type: LLAMA_POOLING_TYPE_RANK,
@@ -72,7 +73,7 @@ export default class DocumentReranker {
         use_mlock: true,
         use_mmap: true,
         n_gpu_layers: 0,
-      });
+      }));
 
       const documents = results.map(r =>
         String(r.metadata.content ?? '').slice(0, 512)

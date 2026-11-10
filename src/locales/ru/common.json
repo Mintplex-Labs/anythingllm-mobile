@@ -120,7 +120,7 @@
     "about": {
       "release_notes": "Примечания к выпуску для v{{version}}",
       "star_github": "Звёздочка на GitHub",
-      "join_discord": "Присоединиться к Discord"
+      "join_community": "Присоединиться к обсуждению"
     },
     "utility": {
       "title": "Утилиты",

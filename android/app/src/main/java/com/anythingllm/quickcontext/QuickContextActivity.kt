@@ -4,10 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import com.anythingllm.R
+import com.anythingllm.SharedHostReactActivityDelegate
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
-import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
-import com.facebook.react.defaults.DefaultReactActivityDelegate
 import java.lang.ref.WeakReference
 
 /**
@@ -31,7 +30,7 @@ class QuickContextActivity : ReactActivity() {
     override fun getMainComponentName(): String = COMPONENT_NAME
 
     override fun createReactActivityDelegate(): ReactActivityDelegate =
-        object : DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled) {
+        object : SharedHostReactActivityDelegate(this, mainComponentName) {
             override fun getLaunchOptions(): Bundle = Bundle().apply {
                 putString("selectedText", intent?.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString() ?: "")
             }

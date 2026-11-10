@@ -7,10 +7,9 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.core.view.WindowCompat
+import com.anythingllm.SharedHostReactActivityDelegate
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
-import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
-import com.facebook.react.defaults.DefaultReactActivityDelegate
 import java.lang.ref.WeakReference
 
 /**
@@ -38,7 +37,7 @@ class AssistantActivity : ReactActivity() {
     override fun getMainComponentName(): String = COMPONENT_NAME
 
     override fun createReactActivityDelegate(): ReactActivityDelegate =
-        object : DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled) {
+        object : SharedHostReactActivityDelegate(this, mainComponentName) {
             override fun getLaunchOptions(): Bundle = Bundle().apply {
                 putDouble("invocation", (intent?.getLongExtra(EXTRA_INVOCATION, 0L) ?: 0L).toDouble())
             }

@@ -2,11 +2,11 @@ import { useCallback, useMemo } from 'react';
 import {
   DeviceMemory,
   FitCandidate,
-  getDeviceMemory,
   MemoryFit,
   memoryFitForSize,
   pickRecommendedModel,
 } from '@/utils/models/memoryFit';
+import { getDeviceMemory } from '@/utils/models/deviceMemory';
 
 /**
  * Device-memory verdicts for a list of on-device models.

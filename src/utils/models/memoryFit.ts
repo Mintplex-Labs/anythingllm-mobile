@@ -1,4 +1,3 @@
-import DeviceInfo from 'react-native-device-info';
 import { tKey } from '@/i18n';
 
 /**
@@ -18,26 +17,9 @@ export type MemoryFit = 'ok' | 'tight' | 'impossible';
 export type DeviceMemory = {
   /** Total physical RAM in bytes */
   total: number;
-  /** RAM we consider safe to spend on model weights: total minus `MEMORY_RESERVE_BYTES` */
+  /** RAM we consider safe to spend on model weights - total minus a reserve (see deviceMemory.ts) */
   budget: number;
 };
-
-/** Reserved for the OS, the app and the KV cache. */
-export const MEMORY_RESERVE_BYTES = 2.5e9;
-
-/**
- * Total device RAM and the weights budget, or null when the platform cannot tell us
- * (in which case callers should show no badge at all rather than guess).
- */
-export function getDeviceMemory(): DeviceMemory | null {
-  try {
-    const total = DeviceInfo.getTotalMemorySync();
-    if (!total) return null;
-    return { total, budget: total - MEMORY_RESERVE_BYTES };
-  } catch {
-    return null;
-  }
-}
 
 const SIZE_UNITS: Record<string, number> = {
   b: 1,

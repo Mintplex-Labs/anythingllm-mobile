@@ -35,7 +35,8 @@ import { buildImportedModel, ImportedModel, importedModelId } from '@/utils/mode
 import { formatBytes, formatNumber } from '@/utils/formatters';
 import { findIconByModelName } from '@/components/MonoProviderIcon';
 import { MemoryFitBadge } from '@/components/ModelCard/FitBadges';
-import { getDeviceMemory, MemoryFit, memoryFitForSize } from '@/utils/models/memoryFit';
+import { MemoryFit, memoryFitForSize } from '@/utils/models/memoryFit';
+import { getDeviceMemory } from '@/utils/models/deviceMemory';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 

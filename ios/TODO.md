@@ -37,20 +37,20 @@ These Android native modules have no iOS version, and nothing in JS guards them.
 
 - [x] Toasts: `src/utils/Notification` uses `ToastAndroid` (~98 call sites, silent on iOS).
       Needs a cross-platform toast.
-- [ ] Info.plist:
-  - [ ] add calendar keys (`NSCalendarsFullAccessUsageDescription`,
+- [x] Info.plist:
+  - [x] add calendar keys (`NSCalendarsFullAccessUsageDescription`,
         `NSCalendarsWriteOnlyAccessUsageDescription`, `NSCalendarsUsageDescription`)
-  - [ ] add `NSLocalNetworkUsageDescription` (LAN Ollama / LM Studio / Desktop)
-  - [ ] remove the empty `NSLocationWhenInUseUsageDescription`: `getLocation` is IP-based, and
+  - [x] add `NSLocalNetworkUsageDescription` (LAN Ollama / LM Studio / Desktop)
+  - [x] remove the empty `NSLocationWhenInUseUsageDescription`: `getLocation` is IP-based, and
         App Review rejects empty purpose strings
-  - [ ] portrait-only on iPhone, to match Android
+  - [x] portrait-only on iPhone, to match Android
 - [ ] On-device models:
-  - [ ] Enable Metal on device: `ModelStore.useMetal` is false and the providers hardcode
+  - [x] Enable Metal on device: `ModelStore.useMetal` is false and the providers hardcode
         `n_gpu_layers: 0`. Keep the CPU fallback for the simulator.
   - [x] Budget against the per-app limit in `memoryFit` (`deviceMemory.ios.ts`).
         `useMemoryCheck` already reads `os_proc_available_memory()` through `DeviceInfoModule`.
   - [ ] Same for `contextLength`.
-  - [ ] `use_mlock: false` on iOS.
+  - [x] `use_mlock: false` on iOS.
   - [x] Stop inference and unload models when the app goes to the background
         (`useReleaseModelsInBackground.ios.ts`).
 - [ ] Storage:

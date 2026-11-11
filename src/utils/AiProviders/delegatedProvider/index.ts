@@ -96,6 +96,7 @@ class DelegatedProvider {
         throwIfAborted(signal);
         return new Promise((resolve, reject) => {
             const citations: any[] = [];
+            let streamedText = '';
             const es = new EventSource(`${connectionUrl}/send/stream-chat`, {
                 method: 'POST',
                 headers: {
@@ -121,6 +122,7 @@ class DelegatedProvider {
                 const data = safeJsonParse(event.data || '{}');
                 switch (data.type) {
                     case 'textResponseChunk':
+                        streamedText += data.textResponse ?? '';
                         onStream('chunk', data.textResponse);
                         citations.push(...this.parseSourcesFromResponse(data));
                         break;
@@ -129,10 +131,15 @@ class DelegatedProvider {
                         // under this name - they are progress statuses, not model reasoning.
                         onStream('report_status', data.thought as string);
                         break;
-                    case 'textResponse':
-                        onStream('chunk', data.textResponse);
+                    case 'textResponse': {
+                        // Agent replies stream as chunks, then repeat the whole text here - only add what was not streamed.
+                        const fullText: string = data.textResponse ?? '';
+                        const unstreamed = fullText.startsWith(streamedText) ? fullText.slice(streamedText.length) : fullText;
+                        streamedText = '';
+                        if (unstreamed) onStream('chunk', unstreamed);
                         citations.push(...this.parseSourcesFromResponse(data));
                         break;
+                    }
                     case 'finalizeResponseStream':
                         onStream('report_citations', citations);
                         onStream('complete', '');

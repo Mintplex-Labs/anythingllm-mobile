@@ -119,6 +119,8 @@ export default function OllamaOptions({
           <TextInput
             key="baseUrl"
             keyboardType="url"
+            autoCapitalize="none"
+            autoCorrect={false}
             multiline={false}
             numberOfLines={1}
             style={{
@@ -206,6 +208,8 @@ export default function OllamaOptions({
               value={searchQuery}
               onChangeText={setSearchQuery}
               placeholder={t('settings.provider_options.search_models')}
+              autoCapitalize="none"
+              autoCorrect={false}
               placeholderTextColor="#9F9FA0"
               className="flex-1 h-[38px] ml-2 text-white"
               scrollEnabled={false}

@@ -15,7 +15,14 @@ import {
 import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { ArrowsInSimple, ArrowsOutSimple } from "phosphor-react-native";
 import { screenDimensions } from "@/utils/constants";
-import ActionMenu, { ACTION_MENU_HEIGHT } from "./Actions";
+import ActionMenu from "./Actions";
+import {
+  applyTopPadding,
+  layoutOnSnapStart,
+  promptInputHeight,
+  promptTextProps,
+  snapTopPadding,
+} from "./sheetLayout";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   AttachmentInterface,
@@ -34,7 +41,6 @@ import useLlmPreference from "@/hooks/useLLMPreference";
 import useSpeechToText from "@/hooks/useSpeechToText";
 import { useTranslation } from "react-i18next";
 
-const defaultPadding = [0, 0, 32]; // top padding for snap points
 export const snapPointsDefault = ["22%", "60%", "100%"];
 
 interface PromptInputProps {
@@ -51,7 +57,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
   const drawerStatus = useDrawerStatus();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { registerSheet, presentSheet, activeSheet } = useBottomSheet();
-  const paddingAnim = useRef(new Animated.Value(defaultPadding[0])).current;
+  const paddingAnim = useRef(new Animated.Value(snapTopPadding(0, snapPointsDefault.length - 1, 0))).current;
   const snapPoints = useMemo(() => snapPointsDefault, []);
   const inputRef = useRef<View>(null);
 
@@ -66,6 +72,17 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
   const hasModelSelected = useMemo(() => {
     return !!llmPreferences?.config?.model;
   }, [llmPreferences]);
+
+  const applySnapLayout = useCallback(
+    (index: number) => {
+      setSheetIndex(index);
+      applyTopPadding(
+        paddingAnim,
+        snapTopPadding(index, snapPoints.length - 1, insets.top),
+      );
+    },
+    [insets.top],
+  );
 
   const handleSheetChanges = useCallback(
     (index: number) => {
@@ -83,15 +100,16 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
           break;
       }
 
-      setSheetIndex(index);
-      Animated.timing(paddingAnim, {
-        toValue: defaultPadding[index] ?? defaultPadding[0],
-        duration: 150,
-        delay: 0,
-        useNativeDriver: false,
-      }).start();
+      applySnapLayout(index);
     },
-    [presentSheet],
+    [presentSheet, applySnapLayout],
+  );
+
+  const handleSheetAnimate = useCallback(
+    (_fromIndex: number, toIndex: number) => {
+      if (toIndex >= 0) applySnapLayout(toIndex);
+    },
+    [applySnapLayout],
   );
 
   const HandleComponent = () => {
@@ -131,15 +149,13 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
     if (isNaN(currentSnapPoint))
       currentSnapPoint = parseInt(snapPoints[0]) / 100;
 
-    const actionMenuHeight = isFullScreen
-      ? ACTION_MENU_HEIGHT * 2
-      : ACTION_MENU_HEIGHT;
-    return (
-      screenDimensions.height * currentSnapPoint -
-      insets.bottom -
-      actionMenuHeight -
-      keyboardHeight
-    );
+    return promptInputHeight({
+      snapPoint: currentSnapPoint,
+      topPadding: snapTopPadding(sheetIndex, snapPoints.length - 1, insets.top),
+      isFullScreen,
+      keyboardHeight,
+      insetBottom: insets.bottom,
+    });
   }, [sheetIndex, keyboardHeight]);
 
   // Do not manage the cursor/selection from JS here. IME-based keyboards
@@ -209,6 +225,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
         enableDynamicSizing={false}
         enablePanDownToClose={false}
         onChange={handleSheetChanges}
+        onAnimate={layoutOnSnapStart ? handleSheetAnimate : undefined}
         handleComponent={HandleComponent}
         backgroundStyle={{
           backgroundColor: "#1B1B1E",
@@ -245,7 +262,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
               bottomSheetRef.current?.snapToIndex(0);
               Keyboard.dismiss();
             }}
-            defaultValue={chatHandler.prompt}
+            {...promptTextProps(chatHandler.prompt)}
             onChangeText={handleTextInputChange}
             scrollEnabled={true}
             style={{

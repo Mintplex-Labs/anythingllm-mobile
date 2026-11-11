@@ -1,4 +1,5 @@
 import * as RNFS from '@dr.pogodin/react-native-fs';
+import { LARGE_DOWNLOAD_SESSION_OPTIONS } from '@/utils/fs/atomicDownload';
 import uiStore from '@/store/UIStore';
 import { type Model } from '@/utils/types';
 import { defaultModels } from '@/utils/models';
@@ -91,8 +92,7 @@ class MmprojDownloader {
         fromUrl: model.mmproj.downloadUrl,
         toFile: partPath,
         progressInterval: PROGRESS_INTERVAL_MS,
-        background: true,
-        discretionary: true,
+        ...LARGE_DOWNLOAD_SESSION_OPTIONS,
         progress: (res) => {
           if (!this.isDownloading(modelId)) return; // cancelled - ignore late ticks
           const total = res.contentLength || model.mmproj?.size || 0;

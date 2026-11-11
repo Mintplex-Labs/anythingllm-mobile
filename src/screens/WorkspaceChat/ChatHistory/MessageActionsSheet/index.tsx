@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, NativeEventEmitter } from 'react-native';
+import { ActivityIndicator, DeviceEventEmitter } from 'react-native';
 import { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -117,7 +117,7 @@ export default function MessageActionsSheet({ workspace, thread }: { workspace: 
       Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.THREAD_FORKED, { messageCount });
 
       // Same event + navigation choreography as the "new thread" button in the TopBar.
-      new NativeEventEmitter().emit('workspaceUpdate', {
+      DeviceEventEmitter.emit('workspaceUpdate', {
         type: 'add-thread',
         details: { workspaceSlug: workspace.slug, thread: forkedThread },
       });

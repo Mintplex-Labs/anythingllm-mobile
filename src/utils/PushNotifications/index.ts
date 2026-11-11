@@ -1,7 +1,7 @@
-import notifee, { AndroidImportance, AuthorizationStatus, EventType } from '@notifee/react-native';
+import notifee, { AndroidChannel, AndroidImportance, AuthorizationStatus, EventType } from '@notifee/react-native';
 import { Notification, NotificationSettings } from '@notifee/react-native';
 import { useEffect } from 'react';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import { isScreenLocked } from '@/utils/screenLock';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AwaitableAlert from '@/components/AwaitableAlert';
@@ -79,14 +79,19 @@ class PushNotifications {
     }
 
     private createChannels() {
+        // iOS has no notification channels - notifee resolves createChannel to an empty string there,
+        // so register the id directly and let send() work the same on both platforms.
+        const createChannel = (channel: AndroidChannel) =>
+            Platform.OS === 'android' ? notifee.createChannel(channel) : Promise.resolve(channel.id);
+
         // Primary notification channel
-        notifee.createChannel({
+        createChannel({
             id: 'anythingllm-channel',
             name: 'AnythingLLM',
         }).then(createdChannelId => this.channels.primary = createdChannelId);
 
         // Progress channel to prevent vibration/sounds
-        notifee.createChannel({
+        createChannel({
             id: 'anythingllm-progress',
             name: i18n.t('notifications.channels.download_progress'),
             vibration: false,
@@ -97,7 +102,7 @@ class PushNotifications {
         // Chat replies finishing while the app is in the background. High importance so it
         // heads-up on the lock screen, with a single short buzz rather than the default pattern.
         // Android channel settings are immutable once created, so changes here need a new channel id.
-        notifee.createChannel({
+        createChannel({
             id: 'anythingllm-chat-replies',
             name: i18n.t('notifications.channels.chat_replies'),
             description: i18n.t('notifications.channels.chat_replies_description'),
@@ -108,7 +113,7 @@ class PushNotifications {
         }).then(createdChannelId => this.channels.chat = createdChannelId);
 
         // A scheduled job finished with something to show. Same heads-up treatment as chat replies.
-        notifee.createChannel({
+        createChannel({
             id: 'anythingllm-scheduled-jobs',
             name: i18n.t('notifications.channels.scheduled_jobs'),
             description: i18n.t('notifications.channels.scheduled_jobs_description'),

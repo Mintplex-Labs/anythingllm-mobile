@@ -10,7 +10,6 @@ import { throwIfAborted } from "../chat/abort";
 import { truncateMiddle } from "../chat/contextCompaction";
 import { isOnDeviceProvider, toolSupportsProvider } from "./providerGuards";
 import i18n from "@/i18n";
-import { Platform } from "react-native";
 
 export { isOnDeviceProvider, isOnDeviceProviderName, toolSupportsProvider } from "./providerGuards";
 
@@ -160,8 +159,7 @@ class ToolsManager {
         Tools.appConnections.draftText,
         Tools.appConnections.calendarEventCreation,
         Tools.appConnections.calendarEventReading,
-        // Hands off to the clock app, which only Android has
-        ...(Platform.OS === 'android' ? [Tools.appConnections.setReminder] : []),
+        Tools.appConnections.setReminder,
     ]
 
     log = (text: string, ...args: any[]) => {

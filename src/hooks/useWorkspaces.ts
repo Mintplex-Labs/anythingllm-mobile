@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { NativeEventEmitter } from "react-native";
+import { DeviceEventEmitter } from "react-native";
 import Workspace from "@/database/models/Workspace";
 import uiStore from "@/store/UIStore";
 import { ACTIVE_CHAT_LOCATION_KEY } from "./useChatInfoEmit";
 
-const eventEmitter = new NativeEventEmitter();
+const eventEmitter = DeviceEventEmitter;
 
 /** The chat screen currently open, if one has mounted yet */
 function currentChatLocation(): { wsSlug: string | null, threadSlug: string | null } {

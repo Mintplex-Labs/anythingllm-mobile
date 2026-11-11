@@ -1,18 +1,15 @@
-import { NativeModules } from 'react-native';
 import RNCalendarEvents from 'react-native-calendar-events';
 import moment from 'moment';
 import { type IReminderAction } from '@/database/models/WorkspaceChat';
 import { ensureCalendarPermission } from '@/utils/calendar';
 import i18n from '@/i18n';
 
-const { AlarmModule, MessagingModule } = NativeModules;
-
 export type ReminderKind = IReminderAction['action']['kind'];
 
 /** The clock app's alarms have no date and its timers top out here - anything later becomes a calendar reminder */
 export const CLOCK_HORIZON_MS = 24 * 60 * 60 * 1000;
 /** How long a calendar reminder event lasts - long enough to show as a block, short enough not to fill the day */
-const CALENDAR_REMINDER_LENGTH_MS = 15 * 60 * 1000;
+export const CALENDAR_REMINDER_LENGTH_MS = 15 * 60 * 1000;
 /** Furthest ahead a reminder can be set - anything past it is a mistake, not a plan */
 const MAX_AHEAD_MS = 5 * 365 * 24 * 60 * 60 * 1000;
 
@@ -92,17 +89,6 @@ function resolveDay(dayText: string, time: moment.Moment, now: number): { ok: tr
   return { ok: true, date: at(date) };
 }
 
-/** Hands a one-off alarm to the clock app. Throws when there is no clock app or it refuses. */
-export async function setClockAlarm(fireAt: number, label: string): Promise<void> {
-  const when = moment(fireAt);
-  await AlarmModule.setAlarm(when.hour(), when.minute(), label);
-}
-
-/** Starts a countdown timer in the clock app. Throws when there is no clock app or it refuses. */
-export async function setClockTimer(seconds: number, label: string): Promise<void> {
-  await AlarmModule.setTimer(seconds, label);
-}
-
 /**
  * Adds a short event with an alert at its start to the user's primary writable calendar, asking
  * for calendar access if needed. Returns the event id. Throws `calendar_permission_denied` or
@@ -122,14 +108,6 @@ export async function saveCalendarReminder(fireAt: number, label: string): Promi
     alarms: [{ date: 0 }],
     notes: i18n.t('tools.set_reminder.calendar_notes'),
   });
-}
-
-/** Opens what the card stands for: the clock app's alarms or timers, or the calendar event. Throws when nothing can open it. */
-export async function openReminder(reminder: IReminderAction['action']): Promise<void> {
-  if (reminder.kind === 'alarm') return AlarmModule.showAlarms();
-  if (reminder.kind === 'timer') return AlarmModule.showTimers();
-  if (!reminder.eventId) throw new Error('missing_event');
-  await MessagingModule.viewCalendarEvent(reminder.eventId, reminder.fireAt, reminder.fireAt + CALENDAR_REMINDER_LENGTH_MS);
 }
 
 /** "Today · 3:00 PM", "Tomorrow · 9:00 AM" or "Fri, Oct 3 · 9:00 AM" (with the year when it is not this one) */

@@ -26,4 +26,4 @@ jobs:
           path-to-signatures: "signatures/v1/cla.json"
           # Signatures live on their own branch so branch protection on main doesn't block the bot.
           branch: "cla-signatures"
-          allowlist: timothycarambat,dependabot[bot],*[bot]
+          allowlist: timothycarambat,shatfield4,dependabot[bot],*[bot]

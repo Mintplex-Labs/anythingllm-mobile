@@ -75,7 +75,7 @@ export default function TopBar({
               width: 150,
               height: 50,
             }}
-            resizeMode="center"
+            resizeMode="contain"
           />
         </TouchableOpacity>
         <ModelChip workspace={workspace} />

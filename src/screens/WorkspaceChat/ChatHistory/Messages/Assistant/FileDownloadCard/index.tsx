@@ -1,10 +1,11 @@
 import { memo, useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Platform, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import { Check, DownloadSimple, FileDashed, ShareNetwork } from "phosphor-react-native";
 import { type IAgentAction, type IFileDownloadAction } from "@/database/models/WorkspaceChat";
 import { fileTypeForFilename } from "@/utils/documents/shared";
 import { generatedDocumentExists, generatedDocumentPath } from "@/utils/fs/generatedDocuments";
-import { copyToDeviceDownloads, shareDeviceFile } from "@/utils/fs/deviceDownloads";
+import { shareDeviceFile } from "@/utils/fs/deviceDownloads";
+import { HAS_SHARE_BUTTON, saveFileToDevice } from "./saveFile";
 import { formatBytes } from "@/utils/formatters";
 import { showToast } from "@/utils/Notification";
 import { useTranslation } from "react-i18next";
@@ -87,15 +88,11 @@ function FileDownloadCard({ action }: { action: IFileDownloadAction }) {
         if (!path) return;
         setStatus('saving');
         try {
-            if (Platform.OS === 'android') {
-                const saved = await copyToDeviceDownloads({ filename: title, sourcePath: path });
-                showToast(t('chat.file_download.saved_to', { filename: saved.filename, location: saved.locationLabel }));
-                setStatus('saved');
-                savedTimer.current = setTimeout(() => setStatus('ready'), SAVED_FEEDBACK_MS);
-            } else {
-                await shareDeviceFile({ path, filename: title, mimeType });
-                setStatus('ready');
-            }
+            const saved = await saveFileToDevice({ path, filename: title, mimeType });
+            if (!saved) return setStatus('ready');
+            showToast(t('chat.file_download.saved_to', { filename: saved.filename, location: saved.locationLabel }));
+            setStatus('saved');
+            savedTimer.current = setTimeout(() => setStatus('ready'), SAVED_FEEDBACK_MS);
         } catch (error: any) {
             console.error('[FileDownloadCard] download failed', error);
             showToast(t('chat.file_download.save_failed', { error: error?.message ?? t('chat.unknown_error') }), 'long');
@@ -145,7 +142,7 @@ function FileDownloadCard({ action }: { action: IFileDownloadAction }) {
 
             {!missing && (
                 <View style={{ gap: 6 }} className="flex flex-row items-center">
-                    {Platform.OS === 'android' && (
+                    {HAS_SHARE_BUTTON && (
                         <TouchableOpacity
                             onPress={handleShare}
                             disabled={sharing || status === 'checking' || status === 'saving'}

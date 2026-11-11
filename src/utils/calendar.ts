@@ -1,5 +1,5 @@
-import { Linking, NativeModules, Platform } from 'react-native';
-import RNCalendarEvents, { type CalendarEventReadable, type CalendarEventWritable } from 'react-native-calendar-events';
+import { NativeModules, Platform } from 'react-native';
+import RNCalendarEvents, { type CalendarEventReadable } from 'react-native-calendar-events';
 import moment from 'moment';
 import { type IAgentAction, type IAgentCalendarEventCitation, type ICalendarEventAction, type ICalendarRecurrence } from '@/database/models/WorkspaceChat';
 import * as RNFS from '@dr.pogodin/react-native-fs';
@@ -216,33 +216,6 @@ export async function openCalendarEventInApp(packageName: string, event: Calenda
   );
 }
 
-/**
- * iOS has no new-event screen we can reach, so there the event is saved straight to the default
- * calendar (the user tapped to add it), which needs write access. Throws `calendar_permission_denied`
- * when access is refused. iOS apps cannot add invitees, and weekly repeats fall on the start's weekday.
- */
-export async function saveCalendarEventOnIos(event: CalendarEvent): Promise<void> {
-  if (!(await ensureCalendarPermission(false))) throw new Error('calendar_permission_denied');
-  const recurrence = event.recurrence;
-  await RNCalendarEvents.saveEvent(event.title, {
-    startDate: new Date(event.beginTime).toISOString(),
-    endDate: new Date(event.endTime).toISOString(),
-    allDay: event.allDay,
-    location: event.eventLocation || undefined,
-    notes: descriptionWithUrl(event) || undefined,
-    url: event.url ?? undefined,
-    // A number is a relative offset in minutes from the start - negative is before.
-    alarms: event.reminderMinutes.length ? event.reminderMinutes.map(minutes => ({ date: -minutes })) : undefined,
-    // The library types every field as required, but it only applies the ones that are set.
-    recurrenceRule: recurrence ? ({
-      frequency: recurrence.frequency,
-      interval: recurrence.interval,
-      ...(recurrence.until !== null ? { endDate: new Date(recurrence.until).toISOString() } : {}),
-      ...(recurrence.count !== null ? { occurrence: recurrence.count } : {}),
-    } as CalendarEventWritable['recurrenceRule']) : undefined,
-  });
-}
-
 /** Escapes a TEXT value for an iCalendar property (RFC 5545 3.3.11) */
 function icsText(value: string): string {
   return value.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
@@ -332,21 +305,6 @@ export async function shareEventAsIcs(event: CalendarEvent): Promise<void> {
   const path = `${folder}/${filename}`;
   await RNFS.writeFile(path, buildIcs(event), 'utf8');
   await shareDeviceFile({ path, filename, mimeType: ICS_MIME_TYPE });
-}
-
-/** Seconds between the Unix epoch and 2001-01-01 UTC - the reference date iOS `calshow:` links count from */
-const APPLE_EPOCH_OFFSET_S = 978307200;
-
-/**
- * Opens an event the read-calendar tool cited. Android opens the event itself; iOS has no link to
- * a single event, so the Calendar app opens on its day. Throws when no calendar app could open it.
- */
-export async function viewCalendarEvent(event: CalendarEventCitation['event']): Promise<void> {
-  if (Platform.OS === 'android') {
-    await MessagingModule.viewCalendarEvent(event.id, event.beginTime, event.endTime);
-    return;
-  }
-  await Linking.openURL(`calshow:${Math.floor(event.beginTime / 1000) - APPLE_EPOCH_OFFSET_S}`);
 }
 
 /** "Tue, Sep 30 · 2:00 PM – 3:00 PM", with both dates when the event spans days */

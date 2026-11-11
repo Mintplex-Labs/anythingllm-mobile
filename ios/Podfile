@@ -53,5 +53,14 @@ target 'AnythingLLM' do
       :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
+
+    # fmt 11.0.2's consteval format strings fail to compile under Xcode 26.4+ clang.
+    # Building fmt as C++17 makes it fall back to its non-consteval path.
+    installer.pods_project.targets.each do |target|
+      next unless target.name == 'fmt'
+      target.build_configurations.each do |build_config|
+        build_config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+      end
+    end
   end
 end

@@ -77,13 +77,21 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>AnythingLLM reads your calendar when you ask about your schedule and adds events you approve.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>AnythingLLM reads your calendar when you ask about your schedule and adds events you approve.</string>
+	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
+	<string>AnythingLLM adds calendar events and reminders that you approve.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>AnythingLLM uses the camera to scan connection QR codes and to take photos to send to your model.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>AnythingLLM connects to model servers and AnythingLLM instances on your local network, such as Ollama, LM Studio or AnythingLLM Desktop.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>AnythingLLM uses the microphone to transcribe your speech into a prompt.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -115,8 +123,6 @@
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>

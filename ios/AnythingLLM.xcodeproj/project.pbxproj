@@ -10,17 +10,21 @@
 		00E356F31AD99517003FC87E /* AnythingLLMTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* AnythingLLMTests.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		1C5077855E738169D7580281 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 56D1BD968C32BD43D7C02874 /* PrivacyInfo.xcprivacy */; };
+		39622D773F72F787D34A66A9 /* ToastModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 53F6403F3BA2852E67CFD877 /* ToastModule.m */; };
 		44B2BFEC00074181171A4838 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F7FDAB114968E02D2F3F27 /* AppDelegate.swift */; };
 		5C10CA112EF3A00100AB12C3 /* ScreenLockModule.h in Sources */ = {isa = PBXBuildFile; fileRef = 5C10CA0F2EF3A00100AB12C1 /* ScreenLockModule.h */; };
 		5C10CA122EF3A00100AB12C4 /* ScreenLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C10CA102EF3A00100AB12C2 /* ScreenLockModule.m */; };
+		6E37633E20CD210CFF03E7C4 /* VectorBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D420B5201E46CDC98941DC7 /* VectorBox.m */; };
 		7A5C0DE12F1B400100AB12D3 /* SharedContentModule.h in Sources */ = {isa = PBXBuildFile; fileRef = 7A5C0DE02F1B400100AB12D1 /* SharedContentModule.h */; };
 		7A5C0DE22F1B400100AB12D4 /* SharedContentModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A5C0DE32F1B400100AB12D2 /* SharedContentModule.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		90779B618267A042AC72C098 /* WebScraperModule.m in Sources */ = {isa = PBXBuildFile; fileRef = DC91C088B5DDD42B268059EE /* WebScraperModule.m */; };
 		A85081982D6255F000BDE4BC /* KeepAwakeModule.h in Sources */ = {isa = PBXBuildFile; fileRef = A85081962D6255F000BDE4BC /* KeepAwakeModule.h */; };
 		A85081992D6255F000BDE4BC /* KeepAwakeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A85081972D6255F000BDE4BC /* KeepAwakeModule.m */; };
 		A88DF87F2D0B6F7400239E77 /* DeviceInfoModule.h in Sources */ = {isa = PBXBuildFile; fileRef = A88DF87D2D0B6F7400239E77 /* DeviceInfoModule.h */; };
 		A88DF8802D0B6F7400239E77 /* DeviceInfoModule.m in Sources */ = {isa = PBXBuildFile; fileRef = A88DF87E2D0B6F7400239E77 /* DeviceInfoModule.m */; };
 		ACB048A1D4B12175111FED89 /* libPods-AnythingLLM-AnythingLLMTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 79A3B9EA89EFE88FA274FD1C /* libPods-AnythingLLM-AnythingLLMTests.a */; };
+		BCF3714FA487CBD8EE56C6ED /* PdfParserModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 64B64B0BFCD89DF45D0C4728 /* PdfParserModule.m */; };
 		C3B4E5DF753F2A61870BEB67 /* libPods-AnythingLLM.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B2B1B50A483B5EBA13F9E622 /* libPods-AnythingLLM.a */; };
 		C4A1D0032E9B000100A1B2C3 /* LoopbackAuthModule.h in Sources */ = {isa = PBXBuildFile; fileRef = C4A1D0012E9B000100A1B2C3 /* LoopbackAuthModule.h */; };
 		C4A1D0042E9B000100A1B2C3 /* LoopbackAuthModule.m in Sources */ = {isa = PBXBuildFile; fileRef = C4A1D0022E9B000100A1B2C3 /* LoopbackAuthModule.m */; };
@@ -40,16 +44,21 @@
 		00E356EE1AD99517003FC87E /* AnythingLLMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnythingLLMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* AnythingLLMTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnythingLLMTests.m; sourceTree = "<group>"; };
+		05B99C93D2F5EF69B5A87BCA /* WebScraperModule.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = WebScraperModule.h; path = AnythingLLM/WebScraperModule.h; sourceTree = "<group>"; };
+		13684E1D73F366CADA17A619 /* PdfParserModule.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = PdfParserModule.h; path = AnythingLLM/PdfParserModule.h; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* AnythingLLM.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnythingLLM.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AnythingLLM/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = AnythingLLM/Info.plist; sourceTree = "<group>"; };
 		2502009346FB84D4290094D7 /* Pods-AnythingLLM.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnythingLLM.release.xcconfig"; path = "Target Support Files/Pods-AnythingLLM/Pods-AnythingLLM.release.xcconfig"; sourceTree = "<group>"; };
 		340A2151750B488EE0567E04 /* Pods-AnythingLLM.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnythingLLM.debug.xcconfig"; path = "Target Support Files/Pods-AnythingLLM/Pods-AnythingLLM.debug.xcconfig"; sourceTree = "<group>"; };
 		35F7FDAB114968E02D2F3F27 /* AppDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = AnythingLLM/AppDelegate.swift; sourceTree = "<group>"; };
+		3D420B5201E46CDC98941DC7 /* VectorBox.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = VectorBox.m; path = AnythingLLM/VectorBox.m; sourceTree = "<group>"; };
+		53F6403F3BA2852E67CFD877 /* ToastModule.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ToastModule.m; path = AnythingLLM/ToastModule.m; sourceTree = "<group>"; };
 		56D1BD968C32BD43D7C02874 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = AnythingLLM/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		5C10CA0F2EF3A00100AB12C1 /* ScreenLockModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ScreenLockModule.h; path = AnythingLLM/ScreenLockModule.h; sourceTree = "<group>"; };
 		5C10CA102EF3A00100AB12C2 /* ScreenLockModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ScreenLockModule.m; path = AnythingLLM/ScreenLockModule.m; sourceTree = "<group>"; };
 		5E01428B4E51E39CBC5D2180 /* Pods-AnythingLLM-AnythingLLMTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnythingLLM-AnythingLLMTests.debug.xcconfig"; path = "Target Support Files/Pods-AnythingLLM-AnythingLLMTests/Pods-AnythingLLM-AnythingLLMTests.debug.xcconfig"; sourceTree = "<group>"; };
+		64B64B0BFCD89DF45D0C4728 /* PdfParserModule.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = PdfParserModule.m; path = AnythingLLM/PdfParserModule.m; sourceTree = "<group>"; };
 		79A3B9EA89EFE88FA274FD1C /* libPods-AnythingLLM-AnythingLLMTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AnythingLLM-AnythingLLMTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A5C0DE02F1B400100AB12D1 /* SharedContentModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SharedContentModule.h; path = AnythingLLM/SharedContentModule.h; sourceTree = "<group>"; };
 		7A5C0DE32F1B400100AB12D2 /* SharedContentModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SharedContentModule.m; path = AnythingLLM/SharedContentModule.m; sourceTree = "<group>"; };
@@ -63,6 +72,9 @@
 		C4A1D0012E9B000100A1B2C3 /* LoopbackAuthModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LoopbackAuthModule.h; path = AnythingLLM/LoopbackAuthModule.h; sourceTree = "<group>"; };
 		C4A1D0022E9B000100A1B2C3 /* LoopbackAuthModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = LoopbackAuthModule.m; path = AnythingLLM/LoopbackAuthModule.m; sourceTree = "<group>"; };
 		C4FD69AC6EA2DCF5F09D426E /* Pods-AnythingLLM-AnythingLLMTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnythingLLM-AnythingLLMTests.release.xcconfig"; path = "Target Support Files/Pods-AnythingLLM-AnythingLLMTests/Pods-AnythingLLM-AnythingLLMTests.release.xcconfig"; sourceTree = "<group>"; };
+		C56C4993840CD1D0FE70E152 /* ToastModule.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ToastModule.h; path = AnythingLLM/ToastModule.h; sourceTree = "<group>"; };
+		DBF8456D24A6C00C4E90F9B1 /* VectorBox.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = VectorBox.h; path = AnythingLLM/VectorBox.h; sourceTree = "<group>"; };
+		DC91C088B5DDD42B268059EE /* WebScraperModule.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = WebScraperModule.m; path = AnythingLLM/WebScraperModule.m; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F274FC848BA3693215C5BE4A /* AnythingLLM-Bridging-Header.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "AnythingLLM-Bridging-Header.h"; path = "AnythingLLM/AnythingLLM-Bridging-Header.h"; sourceTree = "<group>"; };
 		F6E78A942BFFAF1A00968174 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
@@ -117,6 +129,14 @@
 				A88DF87E2D0B6F7400239E77 /* DeviceInfoModule.m */,
 				A88DF87D2D0B6F7400239E77 /* DeviceInfoModule.h */,
 				A8894CE12D0E02AF00FA6CAC /* GoogleService-Info.plist */,
+				C56C4993840CD1D0FE70E152 /* ToastModule.h */,
+				53F6403F3BA2852E67CFD877 /* ToastModule.m */,
+				13684E1D73F366CADA17A619 /* PdfParserModule.h */,
+				64B64B0BFCD89DF45D0C4728 /* PdfParserModule.m */,
+				05B99C93D2F5EF69B5A87BCA /* WebScraperModule.h */,
+				DC91C088B5DDD42B268059EE /* WebScraperModule.m */,
+				DBF8456D24A6C00C4E90F9B1 /* VectorBox.h */,
+				3D420B5201E46CDC98941DC7 /* VectorBox.m */,
 			);
 			name = AnythingLLM;
 			sourceTree = "<group>";
@@ -519,6 +539,10 @@
 				A88DF87F2D0B6F7400239E77 /* DeviceInfoModule.h in Sources */,
 				A88DF8802D0B6F7400239E77 /* DeviceInfoModule.m in Sources */,
 				44B2BFEC00074181171A4838 /* AppDelegate.swift in Sources */,
+				39622D773F72F787D34A66A9 /* ToastModule.m in Sources */,
+				BCF3714FA487CBD8EE56C6ED /* PdfParserModule.m in Sources */,
+				90779B618267A042AC72C098 /* WebScraperModule.m in Sources */,
+				6E37633E20CD210CFF03E7C4 /* VectorBox.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

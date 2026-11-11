@@ -17,6 +17,7 @@ import ContextCompactor, { type CompactionChatMessage, truncateMiddle } from '@/
 import { throwIfAborted } from '@/utils/chat/abort';
 import { ChatMemoryEstimate, enableAllocationLogging, estimateChatMemory, readGgufShape } from '@/utils/models/memoryEstimate';
 import Telemetry from '@/utils/Telemetry';
+import { NATIVE_RUNTIME_OPTIONS } from '@/utils/models/runtime';
 
 export type NativeLlamaChatMessage = {
   role: string;
@@ -408,15 +409,12 @@ export default class LlamaRnWrapper {
       n_ctx: nCtx,
       n_batch: Math.min(LlamaRnWrapper.N_BATCH, nCtx),
       n_ubatch: Math.min(LlamaRnWrapper.N_BATCH, nCtx),
-      use_mlock: true,
       use_mmap: true,
       // Shift the KV cache instead of failing if a long answer runs past the window.
       // llama.rn requires shifting OFF for multimodal contexts so media token positions stay put;
       // `runCompletion` already sizes n_predict to the room left so this rarely matters in practice.
       ctx_shift: !multimodal,
-      // CPU only. The Hexagon NPU / OpenCL backends in llama.cpp are experimental and slower
-      // than the CPU path on the phones we target, so we never offload layers.
-      n_gpu_layers: 0,
+      ...NATIVE_RUNTIME_OPTIONS,
       ...(this.modelDefinition?.chatTemplateString ? { chat_template: this.modelDefinition.chatTemplateString } : {}),
     }));
   }

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ActivityIndicator, Animated, StyleSheet }
 import { CHAT_HANDLER_EVENTS, useChatHandlerContext } from "@/hooks/useChatHandler";
 import { type IAttachment } from "@/utils/AiProviders/baseOpenAILikeProvider";
 import LocationAgentTool from "@/utils/ToolsManager/tools/getLocation";
+import ToolsManager from "@/utils/ToolsManager";
 import { useEffect, useRef, useState, type ComponentType } from "react";
 import uiStore from "@/store/UIStore";
 import Document from "@/database/models/Document";
@@ -14,6 +15,32 @@ import { fontStyles } from "@/utils/theme";
 import { CalendarBlank, ChatCircleDots, EnvelopeSimple, FileText, Globe, Image as ImageIcon, type IconProps } from "phosphor-react-native";
 
 const noop = () => { };
+
+/**
+ * Switches tools on for one suggested prompt, then puts each back the way the user had it - a tool
+ * the user never toggled drops its stored value so it falls back to its default again.
+ */
+function enableToolsForPrompt(toolIds: string[]) {
+    let previous: Record<string, boolean> = {};
+    return {
+        before: async function () {
+            previous = await uiStore.getFromStorage('tools', {});
+            const enabled = Object.fromEntries(toolIds.map(id => [id, true]));
+            await uiStore.setToStorage('tools', { ...previous, ...enabled } as never);
+            ToolsManager.resetTools();
+        },
+        after: async function () {
+            const current: Record<string, boolean> = await uiStore.getFromStorage('tools', {});
+            for (const id of toolIds) {
+                if (id in previous) current[id] = previous[id];
+                else delete current[id];
+            }
+            await uiStore.setToStorage('tools', current as never);
+            ToolsManager.resetTools();
+        },
+    };
+}
+
 const smartMessages = {
     hello: {
         icon: ChatCircleDots,
@@ -30,16 +57,7 @@ const smartMessages = {
             if (!location) return null;
             return i18n.t('chat.suggestions.research', { city: location?.city, region: location?.regionName });
         },
-        onClick: {
-            before: async function () {
-                const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, webSearch: true } as never);
-            },
-            after: async function () {
-                const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, webSearch: false } as never);
-            }
-        }
+        onClick: enableToolsForPrompt(['webSearch'])
     },
     calendar: {
         icon: CalendarBlank,
@@ -52,30 +70,12 @@ const smartMessages = {
             if (isPast5PM) return i18n.t('chat.suggestions.calendar_tomorrow');
             return i18n.t('chat.suggestions.calendar_today');
         },
-        onClick: {
-            before: async function () {
-                const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: true, getTime: true } as never);
-            },
-            after: async function () {
-                const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, calendarEventReading: false, getTime: false } as never);
-            }
-        },
+        onClick: enableToolsForPrompt(['calendarEventReading', 'getTime']),
     },
     email: {
         icon: EnvelopeSimple,
         text: () => i18n.t('chat.suggestions.email'),
-        onClick: {
-            before: async function () {
-                const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, draftEmail: true } as never);
-            },
-            after: async function () {
-                const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, draftEmail: false } as never);
-            }
-        }
+        onClick: enableToolsForPrompt(['draftEmail'])
     },
     summarize: {
         icon: FileText,
@@ -93,16 +93,7 @@ const smartMessages = {
             }
             return text;
         },
-        onClick: {
-            before: async function () {
-                const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, summarize: true } as never);
-            },
-            after: async function () {
-                const enabledTools = await uiStore.getFromStorage('tools', {});
-                await uiStore.setToStorage('tools', { ...enabledTools, summarize: false } as never);
-            }
-        }
+        onClick: enableToolsForPrompt(['summarization'])
     }
 };
 
@@ -184,7 +175,7 @@ function RandomSuggestions() {
     // Same route params the chat screen reads - the workspace whose empty thread we are showing
     const { wsSlug } = (useRoute().params ?? {}) as { wsSlug?: string };
     const chatHandler = useChatHandlerContext();
-    const [messages, setMessages] = useState<{ text: string; icon: ComponentType<IconProps>; onClick: { before: () => void; after: () => void } }[] | null>(null);
+    const [messages, setMessages] = useState<{ text: string; icon: ComponentType<IconProps>; onClick: { before: () => void | Promise<void>; after: () => void | Promise<void> } }[] | null>(null);
 
     useEffect(() => {
         let cancelled = false;
@@ -205,8 +196,9 @@ function RandomSuggestions() {
         return () => { cancelled = true; };
     }, [wsSlug]);
 
-    function onPress(item: NonNullable<typeof messages>[number]) {
-        item.onClick.before();
+    async function onPress(item: NonNullable<typeof messages>[number]) {
+        // The tools must be on before the prompt auto-submits and the model's tool list is built
+        await item.onClick.before();
         chatHandler.setPrompt(item.text, true);
         const listener = uiStore.emitter.addListener(CHAT_HANDLER_EVENTS.ASSISTANT_RESPONSE_COMPLETE, () => {
             console.log("Assistant response complete - running default message after hook.");

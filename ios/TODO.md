@@ -25,17 +25,17 @@ tracks everything known to be missing or different on iOS. Tick items off as the
 
 These Android native modules have no iOS version, and nothing in JS guards them.
 
-- [ ] **VectorBox** (RAG / embedded documents, `src/utils/VectorDB.ts`): the biggest item. Port
+- [x] **VectorBox** (RAG / embedded documents, `src/utils/VectorDB.ts`): the biggest item. Port
       to ObjectBox Swift (HNSW), or move both platforms to op-sqlite + sqlite-vec. Keep the JS
       interface and the 768-dim assumption.
-- [ ] **PdfParserModule** (PDF uploads, `src/utils/PDFParser.ts`): PDFKit, `PDFDocument.string`
+- [x] **PdfParserModule** (PDF uploads, `src/utils/PDFParser.ts`): PDFKit, `PDFDocument.string`
       per page. Keep the Android error codes.
-- [ ] **WebScraperModule** (web scraping + summarize-URL tools): a hidden `WKWebView` attached to
+- [x] **WebScraperModule** (web scraping + summarize-URL tools): a hidden `WKWebView` attached to
       the window off-screen, then `document.body.innerText` after load settles. 30s timeout.
 
 ## Needed before a TestFlight build is usable
 
-- [ ] Toasts: `src/utils/Notification` uses `ToastAndroid` (~98 call sites, silent on iOS).
+- [x] Toasts: `src/utils/Notification` uses `ToastAndroid` (~98 call sites, silent on iOS).
       Needs a cross-platform toast.
 - [ ] Info.plist:
   - [ ] add calendar keys (`NSCalendarsFullAccessUsageDescription`,
@@ -47,11 +47,12 @@ These Android native modules have no iOS version, and nothing in JS guards them.
 - [ ] On-device models:
   - [ ] Enable Metal on device: `ModelStore.useMetal` is false and the providers hardcode
         `n_gpu_layers: 0`. Keep the CPU fallback for the simulator.
-  - [ ] Budget against `os_proc_available_memory()` (already returned by `DeviceInfoModule`
-        on iOS) in `memoryFit`, `contextLength` and `useMemoryCheck`, not total RAM.
+  - [x] Budget against the per-app limit in `memoryFit` (`deviceMemory.ios.ts`).
+        `useMemoryCheck` already reads `os_proc_available_memory()` through `DeviceInfoModule`.
+  - [ ] Same for `contextLength`.
   - [ ] `use_mlock: false` on iOS.
-  - [ ] Stop or pause inference when the app goes to the background (no GPU work while
-        backgrounded).
+  - [x] Stop inference and unload models when the app goes to the background
+        (`useReleaseModelsInBackground.ios.ts`).
 - [ ] Storage:
   - [ ] Move models, `processed/` and `generated-documents/` from Documents to Application
         Support. Documents is visible in the Files app (`UIFileSharingEnabled`) and gets backed
@@ -73,14 +74,18 @@ These Android native modules have no iOS version, and nothing in JS guards them.
 
 ## Platform features, reworked for iOS
 
+- [ ] AnythingLLM server: add `"ios"` to `validDeviceOs` in `server/models/mobileDevice.js`.
+      Until then iOS pairing fails with "Invalid device OS - ios".
+
 - [ ] Draft text / email / calendar: native module wrapping `MFMessageComposeViewController`,
       `MFMailComposeViewController` (fall back to `mailto:`) and `EKEventEditViewController`.
       Today iOS uses the share sheet, `mailto:` and a direct EventKit save. The Messages and Mail
       sheets can't be tested in the simulator.
 - [ ] Share to AnythingLLM: a Share Extension + App Group, for Photos, Safari URLs and text.
       "Open in…" from Files already works through `SharedContentModule`.
-- [ ] Reminders: AlarmKit on iOS 26+ (`NSAlarmKitUsageDescription`), local notifications below
-      that. The `setReminder` tool is Android-only today.
+- [x] Reminders: local notifications within 24 hours, calendar events beyond.
+- [ ] Reminders: AlarmKit on iOS 26+ (`NSAlarmKitUsageDescription`), so reminders ring like real
+      alarms and can be changed in the Clock app.
 - [ ] Scheduled jobs: best-effort `BGTaskScheduler` (`UIBackgroundModes` +
       `BGTaskSchedulerPermittedIdentifiers`), plus a due-time local notification. Today jobs
       run in the foreground only. Background runs can't use the GPU.

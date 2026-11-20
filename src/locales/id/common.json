@@ -198,6 +198,11 @@
     "error_loading_thread": "Error memuat thread ruang kerja",
     "unknown_error": "Error tidak diketahui",
     "loading_history": "Memuat riwayat obrolan...",
+    "model_download": {
+      "title": null,
+      "description": null
+    },
+    "model_not_downloaded": null,
     "greetings": {
       "working_on": "Apa yang sedang kami kerjakan?",
       "noodle": "Mari kita diskusikan sesuatu.",
@@ -652,15 +657,18 @@
     "set_reminder": {
       "name": "Pengingat & Alarm",
       "description": "Atur alarm dan timer di aplikasi jam Anda setelah Anda menyetujuinya. Pengingat yang lebih dari satu hari di masa mendatang akan ditambahkan ke kalender Anda.",
+      "description_ios": null,
       "default_label": "Pengingat",
       "calendar_notes": "Pengingat diatur dari AnythingLLM",
       "status_asking": "Meminta untuk mengatur pengingat {{label}}",
       "approval_alarm": "Atur alarm pada {{label}} untuk {{when}}?",
       "approval_timer": "Mulai timer {{duration}} \"{{label}}\"? Timer ini berakhir pada {{when}}.",
       "approval_calendar": "Tambahkan \"{{label}}\" ke kalender Anda untuk {{when}} dengan notifikasi? Ini masih beberapa hari lagi, jadi tidak bisa diatur di aplikasi jam.",
+      "approval_calendar_ios": null,
       "status_not_approved": "Pengingat tidak disetujui",
       "status_expired": "Waktu pengingat telah habis sebelum disetujui.",
-      "status_set": "Atur pengingat {{label}}"
+      "status_set": "Atur pengingat {{label}}",
+      "notification_body": null
     },
     "draft_email": {
       "name": "Konsep Email",

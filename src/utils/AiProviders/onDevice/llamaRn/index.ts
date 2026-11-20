@@ -17,6 +17,7 @@ import ContextCompactor, { type CompactionChatMessage, truncateMiddle } from '@/
 import { throwIfAborted } from '@/utils/chat/abort';
 import { ChatMemoryEstimate, enableAllocationLogging, estimateChatMemory, readGgufShape } from '@/utils/models/memoryEstimate';
 import Telemetry from '@/utils/Telemetry';
+import i18n from '@/i18n';
 import { NATIVE_RUNTIME_OPTIONS } from '@/utils/models/runtime';
 
 export type NativeLlamaChatMessage = {
@@ -313,9 +314,12 @@ export default class LlamaRnWrapper {
         }
       }
 
-      const files = await RNFS.readDir(path);
+      const files = (await RNFS.exists(path)) ? await RNFS.readDir(path) : [];
       const ggufFile = files.find(file => file.name.endsWith('.gguf'));
-      if (!ggufFile) throw new Error(`LlamaRnWrapper::ggufFilePath: No gguf file found for model ${this.model}`);
+      if (!ggufFile) {
+        this.log(`No gguf file found for model ${this.model}`);
+        throw new Error(i18n.t('chat.model_not_downloaded'));
+      }
       this.ggufFilePath = `${path}/${ggufFile.name}`;
     }
     return this.ggufFilePath;

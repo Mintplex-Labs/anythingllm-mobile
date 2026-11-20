@@ -198,6 +198,11 @@
     "error_loading_thread": "कार्यक्षेत्र धागा लोड करने में त्रुटि",
     "unknown_error": "अज्ञात त्रुटि",
     "loading_history": "चैट इतिहास लोड हो रहा है...",
+    "model_download": {
+      "title": null,
+      "description": null
+    },
+    "model_not_downloaded": null,
     "greetings": {
       "working_on": "हम क्या कर रहे हैं?",
       "noodle": "चलो किसी विषय पर चर्चा करते हैं।",
@@ -680,15 +685,18 @@
     "set_reminder": {
       "name": "अलार्म और अनुस्मारक",
       "description": "अपने घड़ी ऐप में अलार्म और टाइमर सेट करें, और जब आप उन्हें स्वीकृत कर लें। एक दिन से अधिक समय बाद के रिमाइंडर आपके कैलेंडर में जुड़ जाएंगे।",
+      "description_ios": null,
       "default_label": "याद दिला",
       "calendar_notes": "AnythingLLM से रिमाइंडर सेट करें",
       "status_asking": "रिमाइंडर \"{{label}}\" सेट करने की अनुमति मांगी जा रही है",
       "approval_alarm": "अलार्म सेट करें \"{{label}}\" के लिए {{when}}?",
       "approval_timer": "{{duration}} टाइमर शुरू करें \"{{label}}\"? यह {{when}} पर समाप्त होता है।",
       "approval_calendar": "क्या आप \"{{label}}\" को अपने कैलेंडर में {{when}} के लिए जोड़ना चाहते हैं, जिसमें अलर्ट भी हो? यह तारीख अभी दूर है, इसलिए इसे घड़ी ऐप में सेट नहीं किया जा सकता।",
+      "approval_calendar_ios": null,
       "status_not_approved": "यह रिमाइंडर स्वीकृत नहीं हुआ।",
       "status_expired": "अलार्म का समय निर्धारित होने से पहले, इसे स्वीकृत नहीं किया गया।",
-      "status_set": "अलार्म सेट करें \"{{label}}\""
+      "status_set": "अलार्म सेट करें \"{{label}}\"",
+      "notification_body": null
     },
     "draft_email": {
       "name": "ईमेल का मसौदा",

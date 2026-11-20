@@ -198,6 +198,11 @@
     "error_loading_thread": "載入工作區執行緒時出錯",
     "unknown_error": "未知錯誤",
     "loading_history": "正在載入聊天記錄...",
+    "model_download": {
+      "title": null,
+      "description": null
+    },
+    "model_not_downloaded": null,
     "greetings": {
       "working_on": "我們目前在進行哪些項目？",
       "noodle": "讓我們聊聊吧。",
@@ -652,15 +657,18 @@
     "set_reminder": {
       "name": "鬧鐘與提醒",
       "description": "在您的時鐘應用程式中設定鬧鐘和計時器後，系統會自動將它們添加到您的日曆中。",
+      "description_ios": null,
       "default_label": "提醒",
       "calendar_notes": "設定提醒時間：AnythingLLM",
       "status_asking": "設定提醒 \"{{label}}\"",
       "approval_alarm": "設定鬧鐘 \"{{label}}\" 在 {{when}}？",
       "approval_timer": "開始計時 \"{{duration}}\" \"{{label}}\"？ 結束時間為 \"{{when}}\"。",
       "approval_calendar": "要將「{{label}}」新增至 {{when}} 的日曆並設定提醒嗎？由於距離現在超過一天，無法在時鐘應用程式中設定。",
+      "approval_calendar_ios": null,
       "status_not_approved": "提醒已取消",
       "status_expired": "提醒時間已過，尚未通過",
-      "status_set": "設定提醒 \"{{label}}\""
+      "status_set": "設定提醒 \"{{label}}\"",
+      "notification_body": null
     },
     "draft_email": {
       "name": "草擬電子郵件",

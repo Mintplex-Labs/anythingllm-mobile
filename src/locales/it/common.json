@@ -198,6 +198,11 @@
     "error_loading_thread": "Errore nel caricamento del thread del workspace",
     "unknown_error": "Errore sconosciuto",
     "loading_history": "Caricamento della cronologia della chat in corso...",
+    "model_download": {
+      "title": null,
+      "description": null
+    },
+    "model_not_downloaded": null,
     "greetings": {
       "working_on": "Su cosa stiamo lavorando?",
       "noodle": "Proviamo a parlare di qualcosa.",
@@ -708,15 +713,18 @@
     "set_reminder": {
       "name": "Allarmi e promemoria",
       "description": "Imposta allarmi e timer nella tua app, dopo averli approvati. Gli avvisi con scadenza superiore a un giorno vengono aggiunti al tuo calendario.",
+      "description_ios": null,
       "default_label": "Promemoria",
       "calendar_notes": "Promemoria impostato da AnythingLLM",
       "status_asking": "Richiesta di impostare un promemoria {{label}}",
       "approval_alarm": "Imposta un timer per {{label}} alle {{when}}?",
       "approval_timer": "Avvia un timer {{duration}} per {{label}}? Termina alle {{when}}.",
       "approval_calendar": "Aggiungi \"{{label}}\" al tuo calendario per {{when}} con promemoria? È troppo lontano, quindi non può essere impostato nell'app dell'orologio.",
+      "approval_calendar_ios": null,
       "status_not_approved": "La notifica non è stata salvata",
       "status_expired": "Il tempo di promemoria è scaduto prima dell'approvazione.",
-      "status_set": "Imposta promemoria \"{{label}}\""
+      "status_set": "Imposta promemoria \"{{label}}\"",
+      "notification_body": null
     },
     "draft_email": {
       "name": "Bozza email",

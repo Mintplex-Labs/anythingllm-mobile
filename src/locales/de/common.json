@@ -198,6 +198,11 @@
     "error_loading_thread": "Fehler beim Laden des Workspace-Threads",
     "unknown_error": "Unbekannter Fehler",
     "loading_history": "Chat-Verlauf wird geladen...",
+    "model_download": {
+      "title": null,
+      "description": null
+    },
+    "model_not_downloaded": null,
     "greetings": {
       "working_on": "Woran arbeiten wir gerade?",
       "noodle": "Lass uns darüber sprechen.",
@@ -680,15 +685,18 @@
     "set_reminder": {
       "name": "Alarme und Erinnerungen",
       "description": "Richten Sie Alarme und Timer in Ihrer Uhr-App ein, nachdem Sie diese bestätigt haben. Erinnerungen, die mehr als einen Tag im Voraus festgelegt sind, werden Ihrem Kalender hinzugefügt.",
+      "description_ios": null,
       "default_label": "Erinnerung",
       "calendar_notes": "Erinnerung wurde für AnythingLLM festgelegt",
       "status_asking": "Erinnerung einrichten? {{label}}",
       "approval_alarm": "Wecker \"{{label}}\" für {{when}} stellen?",
       "approval_timer": "Starte einen {{duration}}-Timer für \"{{label}}\"? Er läuft {{when}} Sekunden.",
       "approval_calendar": "Fügen Sie \"{{label}}\" zu Ihrem Kalender für {{when}} mit einer Erinnerung hinzu? Es ist noch mehr als ein Tag entfernt, daher kann es nicht im Uhr-App festgelegt werden.",
+      "approval_calendar_ios": null,
       "status_not_approved": "Erinnerung wurde nicht bestätigt",
       "status_expired": "Erinnerung abgelaufen, bevor sie genehmigt wurde",
-      "status_set": "Erinnerung einstellen: {{label}}"
+      "status_set": "Erinnerung einstellen: {{label}}",
+      "notification_body": null
     },
     "draft_email": {
       "name": "E-Mail entwerfen",

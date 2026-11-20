@@ -198,6 +198,11 @@
     "error_loading_thread": "Błąd podczas ładowania wątku obszaru roboczego",
     "unknown_error": "Nieznany błąd",
     "loading_history": "Ładowanie historii czatu...",
+    "model_download": {
+      "title": null,
+      "description": null
+    },
+    "model_not_downloaded": null,
     "greetings": {
       "working_on": "W czym pracujemy?",
       "noodle": "Porozmawiajmy o czymś.",
@@ -736,15 +741,18 @@
     "set_reminder": {
       "name": "Alarmy i przypomnienia",
       "description": "Ustaw alarmy i timery w aplikacji zegarka, po ich zatwierdzeniu. Przypomnienia, które są zaplanowane na więcej niż jeden dzień, zostaną dodane do kalendarza.",
+      "description_ios": null,
       "default_label": "Przypomnienie",
       "calendar_notes": "Przypomnienie ustawione na AnythingLLM",
       "status_asking": "Prośba o ustawienie przypomnienia \"{{label}}\"",
       "approval_alarm": "Ustawić alarm \"{{label}}\" na {{when}}?",
       "approval_timer": "Uruchomić minutnik \"{{label}}\" na {{duration}}? Zakończy się {{when}}.",
       "approval_calendar": "Dodaj {{label}} do kalendarza na {{when}} z przypomnieniem? To wydarzenie jest za kilka dni, więc nie można go ustawić w aplikacji zegarka.",
+      "approval_calendar_ios": null,
       "status_not_approved": "Przypomnienie nie zostało zatwierdzone",
       "status_expired": "Czas przypomnienia minął, zanim zostało zatwierdzone.",
-      "status_set": "Ustaw przypomnienie: {{label}}"
+      "status_set": "Ustaw przypomnienie: {{label}}",
+      "notification_body": null
     },
     "draft_email": {
       "name": "Wersja robocza wiadomości e-mail",

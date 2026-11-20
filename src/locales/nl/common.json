@@ -198,6 +198,11 @@
     "error_loading_thread": "Fout bij het laden van werkruimte-thread",
     "unknown_error": "Onbekende fout",
     "loading_history": "Chatgeschiedenis laden...",
+    "model_download": {
+      "title": null,
+      "description": null
+    },
+    "model_not_downloaded": null,
     "greetings": {
       "working_on": "Waar werken we aan?",
       "noodle": "Laten we het eens verder bespreken.",
@@ -680,15 +685,18 @@
     "set_reminder": {
       "name": "Waarschuwingen en herinneringen",
       "description": "Stel alarmen en timers in je klok-app in, nadat je ze hebt goedgekeurd. Herinneringen die meer dan een dag vooruit liggen, worden aan je agenda toegevoegd.",
+      "description_ios": null,
       "default_label": "Herinnering",
       "calendar_notes": "Herinnering ingesteld vanaf AnythingLLM",
       "status_asking": "Vraag om een herinnering \"{{label}}\"",
       "approval_alarm": "Stel een herinnering in op {{label}} voor {{when}}?",
       "approval_timer": "Start een {{duration}} timer {{label}}? Het eindt op {{when}}.",
       "approval_calendar": "Voeg {{label}} toe aan uw agenda voor {{when}} met een herinnering? Dit is meer dan een dag van tevoren, dus het kan niet in de klok-app worden ingesteld.",
+      "approval_calendar_ios": null,
       "status_not_approved": "Herinnering is niet goedgekeurd",
       "status_expired": "Herinnering is verlopen voordat deze was goedgekeurd",
-      "status_set": "Stel herinnering in: {{label}}"
+      "status_set": "Stel herinnering in: {{label}}",
+      "notification_body": null
     },
     "draft_email": {
       "name": "E-mail concepten",

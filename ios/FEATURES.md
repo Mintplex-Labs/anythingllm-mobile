@@ -33,7 +33,7 @@ feature lands, changes or is cut on iOS. Open work items live in [TODO.md](TODO.
 | "Recommended" model and memory-fit badges | ✅ | Measured against the per-app memory limit (`os_proc_available_memory` plus the current footprint), not total RAM (`src/utils/models/deviceMemory.ios.ts`). The simulator has no limit and uses the Mac's RAM. |
 | Image support for vision models (mmproj) | ✅ | Same as Android: not downloaded with the model, offered from the attachments sheet the first time it is needed. |
 | On-device embedder and rerankers | ✅ | Same llama.rn runtime options as chat. |
-| Model downloads | 🟡 | Foreground `URLSession` downloads. They do not resume after the app is killed (Android uses WorkManager). |
+| Model downloads | 🟡 | Background `URLSession` on devices: they keep going while the app is in the background or the phone is locked (the simulator downloads in the foreground only). A download is lost if the app is force-quit, and chat then says the model hasn't finished downloading and points to the model picker. |
 | MLX models (mlx-serve parity) | ⏳ | Long-term: MLX Swift provider next to llama.rn. |
 | Connect to AnythingLLM Server / Desktop (import workspaces) | 🟡 | QR pairing, approval, workspace sync and chat all work. **Needs a server change:** `server/models/mobileDevice.js` only accepts `deviceOs: "android"`, so pairing fails with "Invalid device OS - ios" until `"ios"` is added to `validDeviceOs` (the server's Mobile Connections page already shows an iOS icon). The simulator has no camera, so scanning itself is only testable on a phone. |
 | ChatGPT sign-in | ✅ | `LoopbackAuthModule` (iOS). |

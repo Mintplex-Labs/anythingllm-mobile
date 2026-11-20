@@ -198,6 +198,11 @@
     "error_loading_thread": "Çalışma alanı iş parçacığı yüklenirken hata",
     "unknown_error": "Bilinmeyen hata",
     "loading_history": "Sohbet geçmişi yükleniyor...",
+    "model_download": {
+      "title": null,
+      "description": null
+    },
+    "model_not_downloaded": null,
     "greetings": {
       "working_on": "Şu anda ne üzerinde çalışıyoruz?",
       "noodle": "Konuşalım mı?",
@@ -680,15 +685,18 @@
     "set_reminder": {
       "name": "Uyarılar ve Hatırlatıcılar",
       "description": "Saat uygulamanızda alarm ve zamanlayıcıları ayarlayın ve onayladıktan sonra. Bir günden daha uzun süre sonra gelen hatırlatıcılar takviminizde yer alır.",
+      "description_ios": null,
       "default_label": "Hatırlatıcı",
       "calendar_notes": "Hatırlatıcı AnythingLLM'dan ayarlandı",
       "status_asking": "Hatırlatıcı ayarlama isteği \"{{label}}\"",
       "approval_alarm": "{{when}} için \"{{label}}\" alarmı kurulsun mu?",
       "approval_timer": "{{duration}} süreli \"{{label}}\" zamanlayıcısı başlatılsın mı? {{when}} sona erecek.",
       "approval_calendar": "\"{{label}}\" uyarıyla birlikte {{when}} için takviminize eklensin mi? Bir günden daha uzak olduğu için saat uygulamasında ayarlanamaz.",
+      "approval_calendar_ios": null,
       "status_not_approved": "Hatırlatma reddedildi",
       "status_expired": "Hatırlatma süresi doldu, onaylanmadı.",
-      "status_set": "Hatırlatıcı ayarla: {{label}}"
+      "status_set": "Hatırlatıcı ayarla: {{label}}",
+      "notification_body": null
     },
     "draft_email": {
       "name": "E-posta Taslağı",

@@ -198,6 +198,11 @@
     "error_loading_thread": "Erreur lors du chargement du fil d'espace de travail",
     "unknown_error": "Erreur inconnue",
     "loading_history": "Chargement de l'historique de chat...",
+    "model_download": {
+      "title": null,
+      "description": null
+    },
+    "model_not_downloaded": null,
     "greetings": {
       "working_on": "Sur quoi travaillons-nous ?",
       "noodle": "Parlons-en.",
@@ -708,15 +713,18 @@
     "set_reminder": {
       "name": "Alarmes et rappels",
       "description": "Définissez des alarmes et des minuteries dans votre application d'horloge, une fois qu'elles sont approuvées. Les rappels prévus plus d'un jour à l'avance sont ajoutés à votre calendrier.",
+      "description_ios": null,
       "default_label": "Rappel",
       "calendar_notes": "Rappel programmé à AnythingLLM",
       "status_asking": "Demander de définir un rappel \"{{label}}\"",
       "approval_alarm": "Définir une alarme pour {{label}} à {{when}} ?",
       "approval_timer": "Lancer un minuteur de {{duration}} \"{{label}}\" ? Il se termine {{when}}.",
       "approval_calendar": "Ajoutez \"{{label}}\" à votre calendrier pour {{when}} avec une alerte ? Cela se passe bien après, donc cela ne peut pas être configuré dans l'application d'horloge.",
+      "approval_calendar_ios": null,
       "status_not_approved": "La notification n'a pas été enregistrée.",
       "status_expired": "La date de rappel est passée avant l'approbation.",
-      "status_set": "Définir une alerte \"{{label}}\""
+      "status_set": "Définir une alerte \"{{label}}\"",
+      "notification_body": null
     },
     "draft_email": {
       "name": "Rédiger un e-mail",

@@ -127,6 +127,8 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
         progress: res => {
           const progress = Math.round((res.bytesWritten / res.contentLength) * 100);
           setDownloadProgress(progress);
+          // Read by the chat screen's download banner.
+          if (uiStore.session.has('@downloadInProgress')) uiStore.setSessionKey('@downloadInProgress', { progress });
           // iOS notifications have no progress bar and re-alert on every update - just the start and end ones there.
           if (Platform.OS !== 'android') return;
           const now = Date.now();
@@ -185,8 +187,9 @@ export default function useModelManager({ llmPreferences, fetchLLMPreference, LL
     try {
       activateKeepAwake();
       // Android drops the connection once the app is backgrounded or the phone locks.
-      showToast(i18n.t('downloads.keep_app_open'), 'long');
-      uiStore.setSessionKey('@downloadInProgress', true, uiStore.globalEvents.MODEL_DOWNLOAD_STARTED);
+      // iOS keeps going in a background URLSession, so there is nothing to warn about there.
+      if (Platform.OS === 'android') showToast(i18n.t('downloads.keep_app_open'), 'long');
+      uiStore.setSessionKey('@downloadInProgress', { progress: 0 }, uiStore.globalEvents.MODEL_DOWNLOAD_STARTED);
       await downloadToStorage({
         fromUrl: model.downloadUrl,
         toFile: storageLocation,

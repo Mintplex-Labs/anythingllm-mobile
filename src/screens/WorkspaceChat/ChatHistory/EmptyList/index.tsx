@@ -212,7 +212,7 @@ function RandomSuggestions() {
     return (
         <View style={{ minHeight: SUGGESTION_LIMIT * ROW_MIN_HEIGHT }}>
             {messages && (
-                <SuggestionList suggestions={messages.map((m) => ({ text: m.text, icon: m.icon, onPress: () => onPress(m) }))} />
+                <SuggestionList suggestions={messages.map((m) => ({ text: m.text, icon: m.icon, onPress: () => onPress(m) }))} disabled={chatHandler.promptDisabled} />
             )}
         </View>
     );

@@ -198,6 +198,11 @@
     "error_loading_thread": "ワークスペーススレッドの読み込みエラー",
     "unknown_error": "不明なエラー",
     "loading_history": "チャット履歴を読み込み中...",
+    "model_download": {
+      "title": null,
+      "description": null
+    },
+    "model_not_downloaded": null,
     "greetings": {
       "working_on": "現在、どのようなプロジェクトに取り組んでいますか？",
       "noodle": "何か面白い話題で話しましょう。",
@@ -652,15 +657,18 @@
     "set_reminder": {
       "name": "アラームとリマインダー",
       "description": "時計アプリでアラームやタイマーを設定し、承認後、リマインダーをカレンダーに追加します（1日以上先）。",
+      "description_ios": null,
       "default_label": "リマインダー",
       "calendar_notes": "AnythingLLM に設定",
       "status_asking": "リマインダーを設定する{{label}}",
       "approval_alarm": "{{when}} にアラーム「{{label}}」を設定しますか？",
       "approval_timer": "{{duration}} のタイマー「{{label}}」を開始しますか？ {{when}} に終了します。",
       "approval_calendar": "{{when}} に「{{label}}」を通知付きでカレンダーに追加しますか？ 1 日以上先のため、時計アプリでは設定できません。",
+      "approval_calendar_ios": null,
       "status_not_approved": "リマインダーは承認されませんでした",
       "status_expired": "リマインダーの期限が過ぎたが、まだ承認されていません",
-      "status_set": "リマインダーを設定: {{label}}"
+      "status_set": "リマインダーを設定: {{label}}",
+      "notification_body": null
     },
     "draft_email": {
       "name": "メールをドラフト",

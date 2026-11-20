@@ -12,7 +12,7 @@ import {
   Keyboard,
   View,
 } from "react-native";
-import { BottomSheetModal, BottomSheetTextInput } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetTextInput, useBottomSheetTimingConfigs } from "@gorhom/bottom-sheet";
 import { ArrowsInSimple, ArrowsOutSimple } from "phosphor-react-native";
 import { screenDimensions } from "@/utils/constants";
 import ActionMenu from "./Actions";
@@ -59,6 +59,8 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
   const { registerSheet, presentSheet, activeSheet } = useBottomSheet();
   const paddingAnim = useRef(new Animated.Value(snapTopPadding(0, snapPointsDefault.length - 1, 0))).current;
   const snapPoints = useMemo(() => snapPointsDefault, []);
+  // The input comes back every time another sheet closes - the library's default iOS spring makes that wait feel long.
+  const animationConfigs = useBottomSheetTimingConfigs({ duration: 200 });
   const inputRef = useRef<View>(null);
 
   const [sheetIndex, setSheetIndex] = useState(0);
@@ -221,6 +223,7 @@ export default function PromptInput({ attachmentHandler }: PromptInputProps) {
         ref={bottomSheetRef}
         index={0}
         snapPoints={snapPoints}
+        animationConfigs={animationConfigs}
         keyboardBehavior="extend"
         enableDynamicSizing={false}
         enablePanDownToClose={false}

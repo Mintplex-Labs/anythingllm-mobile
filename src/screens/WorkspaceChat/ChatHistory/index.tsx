@@ -1,5 +1,5 @@
-import { useMemo, useRef, useState, useCallback } from "react";
-import { FlatList, RefreshControl, View, NativeSyntheticEvent, NativeScrollEvent, LayoutChangeEvent, TouchableOpacity, ListRenderItem } from "react-native";
+import { useMemo, useRef, useState, useCallback, useEffect } from "react";
+import { FlatList, Keyboard, KeyboardEvent, LayoutAnimation, RefreshControl, View, NativeSyntheticEvent, NativeScrollEvent, LayoutChangeEvent, TouchableOpacity, ListRenderItem } from "react-native";
 import { screenDimensions } from "@/utils/constants";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { snapPointsDefault } from "../PromptInput";
@@ -34,14 +34,20 @@ export default function ChatHistory() {
     // mid-animation would otherwise flip the button back on before the list lands.
     const programmaticScrollRef = useRef(false);
     const programmaticScrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    // Set when the keyboard starts moving so the next follow-to-bottom scroll animates with it.
+    const keyboardMovingRef = useRef(false);
+    const hasChatsRef = useRef(false);
     const insets = useSafeAreaInsets();
     // Only the history slice of the handler - typing in the prompt must not re-render the list.
     const { chats, isLoadingChats, canScrollChatHistory, isWorking, fetchChats } = useChatHistoryContext();
+    hasChatsRef.current = chats.length > 0;
     const [refreshing, setRefreshing] = useState(false);
     const [isAtBottom, setIsAtBottom] = useState(true);
     const keyboardHeight = useKeyboardHeight();
     const promptInputHeight = useMemo(() => (screenDimensions.height * (100 - parseFloat(snapPointsDefault[0])) / 100), []);
     const chatHistoryHeight = useMemo(() => promptInputHeight - (65 + insets.top + 13), [insets.top]);
+    // Space left above the prompt input once it opens to its keyboard snap point
+    const emptyListFocusedHeight = useMemo(() => chatHistoryHeight - (screenDimensions.height * (parseFloat(snapPointsDefault[1]) - parseFloat(snapPointsDefault[0])) / 100), [chatHistoryHeight]);
     const promptInputContainerHeight = useMemo(() => screenDimensions.height - promptInputHeight, [promptInputHeight]);
     const footerHeight = useMemo(() => {
         return promptInputContainerHeight + 20;
@@ -54,9 +60,10 @@ export default function ChatHistory() {
         return {
             paddingTop: 20,
             paddingHorizontal: 10,
-            paddingBottom: keyboardHeight > 0 ? keyboardHeight + insets.bottom : insets.bottom,
+            // An empty thread has nothing to keep above the keyboard, and the extra padding would scroll its suggestions off screen.
+            paddingBottom: keyboardHeight > 0 && chats.length > 0 ? keyboardHeight + insets.bottom : insets.bottom,
         }
-    }, [keyboardHeight, insets.bottom]);
+    }, [keyboardHeight, insets.bottom, chats.length]);
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
@@ -83,7 +90,28 @@ export default function ChatHistory() {
     const followBottom = useCallback(() => {
         if (!isAtBottomRef.current) return;
         const offset = contentHeight.current - viewHeight.current;
-        if (offset > 0) flatListRef.current?.scrollToOffset({ animated: false, offset });
+        if (offset > 0) flatListRef.current?.scrollToOffset({ animated: keyboardMovingRef.current, offset });
+        keyboardMovingRef.current = false;
+    }, []);
+
+    // iOS announces the keyboard before it moves (Android has no such event): glide the layout
+    // change and the scroll that follows it along with the keyboard instead of jumping.
+    useEffect(() => {
+        const moveWithKeyboard = (event: KeyboardEvent) => {
+            // A thread only needs its scroll animated. The empty state re-lays itself out, and its
+            // greeting fades in and out so it never pops in over the suggestions while they move.
+            if (hasChatsRef.current) {
+                keyboardMovingRef.current = true;
+                return;
+            }
+            const fade = { type: LayoutAnimation.Types.easeInEaseOut, property: LayoutAnimation.Properties.opacity };
+            LayoutAnimation.configureNext({ duration: event.duration, update: { type: 'keyboard' }, create: fade, delete: fade });
+        };
+        const subscriptions = [
+            Keyboard.addListener('keyboardWillShow', moveWithKeyboard),
+            Keyboard.addListener('keyboardWillHide', moveWithKeyboard),
+        ];
+        return () => subscriptions.forEach((subscription) => subscription.remove());
     }, []);
 
     /** User tapped the arrow: jump to the end and dismiss the button immediately. */
@@ -130,8 +158,8 @@ export default function ChatHistory() {
 
     const listFooter = useMemo(() => <View style={{ height: footerHeight }} />, [footerHeight]);
     const listEmpty = useMemo(
-        () => (isLoadingChats ? <EmptyListLoading height={chatHistoryHeight} /> : <EmptyList height={chatHistoryHeight} />),
-        [isLoadingChats, chatHistoryHeight]
+        () => (isLoadingChats ? <EmptyListLoading height={chatHistoryHeight} /> : <EmptyList height={keyboardHeight > 0 ? emptyListFocusedHeight : chatHistoryHeight} compact={keyboardHeight > 0} />),
+        [isLoadingChats, chatHistoryHeight, emptyListFocusedHeight, keyboardHeight]
     );
 
     return (
@@ -141,6 +169,8 @@ export default function ChatHistory() {
                 style={{ flex: 1 }}
                 contentContainerStyle={contentContainerStyle}
                 showsVerticalScrollIndicator={false}
+                // Lets a suggestion be tapped while the keyboard is open; a tap on empty space still closes it.
+                keyboardShouldPersistTaps="handled"
                 scrollEnabled={canScrollChatHistory}
                 data={chats}
                 keyExtractor={keyExtractor}

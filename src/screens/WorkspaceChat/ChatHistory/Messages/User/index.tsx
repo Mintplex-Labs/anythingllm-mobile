@@ -19,7 +19,7 @@ export default function UserMessage({ chat }: { chat: DynamicChatMessage }) {
         <View
           className="bg-white/10 rounded-lg"
           style={{ paddingHorizontal: 14, paddingVertical: 10, maxWidth: '100%' }}>
-          <Text className="text-white text-right">{chat.prompt}</Text>
+          <Text className="text-white">{chat.prompt}</Text>
         </View>
       </TouchableOpacity>
     </View>

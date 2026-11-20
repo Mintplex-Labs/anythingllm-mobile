@@ -134,7 +134,8 @@ function suggestionsForAttachments(attachments: Attachment[]): { text: string; i
     return suggestions;
 }
 
-export default function EmptyList({ height }: { height: number }) {
+/** `compact` drops the greeting so the suggestions fit in the space left above the open keyboard */
+export default function EmptyList({ height, compact = false }: { height: number; compact?: boolean }) {
     const { t } = useTranslation();
     const attachmentHandler = useAttachmentsContext();
     // Picked once so the greeting doesn't change as attachments come and go.
@@ -144,7 +145,7 @@ export default function EmptyList({ height }: { height: number }) {
     return (
         <View style={{ height }} className='items-center justify-center'>
             <View style={{ width: CONTENT_WIDTH }}>
-                <Text style={[fontStyles.display, styles.greeting]}>{t(greetingKey)}</Text>
+                {!compact && <Text style={[fontStyles.display, styles.greeting]}>{t(greetingKey)}</Text>}
                 {/* Something was shared or attached before the first message: suggest what to do with it
                     instead of the generic starters. */}
                 {hasAttachments

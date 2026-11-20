@@ -20,7 +20,7 @@ feature lands, changes or is cut on iOS. Open work items live in [TODO.md](TODO.
   - layout props (e.g. `KeyboardAvoidingView` behavior) and diagnostics
 - Current platform pairs: `src/utils/reminderDelivery`, `src/utils/calendarView`,
   `src/utils/fs/deviceLocation`, `src/utils/models/deviceMemory`, `src/utils/models/runtime`,
-  `src/utils/Notification`, `src/hooks/useReleaseModelsInBackground`,
+  `src/utils/Notification`, `src/hooks/useReleaseModelsInBackground`, `src/hooks/useKeyboardHeight`,
   `PromptInput/sheetLayout`, `DraftCards/openDraft` and `FileDownloadCard/saveFile`.
 
 ## Chat and models

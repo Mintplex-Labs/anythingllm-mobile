@@ -82,6 +82,8 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSAlarmKitUsageDescription</key>
+	<string>AnythingLLM sets the alarms and timers that you approve in chat.</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>AnythingLLM reads your calendar when you ask about your schedule and adds events you approve.</string>
 	<key>NSCalendarsUsageDescription</key>
@@ -96,6 +98,10 @@
 	<string>AnythingLLM uses the microphone to transcribe your speech into a prompt.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>AnythingLLM needs access to your photos so you can attach an image to a prompt.</string>
+	<key>NSRemindersFullAccessUsageDescription</key>
+	<string>AnythingLLM adds the reminders that you approve in chat to your Reminders.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>AnythingLLM adds the reminders that you approve in chat to your Reminders.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>AnythingLLM uses speech recognition to convert your voice into text for chat prompts.</string>
 	<key>RCTNewArchEnabled</key>

@@ -2,8 +2,8 @@ import moment from "moment";
 import { type IReminderAction } from "@/database/models/WorkspaceChat";
 import { type ToolExecutionContext } from "@/utils/ToolsManager";
 import ToolApproval from "@/utils/ToolsManager/toolApproval";
-import { confirmAfterApproval, formatDuration, resolveReminder, saveCalendarReminder } from "@/utils/reminders";
-import { REMINDER_COPY_KEYS, SHORT_REMINDER_PLACE, setClockAlarm, setClockTimer } from "@/utils/reminderDelivery";
+import { confirmAfterApproval, formatDuration, resolveReminder } from "@/utils/reminders";
+import { LATER_REMINDER_KIND, LATER_REMINDER_PLACE, REMINDER_COPY_KEYS, SHORT_REMINDER_PLACE, saveLaterReminder, setClockAlarm, setClockTimer } from "@/utils/reminderDelivery";
 import { parseToolArgs, type StreamEmitter } from "../createFiles/shared";
 import Telemetry from "@/utils/Telemetry";
 import i18n from "@/i18n";
@@ -51,7 +51,7 @@ const tool = {
                 'Use in_minutes for relative times ("in 20 minutes", "in 2 hours" = 120). ' +
                 'Use at_time, plus on_date when a day was named, for clock times ("at 3pm", "tomorrow at 9", "Friday at 5pm"). ' +
                 'You do not need the current date or time - the phone works it out. ' +
-                `Within 24 hours it is set ${SHORT_REMINDER_PLACE}; later reminders are added to the calendar with an alert. ` +
+                `Within 24 hours it is set ${SHORT_REMINDER_PLACE}; later reminders are added to ${LATER_REMINDER_PLACE} with an alert. ` +
                 'The user approves it before it is set.',
             parameters: {
                 type: 'object' as const,
@@ -112,17 +112,20 @@ const tool = {
             try {
                 if (kind === 'alarm') await setClockAlarm(fireAt, label);
                 else if (kind === 'timer') await setClockTimer(durationSeconds!, label);
-                else eventId = await saveCalendarReminder(fireAt, label);
+                else eventId = await saveLaterReminder(fireAt, label);
             } catch (error: any) {
                 console.error('[setReminder] could not set it', error);
                 if (error?.message === 'calendar_permission_denied') return 'Calendar access was not allowed, so the reminder could not be added. It is more than a day away, which the clock app cannot hold. Tell the user to allow calendar access for AnythingLLM in their phone settings.';
                 if (error?.message === 'no_writable_calendar') return 'The user has no calendar that can be written to, so the reminder could not be added. It is more than a day away, which the clock app cannot hold.';
+                if (error?.code === 'reminders_permission_denied') return 'Reminders access was not allowed, so the reminder could not be added. Tell the user to allow Reminders access for AnythingLLM in their phone settings.';
+                if (error?.code === 'no_reminders_list') return 'The user has no list in the Reminders app to add to, so the reminder could not be added.';
+                if (error?.code === 'alarms_denied') return 'Alarms are turned off for AnythingLLM, so the reminder could not be set. Tell the user to allow alarms for AnythingLLM in their phone settings.';
                 if (error?.message === 'notifications_denied') return 'Notifications are turned off for AnythingLLM, so the reminder could not be set. Tell the user to allow notifications for AnythingLLM in their phone settings.';
                 if (error?.code === 'clock_unavailable') return 'No clock app is installed that accepts alarms or timers, so no reminder was set.';
                 return `Could not set the reminder: ${error?.message ?? 'unknown error'}.`;
             }
 
-            const action: IReminderAction = { type: 'reminder_set', action: { kind, label, fireAt, durationSeconds, eventId } };
+            const action: IReminderAction = { type: 'reminder_set', action: { kind: kind === 'calendar' ? LATER_REMINDER_KIND : kind, label, fireAt, durationSeconds, eventId } };
             streamEmitter('report_action', action);
             streamEmitter('report_status', i18n.t('tools.set_reminder.status_set', { label }));
             Telemetry.logEvent(Telemetry.CUSTOM_EVENTS.ACTIONS.REMINDER_SET, { kind });
@@ -130,7 +133,7 @@ const tool = {
             const set = {
                 alarm: `Set an alarm "${label}" ${SHORT_REMINDER_PLACE} for ${whenForModel}.`,
                 timer: `Started a ${formatDuration(durationSeconds!, 'en')} timer "${label}" ${SHORT_REMINDER_PLACE}. It ends ${whenForModel}.`,
-                calendar: `Added "${label}" to the user's calendar for ${whenForModel} with an alert when it starts.`,
+                calendar: `Added "${label}" to ${LATER_REMINDER_PLACE} for ${whenForModel} with an alert at that time.`,
             }[kind];
             return `${set} The user sees it as a card in the chat. Confirm it briefly in one sentence.`;
         } catch (error: any) {

@@ -55,11 +55,11 @@ feature lands, changes or is cut on iOS. Open work items live in [TODO.md](TODO.
 | Web scraping / summarize URL | ✅ | `ios/AnythingLLM/WebScraperModule.m`: hidden `WKWebView`, same 30s timeout and settle delay as Android. |
 | Current time, location | ✅ | Location is IP-based on both platforms; no location permission. |
 | Create files (docx, xlsx, pptx, pdf, ...) | ✅ | Saved to the app's `Exports/` folder, visible in the Files app. Download on the card opens the share sheet with the file under its readable name. |
-| Draft text message | 🟡 | Opens the share sheet. Picking a messaging app from a list is not possible on iOS. |
-| Draft email | 🟡 | Opens `mailto:` (the default mail app). Falls back to the share sheet when no mail app is installed, e.g. the simulator. Picking an email app from a list is not possible on iOS. |
-| Create calendar event | 🟡 | Saved directly with EventKit when the card is tapped; tapping the card again opens the saved event in Calendar. Picking a calendar app is not possible on iOS. |
+| Draft text message | ✅ | Opens the Messages compose sheet over the chat (`ios/AnythingLLM/ComposeModule.m`), filled in for the user to send. Falls back to the share sheet on devices that cannot send texts. Picking a messaging app from a list is not possible on iOS. |
+| Draft email | ✅ | Opens the Mail compose sheet over the chat. Without an account in Mail it opens `mailto:` (the default mail app), and the share sheet when there is no mail app, e.g. the simulator. Picking an email app from a list is not possible on iOS. |
+| Create calendar event | ✅ | Opens Calendar's new event editor over the chat, filled in for the user to add; no calendar permission needed (iOS 17+). Tapping the card again opens the added event's day in Calendar. iOS apps cannot add invitees. |
 | Read calendar events | ✅ | EventKit via `react-native-calendar-events`. |
-| Set reminder / alarm / timer | 🟡 | Within 24 hours: a scheduled local notification (`src/utils/reminderDelivery.ios.ts`) that iOS delivers even when the app is closed. Android puts an alarm or timer in the clock app instead. Further out: a calendar event with an alert, same as Android. Notification reminders can't be opened or changed from the card, since iOS apps can't set Clock alarms before AlarmKit (iOS 26+, ⏳). |
+| Set reminder / alarm / timer | 🟡 | Within 24 hours: an AlarmKit alarm that rings like a Clock alarm (`ios/AnythingLLM/AlarmKitModule.swift`, iOS 26.1+), or a scheduled local notification on older versions. Timers ring at their end time without a countdown (that needs a Live Activity extension), and neither shows in the Clock app, so the card can't open them. Further out: a reminder in the Reminders app (`ios/AnythingLLM/RemindersModule.m`), which the card opens. Android uses the clock app and the calendar instead. |
 | Scheduled jobs | 🟡 | Run while the app is open. iOS does not allow arbitrary background execution, so jobs that come due while the app is closed run the next time it opens. |
 
 ## System integrations

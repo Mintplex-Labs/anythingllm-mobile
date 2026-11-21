@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { CalendarBlank, CaretRight, Clock } from "phosphor-react-native";
+import { CalendarBlank, CaretRight, Clock, ListChecks } from "phosphor-react-native";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { type IAgentAction, type IReminderAction } from "@/database/models/WorkspaceChat";
@@ -45,7 +45,7 @@ const COLORS = {
 function ReminderCard({ action }: { action: IReminderAction }) {
     const { t } = useTranslation();
     const { kind, label, fireAt } = action.action;
-    const Icon = kind === 'calendar' ? CalendarBlank : Clock;
+    const Icon = { alarm: Clock, timer: Clock, calendar: CalendarBlank, reminder: ListChecks }[kind];
     const [now, setNow] = useState(Date.now());
     const passed = fireAt <= now;
     useEffect(() => {

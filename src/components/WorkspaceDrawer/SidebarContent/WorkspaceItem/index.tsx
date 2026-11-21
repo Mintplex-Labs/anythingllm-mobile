@@ -2,7 +2,7 @@ import { View, Text, Alert, TextInput, Modal, TouchableOpacity, KeyboardAvoiding
 import { SquaresFour, CaretUp, Laptop, Cloud } from "phosphor-react-native";
 import { Fragment, useEffect, useState } from "react";
 import ThreadItem from "./ThreadItem";
-import { NativeEventEmitter } from "react-native";
+import { DeviceEventEmitter } from "react-native";
 import Workspace from "@/database/models/Workspace";
 import WorkspaceThread from "@/database/models/WorkspaceThread";
 import { PATHS } from "@/utils/paths";
@@ -15,7 +15,7 @@ interface IWorkspaceItem {
   currentThreadSlug: string | null;
 }
 
-const eventEmitter = new NativeEventEmitter();
+const eventEmitter = DeviceEventEmitter;
 function WorkspaceItem({ workspace, isActive = false, currentThreadSlug }: IWorkspaceItem) {
   const { t } = useTranslation();
   const navigation = useNavigation();

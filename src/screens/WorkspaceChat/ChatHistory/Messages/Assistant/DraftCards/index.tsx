@@ -1,5 +1,5 @@
 import { memo, useEffect, useState, type ReactNode } from "react";
-import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { CalendarPlus, CaretRight, ChatCircleText, EnvelopeSimple } from "phosphor-react-native";
 import { useTranslation } from "react-i18next";
 import { type IAgentAction } from "@/database/models/WorkspaceChat";
@@ -9,23 +9,21 @@ import {
     normalizeEmailDraft,
     normalizeTextDraft,
     onPreferredAppChanged,
-    openEmailLink,
-    shareDraft,
     type DraftKind,
     type EmailDraft,
     type MessagingApp,
     type TextDraft,
 } from "@/utils/messaging";
-import { describeRecurrence, formatEventWhen, normalizeCalendarEvent, saveCalendarEventOnIos, type CalendarEvent } from "@/utils/calendar";
-import { showToast } from "@/utils/Notification";
-import { focusCalendarEvent, focusEmailDraft, focusTextDraft } from "@/screens/WorkspaceChat/ChatHistory/DraftSheet";
+import { describeRecurrence, formatEventWhen, normalizeCalendarEvent, type CalendarEvent } from "@/utils/calendar";
+import { addCalendarEvent, openEmailDraft, openTextDraft } from "./openDraft";
 
 /**
  * Cards for the texts, emails and calendar events the assistant drafted in this turn
  * (`text_draft` / `email_draft` / `calendar_event_creation` actions, plus the old `sms` / `email`
  * link actions). We can never send or save them ourselves - tapping one opens the app picker
  * (DraftSheet), which hands the draft to the user's messaging, mail or calendar app (events can
- * also be saved as an .ics file). The last app used replaces the card's generic icon.
+ * also be saved as an .ics file). The last app used replaces the card's generic icon. iOS cannot
+ * list apps - see `openDraft.ios.ts`.
  *
  * Like file cards, they wait for the reply to finish so streaming text does not keep pushing them around.
  */
@@ -93,19 +91,13 @@ function TextDraftCard({ draft }: { draft: TextDraft }) {
     const preferred = usePreferredApp('text');
     const title = draft.recipientName ?? draft.phoneNumber ?? t('chat.text_draft.new_message');
 
-    function open() {
-        // iOS has no app list - the share sheet is the picker.
-        if (Platform.OS === 'android') return focusTextDraft(draft);
-        shareDraft(draft).catch(() => showToast(t('chat.text_draft.open_failed')));
-    }
-
     return (
         <DraftCard
             icon={<ChatCircleText size={22} color={COLORS.accent} />}
             title={title}
             app={preferred}
             accessibilityLabel={t('chat.text_draft.open_label', { recipient: title })}
-            onPress={open}>
+            onPress={() => openTextDraft(draft)}>
             <Text numberOfLines={1} style={{ color: COLORS.muted }} className="text-sm">{draft.body}</Text>
         </DraftCard>
     );
@@ -120,12 +112,6 @@ function EmailDraftCard({ draft }: { draft: EmailDraft }) {
         ? `${draft.recipientName} · ${addresses}`
         : draft.recipientName ?? addresses ?? t('chat.email_draft.no_recipient');
 
-    function open() {
-        // iOS has no app list - mailto opens the default mail app.
-        if (Platform.OS === 'android') return focusEmailDraft(draft);
-        openEmailLink(draft).catch(() => showToast(t('chat.email_draft.open_failed')));
-    }
-
     // Subject up top, who it is for as a hint under it, then a snippet of the body.
     return (
         <DraftCard
@@ -133,7 +119,7 @@ function EmailDraftCard({ draft }: { draft: EmailDraft }) {
             title={subject}
             app={preferred}
             accessibilityLabel={t('chat.email_draft.open_label', { subject })}
-            onPress={open}>
+            onPress={() => openEmailDraft(draft)}>
             <Text numberOfLines={1} style={{ color: COLORS.muted }} className="text-xs">{recipient}</Text>
             {!!draft.body && <Text numberOfLines={1} style={{ color: COLORS.muted }} className="text-sm">{draft.body}</Text>}
         </DraftCard>
@@ -145,19 +131,6 @@ function CalendarEventCard({ event }: { event: CalendarEvent }) {
     const preferred = usePreferredApp('calendar');
     const detail = event.eventLocation || event.description;
 
-    function add() {
-        // Android picks the app (or an .ics file) in the draft sheet - iOS has no app list, it saves straight to Calendar.
-        if (Platform.OS === 'android') return focusCalendarEvent(event);
-        saveCalendarEventOnIos(event)
-            .then(() => showToast(t('chat.calendar_event.saved')))
-            .catch((error: unknown) => {
-                console.error('[CalendarEventCard] add failed', error);
-                showToast(error instanceof Error && error.message === 'calendar_permission_denied'
-                    ? t('chat.calendar_event.permission_denied')
-                    : t('chat.calendar_event.open_failed'));
-            });
-    }
-
     // Title up top, when it is as a hint under it, then where (or what) it is.
     return (
         <DraftCard
@@ -165,7 +138,7 @@ function CalendarEventCard({ event }: { event: CalendarEvent }) {
             title={event.title}
             app={preferred}
             accessibilityLabel={t('chat.calendar_event.open_label', { title: event.title })}
-            onPress={add}>
+            onPress={() => addCalendarEvent(event)}>
             <Text numberOfLines={1} style={{ color: COLORS.muted }} className="text-xs">
                 {[formatEventWhen(event, t('chat.calendar_event.all_day')), event.recurrence ? describeRecurrence(event.recurrence, false) : null].filter(Boolean).join(' · ')}
             </Text>

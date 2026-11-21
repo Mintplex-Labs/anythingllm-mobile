@@ -127,6 +127,7 @@ export default function ProviderPicker({
           onChangeText={setSearchQuery}
           placeholder={t('top_bar.model_chip.search_providers')}
           placeholderTextColor="#9F9FA0"
+          autoCapitalize="none"
           autoCorrect={false}
           style={{ flex: 1, height: 38, marginLeft: 8, color: 'white' }}
         />

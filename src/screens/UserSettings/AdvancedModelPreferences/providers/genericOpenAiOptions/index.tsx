@@ -353,7 +353,7 @@ export default function GenericOpenAiOptions({
           width: 45,
           margin: 10,
         }}>
-        <BottomSheetScrollView className="flex-1 bg-[#1B1B1E]">
+        <BottomSheetScrollView className="flex-1 bg-[#1B1B1E]" keyboardShouldPersistTaps="handled">
           <Text className="text-white text-lg font-semibold py-4 text-center">
             {t('settings.provider_options.choose_model')}
           </Text>
@@ -362,6 +362,8 @@ export default function GenericOpenAiOptions({
             <TextInput
               value={searchQuery}
               onChangeText={setSearchQuery}
+              // Open fully so the results are not hidden behind the keyboard
+              onFocus={() => bottomSheetRef.current?.snapToIndex(1)}
               placeholder={t('settings.provider_options.search_models')}
               placeholderTextColor="#9F9FA0"
               className="flex-1 h-[38px] ml-2 text-white"

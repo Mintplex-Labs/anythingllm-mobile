@@ -198,6 +198,11 @@
     "error_loading_thread": "워크스페이스 스레드를 로드하는 중 오류",
     "unknown_error": "알 수 없는 오류",
     "loading_history": "채팅 기록을 로드 중...",
+    "model_download": {
+      "title": null,
+      "description": null
+    },
+    "model_not_downloaded": null,
     "greetings": {
       "working_on": "현재 어떤 작업을 하고 있나요?",
       "noodle": "자, 함께 이야기해 볼까요.",
@@ -284,6 +289,7 @@
       "open_label": "{{label}} 열기, {{when}}",
       "open_clock_failed": "시계 앱을 열 수 없습니다.",
       "open_calendar_failed": "이벤트가 캘린더에 열리지 않습니다.",
+      "open_reminders_failed": null,
       "duration": {
         "hours_other": "{{count}} 시간",
         "minutes_other": "{{count}} 분",
@@ -652,15 +658,20 @@
     "set_reminder": {
       "name": "알림 및 예약",
       "description": "클록 앱에서 알람 및 타이머를 설정한 후, 승인합니다. 1일 이상 뒤의 알림은 캘린더에 추가됩니다.",
+      "description_ios": null,
+      "description_alarms_ios": null,
       "default_label": "알림",
       "calendar_notes": "AnythingLLM에 설정된 알림",
       "status_asking": "알림 설정 요청 \"{{label}}\"",
       "approval_alarm": "{{when}}에 \"{{label}}\" 알람을 설정할까요?",
       "approval_timer": "{{duration}} 타이머 시작하기 {{label}}? 종료 시점은 {{when}}입니다.",
+      "approval_notification_ios": null,
       "approval_calendar": "{{when}}에 \"{{label}}\"을(를) 알림과 함께 캘린더에 추가할까요? 하루 이상 남아 있어 시계 앱에서는 설정할 수 없습니다.",
+      "approval_reminders_ios": null,
       "status_not_approved": "알림이 승인되지 않았습니다.",
       "status_expired": "알림 시간 만료 전에 승인",
-      "status_set": "알림 설정: {{label}}"
+      "status_set": "알림 설정: {{label}}",
+      "notification_body": null
     },
     "draft_email": {
       "name": "이메일 초안",

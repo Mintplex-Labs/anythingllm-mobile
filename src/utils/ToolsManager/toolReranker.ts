@@ -6,6 +6,7 @@ import Telemetry from "@/utils/Telemetry";
 import NetInfo from "@react-native-community/netinfo";
 import { Alert } from "react-native";
 import i18n from "@/i18n";
+import { NATIVE_RUNTIME_OPTIONS } from "@/utils/models/runtime";
 
 type ToolDefinition = {
     type: 'function';
@@ -174,9 +175,8 @@ export default class ToolReranker {
                 n_ctx: 512,
                 n_batch: 512,
                 n_ubatch: 512,
-                use_mlock: true,
                 use_mmap: true,
-                n_gpu_layers: 0,
+                ...NATIVE_RUNTIME_OPTIONS,
             }));
 
             // Build documents from tool definitions

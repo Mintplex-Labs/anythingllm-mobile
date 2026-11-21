@@ -2,7 +2,7 @@ import { Appearance } from 'react-native';
 import { makePersistable } from 'mobx-persist-store';
 import { makeAutoObservable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NativeEventEmitter } from 'react-native';
+import { DeviceEventEmitter } from 'react-native';
 
 export type StorageKeys =
   'onboarding_welcome_completed' |
@@ -48,7 +48,7 @@ export const GLOBAL_EVENTS = {
 } as const;
 
 export class UIStore {
-  emitter: NativeEventEmitter;
+  emitter: typeof DeviceEventEmitter;
   globalEvents = GLOBAL_EVENTS;
 
   static readonly GROUP_KEYS = {
@@ -122,7 +122,7 @@ export class UIStore {
       storage: AsyncStorage,
     });
 
-    this.emitter = new NativeEventEmitter();
+    this.emitter = DeviceEventEmitter;
   }
 
   async removeFromStorage(key: StorageKeys) {

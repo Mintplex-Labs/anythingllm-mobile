@@ -405,6 +405,8 @@ function AvailableModels({
             onChangeText={setSearchQuery}
             placeholder={t('common.search')}
             placeholderTextColor="#9F9FA0"
+            autoCapitalize="none"
+            autoCorrect={false}
             className="flex-1 h-[38px] ml-2 text-white"
             scrollEnabled={false}
             onFocus={() => {
@@ -610,6 +612,8 @@ function ExternalProviderModels({
             onChangeText={setSearchQuery}
             placeholder={t('top_bar.model_chip.search_provider_models', { provider: providerName })}
             placeholderTextColor="#9F9FA0"
+            autoCapitalize="none"
+            autoCorrect={false}
             className="flex-1 h-[38px] ml-2 text-white"
             scrollEnabled={false}
             onFocus={() => bottomSheetRef.current?.snapToIndex(1)}

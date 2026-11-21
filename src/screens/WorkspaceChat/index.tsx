@@ -10,6 +10,7 @@ import useWorkspaceThread from "@/hooks/useWorkspaceThread";
 import PromptInput from "./PromptInput";
 import useAttachments, { AttachmentsProvider } from "@/hooks/useAttachments";
 import ChatHistory from "./ChatHistory";
+import ModelDownloadBanner from "./ModelDownloadBanner";
 import { ChatHandlerWrapper } from "@/hooks/useChatHandler";
 
 // Supplemental UI Sheets from the PromptInput actions
@@ -47,6 +48,8 @@ export default function WorkspaceChat() {
       <ChatHandlerWrapper workspace={workspace} thread={thread} llmProvider={LLMProvider!}>
         {/* The empty-thread suggestions adapt to shared attachments, so the history needs to see them too */}
         <AttachmentsProvider value={attachmentHandler}>
+          {/* Above the history: the prompt input is a bottom sheet that covers the bottom of the screen */}
+          <ModelDownloadBanner />
           <ChatHistory />
           <PromptInput attachmentHandler={attachmentHandler} />
         </AttachmentsProvider>

@@ -1,7 +1,7 @@
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import SafeView from "@/components/SafeView";
 import TopBar from "@/components/TopBar";
-import { NativeEventEmitter } from "react-native";
+import { DeviceEventEmitter } from "react-native";
 import Workspace from "@/database/models/Workspace";
 import { useNavigation } from "@react-navigation/native";
 import { PATHS } from "@/utils/paths";
@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { resolveDefaultChatRoute } from "@/utils/defaultChatRoute";
 import { useTranslation } from "react-i18next";
 
-const eventEmitter = new NativeEventEmitter();
+const eventEmitter = DeviceEventEmitter;
 
 /**
  * Empty-state screen: only meant to be seen when no workspaces exist.

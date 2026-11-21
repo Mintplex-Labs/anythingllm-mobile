@@ -198,6 +198,11 @@
     "error_loading_thread": "Error loading workspace thread",
     "unknown_error": "Unknown error",
     "loading_history": "Loading chat history...",
+    "model_download": {
+      "title": "Downloading your model · {{progress}}%",
+      "description": "You can start chatting as soon as it finishes."
+    },
+    "model_not_downloaded": "This model hasn't finished downloading. Tap the model name at the top of the chat to download it again.",
     "greetings": {
       "working_on": "What are we working on?",
       "noodle": "Let’s noodle on something.",
@@ -287,6 +292,7 @@
       "open_label": "Open {{label}}, {{when}}",
       "open_clock_failed": "Could not open the clock app",
       "open_calendar_failed": "Could not open the event in your calendar",
+      "open_reminders_failed": "Could not open the Reminders app",
       "duration": {
         "hours_one": "{{count}} hour",
         "hours_other": "{{count}} hours",
@@ -680,15 +686,20 @@
     "set_reminder": {
       "name": "Alarms & Reminders",
       "description": "Set alarms and timers in your clock app, after you approve them. Reminders more than a day away are added to your calendar.",
+      "description_ios": "Set reminders that arrive as notifications, after you approve them. Reminders more than a day away are added to your Reminders.",
+      "description_alarms_ios": "Set alarms that ring on your phone, after you approve them. Reminders more than a day away are added to your Reminders.",
       "default_label": "Reminder",
       "calendar_notes": "Reminder set from AnythingLLM",
       "status_asking": "Asking to set reminder \"{{label}}\"",
       "approval_alarm": "Set an alarm \"{{label}}\" for {{when}}?",
       "approval_timer": "Start a {{duration}} timer \"{{label}}\"? It ends {{when}}.",
+      "approval_notification_ios": "Send a \"{{label}}\" reminder notification for {{when}}?",
       "approval_calendar": "Add \"{{label}}\" to your calendar for {{when}} with an alert? It is more than a day away, so it cannot be set in the clock app.",
+      "approval_reminders_ios": "Add \"{{label}}\" to your Reminders for {{when}}? It is more than a day away, so it goes in the Reminders app where you can see and change it.",
       "status_not_approved": "Reminder was not approved",
       "status_expired": "Reminder time passed before it was approved",
-      "status_set": "Set reminder \"{{label}}\""
+      "status_set": "Set reminder \"{{label}}\"",
+      "notification_body": "Reminder from AnythingLLM"
     },
     "draft_email": {
       "name": "Draft Email",

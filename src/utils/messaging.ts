@@ -1,4 +1,4 @@
-import { Linking, NativeModules, Platform, Share } from 'react-native';
+import { NativeModules, Platform, Share } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { type IAgentAction, type IEmailDraftAction, type ITextDraftAction } from '@/database/models/WorkspaceChat';
 
@@ -98,20 +98,6 @@ export async function shareDraft(draft: TextDraft, title?: string): Promise<void
 /** Share sheet for an email - Android passes `title` as the subject, so apps like Slack or Notes get both */
 export async function shareEmailDraft(draft: EmailDraft, dialogTitle?: string): Promise<void> {
   await Share.share({ title: draft.subject, message: draft.body }, { dialogTitle, subject: draft.subject });
-}
-
-/** `mailto:` link for the draft - the path off Android, where the system opens the default mail app */
-export function emailDraftLink(draft: EmailDraft): string {
-  const params = [
-    draft.cc.length ? `cc=${encodeURIComponent(draft.cc.join(','))}` : null,
-    `subject=${encodeURIComponent(draft.subject)}`,
-    `body=${encodeURIComponent(draft.body)}`,
-  ].filter(Boolean);
-  return `mailto:${draft.to.map(encodeURIComponent).join(',')}?${params.join('&')}`;
-}
-
-export async function openEmailLink(draft: EmailDraft): Promise<void> {
-  await Linking.openURL(emailDraftLink(draft));
 }
 
 /** Something that looks like a dialable number rather than a name */

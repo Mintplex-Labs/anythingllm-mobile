@@ -226,7 +226,8 @@ export type IScheduledJobCreatedAction = {
 export type IReminderAction = {
   type: 'reminder_set';
   action: {
-    kind: 'alarm' | 'timer' | 'calendar';
+    /** `reminder` is one in the iOS Reminders app */
+    kind: 'alarm' | 'timer' | 'calendar' | 'reminder';
     label: string;
     /** Epoch millis it fires at */
     fireAt: number;

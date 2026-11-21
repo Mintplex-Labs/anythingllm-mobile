@@ -120,6 +120,8 @@ export default function ProviderSelection({
                 ref={searchInputRef}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
+                // Open fully so the results are not hidden behind the keyboard
+                onFocus={() => bottomSheetRef.current?.snapToIndex(1)}
                 placeholder={t('common.search')}
                 placeholderTextColor="#9F9FA0"
                 className="flex-1 h-[38px] ml-2 text-white"

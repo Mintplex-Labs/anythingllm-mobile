@@ -1,6 +1,6 @@
 import useRedirect from '@/hooks/useRedirect';
 import { useEffect, useState } from 'react';
-import { NativeEventEmitter } from 'react-native';
+import { DeviceEventEmitter } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { MainView } from './Main';
 import AdvancedModelPreferences from './AdvancedModelPreferences';
@@ -24,7 +24,7 @@ const PAGES = {
 export type IWorkspacePageKey = keyof typeof PAGES;
 
 // Local event emitter for Settings page navigation
-const eventEmitter = new NativeEventEmitter();
+const eventEmitter = DeviceEventEmitter;
 /** Route params: `page` opens Settings straight on a sub-page (used by anythingllm:// deep links). */
 export type UserSettingsRouteParams = { page?: IWorkspacePageKey };
 

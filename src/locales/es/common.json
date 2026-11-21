@@ -198,6 +198,11 @@
     "error_loading_thread": "Error al cargar el hilo del espacio de trabajo",
     "unknown_error": "Error desconocido",
     "loading_history": "Cargando historial de chat...",
+    "model_download": {
+      "title": null,
+      "description": null
+    },
+    "model_not_downloaded": null,
     "greetings": {
       "working_on": "¿En qué estamos trabajando?",
       "noodle": "Hagamos algo interesante.",
@@ -290,6 +295,7 @@
       "open_label": "Abrir {{label}}, {{when}}",
       "open_clock_failed": "No se pudo abrir la aplicación del reloj.",
       "open_calendar_failed": "No se pudo abrir el evento en tu calendario.",
+      "open_reminders_failed": null,
       "duration": {
         "hours_many": "{{count}} horas",
         "hours_one": "{{count}} hora",
@@ -708,15 +714,20 @@
     "set_reminder": {
       "name": "Alarmas y recordatorios",
       "description": "Establece alarmas y temporizadores en tu aplicación de reloj, una vez que las hayas aprobado. Las notificaciones con más de un día de antelación se añaden a tu calendario.",
+      "description_ios": null,
+      "description_alarms_ios": null,
       "default_label": "Recordatorio",
       "calendar_notes": "Recordatorio programado para AnythingLLM",
       "status_asking": "Solicitar la creación de una alarma \"{{label}}\"",
       "approval_alarm": "Establecer alarma para {{label}} a las {{when}}?",
       "approval_timer": "Iniciar un temporizador {{duration}} para {{label}}? Termina en {{when}}.",
+      "approval_notification_ios": null,
       "approval_calendar": "¿Añadir \"{{label}}\" a tu calendario para {{when}} con una notificación? Es demasiado tarde para añadirlo en la aplicación de reloj.",
+      "approval_reminders_ios": null,
       "status_not_approved": "La notificación no fue aprobada.",
       "status_expired": "El tiempo de recordatorio ha expirado antes de la aprobación.",
-      "status_set": "Establecer recordatorio {{label}}"
+      "status_set": "Establecer recordatorio {{label}}",
+      "notification_body": null
     },
     "draft_email": {
       "name": "Borrador de correo",

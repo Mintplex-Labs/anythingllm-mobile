@@ -54,10 +54,10 @@ feature lands, changes or is cut on iOS. Open work items live in [TODO.md](TODO.
 | Web search | ✅ | Shared JS. |
 | Web scraping / summarize URL | ✅ | `ios/AnythingLLM/WebScraperModule.m`: hidden `WKWebView`, same 30s timeout and settle delay as Android. |
 | Current time, location | ✅ | Location is IP-based on both platforms; no location permission. |
-| Create files (docx, xlsx, pptx, pdf, ...) | ✅ | Saved to the app's `Exports/` folder, visible in the Files app. |
+| Create files (docx, xlsx, pptx, pdf, ...) | ✅ | Saved to the app's `Exports/` folder, visible in the Files app. Download on the card opens the share sheet with the file under its readable name. |
 | Draft text message | 🟡 | Opens the share sheet. Picking a messaging app from a list is not possible on iOS. |
 | Draft email | 🟡 | Opens `mailto:` (the default mail app). Falls back to the share sheet when no mail app is installed, e.g. the simulator. Picking an email app from a list is not possible on iOS. |
-| Create calendar event | 🟡 | Saved directly with EventKit when the card is tapped. Picking a calendar app is not possible on iOS. |
+| Create calendar event | 🟡 | Saved directly with EventKit when the card is tapped; tapping the card again opens the saved event in Calendar. Picking a calendar app is not possible on iOS. |
 | Read calendar events | ✅ | EventKit via `react-native-calendar-events`. |
 | Set reminder / alarm / timer | 🟡 | Within 24 hours: a scheduled local notification (`src/utils/reminderDelivery.ios.ts`) that iOS delivers even when the app is closed. Android puts an alarm or timer in the clock app instead. Further out: a calendar event with an alert, same as Android. Notification reminders can't be opened or changed from the card, since iOS apps can't set Clock alarms before AlarmKit (iOS 26+, ⏳). |
 | Scheduled jobs | 🟡 | Run while the app is open. iOS does not allow arbitrary background execution, so jobs that come due while the app is closed run the next time it opens. |

@@ -17,6 +17,8 @@ export const SHORT_REMINDER_PLACE = 'in the clock app';
 /** Translation keys for the copy that says where reminders go */
 export const REMINDER_COPY_KEYS = {
     description: 'tools.set_reminder.description',
+    approvalAlarm: 'tools.set_reminder.approval_alarm',
+    approvalTimer: 'tools.set_reminder.approval_timer',
     approvalCalendar: 'tools.set_reminder.approval_calendar',
     openFailed: 'chat.reminder_card.open_clock_failed',
 } as const;

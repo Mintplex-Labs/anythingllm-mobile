@@ -691,6 +691,7 @@
       "status_asking": "Asking to set reminder \"{{label}}\"",
       "approval_alarm": "Set an alarm \"{{label}}\" for {{when}}?",
       "approval_timer": "Start a {{duration}} timer \"{{label}}\"? It ends {{when}}.",
+      "approval_notification_ios": "Send a \"{{label}}\" reminder notification for {{when}}?",
       "approval_calendar": "Add \"{{label}}\" to your calendar for {{when}} with an alert? It is more than a day away, so it cannot be set in the clock app.",
       "approval_calendar_ios": "Add \"{{label}}\" to your calendar for {{when}} with an alert? It is more than a day away, so it goes on your calendar where you can see and change it.",
       "status_not_approved": "Reminder was not approved",

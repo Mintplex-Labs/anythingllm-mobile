@@ -747,6 +747,7 @@
       "status_asking": "Prośba o ustawienie przypomnienia \"{{label}}\"",
       "approval_alarm": "Ustawić alarm \"{{label}}\" na {{when}}?",
       "approval_timer": "Uruchomić minutnik \"{{label}}\" na {{duration}}? Zakończy się {{when}}.",
+      "approval_notification_ios": null,
       "approval_calendar": "Dodaj {{label}} do kalendarza na {{when}} z przypomnieniem? To wydarzenie jest za kilka dni, więc nie można go ustawić w aplikacji zegarka.",
       "approval_calendar_ios": null,
       "status_not_approved": "Przypomnienie nie zostało zatwierdzone",

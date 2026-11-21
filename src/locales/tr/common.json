@@ -691,6 +691,7 @@
       "status_asking": "Hatırlatıcı ayarlama isteği \"{{label}}\"",
       "approval_alarm": "{{when}} için \"{{label}}\" alarmı kurulsun mu?",
       "approval_timer": "{{duration}} süreli \"{{label}}\" zamanlayıcısı başlatılsın mı? {{when}} sona erecek.",
+      "approval_notification_ios": null,
       "approval_calendar": "\"{{label}}\" uyarıyla birlikte {{when}} için takviminize eklensin mi? Bir günden daha uzak olduğu için saat uygulamasında ayarlanamaz.",
       "approval_calendar_ios": null,
       "status_not_approved": "Hatırlatma reddedildi",

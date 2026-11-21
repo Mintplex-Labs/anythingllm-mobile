@@ -86,8 +86,8 @@ const tool = {
             const approval = await ToolApproval.request({
                 skillName: this.definition.function.name,
                 description: {
-                    alarm: i18n.t('tools.set_reminder.approval_alarm', { label, when }),
-                    timer: i18n.t('tools.set_reminder.approval_timer', { label, duration, when }),
+                    alarm: i18n.t(REMINDER_COPY_KEYS.approvalAlarm, { label, when }),
+                    timer: i18n.t(REMINDER_COPY_KEYS.approvalTimer, { label, duration, when }),
                     calendar: i18n.t(REMINDER_COPY_KEYS.approvalCalendar, { label, when }),
                 }[kind],
                 payload: { label, when, type: kind },

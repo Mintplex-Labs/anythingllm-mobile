@@ -719,6 +719,7 @@
       "status_asking": "Demander de définir un rappel \"{{label}}\"",
       "approval_alarm": "Définir une alarme pour {{label}} à {{when}} ?",
       "approval_timer": "Lancer un minuteur de {{duration}} \"{{label}}\" ? Il se termine {{when}}.",
+      "approval_notification_ios": null,
       "approval_calendar": "Ajoutez \"{{label}}\" à votre calendrier pour {{when}} avec une alerte ? Cela se passe bien après, donc cela ne peut pas être configuré dans l'application d'horloge.",
       "approval_calendar_ios": null,
       "status_not_approved": "La notification n'a pas été enregistrée.",

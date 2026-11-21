@@ -663,6 +663,7 @@
       "status_asking": "Yêu cầu đặt lời nhắc {{label}}",
       "approval_alarm": "Đặt báo thức lúc {{label}} cho {{when}}?",
       "approval_timer": "Bắt đầu hẹn giờ {{duration}} \"{{label}}\"? Hẹn giờ kết thúc {{when}}.",
+      "approval_notification_ios": null,
       "approval_calendar": "Thêm \"{{label}}\" vào lịch của bạn với thông báo? Nó còn cách {{when}} một khoảng thời gian, nên không thể đặt trong ứng dụng đồng hồ.",
       "approval_calendar_ios": null,
       "status_not_approved": "Không được chấp nhận",

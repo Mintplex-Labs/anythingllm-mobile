@@ -747,6 +747,7 @@
       "status_asking": "Установить напоминание {{label}}",
       "approval_alarm": "Установить будильник \"{{label}}\" на {{when}}?",
       "approval_timer": "Запустить таймер \"{{label}}\" на {{duration}}? Он закончится {{when}}.",
+      "approval_notification_ios": null,
       "approval_calendar": "Добавить \"{{label}}\" в календарь на {{when}} с оповещением? До события больше суток, поэтому его нельзя установить в приложении \"Часы\".",
       "approval_calendar_ios": null,
       "status_not_approved": "Напоминание не было подтверждено",

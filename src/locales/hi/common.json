@@ -691,6 +691,7 @@
       "status_asking": "रिमाइंडर \"{{label}}\" सेट करने की अनुमति मांगी जा रही है",
       "approval_alarm": "अलार्म सेट करें \"{{label}}\" के लिए {{when}}?",
       "approval_timer": "{{duration}} टाइमर शुरू करें \"{{label}}\"? यह {{when}} पर समाप्त होता है।",
+      "approval_notification_ios": null,
       "approval_calendar": "क्या आप \"{{label}}\" को अपने कैलेंडर में {{when}} के लिए जोड़ना चाहते हैं, जिसमें अलर्ट भी हो? यह तारीख अभी दूर है, इसलिए इसे घड़ी ऐप में सेट नहीं किया जा सकता।",
       "approval_calendar_ios": null,
       "status_not_approved": "यह रिमाइंडर स्वीकृत नहीं हुआ।",

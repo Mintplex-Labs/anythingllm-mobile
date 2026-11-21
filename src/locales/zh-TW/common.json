@@ -663,6 +663,7 @@
       "status_asking": "設定提醒 \"{{label}}\"",
       "approval_alarm": "設定鬧鐘 \"{{label}}\" 在 {{when}}？",
       "approval_timer": "開始計時 \"{{duration}}\" \"{{label}}\"？ 結束時間為 \"{{when}}\"。",
+      "approval_notification_ios": null,
       "approval_calendar": "要將「{{label}}」新增至 {{when}} 的日曆並設定提醒嗎？由於距離現在超過一天，無法在時鐘應用程式中設定。",
       "approval_calendar_ios": null,
       "status_not_approved": "提醒已取消",

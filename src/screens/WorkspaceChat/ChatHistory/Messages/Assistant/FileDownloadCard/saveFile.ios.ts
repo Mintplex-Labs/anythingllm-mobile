@@ -1,3 +1,4 @@
+import * as RNFS from "@dr.pogodin/react-native-fs";
 import { shareDeviceFile, type SavedDeviceFile } from "@/utils/fs/deviceDownloads";
 
 /**
@@ -10,6 +11,12 @@ export const HAS_SHARE_BUTTON = false;
 
 /** @returns null - where the file goes is up to the user in the share sheet */
 export async function saveFileToDevice({ path, filename, mimeType }: { path: string; filename: string; mimeType: string }): Promise<SavedDeviceFile | null> {
-    await shareDeviceFile({ path, filename, mimeType });
+    // The share sheet names a file after what it is called on disk, and generated files are stored under an id.
+    const folder = `${RNFS.TemporaryDirectoryPath}/shared-files`;
+    const namedPath = `${folder}/${filename}`;
+    await RNFS.mkdir(folder);
+    await RNFS.unlink(namedPath).catch(() => null);
+    await RNFS.copyFile(path, namedPath);
+    await shareDeviceFile({ path: namedPath, filename, mimeType });
     return null;
 }

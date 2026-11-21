@@ -663,6 +663,7 @@
       "status_asking": "设置提醒 \"{{label}}\"",
       "approval_alarm": "设置闹钟 \"{{label}}\" 在 {{when}}？",
       "approval_timer": "开始{{duration}}计时器{{label}}？ 计时结束于{{when}}。",
+      "approval_notification_ios": null,
       "approval_calendar": "将 \"{{label}}\" 添加到您的日历，并设置提醒？ 这需要提前 {{when}} 天，因此无法在时钟应用中设置。",
       "approval_calendar_ios": null,
       "status_not_approved": "提醒已取消",

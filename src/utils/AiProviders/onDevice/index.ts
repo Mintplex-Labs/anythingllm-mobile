@@ -332,7 +332,9 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
    * llama.rn rounds are queued, so a prompt sent meanwhile simply waits its turn.
    */
   private scheduleCompaction(messages: DynamicChatMessage[], textResponse: string) {
-    if (!this.submodule) return;
+    // Never load the model just to summarise (eg: it was unloaded when the app went to the
+    // background mid-reply) - the next prompt compacts inline if it has to.
+    if (!this.submodule?.isLoaded) return;
     const last = messages[messages.length - 1];
     const threadSlug = last?.workspaceThreadSlug;
     if (!threadSlug || !last.uuid) return;
@@ -398,6 +400,7 @@ export default class OnDeviceProvider extends BaseOpenAILikeProvider {
       currentMessageHistory: formattedMessages,
       signal: this.abortSignal,
       maxToolResultChars: this.submodule.maxToolResultChars,
+      offeredTools: availableTools,
       maxToolCalls: Workspace.maxToolCallsFor(this.workspace, 'on-device'),
     });
 

@@ -18,6 +18,8 @@ export const SHORT_REMINDER_PLACE = 'as a notification on the phone';
 /** Translation keys for the copy that says where reminders go */
 export const REMINDER_COPY_KEYS = {
     description: 'tools.set_reminder.description_ios',
+    approvalAlarm: 'tools.set_reminder.approval_notification_ios',
+    approvalTimer: 'tools.set_reminder.approval_notification_ios',
     approvalCalendar: 'tools.set_reminder.approval_calendar_ios',
     openFailed: 'chat.reminder_card.open_calendar_failed',
 } as const;

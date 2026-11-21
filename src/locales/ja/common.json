@@ -663,6 +663,7 @@
       "status_asking": "リマインダーを設定する{{label}}",
       "approval_alarm": "{{when}} にアラーム「{{label}}」を設定しますか？",
       "approval_timer": "{{duration}} のタイマー「{{label}}」を開始しますか？ {{when}} に終了します。",
+      "approval_notification_ios": null,
       "approval_calendar": "{{when}} に「{{label}}」を通知付きでカレンダーに追加しますか？ 1 日以上先のため、時計アプリでは設定できません。",
       "approval_calendar_ios": null,
       "status_not_approved": "リマインダーは承認されませんでした",

@@ -207,6 +207,8 @@ export default function OllamaOptions({
             <TextInput
               value={searchQuery}
               onChangeText={setSearchQuery}
+              // Open fully so the results are not hidden behind the keyboard
+              onFocus={() => bottomSheetRef.current?.snapToIndex(1)}
               placeholder={t('settings.provider_options.search_models')}
               autoCapitalize="none"
               autoCorrect={false}
@@ -221,7 +223,7 @@ export default function OllamaOptions({
             )}
           </View>
 
-          <ScrollView className="flex-1 px-4">
+          <ScrollView className="flex-1 px-4" keyboardShouldPersistTaps="handled">
             {filteredModels.map((model) => (
               <TouchableOpacity
                 key={model.id}

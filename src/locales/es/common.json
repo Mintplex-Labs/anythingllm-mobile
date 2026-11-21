@@ -719,6 +719,7 @@
       "status_asking": "Solicitar la creación de una alarma \"{{label}}\"",
       "approval_alarm": "Establecer alarma para {{label}} a las {{when}}?",
       "approval_timer": "Iniciar un temporizador {{duration}} para {{label}}? Termina en {{when}}.",
+      "approval_notification_ios": null,
       "approval_calendar": "¿Añadir \"{{label}}\" a tu calendario para {{when}} con una notificación? Es demasiado tarde para añadirlo en la aplicación de reloj.",
       "approval_calendar_ios": null,
       "status_not_approved": "La notificación no fue aprobada.",

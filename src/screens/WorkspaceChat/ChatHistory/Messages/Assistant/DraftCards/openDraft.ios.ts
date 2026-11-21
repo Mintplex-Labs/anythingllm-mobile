@@ -4,12 +4,16 @@ import i18n from "@/i18n";
 import { showToast } from "@/utils/Notification";
 import { shareDraft, shareEmailDraft, type EmailDraft, type TextDraft } from "@/utils/messaging";
 import { descriptionWithUrl, ensureCalendarPermission, type CalendarEvent } from "@/utils/calendar";
+import { viewCalendarEvent } from "@/utils/calendarView";
 
 /**
  * What tapping a draft card does on iOS, which cannot list installed apps: texts go to the share
  * sheet, emails to the default mail app, and events are saved straight to Calendar.
  * @see openDraft.ts
  */
+
+/** Calendar ids of the events saved since the app started */
+const savedEventIds = new Map<string, string>();
 
 export function openTextDraft(draft: TextDraft) {
     shareDraft(draft).catch(() => showToast(i18n.t('chat.text_draft.open_failed')));
@@ -23,8 +27,18 @@ export function openEmailDraft(draft: EmailDraft) {
 }
 
 export function addCalendarEvent(event: CalendarEvent) {
+    // Tapping the card again shows the event in Calendar instead of saving a second copy.
+    const key = `${event.title}|${event.beginTime}`;
+    const savedId = savedEventIds.get(key);
+    if (savedId) {
+        viewCalendarEvent({ id: savedId, beginTime: event.beginTime, endTime: event.endTime }).catch(() => showToast(i18n.t('chat.calendar_event.open_failed')));
+        return;
+    }
     saveToCalendar(event)
-        .then(() => showToast(i18n.t('chat.calendar_event.saved')))
+        .then((id) => {
+            savedEventIds.set(key, id);
+            showToast(i18n.t('chat.calendar_event.saved'));
+        })
         .catch((error: unknown) => {
             console.error('[CalendarEventCard] add failed', error);
             showToast(error instanceof Error && error.message === 'calendar_permission_denied'
@@ -44,13 +58,13 @@ function emailDraftLink(draft: EmailDraft): string {
 }
 
 /**
- * Saves the event with EventKit, which needs write access. Throws `calendar_permission_denied` when
+ * Saves the event with EventKit, which needs write access, and returns its id. Throws `calendar_permission_denied` when
  * access is refused. iOS apps cannot add invitees, and weekly repeats fall on the start's weekday.
  */
-async function saveToCalendar(event: CalendarEvent): Promise<void> {
+async function saveToCalendar(event: CalendarEvent): Promise<string> {
     if (!(await ensureCalendarPermission(false))) throw new Error('calendar_permission_denied');
     const recurrence = event.recurrence;
-    await RNCalendarEvents.saveEvent(event.title, {
+    return RNCalendarEvents.saveEvent(event.title, {
         startDate: new Date(event.beginTime).toISOString(),
         endDate: new Date(event.endTime).toISOString(),
         allDay: event.allDay,

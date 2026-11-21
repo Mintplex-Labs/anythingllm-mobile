@@ -663,6 +663,7 @@
       "status_asking": "Meminta untuk mengatur pengingat {{label}}",
       "approval_alarm": "Atur alarm pada {{label}} untuk {{when}}?",
       "approval_timer": "Mulai timer {{duration}} \"{{label}}\"? Timer ini berakhir pada {{when}}.",
+      "approval_notification_ios": null,
       "approval_calendar": "Tambahkan \"{{label}}\" ke kalender Anda untuk {{when}} dengan notifikasi? Ini masih beberapa hari lagi, jadi tidak bisa diatur di aplikasi jam.",
       "approval_calendar_ios": null,
       "status_not_approved": "Pengingat tidak disetujui",

@@ -24,7 +24,7 @@ const TICK_INTERVAL_MS = 60 * 1000;
 /** WorkManager stops a worker after 10 minutes - leave headroom for the last job to be saved. */
 const BACKGROUND_PASS_BUDGET_MS = 8 * 60 * 1000;
 
-export const SCHEDULED_JOBS_HEADLESS_TASK = 'ScheduledJobsTask';
+export { SCHEDULED_JOBS_HEADLESS_TASK } from './headlessTask';
 
 type ScheduledJobsNativeModule = {
     scheduleNextRun(atMillis: number): Promise<boolean>;

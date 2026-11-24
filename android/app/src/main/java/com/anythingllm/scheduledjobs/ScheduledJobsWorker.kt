@@ -126,7 +126,7 @@ class ScheduledJobsWorker(
             passFinished?.complete(Unit)
         }
 
-        /** Must match SCHEDULED_JOBS_HEADLESS_TASK in src/utils/ScheduledJobs/scheduler.ts */
+        /** Must match SCHEDULED_JOBS_HEADLESS_TASK in src/utils/ScheduledJobs/headlessTask.ts */
         private const val TASK_KEY = "ScheduledJobsTask"
         private const val START_TIMEOUT_MS = 30_000L
         /** Under WorkManager's 10 minute cap; JS budgets its own pass at 8 minutes. */

@@ -1,13 +1,12 @@
 diff --git a/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/ImagePickerModuleImpl.java b/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/ImagePickerModuleImpl.java
-index 67b6d2e..067b725 100644
+index 67b6d2e..e95ff6f 100644
 --- a/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/ImagePickerModuleImpl.java
 +++ b/node_modules/react-native-image-picker/android/src/main/java/com/imagepicker/ImagePickerModuleImpl.java
-@@ -165,18 +165,20 @@ public class ImagePickerModuleImpl implements ActivityEventListener {
+@@ -165,18 +165,19 @@ public class ImagePickerModuleImpl implements ActivityEventListener {
          }
      }
  
 -    void onAssetsObtained(List<Uri> fileUris) {
-+    // Invokes the callback it is given exactly once, with the assets or the error building them threw.
 +    void onAssetsObtained(final Callback callback, List<Uri> fileUris) {
          ExecutorService executor = Executors.newSingleThreadExecutor();
  
@@ -28,14 +27,10 @@ index 67b6d2e..067b725 100644
      }
  
      @Override
-@@ -187,18 +189,19 @@ public class ImagePickerModuleImpl implements ActivityEventListener {
+@@ -187,18 +188,15 @@ public class ImagePickerModuleImpl implements ActivityEventListener {
              return;
          }
  
-+        // Take the callback before doing any work. Two results can arrive for one callback: a second launch
-+        // (eg: a double tap) replaces the callback while the first picker is open, and both pickers' results
-+        // are delivered when the app resumes. The second must find nothing to answer - a React Native
-+        // callback invoked twice aborts the app ("Callback arg cannot be called more than once").
 +        final Callback callback = this.callback;
 +        this.callback = null;
 +
@@ -56,7 +51,7 @@ index 67b6d2e..067b725 100644
          }
  
          switch (requestCode) {
-@@ -207,11 +210,11 @@ public class ImagePickerModuleImpl implements ActivityEventListener {
+@@ -207,11 +205,11 @@ public class ImagePickerModuleImpl implements ActivityEventListener {
                      saveToPublicDirectory(cameraCaptureURI, reactContext, "photo");
                  }
  
@@ -70,7 +65,7 @@ index 67b6d2e..067b725 100644
                  break;
  
              case REQUEST_LAUNCH_VIDEO_CAPTURE:
-@@ -219,7 +222,7 @@ public class ImagePickerModuleImpl implements ActivityEventListener {
+@@ -219,7 +217,7 @@ public class ImagePickerModuleImpl implements ActivityEventListener {
                      saveToPublicDirectory(cameraCaptureURI, reactContext, "video");
                  }
  

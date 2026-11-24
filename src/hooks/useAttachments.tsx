@@ -362,8 +362,6 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
     }, [deviceInfo.isAndroid]);
 
     const askForImage = useCallback(async (source: ImageSource, { maxDimension = IMAGE_MAX_DIMENSION.external }: { maxDimension?: number } = {}) => {
-        // One picker at a time: a double tap would otherwise open two cameras, and the picker only answers the
-        // last launch, so the first call would never resolve (GH #146).
         if (imagePickerOpenRef.current) return;
         imagePickerOpenRef.current = true;
         try {

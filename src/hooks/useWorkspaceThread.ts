@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { NativeEventEmitter } from "react-native";
+import { DeviceEventEmitter } from "react-native";
 import Workspace from "@/database/models/Workspace";
 import WorkspaceThread from "@/database/models/WorkspaceThread";
 
-const eventEmitter = new NativeEventEmitter();
+const eventEmitter = DeviceEventEmitter;
 export default function useWorkspaceThread(wsSlug: string, threadSlug: string | null) {
   const [isLoading, setIsLoading] = useState(true);
   const [workspace, setWorkspace] = useState<any>(null);

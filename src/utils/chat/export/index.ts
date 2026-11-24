@@ -8,10 +8,11 @@ import { buildThreadMarkdown } from './markdown';
 import { buildThreadJsonString } from './json';
 import { buildThreadPdfBase64 } from './pdf';
 import { EXPORT_FORMATS, type ExportFormat, type ThreadExportContext } from './types';
-import { openDeviceDownloadsLocation, shareDeviceFile, writeToDeviceDownloads } from '@/utils/fs/deviceDownloads';
+import { shareDeviceFile, writeToDeviceDownloads } from '@/utils/fs/deviceDownloads';
+import { openDeviceDownloadsLocation } from '@/utils/fs/deviceLocation';
 
 export { EXPORT_FORMATS, type ExportFormat, type ThreadExportContext } from './types';
-export { openLocationLabel } from '@/utils/fs/deviceDownloads';
+export { openLocationLabel } from '@/utils/fs/deviceLocation';
 
 export type SavedThreadExport = {
   /** Absolute path of the file on disk */

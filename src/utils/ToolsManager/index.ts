@@ -10,7 +10,6 @@ import { throwIfAborted } from "../chat/abort";
 import { truncateMiddle } from "../chat/contextCompaction";
 import { isOnDeviceProvider, toolSupportsProvider } from "./providerGuards";
 import i18n from "@/i18n";
-import { Platform } from "react-native";
 
 export { isOnDeviceProvider, isOnDeviceProviderName, toolSupportsProvider } from "./providerGuards";
 
@@ -128,6 +127,11 @@ type ToolCallLoopProps = {
      * jobs, where the user pre-selects the tools per job (see `getToolsByIds`).
      */
     toolset?: ToolManagerTool[];
+    /**
+     * Tool definitions the model may call in the follow-up rounds - the reranked subset the first
+     * round was given. Unset = every tool in `toolset`, or every enabled tool.
+     */
+    offeredTools?: ToolManagerTool['definition'][];
     /** Extra per-turn context handed to every tool execution (merged with `signal`) */
     executionContext?: Omit<ToolExecutionContext, 'signal'>;
     /**
@@ -160,8 +164,7 @@ class ToolsManager {
         Tools.appConnections.draftText,
         Tools.appConnections.calendarEventCreation,
         Tools.appConnections.calendarEventReading,
-        // Hands off to the clock app, which only Android has
-        ...(Platform.OS === 'android' ? [Tools.appConnections.setReminder] : []),
+        Tools.appConnections.setReminder,
     ]
 
     log = (text: string, ...args: any[]) => {
@@ -416,13 +419,14 @@ class ToolsManager {
         signal = null,
         maxToolResultChars,
         toolset,
+        offeredTools,
         executionContext = {},
         maxToolCalls = null,
     }: ToolCallLoopProps): Promise<ICompleteResponse> {
         let willLoop = currentResponse.toolCalls && currentResponse.toolCalls.length > 0;
         if (!willLoop) return currentResponse;
 
-        let availableTools = toolset ? toolset.map(tool => tool.definition) : await this.injectAvailableTools();
+        let availableTools = offeredTools ?? (toolset ? toolset.map(tool => tool.definition) : await this.injectAvailableTools());
         let nextResponse = currentResponse;
         let nextMessages = [...currentMessageHistory];
         let toolCallsUsed = 0;

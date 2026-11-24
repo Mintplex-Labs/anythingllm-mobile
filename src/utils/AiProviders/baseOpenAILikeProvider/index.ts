@@ -640,6 +640,7 @@ export default abstract class BaseOpenAILikeProvider {
       mergeToolCallResults: false,
       signal: this.abortSignal,
       toolset,
+      offeredTools: availableTools,
       executionContext: { autoApproveTools },
       maxToolCalls: Workspace.maxToolCallsFor(this.workspace, 'cloud'),
     });

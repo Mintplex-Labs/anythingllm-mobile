@@ -2,6 +2,7 @@ import { RERANKER_MODEL, resolveDestinationPathFromGGUFUrl } from "@/utils/model
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import { initLlama, LlamaContext } from "llama.rn";
 import Telemetry from "@/utils/Telemetry";
+import { NATIVE_RUNTIME_OPTIONS } from "@/utils/models/runtime";
 import type { SemanticSearchResult } from "@/utils/VectorDB";
 
 const LLAMA_POOLING_TYPE_RANK = 'rank' as const;
@@ -70,9 +71,8 @@ export default class DocumentReranker {
         n_ctx: 512,
         n_batch: 512,
         n_ubatch: 512,
-        use_mlock: true,
         use_mmap: true,
-        n_gpu_layers: 0,
+        ...NATIVE_RUNTIME_OPTIONS,
       }));
 
       const documents = results.map(r =>

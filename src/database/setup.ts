@@ -1,6 +1,5 @@
 import { Database } from '@nozbe/watermelondb';
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
-import { Platform } from 'react-native';
 import schema from './schema';
 import migrations from './migrations';
 
@@ -14,7 +13,7 @@ const adapter = new SQLiteAdapter({
   schema,
   migrations,
   dbName: 'anythingllm',
-  jsi: Platform.OS === 'ios', // Enable JSI for better performance on iOS
+  jsi: false,
   onSetUpError: (error) => console.error('Database setup error:', error),
 });
 

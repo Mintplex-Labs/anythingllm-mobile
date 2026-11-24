@@ -4,6 +4,7 @@ import * as RNFS from '@dr.pogodin/react-native-fs';
 import { downloadFileAtomic } from "@/utils/fs/atomicDownload";
 import { initLlama, LlamaContext, NativeEmbeddingResult } from "llama.rn";
 import Telemetry from "@/utils/Telemetry";
+import { NATIVE_RUNTIME_OPTIONS } from "@/utils/models/runtime";
 
 type EmbedderPrefixType = 'query' | 'embed_document';
 
@@ -120,9 +121,8 @@ export default class OnDeviceEmbedderProvider {
                     n_ctx: this.CONTEXT_LENGTH,
                     n_batch: this.CONTEXT_LENGTH,
                     n_ubatch: this.CONTEXT_LENGTH,
-                    use_mlock: true,
                     use_mmap: true,
-                    n_gpu_layers: 0, // CPU only
+                    ...NATIVE_RUNTIME_OPTIONS,
                 }));
                 this.log(`${this.model} loaded`);
                 return true;

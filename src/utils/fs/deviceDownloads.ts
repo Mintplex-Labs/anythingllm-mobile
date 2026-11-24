@@ -1,8 +1,6 @@
-import { Linking, PermissionsAndroid, Platform } from 'react-native';
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import Share from 'react-native-share';
-import IntentLauncher from '@yz1311/react-native-intent-launcher';
-import i18n from '@/i18n';
+import { announceNewFile, resolveDownloadsDirectory } from './deviceLocation';
 
 /**
  * Putting a file somewhere the user can find it outside the app.
@@ -12,9 +10,6 @@ import i18n from '@/i18n';
  * "On My iPhone > AnythingLLM". Shared by the thread exporter and the generated-file
  * download cards so both land in the same place with the same permission handling.
  */
-
-/** iOS: Documents/Exports, visible in the Files app */
-export const IOS_EXPORT_FOLDER_PATH = `${RNFS.DocumentDirectoryPath}/Exports`;
 
 export type SavedDeviceFile = {
   /** Absolute path of the file on disk */
@@ -27,33 +22,6 @@ export type SavedDeviceFile = {
 
 function log(message: any, ...args: any[]) {
   console.log('\x1b[36m[DeviceDownloads]\x1b[0m', message, ...args);
-}
-
-/**
- * Where user-facing files land on this device.
- * Android: the shared Downloads folder. iOS: Documents/Exports, visible in the Files app.
- */
-export async function resolveDownloadsDirectory(): Promise<{ path: string; locationLabel: string }> {
-  if (Platform.OS === 'android') {
-    await ensureAndroidStoragePermission();
-    return { path: RNFS.DownloadDirectoryPath, locationLabel: i18n.t('files.location.downloads') };
-  }
-  return { path: IOS_EXPORT_FOLDER_PATH, locationLabel: i18n.t('files.location.ios_exports') };
-}
-
-/**
- * Android 9 and below still gate the Downloads folder behind WRITE_EXTERNAL_STORAGE.
- * Android 10+ lets an app write its own files there without any permission.
- */
-export async function ensureAndroidStoragePermission(): Promise<void> {
-  if (Platform.OS !== 'android' || Platform.Version >= 29) return;
-  const status = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, {
-    title: i18n.t('files.storage_permission.title'),
-    message: i18n.t('files.storage_permission.message'),
-    buttonPositive: i18n.t('common.allow'),
-    buttonNegative: i18n.t('common.cancel'),
-  });
-  if (status !== PermissionsAndroid.RESULTS.GRANTED) throw new Error('Storage permission was not granted');
 }
 
 /**
@@ -79,12 +47,6 @@ async function prepareDestination(filename: string): Promise<{ path: string; fil
   return { path: `${directory}/${finalName}`, filename: finalName, locationLabel };
 }
 
-/** Tell Android's media scanner about a new file so it shows up in the Downloads app straight away */
-async function announceToMediaScanner(path: string) {
-  if (Platform.OS !== 'android') return;
-  await RNFS.scanFile(path).catch(error => log('scanFile failed (non-fatal)', error));
-}
-
 /** Write content straight into the device's downloads location */
 export async function writeToDeviceDownloads({
   filename,
@@ -97,7 +59,7 @@ export async function writeToDeviceDownloads({
 }): Promise<SavedDeviceFile> {
   const destination = await prepareDestination(filename);
   await RNFS.writeFile(destination.path, content, encoding);
-  await announceToMediaScanner(destination.path);
+  await announceNewFile(destination.path);
   log(`Wrote ${destination.filename} to ${destination.locationLabel}`);
   return destination;
 }
@@ -106,30 +68,9 @@ export async function writeToDeviceDownloads({
 export async function copyToDeviceDownloads({ filename, sourcePath }: { filename: string; sourcePath: string }): Promise<SavedDeviceFile> {
   const destination = await prepareDestination(filename);
   await RNFS.copyFile(sourcePath, destination.path);
-  await announceToMediaScanner(destination.path);
+  await announceNewFile(destination.path);
   log(`Copied ${destination.filename} to ${destination.locationLabel}`);
   return destination;
-}
-
-/** Label for the button that jumps to the saved file's folder */
-/** Label for the button that jumps to where a file was saved - translated when called */
-export function openLocationLabel(): string {
-  return Platform.OS === 'android' ? i18n.t('files.location.open_downloads') : i18n.t('files.location.open_files');
-}
-
-/**
- * Jump to where a file was saved.
- * Android: the system Downloads app. iOS: the Files app opened at the file's folder.
- */
-export async function openDeviceDownloadsLocation(path: string): Promise<void> {
-  if (Platform.OS === 'android') {
-    // The type insists on category/data but the native module only applies keys that are present,
-    // and passing empty strings would add a bogus category / data uri to the intent.
-    await IntentLauncher.startActivity({ action: 'android.intent.action.VIEW_DOWNLOADS' } as any);
-    return;
-  }
-  const folder = path.slice(0, path.lastIndexOf('/'));
-  await Linking.openURL(`shareddocuments://${folder}`);
 }
 
 /**

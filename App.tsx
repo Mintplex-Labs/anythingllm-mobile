@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { ActivityIndicator, Provider as PaperProvider } from 'react-native-paper';
 import { StatusBar } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
 import {
   gestureHandlerRootHOC,
   GestureHandlerRootView,
@@ -32,6 +32,7 @@ import { useDeepLinkNavigation } from '@/utils/DeepLinks';
 import HighlightsHost from '@/components/Highlights/HighlightsHost';
 import ErrorBoundary, { RootErrorFallback } from '@/components/ErrorBoundary';
 import { hydrateLanguage } from '@/i18n';
+import useReleaseModelsInBackground from '@/hooks/useReleaseModelsInBackground';
 
 const Drawer = createDrawerNavigator();
 const App = observer(() => {
@@ -43,6 +44,8 @@ const App = observer(() => {
   useDeepLinkNavigation();
   // Runs due scheduled jobs while the app is open and keeps the background wake-up armed.
   useScheduledJobsTicker();
+  // Frees on-device model memory when the app is backgrounded, where the platform needs it.
+  useReleaseModelsInBackground();
   const theme = useTheme();
   const styles = rootStyles(theme);
   const { initialRoute, isLoading } = useInitialRoute();
@@ -66,7 +69,7 @@ const App = observer(() => {
 
   if (isLoading || loadingOnboardingCompleted || !languageReady)
     return (
-      <SafeAreaProvider>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <SafeView
           scrollable={false}
           containerClassNames="flex h-[100vh] justify-center items-center">
@@ -84,7 +87,7 @@ const App = observer(() => {
     <BottomSheetProvider>
       <Suspense fallback={<ActivityIndicator />}>
         <GestureHandlerRootView style={styles.root}>
-          <SafeAreaProvider>
+          <SafeAreaProvider initialMetrics={initialWindowMetrics}>
             <StatusBar barStyle='default' backgroundColor="transparent" translucent />
             {/*
               No KeyboardProvider (react-native-keyboard-controller) here on purpose.

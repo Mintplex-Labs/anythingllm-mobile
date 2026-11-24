@@ -122,6 +122,8 @@ export default function LMStudioOptions({
           <TextInput
             key="baseUrl"
             keyboardType="url"
+            autoCapitalize="none"
+            autoCorrect={false}
             multiline={false}
             numberOfLines={1}
             style={{
@@ -186,7 +188,11 @@ export default function LMStudioOptions({
             <TextInput
               value={searchQuery}
               onChangeText={setSearchQuery}
+              // Open fully so the results are not hidden behind the keyboard
+              onFocus={() => bottomSheetRef.current?.snapToIndex(1)}
               placeholder={t('settings.provider_options.search_models')}
+              autoCapitalize="none"
+              autoCorrect={false}
               placeholderTextColor="#9F9FA0"
               className="flex-1 h-[38px] ml-2 text-white"
               scrollEnabled={false}
@@ -198,7 +204,7 @@ export default function LMStudioOptions({
             )}
           </View>
 
-          <ScrollView className="flex-1 px-4">
+          <ScrollView className="flex-1 px-4" keyboardShouldPersistTaps="handled">
             {filteredModels.map((model) => (
               <TouchableOpacity
                 key={model.id}

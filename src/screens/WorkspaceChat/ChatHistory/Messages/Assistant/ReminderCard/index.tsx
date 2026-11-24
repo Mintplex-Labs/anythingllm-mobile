@@ -1,10 +1,11 @@
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { CalendarBlank, CaretRight, Clock } from "phosphor-react-native";
+import { CalendarBlank, CaretRight, Clock, ListChecks } from "phosphor-react-native";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { type IAgentAction, type IReminderAction } from "@/database/models/WorkspaceChat";
-import { formatReminderWhen, openReminder } from "@/utils/reminders";
+import { formatReminderWhen } from "@/utils/reminders";
+import { canOpenReminder, openReminder, REMINDER_COPY_KEYS } from "@/utils/reminderDelivery";
 import { showToast } from "@/utils/Notification";
 
 /**
@@ -25,6 +26,9 @@ export default memo(function ReminderCards({ actions = [], isLoading = false }: 
     );
 });
 
+/** How often a pending card refreshes its countdown */
+const COUNTDOWN_REFRESH_MS = 30_000;
+
 const COLORS = {
     /** zinc-800 - same surface as the other chat cards */
     card: '#27272A',
@@ -41,8 +45,14 @@ const COLORS = {
 function ReminderCard({ action }: { action: IReminderAction }) {
     const { t } = useTranslation();
     const { kind, label, fireAt } = action.action;
-    const Icon = kind === 'calendar' ? CalendarBlank : Clock;
-    const passed = fireAt <= Date.now();
+    const Icon = { alarm: Clock, timer: Clock, calendar: CalendarBlank, reminder: ListChecks }[kind];
+    const [now, setNow] = useState(Date.now());
+    const passed = fireAt <= now;
+    useEffect(() => {
+        if (passed) return;
+        const interval = setInterval(() => setNow(Date.now()), COUNTDOWN_REFRESH_MS);
+        return () => clearInterval(interval);
+    }, [passed]);
     const when = formatReminderWhen(fireAt);
     const status = passed ? t('chat.reminder_card.passed') : moment(fireAt).fromNow();
 
@@ -61,11 +71,11 @@ function ReminderCard({ action }: { action: IReminderAction }) {
     const style = { backgroundColor: COLORS.card, borderRadius: 12, padding: 12, gap: 12, width: '100%' } as const;
 
     // A reminder that has gone off has nothing left to open.
-    if (passed) {
+    if (passed || !canOpenReminder(kind)) {
         return <View style={style} className="flex flex-row items-center">{content}</View>;
     }
 
-    const open = () => openReminder(action.action).catch(() => showToast(t(kind === 'calendar' ? 'chat.reminder_card.open_calendar_failed' : 'chat.reminder_card.open_clock_failed')));
+    const open = () => openReminder(action.action).catch(() => showToast(t(kind === 'calendar' ? 'chat.reminder_card.open_calendar_failed' : REMINDER_COPY_KEYS.openFailed)));
     return (
         <TouchableOpacity
             onPress={open}

@@ -8,7 +8,7 @@ import {
   View,
   TouchableOpacity,
   Text,
-  NativeEventEmitter,
+  DeviceEventEmitter,
   Modal,
   TextInput,
   KeyboardAvoidingView,
@@ -17,7 +17,7 @@ import {
   Keyboard,
 } from 'react-native';
 
-const eventEmitter = new NativeEventEmitter();
+const eventEmitter = DeviceEventEmitter;
 export default function NewWorkspaceModal({ showing, close }: { showing: boolean, close: () => void }) {
   const { t } = useTranslation();
   const navigation = useNavigation();

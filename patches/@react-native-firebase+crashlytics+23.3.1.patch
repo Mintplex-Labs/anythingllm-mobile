@@ -1,0 +1,18 @@
+diff --git a/node_modules/@react-native-firebase/crashlytics/ios_config.sh b/node_modules/@react-native-firebase/crashlytics/ios_config.sh
+index c13498f..bc351b6 100755
+--- a/node_modules/@react-native-firebase/crashlytics/ios_config.sh
++++ b/node_modules/@react-native-firebase/crashlytics/ios_config.sh
+@@ -16,6 +16,13 @@
+ #
+ set -e
+ 
++# Local builds may omit GoogleService-Info.plist (Firebase is optional, see the app's
++# "Copy GoogleService-Info.plist" phase). Crashlytics' run script hard-fails without it.
++if [[ ! -f "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleService-Info.plist" ]]; then
++  echo "warning: GoogleService-Info.plist not bundled - skipping Crashlytics configuration"
++  exit 0
++fi
++
+ if [[ ${PODS_ROOT} ]]; then
+   echo "info: Exec FirebaseCrashlytics Run from Pods"
+   "${PODS_ROOT}/FirebaseCrashlytics/run"

@@ -122,6 +122,27 @@ describe('toolCallLoop max tool calls', () => {
     expect(sent.some((m: any) => m.role === 'tool' && m.tool_call_id)).toBe(true);
   });
 
+  test('follow-up rounds only offer the tools the first round was given', async () => {
+    const search = makeTool('search');
+    const time = makeTool('time');
+    const runStreamCompletion = jest.fn(async (_messages: any[], _cb: any, tools: any[]) => {
+      expect(tools).toEqual([search.definition]);
+      return { textResponse: 'done' } as any;
+    });
+
+    await ToolsManager.toolCallLoop({
+      currentResponse: toolCallResponse(['search']),
+      runStreamCompletion,
+      streamEmitter: () => {},
+      currentMessageHistory: history,
+      mergeToolCallResults: false,
+      toolset: [search, time],
+      offeredTools: [search.definition],
+    });
+
+    expect(runStreamCompletion).toHaveBeenCalledTimes(1);
+  });
+
   test('no cap keeps looping until the model stops', async () => {
     const search = makeTool('search');
     let round = 0;

@@ -21,6 +21,7 @@ import com.anythingllm.assistant.AssistantPackage
 import com.anythingllm.messaging.MessagingPackage
 import com.anythingllm.alarms.AlarmPackage
 import com.anythingllm.loopbackauth.LoopbackAuthPackage
+import com.anythingllm.network.SafeCookieJarContainer
 
 class MainApplication : Application(), ReactApplication {
 
@@ -58,6 +59,7 @@ class MainApplication : Application(), ReactApplication {
 
   override fun onCreate() {
     super.onCreate()
+    SafeCookieJarContainer.install(this)
     loadReactNative(this)
   }
 }

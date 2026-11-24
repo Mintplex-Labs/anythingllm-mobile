@@ -1,7 +1,6 @@
 import { Linking, PermissionsAndroid, Platform } from 'react-native';
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import Share from 'react-native-share';
-import IntentLauncher from '@yz1311/react-native-intent-launcher';
 import i18n from '@/i18n';
 
 /**
@@ -123,9 +122,9 @@ export function openLocationLabel(): string {
  */
 export async function openDeviceDownloadsLocation(path: string): Promise<void> {
   if (Platform.OS === 'android') {
-    // The type insists on category/data but the native module only applies keys that are present,
-    // and passing empty strings would add a bogus category / data uri to the intent.
-    await IntentLauncher.startActivity({ action: 'android.intent.action.VIEW_DOWNLOADS' } as any);
+    // Plain startActivity, not for a result: there is nothing to read back, and a result can come back
+    // to a React context that was restarted while the Downloads app was open (GH #149).
+    await Linking.sendIntent('android.intent.action.VIEW_DOWNLOADS');
     return;
   }
   const folder = path.slice(0, path.lastIndexOf('/'));

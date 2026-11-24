@@ -6,6 +6,10 @@
             <action android:name="android.intent.action.VIEW" />
             <data android:scheme="https"/>
         </intent>
+        <!-- The Downloads app a saved file can be shown in (Linking.sendIntent checks it resolves first) -->
+        <intent>
+            <action android:name="android.intent.action.VIEW_DOWNLOADS" />
+        </intent>
         <!-- Messaging apps a drafted text can be opened in (MessagingModule) -->
         <intent>
             <action android:name="android.intent.action.SENDTO" />

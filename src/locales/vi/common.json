@@ -1165,6 +1165,7 @@
       "synced": "Đã đồng bộ",
       "sync_failed": "Thất bại",
       "sync_workspace_failed": "Không thể đồng bộ không gian làm việc {{name}}",
+      "sync_workspace_too_large": null,
       "workspaces": "Không gian làm việc",
       "platform_desktop": "AnythingLLM Desktop",
       "platform_server": "AnythingLLM Server",

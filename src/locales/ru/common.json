@@ -1294,6 +1294,7 @@
       "synced": "Синхронизировано",
       "sync_failed": "Ошибка",
       "sync_workspace_failed": "Не удалось синхронизировать рабочее пространство {{name}}",
+      "sync_workspace_too_large": null,
       "workspaces": "Рабочие пространства",
       "platform_desktop": "AnythingLLM Desktop",
       "platform_server": "AnythingLLM Server",

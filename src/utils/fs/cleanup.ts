@@ -8,6 +8,7 @@ import ScheduledJobRun from '@/database/models/ScheduledJobRun';
 import uiStore from '@/store/UIStore';
 import { deleteProcessedFiles, deleteProcessedFilesNotIn, listProcessedFiles } from '@/utils/fs';
 import { deleteGeneratedDocuments, deleteGeneratedDocumentsNotIn, GENERATED_DOCUMENTS_FOLDER_PATH } from '@/utils/fs/generatedDocuments';
+import { WORKSPACE_SYNC_ATTACHMENTS_FOLDER } from '@/utils/AnythingLLMExternal';
 
 /**
  * Housekeeping for files the app writes to disk. Everything here is derived state:
@@ -16,6 +17,7 @@ import { deleteGeneratedDocuments, deleteGeneratedDocumentsNotIn, GENERATED_DOCU
  *  - image picker temp files react-native-image-picker writes a downscaled copy to the cache dir
  *                            (`rn_image_picker_*`) - we only ever read its base64, so the file is waste
  *  - `tmp/uploads/`          Android copy-before-parse workaround; normally removed after parsing
+ *  - `workspace-sync/`       attachments of a workspace being synced from AnythingLLM; removed when the sync ends
  *
  * The models purge their own files on delete, so this sweep is a safety net for anything that
  * slipped through (crashes mid-delete, installs from before the models cleaned up after themselves).
@@ -118,15 +120,13 @@ export async function purgeUploadScratchFolder(): Promise<void> {
 const SHARED_CONTENT_FOLDERS = [...new Set([RNFS.CachesDirectoryPath, RNFS.TemporaryDirectoryPath].filter(Boolean))]
     .map((folder) => `${folder}/shared`);
 const SHARED_CONTENT_MAX_AGE_MS = 60 * 60 * 1000;
+/** A workspace sync deletes its attachment folder when it ends - an older one was left by a crash mid-sync */
+const WORKSPACE_SYNC_MAX_AGE_MS = 60 * 60 * 1000;
 
-/**
- * Remove copies of files shared to the app (see utils/SharedContent). They are normally deleted as
- * soon as they are attached; the age guard leaves a share that is being processed right now alone.
- * Pass `maxAgeMs: 0` to remove everything.
- */
-export async function purgeStaleSharedContent({ maxAgeMs = SHARED_CONTENT_MAX_AGE_MS }: { maxAgeMs?: number } = {}): Promise<number> {
+/** Remove the entries of `folders` last modified more than `maxAgeMs` ago (every entry when it is 0) */
+async function purgeStaleEntries(folders: string[], maxAgeMs: number, label: string): Promise<number> {
     let removed = 0;
-    for (const folder of SHARED_CONTENT_FOLDERS) {
+    for (const folder of folders) {
         try {
             if (!(await RNFS.exists(folder))) continue;
             for (const entry of await RNFS.readDir(folder)) {
@@ -135,11 +135,28 @@ export async function purgeStaleSharedContent({ maxAgeMs = SHARED_CONTENT_MAX_AG
                 await RNFS.unlink(entry.path).then(() => removed++).catch(() => null);
             }
         } catch (e) {
-            log('could not scan shared content folder', folder, e);
+            log(`could not scan ${label} folder`, folder, e);
         }
     }
-    if (removed) log(`Removed ${removed} shared content folder(s)`);
+    if (removed) log(`Removed ${removed} ${label} folder(s)`);
     return removed;
+}
+
+/**
+ * Remove copies of files shared to the app (see utils/SharedContent). They are normally deleted as
+ * soon as they are attached; the age guard leaves a share that is being processed right now alone.
+ * Pass `maxAgeMs: 0` to remove everything.
+ */
+export function purgeStaleSharedContent({ maxAgeMs = SHARED_CONTENT_MAX_AGE_MS }: { maxAgeMs?: number } = {}): Promise<number> {
+    return purgeStaleEntries(SHARED_CONTENT_FOLDERS, maxAgeMs, 'shared content');
+}
+
+/**
+ * Remove attachment folders a workspace sync left behind (see `WORKSPACE_SYNC_ATTACHMENTS_FOLDER`). The age
+ * guard leaves a sync that is running right now alone. Pass `maxAgeMs: 0` to remove everything.
+ */
+export function purgeStaleWorkspaceSyncFiles({ maxAgeMs = WORKSPACE_SYNC_MAX_AGE_MS }: { maxAgeMs?: number } = {}): Promise<number> {
+    return purgeStaleEntries([WORKSPACE_SYNC_ATTACHMENTS_FOLDER], maxAgeMs, 'workspace sync');
 }
 
 /**
@@ -165,6 +182,7 @@ export async function runFileSweep(): Promise<void> {
         purgeImagePickerTempFiles(),
         purgeUploadScratchFolder(),
         purgeStaleSharedContent(),
+        purgeStaleWorkspaceSyncFiles(),
     ]);
     log(`Sweep finished in ${Date.now() - started}ms`);
 }
@@ -181,6 +199,7 @@ export async function deleteAllAppFiles(): Promise<void> {
         purgeImagePickerTempFiles(),
         purgeUploadScratchFolder(),
         purgeStaleSharedContent({ maxAgeMs: 0 }),
+        purgeStaleWorkspaceSyncFiles({ maxAgeMs: 0 }),
     ]);
     log('Removed all app-managed files');
 }

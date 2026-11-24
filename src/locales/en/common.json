@@ -1208,6 +1208,7 @@
       "synced": "Synced",
       "sync_failed": "Failed",
       "sync_workspace_failed": "Failed to sync workspace {{name}}",
+      "sync_workspace_too_large": "Workspace {{name}} has too many chats to sync to this device",
       "workspaces": "Workspaces",
       "platform_desktop": "AnythingLLM Desktop",
       "platform_server": "AnythingLLM Server",

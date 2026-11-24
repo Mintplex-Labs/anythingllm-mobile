@@ -1,9 +1,9 @@
 import AnythingLLMExternal, { CommandResponses } from "@/utils/AnythingLLMExternal";
-import { formatNumber } from "@/utils/formatters";
+import { formatBytes, formatNumber, numberToPercentageString } from "@/utils/formatters";
 import { CheckCircle, WarningCircle } from "phosphor-react-native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
-import { syncFromRemote } from "./sync";
+import { syncFromRemote, type SyncProgress } from "./sync";
 import { useTranslation } from "react-i18next";
 import { JOB_COLORS } from "@/screens/ScheduledJobs/components";
 
@@ -41,6 +41,7 @@ export default function WorkspaceItem({ module, workspace, last }: WorkspaceItem
 function SyncButton({ module, workspace }: { module: AnythingLLMExternal, workspace: CommandResponses['workspaces']['workspaces'][number] }) {
     const { t } = useTranslation();
     const [status, setStatus] = useState<IStatus>('idle');
+    const [progress, setProgress] = useState<SyncProgress | null>(null);
 
     // Reset status after 5 seconds if there is an error so they can try again
     useEffect(() => {
@@ -55,6 +56,7 @@ function SyncButton({ module, workspace }: { module: AnythingLLMExternal, worksp
         return (
             <View style={[pill, { backgroundColor: 'rgba(255,255,255,0.08)' }]} className="flex flex-row items-center justify-center">
                 <ActivityIndicator size="small" color={JOB_COLORS.accent} />
+                {progress && <Text style={{ color: JOB_COLORS.muted }} className="text-sm font-medium">{progressLabel(progress)}</Text>}
             </View>
         );
     }
@@ -79,7 +81,7 @@ function SyncButton({ module, workspace }: { module: AnythingLLMExternal, worksp
 
     return (
         <TouchableOpacity
-            onPress={() => syncFromRemote({ module, workspace, setStatus })}
+            onPress={() => syncFromRemote({ module, workspace, setStatus, setProgress })}
             activeOpacity={0.8}
             accessibilityRole="button"
             style={[pill, { backgroundColor: '#FFFFFF' }]}
@@ -87,4 +89,10 @@ function SyncButton({ module, workspace }: { module: AnythingLLMExternal, worksp
             <Text style={{ color: JOB_COLORS.page }} className="text-sm font-medium">{t('connect.import.sync')}</Text>
         </TouchableOpacity>
     );
+}
+
+/** "42%" of the download, or "120 MB" when its size is unknown */
+function progressLabel(progress: SyncProgress): string {
+    if (progress.total) return numberToPercentageString(Math.min(progress.received / progress.total, 1));
+    return formatBytes(progress.received, 0);
 }

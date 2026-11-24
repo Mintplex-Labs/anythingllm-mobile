@@ -1208,6 +1208,7 @@
       "synced": "Synchronisiert",
       "sync_failed": "Fehlgeschlagen",
       "sync_workspace_failed": "Fehler beim Synchronisieren des Workspace {{name}}",
+      "sync_workspace_too_large": null,
       "workspaces": "Arbeitsbereiche",
       "platform_desktop": "AnythingLLM Desktop",
       "platform_server": "AnythingLLM Server",

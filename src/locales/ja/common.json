@@ -1165,6 +1165,7 @@
       "synced": "同期されました",
       "sync_failed": "失敗",
       "sync_workspace_failed": "ワークスペース{{name}}の同期に失敗しました",
+      "sync_workspace_too_large": null,
       "workspaces": "ワークスペース",
       "platform_desktop": "AnythingLLM Desktop",
       "platform_server": "AnythingLLM サーバー",

@@ -1165,6 +1165,7 @@
       "synced": "已同步",
       "sync_failed": "失敗",
       "sync_workspace_failed": "無法同步工作區 {{name}}",
+      "sync_workspace_too_large": null,
       "workspaces": "工作空間",
       "platform_desktop": "AnythingLLM Desktop",
       "platform_server": "AnythingLLM Server",

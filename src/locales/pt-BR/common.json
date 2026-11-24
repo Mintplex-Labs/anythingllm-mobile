@@ -1251,6 +1251,7 @@
       "synced": "Sincronizado",
       "sync_failed": "Falhou",
       "sync_workspace_failed": "Falha ao sincronizar espaço de trabalho {{name}}",
+      "sync_workspace_too_large": null,
       "workspaces": "Espaços de trabalho",
       "platform_desktop": "AnythingLLM Desktop",
       "platform_server": "AnythingLLM Server",

@@ -1208,6 +1208,7 @@
       "synced": "Senkronize",
       "sync_failed": "Başarısız",
       "sync_workspace_failed": "Çalışma alanı senkronizasyonu başarısız {{name}}",
+      "sync_workspace_too_large": null,
       "workspaces": "Çalışma Alanları",
       "platform_desktop": "AnythingLLM Desktop",
       "platform_server": "AnythingLLM Sunucu",

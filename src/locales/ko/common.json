@@ -1165,6 +1165,7 @@
       "synced": "동기화됨",
       "sync_failed": "실패",
       "sync_workspace_failed": "워크스페이스 {{name}} 동기화 실패",
+      "sync_workspace_too_large": null,
       "workspaces": "작업 공간",
       "platform_desktop": "AnythingLLM Desktop",
       "platform_server": "AnythingLLM Server",

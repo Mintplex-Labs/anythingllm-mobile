@@ -1165,6 +1165,7 @@
       "synced": "Tersinkronkan",
       "sync_failed": "Gagal",
       "sync_workspace_failed": "Gagal menyinkronkan ruang kerja {{name}}",
+      "sync_workspace_too_large": null,
       "workspaces": "Ruang Kerja",
       "platform_desktop": "AnythingLLM Desktop",
       "platform_server": "AnythingLLM Server",

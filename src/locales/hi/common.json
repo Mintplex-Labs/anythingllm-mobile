@@ -1208,6 +1208,7 @@
       "synced": "सिंक किया गया",
       "sync_failed": "विफल",
       "sync_workspace_failed": "कार्यक्षेत्र {{name}} को सिंक करने में विफल",
+      "sync_workspace_too_large": null,
       "workspaces": "कार्यक्षेत्र",
       "platform_desktop": "AnythingLLM Desktop",
       "platform_server": "AnythingLLM Server",

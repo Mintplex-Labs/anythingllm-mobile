@@ -88,3 +88,6 @@ sourcemaps/
 # Licensed brand fonts (Fontshare FFL - no redistribution). See scripts/checkBrandFonts.js
 src/assets/fonts/ClashDisplay-*
 android/app/src/main/assets/fonts/ClashDisplay-*
+
+# Local MCP server config (Claude Code / editor)
+.mcp.json

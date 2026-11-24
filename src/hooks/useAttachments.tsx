@@ -148,6 +148,7 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
     // Latest attachments for callbacks that must not re-create on every change (picker limits).
     const attachmentsRef = useRef(attachments);
     useEffect(() => { attachmentsRef.current = attachments; }, [attachments]);
+    const imagePickerOpenRef = useRef(false);
     const addAttachment = useCallback((attachment: Attachment) => {
         setAttachments(prev => [...prev, attachment]);
     }, []);
@@ -361,6 +362,10 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
     }, [deviceInfo.isAndroid]);
 
     const askForImage = useCallback(async (source: ImageSource, { maxDimension = IMAGE_MAX_DIMENSION.external }: { maxDimension?: number } = {}) => {
+        // One picker at a time: a double tap would otherwise open two cameras, and the picker only answers the
+        // last launch, so the first call would never resolve (GH #146).
+        if (imagePickerOpenRef.current) return;
+        imagePickerOpenRef.current = true;
         try {
             const remaining = MAX_ATTACHMENTS - attachmentsRef.current.length;
             if (remaining <= 0) return showToast(i18n.t('models.attachments.max_reached', { count: MAX_ATTACHMENTS }));
@@ -417,6 +422,8 @@ export default function useAttachments(wsSlug: string, threadSlug: string | null
         } catch (e) {
             console.log('askForImage error', e);
             showToast((e as Error).message || i18n.t('models.attachments.image_attach_failed'));
+        } finally {
+            imagePickerOpenRef.current = false;
         }
     }, [ensureCameraPermission]);
 

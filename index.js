@@ -2,8 +2,10 @@
  * @format
  */
 
+// Before anything else: React Native feature flags can only be overridden before the first one is read.
+import './src/utils/reactNativeFeatureFlags';
 import {AppRegistry} from 'react-native';
-// Loaded first so Crashlytics' global error handler is in place before any app code runs.
+// Loaded before the rest so Crashlytics' global error handler is in place before any app code runs.
 import './src/utils/Telemetry';
 // Web globals (URL, streams, TextEncoder, crypto, Buffer). Loaded here rather than only through App so the
 // headless scheduled-jobs task, which never loads App, gets them too.
